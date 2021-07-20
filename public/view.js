@@ -13,6 +13,7 @@
  */
 
 import {h, render} from '/js/src/index.js';
+import sessionService from '/js/src/sessionService.js';
 
 const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i], b[i]]);
 const goodBadOpt = (n, goodOpts, badOpts, opts) =>
@@ -57,10 +58,10 @@ function loggingSite(model) {
                             const dbname = dbnameEl.value ? dbnameEl.value !== '' : dbnameEl.placeholder;
 
                             const p = await model.login(username, password, dbname);
-                            console.log(window.sS);
+                            console.log(window.session);
                         }
                     }, "login")),
-                    h('.pv2', h('button.btn', {onclick: e => alert("TODO, now you are logged as: " + window.sS.name)}, "register"))
+                    h('.pv2', h('button.btn', {onclick: e => alert("TODO, now you are logged as: " + window.session.name)}, "register"))
                 ])
             )
         ])
@@ -72,7 +73,10 @@ function userPanel(model) {
         // menu bar
         h('.bg-white.flex-row.p2.shadow-level2.level2', {id: 'menu'}, [
             h('.flex-grow.text-left', [
-                h('button.btn', {onclick: e => alert('TODO')}, 'opts')
+                h('button.btn', {onclick: e => {
+                        // alert('TODO')
+                        console.log(sessionService.session);
+                    }}, 'opts')
             ]), ' ',
             h('.w-50.text-center', [
                 h('h4.primary', 'TEST APP PANEL')
@@ -88,17 +92,17 @@ function userPanel(model) {
         h('.flex-grow.flex-row', [
             // sidebar
             h('.sidebar.flex-column', [
-                h(goodBadOpt('button.btn', ['.btn-primary'], ['.btn-success'], [!model.timeServerContentVisible]),
+                h(goodBadOpt('button.btn.p1.m1', ['.btn-primary'], ['.btn-success'], [!model.timeServerContentVisible]),
                     {
                         id: 'time-server-hide-show-btn',
                         onclick: e => model.showHideTimeServerContent()
                     }, 'time server'), ' ',
-                h(goodBadOpt('button.btn', ['.btn-primary'], ['.btn-success'], [!model.RCTHomepageVisible]),
+                h(goodBadOpt('button.btn.p1.m1', ['.btn-primary'], ['.btn-success'], [!model.RCTHomepageVisible]),
                     {id: 'RCT-main-show-btn', onclick: e => model.showHideRCTHomepage()}, 'RCT main'), ' ',
             ]), ' ',
             // content
             h('.flex-grow.relative', [
-                h('.scroll-y.absolute-fill.bg-white', {id: 'main-content'}, [
+                h('.scroll-y.absolute-fill.bg-white.p3.m2', {id: 'main-content'}, [
                     h('h2.gray', 'MAIN CONTENT'),
                     model.timeServerContentVisible ? timeServerContent(model) : '',
                     model.RCTHomepageVisible ? RCTHomepage(model) : '',

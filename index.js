@@ -31,7 +31,7 @@ console.log("ip address: " + httpServer.ipAddress);
 // Server static content in public directory
 httpServer.addStaticPath('./public');
 
-// Declare HTTP POST route availabe under "/api/getDate" path
+// Declare HTTP POST route available under "/api/getDate" path
 httpServer.post('/getDate', (req, res) => {
     res.json({date: new Date()});
 });
@@ -99,10 +99,8 @@ httpServer.post('/RCTHomepage', (req, res) => {
 
     select(client, 'SELECT * from periods;')
         .then(sqlres => {
-            console.log(sqlres.rows)
             res.json({type: 'res', data: sqlres.rows});
         }).catch(e => {
-            console.log(e.message);
             res.json({type: 'err', data: e.code});
     })
 

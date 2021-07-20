@@ -9,13 +9,13 @@
 		import sessionService from '/js/src/sessionService.js';
 		sessionService.loadAndHideParameters();
 		// sessionService.loadParameters();
-		window.sS = sessionService.session;
-		window.s = sessionService;
+		window.sesService = sessionService;
+		sessionStorage.sesService = sessionService;
+		window.session = sessionService.get();
 	</script>
 
-	<!-- Main application controller -->
+	<!-- Main application controlanonymousler -->
 	<script type="module">
-
 
 		// Import MVC
 		import {mount} from '/js/src/index.js';
@@ -27,7 +27,7 @@
 		const debug = true; // shows when redraw is done
 		mount(document.body, view, model, debug);
 
-		// Expose model to interract with it the browser's console
+		// Expose model to interact with it the browser's console
 		window.model = model;
 	</script>
 </head>

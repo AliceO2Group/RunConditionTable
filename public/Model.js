@@ -14,6 +14,7 @@
 
 // Import frontend framework
 import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
+import sessionService from '/js/src/sessionService.js';
 
 
 // The model
@@ -50,7 +51,7 @@ export default class Model extends Observable {
         });
 
         this.ws.addListener('command', (msg) => {
-            if (msg.command === 'server-date' && msg.payload.userIndex === window.sS.personid) {
+            if (msg.command === 'server-date' && msg.payload.userIndex === window.session.personid) {
                 this.date = msg.payload.date;
                 this.incrementResponsesNumb(msg.payload.rowIndex);
                 console.log(msg.payload);
@@ -103,9 +104,9 @@ export default class Model extends Observable {
         }
         this.ws.sendMessage({
             command: 'stream-date',
-            payload: {mess: 'message from client', interval: interval, step: step, rowIndex: index, userIndex: window.sS.personid}
+            payload: {mess: 'message from client', interval: interval, step: step, rowIndex: index, userIndex: window.session.personid}
         });
-        const i = window.sS.personid;
+        const i = window.session.personid;
         this.ws.setFilter(function (message) {
             console.log(message);
             return message.command === 'server-date';
@@ -128,13 +129,20 @@ export default class Model extends Observable {
                 }
             } else {
                 if (content.type === 'res') {
-                    window.s.session.username = username;
-                    window.sS.name = username;
-                    window.sS.username = username;
-                    window.sS.personid = content.id;
+                    window.session.name = username;
+                    window.session.username = username;
+                    window.session.personid = content.id;
                     this.username = username;
                     this.password = password;
                     this.dbname = dbname;
+
+                    sessionStorage.username = username;
+                    sessionStorage.dbname = dbname;
+                    sessionStorage.token = "";
+
+                    console.log("sessionService_________________________")
+                    console.log(sessionService);
+                    sessionService.username = username;
 
                     this.logged = true;
                     this.notify();
@@ -151,7 +159,7 @@ export default class Model extends Observable {
         const response = await fetchClient('/api/logout', {
             method: 'POST',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
-            body: JSON.stringify({username: window.sS.username, id: window.sS.personid})
+            body: JSON.stringify({username: window.session.username, id: window.session.personid})
         });
         const content = await response.json();
         console.log(content)
@@ -160,9 +168,9 @@ export default class Model extends Observable {
         } else {
             if (content.type === 'res') {
                 alert('successfully logged out');
-                window.sS.name = 'Anonymous';
-                window.sS.username = 'Anonymous';
-                window.sS.personid = 0;
+                window.session.name = 'Anonymous';
+                window.session.username = 'Anonymous';
+                window.session.personid = 0;
             }
         }
         this.logged = false;
