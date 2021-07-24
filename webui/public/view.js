@@ -10,19 +10,12 @@
  * In applying this license CERN does not waive the privileges and immunities
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
-*/
+ */
 
-// This is quick start configuration
-// See the Backend documentation for more details
-//
-module.exports = {
-  jwt: {
-    secret: 'supersecret',
-    expiration: '5m'
-  },
-  http: {
-    port: 8080,
-    hostname: 'localhost',
-    tls: false
-  }
-};
+import userPanel from './components/rct/userPanel.js';
+import loggingSite from './components/loggingSite.js';
+ 
+// The view
+export default function view(model) {
+    return model.logged ? userPanel(model) : loggingSite(model);
+}

@@ -14,7 +14,6 @@
 
 // Import frontend framework
 import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
-import sessionService from '/js/src/sessionService.js';
 
 
 // The model
@@ -24,12 +23,17 @@ export default class Model extends Observable {
         this.count = 0;
         this.date = null;
         this.ws = null;
-        this.list = [];
+        this.timeServerList = [];
         this.lastIndex = 1;
         this.hideMarkedRecords = false;
         this.logged = false;
-        this.timeServerContentVisible = false;
-        this.RCTHomepageVisible = false;
+
+        this.contentVisibility = {
+            timeServerContentVisible: false,
+            RCTHomepageVisible: false
+        }
+        this.currentContent = null;
+
         this.RCTCurentContent = null;
         this.RCTdataFetched = false;
 
@@ -51,7 +55,7 @@ export default class Model extends Observable {
         });
 
         this.ws.addListener('command', (msg) => {
-            if (msg.command === 'server-date' && msg.payload.userIndex === window.session.personid) {
+            if (msg.command === 'server-date' && msg.payload.userIndex === window.sesService.session.personid) {
                 this.date = msg.payload.date;
                 this.incrementResponsesNumb(msg.payload.rowIndex);
                 console.log(msg.payload);
@@ -61,7 +65,7 @@ export default class Model extends Observable {
     }
 
     incrementResponsesNumb(index) {
-        const l = this.list.filter((e) => e.rowIndex === index)
+        const l = this.timeServerList.filter((e) => e.rowIndex === index)
         l[0].responses++;
     }
 
@@ -76,20 +80,11 @@ export default class Model extends Observable {
     }
 
     add(rec) {
-        this.list.push(rec)
+        this.timeServerList.push(rec)
         this.lastIndex++;
         this.notify();
     }
 
-    changeItemStatus(item) {
-        item.marked = !item.marked;
-        this.notify();
-    }
-
-    changeRecordsVisibility() {
-        this.hideMarkedRecords = !this.hideMarkedRecords;
-        this.notify();
-    }
 
     async fetchDate() {
         const response = await fetchClient('/api/getDate', {method: 'POST'});
@@ -104,13 +99,23 @@ export default class Model extends Observable {
         }
         this.ws.sendMessage({
             command: 'stream-date',
-            payload: {mess: 'message from client', interval: interval, step: step, rowIndex: index, userIndex: window.session.personid}
+            payload: {mess: 'message from client', interval: interval, step: step, rowIndex: index, userIndex: window.sesService.session.personid}
         });
-        const i = window.session.personid;
+        const i = window.sesService.session.personid;
         this.ws.setFilter(function (message) {
             console.log(message);
             return message.command === 'server-date';
         });
+    }
+
+    changeItemStatus(item) {
+        item.marked = !item.marked;
+        this.notify();
+    }
+
+    changeRecordsVisibility() {
+        this.hideMarkedRecords = !this.hideMarkedRecords;
+        this.notify();
     }
 
     async login(username, password, dbname) {
@@ -129,20 +134,17 @@ export default class Model extends Observable {
                 }
             } else {
                 if (content.type === 'res') {
-                    window.session.name = username;
-                    window.session.username = username;
-                    window.session.personid = content.id;
+                    window.sesService.session.username = username;
+                    window.sesService.session.name = username;
+                    window.sesService.session.personid = content.id;
                     this.username = username;
                     this.password = password;
                     this.dbname = dbname;
-
+                    sessionStorage.logged = "true";
                     sessionStorage.username = username;
+                    sessionStorage.token =  sesService.session.token;
                     sessionStorage.dbname = dbname;
-                    sessionStorage.token = "";
-
-                    console.log("sessionService_________________________")
-                    console.log(sessionService);
-                    sessionService.username = username;
+                    sessionStorage.password = password;
 
                     this.logged = true;
                     this.notify();
@@ -150,7 +152,7 @@ export default class Model extends Observable {
             }
 
         } else {
-            alert("Incorrect inforamtion");
+            alert("Incorrect information");
         }
 
     }
@@ -159,7 +161,7 @@ export default class Model extends Observable {
         const response = await fetchClient('/api/logout', {
             method: 'POST',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
-            body: JSON.stringify({username: window.session.username, id: window.session.personid})
+            body: JSON.stringify({username: window.sesService.session.username, id: window.sesService.session.personid})
         });
         const content = await response.json();
         console.log(content)
@@ -168,24 +170,44 @@ export default class Model extends Observable {
         } else {
             if (content.type === 'res') {
                 alert('successfully logged out');
-                window.session.name = 'Anonymous';
-                window.session.username = 'Anonymous';
-                window.session.personid = 0;
+                window.sesService.session.name = 'Anonymous';
+                window.sesService.session.username = 'Anonymous';
+                window.sesService.session.personid = 0;
             }
         }
         this.logged = false;
+        sessionStorage.logged = "false";
+        sessionStorage.username = null;
+        sessionStorage.password = null;
+        sessionStorage.dbname = null;
+
         this.notify();
     }
 
+
     showHideTimeServerContent() {
-        this.timeServerContentVisible = !this.timeServerContentVisible;
-        if (this.timeServerContentVisible) this.RCTHomepageVisible = false;
+        if (this.contentVisibility.timeServerContentVisible) {
+            this.contentVisibility.timeServerContentVisible = false;
+            this.currentContent = null;
+        } else {
+            if (this.currentContent !== null)
+                this.contentVisibility[this.currentContent] = false;
+            this.contentVisibility.timeServerContentVisible = true;
+            this.currentContent = "timeServerContentVisible";
+        }
         this.notify();
     }
 
     showHideRCTHomepage() {
-        this.RCTHomepageVisible = !this.RCTHomepageVisible;
-        if (this.RCTHomepageVisible) this.timeServerContentVisible = false;
+        if (this.contentVisibility.RCTHomepageVisible) {
+            this.contentVisibility.RCTHomepageVisible = false;
+            this.currentContent = null;
+        } else {
+            if (this.currentContent !== null)
+                this.contentVisibility[this.currentContent] = false;
+            this.contentVisibility.RCTHomepageVisible = true;
+            this.currentContent = "RCTHomepageVisible";
+        }
         this.notify();
         if (!this.RCTdataFetched) {
             this.reqServerForRCTHomepage().then(r => {

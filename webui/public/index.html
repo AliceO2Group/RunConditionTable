@@ -1,6 +1,6 @@
 <!doctype html>
 <head>
-	<title>Tutorial - Time server</title>
+	<title>RCT prototype</title>
 	<link rel="stylesheet" href="/css/src/bootstrap.css">
 	<script src="/js/src/compatibility.js"></script>
 
@@ -8,14 +8,22 @@
 	<script type="module">
 		import sessionService from '/js/src/sessionService.js';
 		sessionService.loadAndHideParameters();
-		// sessionService.loadParameters();
+		if (sessionStorage.hasOwnProperty('logged') &&
+				sessionStorage.logged === "true") {
+			console.log("Try to relog");
+			sessionService.session.username = sessionStorage.username;
+			sessionService.session.password = sessionStorage.password;
+			sessionService.session.token = sessionStorage.token;
+			sessionService.session.dbname = sessionStorage.dbname;
+		}
+
 		window.sesService = sessionService;
 		sessionStorage.sesService = sessionService;
-		window.session = sessionService.get();
 	</script>
 
-	<!-- Main application controlanonymousler -->
+	<!-- Main application controller -->
 	<script type="module">
+
 
 		// Import MVC
 		import {mount} from '/js/src/index.js';
@@ -29,5 +37,9 @@
 
 		// Expose model to interact with it the browser's console
 		window.model = model;
+		if (sessionStorage.hasOwnProperty("logged") && sessionStorage.logged === "true") {
+			model.logged = true;
+			model.notify();
+		}
 	</script>
 </head>

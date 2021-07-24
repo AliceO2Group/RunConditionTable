@@ -1,0 +1,1 @@
+alter database "rct-db" owner to "rct-user";
