@@ -8,6 +8,8 @@
 	<script type="module">
 		import sessionService from '/js/src/sessionService.js';
 		sessionService.loadAndHideParameters();
+
+		// TODO
 		if (sessionStorage.hasOwnProperty('logged') &&
 				sessionStorage.logged === "true") {
 			console.log("Try to relog");
@@ -37,6 +39,8 @@
 
 		// Expose model to interact with it the browser's console
 		window.model = model;
+
+		// TODO
 		if (sessionStorage.hasOwnProperty("logged") && sessionStorage.logged === "true") {
 			model.logged = true;
 			model.notify();

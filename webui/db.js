@@ -44,14 +44,10 @@ class PGCommunicator {
         });
     }
     #logout(req, res) {
-        const body = req.body;
-        console.log('Try to log out: ' + body.username + ", id: " + body.id);
-        // console.log(req);
+        // console.log('Try to log out: ' + body.username + ", id: " + body.id);
         let found = false
         this.loggedUsers.list = this.loggedUsers.list.filter(item => {
-            const cond = !(item.id === body.id
-                && item.username === body.username
-                && item.token === req.query.token)
+            const cond = item.token !== req.query.token;
             if (!cond) found = true;
             return cond;
         });
@@ -64,7 +60,6 @@ class PGCommunicator {
     #RCTHomepage(req, res) {
 
         const body = req.body;
-        // console.log(req);
         console.log('user try to log in' + body);
         const client = new Client({
             user: body.username,
@@ -76,11 +71,9 @@ class PGCommunicator {
 
         select(client, 'SELECT * from periods;')
             .then(sqlRes => {
-                // console.log(sqlRes.rows)
                 res.json({type: 'res', data: sqlRes.rows});
             }).catch(e => {
-            // console.log(e.message);
-            res.json({type: 'err', data: e.code});
+                res.json({type: 'err', data: e.code});
         })
     }
 
@@ -88,7 +81,7 @@ class PGCommunicator {
         this.httpserver.post(name, (req, res) => this.#login(req, res));
     }
     bindLogout(name) {
-        this.httpserver.post(name, (req, res) => this.#logout(res, res));
+        this.httpserver.post(name, (req, res) => this.#logout(req, res));
     }
     bindRCTHomepage(name) {
         this.httpserver.post(name, (req, res) => this.#RCTHomepage(req, res));

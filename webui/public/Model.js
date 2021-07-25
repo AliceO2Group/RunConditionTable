@@ -21,15 +21,10 @@ export default class Model extends Observable {
     constructor() {
         super();
         this.count = 0;
-        this.date = null;
-        this.ws = null;
-        this.timeServerList = [];
-        this.lastIndex = 1;
         this.hideMarkedRecords = false;
         this.logged = false;
 
         this.contentVisibility = {
-            timeServerContentVisible: false,
             RCTHomepageVisible: false
         }
         this.currentContent = null;
@@ -41,72 +36,10 @@ export default class Model extends Observable {
         this.username = null;
         this.password = null;
         this.dbname = null;
-
-
-        this._prepareWebSocket();
-    }
-
-    _prepareWebSocket() {
-        // Real-time communication with server
-        this.ws = new WebSocketClient();
-
-        this.ws.addListener('authed', () => {
-            console.log('ready, let send a message: ');
-        });
-
-        this.ws.addListener('command', (msg) => {
-            if (msg.command === 'server-date' && msg.payload.userIndex === window.sesService.session.personid) {
-                this.date = msg.payload.date;
-                this.incrementResponsesNumb(msg.payload.rowIndex);
-                console.log(msg.payload);
-                this.notify();
-            }
-        });
-    }
-
-    incrementResponsesNumb(index) {
-        const l = this.timeServerList.filter((e) => e.rowIndex === index)
-        l[0].responses++;
-    }
-
-    increment() {
-        this.count++;
-        this.notify();
-    }
-
-    decrement() {
-        this.count--;
-        this.notify();
-    }
-
-    add(rec) {
-        this.timeServerList.push(rec)
-        this.lastIndex++;
-        this.notify();
     }
 
 
-    async fetchDate() {
-        const response = await fetchClient('/api/getDate', {method: 'POST'});
-        const content = await response.json();
-        this.date = content.date;
-        this.notify();
-    }
 
-    streamDate(index, interval = 500, step = 100) {
-        if (!this.ws.authed) {
-            return alert('WS not authed, wait and retry');
-        }
-        this.ws.sendMessage({
-            command: 'stream-date',
-            payload: {mess: 'message from client', interval: interval, step: step, rowIndex: index, userIndex: window.sesService.session.personid}
-        });
-        const i = window.sesService.session.personid;
-        this.ws.setFilter(function (message) {
-            console.log(message);
-            return message.command === 'server-date';
-        });
-    }
 
     changeItemStatus(item) {
         item.marked = !item.marked;
@@ -161,7 +94,7 @@ export default class Model extends Observable {
         const response = await fetchClient('/api/logout', {
             method: 'POST',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
-            body: JSON.stringify({username: window.sesService.session.username, id: window.sesService.session.personid})
+            // body: JSON.stringify({username: window.sesService.session.username, id: window.sesService.session.personid})
         });
         const content = await response.json();
         console.log(content)
@@ -184,19 +117,6 @@ export default class Model extends Observable {
         this.notify();
     }
 
-
-    showHideTimeServerContent() {
-        if (this.contentVisibility.timeServerContentVisible) {
-            this.contentVisibility.timeServerContentVisible = false;
-            this.currentContent = null;
-        } else {
-            if (this.currentContent !== null)
-                this.contentVisibility[this.currentContent] = false;
-            this.contentVisibility.timeServerContentVisible = true;
-            this.currentContent = "timeServerContentVisible";
-        }
-        this.notify();
-    }
 
     showHideRCTHomepage() {
         if (this.contentVisibility.RCTHomepageVisible) {
