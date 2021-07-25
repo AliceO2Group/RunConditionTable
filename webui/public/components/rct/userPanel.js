@@ -1,6 +1,5 @@
 import { h } from '/js/src/index.js';
 import { goodBadOpt } from '../../utils/utils.js';
-import { timeServerContent } from "../timeServer/timeServerView.js";
 import RCTHomepage from './homePage.js';
 
 export default function userPanel(model) {

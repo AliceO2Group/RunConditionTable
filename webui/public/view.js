@@ -17,5 +17,5 @@ import loggingSite from './components/loggingSite.js';
  
 // The view
 export default function view(model) {
-    return model.logged ? userPanel(model) : loggingSite(model);
+    return model.mode === "logged" ? userPanel(model.logged) : loggingSite(model.unlogged);
 }
