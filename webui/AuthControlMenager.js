@@ -9,9 +9,11 @@ class AuthControlMenager {
         this.log = log;
     }
 
-    #tokenControl(req, res) {res.json({})}
+    #tokenControl(req, res) {
+        res.json({date: new Date()})
+    }
 
-    bindToTokenControll(name) {
+    bindToTokenControl(name) {
         this.httpserver.post(name, (req, res) => this.#tokenControl(req, res))
     };
 

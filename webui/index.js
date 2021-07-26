@@ -40,4 +40,4 @@ pgCommunicator.bindRCTHomepage('/RCTHomepage');
 
 const AuthControlManager = require('./AuthControlMenager.js');
 const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);
-authControlManager.bindToTokenControll('/auth-control');
+authControlManager.bindToTokenControl('/auth-control');

@@ -30,14 +30,10 @@ export default class Model extends Observable {
     }
 
     _tokenExpirationHandler(status) {
-        console.log('_tokenExpirationHandler', status)
+        console.log('status', status);
         if (status === '403' || status === 403) {
-            for (var propt in sessionStorage) {
-                if (sessionStorage.hasOwnProperty(propt)) {
-                    console.log(propt, sessionStorage[propt]);
-                    sessionStorage[propt] = null;
-                }
-            }
+            console.log('_tokenExpirationHandler');
+            sessionStorage.clear();
             alert('Auth token expired!');
             document.location.reload(true);
         }
@@ -53,7 +49,6 @@ export default class Model extends Observable {
         console.log('controlServerRequest - content', content);
 
         const status = response.status;
-
         this._tokenExpirationHandler(status);
     }
 }
