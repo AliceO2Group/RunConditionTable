@@ -21,7 +21,7 @@ import ModelLogged from "./submodels/logged/ModelLogged.js";
 export default class Model extends Observable {
     constructor() {
         super();
-        this.mode = 'unlogged';
+        this.mode = 'unLogged';
         this.mUnlogged = new ModelUnlogged(this);
         this.mUnlogged.bubbleTo(this);
 

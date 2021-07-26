@@ -35,7 +35,7 @@ class PGCommunicator {
                         dbName: body.dbname,
                         password: body.password,
                         username: body.username,
-                        date: sqlRes.rows[0],
+                        date: new Date(),
                     }
 
                 console.log(this.loggedUsers);

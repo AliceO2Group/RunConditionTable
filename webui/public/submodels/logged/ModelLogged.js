@@ -14,6 +14,7 @@ export default class ModelLogged extends Observable {
 
         this.fetchedData = {
             mainRCTTable: {
+                //url: null,
                 columnsNames: null, // TODO may be help in managing hiding columns, it would be list of objects holding necessary information
                 rows: null,
                 dataSubsetMetadata: {
