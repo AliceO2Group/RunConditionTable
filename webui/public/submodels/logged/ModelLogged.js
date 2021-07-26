@@ -6,7 +6,6 @@ export default class ModelLogged extends Observable {
         super();
         this.parent = parent;
 
-
         this.hideMarkedRecords = false;
         this.contentVisibility = {
             RCTHomepageVisible: false
@@ -18,8 +17,6 @@ export default class ModelLogged extends Observable {
 
         // TODO;
         this.username = null;
-        this.password = null;
-        this.dbname = null;
     }
 
     changeItemStatus(item) {
@@ -29,31 +26,6 @@ export default class ModelLogged extends Observable {
 
     changeRecordsVisibility() {
         this.hideMarkedRecords = !this.hideMarkedRecords;
-        this.notify();
-    }
-
-    async logout() {
-        const response = await fetchClient('/api/logout', {
-            method: 'POST',
-            headers: {'Content-type': 'application/json; charset=UTF-8'},
-        });
-        const content = await response.json();
-        const status = response.status;
-        this.parent._tokenExpirationHandler(status);
-
-        if (content.type === 'err') {
-            alert("Some error occurred: " + content.data);
-        } else {
-            if (content.type === 'res') {
-                alert('successfully logged out');
-                window.sesService.session.name = 'Anonymous';
-                window.sesService.session.username = 'Anonymous';
-                window.sesService.session.personid = 0;
-            }
-        }
-        sessionStorage.token = null;
-        this.parent.mode = "mUnlogged";
-
         this.notify();
     }
 
@@ -96,4 +68,27 @@ export default class ModelLogged extends Observable {
         }
         this.notify();
     }
+
+    async logout() {
+        const response = await fetchClient('/api/logout', {
+            method: 'POST',
+            headers: {'Content-type': 'application/json; charset=UTF-8'},
+        });
+        const content = await response.json();
+        const status = response.status;
+        this.parent._tokenExpirationHandler(status);
+
+        if (content.type === 'err') {
+            alert("Some error occurred: " + content.data);
+        } else {
+            if (content.type === 'res') {
+                alert('successfully logged out');
+            }
+        }
+        sessionStorage.token = null;
+        this.parent.mode = "mUnlogged";
+
+        this.notify();
+    }
+
 }
