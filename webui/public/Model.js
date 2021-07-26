@@ -28,6 +28,34 @@ export default class Model extends Observable {
         this.mLogged = new ModelLogged(this);
         this.mLogged.bubbleTo(this);
     }
+
+    _tokenExpirationHandler(status) {
+        console.log('_tokenExpirationHandler', status)
+        if (status === '403' || status === 403) {
+            for (var propt in sessionStorage) {
+                if (sessionStorage.hasOwnProperty(propt)) {
+                    console.log(propt, sessionStorage[propt]);
+                    sessionStorage[propt] = null;
+                }
+            }
+            alert('Auth token expired!');
+            document.location.reload(true);
+        }
+    }
+
+    async controlServerRequest(name = '/api/auth-control') {
+        const response = await fetchClient(name, {
+            method: 'POST',
+            headers: {'Content-type': 'application/json; charset=UTF-8'},
+        })
+        console.log('controlServerRequest - response', response);
+        const content = await response.json();
+        console.log('controlServerRequest - content', content);
+
+        const status = response.status;
+
+        this._tokenExpirationHandler(status);
+    }
 }
 
 

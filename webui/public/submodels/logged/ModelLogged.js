@@ -38,7 +38,9 @@ export default class ModelLogged extends Observable {
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         });
         const content = await response.json();
-        console.log(content)
+        const status = response.status;
+        this.parent._tokenExpirationHandler(status);
+
         if (content.type === 'err') {
             alert("Some error occurred: " + content.data);
         } else {
@@ -49,10 +51,8 @@ export default class ModelLogged extends Observable {
                 window.sesService.session.personid = 0;
             }
         }
+        sessionStorage.token = null;
         this.parent.mode = "mUnlogged";
-        sessionStorage.logged = "false";
-        sessionStorage.username = null;
-        sessionStorage.dbname = null;
 
         this.notify();
     }
@@ -80,8 +80,10 @@ export default class ModelLogged extends Observable {
             method: 'POST',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         });
-
         const content = await response.json()
+        const status = response.status;
+        this.parent._tokenExpirationHandler(status);
+
         if (content.type === 'err') {
             console.log(content.data);
             alert('err', content.data);

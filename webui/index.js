@@ -37,3 +37,7 @@ const pgCommunicator = new PGcommunicator(httpServer, loggedUsers, log);
 pgCommunicator.bindLogging('/login');
 pgCommunicator.bindLogout('/logout');
 pgCommunicator.bindRCTHomepage('/RCTHomepage');
+
+const AuthControlManager = require('./AuthControlMenager.js');
+const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);
+authControlManager.bindToTokenControll('/auth-control');
