@@ -23,19 +23,21 @@ export default class ModelUnlogged extends Observable {
                 }
             } else {
                 if (content.type === 'res') {
+                    // TODO tę redundancję
                     window.sesService.session.username = username;
                     window.sesService.session.name = username;
                     window.sesService.session.personid = content.id;
-                    this.parent.logged.username = username;
-                    this.parent.logged.password = password;
-                    this.parent.logged.dbname = dbname;
-                    sessionStorage.logged = "true";
-                    sessionStorage.username = username;
-                    sessionStorage.token =  sesService.session.token;
-                    sessionStorage.dbname = dbname;
-                    sessionStorage.password = password;
+                    console.log(this.parent)
+                    this.parent.mLogged.username = username;
+                    this.parent.mLogged.password = password;
+                    this.parent.mLogged.dbname = dbname;
+                    // sessionStorage.logged = "true";
+                    // sessionStorage.username = username;
+                    // sessionStorage.token =  sesService.session.token;
+                    // sessionStorage.dbname = dbname;
+                    // sessionStorage.password = password;
 
-                    this.parent.mode = "logged";
+                    this.parent.mode = "mLogged";
                     this.notify();
                 }
             }

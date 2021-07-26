@@ -19,7 +19,6 @@ class PGCommunicator {
 
     #login(req, res) {
         const body = req.body;
-        // console.log(req);
         console.log('user try to log in' + body);
         const client = new Client({
             user: body.username,
@@ -31,26 +30,25 @@ class PGCommunicator {
 
         select(client, 'SELECT NOW();')
             .then(sqlRes => {
-                res.json({type: 'res', id: this.loggedUsers.lastID, data: sqlRes.rows});
-                this.loggedUsers.list.push({
-                    id: this.loggedUsers.lastID,
-                    username: body.username,
-                    date: new Date(),
-                    token: req.query.token})
-                this.loggedUsers.lastID ++;
+                res.json({type: 'res', data: sqlRes.rows});
+                this.loggedUsers.tokenToUsrData[req.query.token] = {
+                        dbName: body.dbname,
+                        password: body.password,
+                        username: body.username,
+                        date: sqlRes.rows[0],
+                    }
+
+                console.log(this.loggedUsers);
             }).catch(e => {
-            // console.log(e.message);
-            res.json({type: 'err', data: e.code})
+                res.json({type: 'err', data: e.code})
         });
     }
     #logout(req, res) {
-        // console.log('Try to log out: ' + body.username + ", id: " + body.id);
         let found = false
-        this.loggedUsers.list = this.loggedUsers.list.filter(item => {
-            const cond = item.token !== req.query.token;
-            if (!cond) found = true;
-            return cond;
-        });
+        if (this.loggedUsers.tokenToUsrData[req.query.token]) {
+            found = true;
+            this.loggedUsers.tokenToUsrData[req.query.token] = null;
+        }
         if (found) {
             res.json({type: 'res', data: 'OK'});
         } else {
@@ -60,21 +58,28 @@ class PGCommunicator {
     #RCTHomepage(req, res) {
 
         const body = req.body;
-        console.log('user try to log in' + body);
-        const client = new Client({
-            user: body.username,
-            host: 'localhost',
-            database: body.dbname,
-            password: body.password,
-            port: 5432,
-        });
+        const clientData = this.loggedUsers.tokenToUsrData[req.query.token];
 
-        select(client, 'SELECT * from periods;')
-            .then(sqlRes => {
-                res.json({type: 'res', data: sqlRes.rows});
-            }).catch(e => {
+        if (clientData) {
+            const confClient = {
+                user: clientData.username,
+                host: 'localhost',
+                database: clientData.dbName,
+                password: clientData.password,
+                port: 5432,
+            }
+            const client = new Client(confClient);
+
+            select(client, 'SELECT * from periods;')
+                .then(sqlRes => {
+                    res.json({type: 'res', data: sqlRes.rows});
+                }).catch(e => {
                 res.json({type: 'err', data: e.code});
-        })
+            })
+        } else {
+            console.log('invalid token or no such user')
+            res.json({type: 'err', data: 'invalid token or no such user'});
+        }
     }
 
     bindLogging(name) {

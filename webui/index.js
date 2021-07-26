@@ -21,8 +21,7 @@ const config = require('./config.js');
 // Get logger instance
 const log = new Log('Tutorial');
 let loggedUsers = {
-    list: [],
-    lastID: 1
+    tokenToUsrData: {},
 }
 
 // HTTP server

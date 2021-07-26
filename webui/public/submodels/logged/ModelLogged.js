@@ -4,8 +4,8 @@ import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
 export default class ModelLogged extends Observable {
     constructor(parent) {
         super();
-
         this.parent = parent;
+
 
         this.hideMarkedRecords = false;
         this.contentVisibility = {
@@ -50,10 +50,9 @@ export default class ModelLogged extends Observable {
                 window.sesService.session.personid = 0;
             }
         }
-        this.parent.mode = "unlogged";
+        this.parent.mode = "mUnlogged";
         sessionStorage.logged = "false";
         sessionStorage.username = null;
-        sessionStorage.password = null;
         sessionStorage.dbname = null;
 
         this.notify();
@@ -81,13 +80,20 @@ export default class ModelLogged extends Observable {
         const response = await fetchClient('/api/RCTHomepage', {
             method: 'POST',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
-            body: JSON.stringify({username: this.username, password: this.password, dbname: this.dbname})
+            // body: JSON.stringify({username: this.username, password: this.password, dbname: this.dbname})
         });
 
         const content = await response.json()
-        this.RCTCurentContent = content.data.map(item => {item.marked = false; return item;});
-        this.RCTdataFetched = true;
-        console.log(this.RCTCurentContent);
+        if (content.type === 'err') {
+            console.log(content.data);
+            alert('err', content.data);
+        } else {
+            this.RCTCurentContent = content.data.map(item => {
+                item.marked = false;
+                return item;
+            });
+            this.RCTdataFetched = true;
+        }
         this.notify();
     }
 }

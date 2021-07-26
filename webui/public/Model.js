@@ -14,23 +14,20 @@
 
 // Import frontend framework
 import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
-import ModelUnlogged from "./submodels/unlogged.js";
-import ModelLogged from "./submodels/logged/logged.js";
+import ModelUnlogged from "./submodels/ModelUnlogged.js";
+import ModelLogged from "./submodels/logged/ModelLogged.js";
 
 // The model
 export default class Model extends Observable {
     constructor() {
         super();
         this.mode = 'unlogged';
-        this.unlogged = new ModelUnlogged(this);
-        this.unlogged.bubbleTo(this);
+        this.mUnlogged = new ModelUnlogged(this);
+        this.mUnlogged.bubbleTo(this);
 
-        this.logged = new ModelLogged(this);
-        this.logged.bubbleTo(this);
+        this.mLogged = new ModelLogged(this);
+        this.mLogged.bubbleTo(this);
     }
-
-
-
 }
 
 
