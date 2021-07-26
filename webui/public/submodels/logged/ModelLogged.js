@@ -12,8 +12,33 @@ export default class ModelLogged extends Observable {
         }
         this.currentContent = null;
 
-        this.RCTCurentContent = null;
-        this.RCTdataFetched = false;
+        this.fetchedData = {
+            mainRCTTable: {
+                columnsNames: null, // TODO may be help in managing hiding columns, it would be list of objects holding necessary information
+                rows: null,
+                dataSubsetMetadata: {
+                    fetched: false,
+                    rowsOnSite: null,
+                    site: null,
+                }
+            },
+            periods: {
+                /** structure:: */
+                // periodName : {
+                //              columnsNames: <...>,
+                //              rows: <...>,
+                //              dataSubsetMetadata: <{as above}>
+                //  }
+                // ...
+            },
+            runs: {
+                // as above
+            }
+
+
+
+        };
+        this.currentDataView = null;
 
         // TODO;
         this.username = null;
@@ -42,7 +67,7 @@ export default class ModelLogged extends Observable {
         this.notify();
         if (!this.RCTdataFetched) {
             this.reqServerForRCTHomepage().then(r => {
-                console.log(this.RCTCurentContent);
+                console.log(this.fetchedData);
             })
         }
     }
@@ -60,7 +85,7 @@ export default class ModelLogged extends Observable {
             console.log(content.data);
             alert('err', content.data);
         } else {
-            this.RCTCurentContent = content.data.map(item => {
+            this.fetchedData = content.data.map(item => {
                 item.marked = false;
                 return item;
             });
