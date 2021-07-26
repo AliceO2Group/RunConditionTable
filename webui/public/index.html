@@ -8,19 +8,14 @@
 	<script type="module">
 		import sessionService from '/js/src/sessionService.js';
 		sessionService.loadAndHideParameters();
+		console.log(sessionService);
 
 		// TODO
-		if (sessionStorage.hasOwnProperty('logged') &&
-				sessionStorage.logged === "true") {
+		if (sessionStorage.hasOwnProperty('token') && sessionStorage.token !== 'null') {
 			console.log("Try to relog");
-			sessionService.session.username = sessionStorage.username;
-			sessionService.session.password = sessionStorage.password;
 			sessionService.session.token = sessionStorage.token;
-			sessionService.session.dbname = sessionStorage.dbname;
 		}
-
 		window.sesService = sessionService;
-		sessionStorage.sesService = sessionService;
 	</script>
 
 	<!-- Main application controller -->
@@ -41,8 +36,9 @@
 		window.model = model;
 
 		// TODO
-		if (sessionStorage.hasOwnProperty("logged") && sessionStorage.logged === "true") {
-			model.logged = true;
+		if (sessionStorage.hasOwnProperty('token') && sessionStorage.token !== 'null') {
+			model.controlServerRequest();
+			model.mode = 'mLogged'
 			model.notify();
 		}
 	</script>
