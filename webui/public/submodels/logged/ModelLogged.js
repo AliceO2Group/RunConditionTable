@@ -36,7 +36,6 @@ export default class ModelLogged extends Observable {
         const response = await fetchClient('/api/logout', {
             method: 'POST',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
-            // body: JSON.stringify({username: window.sesService.session.username, id: window.sesService.session.personid})
         });
         const content = await response.json();
         console.log(content)
@@ -80,7 +79,6 @@ export default class ModelLogged extends Observable {
         const response = await fetchClient('/api/RCTHomepage', {
             method: 'POST',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
-            // body: JSON.stringify({username: this.username, password: this.password, dbname: this.dbname})
         });
 
         const content = await response.json()
