@@ -1,6 +1,5 @@
 import { h } from '/js/src/index.js';
 import { goodBadOpt } from '../../utils/utils.js';
-import { timeServerContent } from "../timeServer/timeServerView.js";
 import RCTHomepage from './homePage.js';
 
 export default function userPanel(model) {
@@ -24,19 +23,12 @@ export default function userPanel(model) {
         h('.flex-grow.flex-row', [
             // sidebar
             h('.sidebar.flex-column.bg-gray-lighter', [
-                h(goodBadOpt('button.btn.p2.m2', ['.btn-success'], ['.btn-primary'], [!model.timeServerContentVisible]),
-                    {
-                        id: 'time-server-hide-show-btn',
-                        onclick: e => model.showHideTimeServerContent()
-                    }, 'time server'), ' ',
                 h(goodBadOpt('button.btn.p2.m2', ['.btn-success'], ['.btn-primary'], [!model.RCTHomepageVisible]),
                     {id: 'RCT-main-show-btn', onclick: e => model.showHideRCTHomepage()}, 'RCT main'), ' ',
             ]), ' ',
             // content
             h('.flex-grow.relative', [
                 h('.scroll-y.absolute-fill.bg-white', {id: 'main-content'}, [
-                    // h('h2.gray', 'MAIN CONTENT'),
-                    model.contentVisibility.timeServerContentVisible ? timeServerContent(model) : '',
                     model.contentVisibility.RCTHomepageVisible ? RCTHomepage(model) : '',
                 ])
             ])

@@ -19,7 +19,6 @@ class PGCommunicator {
 
     #login(req, res) {
         const body = req.body;
-        // console.log(req);
         console.log('user try to log in' + body);
         const client = new Client({
             user: body.username,
@@ -31,30 +30,25 @@ class PGCommunicator {
 
         select(client, 'SELECT NOW();')
             .then(sqlRes => {
-                res.json({type: 'res', id: this.loggedUsers.lastID, data: sqlRes.rows});
-                this.loggedUsers.list.push({
-                    id: this.loggedUsers.lastID,
-                    username: body.username,
-                    date: new Date(),
-                    token: req.query.token})
-                this.loggedUsers.lastID ++;
+                res.json({type: 'res', data: sqlRes.rows});
+                this.loggedUsers.tokenToUsrData[req.query.token] = {
+                        dbName: body.dbname,
+                        password: body.password,
+                        username: body.username,
+                        date: sqlRes.rows[0],
+                    }
+
+                console.log(this.loggedUsers);
             }).catch(e => {
-            // console.log(e.message);
-            res.json({type: 'err', data: e.code})
+                res.json({type: 'err', data: e.code})
         });
     }
     #logout(req, res) {
-        const body = req.body;
-        console.log('Try to log out: ' + body.username + ", id: " + body.id);
-        // console.log(req);
         let found = false
-        this.loggedUsers.list = this.loggedUsers.list.filter(item => {
-            const cond = !(item.id === body.id
-                && item.username === body.username
-                && item.token === req.query.token)
-            if (!cond) found = true;
-            return cond;
-        });
+        if (this.loggedUsers.tokenToUsrData[req.query.token]) {
+            found = true;
+            this.loggedUsers.tokenToUsrData[req.query.token] = null;
+        }
         if (found) {
             res.json({type: 'res', data: 'OK'});
         } else {
@@ -64,31 +58,35 @@ class PGCommunicator {
     #RCTHomepage(req, res) {
 
         const body = req.body;
-        // console.log(req);
-        console.log('user try to log in' + body);
-        const client = new Client({
-            user: body.username,
-            host: 'localhost',
-            database: body.dbname,
-            password: body.password,
-            port: 5432,
-        });
+        const clientData = this.loggedUsers.tokenToUsrData[req.query.token];
 
-        select(client, 'SELECT * from periods;')
-            .then(sqlRes => {
-                // console.log(sqlRes.rows)
-                res.json({type: 'res', data: sqlRes.rows});
-            }).catch(e => {
-            // console.log(e.message);
-            res.json({type: 'err', data: e.code});
-        })
+        if (clientData) {
+            const confClient = {
+                user: clientData.username,
+                host: 'localhost',
+                database: clientData.dbName,
+                password: clientData.password,
+                port: 5432,
+            }
+            const client = new Client(confClient);
+
+            select(client, 'SELECT * from periods;')
+                .then(sqlRes => {
+                    res.json({type: 'res', data: sqlRes.rows});
+                }).catch(e => {
+                res.json({type: 'err', data: e.code});
+            })
+        } else {
+            console.log('invalid token or no such user')
+            res.json({type: 'err', data: 'invalid token or no such user'});
+        }
     }
 
     bindLogging(name) {
         this.httpserver.post(name, (req, res) => this.#login(req, res));
     }
     bindLogout(name) {
-        this.httpserver.post(name, (req, res) => this.#logout(res, res));
+        this.httpserver.post(name, (req, res) => this.#logout(req, res));
     }
     bindRCTHomepage(name) {
         this.httpserver.post(name, (req, res) => this.#RCTHomepage(req, res));

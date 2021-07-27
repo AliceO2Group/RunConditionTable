@@ -1,7 +1,7 @@
 module.exports = {
     jwt: {
       secret: 'supersecret',
-      expiration: '5m'
+      expiration: '2m'
     },
     http: {
       port: 8080,
