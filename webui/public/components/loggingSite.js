@@ -27,7 +27,7 @@ export default function loggingSite(model) {
     return h('div.loginDiv',
         h('div.loginDivInside', [
             title,
-            
+
             container(
                 inputForm("dbname", "dbname", "rct-db"),
                 inputForm("username", "username", "username"),

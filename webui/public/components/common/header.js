@@ -1,18 +1,13 @@
+import button from './button.js';
 import { h } from '/js/src/index.js';
 
 export default function header(model) {
-    return h('.bg-white.flex-row.p2.shadow-level2.level2', {id: 'menu'}, [
-        h('.flex-grow.text-left', [
-            h('button.btn', {onclick: e => alert('TODO')}, 'opts')
+    return h('.header', {id: 'header'}, [
+        button('settings', () => alert('TODO')),
+        h('h4.title', 'Some useful tools will be placed here (like exports etc.?)'),
+        h('.header-right', [
+            h('.search', h('input', {id: 'main-panel-search', placeholder: 'search', type: 'input'})),
+            button('logout', () => model.logout()),
         ]), ' ',
-        h('.w-50.text-center', [
-            h('h4.primary', 'TEST APP PANEL')
-        ]), ' ',
-        h('.flex-grow', [
-            h('input', {id: 'main-panel-search', placeholder: 'search', type: 'input'})
-        ]), ' ',
-        h('flex-grow.text-right', [
-            h('button.btn', {onclick: e => model.logout()}, 'logout')
-        ]),
     ]);
 }
