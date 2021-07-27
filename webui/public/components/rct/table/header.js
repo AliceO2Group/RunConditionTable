@@ -1,6 +1,6 @@
 import { h } from '/js/src/index.js';
 
-export default function header(checkBoxFunction) {
+export default function tableHeader(checkBoxFunction) {
     return h('tr', [
                 h('th', {scope: "col"}, "id"),
                 h('th', {scope: "col"}, "Data taking year"),

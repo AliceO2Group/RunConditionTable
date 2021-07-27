@@ -32,6 +32,9 @@ console.log("ip address: " + httpServer.ipAddress);
 // Server static content in public directory
 httpServer.addStaticPath('./public');
 
+// serving less.js file --- probably not the best possible solution...
+httpServer.addStaticPath('./node_modules/less/dist');
+
 const PGcommunicator = require('./db.js');
 const pgCommunicator = new PGcommunicator(httpServer, loggedUsers, log);
 pgCommunicator.bindLogging('/login');

@@ -1,6 +1,6 @@
 import { h } from '/js/src/index.js';
 import button from '../common/button.js';
-import header from './table/header.js';
+import tableHeader from './table/header.js';
 import row from './table/row.js';
 
 export default function RCTTableView(model) {
@@ -10,7 +10,7 @@ export default function RCTTableView(model) {
         button('reload data', () => model.reqServerForRCTHomePage(), 'reload-btn'),
 
         h('tbody', {id: 'periods-table-body'}, [
-            header(() => model.changeRecordsVisibility()),
+            tableHeader(() => model.changeRecordsVisibility()),
             model.RCTdataFetched ? model.RCTCurentContent.map(item => row(model, item)) : 'loading data',
         ])
     ]))

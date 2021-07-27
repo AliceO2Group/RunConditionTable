@@ -24,8 +24,8 @@ export default function loggingSite(model) {
     const registerButton = button("register", handleRegistration);
     const title = h('h1.primary', 'TEST APP');
     
-    return h('div.flex-column.items-center.justify-center',
-        h('div.flex-column.bg-gray-lighter.br3.p4', [
+    return h('div.loginDiv',
+        h('div.loginDivInside', [
             title,
             
             container(
