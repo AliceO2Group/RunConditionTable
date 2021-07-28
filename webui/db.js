@@ -1,9 +1,7 @@
 const {Client} = require('pg');
 
 async function select(client, command) {
-    await client.connect();
     const res = await client.query(command);
-    await client.end();
     return res;
 }
 
@@ -33,17 +31,12 @@ class PGCommunicator {
             port: 5432,
         });
 
+        (async () => await client.connect())();
         select(client, 'SELECT NOW();')
-            .then(sqlRes => {
+            .then(async sqlRes => {
                 res.json({type: 'res', data: sqlRes.rows});
                 this.loggedUsers.tokenToUserData[req.query.token] = {
-                        pgClient: new Client({
-                            database: body.dbname,
-                            password: body.password,
-                            user: body.username,
-                            host: 'localhost',
-                            port: 5432
-                        }),
+                        pgClient: client,
                         loginDate: new Date(),
                     }
 
@@ -74,6 +67,7 @@ class PGCommunicator {
     #doQuery(req, res, query=null) {
         console.log(req.query);
         const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
+        console.log(client);
         if (client) {
             const body = req.body;
             if (query === null)
@@ -83,7 +77,8 @@ class PGCommunicator {
                     .then((dbRes) => {
                         res.json({type: 'res', data: dbRes.rows});
                     }).catch(e => {
-                    res.json({type: 'err', data: e.code});
+                        console.log(e);
+                        res.json({type: 'err', data: e.code});
                 })
             } else {
                 res.json('This query is malicious');
