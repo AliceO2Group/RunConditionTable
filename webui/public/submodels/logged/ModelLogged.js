@@ -1,5 +1,5 @@
 import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
-
+import changeLocation from "../../utils/location.js";
 
 export default class ModelLogged extends Observable {
     constructor(parent) {
@@ -17,7 +17,7 @@ export default class ModelLogged extends Observable {
                 //url: null,
                 columnsNames: null, // TODO may be help in managing hiding columns, it would be list of objects holding necessary information
                 rows: null,
-                dataSubsetMetadata: {
+                metadata: {
                     fetched: false,
                     rowsOnSite: null,
                     site: null,
@@ -66,7 +66,7 @@ export default class ModelLogged extends Observable {
             this.currentContent = "RCTHomepageVisible";
         }
         this.notify();
-        if (!this.RCTdataFetched) {
+        if (!this.fetchedData.periods.fetched) {
             this.reqServerForRCTHomepage().then(r => {
                 console.log(this.fetchedData);
             })
@@ -74,6 +74,7 @@ export default class ModelLogged extends Observable {
     }
 
     async reqServerForRCTHomepage(){
+        this.fetchedData.mainRCTTable.metadata.fetched = false;
         const response = await fetchClient('/api/RCTHomepage', {
             method: 'GET',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
@@ -86,11 +87,11 @@ export default class ModelLogged extends Observable {
             console.log(content.data);
             alert('err', content.data);
         } else {
-            this.fetchedData = content.data.map(item => {
+            this.fetchedData.mainRCTTable.rows = content.data.map(item => {
                 item.marked = false;
                 return item;
             });
-            this.RCTdataFetched = true;
+            this.fetchedData.mainRCTTable.metadata.fetched = true;
         }
         this.notify();
     }
@@ -112,6 +113,7 @@ export default class ModelLogged extends Observable {
             }
         }
         sessionStorage.token = null;
+        changeLocation('/api/login');
         this.parent.mode = "mUnlogged";
 
         this.notify();

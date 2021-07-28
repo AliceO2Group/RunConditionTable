@@ -20,6 +20,11 @@ class PGCommunicator {
     #login(req, res) {
         const body = req.body;
         console.log('user try to log in' + body);
+
+        console.log('req', req);
+        console.log('headers', req.headers);
+        console.log('body', req.body);
+
         const client = new Client({
             user: body.username,
             host: 'localhost',
@@ -31,11 +36,15 @@ class PGCommunicator {
         select(client, 'SELECT NOW();')
             .then(sqlRes => {
                 res.json({type: 'res', data: sqlRes.rows});
-                this.loggedUsers.tokenToUsrData[req.query.token] = {
-                        dbName: body.dbname,
-                        password: body.password,
-                        username: body.username,
-                        date: new Date(),
+                this.loggedUsers.tokenToUserData[req.query.token] = {
+                        pgClient: new Client({
+                            database: body.dbname,
+                            password: body.password,
+                            user: body.username,
+                            host: 'localhost',
+                            port: 5432
+                        }),
+                        loginDate: new Date(),
                     }
 
                 console.log(this.loggedUsers);
@@ -45,9 +54,9 @@ class PGCommunicator {
     }
     #logout(req, res) {
         let found = false
-        if (this.loggedUsers.tokenToUsrData[req.query.token]) {
+        if (this.loggedUsers.tokenToUserData[req.query.token]) {
             found = true;
-            this.loggedUsers.tokenToUsrData[req.query.token] = null;
+            this.loggedUsers.tokenToUserData[req.query.token] = null;
         }
         if (found) {
             res.json({type: 'res', data: 'OK'});
@@ -55,35 +64,41 @@ class PGCommunicator {
             res.json({type: 'err', data: 'NOUSER'});
         }
     }
-    #RCTHomepage(req, res) {
 
-        const body = req.body;
-        const clientData = this.loggedUsers.tokenToUsrData[req.query.token];
-        console.log('req', req);
-        console.log('headers', req.headers);
-        console.log('body', req.body);
+    #verifysqlQuery(query) {
+        // TODO To handling hacking;
+        return true;
+    }
 
-        if (clientData) {
-            const confClient = {
-                user: clientData.username,
-                host: 'localhost',
-                database: clientData.dbName,
-                password: clientData.password,
-                port: 5432,
+
+    #doQuery(req, res, query=null) {
+        console.log(req.query);
+        const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
+        if (client) {
+            const body = req.body;
+            if (query === null)
+                query = body.sqlQuery;
+            if (this.#verifysqlQuery(query)) {
+                select(client, query)
+                    .then((dbRes) => {
+                        res.json({type: 'res', data: dbRes.rows});
+                    }).catch(e => {
+                    res.json({type: 'err', data: e.code});
+                })
+            } else {
+                res.json('This query is malicious');
             }
-            const client = new Client(confClient);
-
-            select(client, 'SELECT * from periods;')
-                .then(sqlRes => {
-                    res.json({type: 'res', data: sqlRes.rows});
-                }).catch(e => {
-                res.json({type: 'err', data: e.code});
-            })
         } else {
-            console.log('invalid token or no such user')
+            console.log('No such client');
             res.json({type: 'err', data: 'invalid token or no such user'});
         }
     }
+
+    #getRCTHomepage(req, res) {
+       this.#doQuery(req, res, 'SELECT * from periods;');
+    }
+
+
 
     bindLogging(name) {
         this.httpserver.post(name, (req, res) => this.#login(req, res));
@@ -92,7 +107,7 @@ class PGCommunicator {
         this.httpserver.post(name, (req, res) => this.#logout(req, res));
     }
     bindRCTHomepage(name) {
-        this.httpserver.get(name, (req, res) => this.#RCTHomepage(req, res));
+        this.httpserver.get(name, (req, res) => this.#getRCTHomepage(req, res));
     }
 
 }

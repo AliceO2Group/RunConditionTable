@@ -21,7 +21,7 @@ const config = require('./config.js');
 // Get logger instance
 const log = new Log('Tutorial');
 let loggedUsers = {
-    tokenToUsrData: {},
+    tokenToUserData: {},
 }
 
 // HTTP server
@@ -31,6 +31,7 @@ console.log("ip address: " + httpServer.ipAddress);
 
 // Server static content in public directory
 httpServer.addStaticPath('./public');
+httpServer.addStaticPath('./public', '/api/login/');
 
 const PGcommunicator = require('./db.js');
 const pgCommunicator = new PGcommunicator(httpServer, loggedUsers, log);

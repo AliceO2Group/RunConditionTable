@@ -26,7 +26,7 @@ export default function RCTTableView(model) {
                     ])
                 )
             ]),
-            model.RCTdataFetched ? model.RCTCurentContent.map(item =>
+            model.fetchedData.mainRCTTable.metadata.fetched ? model.fetchedData.mainRCTTable.rows.map(item =>
                 h(goodBadOpt(
                     'tr',
                     ['.bg-grey', '.d-none'],

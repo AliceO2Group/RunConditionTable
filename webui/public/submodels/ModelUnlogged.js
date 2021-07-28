@@ -1,4 +1,5 @@
 import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
+import changeLocation from "../utils/location.js";
 
 
 export default class ModelUnlogged extends Observable {
@@ -27,6 +28,8 @@ export default class ModelUnlogged extends Observable {
             } else {
                 if (content.type === 'res') {
                     sessionStorage.token =  sesService.session.token;
+
+                    changeLocation(`/api/home/${username}/`);
 
                     this.parent.mode = "mLogged";
                     this.notify();
