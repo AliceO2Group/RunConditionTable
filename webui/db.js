@@ -82,6 +82,50 @@ class PGCommunicator {
         }
     }
 
+    /*
+    #RCTFilter(req, res) {
+        const body = req.body;
+        const clientData = this.loggedUsers.tokenToUsrData[req.query.token];
+
+        if (clientData) {
+            const confClient = {
+                user: clientData.username,
+                host: 'localhost',
+                database: clientData.dbName,
+                password: clientData.password,
+                port: 5432,
+            }
+            const client = new Client(confClient);
+
+            select(client, 'SELECT * from periods where id=2;')
+                .then(sqlRes => {
+                    res.json({type: 'res', data: sqlRes.rows});
+                }).catch(e => {
+                res.json({type: 'err', data: e.code});
+            })
+        } else {
+            console.log('invalid token or no such user')
+            res.json({type: 'err', data: 'invalid token or no such user'});
+        }
+        /*
+        const body = req.body;
+        console.log('rct filter');
+        const client = new Client({
+            user: body.username,
+            host: 'localhost',
+            database: body.dbname,
+            password: body.password,
+            port: 5432,
+        });
+
+        select(client, 'SELECT * from periods where id=2',)//$1 or year=$2 or period=$3 or beam=$4 or energy=$5;', )
+        .then(sqlRes => {
+            res.json({type: 'res', data: sqlRes.rows});
+        }).catch(e => {
+        res.json({type: 'err', data: e.code});
+        })
+    }*/
+
     bindLogging(name) {
         this.httpserver.post(name, (req, res) => this.#login(req, res));
     }
@@ -91,6 +135,11 @@ class PGCommunicator {
     bindRCTHomepage(name) {
         this.httpserver.post(name, (req, res) => this.#RCTHomepage(req, res));
     }
+    /*
+    bindRCTFilter(name) {
+        this.httpserver.post(name, (req, res) => this.#RCTFilter(req, res));
+    }*/
+
 
 }
 

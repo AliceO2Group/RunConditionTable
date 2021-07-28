@@ -1,4 +1,4 @@
-import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
+import {Observable, fetchClient, QueryRouter} from '/js/src/index.js';
 
 
 export default class ModelLogged extends Observable {
@@ -17,7 +17,27 @@ export default class ModelLogged extends Observable {
 
         // TODO;
         this.username = null;
+
+        // Setup router
+        this.router = new QueryRouter();
+        this.router.observe(this.handleLocationChange.bind(this));
+        this.handleLocationChange(); // Init first page
     }
+
+    handleLocationChange() {
+        switch (this.router.params.page) {
+          case 'periods':
+            // call some ajax to load periods
+            break;
+          case 'item':
+            // call some ajax to load item this.router.params.id
+            break;
+          default:
+            // default route, replace the current one not handled
+            this.router.go('?page=periods', true);
+            break;
+        }
+      }
 
     changeItemStatus(item) {
         item.marked = !item.marked;
@@ -91,4 +111,31 @@ export default class ModelLogged extends Observable {
         this.notify();
     }
 
+    /*
+    async filter(id, year, period, beam, energy, bField, statistics) {
+        //
+    }
+
+    async reqServerForRCTFilter(){
+        const response = await fetchClient('/api/RCTfilter', {
+            method: 'POST',
+            headers: {'Content-type': 'application/json; charset=UTF-8'},
+        });
+        const content = await response.json()
+        const status = response.status;
+        this.parent._tokenExpirationHandler(status);
+
+        if (content.type === 'err') {
+            console.log(content.data);
+            alert('err', content.data);
+        } else {
+            this.RCTCurentContent = content.data.map(item => {
+                item.marked = false;
+                return item;
+            });
+            this.RCTdataFetched = true;
+        }
+        this.notify();
+    }
+    */
 }
