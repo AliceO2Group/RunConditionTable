@@ -75,7 +75,7 @@ export default class ModelLogged extends Observable {
 
     async reqServerForRCTHomepage(){
         const response = await fetchClient('/api/RCTHomepage', {
-            method: 'POST',
+            method: 'GET',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         });
         const content = await response.json()

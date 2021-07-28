@@ -59,6 +59,9 @@ class PGCommunicator {
 
         const body = req.body;
         const clientData = this.loggedUsers.tokenToUsrData[req.query.token];
+        console.log('req', req);
+        console.log('headers', req.headers);
+        console.log('body', req.body);
 
         if (clientData) {
             const confClient = {
@@ -89,7 +92,7 @@ class PGCommunicator {
         this.httpserver.post(name, (req, res) => this.#logout(req, res));
     }
     bindRCTHomepage(name) {
-        this.httpserver.post(name, (req, res) => this.#RCTHomepage(req, res));
+        this.httpserver.get(name, (req, res) => this.#RCTHomepage(req, res));
     }
 
 }
