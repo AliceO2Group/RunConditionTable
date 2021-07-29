@@ -1,6 +1,7 @@
 
 import {fetchClient} from '/js/src/index.js';
 
+const defaultRowsOnSite = 50;
 
 export default class FetchedData {
     constructor(model, url) {
@@ -10,19 +11,19 @@ export default class FetchedData {
         this.rows = null
         this.metadata = {
             fetched: false,
-            rowsOnSite: null,
-            site: null,
+            rowsOnSite: defaultRowsOnSite,
+            site: 1,
             }
     }
 
 
-    async fetch(url) {
+    async fetch() {
         //TODO parsing url to <query?>, rowsOnSite, site;
 
         this.metadata.fetched = false;
         // for loading icon displaying;
         this.model.notify();
-        const response = await fetchClient(/**TODO*/url ? url : '/api/RCTHomepage', {
+        const response = await fetchClient(/**TODO*/this.url ? this.url : '/api/RCTHomepage', {
             method: 'GET',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         });

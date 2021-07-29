@@ -1,5 +1,6 @@
 const {Client} = require('pg');
 //TODO everywhere? add handling error when client unexpectedly disconnect;
+//TODO removing clients;
 
 async function select(client, command) {
     const res = await client.query(command);
@@ -37,7 +38,6 @@ class PGCommunicator {
                         pgClient: client,
                         loginDate: new Date(),
                     }
-
                 console.log(this.loggedUsers);
             }).catch(e => {
                 res.json({type: 'err', data: e.code})
@@ -60,35 +60,42 @@ class PGCommunicator {
         // TODO To handling hacking;
         return true;
     }
+    #parseReqQToSqlQ(query) {
+        const sqlQ = `SELECT * FROM ${query.table} LIMIT ${query.rowsOnSite} OFFSET ${query.rowsOnSite * (query.site - 1)};`;
+        console.log(sqlQ);
+        return sqlQ;
+    }
 
 
     #doQuery(req, res, query=null) {
-        console.log(req.query);
-        const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
+        if (this.loggedUsers.tokenToUserData[req.query.token]) {
+            const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
+            if (query === null) {
+                query = this.#parseReqQToSqlQ(req.query);
+            }
 
-        if (client) {
-            const body = req.body;
-            if (query === null)
-                query = body.sqlQuery;
-            if (this.#verifysqlQuery(query)) {
-                select(client, query)
-                    .then((dbRes) => {
-                        res.json({type: 'res', data: {fields: dbRes.fields, rows: dbRes.rows}});
-                    }).catch(e => {
+            if (client) {
+                const body = req.body;
+                if (this.#verifysqlQuery(query)) {
+                    select(client, query)
+                        .then((dbRes) => {
+                            res.json({type: 'res', data: {fields: dbRes.fields, rows: dbRes.rows}});
+                        }).catch(e => {
                         console.log(e);
                         res.json({type: 'err', data: e.code});
-                })
+                    })
+                } else {
+                    res.json('This query is malicious');
+                }
             } else {
-                res.json('This query is malicious');
+                console.log('invalid token or no such client');
+                res.json({type: 'err', data: 'invalid token or no such user'});
             }
-        } else {
-            console.log('invalid token or no such client');
-            res.json({type: 'err', data: 'invalid token or no such user'});
         }
     }
 
     #getRCTHomepage(req, res) {
-       this.#doQuery(req, res, 'SELECT * from periods;');
+       this.#doQuery(req, res);
     }
 
 
