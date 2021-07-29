@@ -10,7 +10,7 @@ function handleClick(model, e) {
 }
 
 const menu = (model) => h('.mySidebar.flex-column.bg-gray-lighter', [
-    h(goodBadOpt('button.btn.p2.m2', ['.btn-success'], ['.btn-primary'], [!model.RCTHomepageVisible]),
+    h(goodBadOpt('button.btn.p2.m2', ['.btn-success'], ['.btn-primary'], [!model.contentVisibility.RCTHomepageVisible]),
     {id: 'RCT-main-show-btn', onclick: e => model.showHideRCTHomepage()}, 'Show data'), ' ',
     button('RCT Home page', (e) => handleClick(model, e), '', '?page=periods'),
     button('Item 1', (e) => handleClick(model, e), '', '?page=item&id=1'),
