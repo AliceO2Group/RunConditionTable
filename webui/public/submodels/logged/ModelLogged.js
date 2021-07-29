@@ -55,7 +55,7 @@ export default class ModelLogged extends Observable {
             this.currentContent = "RCTHomepageVisible";
         }
         this.notify();
-        if (!this.fetchedData.periods.fetched) {
+        if (this.fetchedData.mainRCTTable === null) {
             this.reqServerForRCTHomepage().then(r => {
                 console.log(this.fetchedData);
             })
