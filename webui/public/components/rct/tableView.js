@@ -3,7 +3,6 @@ import button from '../common/button.js';
 import tableHeader from './table/header.js';
 import row from './table/row.js';
 import filter from './table/filter.js';
-import fields from "./table/fields.js";
 import container from "../common/container.js";
 
 const rows = (model, colNames, data, buttonsFunctions) =>
@@ -31,9 +30,9 @@ export default function tableView(model, data) {
                 button('reload data', () => data.fetch(), 'reload-btn'), ' ',
 
                 h('tbody', {id: 'table-body-' + data.url}, [
-                    tableHeader(colNames, data, () => model.changeRecordsVisibility(data)),
                     switchCase(model.router.params.page, {
-                        periods: fields(model, colNames, data, fieldsButtonsFunctions).concat(rows(model, colNames, data, buttonsFunctions)),
+                        periods: [tableHeader(colNames, data, () => model.changeRecordsVisibility(data))]
+                            .concat(rows(model, colNames, data, buttonsFunctions)),
 
                         // item: filter(() => model.reqServerForRCTFilter()),
                     })
