@@ -1,4 +1,6 @@
 import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
+import FetchedData from "./FetchedData.js";
+
 
 export default class ModelLogged extends Observable {
     constructor(parent) {
@@ -12,16 +14,7 @@ export default class ModelLogged extends Observable {
         this.currentContent = null;
 
         this.fetchedData = {
-            mainRCTTable: {
-                //url: null,
-                columnsNames: null, // TODO may be help in managing hiding columns, it would be list of objects holding necessary information
-                rows: null,
-                metadata: {
-                    fetched: false,
-                    rowsOnSite: null,
-                    site: null,
-                }
-            },
+            mainRCTTable: null,
             periods: {
                 /** structure:: */
                 // periodName : {
@@ -34,9 +27,6 @@ export default class ModelLogged extends Observable {
             runs: {
                 // as above
             }
-
-
-
         };
         this.currentDataView = null;
 
@@ -72,27 +62,9 @@ export default class ModelLogged extends Observable {
         }
     }
 
-    async reqServerForRCTHomepage(){
-        this.fetchedData.mainRCTTable.metadata.fetched = false;
-        const response = await fetchClient('/api/RCTHomepage', {
-            method: 'GET',
-            headers: {'Content-type': 'application/json; charset=UTF-8'},
-        });
-        const content = await response.json()
-        const status = response.status;
-        this.parent._tokenExpirationHandler(status);
-
-        if (content.type === 'err') {
-            console.log(content.data);
-            alert('err', content.data);
-        } else {
-            this.fetchedData.mainRCTTable.rows = content.data.map(item => {
-                item.marked = false;
-                return item;
-            });
-            this.fetchedData.mainRCTTable.metadata.fetched = true;
-        }
-        this.notify();
+    async reqServerForRCTHomepage() {
+        this.fetchedData.mainRCTTable = new FetchedData(this, null);
+        await this.fetchedData.mainRCTTable.fetch();
     }
 
     async logout() {

@@ -5,7 +5,7 @@ export default function RCTTableView(model) {
     return h('div.p3', h('table.table', {id: 'data-table'}, [
 
         h('thead.text-center', "Periods"),
-        h('button.btn', {id: 'reload-btn', onclick: e => model.reqServerForRCTHomepage()}, 'reload data'),
+        h('button.btn', {id: 'reload-btn', onclick: e => model.fetchedData.mainRCTTable.fetch()}, 'reload data'),
         h('tbody', {id: 'periods-table-body'}, [
             h('tr', [
                 h('th', {scope: "col"}, "id"),

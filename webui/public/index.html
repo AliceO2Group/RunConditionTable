@@ -7,9 +7,7 @@
 	<!-- Load the session service, parse variables provided by server in the query -->
 	<script type="module">
 		import sessionService from '/js/src/sessionService.js';
-		import changeLocation from "./utils/_____location.js";
 
-		changeLocation('/api/login/');
 		sessionService.loadAndHideParameters();
 		if (sessionStorage.hasOwnProperty('token') && sessionStorage.token !== 'null') {
 			console.log("Try to relog");
