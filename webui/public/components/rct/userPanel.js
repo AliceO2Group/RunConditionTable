@@ -1,5 +1,5 @@
 import { h } from '/js/src/index.js';
-import { goodBadOpt } from '../../utils/utils.js';
+import { serialIf } from '../../utils/utils.js';
 import RCTHomepage from './homePage.js';
 import header from '../common/header.js';
 import button from '../common/button.js';
@@ -10,7 +10,7 @@ function handleClick(model, e) {
 }
 
 const menu = (model) => h('.mySidebar.flex-column.bg-gray-lighter', [
-    h(goodBadOpt('button.btn.p2.m2', ['.btn-success'], ['.btn-primary'], [!model.contentVisibility.RCTHomepageVisible]),
+    h(serialIf('button.btn.p2.m2', ['.btn-success'], ['.btn-primary'], [!model.contentVisibility.RCTHomepageVisible]),
     {id: 'RCT-main-show-btn', onclick: e => model.showHideRCTHomepage()}, 'Show data'), ' ',
     button('RCT Home page', (e) => handleClick(model, e), '', '?page=periods'),
     button('Item 1', (e) => handleClick(model, e), '', '?page=item&id=1'),

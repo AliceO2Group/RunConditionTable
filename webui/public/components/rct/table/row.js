@@ -1,9 +1,9 @@
 import { h } from '/js/src/index.js';
-import { goodBadOpt } from '../../../utils/utils.js';
+import { serialIf } from '../../../utils/utils.js';
 import button from '../../common/button.js';
 
 export default function row(model, colNames, data, item, buttonsFunctions) {
-    return h(goodBadOpt(
+    return h(serialIf(
                     'tr',
                     ['.bg-grey', '.d-none'],
                     ['.bg-warning', ''],
