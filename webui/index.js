@@ -37,7 +37,7 @@ const PGcommunicator = require('./db.js');
 const pgCommunicator = new PGcommunicator(httpServer, loggedUsers, log);
 pgCommunicator.bindLogging('/login');
 pgCommunicator.bindLogout('/logout');
-pgCommunicator.bindRCTHomepage('/RCT-Data');
+pgCommunicator.bindGetDBData('/RCT-Data');
 pgCommunicator.bindDate('/date');
 
 const AuthControlManager = require('./AuthControlManager.js');

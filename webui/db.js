@@ -67,7 +67,7 @@ class PGCommunicator {
     }
 
 
-    #doQuery(req, res, query=null) {
+    #realizeDataReq(req, res, query=null) {
         if (this.loggedUsers.tokenToUserData[req.query.token]) {
             const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
             if (query === null) {
@@ -85,7 +85,7 @@ class PGCommunicator {
                         res.json({type: 'err', data: e.code});
                     })
                 } else {
-                    res.json('This query is malicious');
+                    res.json(req, query, 'This query is malicious');
                 }
             } else {
                 console.log('invalid token or no such client');
@@ -94,12 +94,12 @@ class PGCommunicator {
         }
     }
 
-    #getRCTHomepage(req, res) {
-       this.#doQuery(req, res);
-    }
+    // #getRCTHomepage(req, res) {
+    //    this.#realizeDataReq(req, res);
+    // }
 
     #getDate(req, res) {
-        this.#doQuery(req, res, 'SELECT NOW();')
+        this.#realizeDataReq(req, res, 'SELECT NOW();')
     }
 
     bindLogging(name) {
@@ -108,8 +108,8 @@ class PGCommunicator {
     bindLogout(name) {
         this.httpserver.post(name, (req, res) => this.#logout(req, res));
     }
-    bindRCTHomepage(name) {
-        this.httpserver.get(name, (req, res) => this.#getRCTHomepage(req, res));
+    bindGetDBData(name) {
+        this.httpserver.get(name, (req, res) => this.#realizeDataReq(req, res));
     }
 
     bindDate(name) {
