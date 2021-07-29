@@ -11,7 +11,7 @@ export default function row(model, colNames, data, item, buttonsFunctions) {
                 ), colNames.map(n => {
                         if (item.hasOwnProperty(n)) {
                             if (buttonsFunctions.hasOwnProperty(n))
-                                return h('td', button(item[n], buttonsFunctions[n](item, n)))
+                                return h('td', button(item[n], buttonsFunctions[n](item, n), '', `?page=period&period=${item[n]}`));
                             else
                                 return h('td', item[n])
                         } else {

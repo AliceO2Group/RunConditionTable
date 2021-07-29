@@ -37,16 +37,22 @@ export default class ModelLogged extends Observable {
     }
 
     handleLocationChange() {
-        switch (this.router.params.page) {
-            case 'periods':
-                // call some ajax to load periods
-                break;
-            case 'item':
-                // call some ajax to load item this.router.params.id
+        const params = this.router.params;
+        switch (params.page) {
+            case 'Rct-Data':
+                switch (params.table) {
+                    case 'periods':
+                        // call some ajax to load periods
+                        break;
+                    case 'period':
+                        break;
+                }
+            break;
+            case 'home':
                 break;
             default:
                 // default route, replace the current one not handled
-                this.router.go('?page=periods', true);
+                this.router.go('?page=home', true);
                 break;
         }
     }
@@ -81,6 +87,13 @@ export default class ModelLogged extends Observable {
 
     async reqServerForRCTHomepage() {
         this.fetchedData.mainRCTTable = new FetchedData(this, '/api/RCT-Data/?table=periods&rowsOnSite=50&site=1');
+        await this.fetchedData.mainRCTTable.fetch();
+    }
+
+    async reqForData() {
+        const params = this.router.params;
+
+        this.fetchedData.mainRCTTable = new FetchedData(this, '/api/RCT-Data/?table=' );
         await this.fetchedData.mainRCTTable.fetch();
     }
 

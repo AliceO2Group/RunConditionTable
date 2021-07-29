@@ -8,20 +8,42 @@ import container from "../common/container.js";
 const rows = (model, colNames, data, buttonsFunctions) =>
         data.rows.map(item => row(model, colNames, data, item, buttonsFunctions));
 
+function handleClick(model, e) {
+    model.router.handleLinkEvent(e);
+    model.notify();
+}
+
+const tableBody = (model, colNames, data, buttonsFunctions) => {
+    return [tableHeader(colNames, data, () => model.changeRecordsVisibility(data))]
+        .concat(rows(model, colNames, data, buttonsFunctions));
+}
+
+export default function currentTableView(model) {
+    const params = model.router.params;
+    return params.page === 'Rct-Data' ? switchCase(params.table, {
+        periods: tableView(model, model.fetchedData.mainRCTTable, ),
+        period: tableView(model, model.fetchedData.periods[params.period]),
+        // item: filter(() => model.reqServerForRCTFilter()),
+    }) : '';
+}
+
 // TODO reading which data object view it is supposed to return from model QueryRouter;
-export default function tableView(model, data) {
+function tableView(model, data) {
+    if (! data)
+        return '';
+        // model.reqForData();
     if (data.fetched) {
-        const colNames = data.fields.filter(f => !(f.marked && data.hideMarkedRecords)).map(f => f.name);
-        console.log('fields', data.fields);
-        console.log('colNames', colNames);
+        const visibleFields = data.fields.filter(f => !(f.marked && data.hideMarkedRecords));
+
+        // TODO need to be generalized for each table type;
+        const colNames = visibleFields.map(f => f.name);
         const buttonsFunctions = {
             period: (item, name) => {
-                return (item) => {
-                    alert(item[name]);
+                return (e) => {
+                    handleClick(model, e);
                 }
             }
         };
-        const fieldsButtonsFunctions = null;
 
         return h('div.p3',
             h('table.table', {id: 'data-table-' + data.url}, [
@@ -30,12 +52,7 @@ export default function tableView(model, data) {
                 button('reload data', () => data.fetch(), 'reload-btn'), ' ',
 
                 h('tbody', {id: 'table-body-' + data.url}, [
-                    switchCase(model.router.params.page, {
-                        periods: [tableHeader(colNames, data, () => model.changeRecordsVisibility(data))]
-                            .concat(rows(model, colNames, data, buttonsFunctions)),
-
-                        // item: filter(() => model.reqServerForRCTFilter()),
-                    })
+                    tableBody(model, colNames, data, buttonsFunctions),
                 ])
             ]))
     } else {
