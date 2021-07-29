@@ -19,7 +19,7 @@ export default class FetchedData {
 
     async fetch() {
         //TODO parsing url to <query?>, rowsOnSite, site;
-        console.log('fetching');
+        console.log('fetching from: ', this.url);
         this.fetched = false;
         // for loading icon displaying;
         this.model.notify();
@@ -27,6 +27,7 @@ export default class FetchedData {
             method: 'GET',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         });
+
         const content = await response.json()
         const status = response.status;
         this.model.parent._tokenExpirationHandler(status);
@@ -44,7 +45,6 @@ export default class FetchedData {
                 item.marked = false;
                 return item;
             });
-            console.log('this.fetched = true;');
             this.fetched = true;
         }
         this.model.notify();

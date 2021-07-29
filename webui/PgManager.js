@@ -2,12 +2,14 @@ const {Client} = require('pg');
 //TODO everywhere? add handling error when client unexpectedly disconnect;
 //TODO removing clients;
 
+//TODO often token expire unexpectedly to fast;
+
 async function select(client, command) {
     const res = await client.query(command);
     return res;
 }
 
-class PGCommunicator {
+class PgManager {
     constructor(httpserver, loggedUsers, log) {
         console.assert(httpserver !== null);
         console.assert(loggedUsers != null);
@@ -62,22 +64,20 @@ class PGCommunicator {
     }
     #parseReqQToSqlQ(query) {
         const sqlQ = `SELECT * FROM ${query.table} LIMIT ${query.rowsOnSite} OFFSET ${query.rowsOnSite * (query.site - 1)};`;
-        console.log(sqlQ);
         return sqlQ;
     }
 
 
-    #realizeDataReq(req, res, query=null) {
+    async #realizeDataReq(req, res, query=null) {
         if (this.loggedUsers.tokenToUserData[req.query.token]) {
             const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
             if (query === null) {
                 query = this.#parseReqQToSqlQ(req.query);
             }
-
+            console.log(new Date(), query);
             if (client) {
-                const body = req.body;
                 if (this.#verifysqlQuery(query)) {
-                    select(client, query)
+                    await select(client, query)
                         .then((dbRes) => {
                             res.json({type: 'res', data: {fields: dbRes.fields, rows: dbRes.rows}});
                         }).catch(e => {
@@ -91,15 +91,15 @@ class PGCommunicator {
                 console.log('invalid token or no such client');
                 res.json({type: 'err', data: 'invalid token or no such user'});
             }
+        } else {
+            console.log('invalid token or no such client');
+            res.json({type: 'err', data: 'invalid token or no such user'});
         }
     }
 
-    // #getRCTHomepage(req, res) {
-    //    this.#realizeDataReq(req, res);
-    // }
 
-    #getDate(req, res) {
-        this.#realizeDataReq(req, res, 'SELECT NOW();')
+    async #getDate(req, res) {
+        await this.#realizeDataReq(req, res, 'SELECT NOW();')
     }
 
     bindLogging(name) {
@@ -118,4 +118,4 @@ class PGCommunicator {
 
 }
 
-module.exports = PGCommunicator;
+module.exports = PgManager;

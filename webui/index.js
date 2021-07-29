@@ -36,12 +36,12 @@ httpServer.addStaticPath('./public', '/api/login/');
 // serving less.js file --- probably not the best possible solution...
 httpServer.addStaticPath('./node_modules/less/dist', '/scripts');
 
-const PGcommunicator = require('./db.js');
-const pgCommunicator = new PGcommunicator(httpServer, loggedUsers, log);
-pgCommunicator.bindLogging('/login');
-pgCommunicator.bindLogout('/logout');
-pgCommunicator.bindGetDBData('/RCT-Data');
-pgCommunicator.bindDate('/date');
+const PgManager = require('./PgManager.js');
+const pgManager = new PgManager(httpServer, loggedUsers, log);
+pgManager.bindLogging('/login');
+pgManager.bindLogout('/logout');
+pgManager.bindGetDBData('/RCT-Data');
+pgManager.bindDate('/date');
 
 const AuthControlManager = require('./AuthControlManager.js');
 const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);

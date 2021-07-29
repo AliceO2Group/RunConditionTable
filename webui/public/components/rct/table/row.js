@@ -2,16 +2,16 @@ import { h } from '/js/src/index.js';
 import { goodBadOpt } from '../../../utils/utils.js';
 import button from '../../common/button.js';
 
-export default function row(colNames, data, item, buttonsFunctions) {
+export default function row(model, colNames, data, item, buttonsFunctions) {
     return h(goodBadOpt(
                     'tr',
                     ['.bg-grey', '.d-none'],
                     ['.bg-warning', ''],
-                    [!row.marked, data.hideMarkedRecords && row.marked]
+                    [!item.marked, data.hideMarkedRecords && item.marked]
                 ), colNames.map(n => {
                         if (item.hasOwnProperty(n)) {
                             if (buttonsFunctions.hasOwnProperty(n))
-                                return h('td', button(item[n], buttonsFunctions[n](item)))
+                                return h('td', button(item[n], buttonsFunctions[n](item, n)))
                             else
                                 return h('td', item[n])
                         } else {

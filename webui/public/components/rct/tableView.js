@@ -4,9 +4,10 @@ import tableHeader from './table/header.js';
 import row from './table/row.js';
 import filter from './table/filter.js';
 import fields from "./table/fields.js";
+import container from "../common/container.js";
 
-const rows = (colNames, model, data, buttonsFunctions) =>
-        data.rows.map(item => row(colNames, model, item, buttonsFunctions));
+const rows = (model, colNames, data, buttonsFunctions) =>
+        data.rows.map(item => row(model, colNames, data, item, buttonsFunctions));
 
 // TODO reading which data object view it is supposed to return from model QueryRouter;
 export default function tableView(model, data) {
@@ -15,9 +16,9 @@ export default function tableView(model, data) {
         console.log('fields', data.fields);
         console.log('colNames', colNames);
         const buttonsFunctions = {
-            period: (item) => {
+            period: (item, name) => {
                 return (item) => {
-                    alert(item.period);
+                    alert(item[name]);
                 }
             }
         };
@@ -30,15 +31,18 @@ export default function tableView(model, data) {
                 button('reload data', () => data.fetch(), 'reload-btn'), ' ',
 
                 h('tbody', {id: 'table-body-' + data.url}, [
-                    tableHeader(colNames, data, () => model.changeRecordsVisibility()),
+                    tableHeader(colNames, data, () => model.changeRecordsVisibility(data)),
                     switchCase(model.router.params.page, {
-                        periods: fields(colNames, data, fieldsButtonsFunctions).concat(rows(colNames, model, data, buttonsFunctions)),
+                        periods: fields(model, colNames, data, fieldsButtonsFunctions).concat(rows(model, colNames, data, buttonsFunctions)),
 
                         // item: filter(() => model.reqServerForRCTFilter()),
                     })
                 ])
             ]))
     } else {
-        return button('reload data', () => data.fetch(), 'reload-btn');
+        return container(
+            h('p', "loading data... //TODO need some loading image/animation"),
+            button('reload data', () => data.fetch(), 'reload-btn')
+        );
     }
 }

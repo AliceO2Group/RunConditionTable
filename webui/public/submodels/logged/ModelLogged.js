@@ -56,8 +56,8 @@ export default class ModelLogged extends Observable {
         this.notify();
     }
 
-    changeRecordsVisibility() {
-        this.hideMarkedRecords = !this.hideMarkedRecords;
+    changeRecordsVisibility(data) {
+        data.hideMarkedRecords = !data.hideMarkedRecords;
         this.notify();
     }
 
