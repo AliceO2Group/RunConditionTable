@@ -63,7 +63,7 @@ export default class ModelLogged extends Observable {
     }
 
     async reqServerForRCTHomepage() {
-        this.fetchedData.mainRCTTable = new FetchedData(this, '/api/RCTHomepage/?table=periods&rowsOnSite=50&site=2');
+        this.fetchedData.mainRCTTable = new FetchedData(this, '/api/RCT-Data/?table=periods&rowsOnSite=50&site=2');
         await this.fetchedData.mainRCTTable.fetch();
     }
 
