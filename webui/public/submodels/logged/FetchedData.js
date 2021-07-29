@@ -4,23 +4,23 @@ import {fetchClient} from '/js/src/index.js';
 const defaultRowsOnSite = 50;
 
 export default class FetchedData {
-    constructor(model, url) {
+    constructor(model, url, name='table') {
+        this.name = name;
         this.model = model;
         this.url = url;
         this.fields = null; // TODO may be help in managing hiding columns, it would be list of objects holding necessary information
-        this.rows = null
-        this.metadata = {
-            fetched: false,
-            rowsOnSite: defaultRowsOnSite,
-            site: 1,
-        }
+        this.rows = null;
+        this.fetched = false;
+        this.rowsOnSite = defaultRowsOnSite;
+        this.site = 1;
+        this.hideMarkedRecords = false;
     }
 
 
     async fetch() {
         //TODO parsing url to <query?>, rowsOnSite, site;
-
-        this.metadata.fetched = false;
+        console.log('fetching');
+        this.fetched = false;
         // for loading icon displaying;
         this.model.notify();
         const response = await fetchClient(/**TODO*/this.url ? this.url : '/date', {
@@ -44,8 +44,8 @@ export default class FetchedData {
                 item.marked = false;
                 return item;
             });
-
-            this.metadata.fetched = true;
+            console.log('this.fetched = true;');
+            this.fetched = true;
         }
         this.model.notify();
     }

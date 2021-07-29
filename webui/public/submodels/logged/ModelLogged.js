@@ -7,7 +7,6 @@ export default class ModelLogged extends Observable {
         super();
         this.parent = parent;
 
-        this.hideMarkedRecords = false;
         this.contentVisibility = {
             RCTHomepageVisible: false
         }
@@ -20,7 +19,6 @@ export default class ModelLogged extends Observable {
                 // periodName : {
                 //              columnsNames: <...>,
                 //              rows: <...>,
-                //              dataSubsetMetadata: <{as above}>
                 //  }
                 // ...
             },
@@ -28,7 +26,6 @@ export default class ModelLogged extends Observable {
                 // as above
             }
         };
-        this.currentDataView = null;
 
         // TODO;
         this.username = null;
@@ -49,7 +46,7 @@ export default class ModelLogged extends Observable {
                 break;
             default:
                 // default route, replace the current one not handled
-                this.router.go('?page=home', true);
+                this.router.go('?page=periods', true);
                 break;
         }
     }
@@ -83,7 +80,7 @@ export default class ModelLogged extends Observable {
     }
 
     async reqServerForRCTHomepage() {
-        this.fetchedData.mainRCTTable = new FetchedData(this, '/api/RCT-Data/?table=periods&rowsOnSite=50&site=2');
+        this.fetchedData.mainRCTTable = new FetchedData(this, '/api/RCT-Data/?table=periods&rowsOnSite=50&site=1');
         await this.fetchedData.mainRCTTable.fetch();
     }
 
