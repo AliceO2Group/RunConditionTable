@@ -13,7 +13,7 @@ export default class FetchedData {
             fetched: false,
             rowsOnSite: defaultRowsOnSite,
             site: 1,
-            }
+        }
     }
 
 
@@ -23,7 +23,7 @@ export default class FetchedData {
         this.metadata.fetched = false;
         // for loading icon displaying;
         this.model.notify();
-        const response = await fetchClient(/**TODO*/this.url ? this.url : '/api/RCTHomepage', {
+        const response = await fetchClient(/**TODO*/this.url ? this.url : '/date', {
             method: 'GET',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         });
@@ -44,6 +44,7 @@ export default class FetchedData {
                 item.marked = false;
                 return item;
             });
+
             this.metadata.fetched = true;
         }
         this.model.notify();

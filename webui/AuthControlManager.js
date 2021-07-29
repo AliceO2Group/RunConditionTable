@@ -1,5 +1,5 @@
 
-class AuthControlMenager {
+class AuthControlManager {
     constructor(httpserver, loggedUsers, log) {
         console.assert(httpserver !== null);
         console.assert(loggedUsers != null);
@@ -19,4 +19,4 @@ class AuthControlMenager {
 
 }
 
-module.exports = AuthControlMenager;
+module.exports = AuthControlManager;

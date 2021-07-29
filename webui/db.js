@@ -98,7 +98,9 @@ class PGCommunicator {
        this.#doQuery(req, res);
     }
 
-
+    #getDate(req, res) {
+        this.#doQuery(req, res, 'SELECT NOW();')
+    }
 
     bindLogging(name) {
         this.httpserver.post(name, (req, res) => this.#login(req, res));
@@ -108,6 +110,10 @@ class PGCommunicator {
     }
     bindRCTHomepage(name) {
         this.httpserver.get(name, (req, res) => this.#getRCTHomepage(req, res));
+    }
+
+    bindDate(name) {
+        this.httpserver.get(name, (req, res) => this.#getDate(req, res));
     }
 
 }
