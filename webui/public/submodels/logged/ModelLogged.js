@@ -1,5 +1,4 @@
 import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
-import changeLocation from "../../utils/location.js";
 
 export default class ModelLogged extends Observable {
     constructor(parent) {
@@ -113,7 +112,6 @@ export default class ModelLogged extends Observable {
             }
         }
         sessionStorage.token = null;
-        changeLocation('/api/login');
         this.parent.mode = "mUnlogged";
 
         this.notify();

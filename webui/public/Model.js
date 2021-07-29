@@ -17,7 +17,6 @@ import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
 
 import ModelUnlogged from "./submodels/ModelUnlogged.js";
 import ModelLogged from "./submodels/logged/ModelLogged.js";
-import changeLocation from "./utils/location.js";
 
 // The model
 export default class Model extends Observable {
@@ -37,7 +36,6 @@ export default class Model extends Observable {
             console.log('_tokenExpirationHandler');
             sessionStorage.clear();
             alert('Auth token expired!');
-            changeLocation('/');
             document.location.reload(true);
         }
     }
