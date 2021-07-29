@@ -6,6 +6,7 @@ cd WebUI-tutorial
 ```
 
 ## 1. Baza danych
+Na potrzeby tutoriala tworzymy bazę danych, z którą będzie komunikować się nasza aplikacja. Do zarządzania bazą danych wykorzystujemy [PostgreSQL](https://www.postgresql.org/). Nie przedstawiamy procesu instalacji i lokalnej konfiguracji, ponieważ dla różnych systemów operacyjnych wyglądają one inaczej.
 ```shell
 cd postgres
 psql
@@ -41,7 +42,7 @@ czyli metodę autentykacji opartej o hasło.
 Następnie należy zrestartować postgresa: `sudo service postgresql restart`.
 
 ### Tabele
-_Disclaimer:_ Schemat najprawdopodobniej nie odzwierciedla rzeczywistych zależnośći pomiędzy danymi, o te trzeba będzie jeszcze dopytać.
+_Disclaimer:_ Przyjęty schemat najprawdopodobniej nie odzwierciedla rzeczywistych zależnośći pomiędzy danymi, o te trzeba będzie jeszcze dopytać.
 
 ```shell
 psql -d "rct-db" -U "rct-user" -W
