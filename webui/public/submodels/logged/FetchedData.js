@@ -6,7 +6,7 @@ export default class FetchedData {
     constructor(model, url) {
         this.model = model;
         this.url = url;
-        this.columnsNames = null; // TODO may be help in managing hiding columns, it would be list of objects holding necessary information
+        this.fields = null; // TODO may be help in managing hiding columns, it would be list of objects holding necessary information
         this.rows = null
         this.metadata = {
             fetched: false,
@@ -15,9 +15,14 @@ export default class FetchedData {
             }
     }
 
-    async reqServerForRCTHomepage(){
+
+    async fetch(url) {
+        //TODO parsing url to <query?>, rowsOnSite, site;
+
         this.metadata.fetched = false;
-        const response = await fetchClient('/api/RCTHomepage', {
+        // for loading icon displaying;
+        this.model.notify();
+        const response = await fetchClient(/**TODO*/url ? url : '/api/RCTHomepage', {
             method: 'GET',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         });
@@ -29,16 +34,17 @@ export default class FetchedData {
             console.log(content.data);
             alert('err', content.data);
         } else {
-            this.rows = content.data.map(item => {
+            // TODO may add some function like "addDisplayAttributes"
+            this.fields = content.data.fields.map(item => {
+                item.marked = false;
+                return item;
+            });
+            this.rows = content.data.rows.map(item => {
                 item.marked = false;
                 return item;
             });
             this.metadata.fetched = true;
         }
         this.model.notify();
-    }
-
-    async fetch() {
-        await this.reqServerForRCTHomepage();
     }
 }

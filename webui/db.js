@@ -1,4 +1,5 @@
 const {Client} = require('pg');
+//TODO everywhere? add handling error when client unexpectedly disconnect;
 
 async function select(client, command) {
     const res = await client.query(command);
@@ -19,9 +20,6 @@ class PGCommunicator {
         const body = req.body;
         console.log('user try to log in' + body);
 
-        console.log('req', req);
-        console.log('headers', req.headers);
-        console.log('body', req.body);
 
         const client = new Client({
             user: body.username,
@@ -67,7 +65,7 @@ class PGCommunicator {
     #doQuery(req, res, query=null) {
         console.log(req.query);
         const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
-        console.log(client);
+
         if (client) {
             const body = req.body;
             if (query === null)
@@ -75,7 +73,7 @@ class PGCommunicator {
             if (this.#verifysqlQuery(query)) {
                 select(client, query)
                     .then((dbRes) => {
-                        res.json({type: 'res', data: dbRes.rows});
+                        res.json({type: 'res', data: {fields: dbRes.fields, rows: dbRes.rows}});
                     }).catch(e => {
                         console.log(e);
                         res.json({type: 'err', data: e.code});
@@ -84,7 +82,7 @@ class PGCommunicator {
                 res.json('This query is malicious');
             }
         } else {
-            console.log('No such client');
+            console.log('invalid token or no such client');
             res.json({type: 'err', data: 'invalid token or no such user'});
         }
     }

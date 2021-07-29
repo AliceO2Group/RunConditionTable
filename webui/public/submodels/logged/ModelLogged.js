@@ -1,4 +1,4 @@
-import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
+import {Observable, fetchClient} from '/js/src/index.js';
 import FetchedData from "./FetchedData.js";
 
 
