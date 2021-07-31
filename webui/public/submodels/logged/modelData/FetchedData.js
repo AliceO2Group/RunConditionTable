@@ -53,6 +53,17 @@ export default class FetchedData {
         this.model.notify();
     }
 
+
+    changeItemStatus(item) {
+        item.marked = !item.marked;
+        this.model.notify();
+    }
+
+    changeRecordsVisibility(data) {
+        data.hideMarkedRecords = !data.hideMarkedRecords;
+        this.model.notify();
+    }
+
     clear() {
         this.fields = null;
         this.rows = null;

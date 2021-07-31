@@ -7,21 +7,8 @@ import container from "../../common/container.js";
 
 import pagesCellsButtons from "./pagesCellsButtons.js";
 
-// TODO need to define generalized rules for backend views naming;
-// wich view is defined by params: page and index
 
-
-
-const rows = (model, colNames, data, cellsButtons) =>
-        data.rows.map(item => row(model, colNames, data, item, cellsButtons));
-
-
-
-const tableBody = (model, colNames, data, cellsButtons) => {
-    return [tableHeader(colNames, data, () => model.changeRecordsVisibility(data))]
-        .concat(rows(model, colNames, data, cellsButtons));
-}
-
+// TODO bug: when mark some row and switch to another table then back cause marking error;
 
 export default function tableView(model) {
     const params = model.router.params;
@@ -37,7 +24,6 @@ export default function tableView(model) {
         const visibleFields = data.fields.filter(f => !(f.marked && data.hideMarkedRecords));
 
         // TODO need to be generalized for each table type;
-        const colNames = visibleFields.map(f => f.name);
 
 
         return h('div.p3',
@@ -47,7 +33,7 @@ export default function tableView(model) {
                 button('reload data', () => data.fetch(), 'reload-btn'), ' ',
 
                 h('tbody', {id: 'table-body-' + data.url}, [
-                    tableBody(model, colNames, data, cellsButtons),
+                    tableBody(model, visibleFields, data, cellsButtons),
                 ])
             ]))
     } else {
@@ -56,4 +42,15 @@ export default function tableView(model) {
             button('reload data', () => data.fetch(), 'reload-btn')
         );
     }
+}
+
+
+const rows = (model, visibleFields, data, cellsButtons) =>
+    data.rows.map(item => row(model, visibleFields, data, item, cellsButtons));
+
+
+
+const tableBody = (model, visibleFields, data, cellsButtons) => {
+    return [tableHeader(visibleFields, data, () => data.changeRecordsVisibility(data))]
+        .concat(rows(model, visibleFields, data, cellsButtons));
 }

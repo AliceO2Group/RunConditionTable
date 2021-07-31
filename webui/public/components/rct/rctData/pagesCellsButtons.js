@@ -6,6 +6,7 @@ function handleClick(model, e) {
     model.notify();
 }
 
+//** modify in order to create appropriate behaviour*/
 const pagesCellsButtons = {
     main: {
         period: (model, item, name) => {
@@ -16,6 +17,7 @@ const pagesCellsButtons = {
     },
     runsPerPeriod: {},
     mc: {},
+    // ...,
 
 }
 

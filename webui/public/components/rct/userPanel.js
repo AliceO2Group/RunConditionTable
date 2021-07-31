@@ -21,6 +21,7 @@ const loadedDataButtons = (model, page) => {
     return buttons;
 }
 
+// TODO, sidebar should be nicer'
 const menu = (model) => h('.mySidebar.flex-column.bg-gray-lighter', [
     button('Home', (e) => handleClick(model, e), '', '/home/?page=home'),
     h('h.title', 'RCT Data'),
@@ -47,6 +48,7 @@ export default function userPanel(model) {
                 h('.scroll-y.absolute-fill.bg-white', {id: 'main-content'}, [
                     // TODO handling more cases;
                     url.pathname === '/api/Rct-Data/' ? rctDataView(model) : home(model),
+                    // TODO why this one below doesn't work;
                     // switchCase(url.pathname, {
                     //     '/home/': home(model),
                     //     '/api/Rct-Data/': currentTableView(model),

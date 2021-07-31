@@ -37,16 +37,6 @@ export default class ModelLogged extends Observable {
         }
     }
 
-    changeItemStatus(item) {
-        item.marked = !item.marked;
-        this.notify();
-    }
-
-    changeRecordsVisibility(data) {
-        data.hideMarkedRecords = !data.hideMarkedRecords;
-        this.notify();
-    }
-
 
     async reqForData() {
         const params = this.router.params;
