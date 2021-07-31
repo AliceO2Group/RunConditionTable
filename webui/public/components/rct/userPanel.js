@@ -1,30 +1,40 @@
-import { h } from '/js/src/index.js';
+import { h, switchCase } from '/js/src/index.js';
 import { serialIf } from '../../utils/utils.js';
-import RCThomepage from './RCThomepage.js';
 import header from '../common/header.js';
 import button from '../common/button.js';
+import home from "./home.js";
+import rctDataView from "./rctData/rctDataView.js";
 
 function handleClick(model, e) {
     model.router.handleLinkEvent(e);
     model.notify();
 }
 
+const loadedDataButtons = (model, page) => {
+    const buttons = [];
+    for (var index in page) {
+        if (page.hasOwnProperty(index)) {
+            const url = page[index].url;
+            buttons.push(button(index, (e) => handleClick(model, e), '', url.pathname + url.search));
+        }
+    }
+    return buttons;
+}
+
 const menu = (model) => h('.mySidebar.flex-column.bg-gray-lighter', [
-    h(serialIf('button.btn.p2.m2', ['.btn-success'], ['.btn-primary'], [!model.contentVisibility.RCTHomepageVisible]),
-    {id: 'RCT-main-show-btn', onclick: e => model.showHideRCTHomepage()}, 'Show data'), ' ',
-    button('RCT Home page', (e) => handleClick(model, e), '', '?page=Rct-Data&table=periods'),
-    // button('Item 1', (e) => handleClick(model, e), '', '?page=item&id=1'),
-    // button('Item 2', (e) => handleClick(model, e), '', '?page=item&id=2'),
-    // button('Item 3', (e) => handleClick(model, e), '', '?page=item&id=3'),
-    button('Period view', () => {return undefined;}),
-    button('Runs per period view', () => {return undefined;}),
-    button('Alternative layout', () => {return undefined;}),
-    button('Data or MC', () => {return undefined;}),
+    button('Home', (e) => handleClick(model, e), '', '/home/?page=home'),
+    h('h.title', 'RCT Data'),
+    button('main', (e) => handleClick(model, e), '', '/api/Rct-Data/?page=main&index=_0&view=periods&rowsOnSite=50&site=1'),
+    button('Runs per period', () => {return undefined;}),
+    h('.flex-column', loadedDataButtons(model, model.fetchedData['runsPerPeriod'])),
+    button('MC', (e) => handleClick(model, e), '', '/api/Rct-Data/?page=mc&index=_0&view=mc&rowsOnSite=50&site=1'),
     button('Pass QA Statistics Summary', () => {return undefined;}),
     button('QA Expert Flagging', () => {return undefined;}),
 ]);
 
 export default function userPanel(model) {
+    const url = model.router.getUrl();
+    console.log('userPanel', url);
     return h('.flex-column.absolute-fill', [
         header(model),
         // content below menu bar
@@ -35,7 +45,12 @@ export default function userPanel(model) {
             // content
             h('.flex-grow.relative', [
                 h('.scroll-y.absolute-fill.bg-white', {id: 'main-content'}, [
-                    model.contentVisibility.RCTHomepageVisible ? RCThomepage(model) : h('h4.primary', 'click on "Show data" button'),
+                    // TODO handling more cases;
+                    url.pathname === '/api/Rct-Data/' ? rctDataView(model) : home(model),
+                    // switchCase(url.pathname, {
+                    //     '/home/': home(model),
+                    //     '/api/Rct-Data/': currentTableView(model),
+                    // }, home(model))
                 ])
             ])
         ])

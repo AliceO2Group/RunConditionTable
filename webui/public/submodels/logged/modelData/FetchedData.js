@@ -2,28 +2,31 @@
 import {fetchClient} from '/js/src/index.js';
 
 const defaultRowsOnSite = 50;
+const defaultSite = 1;
 
 export default class FetchedData {
     constructor(model, url, name='table') {
         this.name = name;
         this.model = model;
         this.url = url;
-        this.fields = null; // TODO may be help in managing hiding columns, it would be list of objects holding necessary information
+        this.fields = null;
         this.rows = null;
         this.fetched = false;
-        this.rowsOnSite = defaultRowsOnSite;
-        this.site = 1;
+
+        const params = url.searchParams.entries();
+        this.rowsOnSite = params.hasOwnProperty('rowsOnSite') ? params.rowsOnSite : defaultRowsOnSite;
+        this.site = params.hasOwnProperty('site') ? params.site : defaultSite;
+
         this.hideMarkedRecords = false;
     }
 
 
     async fetch() {
-        //TODO parsing url to <query?>, rowsOnSite, site;
         console.log('fetching from: ', this.url);
         this.fetched = false;
         // for loading icon displaying;
         this.model.notify();
-        const response = await fetchClient(/**TODO*/this.url ? this.url : '/date', {
+        const response = await fetchClient(/**TODO*/this.url ? this.url.pathname + this.url.search : '/date', {
             method: 'GET',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         });
@@ -48,5 +51,12 @@ export default class FetchedData {
             this.fetched = true;
         }
         this.model.notify();
+    }
+
+    clear() {
+        this.fields = null;
+        this.rows = null;
+        this.fetched = false;
+        this.hideMarkedRecords = false;
     }
 }

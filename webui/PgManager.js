@@ -63,12 +63,12 @@ class PgManager {
         return true;
     }
     #parseReqQToSqlQ(query) {
-        const sqlQ = `SELECT * FROM ${query.table} LIMIT ${query.rowsOnSite} OFFSET ${query.rowsOnSite * (query.site - 1)};`;
+        const sqlQ = `SELECT * FROM ${query.view} LIMIT ${query.rowsOnSite} OFFSET ${query.rowsOnSite * (query.site - 1)};`;
         return sqlQ;
     }
 
 
-    async #realizeDataReq(req, res, query=null) {
+    async #execDataReq(req, res, query=null) {
         if (this.loggedUsers.tokenToUserData[req.query.token]) {
             const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
             if (query === null) {
@@ -99,7 +99,7 @@ class PgManager {
 
 
     async #getDate(req, res) {
-        await this.#realizeDataReq(req, res, 'SELECT NOW();')
+        await this.#execDataReq(req, res, 'SELECT NOW();')
     }
 
     bindLogging(name) {
@@ -108,8 +108,8 @@ class PgManager {
     bindLogout(name) {
         this.httpserver.post(name, (req, res) => this.#logout(req, res));
     }
-    bindGetDBData(name) {
-        this.httpserver.get(name, (req, res) => this.#realizeDataReq(req, res));
+    bindGetDbData(name) {
+        this.httpserver.get(name, (req, res) => this.#execDataReq(req, res));
     }
 
     bindDate(name) {

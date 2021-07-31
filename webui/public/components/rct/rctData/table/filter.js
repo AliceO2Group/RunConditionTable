@@ -1,6 +1,6 @@
-import inputForm from '../../common/inputForm.js';
+import inputForm from '../../../common/inputForm.js';
 import { h } from '/js/src/index.js';
-import button from '../../common/button.js';
+import button from '../../../common/button.js';
 
 async function handleFilter(model) {
     const idWanted = document.getElementById('idWanted').value;

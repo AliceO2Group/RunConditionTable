@@ -1,31 +1,14 @@
-import {Observable, fetchClient, QueryRouter} from '/js/src/index.js';
-import FetchedData from "./FetchedData.js";
-
+import {fetchClient, Observable, QueryRouter} from '/js/src/index.js';
+import FetchedData from "./modelData/FetchedData.js";
+import ModelFetchedDataStructure from "./modelData/ModelFetchedDataStructure.js";
+const rctDataServerPathname = '/api/Rct-Data/';
 
 export default class ModelLogged extends Observable {
     constructor(parent) {
         super();
         this.parent = parent;
 
-        this.contentVisibility = {
-            RCTHomepageVisible: false
-        }
-        this.currentContent = null;
-
-        this.fetchedData = {
-            mainRCTTable: null,
-            periods: {
-                /** structure:: */
-                // periodName : {
-                //              columnsNames: <...>,
-                //              rows: <...>,
-                //  }
-                // ...
-            },
-            runs: {
-                // as above
-            }
-        };
+        this.fetchedData = new ModelFetchedDataStructure();
 
         // TODO;
         this.username = null;
@@ -38,21 +21,18 @@ export default class ModelLogged extends Observable {
 
     handleLocationChange() {
         const params = this.router.params;
-        switch (params.page) {
-            case 'Rct-Data':
-                switch (params.table) {
-                    case 'periods':
-                        // call some ajax to load periods
-                        break;
-                    case 'period':
-                        break;
-                }
+        const url = this.router.getUrl();
+        switch (url.pathname) {
+            case '/api/Rct-Data/':
+                this.reqForData()
+                    .then(r => {console.log('data object constructed and fetched at:', this.router.getUrl())})
+                    .catch(e => {console.log(e)});
             break;
-            case 'home':
+            case '/home/':
                 break;
             default:
                 // default route, replace the current one not handled
-                this.router.go('?page=home', true);
+                // this.router.go('/home', false);
                 break;
         }
     }
@@ -67,34 +47,49 @@ export default class ModelLogged extends Observable {
         this.notify();
     }
 
-    showHideRCTHomepage() {
-        if (this.contentVisibility.RCTHomepageVisible) {
-            this.contentVisibility.RCTHomepageVisible = false;
-            this.currentContent = null;
-        } else {
-            if (this.currentContent !== null)
-                this.contentVisibility[this.currentContent] = false;
-            this.contentVisibility.RCTHomepageVisible = true;
-            this.currentContent = "RCTHomepageVisible";
-        }
-        this.notify();
-        if (this.fetchedData.mainRCTTable === null) {
-            this.reqServerForRCTHomepage().then(r => {
-                console.log(this.fetchedData);
-            })
-        }
-    }
-
-    async reqServerForRCTHomepage() {
-        this.fetchedData.mainRCTTable = new FetchedData(this, '/api/RCT-Data/?table=periods&rowsOnSite=50&site=1');
-        await this.fetchedData.mainRCTTable.fetch();
-    }
+    // showHideRCTHomepage() {
+    //     if (this.contentVisibility.RCTHomepageVisible) {
+    //         this.contentVisibility.RCTHomepageVisible = false;
+    //         this.currentContent = null;
+    //     } else {
+    //         if (this.currentContent !== null)
+    //             this.contentVisibility[this.currentContent] = false;
+    //         this.contentVisibility.RCTHomepageVisible = true;
+    //         this.currentContent = "RCTHomepageVisible";
+    //     }
+    //     this.notify();
+    //     if (this.fetchedData.mainRCTTable === null) {
+    //         this.reqServerForRCTHomepage().then(r => {
+    //             console.log(this.fetchedData);
+    //         })
+    //     }
+    // }
+    //
+    // async reqServerForRCTHomepage() {
+    //     this.fetchedData.mainRCTTable = new FetchedData(this, '/api/RCT-Data/?view=periods&rowsOnSite=50&site=1');
+    //     await this.fetchedData.mainRCTTable.fetch();
+    // }
 
     async reqForData() {
         const params = this.router.params;
+        const url = this.router.getUrl();
+        console.log('reqForData', url);
 
-        this.fetchedData.mainRCTTable = new FetchedData(this, '/api/RCT-Data/?table=' );
-        await this.fetchedData.mainRCTTable.fetch();
+        console.assert(url.pathname === rctDataServerPathname)
+        console.assert(params.hasOwnProperty('page') && params.hasOwnProperty('index'));
+        console.assert(params.hasOwnProperty('view'));
+        console.assert(params.hasOwnProperty('rowsOnSite'));
+        console.assert(params.hasOwnProperty('site'));
+
+
+        console.assert(this.fetchedData.hasOwnProperty(params.page));
+        if (! this.fetchedData[params.page][params.index]) {
+            console.log('creating new fetchedData object at: ', url);
+            this.fetchedData[params.page][params.index] = new FetchedData(this, url);
+        }
+
+        await this.fetchedData[params.page][params.index].fetch();
+        return this.fetchedData[params.page][params.index];
     }
 
     async logout() {

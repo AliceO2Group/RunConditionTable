@@ -1,8 +1,7 @@
 import { h } from '/js/src/index.js';
-import { serialIf } from '../../../utils/utils.js';
-import button from '../../common/button.js';
+import { serialIf } from '../../../../utils/utils.js';
 
-export default function row(model, colNames, data, item, buttonsFunctions) {
+export default function row(model, colNames, data, item, cellsButtons) {
     return h(serialIf(
                     'tr',
                     ['.bg-grey', '.d-none'],
@@ -10,8 +9,8 @@ export default function row(model, colNames, data, item, buttonsFunctions) {
                     [!item.marked, data.hideMarkedRecords && item.marked]
                 ), colNames.map(n => {
                         if (item.hasOwnProperty(n)) {
-                            if (buttonsFunctions.hasOwnProperty(n))
-                                return h('td', button(item[n], buttonsFunctions[n](item, n), '', `?page=period&period=${item[n]}`));
+                            if (cellsButtons.hasOwnProperty(n))
+                                return h('td', cellsButtons[n](model, item, n));
                             else
                                 return h('td', item[n])
                         } else {

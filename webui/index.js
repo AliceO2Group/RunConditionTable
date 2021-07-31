@@ -40,7 +40,7 @@ const PgManager = require('./PgManager.js');
 const pgManager = new PgManager(httpServer, loggedUsers, log);
 pgManager.bindLogging('/login');
 pgManager.bindLogout('/logout');
-pgManager.bindGetDBData('/RCT-Data');
+pgManager.bindGetDbData('/RCT-Data');
 pgManager.bindDate('/date');
 
 const AuthControlManager = require('./AuthControlManager.js');
