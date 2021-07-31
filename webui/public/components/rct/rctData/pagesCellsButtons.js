@@ -9,8 +9,9 @@ function handleClick(model, e) {
 const pagesCellsButtons = {
     main: {
         period: (model, item, name) => {
-            return button(name, (e) =>
-                handleClick(model, e), '', `/api/Rct-Data/?page=runsPerPeriod&index=${item.period}&view=runs&period=${item.period}&rowsOnSite=50&site=1`);
+            return button(item.period, (e) =>
+                handleClick(model, e), '',
+                `/api/Rct-Data/?page=runsPerPeriod&index=${item.period}&view=runs&period=${item.period}&rowsOnSite=50&site=1`);
         },
     },
     runsPerPeriod: {},

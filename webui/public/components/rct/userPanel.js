@@ -25,7 +25,7 @@ const menu = (model) => h('.mySidebar.flex-column.bg-gray-lighter', [
     button('Home', (e) => handleClick(model, e), '', '/home/?page=home'),
     h('h.title', 'RCT Data'),
     button('main', (e) => handleClick(model, e), '', '/api/Rct-Data/?page=main&index=_0&view=periods&rowsOnSite=50&site=1'),
-    button('Runs per period', () => {return undefined;}),
+    h('h.title', 'Runs per period'),
     h('.flex-column', loadedDataButtons(model, model.fetchedData['runsPerPeriod'])),
     button('MC', (e) => handleClick(model, e), '', '/api/Rct-Data/?page=mc&index=_0&view=mc&rowsOnSite=50&site=1'),
     button('Pass QA Statistics Summary', () => {return undefined;}),

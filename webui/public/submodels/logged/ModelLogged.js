@@ -47,28 +47,6 @@ export default class ModelLogged extends Observable {
         this.notify();
     }
 
-    // showHideRCTHomepage() {
-    //     if (this.contentVisibility.RCTHomepageVisible) {
-    //         this.contentVisibility.RCTHomepageVisible = false;
-    //         this.currentContent = null;
-    //     } else {
-    //         if (this.currentContent !== null)
-    //             this.contentVisibility[this.currentContent] = false;
-    //         this.contentVisibility.RCTHomepageVisible = true;
-    //         this.currentContent = "RCTHomepageVisible";
-    //     }
-    //     this.notify();
-    //     if (this.fetchedData.mainRCTTable === null) {
-    //         this.reqServerForRCTHomepage().then(r => {
-    //             console.log(this.fetchedData);
-    //         })
-    //     }
-    // }
-    //
-    // async reqServerForRCTHomepage() {
-    //     this.fetchedData.mainRCTTable = new FetchedData(this, '/api/RCT-Data/?view=periods&rowsOnSite=50&site=1');
-    //     await this.fetchedData.mainRCTTable.fetch();
-    // }
 
     async reqForData() {
         const params = this.router.params;
@@ -87,8 +65,9 @@ export default class ModelLogged extends Observable {
             console.log('creating new fetchedData object at: ', url);
             this.fetchedData[params.page][params.index] = new FetchedData(this, url);
         }
+        if (! this.fetchedData[params.page][params.index].fetched)
+            await this.fetchedData[params.page][params.index].fetch();
 
-        await this.fetchedData[params.page][params.index].fetch();
         return this.fetchedData[params.page][params.index];
     }
 
