@@ -21,7 +21,7 @@ const config = require('./config.js');
 // Get logger instance
 const log = new Log('Tutorial');
 let loggedUsers = {
-    tokenToUsrData: {},
+    tokenToUserData: {},
 }
 
 // HTTP server
@@ -31,16 +31,18 @@ console.log("ip address: " + httpServer.ipAddress);
 
 // Server static content in public directory
 httpServer.addStaticPath('./public');
+httpServer.addStaticPath('./public', '/login');
 
 // serving less.js file --- probably not the best possible solution...
-httpServer.addStaticPath('./node_modules/less/dist');
+httpServer.addStaticPath('./node_modules/less/dist', '/scripts');
 
-const PGcommunicator = require('./db.js');
-const pgCommunicator = new PGcommunicator(httpServer, loggedUsers, log);
-pgCommunicator.bindLogging('/login');
-pgCommunicator.bindLogout('/logout');
-pgCommunicator.bindRCTHomepage('/RCTHomepage');
+const PgManager = require('./PgManager.js');
+const pgManager = new PgManager(httpServer, loggedUsers, log);
+pgManager.bindLogging('/login');
+pgManager.bindLogout('/logout');
+pgManager.bindGetDbData('/RCT-Data');
+pgManager.bindDate('/date');
 
-const AuthControlManager = require('./AuthControlMenager.js');
+const AuthControlManager = require('./AuthControlManager.js');
 const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);
 authControlManager.bindToTokenControl('/auth-control');

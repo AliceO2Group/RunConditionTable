@@ -14,6 +14,7 @@
 
 // Import frontend framework
 import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
+
 import ModelUnlogged from "./submodels/ModelUnlogged.js";
 import ModelLogged from "./submodels/logged/ModelLogged.js";
 
@@ -35,6 +36,7 @@ export default class Model extends Observable {
             console.log('_tokenExpirationHandler');
             sessionStorage.clear();
             alert('Auth token expired!');
+            this.mLogged.router.go('/', true);
             document.location.reload(true);
         }
     }

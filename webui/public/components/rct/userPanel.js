@@ -1,30 +1,59 @@
-import { h } from '/js/src/index.js';
-import { goodBadOpt } from '../../utils/utils.js';
-import RCTHomepage from './homePage.js';
+import { h, switchCase } from '/js/src/index.js';
+import { serialIf } from '../../utils/utils.js';
 import header from '../common/header.js';
 import button from '../common/button.js';
+import home from "./home.js";
+import rctDataView from "./rctData/rctDataView.js";
+
+function handleClick(model, e) {
+    model.router.handleLinkEvent(e);
+    model.notify();
+}
+
+const loadedDataButtons = (model, page) => {
+    const buttons = [];
+    for (var index in page) {
+        if (page.hasOwnProperty(index)) {
+            const url = page[index].url;
+            buttons.push(button(index, (e) => handleClick(model, e), '', url.pathname + url.search));
+        }
+    }
+    return buttons;
+}
+
+// TODO, sidebar should be nicer'
+// TODO, add using filtering, to uri construction;
+const menu = (model) => h('.mySidebar.flex-column.bg-gray-lighter', [
+    button('Home', (e) => handleClick(model, e), '', '/home/?page=home'),
+    h('h.title', 'RCT Data'),
+    button('main', (e) => handleClick(model, e), '', '/api/Rct-Data/?page=main&index=_0&view=periods&rowsOnSite=50&site=1'),
+    h('h.title', 'Runs per period'),
+    h('.flex-column', loadedDataButtons(model, model.fetchedData['runsPerPeriod'])),
+    button('MC', (e) => handleClick(model, e), '', '/api/Rct-Data/?page=mc&index=_0&view=mc&rowsOnSite=50&site=1'),
+    button('Pass QA Statistics Summary', () => {return undefined;}),
+    button('QA Expert Flagging', () => {return undefined;}),
+]);
 
 export default function userPanel(model) {
+    const url = model.router.getUrl();
+    console.log('userPanel', url);
     return h('.flex-column.absolute-fill', [
         header(model),
         // content below menu bar
         h('.flex-grow.flex-row', [
             // sidebar
-            h('.mySidebar.flex-column.bg-gray-lighter', [
-                h(goodBadOpt('button.btn.p2.m2', ['.btn-success'], ['.btn-primary'], [!model.RCTHomepageVisible]),
-                    {id: 'RCT-main-show-btn', onclick: e => model.showHideRCTHomepage()}, 'RCT Home Page'), ' ',
-                button('Period view', () => {return undefined;}),
-                button('Period view', () => {return undefined;}),
-                button('Runs per period view', () => {return undefined;}),
-                button('Alternative layout', () => {return undefined;}),
-                button('Data or MC', () => {return undefined;}),
-                button('Pass QA Statistics Summary', () => {return undefined;}),
-                button('QA Expert Flagging', () => {return undefined;}),
-            ]), ' ',
+            menu(model),
+            
             // content
             h('.flex-grow.relative', [
                 h('.scroll-y.absolute-fill.bg-white', {id: 'main-content'}, [
-                    model.contentVisibility.RCTHomepageVisible ? RCTHomepage(model) : '',
+                    // TODO handling more cases;
+                    url.pathname === '/api/Rct-Data/' ? rctDataView(model) : home(model),
+                    // TODO why this one below doesn't work;
+                    // switchCase(url.pathname, {
+                    //     '/home/': home(model),
+                    //     '/api/Rct-Data/': currentTableView(model),
+                    // }, home(model))
                 ])
             ])
         ])
