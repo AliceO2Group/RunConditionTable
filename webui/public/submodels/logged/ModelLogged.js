@@ -25,7 +25,7 @@ export default class ModelLogged extends Observable {
         switch (url.pathname) {
             case '/api/Rct-Data/':
                 this.reqForData()
-                    .then(r => {console.log('data object constructed and fetched at:', this.router.getUrl())})
+                    .then(r => {console.log('data object constructed and/or fetched at:', this.router.getUrl())})
                     .catch(e => {console.log(e)});
             break;
             case '/home/':
@@ -79,6 +79,7 @@ export default class ModelLogged extends Observable {
         }
         sessionStorage.token = null;
         this.parent.mode = "mUnlogged";
+        this.router.go('/');
 
         this.notify();
     }

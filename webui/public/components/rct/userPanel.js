@@ -22,6 +22,7 @@ const loadedDataButtons = (model, page) => {
 }
 
 // TODO, sidebar should be nicer'
+// TODO, add using filtering, to uri construction;
 const menu = (model) => h('.mySidebar.flex-column.bg-gray-lighter', [
     button('Home', (e) => handleClick(model, e), '', '/home/?page=home'),
     h('h.title', 'RCT Data'),

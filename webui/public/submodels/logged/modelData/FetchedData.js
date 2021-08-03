@@ -53,6 +53,11 @@ export default class FetchedData {
         this.model.notify();
     }
 
+    changeFiltering(/**???*/) {
+        // TODO
+        this.fetch();
+    }
+
 
     changeItemStatus(item) {
         item.marked = !item.marked;
