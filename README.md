@@ -1,132 +1,60 @@
-# WebUI-tutorial
+# Założenia wstępne:
+- [x] działające środowisko PostgreSQL (dalej zakładamy wykorzystanie `psql`)
+- [x] zainstalowany node.js
 
+# 1. Przygotowanie bazy danych
+Za pomocą poleceń w `psql` stworzymy użytkownika i prostą bazę danych, z którą będzie komunikować się aplikacja:
 ```shell
-git clone https://github.com/Ehevi/WebUI-tutorial WebUI-tutorial
-cd WebUI-tutorial
-```
-
-## 1. Baza danych
-```shell
-cd postgres
 psql
-\i create-user.sql # tworzy nowego użytkownika z hasłem, oczywiście można równoważnie wpisać do konsoli zawartość skryptu
-\du # wyświetl listę użytkowników, powinien pojawić się nowy użytkownik; żeby wyjść: q
-\i create-database.sql # tworzy bazę danych
-\l # wyświetl listę baz danych, powinna się tam pojawić nowoutworzona baza danych
-\i alter-database.sql # zmiana właściciela bazy danych na "rct-user"
-\l
+create user "crud-user" with password 'crud-passwd';
+create database "crud-db";
+alter database "crud-db" owner to "crud-user";
+\q
+```
+Połączenie z nową bazą danych jako nowo utworzony użytkownik:
+```shell
+psql -d "crud-db" -U "crud-user" -W
+# psql zapyta o zdefiniowane poprzednio hasło (crud-passwd)
+create table if not exists public.data
+( id serial PRIMARY KEY,
+  value INTEGER NOT NULL,
+  date DATE NOT NULL);
+  
+insert into data(value, date) values(13, '2021-01-01');
+insert into data(value, date) values(7, '2022-08-09');
+
+select * from data;
+select now();
+select date(now());
+insert into data(value, date) values(2, date(now()));
+select * from data;
 exit
 ```
 
-`psql` zapewnia interfejs konsolowy, moim zdaniem wygodniej jest korzystać z narzędzia upraszczającego administrację bazą danych ([pgAdmin](https://www.pgadmin.org))
-
-Praca użytkownika z bazą danych:
+# 2. WebUI
 ```shell
-psql -d "rct-db" -U "rct-user" -W
-```
-Po wprowadzeniu hasła (`rct-passwd`) można sprawdzić parametry połączenia za pomocą polecenia `\conninfo`.
-
-W przypadku błędu `psql: error: FATAL:  Peer authentication failed for user "rct-user"`, warto sprawdzić i ewentualnie zmodyfikować zawartość pliku `pg_hba.conf` (Ubuntu: `sudo nano /etc/postgresql/13/main/pg_hba.conf`). Jeżeli metoda autentykacji ustawiona jest na `peer`, to postgres będzie używał nazwy konta systemu operacyjnego jako nazwy bazy danych i nazwy użytkownika. Problem może rozwiązać zmiana linijki:
-```
-# TYPE DATABASE USER ADDRESS METHOD
-local  all      all          peer
-```
-na:
-```
-# TYPE DATABASE USER ADDRESS METHOD
-local  all      all          md5
-```
-czyli metodę autentykacji opartej o hasło.
-
-Następnie należy zrestartować postgresa: `sudo service postgresql restart`.
-
-### Tabele
-_Disclaimer:_ Schemat najprawdopodobniej nie odzwierciedla rzeczywistych zależnośći pomiędzy danymi, o te trzeba będzie jeszcze dopytać.
-
-```shell
-psql -d "rct-db" -U "rct-user" -W
-# utworzenie tabel:
-\i periods.sql
-\i mc.sql
-\i runs.sql
-\i flags.sql
-\i b-fields.sql
-\dt # wyświetl wszystkie tabele
-select * from mc; # wyświetl wszystkie dane z tabeli mc
-
-# uzupełnienie tabel:
-\i fill-periods.sql
-\i fill-runs.sql
-\i fill-flags.sql
-\i fill-mc.sql
-\i fill-b-fields.sql
-```
-
-## 2. node-postgres
-[`pg`](https://node-postgres.com) to moduł ułatwiający pracę z postgresem przy wykorzystaniu node.js'a.
-Efekt końcowy można porównać z tym znajdującym się w folderze node-pg-basics.
-```shell
-mkdir node-pg-basics # utwórz nowy folder, w którym będzie znajdował się cały projekt
-npm -y init
+mkdir crud # utwórz nowy folder, w którym będzie znajdował się cały projekt
+cd crud
 touch index.js
-npm install pg
+npm init -y
 ```
-
-W pliku `index.js` łączymy się z utworzoną wcześniej bazą danych:
-```js
-const {Client} = require('pg')
-
-const client = new Client({
-    user: 'rct-user',
-    host: 'localhost',
-    database: 'rct-db',
-    password: 'rct-passwd',
-    port: 5432,
-})
-
-function select() {
-    client.connect()
-    .then(() => console.log("Connected successfully! :)"))
-    .then(() => client.query("select * from home where year = $1", ["2022"]))
-    .then((results) => console.table(results.rows))
-    .catch(e => console.log(e))
-    .finally(() => client.end())
-}
-
-select()
-```
-
-Po uruchomieniu (`node index.js`) otrzymamy:
-![webui](https://user-images.githubusercontent.com/48785655/125107704-67487f80-e0e1-11eb-957b-2832427fdc46.png)
-
-## 3. WebUI framework
-Oczekiwany efekt końcowy znajduje się w folderze `webui`.
+... opis package.json, package-lock.json
+co jest w package.json i po co
+package.json dopisać skrypt "start": "node index.js"
+[npm scripts](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/devel.md#npm-scripts)
 
 ```shell
-mkdir webui # utwórz nowy folder, w którym będzie znajdował się cały projekt
-cd webui
-npm -y init
 npm install --save @aliceo2/web-ui
 ```
-Polecenie `npm -y init` utworzy plik `package.json` i uzupełni go domyślnymi ustawieniami (można również wpisywać je samodzielnie, wtedy bez opcji `-y` ). Polecenie `npm install --save @aliceo2/web-ui` ściągnie paczkę frameworka i wszystkie przez niego wykorzystywane. Zostaną zapisane w folderze `node_modules`. Ich opis znajduje się w pliku `package-lock.json`. Dodatkowo dzięki opcji `--save` w pliku `package.json` pojawi się zapis o zależnościach. Ma to tę zaletę, że folderu `node_modules` generalnie nie wrzuca się np. na GitHuba (.gitignore), a zapis wykorzystywanych zależności umożliwia ich proste zainstalowanie za pomocą `npm install`. Można to przetestować np. wywołując je po usunięciu folderu `node_modules`.
+... opis co się tutaj dzieje
 
-Zgodnie z zapisem w `package.json` plikiem wejściowym do aplikacji jest `index.js`:
-```shell
-touch index.js
-```
-
-W pliku package.json należy dopisać skrypt (8 linia pliku):
-```json
-"start": "node index.js"
-```
-(zgodnie z przyjętą we frameworku ![konwencją](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/devel.md#npm-scripts)). Teraz wpisanie w terminalu `npm start` będzie równoważne wywołaniu `node index.js`.
-
-Oprócz pliku wejściowego (index.js) będziemy korzystać również z plików `config.js` oraz `PgManager.js`. Jak łatwo się domyślić, zawartość pierwszego z nich to konfiguracja połączenia:
+## Zawartość plików
+### `config.js`
 ```js
 module.exports = {
     jwt: {
       secret: 'supersecret',
-      expiration: '5m'
+      expiration: '10m'
     },
     http: {
       port: 8080,
@@ -135,4 +63,109 @@ module.exports = {
     }
   };
 ```
-natomiast plik `PgManager.js` zawiera klasę odpowiadającą za połączenie z bazą danych.
+jwt to dane do utworzenia [JSON Web Token](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/json-tokens.md), który będzie wykorzystywany przez serwer HTTP. Służy do zabezpieczania połączenia pomiędzy serwerem a klientem.
+
+### `index.js`
+To jest plik wejściowy do aplikacji.
+```js
+const { HttpServer, Log } = require('@aliceo2/web-ui');
+const config = require('./config.js');
+const log = new Log('Crud Tutorial');
+const httpServer = new HttpServer(config.http, config.jwt);
+
+httpServer.addStaticPath('./public');
+
+log.info('hello there');
+log.warn('this is a warning!');
+log.error('this is an error!');
+```
+Co się tutaj dzieje:
+1. require: co robi i dlaczego
+2. log: wykorzystywany do informowania w konsoli IDE o tym, co się dzieje podczas działania aplikacji; więcej [tutaj](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/logging.md)
+3. httpServer: nowa instancja serwera o parametrach zdefiniowanych w pliku `config.js`; więcej [tutaj](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/http-server.md). Serwer udostępnia użytkownikowi zawartość folderu `public`.
+
+### folder `public`
+Utwórz plik index.html:
+```html
+<!doctype html>
+<title>CRUD Tutorial</title>
+<h1>Hello world!</h1>
+```
+Teraz po uruchomieniu `npm start`, przeglądarka pod adresem [localhost:8080](localhost:8080) (parametry z pliku `config.js`) wyświetli // obrazek //.
+Otwórz konsolę Ctrl + Shift + I, co można robić w konsoli i do czego to służy.
+
+Tutaj dodać favicon i dlaczego.
+
+### Debugowanie
+[jak tłumaczą WebUI](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/debug.md)
+Ctrl + Shift + I, etc.
+
+# 3. node postgres
+```shell
+npm install pg
+```
+Utwórz folder db, a w nim plik `connection.js`. W tym pliku:
+```js
+const { Client } = require("pg");
+
+const client = new Client({
+    user: 'crud-user',
+    host: 'localhost',
+    database: 'crud-db',
+    password: 'crud-passwd',
+    port: 5432,
+})
+
+client.connect();
+
+module.exports = client;
+```
+Tworzymy nowego klienta, który połączy się naszą aplikację z bazą danych. Plik eksportuje utworzone połączenie.
+
+Modyfikujemy `index.js`:
+```js
+const db = require("./db/connection.js");
+```
+
+Wykorzystamy publiczne metody serwera, aby obsłużyć operacje CRUD wykonywane na bazie danych.
+Zaczynając od GET (pobranie danych z bazy):
+
+```js
+httpServer.get("/getData", async function(req, res, next) {
+  try {
+    const results = await db.query("SELECT * FROM data ORDER BY id");
+    return res.json(results.rows);
+  } catch (err) {
+    return next(err);
+  }
+}, { public: true });
+```
+Pod adresem [localhost:8080/api/getData](localhost:8080/api/getData) dostępne będą teraz dane pobrane z bazy.
+Dlaczego jeszcze po drodze `/api`? Bo tak jest [tutaj](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/Backend/http/server.js).
+`{ public: true });` wyłącza weryfikację tokenu (JWT), bez tego zobaczysz błąd // zrzut błędu //
+Uruchom aplikację i wprowadź ten adres w przeglądarce. Obrazek co będzie widać:
+
+// może najpierw przykład z localhost:8080/api/hi
+```js
+http.get('/hi', (req, res) => {
+  res.status(200).json({message: 'hi'})
+}, { public: true });
+```
+
+# Zamieszanie w folderze public, żeby wyświetlać coś lepszego
+- index.html: sessionService.loadAndHideParameters //Token i dane użytkownika przyznane klientowi kiedy wchodzi na stronę udostępnioną przez `addStaticPath`.
+- koncepcja MVC
+- utworzerzenie modelu, widoku
+- Model: routy dla CRUDa, fetchClient
+- await, asynchroniczność [AJAX](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/async-calls.md): co to, po co, dlaczego
+- widok: [komponenty](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/components.md) - takie cegiełki, z których potem buduje się aplikację (albo jeszcze inne pośrednie cegiełki)
+
+## Model
+
+## Widok, podwidoki
+- może jakiś wykres wrzucić? coś [stąd](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/charts.md) np.
+
+## Stylowanie
+1. najpierw zobacz [tu](https://aliceo2group.github.io/WebUi/Framework/docs/reference/frontend-css.html)
+2. rightClick + Inspect...
+3. CSS, załączanie pliku CSS do index.html
