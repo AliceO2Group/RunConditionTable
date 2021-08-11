@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/src/bootstrap.css">
+	<link rel="stylesheet" href="styles/custom.css">
+	<!--favicon source: https://favicon.io/emoji-favicons/microscope/-->
+	<link rel="icon" href="./images/favicon/favicon.ico">
+	<meta charset="UTF-8">
+    <title>CRUD Tutorial</title>
+</head>
+<body>
+    <script type="module">
+		import sessionService from '/js/src/sessionService.js';
+		sessionService.loadAndHideParameters();
+		window.sesService = sessionService;
+	</script>
+    <!-- Main application controller -->
+	<script type="module">
+		// Import MVC
+		import {mount} from '/js/src/index.js';
+		import view from './view.js';
+		import Model from './Model.js';
+
+		// Start application
+		const model = new Model();
+		const debug = true; // shows when redraw is done
+		mount(document.body, view, model, debug);
+
+		// Expose model to interact with it the browser's console
+		window.model = model;
+	</script>
+</body>
+</html>
