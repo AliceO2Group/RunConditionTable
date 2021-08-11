@@ -2,7 +2,6 @@ import { h, switchCase } from '/js/src/index.js';
 import button from '../../common/button.js';
 import tableHeader from './table/header.js';
 import row from './table/row.js';
-import filter from './table/filter.js';
 import container from "../../common/container.js";
 
 import pagesCellsButtons from "./pagesCellsButtons.js";
@@ -30,7 +29,7 @@ export default function tableView(model) {
             h('table.table', {id: 'data-table-' + data.url}, [
 
                 h('thead.text-center', data.name), ' ',
-                button('reload data', () => data.fetch(), 'reload-btn'), ' ',
+                button(model, 'reload data', () => data.fetch(), 'reload-btn'), ' ',
 
                 h('tbody', {id: 'table-body-' + data.url}, [
                     tableBody(model, visibleFields, data, cellsButtons),
@@ -39,7 +38,7 @@ export default function tableView(model) {
     } else {
         return container(
             h('p', "loading data... //TODO need some loading image/animation"),
-            button('reload data', () => data.fetch(), 'reload-btn')
+            button(model, 'reload data', () => data.fetch(), 'reload-btn')
         );
     }
 }

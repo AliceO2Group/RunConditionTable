@@ -20,8 +20,8 @@ async function handleLogin(model) {
 }
 
 export default function loggingSite(model) {
-    const loginButton = button("login", () => handleLogin(model));
-    const registerButton = button("register", handleRegistration);
+    const loginButton = button(model, "login", () => handleLogin(model));
+    const registerButton = button(model, "register", handleRegistration);
     const title = h('h1.primary', 'TEST APP');
     
     return h('div.loginDiv',
