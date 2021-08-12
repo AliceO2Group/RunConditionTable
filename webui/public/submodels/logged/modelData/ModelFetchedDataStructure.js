@@ -31,4 +31,8 @@ export default class ModelFetchedDataStructure {
             this[prop] = {};
         }
     }
+
+    delete(page, index) {
+        this[page][index] = undefined;
+    }
 }

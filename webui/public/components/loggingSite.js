@@ -15,8 +15,6 @@ async function handleLogin(model) {
     const dbname = dbnameEl.value === '' ? dbnameEl.placeholder : dbnameEl.value;
 
     const p = await model.login(username, password, dbname);
-    console.log("Logged in successfully!");
-    console.log(`sessionService: ${sessionService}`);
 }
 
 export default function loggingSite(model) {

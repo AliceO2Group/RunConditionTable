@@ -5,6 +5,7 @@ import row from './table/row.js';
 import container from "../../common/container.js";
 
 import pagesCellsButtons from "./pagesCellsButtons.js";
+import spinner from "../../spinner.js";
 
 
 // TODO bug: when mark some row and switch to another table then back cause marking error;
@@ -36,9 +37,9 @@ export default function tableView(model) {
                 ])
             ]))
     } else {
-        return container(
-            h('p', "loading data... //TODO need some loading image/animation"),
-            button(model, 'reload data', () => data.fetch(), 'reload-btn')
+        return h('.item-center.justify-center',
+            [button(model, 'reload data', () => data.fetch(), 'reload-btn'),
+            spinner()]
         );
     }
 }

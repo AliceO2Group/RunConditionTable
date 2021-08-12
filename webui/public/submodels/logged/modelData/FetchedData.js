@@ -75,4 +75,10 @@ export default class FetchedData {
         this.fetched = false;
         this.hideMarkedRecords = false;
     }
+
+    // delete() {
+    //     const params = this.url.searchParams.entries();
+    //     this.p
+    //
+    // }
 }

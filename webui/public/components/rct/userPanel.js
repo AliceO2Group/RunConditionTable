@@ -4,24 +4,9 @@ import header from '../common/header.js';
 import button from '../common/button.js';
 import home from "./home.js";
 import rctDataView from "./rctData/rctDataView.js";
-import fetchedDataSection from "../common/fetchedDataSection.js";
-import handleClick from "../common/handleClick.js";
+import sidebar from "./sidebar.js";
 
 
-
-// TODO, sidebar should be nicer'
-// TODO, add using filtering, to uri construction;
-const menu = (model) => h('.mySidebar.flex-column.bg-gray-lighter', [
-    button(model, 'Home', (e) => handleClick(model, e), '', '/home/?page=home'),
-    h('.m1'),
-
-    fetchedDataSection(model, null, 'Periods'),
-    button(model, 'main', (e) => handleClick(model, e), '', '/api/Rct-Data/?page=main&index=_0&view=periods&rowsOnSite=50&site=1'),
-    fetchedDataSection(model, 'runsPerPeriod', 'Runs per period'),
-    button(model, 'MC', (e) => handleClick(model, e), '', '/api/Rct-Data/?page=mc&index=_0&view=mc&rowsOnSite=50&site=1'),
-    button(model, 'Pass QA Statistics Summary', () => {return undefined;}),
-    button(model, 'QA Expert Flagging', () => {return undefined;}),
-]);
 
 export default function userPanel(model) {
     const url = model.router.getUrl();
@@ -31,7 +16,7 @@ export default function userPanel(model) {
         // content below menu bar
         h('.flex-grow.flex-row', [
             // sidebar
-            menu(model),
+            sidebar(model),
             
             // content
             h('.flex-grow.relative', [

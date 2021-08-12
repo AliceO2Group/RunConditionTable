@@ -4,7 +4,7 @@ export default function button(model, label, onclickAction, id = '', href = unde
     var buttonType = '.myFinalButton';
     if (model.router) {
         const url = model.router.getUrl();
-        if (id === (url.pathname + url.search))
+        if (href === (url.pathname + url.search))
             buttonType = '.myActiveButton';
     }
 
