@@ -22,7 +22,7 @@ export default function row(model, visibleFields, data, item, cellsButtons) {
                     h('td', h('input.form-check-input.p1.mh4.justify-center.relative', {
                         style: 'margin-left=0',
                         type: 'checkbox',
-                        id: 'record-mark',
+                        checked: item.marked,
                         onclick: (e) => data.changeItemStatus(item)
                     }))
 
