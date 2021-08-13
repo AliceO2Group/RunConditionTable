@@ -1,5 +1,14 @@
-.myButton {
-    margin: 10px;
-    background-color: blanchedalmond;
+
+
+.margin0 {
+    margin: 0 0 0 0;
+}
+
+.padding0 {
+    padding: 0 0 0 0;
+}
+
+.ml0 {
+    margin-left: 0;
 }
 

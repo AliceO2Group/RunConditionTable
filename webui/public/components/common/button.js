@@ -1,11 +1,11 @@
 import { h } from '/js/src/index.js';
 
-export default function button(model, label, onclickAction, id = '', href = undefined, adClasses='') {
-    var buttonType = '.myFinalButton' + adClasses;
+export default function button(model, label, onclickAction, id = '', href = undefined, adClasses='', margin='.m1') {
+    var buttonType = '.myFinalButton' + adClasses + margin;
     if (model.router) {
         const url = model.router.getUrl();
         if (href === (url.pathname + url.search))
-            buttonType = '.myActiveButton' + adClasses;
+            buttonType = '.myActiveButton' + adClasses + margin;
     }
 
     if (typeof(href) !== "undefined")
