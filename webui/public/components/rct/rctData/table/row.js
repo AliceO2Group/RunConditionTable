@@ -1,7 +1,6 @@
 import { h } from '/js/src/index.js';
 import { serialIf } from '../../../../utils/utils.js';
 
-//TODO <need?> some method for providing id for marking buttons;
 export default function row(model, visibleFields, data, item, cellsButtons) {
     return h(serialIf(
                     'tr',
@@ -23,7 +22,7 @@ export default function row(model, visibleFields, data, item, cellsButtons) {
                         style: 'margin-left=0',
                         type: 'checkbox',
                         checked: item.marked,
-                        onclick: (e) => data.changeItemStatus(item)
+                        onclick: () => data.changeItemStatus(item)
                     }))
 
                 ]))
