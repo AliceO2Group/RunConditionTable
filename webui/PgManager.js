@@ -21,18 +21,22 @@ class PgManager {
 
     #login(req, res) {
         const body = req.body;
-        console.log('user try to log in' + body);
+        console.log('user try to log in ', body);
 
 
-        const client = new Client({
-            user: body.username,
-            host: 'localhost',
-            database: body.dbname,
-            password: body.password,
-            port: 5432,
-        });
+        var client = this.loggedUsers.tokenToUserData[req.query.token];
+        console.log(client);
+        if (client === undefined || client === null) {
+            client = new Client({
+                user: body.username,
+                host: 'localhost',
+                database: body.dbname,
+                password: body.password,
+                port: 5432,
+            });
 
-        (async () => await client.connect())();
+            (async () => await client.connect())();
+        }
         select(client, 'SELECT NOW();')
             .then(async sqlRes => {
                 res.json({type: 'res', data: sqlRes.rows});

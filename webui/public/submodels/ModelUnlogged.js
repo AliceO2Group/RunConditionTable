@@ -8,6 +8,7 @@ export default class ModelUnlogged extends Observable {
     }
 
     async login(username, password, dbname) {
+        console.log(username, password, dbname);
         if (username !== "" && password !== "") {
             const response = await fetchClient('/api/login', {
                 method: 'POST',

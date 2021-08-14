@@ -1,16 +1,12 @@
 import RCTDATAPAGES from "../../../RCTDATAPAGES.js";
 import button from '../../common/button.js';
-
-function handleClick(model, e) {
-    model.router.handleLinkEvent(e);
-    model.notify();
-}
+import handleClick from "../../common/handleClick.js";
 
 //** modify in order to create appropriate behaviour*/
 const pagesCellsButtons = {
     main: {
         period: (model, item, name) => {
-            return button(item.period, (e) =>
+            return button(model, item.period, (e) =>
                 handleClick(model, e), '',
                 `/api/Rct-Data/?page=runsPerPeriod&index=${item.period}&view=runs&period=${item.period}&rowsOnSite=50&site=1`);
         },

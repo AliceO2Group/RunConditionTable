@@ -2,13 +2,12 @@ import { h, switchCase } from '/js/src/index.js';
 import button from '../../common/button.js';
 import tableHeader from './table/header.js';
 import row from './table/row.js';
-import filter from './table/filter.js';
 import container from "../../common/container.js";
 
 import pagesCellsButtons from "./pagesCellsButtons.js";
+import spinner from "../../spinner.js";
+import filter from "./table/filter.js";
 
-
-// TODO bug: when mark some row and switch to another table then back cause marking error;
 
 export default function tableView(model) {
     const params = model.router.params;
@@ -17,40 +16,53 @@ export default function tableView(model) {
     const cellsButtons = pagesCellsButtons[params.page];
 
     if (! data) {
-        console.log('tableView error; data===null');
+        console.error('tableView error; data===null');
         data = model.reqForData();
     }
     if (data.fetched) {
-        const visibleFields = data.fields.filter(f => !(f.marked && data.hideMarkedRecords));
+        const fields = data.fields;
+        const visibleFields = fields.filter(f => !f.marked);
 
-        // TODO need to be generalized for each table type;
-
-
-        return h('div.p3',
+        return h('div.p3',[
+            fieldsVisibilityControl(model, data, fields),
+            button(model, 'reload data', () => data.fetch(), 'reload-btn'), ' ', // TODO move up
             h('table.table', {id: 'data-table-' + data.url}, [
 
-                h('thead.text-center', data.name), ' ',
-                button('reload data', () => data.fetch(), 'reload-btn'), ' ',
+                    h('thead.text-center', data.name),
+                    tableBody(model, visibleFields, data, cellsButtons)
 
-                h('tbody', {id: 'table-body-' + data.url}, [
-                    tableBody(model, visibleFields, data, cellsButtons),
                 ])
-            ]))
+            ])
     } else {
-        return container(
-            h('p', "loading data... //TODO need some loading image/animation"),
-            button('reload data', () => data.fetch(), 'reload-btn')
+        return h('.item-center.justify-center',
+            [button(model, 'reload data', () => data.fetch(), 'reload-btn'),
+            spinner()]
         );
     }
 }
 
 
-const rows = (model, visibleFields, data, cellsButtons) =>
-    data.rows.map(item => row(model, visibleFields, data, item, cellsButtons));
+function fieldsVisibilityControl(mode, data, fields) {
+    return h('.p3', fields.map(f => h('label', [
+                                        h('input.form-check-input.p3', {
+                                            onclick: () => data.changeItemStatus(f),
+                                            checked: !f.marked,
+                                            type: 'checkbox'
+                                        }),
+                                        f.name,
+                                    ])
+    ))
+}
 
 
+function rows(model, visibleFields, data, cellsButtons) {
+    return data.rows.map(item => row(model, visibleFields, data, item, cellsButtons));
+}
 
-const tableBody = (model, visibleFields, data, cellsButtons) => {
-    return [tableHeader(visibleFields, data, () => data.changeRecordsVisibility(data))]
-        .concat(rows(model, visibleFields, data, cellsButtons));
+
+function tableBody(model, visibleFields, data, cellsButtons) {
+    return h('tbody', {id: 'table-body-' + data.url},
+        [tableHeader(visibleFields, data, () => data.changeRecordsVisibility(data))]
+        .concat(rows(model, visibleFields, data, cellsButtons))
+    );
 }
