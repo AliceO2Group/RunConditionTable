@@ -28,7 +28,8 @@ export default function tableView(model) {
             button(model, 'reload data', () => data.fetch(), 'reload-btn'), ' ', // TODO move up
             h('table.table', {id: 'data-table-' + data.url}, [
 
-                    h('thead.text-center', data.name),
+                    h('caption', data.name),
+                    tableHeader(visibleFields, data, () => data.changeRecordsVisibility(data)),
                     tableBody(model, visibleFields, data, cellsButtons)
 
                 ])
@@ -55,14 +56,9 @@ function fieldsVisibilityControl(mode, data, fields) {
 }
 
 
-function rows(model, visibleFields, data, cellsButtons) {
-    return data.rows.map(item => row(model, visibleFields, data, item, cellsButtons));
-}
-
 
 function tableBody(model, visibleFields, data, cellsButtons) {
     return h('tbody', {id: 'table-body-' + data.url},
-        [tableHeader(visibleFields, data, () => data.changeRecordsVisibility(data))]
-        .concat(rows(model, visibleFields, data, cellsButtons))
+        data.rows.map(item => row(model, visibleFields, data, item, cellsButtons))
     );
 }

@@ -1,10 +1,11 @@
-import { h } from '/js/src/index.js';
+import {h} from '/js/src/index.js';
 
 export default function tableHeader(visibleFields, data, checkBoxFunction) {
-    return h('tr',
-                visibleFields.map(f => {
-                    return h('th', {scope: 'col'}, f.name)
-                }).concat([
+    return h('thead',
+        h('tr',
+            visibleFields.map(f => {
+                return h('th', {scope: 'col'}, f.name)
+            }).concat([
                 h('th', {scope: "col"},
                     h('.form-check.mv2', [
                         h('input.form-check-input', {
@@ -15,4 +16,5 @@ export default function tableHeader(visibleFields, data, checkBoxFunction) {
                     ])
                 )
             ]))
+    )
 }
