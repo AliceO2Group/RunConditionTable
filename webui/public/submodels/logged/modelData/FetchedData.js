@@ -41,7 +41,7 @@ export default class FetchedData {
         } else {
             // TODO may add some function like "addDisplayAttributes"
             this.fields = content.data.fields.map(item => {
-                item.marked = false;
+                item.marked = true;
                 return item;
             });
             this.rows = content.data.rows.map(item => {

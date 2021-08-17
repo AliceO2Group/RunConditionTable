@@ -21,7 +21,7 @@ export default function tableView(model) {
     }
     if (data.fetched) {
         const fields = data.fields;
-        const visibleFields = fields.filter(f => !f.marked);
+        const visibleFields = fields.filter(f => f.marked);
 
         return h('div.p3',[
             fieldsVisibilityControl(model, data, fields),
@@ -46,7 +46,7 @@ function fieldsVisibilityControl(mode, data, fields) {
     return h('.p3', fields.map(f => h('label', [
                                         h('input.form-check-input.p3', {
                                             onclick: () => data.changeItemStatus(f),
-                                            checked: !f.marked,
+                                            checked: f.marked,
                                             type: 'checkbox'
                                         }),
                                         f.name,
