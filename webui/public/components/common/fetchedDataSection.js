@@ -9,29 +9,30 @@ function sectionTitle(label) {
 function multiButtonController(model, pageName, index) {
     const page = model.fetchedData[pageName]
     const url = page[index].url;
+    const dropdownID = "dropdown-" + url;
     const button1 = button(model, index, (e) => handleClick(model, e), '', url.pathname + url.search, '.margin0', '');
     return h('.flex-row.appearance.w-100.m1.justify-between', [
         button1,
-        h('.microBtnContainer.dropdown', {id: "dropdown-" + url, name: 'section-object-dropdown'}, [
+        h('.microBtnContainer.dropdown', {id: dropdownID, name: 'section-object-dropdown'}, [
             h('svg.icon', {fill: "currentcolor", viewBox: "0 0 8 8",
                 onmouseenter: () => {
-                    document.getElementById("dropdown-" + url).classList.toggle('dropdown-open');
+                    document.getElementById(dropdownID).classList.toggle('dropdown-open');
                 },
                 onmouseleave: () => {
                     setTimeout( () => {
-                        if (!document.getElementById("dropdown-" + url).classList.contains('dropdown-opened'))
-                            document.getElementById("dropdown-" + url).classList.remove('dropdown-open');
+                        if (!document.getElementById(dropdownID).classList.contains('dropdown-opened'))
+                            document.getElementById(dropdownID).classList.remove('dropdown-open');
                     }, 100);
                 }
             },
                 h('path', {d: "M0 2l4 4 4-4h-8z", name:"caret-bottom"})),
             h('.dropdown-menu', {
                 onmouseenter: () => {
-                    document.getElementById("dropdown-" + url).classList.toggle('dropdown-opened');
+                    document.getElementById(dropdownID).classList.toggle('dropdown-opened');
                 },
                 onmouseleave: () => {
-                    document.getElementById("dropdown-" + url).classList.remove('dropdown-open');
-                    document.getElementById("dropdown-" + url).classList.remove('dropdown-opened');
+                    document.getElementById(dropdownID).classList.remove('dropdown-open');
+                    document.getElementById(dropdownID).classList.remove('dropdown-opened');
                 }
             },[
                 h('a.microBtn', {
