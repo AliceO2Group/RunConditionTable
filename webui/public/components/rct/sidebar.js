@@ -11,7 +11,7 @@ function higherLevelButton(model, page, index, label, view) {
     var pathNQuery = `/api/Rct-Data/?page=${page}&index=${index}&view=${view}&rowsOnSite=50&site=1`;
     const fdata = model.fetchedData[page][index];
     if (fdata !== undefined && fdata !== null)
-        pathNQuery = fdata.url;
+        pathNQuery = fdata.url.pathname + fdata.url.search;
     return button(model, label, (e) => handleClick(model, e), '', pathNQuery);
 
 }
