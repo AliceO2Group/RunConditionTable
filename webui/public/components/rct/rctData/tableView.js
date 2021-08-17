@@ -24,7 +24,7 @@ export default function tableView(model) {
         const visibleFields = fields.filter(f => f.marked);
 
         return h('div.p3',[
-            fieldsVisibilityControl(model, data, fields),
+            // fieldsVisibilityControl(model, data, fields),
             button(model, 'reload data', () => data.fetch(), 'reload-btn'), ' ', // TODO move up
             h('table.table', {id: 'data-table-' + data.url}, [
 
