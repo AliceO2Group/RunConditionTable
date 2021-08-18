@@ -1,4 +1,5 @@
 const {Client} = require('pg');
+const ReqParser = require('./ReqParser.js');
 //TODO everywhere? add handling error when client unexpectedly disconnect;
 //TODO removing clients;
 
@@ -17,6 +18,7 @@ class PgManager {
         this.loggedUsers = loggedUsers;
         this.httpserver = httpserver;
         this.log = log;
+        this.parser = new ReqParser();
     }
 
     #login(req, res) {
@@ -41,14 +43,15 @@ class PgManager {
             .then(async sqlRes => {
                 res.json({type: 'res', data: sqlRes.rows});
                 this.loggedUsers.tokenToUserData[req.query.token] = {
-                        pgClient: client,
-                        loginDate: new Date(),
-                    }
+                    pgClient: client,
+                    loginDate: new Date(),
+                }
                 console.log(this.loggedUsers);
             }).catch(e => {
-                res.json({type: 'err', data: e.code})
+            res.json({type: 'err', data: e.code})
         });
     }
+
     #logout(req, res) {
         let found = false
         if (this.loggedUsers.tokenToUserData[req.query.token]) {
@@ -68,16 +71,11 @@ class PgManager {
     }
 
     #parseReqQToSqlQ(query) {
-        switch (query.view) {
-            case 'periods': return`SELECT * FROM ${query.view} LIMIT ${query.rowsOnSite} OFFSET ${query.rowsOnSite * (query.site - 1)};`;
-            case 'mc': return`SELECT * FROM ${query.view} LIMIT ${query.rowsOnSite} OFFSET ${query.rowsOnSite * (query.site - 1)};`;
-            case 'runs': return `SELECT * FROM ${query.view} WHERE period_id = (SELECT id FROM periods WHERE periods.period = '${query.period}') LIMIT ${query.rowsOnSite} OFFSET ${query.rowsOnSite * (query.site - 1)};`;
-            default: return 'SELECT NOW()';
-        }
+        return this.parser.parse(query);
     }
 
 
-    async #execDataReq(req, res, query=null) {
+    async #execDataReq(req, res, query = null) {
         if (this.loggedUsers.tokenToUserData[req.query.token]) {
             const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
             if (query === null) {
@@ -88,11 +86,28 @@ class PgManager {
                 if (this.#verifysqlQuery(query)) {
                     await select(client, query)
                         .then((dbRes) => {
-                            res.json({type: 'res', data: {fields: dbRes.fields, rows: dbRes.rows}});
+                            const fields = dbRes.fields;
+                            var rows = dbRes.rows;
+                            const data = {};
+                            console.log(req.query);
+                            if (req.query['count-records'] === 'true') {
+                                data['totalRecordsNumber'] = rows.length;
+                                const offset = req.query.rowsOnSite * (req.query.site - 1);
+                                const limit = req.query.rowsOnSite;
+                                rows = rows.slice(offset, offset + limit);
+                            }
+                            console.log(data);
+
+                            data['rows'] = rows;
+                            data['fields'] = fields;
+
+                            res.json({
+                                type: 'res', data: data
+                            });
                         }).catch(e => {
-                        console.log(e);
-                        res.json({type: 'err', data: e.code});
-                    })
+                            console.log(e);
+                            res.json({type: 'err', data: e.code});
+                        })
                 } else {
                     res.json(req, query, 'This query is malicious');
                 }
@@ -114,9 +129,11 @@ class PgManager {
     bindLogging(name) {
         this.httpserver.post(name, (req, res) => this.#login(req, res));
     }
+
     bindLogout(name) {
         this.httpserver.post(name, (req, res) => this.#logout(req, res));
     }
+
     bindGetDbData(name) {
         this.httpserver.get(name, (req, res) => this.#execDataReq(req, res));
     }
