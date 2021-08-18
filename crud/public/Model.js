@@ -1,4 +1,5 @@
 import { Observable, fetchClient } from '/js/src/index.js';
+import { parseMonthModel, parseDay } from './utils/dateHelper.js';
 import { sleep } from './utils/sleep.js';
 
 export default class Model extends Observable {
@@ -57,10 +58,26 @@ export default class Model extends Observable {
 
     async filter(id, value, year, month, day) {
       this.data = [];
-      const response = await fetchClient('/api/getData/filter', {
-          method: 'PATCH',
-          headers: {'Content-type': 'application/json; charset=UTF-8'},
-          body: JSON.stringify({id:id, value: value, year: year, month: month, day: day}),
+      const filters = {
+        id: id,
+        value: value,
+        date: (year && month && day) ? `${year}-${parseMonthModel(month)}-${parseDay(day)}` : undefined,
+      };
+
+      let queryString = `?`;
+      let next = false;
+      
+      for (const [key, value] of Object.entries(filters)) {
+        if (value && value !== "") {
+          if (next) queryString += '&';
+          if (key == 'date') queryString += `${key}='${value}'`;
+          else queryString += `${key}=${value}`;
+          next = true;
+        }
+      }
+      
+      const response = await fetchClient(`/api/getData${queryString}`, {
+          method: 'GET',
       });
       const content = await response.json().then(data => {
         for (const item of data.map(item => {

@@ -15,13 +15,11 @@ async function handleLogin(model) {
     const dbname = dbnameEl.value === '' ? dbnameEl.placeholder : dbnameEl.value;
 
     const p = await model.login(username, password, dbname);
-    console.log("Logged in successfully!");
-    console.log(`sessionService: ${sessionService}`);
 }
 
 export default function loggingSite(model) {
-    const loginButton = button("login", () => handleLogin(model));
-    const registerButton = button("register", handleRegistration);
+    const loginButton = button(model, "login", () => handleLogin(model));
+    const registerButton = button(model, "register", handleRegistration);
     const title = h('h1.primary', 'TEST APP');
     
     return h('div.loginDiv',
