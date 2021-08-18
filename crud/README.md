@@ -50,7 +50,7 @@ Polecenie `npm -y init` utworzy plik `package.json` i uzupełni go domyślnymi u
 ```shell
 touch index.js
 ```
-Na razie wpiszmy w nim np. `console.log('Hello there');`. Zgodnie z przyjętą [konwencją](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/devel.md#npm-scripts) aplikację będziemy uruchamiać poleceniem `npm start`. W tym celu do pliku [`package.json`](https://github.com/Ehevi/crud/edit/main/link-do-pliku-tutaj) należy dopisać skrypt `"start": "node index.js"`. Szybki test, czy działa:
+Na razie wpiszmy w nim np. `console.log('Hello there');`. Zgodnie z przyjętą [konwencją](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/devel.md#npm-scripts) aplikację będziemy uruchamiać poleceniem `npm start`. W tym celu do pliku [`package.json`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/package.json) należy dopisać skrypt `"start": "node index.js"`. Szybki test, czy działa:
 
 ![test](https://user-images.githubusercontent.com/48785655/129396425-885d36e7-a8c6-4a14-bdcf-9bc4a4552867.png)
 
@@ -59,9 +59,9 @@ Wykorzystamy moduł [`pg`](https://node-postgres.com) ułatwiający pracę z pos
 ```shell
 npm install pg
 ```
-Po wywołaniu tego polecenia w folderze projektu pojawi się folder `node_modules` oraz plik `package-lock.json`, a do pliku `package.json` zostanie dopisana odpowiednia zależność. W folderze `node_modules` znajdują się moduły wykorzystywane przez aplikację. Są stosunkowo dużymi plikami, dlatego generalnie nie wrzuca się ich np. na GitHuba (tutaj link do pliku .gitignore). Aby zapewnić spójność modułów wykorzystywanych przez różne osoby współpracujące przy danym projekcie, zapis instalowanych zależności jest na bieżąco tworzony w pliku `package-lock.json`. Dzięki niemu proste będzie ich jednoznaczne odtworzenie. Żeby to przetestować usuń folder `node_modules`, a następnie wywołaj polecenie `npm install`. Do folderu `node_modules` ponownie została ściągnięta paczka `pg` oraz wszystkie przez nią wykorzystywane.
+Po wywołaniu tego polecenia w folderze projektu pojawi się folder `node_modules` oraz plik `package-lock.json`, a do pliku `package.json` zostanie dopisana odpowiednia zależność. W folderze `node_modules` znajdują się moduły wykorzystywane przez aplikację. Są stosunkowo dużymi plikami, dlatego generalnie nie wrzuca się ich np. na GitHuba ([`.gitignore`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/.gitignore)). Aby zapewnić spójność modułów wykorzystywanych przez różne osoby współpracujące przy danym projekcie, zapis instalowanych zależności jest na bieżąco tworzony w pliku `package-lock.json`. Dzięki niemu proste będzie ich jednoznaczne odtworzenie. Żeby to przetestować usuń folder `node_modules`, a następnie wywołaj polecenie `npm install`. Do folderu `node_modules` ponownie została ściągnięta paczka `pg` oraz wszystkie przez nią wykorzystywane.
 
-Utwórz folder `db`, a w nim plik [`connection.js`](https://github.com/Ehevi/crud/edit/main/link-do-pliku-tutaj).
+Utwórz folder `db`, a w nim plik [`connection.js`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/db/connection.js).
 ```js
 const { Client } = require("pg");
 
@@ -77,7 +77,7 @@ client.connect();
 
 module.exports = client;
 ```
-Tworzymy w nim klienta, który łączy się z utworzoną wcześniej bazą (por. parametry z punktu 1 - link). Port 5432 to domyślny port, na którym działa postgres.
+Tworzymy w nim klienta, który łączy się z utworzoną wcześniej bazą (por. parametry z [punktu 1](https://github.com/xsalonx/cern_RCT_test/tree/crud/crud#1-przygotowanie-bazy-danych)). Port 5432 to domyślny port, na którym działa postgres.
 
 Wyeksportowane połączenie wykorzystamy teraz w pliku `index.js`.
 
@@ -97,7 +97,7 @@ Poleceniem `npm install --save @aliceo2/web-ui` ściągnij paczkę frameworka i 
 npm install --save @aliceo2/web-ui
 ```
 
-Zaczniemy od uworzenia serwera HTTP. Zapis konfiguracji będzie znajdował się w pliku [`config.js`](https://github.com/Ehevi/crud/edit/main/link-do-pliku-tutaj):
+Zaczniemy od uworzenia serwera HTTP. Zapis konfiguracji będzie znajdował się w pliku [`config.js`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/config.js):
 ```js
 module.exports = {
     jwt: {
@@ -143,13 +143,13 @@ Utwórz ten folder, a w nim plik `index.html`:
 </body>
 </html>
 ```
-Teraz uruchom `npm start` i otwórz przeglądarkę pod adresem [localhost:8080](localhost:8080) (parametry z pliku `config.js`). W przeglądarce uruchom konsolę: `Ctrl + Shift + I`. Konsola przeglądarki jest bardzo przydatna przy [debugowaniu](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/debug.md). Całość generalnie działa, ale już pojawił się pierwszy błąd, mianowicie:
+Teraz uruchom `npm start` i otwórz przeglądarkę pod adresem [localhost:8080](http://localhost:8080) (parametry z pliku `config.js`). W przeglądarce uruchom konsolę: `Ctrl + Shift + I`. Konsola przeglądarki jest bardzo przydatna przy [debugowaniu](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/debug.md). Całość generalnie działa, ale już pojawił się pierwszy błąd, mianowicie:
 
 ![favicon-error](https://user-images.githubusercontent.com/48785655/129437518-03ae41a9-45b2-46c6-b31a-aa96bcd53a6f.png)
 
 Przeglądarka wysłała do serwera zapytanie `GET http://localhost:8080/favicon.ico`, na które otrzymała odpowiedź 404 - Page not found. Żeby taki błąd się nie pojawiał musimy udostępnić żądany plik `favicon.ico`.
 
-W folderze `public` utwórz nowy folder `images`, do którego wklej folder [`favicon`](https://github.com/Ehevi/crud/edit/main/link-do-pliku-tutaj) ([źródło](https://favicon.io/emoji-favicons/microscope/)) - lub znajdź i wklej inny obrazek, który uważasz za ładniejszy. Następnie zmodyfikuj sekcję `head` pliku `index.html`:
+W folderze `public` utwórz nowy folder `images`, do którego wklej folder [`favicon`](https://github.com/xsalonx/cern_RCT_test/tree/master/crud/public/images/favicon) ([źródło](https://favicon.io/emoji-favicons/microscope/)) - lub znajdź i wklej inny obrazek, który uważasz za ładniejszy. Następnie zmodyfikuj sekcję `head` pliku `index.html`:
 ```html
 <head>
     <link rel="icon" href="./images/favicon/favicon.ico">
@@ -421,7 +421,7 @@ export default class Model extends Observable {
 ```
 
 ### Widok
-Za widok będzie odpowiedzialny plik [`view.js`](https://github.com/Ehevi/link-do-pliku) w folderze public. Rozważmy dwa przypadki:
+Za całokształt widoku będzie odpowiedzialny plik [`view.js`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/public/view.js) w folderze public. Rozważmy dwa przypadki:
 - a) przypadek "podstawowy" - dane niezaładowane
 - b) dane załadowane
 
@@ -544,18 +544,18 @@ W tabeli obok pobranych danych umieścimy przycisk :heavy_multiplication_x:, kt�
 ##### Do pliku `Model.js`dopisz:
 ```js
 async delete(id) {
-      const response = await fetchClient(`/api/delete/${id}`, {
+    const response = await fetchClient(`/api/delete/${id}`, {
         method: 'DELETE',
-      });
-      this.getData();
-    }
+    });
+    this.getData();
+}
 ```
 
 ##### Zmodyfikuj header w pliku `loaded-view.js` tak, aby dołożyć dodatkową kolumnę na usuwanie:
 ```js
-    const header = h('thead',
-            h('tr',
-                h('th', 'id'),
+const header = h('thead',
+	h('tr',
+        	h('th', 'id'),
                 h('th', 'value'),
                 h('th', 'date'),
                 h('th', 'delete')
@@ -892,7 +892,7 @@ Uruchom aplikację.
 2. rightClick + Inspect...
 3. CSS, załączanie pliku CSS do index.html
 
-## W folderze public utwórz folder `styles`, a w nim plik [`custom.css`](https://github.com/Ehevi/link-do-pliku) i załącz go w pliku `index.html` w sekcji head:
+## W folderze public utwórz folder `styles`, a w nim plik [`custom.css`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/public/styles/custom.css) i załącz go w pliku `index.html` w sekcji head:
 ```html
 <head>
     <link rel="stylesheet" href="/css/src/bootstrap.css">
@@ -937,12 +937,13 @@ export default function spinner() {
 }
 ```
 
-Będziemy wyświetlać go w czasie ładowania danych. Mamy ich na razie bardzo mało, więc nakażemy aplikacji na kilka sekund iść spać. W utils/sleep.js napisz:
+Będziemy wyświetlać go w czasie ładowania danych. Mamy ich na razie bardzo mało, więc nakażemy aplikacji na kilka sekund iść spać. W `utils/sleep.js` napisz:
 ```js
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 ```
+
 W pliku Model.js `import { sleep } from './utils/sleep.js';`. W konstruktorze dodaj własność `this.spinner = false;`
 Dalej dopisz:
 ```js
