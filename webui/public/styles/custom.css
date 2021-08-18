@@ -12,3 +12,6 @@
     margin-left: 0;
 }
 
+.thin-border {
+    border: solid gray 1px;
+}

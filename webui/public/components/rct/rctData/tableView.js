@@ -16,7 +16,7 @@ export default function tableView(model) {
     const visibleFields = fields.filter(f => f.marked);
 
     return h('div.p3', [
-        // fieldsVisibilityControl(model, data, fields),
+        fieldsVisibilityControl(model, data, fields),
         button(model, 'reload data', () => data.fetch(), 'reload-btn'), ' ', // TODO move up
         h('table.table', {id: 'data-table-' + data.url}, [
 
@@ -30,14 +30,28 @@ export default function tableView(model) {
 }
 
 
+// function fieldsVisibilityControl(mode, data, fields) {
+//     return h('.flex-row.p3', fields.map(f =>
+//         h('.d-inline.p1',[
+//             h('input.form-check-input.p3.d-block', {
+//                 onclick: () => data.changeItemStatus(f),
+//                 checked: f.marked,
+//                 type: 'checkbox'
+//             }),
+//             f.name,
+//         ])
+//     ))
+// }
+
 function fieldsVisibilityControl(mode, data, fields) {
-    return h('.flex-row.p3', fields.map(f => h('label', [
-            h('input.form-check-input.p3', {
+    return h('.flex-row.p3.justify-start', fields.map(f =>
+        h('span.p1.thin-border', [
+            h('.d-block.w-100', h('input.p3', {
                 onclick: () => data.changeItemStatus(f),
                 checked: f.marked,
                 type: 'checkbox'
-            }),
-            f.name,
+            })),
+            h('p', f.name)
         ])
     ))
 }
