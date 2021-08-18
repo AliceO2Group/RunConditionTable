@@ -122,7 +122,7 @@ W pliku package.json należy dopisać skrypt (8 linia pliku):
 ```
 (zgodnie z przyjętą we frameworku ![konwencją](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/devel.md#npm-scripts)). Teraz wpisanie w terminalu `npm start` będzie równoważne wywołaniu `node index.js`.
 
-Oprócz pliku wejściowego (index.js) będziemy korzystać również z plików `config.js` oraz `db.js`. Jak łatwo się domyślić, zawartość pierwszego z nich to konfiguracja połączenia:
+Oprócz pliku wejściowego (index.js) będziemy korzystać również z plików `config.js` oraz `PgManager.js`. Jak łatwo się domyślić, zawartość pierwszego z nich to konfiguracja połączenia:
 ```js
 module.exports = {
     jwt: {
@@ -136,4 +136,4 @@ module.exports = {
     }
   };
 ```
-natomiast plik `db.js` zawiera klasę odpowiadającą za połączenie z bazą danych.
+natomiast plik `PgManager.js` zawiera klasę odpowiadającą za połączenie z bazą danych.
