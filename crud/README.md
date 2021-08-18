@@ -45,7 +45,7 @@ npm init -y
 ```
 
 W tym momencie wygodnie będzie otworzyć folder projektu w aplikacji dedykowanej edytowaniu kodu, np. Visual Studio Code, WebStorm itp..
-Polecenie `npm -y init` utworzy plik `package.json` i uzupełni go domyślnymi ustawieniami (można również wpisywać je samodzielnie, wtedy bez opcji `-y` ). Według domyślnych ustawień plikiem głównym projektu będzie `index.js`.
+Polecenie [`npm -y init`](https://docs.npmjs.com/cli/v7/commands/npm-init) utworzy plik `package.json` i uzupełni go domyślnymi ustawieniami (można również wpisywać je samodzielnie, wtedy bez opcji `-y` ). Według domyślnych ustawień plikiem głównym projektu będzie `index.js`.
 
 ```shell
 touch index.js
@@ -54,12 +54,14 @@ Na razie wpiszmy w nim np. `console.log('Hello there');`. Zgodnie z przyjętą [
 
 ![test](https://user-images.githubusercontent.com/48785655/129396425-885d36e7-a8c6-4a14-bdcf-9bc4a4552867.png)
 
+Więcej na temat pliku `package.json` dowiesz się z [oficjalnej dokumentacji](https://docs.npmjs.com/cli/v7/configuring-npm/package-json).
+
 # 3. Interakcja z bazą danych
 Wykorzystamy moduł [`pg`](https://node-postgres.com) ułatwiający pracę z postgresem przy wykorzystaniu node.js'a. Żeby z niego korzystać konieczna jest wcześniejsza jego instalacja:
 ```shell
 npm install pg
 ```
-Po wywołaniu tego polecenia w folderze projektu pojawi się folder `node_modules` oraz plik `package-lock.json`, a do pliku `package.json` zostanie dopisana odpowiednia zależność. W folderze `node_modules` znajdują się moduły wykorzystywane przez aplikację. Są stosunkowo dużymi plikami, dlatego generalnie nie wrzuca się ich np. na GitHuba ([`.gitignore`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/.gitignore)). Aby zapewnić spójność modułów wykorzystywanych przez różne osoby współpracujące przy danym projekcie, zapis instalowanych zależności jest na bieżąco tworzony w pliku `package-lock.json`. Dzięki niemu proste będzie ich jednoznaczne odtworzenie. Żeby to przetestować usuń folder `node_modules`, a następnie wywołaj polecenie `npm install`. Do folderu `node_modules` ponownie została ściągnięta paczka `pg` oraz wszystkie przez nią wykorzystywane.
+Po wywołaniu tego polecenia w folderze projektu pojawi się folder `node_modules` oraz plik [`package-lock.json`](https://docs.npmjs.com/cli/v7/configuring-npm/package-lock-json), a do pliku `package.json` zostanie dopisana odpowiednia zależność. W folderze `node_modules` znajdują się moduły wykorzystywane przez aplikację. Są stosunkowo dużymi plikami, dlatego generalnie nie wrzuca się ich np. na GitHuba ([`.gitignore`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/.gitignore)). Aby zapewnić spójność modułów wykorzystywanych przez różne osoby współpracujące przy danym projekcie, zapis instalowanych zależności jest na bieżąco tworzony w pliku `package-lock.json`. Dzięki niemu proste będzie ich jednoznaczne odtworzenie. Żeby to przetestować usuń folder `node_modules`, a następnie wywołaj polecenie [`npm install`](https://docs.npmjs.com/cli/v7/commands/npm-install) (tym razem specyfikacji, jakie moduły chcesz zainstalować). Do folderu `node_modules` ponownie została ściągnięta paczka `pg` oraz wszystkie przez nią wykorzystywane.
 
 Utwórz folder `db`, a w nim plik [`connection.js`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/db/connection.js).
 ```js
