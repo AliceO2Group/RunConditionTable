@@ -57,7 +57,7 @@ Na razie wpiszmy w nim np. `console.log('Hello there');`. Zgodnie z przyjętą [
 Więcej na temat pliku `package.json` dowiesz się z [oficjalnej dokumentacji](https://docs.npmjs.com/cli/v7/configuring-npm/package-json).
 
 # 3. Interakcja z bazą danych
-Wykorzystamy moduł [`pg`](https://node-postgres.com) ułatwiający pracę z postgresem przy wykorzystaniu node.js'a. Żeby z niego korzystać konieczna jest wcześniejsza jego [instalacja](https://docs.npmjs.com/cli/v7/commands/npm-install):
+Wykorzystamy moduł [`pg`](https://node-postgres.com) ułatwiający pracę z postgresem przy wykorzystaniu node.js'a. Żeby z niego korzystać konieczna jest jego wcześniejsza [instalacja](https://docs.npmjs.com/cli/v7/commands/npm-install):
 ```shell
 npm install pg
 ```
@@ -396,6 +396,7 @@ Przeczytaj [artykuł wprowadzający](https://github.com/AliceO2Group/WebUi/blob/
 Zarówno model jak i widok mogą być (i zazwyczaj są) podzielone na mniejsze elementy składowe, odpowiednio na podmodele i podwidoki. Aby zwiększyć czytelność i ułatwić organizację kodu przechowuje się je w osobnych plikach/folderach.
 
 # 7. Uwzględnienie MVC w aplikacji `crud`
+## 7.1. Wyświetlanie danych
 __Do czego dążymy:__ przycisk w oknie przeglądarki, którego naciśnięcie (_użytkownik_ -> kontroler) spowoduje pobranie danych z bazy (_kontroler_ -> model) i ich wyświetlenie (_model_ -> widok -> _użytkownik_).
 
 ### Model
@@ -541,12 +542,11 @@ export default function view(model) {
 
 Uruchom aplikację i sprawdź jej działanie.
 
-Na tym etapie mamy już działającą aplikację pozwalającą na wyświetlenie danych pobranych z bazy. Rozbudujmy ją o pozostałe operacje składowe akronimu CRUD:
-
+## 7.2. Rozbudowa frontendu o pozostałe operacje składowe akronimu CRUD:
 #### `DELETE`
 W tabeli obok pobranych danych umieścimy przycisk :heavy_multiplication_x:, którego naciśnięcie spowoduje usunięcie związanego z nim wiersza.
 
-##### Do pliku `Model.js`dopisz:
+##### Do modelu dopisz:
 ```js
 async delete(id) {
     const response = await fetchClient(`/api/delete/${id}`, {
@@ -605,7 +605,7 @@ Uruchom aplikację i sprawdź jej działanie.
 
 #### `INSERT`
 Dodamy stały element załadowanego widoku aplikacji umożliwiający wstawianie nowych danych:
-##### Do pliku `Model.js`dopisz:
+##### Do modelu dopisz:
 ```js
 async insert(value, date) {
       const response = await fetchClient('/api/insert', {
@@ -676,13 +676,12 @@ export default function loadedView(model) {
         )
     );
 }
-
 ```
 
 #### `UPDATE`
 Wykorzystamy utworzony wcześniej komponent formularza do implementacji obsługi aktualizacji danych. Dodamy nową kolumnę w tabeli z danymi. W kolumnie będzie znajdował się przycisk, którego naciśnięcie spowoduje rozwinięcie formularza ("dropdown"):
 
-##### Do pliku `Model.js`dopisz:
+##### Do modelu dopisz:
 ```js
 async update(id, value, date) {
       const response = await fetchClient(`/api/update/${id}`, {
@@ -701,7 +700,7 @@ async update(id, value, date) {
       this.notify();
     }
 ```
-oraz w funkcji getData dodaj pobieranym z bazy elementom właściwość isDropdownVisible:
+oraz w funkcji getData dodaj pobieranym z bazy elementom własność isDropdownVisible:
 ```js
 const content = await response.json().then(data => {
         for(const item of data.map(item => {item.isDropdownVisible = false; return item;})) {
@@ -770,7 +769,7 @@ return [
 
 Nie zapomnij dopisać linii `import form from '../loaded/form.js';` na górze pliku.
 
-# 7. Obsługa filtrowania danych
+# 8. Obsługa filtrowania danych
 Aby uniknąć błędów w obsłudze zapytania "getData" do serwera HTTP usuń z pliku `index.js` linię `if (filteredResults.length < 1) return res.send("No matching results");`. Brak danych pasujących do kryterium będzie obsługiwany w wyższych warstwach aplikacji.
 
 Do pliku `Model.js` dopisz:
@@ -892,7 +891,7 @@ oraz dodaj odpowiedni import na górze pliku: `import filter from './filter.js';
 
 Uruchom aplikację.
 
-# 8. Ostylowanie aplikacji
+# 9. Ostylowanie aplikacji
 1. najpierw zobacz [tu](https://aliceo2group.github.io/WebUi/Framework/docs/reference/frontend-css.html)
 2. rightClick + Inspect...
 3. CSS, załączanie pliku CSS do index.html
@@ -918,9 +917,9 @@ export default function button(label, onClickAction) {
 }
 ```
 
-# 9. Więcej opisu do stylowania aplikacji
+# 10. Więcej opisu do stylowania aplikacji
 
-# 10. Taki ładny spinner dodamy
+# 11. Taki ładny spinner dodamy
 Utwórz komponent `spinner.js` w folderze public/components:
 ```js
 import { h } from '/js/src/index.js';
@@ -977,7 +976,10 @@ export default function view(model) {
 
 Uruchom aplikację i podziwiaj spinner w czasie ładowania danych.
 
-# 11 .Dalej:
+# 12. Dalej:
 - Model: routy dla CRUDa, fetchClient
 - await, asynchroniczność [AJAX](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/async-calls.md): co to, po co, dlaczego
 - może jakiś wykres wrzucić? coś [stąd](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/charts.md) np.
+
+# 13. Zakończenie
+Porównaj efekt końcowy z zawartością tego folderu.
