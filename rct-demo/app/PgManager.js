@@ -96,7 +96,7 @@ class PgManager {
                                 const limit = req.query.rowsOnSite;
                                 rows = rows.slice(offset, offset + limit);
                             }
-                            console.log(data);
+                            // console.log(data);
 
                             data['rows'] = rows;
                             data['fields'] = fields;

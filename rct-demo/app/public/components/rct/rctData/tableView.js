@@ -17,6 +17,7 @@ export default function tableView(model) {
 
     return h('div.p3', [
         fieldsVisibilityControl(model, data, fields),
+        siteController(model, data),
         button(model, 'reload data', () => data.fetch(), 'reload-btn'), ' ', // TODO move up
         h('table.table', {id: 'data-table-' + data.url}, [
 
@@ -29,19 +30,14 @@ export default function tableView(model) {
 
 }
 
+function siteController(model, data) {
+    return h('.flex-row', [...Array(Math.ceil(data.totalRecordsNumber / data.rowsOnSite)).keys()].map(i => {
+        const site = i + 1;
+        return h('a', {onclick: () => data.changeSite(site)}, site);
+    }))
 
-// function fieldsVisibilityControl(mode, data, fields) {
-//     return h('.flex-row.p3', fields.map(f =>
-//         h('.d-inline.p1',[
-//             h('input.form-check-input.p3.d-block', {
-//                 onclick: () => data.changeItemStatus(f),
-//                 checked: f.marked,
-//                 type: 'checkbox'
-//             }),
-//             f.name,
-//         ])
-//     ))
-// }
+}
+
 
 function fieldsVisibilityControl(mode, data, fields) {
     return h('.flex-row.p3.justify-start', fields.map(f =>

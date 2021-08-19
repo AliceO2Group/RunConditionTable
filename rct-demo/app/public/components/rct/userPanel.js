@@ -10,7 +10,6 @@ import sidebar from "./sidebar.js";
 
 export default function userPanel(model) {
     const url = model.router.getUrl();
-    console.log('userPanel', url);
     return h('.flex-column.absolute-fill', [
         header(model),
         // content below menu bar

@@ -1,7 +1,8 @@
 
 import {fetchClient} from '/js/src/index.js';
+import {replaceUrlParams} from "../../../utils/utils.js";
 
-const defaultRowsOnSite = 50;
+const defaultRowsOnSite = 100;
 const defaultSite = 1;
 
 export default class FetchedData {
@@ -13,7 +14,7 @@ export default class FetchedData {
         this.rows = null;
         this.fetched = false;
 
-        const params = url.searchParams.entries();
+        const params = Object.fromEntries(url.searchParams.entries());
         this.rowsOnSite = params.hasOwnProperty('rowsOnSite') ? params.rowsOnSite : defaultRowsOnSite;
         this.site = params.hasOwnProperty('site') ? params.site : defaultSite;
 
@@ -53,7 +54,6 @@ export default class FetchedData {
             });
             this.fetched = true;
             if (this.totalRecordsNumber === null || this.totalRecordsNumber === undefined) {
-                console.log(content.data);
                 this.totalRecordsNumber = content.data.totalRecordsNumber;
             }
         }
@@ -62,7 +62,14 @@ export default class FetchedData {
 
     changeFiltering(/**???*/) {
         // TODO
-        this.fetch();
+        this.fetch().then(r => {}).catch(e => {console.error(e)});
+    }
+
+    changeSite(site) {
+        console.assert(site < this.totalRecordsNumber / this.rowsOnSite + 1);
+        this.fetched = false;
+        this.url = replaceUrlParams(this.url, [['site', site]]);
+        this.model.router.go(this.url);
     }
 
 
