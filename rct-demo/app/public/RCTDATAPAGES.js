@@ -1,4 +1,4 @@
 
-const RCTDATAPAGES = ['main', 'runsPerPeriod', 'mc'];
+const RCTDATAPAGES = ['main', 'runsPerPeriod', 'mc', 'flags'];
 
 export default RCTDATAPAGES;

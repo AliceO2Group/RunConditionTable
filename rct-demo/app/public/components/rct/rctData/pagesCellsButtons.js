@@ -6,12 +6,17 @@ import handleClick from "../../common/handleClick.js";
 const pagesCellsButtons = {
     main: {
         period: (model, item, name) => {
-            return button(model, item.period, (e) =>
-                handleClick(model, e), '',
+            return button(model, item.period, (e) => handleClick(model, e), '',
                 `/api/Rct-Data/?page=runsPerPeriod&index=${item.period}&view=runs&period=${item.period}&rowsOnSite=50&site=1`);
         },
     },
-    runsPerPeriod: {},
+    runsPerPeriod: {
+        id: (model, item, name) => {
+            return button(model, item.id, (e) => handleClick(model, e), '',
+                `/api/Rct-Data/?page=flags&index=${item.id}&view=flags&run_id=${item.id}&rowsOnSite=50&site=1`);
+        }
+    },
+    flags: {},
     mc: {},
     // ...,
 

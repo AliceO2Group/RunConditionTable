@@ -11,6 +11,8 @@ class ReqParser {
                 return `SELECT * FROM ${query.view} ${dataSubsetQueryPart(query)};`;
             case 'runs':
                 return `SELECT * FROM ${query.view} WHERE period_id = (SELECT id FROM periods WHERE periods.period = '${query.period}') ${dataSubsetQueryPart(query)};`;
+            case 'flags':
+                return `SELECT * FROM ${query.view} WHERE run_id = ${query.run_id} ${dataSubsetQueryPart(query)};`;
             default:
                 return 'SELECT NOW()';
         }

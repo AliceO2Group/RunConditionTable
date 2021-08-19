@@ -24,13 +24,12 @@ export default function sidebar(model) {
         fetchedDataSection(model, null, 'Periods'),
         higherLevelButton(model, 'main', '_0', 'main view', 'periods'),
         fetchedDataSection(model, 'runsPerPeriod', 'Runs per period'),
-        higherLevelButton(model, 'mc', '_0', 'MC', 'mc'),
+        fetchedDataSection(model, null, 'Monte Carlo'),
+        higherLevelButton(model, 'mc', '_0', 'main view', 'mc'),
 
-        button(model, 'Pass QA Statistics Summary', () => {
-            return undefined;
-        }),
-        button(model, 'QA Expert Flagging', () => {
-            return undefined;
-        }),
+        // button(model, 'Pass QA Statistics Summary', () => {
+        //     return undefined;
+        // }),
+        fetchedDataSection(model, 'flags', 'QA Expert Flagging'),
     ]);
 }
