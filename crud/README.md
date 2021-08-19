@@ -190,13 +190,17 @@ const db = require('./db/connection.js');
 const config = require('./config.js');
 const httpServer = new HttpServer(config.http, config.jwt);
 
+const log = new Log('Crud Tutorial');
+
 httpServer.addStaticPath('./public');
 
 httpServer.get("/getData", async function(req, res, next) {
     try {
+      log.info("Getting data from database");
       const results = await db.query("SELECT * FROM data ORDER BY id");
       return res.json(results.rows);
     } catch (err) {
+      log.error('Select attempt failed!');
       return next(err);
     }
   }, { public: true });
@@ -210,7 +214,8 @@ Wykorzystamy adres URL do przesyłania prostych zapytań do serwera w formacie `
 ```js
 httpServer.get("/getData", async function(req, res, next) {
     try {
-        const filters = req.query;
+        log.info("Getting data from database");
+	const filters = req.query;
         const results = await db.query("SELECT * FROM data ORDER BY id");
 
         const filteredResults = results.rows.filter(row => {
@@ -225,6 +230,7 @@ httpServer.get("/getData", async function(req, res, next) {
 	if (filteredResults.length < 1) return res.send("No matching results");
         return res.json(filteredResults);
     } catch (err) {
+      log.error('Select attempt failed!');
       return next(err);
     }
   }, {public: true});
@@ -271,13 +277,15 @@ httpServer.post("/insert", async function(req, res, next) {
         var date = req.body.date;
         var value = req.body.value;
 
-        const result = await db.query(
+        log.info(`Inserting data: value='${value}', date='${date}'`);
+	const result = await db.query(
           "INSERT INTO data (value, date) VALUES ($1, $2) RETURNING *",
           [value, date]
         );
         return res.json(result.rows[0]);
     } catch (err) {
-        return next(err);
+        log.error('Insert attempt failed!');
+	return next(err);
     }
 }, { public: true });
 ```
@@ -289,12 +297,14 @@ httpServer.patch("/update/:id", async function(req, res, next) {
     const value = req.body.value;
     const date = req.body.date;
 
+    log.info(`Updating data item with id=${id} to: value='${value}', date='${date}`);
     const result = await db.query(
       "UPDATE data SET value=$1, date=$2 WHERE id=$3 RETURNING *",
       [value, date, id]
     );
     return res.json(result.rows[0]);
   } catch (err) {
+    log.error('Update attempt failed!');
     return next(err);
   }
 }, { public: true });
@@ -304,11 +314,13 @@ httpServer.patch("/update/:id", async function(req, res, next) {
 ```js
 httpServer.delete("/delete/:id", async function(req, res, next) {
   try {
+    log.info(`Deleting data item with id=${req.params.id}`);
     const result = await db.query("DELETE FROM data WHERE id=$1", [
       req.params.id
     ]);
     return res.json({ message: "Deleted" });
   } catch (err) {
+    log.error('Delete attempt failed!');
     return next(err);
   }
 }, { public: true });
@@ -892,15 +904,84 @@ oraz dodaj odpowiedni import na górze pliku: `import filter from './filter.js';
 Uruchom aplikację.
 
 # 9. Ostylowanie aplikacji
-1. najpierw zobacz [tu](https://aliceo2group.github.io/WebUi/Framework/docs/reference/frontend-css.html)
-2. rightClick + Inspect...
-3. CSS, załączanie pliku CSS do index.html
+Napisana aplikacja jest już w pełni fukncjonalna. Jednak jej mało atrakcyjny wygląd negatywnie wpłynie na wrażenia korzystającego z niej użytkownika.
 
-## W folderze public utwórz folder `styles`, a w nim plik [`custom.css`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/public/styles/custom.css) i załącz go w pliku `index.html` w sekcji head:
+W najprostszym przypadku style definiowane są w plikach CSS (_Cascading Style Sheets_: Kaskadowe Arkusze Stylów).
+
+### Przykład
+- opis stylowania buttona w pliku custom.css
+
+W folderze public utwórz folder `styles`, a w nim plik [`custom.css`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/public/styles/custom.css).
+```css
+/* fancyButton design from http://grohit.com/ */
+
+.fancyButton {
+    width: 300px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.fancyButton a {
+    text-decoration: none;
+    border: 2px solid #3C403D;
+    padding: 15px;
+    color: #3C403D;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+}
+
+span {
+    position: relative;
+    z-index: 3;
+}
+
+.fancyButton a::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: -2px;
+    width: calc(100% + 6px);
+    /*100% plus double the times left values*/
+    height: calc(100% - 10px);
+    background-color: #DADED4;
+    transition: all 0.5s ease-in-out;
+    transform: scaleY(1);
+}
+  
+.fancyButton a:hover::before {
+    transform: scaleY(0);
+}
+
+.fancyButton a::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: -5px;
+    width: calc(100% - 10px);
+    /*100% plus double the times left values*/
+    height: calc(100% + 10px);
+    background-color: #DADED4;
+    transition: all 0.5s ease-in-out;
+    transform: scaleX(1);
+}
+  
+.fancyButton a:hover::after {
+    transform: scaleX(0);
+}
+```
+
+## Arkusz załącz w pliku `index.html` w sekcji head:
+// załączanie pliku CSS do index.html
 ```html
 <head>
     <link rel="stylesheet" href="/css/src/bootstrap.css">
-    <--link rel="stylesheet" href="styles/custom.css">
+    <link rel="stylesheet" href="styles/custom.css">
     <!--favicon source: https://favicon.io/emoji-favicons/microscope/-->
     <link rel="icon" href="./images/favicon/favicon.ico">
     <meta charset="UTF-8">
@@ -909,6 +990,7 @@ Uruchom aplikację.
 ```
 
 ## Ostyluj komponent `button` (w pliku button.js):
+przypisanie klasy do elementu
 ```js
 export default function button(label, onClickAction) {
     return h('div.fancyButton', {onclick: onClickAction},
@@ -917,7 +999,12 @@ export default function button(label, onClickAction) {
 }
 ```
 
-# 10. Więcej opisu do stylowania aplikacji
+... stylowanie strony przed załadowaniem danych
+... stylowanie komponentów strony z załadowanymi danymi
+
+# 10. Więcej opisu do stylowania aplikacji: plik bootstrap w plikach frameworka
+- przygotowany arkusz we Frameworku - najpierw zobacz [tu](https://aliceo2group.github.io/WebUi/Framework/docs/reference/frontend-css.html)
+- rightClick + Inspect
 
 # 11. Taki ładny spinner dodamy
 Utwórz komponent `spinner.js` w folderze public/components:
