@@ -25,7 +25,6 @@ export default class FetchedData {
 
 
     async fetch() {
-        console.log('fetching from: ', this.url);
         this.fetched = false;
         // for loading icon displaying;
         this.model.notify();

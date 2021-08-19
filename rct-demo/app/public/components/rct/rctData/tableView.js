@@ -3,6 +3,7 @@ import button from '../../common/button.js';
 import tableHeader from './table/header.js';
 import row from './table/row.js';
 import pagesCellsButtons from "./pagesCellsButtons.js";
+import {range, replaceUrlParams} from "../../../utils/utils.js";
 
 
 export default function tableView(model) {
@@ -30,11 +31,38 @@ export default function tableView(model) {
 
 }
 
+const visibleNeighbourButtonsRange = 2;
+const maxVisibleButtons = 10;
+
 function siteController(model, data) {
-    return h('.flex-row', [...Array(Math.ceil(data.totalRecordsNumber / data.rowsOnSite)).keys()].map(i => {
+    const mapArrayToButtons = (arr) => arr.map(i => {
         const site = i + 1;
-        return h('a', {onclick: () => data.changeSite(site)}, site);
-    }))
+        const url = replaceUrlParams(data.url, [['site', site]]);
+        return button(model, site, () => data.changeSite(site), '', url.pathname + url.search, '', '.m1', true);
+    })
+    const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
+    let currentSite = Object.fromEntries(data.url.searchParams.entries())['site'] - 1;
+
+    const middleButtonsR = range(Math.max(0, currentSite - visibleNeighbourButtonsRange),
+                                 Math.min(sitesNumber, currentSite + visibleNeighbourButtonsRange + 1));
+
+    const leftButtonsR = range(0,
+                               Math.min(middleButtonsR[0], Math.floor((maxVisibleButtons - (2 * visibleNeighbourButtonsRange + 1)) / 2)));
+
+    const rightButtonsR = range(Math.max(middleButtonsR[middleButtonsR.length - 1] + 1, sitesNumber - Math.floor((maxVisibleButtons - (2 * visibleNeighbourButtonsRange + 1)) / 2)),
+                                sitesNumber);
+
+    const leftThreeDotsPresent = !(leftButtonsR[leftButtonsR.length - 1] === middleButtonsR[0] - 1 || leftButtonsR.length === 0);
+    const rightThreeDotsPresent = !(rightButtonsR[0] === middleButtonsR[middleButtonsR.length - 1] + 1 || rightButtonsR.length === 0);
+
+    console.log(sitesNumber, leftButtonsR, middleButtonsR, rightButtonsR);
+    return h('.flex-row', [
+        mapArrayToButtons(leftButtonsR),
+        leftThreeDotsPresent ? '...' : '',
+        mapArrayToButtons(middleButtonsR),
+        rightThreeDotsPresent ? '...' : '',
+        mapArrayToButtons(rightButtonsR),
+    ]);
 
 }
 

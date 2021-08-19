@@ -25,8 +25,8 @@ export default class ModelLogged extends Observable {
         switch (url.pathname) {
             case '/api/Rct-Data/':
                 this.reqForData()
-                    .then(r => {console.log('data object constructed and/or fetched at:', this.router.getUrl())})
-                    .catch(e => {console.log(e)});
+                    .then(r => {})
+                    .catch(e => {console.error(e)});
             break;
             case '/home/':
                 break;
@@ -41,7 +41,6 @@ export default class ModelLogged extends Observable {
     async reqForData() {
         const params = this.router.params;
         const url = this.router.getUrl();
-        console.log('reqForData', url);
 
         console.assert(url.pathname === rctDataServerPathname)
         console.assert(params.hasOwnProperty('page') && params.hasOwnProperty('index'));
@@ -53,7 +52,6 @@ export default class ModelLogged extends Observable {
 
 
         if (! this.fetchedData[params.page][params.index]) {
-            console.log('creating new fetchedData object at: ', url);
             this.fetchedData[params.page][params.index] = new FetchedData(this, url);
         }
         if (! this.fetchedData[params.page][params.index].fetched)
