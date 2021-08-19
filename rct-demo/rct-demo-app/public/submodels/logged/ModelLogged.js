@@ -51,6 +51,7 @@ export default class ModelLogged extends Observable {
 
 
         console.assert(this.fetchedData.hasOwnProperty(params.page));
+
         if (! this.fetchedData[params.page][params.index]) {
             console.log('creating new fetchedData object at: ', url);
             this.fetchedData[params.page][params.index] = new FetchedData(this, url);

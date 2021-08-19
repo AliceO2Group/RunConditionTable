@@ -9,26 +9,57 @@ function sectionTitle(label) {
 function multiButtonController(model, pageName, index) {
     const page = model.fetchedData[pageName]
     const url = page[index].url;
+    const dropdownID = "dropdown-" + url;
     const button1 = button(model, index, (e) => handleClick(model, e), '', url.pathname + url.search, '.margin0', '');
     return h('.flex-row.appearance.w-100.m1.justify-between', [
         button1,
-        h('.microBtnContainer', [
-            h('a.microBtn', {onclick: () => {
-                    model.router.go('/home/?page=home'); // TODO
-                    model.fetchedData.delete(pageName, index);
-                    model.notify();
-                }}, 'X'),
-            h('a.microBtn', {onclick: () => {
-                page[index].fetch();
-                }}, 'R'),
-            h('a.microBtn', { onclick: () => {
-                    navigator.clipboard.writeText(url.toString())
-                        .then(r => {
-                            console.log(url + "was copied to clipboard")})
-                        .catch(e => {console.error(e)});
+        h('.microBtnContainer.dropdown', {id: dropdownID, name: 'section-object-dropdown'}, [
+            h('svg.icon', {fill: "currentcolor", viewBox: "0 0 8 8",
+                onmouseenter: () => {
+                    document.getElementById(dropdownID).classList.toggle('dropdown-open');
+                },
+                onmouseleave: () => {
+                    setTimeout( () => {
+                        if (!document.getElementById(dropdownID).classList.contains('dropdown-opened'))
+                            document.getElementById(dropdownID).classList.remove('dropdown-open');
+                    }, 100);
                 }
-            }, 'C')
-        ])
+            },
+                h('path', {d: "M0 2l4 4 4-4h-8z", name:"caret-bottom"})),
+            h('.dropdown-menu', {
+                onmouseenter: () => {
+                    document.getElementById(dropdownID).classList.toggle('dropdown-opened');
+                },
+                onmouseleave: () => {
+                    document.getElementById(dropdownID).classList.remove('dropdown-open');
+                    document.getElementById(dropdownID).classList.remove('dropdown-opened');
+                }
+            },[
+                h('a.microBtn', {
+                    onclick: () => {
+                        model.router.go('/home/?page=home'); // TODO
+                        model.fetchedData.delete(pageName, index);
+                        model.notify();
+                    }
+                }, 'X'),
+                h('a.microBtn', {
+                    onclick: () => {
+                        page[index].fetch();
+                    }
+                }, 'R'),
+                h('a.microBtn', {
+                    onclick: () => {
+                        navigator.clipboard.writeText(url.toString())
+                            .then(r => {
+                                console.log(url + "was copied to clipboard")
+                            })
+                            .catch(e => {
+                                console.error(e)
+                            });
+                    }
+                }, 'C')
+            ])]
+        )
     ]);
 }
 
@@ -43,7 +74,7 @@ export default function fetchedDataSection(model, pageName, label) {
         }
     }
 
-    return h('.flex-wrap.item-center.justify-center',[
+    return h('.flex-wrap.item-center.justify-center', [
         sectionTitle(label),
         h('.flex-column', buttons)
     ]);

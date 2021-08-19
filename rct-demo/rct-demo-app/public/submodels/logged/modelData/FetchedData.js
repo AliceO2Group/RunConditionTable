@@ -17,6 +17,8 @@ export default class FetchedData {
         this.rowsOnSite = params.hasOwnProperty('rowsOnSite') ? params.rowsOnSite : defaultRowsOnSite;
         this.site = params.hasOwnProperty('site') ? params.site : defaultSite;
 
+        this.totalRecordsNumber = null;
+
         this.hideMarkedRecords = false;
     }
 
@@ -26,7 +28,8 @@ export default class FetchedData {
         this.fetched = false;
         // for loading icon displaying;
         this.model.notify();
-        const response = await fetchClient(/**TODO*/this.url ? this.url.pathname + this.url.search : '/date', {
+        const reqEndpoint = this.url.pathname + this.url.search + (this.totalRecordsNumber === null || this.totalRecordsNumber === undefined ? '&count-records=true' : '');
+        const response = await fetchClient(reqEndpoint, {
             method: 'GET',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         });
@@ -36,12 +39,12 @@ export default class FetchedData {
         this.model.parent._tokenExpirationHandler(status);
 
         if (content.type === 'err') {
-            console.log(content.data);
+            console.error(content.data);
             alert('err', content.data);
         } else {
-            // TODO may add some function like "addDisplayAttributes"
+
             this.fields = content.data.fields.map(item => {
-                item.marked = false;
+                item.marked = true;
                 return item;
             });
             this.rows = content.data.rows.map(item => {
@@ -49,6 +52,10 @@ export default class FetchedData {
                 return item;
             });
             this.fetched = true;
+            if (this.totalRecordsNumber === null || this.totalRecordsNumber === undefined) {
+                console.log(content.data);
+                this.totalRecordsNumber = content.data.totalRecordsNumber;
+            }
         }
         this.model.notify();
     }

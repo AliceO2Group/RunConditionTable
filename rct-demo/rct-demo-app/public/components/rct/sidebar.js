@@ -6,15 +6,26 @@ import button from "../common/button.js";
 import handleClick from "../common/handleClick.js";
 import fetchedDataSection from "../common/fetchedDataSection.js";
 
+
+function higherLevelButton(model, page, index, label, view) {
+    var pathNQuery = `/api/Rct-Data/?page=${page}&index=${index}&view=${view}&rowsOnSite=50&site=1`;
+    const fdata = model.fetchedData[page][index];
+    if (fdata !== undefined && fdata !== null)
+        pathNQuery = fdata.url.pathname + fdata.url.search;
+    return button(model, label, (e) => handleClick(model, e), '', pathNQuery);
+
+}
+
 export default function sidebar(model) {
     return h('.mySidebar.flex-column.bg-gray-lighter', [
         button(model, 'Home', (e) => handleClick(model, e), '', '/home/?page=home'),
         h('.m1'),
 
         fetchedDataSection(model, null, 'Periods'),
-        button(model, 'main', (e) => handleClick(model, e), '', '/api/Rct-Data/?page=main&index=_0&view=periods&rowsOnSite=50&site=1'),
+        higherLevelButton(model, 'main', '_0', 'main view', 'periods'),
         fetchedDataSection(model, 'runsPerPeriod', 'Runs per period'),
-        button(model, 'MC', (e) => handleClick(model, e), '', '/api/Rct-Data/?page=mc&index=_0&view=mc&rowsOnSite=50&site=1'),
+        higherLevelButton(model, 'mc', '_0', 'MC', 'mc'),
+
         button(model, 'Pass QA Statistics Summary', () => {
             return undefined;
         }),
