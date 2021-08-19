@@ -3,7 +3,8 @@ import button from '../../common/button.js';
 import tableHeader from './table/header.js';
 import row from './table/row.js';
 import pagesCellsButtons from "./pagesCellsButtons.js";
-
+import postingDataConfig from "../postingDataConfig.js";
+import {postForm} from "../postingData.js";
 
 export default function tableView(model) {
 
@@ -18,30 +19,18 @@ export default function tableView(model) {
     return h('div.p3', [
         fieldsVisibilityControl(model, data, fields),
         button(model, 'reload data', () => data.fetch(), 'reload-btn'), ' ', // TODO move up
+
         h('table.table', {id: 'data-table-' + data.url}, [
 
             // h('caption', data.name),
             tableHeader(visibleFields, data, () => data.changeRecordsVisibility(data)),
-            tableBody(model, visibleFields, data, cellsButtons)
+            tableBody(model, visibleFields, data, cellsButtons, params)
 
         ])
     ])
 
 }
 
-
-// function fieldsVisibilityControl(mode, data, fields) {
-//     return h('.flex-row.p3', fields.map(f =>
-//         h('.d-inline.p1',[
-//             h('input.form-check-input.p3.d-block', {
-//                 onclick: () => data.changeItemStatus(f),
-//                 checked: f.marked,
-//                 type: 'checkbox'
-//             }),
-//             f.name,
-//         ])
-//     ))
-// }
 
 function fieldsVisibilityControl(mode, data, fields) {
     return h('.flex-row.p3.justify-start', fields.map(f =>
@@ -57,8 +46,8 @@ function fieldsVisibilityControl(mode, data, fields) {
 }
 
 
-function tableBody(model, visibleFields, data, cellsButtons) {
+function tableBody(model, visibleFields, data, cellsButtons, params) {
     return h('tbody', {id: 'table-body-' + data.url},
-        data.rows.map(item => row(model, visibleFields, data, item, cellsButtons))
+        [postingDataConfig.hasOwnProperty(params.page) ? postForm(model, data) : ''].concat(data.rows.map(item => row(model, visibleFields, data, item, cellsButtons)))
     );
 }

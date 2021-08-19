@@ -2,7 +2,7 @@ class ReqParser {
 
     constructor() {}
 
-    parse(query) {
+    parseDataReq(query) {
         const dataSubsetQueryPart = (query) => query['count-records'] === 'true' ? '' : `LIMIT ${query.rowsOnSite} OFFSET ${query.rowsOnSite * (query.site - 1)}`;
         switch (query.view) {
             case 'periods':
@@ -16,6 +16,13 @@ class ReqParser {
             default:
                 return 'SELECT NOW()';
         }
+    }
+
+    parseInsertDataReq(payload) {
+        const valueEntries = Object.entries(payload.data);
+        const keys = valueEntries.map(([k, v]) => k);
+        const values = valueEntries.map(([k, v]) => v);
+        return `INSERT INTO ${payload.view}(${keys.join(', ')}) VALUES(${values.join(', ')});`;
     }
 }
 

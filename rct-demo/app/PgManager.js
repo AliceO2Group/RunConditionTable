@@ -71,7 +71,7 @@ class PgManager {
     }
 
     #parseReqQToSqlQ(query) {
-        return this.parser.parse(query);
+        return this.parser.parseDataReq(query);
     }
 
 
@@ -122,6 +122,34 @@ class PgManager {
     }
 
 
+
+    async #execDataInsert(req, res) {
+        if (this.loggedUsers.tokenToUserData[req.query.token]) {
+            const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
+            const query = this.parser.parseInsertDataReq(req.payload);
+            if (client) {
+                if (this.#verifysqlQuery(query)) {
+                    await select(client, query)
+                        .then(() => {
+                            res.json({type: 'res', data: 'data inserted'});
+                        })
+                        .catch(e => {
+                            console.error(e);
+                            res.json({type: 'err', data: e.code});
+                        })
+                } else {
+                    res.json(req, query, 'This query is malicious');
+                }
+            } else {
+                console.log('invalid token or no such client');
+                res.json({type: 'err', data: 'invalid token or no such user'});
+            }
+        } else {
+            console.log('invalid token or no such client');
+            res.json({type: 'err', data: 'invalid token or no such user'});
+        }
+    }
+
     async #getDate(req, res) {
         await this.#execDataReq(req, res, 'SELECT NOW();')
     }
@@ -136,6 +164,10 @@ class PgManager {
 
     bindGetDbData(name) {
         this.httpserver.get(name, (req, res) => this.#execDataReq(req, res));
+    }
+
+    bindInsertDbata(name) {
+        this.httpserver.post(name, (req, res) => this.#execDataInsert(req, res));
     }
 
     bindDate(name) {
