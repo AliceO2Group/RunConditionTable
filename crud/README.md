@@ -50,18 +50,18 @@ Polecenie [`npm -y init`](https://docs.npmjs.com/cli/v7/commands/npm-init) utwor
 ```shell
 touch index.js
 ```
-Na razie wpiszmy w nim np. `console.log('Hello there');`. Zgodnie z przyjętą [konwencją](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/devel.md#npm-scripts) aplikację będziemy uruchamiać poleceniem `npm start`. W tym celu do pliku [`package.json`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/package.json) należy dopisać skrypt `"start": "node index.js"`. Szybki test, czy działa:
+Na razie wpiszmy w nim np. `console.log('Hello there');`. Zgodnie z przyjętą [konwencją](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/devel.md#npm-scripts) aplikację będziemy uruchamiać poleceniem `npm start`. W tym celu do pliku `package.json` należy dopisać skrypt [`"start": "node index.js"`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/package.json). Szybki test, czy działa:
 
 ![test](https://user-images.githubusercontent.com/48785655/129396425-885d36e7-a8c6-4a14-bdcf-9bc4a4552867.png)
 
 Więcej na temat pliku `package.json` dowiesz się z [oficjalnej dokumentacji](https://docs.npmjs.com/cli/v7/configuring-npm/package-json).
 
 # 3. Interakcja z bazą danych
-Wykorzystamy moduł [`pg`](https://node-postgres.com) ułatwiający pracę z postgresem przy wykorzystaniu node.js'a. Żeby z niego korzystać konieczna jest wcześniejsza jego instalacja:
+Wykorzystamy moduł [`pg`](https://node-postgres.com) ułatwiający pracę z postgresem przy wykorzystaniu node.js'a. Żeby z niego korzystać konieczna jest wcześniejsza jego [instalacja](https://docs.npmjs.com/cli/v7/commands/npm-install):
 ```shell
 npm install pg
 ```
-Po wywołaniu tego polecenia w folderze projektu pojawi się folder `node_modules` oraz plik [`package-lock.json`](https://docs.npmjs.com/cli/v7/configuring-npm/package-lock-json), a do pliku `package.json` zostanie dopisana odpowiednia zależność. W folderze `node_modules` znajdują się moduły wykorzystywane przez aplikację. Są stosunkowo dużymi plikami, dlatego generalnie nie wrzuca się ich np. na GitHuba ([`.gitignore`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/.gitignore)). Aby zapewnić spójność modułów wykorzystywanych przez różne osoby współpracujące przy danym projekcie, zapis instalowanych zależności jest na bieżąco tworzony w pliku `package-lock.json`. Dzięki niemu proste będzie ich jednoznaczne odtworzenie. Żeby to przetestować usuń folder `node_modules`, a następnie wywołaj polecenie [`npm install`](https://docs.npmjs.com/cli/v7/commands/npm-install) (tym razem specyfikacji, jakie moduły chcesz zainstalować). Do folderu `node_modules` ponownie została ściągnięta paczka `pg` oraz wszystkie przez nią wykorzystywane.
+Po wywołaniu tego polecenia w folderze projektu pojawi się folder `node_modules` oraz plik [`package-lock.json`](https://docs.npmjs.com/cli/v7/configuring-npm/package-lock-json), a do pliku `package.json` zostanie dopisana odpowiednia zależność. W folderze `node_modules` znajdują się moduły wykorzystywane przez aplikację. Są stosunkowo dużymi plikami, dlatego generalnie nie wrzuca się ich np. na GitHuba ([`.gitignore`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/.gitignore)). Aby zapewnić spójność modułów wykorzystywanych przez różne osoby współpracujące przy danym projekcie, zapis instalowanych zależności jest na bieżąco tworzony w pliku `package-lock.json`. Dzięki niemu proste będzie ich jednoznaczne odtworzenie. Żeby to przetestować usuń folder `node_modules`, a następnie wywołaj polecenie `npm install` (tym razem specyfikacji, jakie moduły chcesz zainstalować). Do folderu `node_modules` ponownie została ściągnięta paczka `pg` oraz wszystkie przez nią wykorzystywane.
 
 Utwórz folder `db`, a w nim plik [`connection.js`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/db/connection.js).
 ```js
@@ -163,7 +163,7 @@ Ponownie uruchom aplikację i przeglądarkę. Błąd zniknął, a obok tytułu s
 
 ![fav](https://user-images.githubusercontent.com/48785655/129437983-3769515c-963b-4174-82a0-c0adf0c2eb48.png)
 
-Kolejny element, który należy poprawić, to fakt, że aktualnie informacje [JSON Web Token](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/json-tokens.md) są wyświetlane w adresie URL. Zmodyfikuj sekcję `body` pliku `index.html`:
+Kolejny element, który należy poprawić, to fakt, że aktualnie dane, w celu których ukrycia wykorzystujemy [token](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/json-tokens.md) są wyświetlane w adresie URL. Zmodyfikuj sekcję `body` pliku `index.html`:
 ```html
 <body>
     <script type="module">
@@ -173,11 +173,14 @@ Kolejny element, który należy poprawić, to fakt, że aktualnie informacje [JS
     <h1>Hello world!</h1>
 </body>
 ```
-
-Po wywołaniu [funkcji](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/Frontend/js/src/sessionService.js) ze skryptu, dane są dostępne po stronie klienta poprzez obiekt `sessionService`. Dopisz do skryptu linię `console.log(sessionService.session);`. Wyświetlone dane to te same, które wcześniej były dopisywane do adresu URL, dokładniejszy ich opis znajdziesz [JSON Web Token](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/json-tokens.md).
+Po wywołaniu [funkcji](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/Frontend/js/src/sessionService.js) ze skryptu, dane są dostępne po stronie klienta poprzez obiekt `sessionService`. Dopisz do skryptu linię `console.log(sessionService.session);`. Wyświetlone dane to te same, które wcześniej były dopisywane do adresu URL, dokładniejszy ich opis znajdziesz [tutaj](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/json-tokens.md).
 
 # 5. CRUD
 Wykorzystamy publiczne metody serwera, aby obsłużyć operacje CRUD wykonywane na bazie danych.
+
+| [Create](https://github.com/xsalonx/cern_RCT_test/tree/master/crud#create-post) | [Read](https://github.com/xsalonx/cern_RCT_test/tree/master/crud#read-get) | [Update](https://github.com/xsalonx/cern_RCT_test/tree/master/crud#update-patch) | [Delete](https://github.com/xsalonx/cern_RCT_test/tree/master/crud#delete-delete) |
+| :---:   | :-: | :-: | :-: |
+| `POST` | `GET` | `PATCH` | `DELETE` |
 
 ## Read (`GET`)
 Zmodyfikuj plik `index.js`:
@@ -203,7 +206,7 @@ Według przyjętej we frameworku reguły (patrz [tutaj](https://github.com/Alice
 `{ public: true }` wyłącza weryfikację tokenu, bez tego przy aktualnej konfiguracji zobaczysz błąd 403.
 
 ### Proste filtrowanie
-Wykorzystamy adres URL do przesyłania prostych zapytań do serwera w formie `?klucz=wartość`. Zmodyfikuj zdefiniowaną wcześniej obsługę zapytania `GET`:
+Wykorzystamy adres URL do przesyłania prostych zapytań do serwera w formacie `?klucz=wartość`. Zmodyfikuj zdefiniowaną wcześniej obsługę zapytania `GET`:
 ```js
 httpServer.get("/getData", async function(req, res, next) {
     try {
