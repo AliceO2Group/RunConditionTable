@@ -1,4 +1,4 @@
-import button from "./button.js";
+import viewButton from "../common/viewButton.js";
 import {h} from '/js/src/index.js'
 import handleClick from "../../utils/handleClick.js";
 
@@ -6,11 +6,11 @@ function sectionTitle(label) {
     return h('.sectionTitle', label)
 }
 
-function multiButtonController(model, pageName, index) {
-    const page = model.fetchedData[pageName]
-    const url = page[index].url;
+function multiButtonController(model, sectionName, index) {
+    const section = model.fetchedData[sectionName]
+    const url = section[index].url;
     const dropdownID = "dropdown-" + url;
-    const button1 = button(model, index, (e) => handleClick(model, e), '', url.pathname + url.search, '.margin0', '');
+    const button1 = viewButton(model, index, (e) => handleClick(model, e), '', url.pathname + url.search, '.margin0', '');
     return h('.flex-row.appearance.w-100.m1.justify-between', [
         button1,
         h('.microBtnContainer.dropdown', {id: dropdownID, name: 'section-object-dropdown'}, [
@@ -37,14 +37,14 @@ function multiButtonController(model, pageName, index) {
             },[
                 h('a.microBtn', {
                     onclick: () => {
-                        model.router.go('/home/?page=home'); // TODO
-                        model.fetchedData.delete(pageName, index);
+                        model.router.go('/home/?section=home'); // TODO
+                        model.fetchedData.delete(sectionName, index);
                         model.notify();
                     }
                 }, 'X'),
                 h('a.microBtn', {
                     onclick: () => {
-                        page[index].fetch();
+                        section[index].fetch();
                     }
                 }, 'R'),
                 h('a.microBtn', {
@@ -63,13 +63,13 @@ function multiButtonController(model, pageName, index) {
     ]);
 }
 
-export default function fetchedDataSection(model, pageName, label) {
-    const page = model.fetchedData[pageName]
+export default function fetchedDataSection(model, sectionName, label) {
+    const section = model.fetchedData[sectionName]
     const buttons = [];
-    if (pageName !== null) {
-        for (var index in page) {
-            if (page.hasOwnProperty(index) && page[index] !== undefined && page[index] !== null) {
-                buttons.push(multiButtonController(model, pageName, index));
+    if (sectionName !== null) {
+        for (let index in section) {
+            if (section.hasOwnProperty(index) && section[index] !== undefined && section[index] !== null) {
+                buttons.push(multiButtonController(model, sectionName, index));
             }
         }
     }

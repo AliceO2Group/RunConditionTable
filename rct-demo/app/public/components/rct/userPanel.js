@@ -1,7 +1,7 @@
 import { h, switchCase } from '/js/src/index.js';
 import { serialIf } from '../../utils/utils.js';
 import header from '../common/header.js';
-import button from '../common/button.js';
+import viewButton from '../common/viewButton.js';
 import home from "./home.js";
 import rctDataView from "./rctData/rctDataView.js";
 import sidebar from "./sidebar.js";

@@ -1,7 +1,7 @@
 import { h } from '/js/src/index.js';
 import sessionService from '/js/src/sessionService.js';
 import inputForm from './common/inputForm.js';
-import button from './common/button.js';
+import viewButton from './common/viewButton.js';
 import container from './common/container.js';
 
 function handleRegistration() {
@@ -18,8 +18,8 @@ async function handleLogin(model) {
 }
 
 export default function loggingSite(model) {
-    const loginButton = button(model, "login", () => handleLogin(model));
-    const registerButton = button(model, "register", handleRegistration);
+    const loginButton = viewButton(model, "login", () => handleLogin(model));
+    const registerButton = viewButton(model, "register", handleRegistration);
     const title = h('h1.primary', 'TEST APP');
     
     return h('div.loginDiv',

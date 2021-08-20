@@ -1,6 +1,6 @@
 import { h } from '/js/src/index.js';
 
-export default function button(model, label, onclickAction, id = '', href = undefined, adClasses='', margin='.m1', forceButton=false) {
+export default function viewButton(model, label, onclickAction, id = '', href = undefined, adClasses='', margin='.m1', forceButton=false) {
     let buttonType = '.myFinalButton' + adClasses + margin;
     if (model.router && href !== undefined) {
         const url = model.router.getUrl();

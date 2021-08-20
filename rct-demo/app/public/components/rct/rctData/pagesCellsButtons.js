@@ -1,14 +1,14 @@
-import RCTDATAPAGES from "../../../RCTDATAPAGES.js";
-import button from '../../common/button.js';
+import RCTDATA_SECTIONS from "../../../RCTDATA_SECTIONS.js";
+import viewButton from '../../common/viewButton.js';
 import handleClick from "../../../utils/handleClick.js";
 
 //** modify in order to create appropriate behaviour*/
 const pagesCellsButtons = {
     main: {
         period: (model, item, name) => {
-            return button(model, item.period, (e) =>
+            return viewButton(model, item.period, (e) =>
                 handleClick(model, e), '',
-                `/api/Rct-Data/?page=runsPerPeriod&index=${item.period}&view=runs&period=${item.period}&rowsOnSite=50&site=1`);
+                `/api/Rct-Data/?section=runsPerPeriod&index=${item.period}&view=runs&period=${item.period}&rowsOnPage=50&page=1`);
         },
     },
     runsPerPeriod: {},
@@ -19,7 +19,7 @@ const pagesCellsButtons = {
 
 for (var p in pagesCellsButtons) {
     if (pagesCellsButtons.hasOwnProperty(p)) {
-        if (! RCTDATAPAGES.includes(p))
+        if (! RCTDATA_SECTIONS.includes(p))
             throw Error('incorrect configuration');
     }
 }

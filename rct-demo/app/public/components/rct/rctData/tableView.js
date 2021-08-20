@@ -1,5 +1,5 @@
 import {h, switchCase} from '/js/src/index.js';
-import button from '../../common/button.js';
+import viewButton from '../../common/viewButton.js';
 import tableHeader from './table/header.js';
 import row from './table/row.js';
 import pagesCellsButtons from "./pagesCellsButtons.js";
@@ -9,9 +9,9 @@ import siteController from "./siteController.js";
 export default function tableView(model) {
 
     const params = model.router.params;
-    const data = model.fetchedData[params.page][params.index];
+    const data = model.fetchedData[params.section][params.index];
 
-    const cellsButtons = pagesCellsButtons[params.page];
+    const cellsButtons = pagesCellsButtons[params.section];
 
     const fields = data.fields;
     const visibleFields = fields.filter(f => f.marked);
@@ -19,7 +19,7 @@ export default function tableView(model) {
     return h('div.p3', [
         fieldsVisibilityControl(model, data, fields),
         siteController(model, data),
-        button(model, 'reload data', () => data.fetch(), 'reload-btn'), ' ', // TODO move up
+        viewButton(model, 'reload data', () => data.fetch(), 'reload-btn'), ' ', // TODO move up
         h('table.table', {id: 'data-table-' + data.url}, [
 
             // h('caption', data.name),

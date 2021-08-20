@@ -1,10 +1,10 @@
 
-import RCTDATAPAGES from "../../../RCTDATAPAGES.js";
+import RCTDATA_SECTIONS from "../../../RCTDATA_SECTIONS.js";
 
 
 export default class ModelFetchedDataStructure {
     constructor() {
-        for (var prop of RCTDATAPAGES) {
+        for (var prop of RCTDATA_SECTIONS) {
             this[prop] = {};
         }
     }
@@ -15,7 +15,7 @@ export default class ModelFetchedDataStructure {
             console.log(this);
         else {
             const pObj = {};
-            for (var prop in RCTDATAPAGES) {
+            for (var prop in RCTDATA_SECTIONS) {
                 pObj[prop] = [];
                 for (var p in this[prop]) {
                     if (this[prop].hasOwnProperty(p))
@@ -27,7 +27,7 @@ export default class ModelFetchedDataStructure {
     }
 
     clear() {
-        for (var prop in RCTDATAPAGES) {
+        for (var prop in RCTDATA_SECTIONS) {
             this[prop] = {};
         }
     }

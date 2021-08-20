@@ -87,13 +87,13 @@ class PgManager {
                     await select(client, query)
                         .then((dbRes) => {
                             const fields = dbRes.fields;
-                            var rows = dbRes.rows;
+                            let rows = dbRes.rows;
                             const data = {};
                             console.log(req.query);
                             if (req.query['count-records'] === 'true') {
                                 data['totalRecordsNumber'] = rows.length;
-                                const offset = req.query.rowsOnSite * (req.query.site - 1);
-                                const limit = req.query.rowsOnSite;
+                                const offset = req.query.rowsOnPage * (req.query.page - 1);
+                                const limit = req.query.rowsOnPage;
                                 rows = rows.slice(offset, offset + limit);
                             }
                             // console.log(data);

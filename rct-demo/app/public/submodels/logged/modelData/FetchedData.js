@@ -2,8 +2,8 @@
 import {fetchClient} from '/js/src/index.js';
 import {replaceUrlParams} from "../../../utils/utils.js";
 
-const defaultRowsOnSite = 100;
-const defaultSite = 1;
+const defaultRowsOnPage = 100;
+const defaultPage = 1;
 
 export default class FetchedData {
     constructor(model, url, name='table') {
@@ -15,8 +15,8 @@ export default class FetchedData {
         this.fetched = false;
 
         const params = Object.fromEntries(url.searchParams.entries());
-        this.rowsOnSite = params.hasOwnProperty('rowsOnSite') ? params.rowsOnSite : defaultRowsOnSite;
-        this.site = params.hasOwnProperty('site') ? params.site : defaultSite;
+        this.rowsOnPage = params.hasOwnProperty('rowsOnPage') ? params.rowsOnPage : defaultRowsOnPage;
+        this.site = params.hasOwnProperty('page') ? params.page : defaultPage;
 
         this.totalRecordsNumber = null;
 
@@ -64,10 +64,10 @@ export default class FetchedData {
         this.fetch().then(r => {}).catch(e => {console.error(e)});
     }
 
-    changeSite(site) {
-        console.assert(site < this.totalRecordsNumber / this.rowsOnSite + 1);
+    changePage(page) {
+        console.assert(page < this.totalRecordsNumber / this.rowsOnPage + 1);
         this.fetched = false;
-        this.url = replaceUrlParams(this.url, [['site', site]]);
+        this.url = replaceUrlParams(this.url, [['page', page]]);
         this.model.router.go(this.url);
     }
 
