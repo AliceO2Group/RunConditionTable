@@ -3,7 +3,7 @@ import {h} from "/js/src/index.js";
 // TODO, sidebar should be nicer'
 // TODO, add using filtering, to uri construction;
 import button from "../common/button.js";
-import handleClick from "../common/handleClick.js";
+import handleClick from "../../utils/handleClick.js";
 import fetchedDataSection from "../common/fetchedDataSection.js";
 
 

@@ -1,6 +1,6 @@
 import RCTDATAPAGES from "../../../RCTDATAPAGES.js";
 import button from '../../common/button.js';
-import handleClick from "../../common/handleClick.js";
+import handleClick from "../../../utils/handleClick.js";
 
 //** modify in order to create appropriate behaviour*/
 const pagesCellsButtons = {
