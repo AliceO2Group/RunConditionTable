@@ -3,7 +3,7 @@ class ReqParser {
     constructor() {}
 
     parse(query) {
-        const dataSubsetQueryPart = (query) => query['count-records'] === 'true' ? '' : `LIMIT ${query.rowsOnSite} OFFSET ${query.rowsOnSite * (query.site - 1)}`;
+        const dataSubsetQueryPart = (query) => query['count-records'] === 'true' ? '' : `LIMIT ${query.rowsOnPage} OFFSET ${query.rowsOnPage * (query.page - 1)}`;
         switch (query.view) {
             case 'periods':
                 return `SELECT * FROM ${query.view} ${dataSubsetQueryPart(query)};`;

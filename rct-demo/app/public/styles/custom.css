@@ -15,3 +15,10 @@
 .thin-border {
     border: solid gray 1px;
 }
+
+.page-changing-controller {
+    padding: 5px;
+    margin: 3px;
+    cursor: pointer;
+
+}

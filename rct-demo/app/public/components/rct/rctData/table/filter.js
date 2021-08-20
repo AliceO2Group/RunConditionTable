@@ -1,6 +1,6 @@
 import inputForm from '../../../common/inputForm.js';
 import { h } from '/js/src/index.js';
-import button from '../../../common/button.js';
+import viewButton from '../../../common/viewButton.js';
 
 async function handleFilter(model) {
     const idWanted = document.getElementById('idWanted').value;
@@ -25,6 +25,6 @@ export default function filter(exec){//model){//exec) {
                 h('th', {scope: "col"}, inputForm('b field', 'bFieldWanted', 'search'),),
                 h('th', {scope: "col"}, inputForm('statistics', 'statisticsWanted', 'search'),),
                 //h('th', {scope: "col"}, button('Search', handleFilter(model), ''),),
-                h('th', {scope: "col"}, button('Search', exec, ''),),
+                h('th', {scope: "col"}, viewButton('Search', exec, ''),),
             ])
 }

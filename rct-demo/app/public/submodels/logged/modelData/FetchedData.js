@@ -1,8 +1,9 @@
 
 import {fetchClient} from '/js/src/index.js';
+import {replaceUrlParams} from "../../../utils/utils.js";
 
-const defaultRowsOnSite = 50;
-const defaultSite = 1;
+const defaultRowsOnPage = 100;
+const defaultPage = 1;
 
 export default class FetchedData {
     constructor(model, url, name='table') {
@@ -13,9 +14,9 @@ export default class FetchedData {
         this.rows = null;
         this.fetched = false;
 
-        const params = url.searchParams.entries();
-        this.rowsOnSite = params.hasOwnProperty('rowsOnSite') ? params.rowsOnSite : defaultRowsOnSite;
-        this.site = params.hasOwnProperty('site') ? params.site : defaultSite;
+        const params = Object.fromEntries(url.searchParams.entries());
+        this.rowsOnPage = params.hasOwnProperty('rowsOnPage') ? params.rowsOnPage : defaultRowsOnPage;
+        this.site = params.hasOwnProperty('page') ? params.page : defaultPage;
 
         this.totalRecordsNumber = null;
 
@@ -24,7 +25,6 @@ export default class FetchedData {
 
 
     async fetch() {
-        console.log('fetching from: ', this.url);
         this.fetched = false;
         // for loading icon displaying;
         this.model.notify();
@@ -53,7 +53,6 @@ export default class FetchedData {
             });
             this.fetched = true;
             if (this.totalRecordsNumber === null || this.totalRecordsNumber === undefined) {
-                console.log(content.data);
                 this.totalRecordsNumber = content.data.totalRecordsNumber;
             }
         }
@@ -62,7 +61,14 @@ export default class FetchedData {
 
     changeFiltering(/**???*/) {
         // TODO
-        this.fetch();
+        this.fetch().then(r => {}).catch(e => {console.error(e)});
+    }
+
+    changePage(page) {
+        console.assert(page < this.totalRecordsNumber / this.rowsOnPage + 1);
+        this.fetched = false;
+        this.url = replaceUrlParams(this.url, [['page', page]]);
+        this.model.router.go(this.url);
     }
 
 
