@@ -14,7 +14,7 @@ export function postForm(model, data) {
         } else {
             return h('td', h('form', h('input', {id: 'input-form-' + f.name})));
         }
-    }).concat([h('button.btn', {onclick: () => {}}, 'submit')]))
+    }).concat([h('button.btn', {onclick: () => postData(model, data)}, 'submit')]))
 }
 
 async function postData(model, data) {
