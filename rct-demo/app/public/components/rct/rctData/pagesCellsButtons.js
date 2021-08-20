@@ -11,7 +11,13 @@ const pagesCellsButtons = {
                 `/api/Rct-Data/?section=runsPerPeriod&index=${item.period}&view=runs&period=${item.period}&rowsOnPage=50&page=1`);
         },
     },
-    runsPerPeriod: {},
+    runsPerPeriod: {
+        id: (model, item, name) => {
+            return viewButton(model, item.id, (e) => handleClick(model, e), '',
+                `/api/Rct-Data/?page=flags&index=${item.id}&view=flags&run_id=${item.id}&rowsOnSite=50&site=1`);
+        }
+    },
+    flags: {},
     mc: {},
     // ...,
 

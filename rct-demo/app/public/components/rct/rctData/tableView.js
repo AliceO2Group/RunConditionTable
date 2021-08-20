@@ -5,6 +5,8 @@ import row from './table/row.js';
 import pagesCellsButtons from "./pagesCellsButtons.js";
 import siteController from "./siteController.js";
 
+import postingDataConfig from "../postingDataConfig.js";
+import {postForm} from "../postingData.js";
 
 export default function tableView(model) {
 
@@ -24,7 +26,7 @@ export default function tableView(model) {
 
             // h('caption', data.name),
             tableHeader(visibleFields, data, () => data.changeRecordsVisibility(data)),
-            tableBody(model, visibleFields, data, cellsButtons)
+            tableBody(model, visibleFields, data, cellsButtons, params)
 
         ])
     ])
@@ -47,8 +49,8 @@ function fieldsVisibilityControl(mode, data, fields) {
 }
 
 
-function tableBody(model, visibleFields, data, cellsButtons) {
+function tableBody(model, visibleFields, data, cellsButtons, params) {
     return h('tbody', {id: 'table-body-' + data.url},
-        data.rows.map(item => row(model, visibleFields, data, item, cellsButtons))
+        [postingDataConfig.hasOwnProperty(params.page) ? postForm(model, data) : ''].concat(data.rows.map(item => row(model, visibleFields, data, item, cellsButtons)))
     );
 }

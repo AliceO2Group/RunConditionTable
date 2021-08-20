@@ -42,6 +42,7 @@ pgManager.bindLogging('/login');
 pgManager.bindLogout('/logout');
 pgManager.bindGetDbData('/RCT-Data');
 pgManager.bindDate('/date');
+pgManager.bindInsertDbData('/Rct-Data/insert-data');
 
 const AuthControlManager = require('./AuthControlManager.js');
 const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);
