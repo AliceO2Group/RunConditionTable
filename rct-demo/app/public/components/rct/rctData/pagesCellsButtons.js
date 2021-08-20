@@ -14,7 +14,7 @@ const pagesCellsButtons = {
     runsPerPeriod: {
         id: (model, item, name) => {
             return viewButton(model, item.id, (e) => handleClick(model, e), '',
-                `/api/Rct-Data/?page=flags&index=${item.id}&view=flags&run_id=${item.id}&rowsOnSite=50&site=1`);
+                `/api/Rct-Data/?section=flags&index=${item.id}&view=flags&run_id=${item.id}&rowsOnPage=50&page=1`);
         }
     },
     flags: {},

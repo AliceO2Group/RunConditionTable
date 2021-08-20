@@ -51,6 +51,6 @@ function fieldsVisibilityControl(mode, data, fields) {
 
 function tableBody(model, visibleFields, data, cellsButtons, params) {
     return h('tbody', {id: 'table-body-' + data.url},
-        [postingDataConfig.hasOwnProperty(params.page) ? postForm(model, data) : ''].concat(data.rows.map(item => row(model, visibleFields, data, item, cellsButtons)))
+        [postingDataConfig.hasOwnProperty(params.section) ? postForm(model, data) : ''].concat(data.rows.map(item => row(model, visibleFields, data, item, cellsButtons)))
     );
 }
