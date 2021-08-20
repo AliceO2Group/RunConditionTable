@@ -1,6 +1,5 @@
 import postingDataConfig from "./postingDataConfig.js";
-import {h} from '/js/src/index.js';
-import {fetchClient} from "@aliceo2/web-ui/Frontend/js/src";
+import {h, fetchClient} from '/js/src/index.js';
 
 
 export function postForm(model, data) {
