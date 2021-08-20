@@ -22,7 +22,7 @@ class ReqParser {
         const valueEntries = Object.entries(payload.data);
         const keys = valueEntries.map(([k, v]) => k);
         const values = valueEntries.map(([k, v]) => v);
-        return `INSERT INTO ${payload.view}(${keys.join(', ')}) VALUES(${values.join(', ')});`;
+        return `INSERT INTO ${payload.targetTable}("${keys.join('\", \"')}") VALUES(${values.join(', ')});`;
     }
 }
 

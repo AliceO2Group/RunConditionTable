@@ -34,9 +34,16 @@ async function postData(model, data) {
     const response = await fetchClient(reqEndpoint, {
         method: 'POST',
         headers: {'Content-type': 'application/json; charset=UTF-8'},
-        payload: {
-            view: pageMetadata.targetTable,
-            data: dataObj,
-        }
+        body: JSON.stringify({
+            payload: {
+                targetTable: pageMetadata.targetTable,
+                data: dataObj,
+            }
+        })
     });
+
+    const content = await response.json();
+    alert(content.data);
+    await data.fetch();
+    model.notify();
 }

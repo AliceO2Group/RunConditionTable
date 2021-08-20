@@ -124,9 +124,12 @@ class PgManager {
 
 
     async #execDataInsert(req, res) {
+        console.log(req);
         if (this.loggedUsers.tokenToUserData[req.query.token]) {
             const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
-            const query = this.parser.parseInsertDataReq(req.payload);
+            const query = this.parser.parseInsertDataReq(req.body.payload);
+            console.log(new Date(), query);
+
             if (client) {
                 if (this.#verifysqlQuery(query)) {
                     await select(client, query)
@@ -166,7 +169,7 @@ class PgManager {
         this.httpserver.get(name, (req, res) => this.#execDataReq(req, res));
     }
 
-    bindInsertDbata(name) {
+    bindInsertDbData(name) {
         this.httpserver.post(name, (req, res) => this.#execDataInsert(req, res));
     }
 

@@ -1,6 +1,6 @@
-import button from "./button.js";
+import button from "../common/button.js";
 import {h} from '/js/src/index.js'
-import handleClick from "./handleClick.js";
+import handleClick from "../../utils/handleClick.js";
 
 function sectionTitle(label) {
     return h('.sectionTitle', label)
