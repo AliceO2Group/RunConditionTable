@@ -55,9 +55,9 @@ def insert(tableName, genF, connection=None):
 
 def gen_cern_db_data():
     insert('periods', lambda: gen_periods_records(200))
-    insert('\"B field\"', gen_b_field)
+    insert('b_fields', gen_b_field)
     insert('runs', lambda: gen_runs(repeat=False))
-    insert('\"monte carlo\"', gen_monte_carlo)
+    insert('mc', gen_monte_carlo)
     insert('flags', gen_flags)
 
 

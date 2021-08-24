@@ -31,7 +31,7 @@ def gen_b_field(periodIds=None, bFieldR=None):
     if periodIds is None:
         conn = connect_cern_db()
         cur = conn.cursor()
-        cur.execute('SELECT id from periods WHERE id not in(select period_id from "B field");')
+        cur.execute('SELECT id from periods WHERE id not in(select period_id from "b_fields");')
         periodIds = cur.fetchall()
         periodIds = [e[0] for e in periodIds]
     if bFieldR is None:
@@ -77,7 +77,7 @@ def gen_monte_carlo(repeat=False):
     cur = conn.cursor()
     if not repeat:
         cur.execute(
-            'SELECT p.id, r.id from periods as p inner join runs as r on r.period_id = p.id where (p.id, r.id) not in(SELECT period_id, run_number from "monte carlo");')
+            'SELECT p.id, r.id from periods as p inner join runs as r on r.period_id = p.id where (p.id, r.id) not in(SELECT period_id, run_id from "mc");')
     else:
         cur.execute('SELECT p.id, r.id from periods as p inner join runs as r on r.period_id = p.id;')
     entries = cur.fetchall()
