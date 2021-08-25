@@ -3,10 +3,13 @@ const db = require('./db/connection.js');
 const config = require('./config.js');
 const httpServer = new HttpServer(config.http, config.jwt);
 
+const log = new Log('Crud Tutorial');
+
 httpServer.addStaticPath('./public');
 
 httpServer.get("/getData", async function(req, res, next) {
     try {
+        log.info("Getting data from database");
         const filters = req.query;
         const results = await db.query("SELECT * FROM data ORDER BY id");
 
@@ -28,6 +31,7 @@ httpServer.get("/getData", async function(req, res, next) {
         });
         return res.json(filteredResults);
     } catch (err) {
+      log.error('Select attempt failed!');
       return next(err);
     }
   }, {public: true});
@@ -36,13 +40,15 @@ httpServer.get("/getData", async function(req, res, next) {
     try {
         var date = req.body.date;
         var value = req.body.value;
-
+        
+        log.info(`Inserting data: value='${value}', date='${date}'`);
         const result = await db.query(
           "INSERT INTO data (value, date) VALUES ($1, $2) RETURNING *",
           [value, date]
         );
         return res.json(result.rows[0]);
     } catch (err) {
+        log.error('Insert attempt failed!');
         return next(err);
     }
 }, { public: true });
@@ -52,24 +58,28 @@ httpServer.patch("/update/:id", async function(req, res, next) {
       const id = req.params.id;
       const value = req.body.value;
       const date = req.body.date;
-  
+      
+      log.info(`Updating data item with id=${id} to: value='${value}', date='${date}`);
       const result = await db.query(
         "UPDATE data SET value=$1, date=$2 WHERE id=$3 RETURNING *",
         [value, date, id]
       );
       return res.json(result.rows[0]);
     } catch (err) {
+      log.error('Update attempt failed!');
       return next(err);
     }
   }, { public: true });
 
   httpServer.delete("/delete/:id", async function(req, res, next) {
     try {
+      log.info(`Deleting data item with id=${req.params.id}`);
       const result = await db.query("DELETE FROM data WHERE id=$1", [
         req.params.id
       ]);
       return res.json({ message: "Deleted" });
     } catch (err) {
+      log.error('Delete attempt failed!');
       return next(err);
     }
   }, { public: true });
