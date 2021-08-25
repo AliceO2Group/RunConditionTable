@@ -7,13 +7,13 @@ cd WebUI-tutorial
 
 ## 1. Baza danych
 ```shell
-cd postgressql_scripts
+cd postgresql_scripts
 psql
 \i create-user.sql # tworzy nowego użytkownika z hasłem, oczywiście można równoważnie wpisać do konsoli zawartość skryptu
 \du # wyświetl listę użytkowników, powinien pojawić się nowy użytkownik; żeby wyjść: q
 \i create-database.sql # tworzy bazę danych
 \l # wyświetl listę baz danych, powinna się tam pojawić nowoutworzona baza danych
-\i alter-database.sql # zmiana właściciela bazy danych na "rct-user"
+\i create-database.sql # zmiana właściciela bazy danych na "rct-user"
 \l
 exit
 ```

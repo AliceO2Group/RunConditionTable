@@ -1,6 +1,6 @@
 import random
 from random import randint as ri, choice, uniform
-from connect import *
+from connect import connect_rct_db
 
 
 def gen_periods_records(N, yearsR=None, periodsSuffixR=None, beams=None, energyR=None):
@@ -27,9 +27,9 @@ def gen_periods_records(N, yearsR=None, periodsSuffixR=None, beams=None, energyR
     ) for _ in range(N)]
 
 
-def gen_b_field(periodIds=None, bFieldR=None):
+def gen_b_field(host, user, password, dbname, periodIds=None, bFieldR=None):
     if periodIds is None:
-        conn = connect_cern_db()
+        conn = connect_rct_db(host, user, password, dbname)
         cur = conn.cursor()
         cur.execute('SELECT id from periods WHERE id not in(select period_id from "b_fields");')
         periodIds = cur.fetchall()
@@ -54,10 +54,10 @@ def gen_b_field(periodIds=None, bFieldR=None):
            ) for _ in range(l)]
 
 
-def gen_runs(runsR=None, repeat=False):
+def gen_runs(host, user, password, dbname, runsR=None, repeat=False):
     if runsR is None:
         runsR = (4, 20)
-    conn = connect_cern_db()
+    conn = connect_rct_db(host, user, password, dbname)
     cur = conn.cursor()
     if not repeat:
         cur.execute('SELECT id from periods WHERE id not in(select period_id from runs);')
@@ -73,8 +73,8 @@ def gen_runs(runsR=None, repeat=False):
     ) for pId in periodIds for _ in range(ri(runsR[0], runsR[1]))]
 
 
-def gen_monte_carlo(repeat=False):
-    conn = connect_cern_db()
+def gen_monte_carlo(host, user, password, dbname, repeat=False):
+    conn = connect_rct_db(host, user, password, dbname)
     cur = conn.cursor()
     if not repeat:
         cur.execute(
@@ -93,10 +93,10 @@ def gen_monte_carlo(repeat=False):
     ) for pi in entries]
 
 
-def gen_flags(flagsR=None, repeat=False):
+def gen_flags(host, user, password, dbname, flagsR=None, repeat=False):
     if flagsR is None:
         flagsR = (0, 10)
-    conn = connect_cern_db()
+    conn = connect_rct_db(host, user, password, dbname)
     cur = conn.cursor()
     if not repeat:
         cur.execute(
