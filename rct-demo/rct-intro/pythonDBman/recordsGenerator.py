@@ -31,7 +31,7 @@ def gen_b_field(periodIds=None, bFieldR=None):
     if periodIds is None:
         conn = connect_cern_db()
         cur = conn.cursor()
-        cur.execute('SELECT id from periods WHERE id not in(select period_id from "B field");')
+        cur.execute('SELECT id from periods WHERE id not in(select period_id from "b_fields");')
         periodIds = cur.fetchall()
         periodIds = [e[0] for e in periodIds]
     if bFieldR is None:
@@ -69,6 +69,7 @@ def gen_runs(runsR=None, repeat=False):
     return [(
         'DEFAULT',
         str(pId),
+        str(ri(1111111, 8888888)),
     ) for pId in periodIds for _ in range(ri(runsR[0], runsR[1]))]
 
 
@@ -77,19 +78,19 @@ def gen_monte_carlo(repeat=False):
     cur = conn.cursor()
     if not repeat:
         cur.execute(
-            'SELECT p.id, r.id from periods as p inner join runs as r on r.period_id = p.id where (p.id, r.id) not in(SELECT period_id, run_number from "monte carlo");')
+            'SELECT p.id from periods as p where p.id not in(SELECT period_id from "mc");')
     else:
-        cur.execute('SELECT p.id, r.id from periods as p inner join runs as r on r.period_id = p.id;')
+        cur.execute('SELECT p.id from periods as p;')
     entries = cur.fetchall()
 
     return [(
         'DEFAULT',
         'mu_' + str(ri(100000, 100000000)),
-        str(rn),
+        str(ri(1111111, 88888888)),
         'ir_' + str(ri(10000, 10000000)),
         'filing_scheme_' + str(ri(100000, 100000000)),
-        str(pi)
-    ) for pi, rn in entries]
+        str(pi[0])
+    ) for pi in entries]
 
 
 def gen_flags(flagsR=None, repeat=False):

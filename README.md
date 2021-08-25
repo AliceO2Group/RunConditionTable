@@ -7,7 +7,7 @@ cd WebUI-tutorial
 
 ## 1. Baza danych
 ```shell
-cd postgres
+cd postgressql_scripts
 psql
 \i create-user.sql # tworzy nowego użytkownika z hasłem, oczywiście można równoważnie wpisać do konsoli zawartość skryptu
 \du # wyświetl listę użytkowników, powinien pojawić się nowy użytkownik; żeby wyjść: q

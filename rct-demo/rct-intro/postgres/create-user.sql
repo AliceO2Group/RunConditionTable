@@ -1,1 +1,0 @@
-create user "rct-user" with password 'rct-passwd';
