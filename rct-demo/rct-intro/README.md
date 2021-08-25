@@ -1,10 +1,27 @@
-# 1. Baza danych
+# 1. Wstęp
 
 Na potrzeby tutoriala utworzymy bazę danych, z którą będzie komunikować się nasza aplikacja. Do zarządzania bazą danych wykorzystujemy [PostgreSQL](https://www.postgresql.org/). Nie przedstawiamy procesu instalacji i lokalnej konfiguracji, ponieważ dla różnych systemów operacyjnych wyglądają one inaczej.
 
 W folderze [postgres](https://github.com/xsalonx/cern_RCT_test/tree/master/postgres) znajdują się skrypty sql, z których korzystamy w kolejnych krokach. Zakładamy wykorzystanie klienta `psql`, który zapewnia interfejs konsolowy. Ponadto warto zapoznać się z narzędziem upraszczającym administrację bazą danych, [pgAdmin](https://www.pgadmin.org).
 
-# 2. Utworzenie użytkownika i bazy danych
+# 2. Baza danych
+_Disclaimer:_ Przyjęty schemat bazy danych (rysunek poniżej) został stworzony na podstawie dokumentów dostępnych w momencie pisania tego pliku. Ze względu na napotkane niejednoznaczności lub/i błędy interpretacyjne najprawdopodobniej nie odzwierciedla on rzeczywistych zależności pomiędzy danymi.
+
+![diagram](https://user-images.githubusercontent.com/48785655/127494257-59081600-07c4-4277-bee6-3acd5ceba941.png)
+
+# 3. Wybierz jedną ze ścieżek:
+
+| Wersja dla lubiących pisać / chcących poćwiczyć lub nauczyć się Postgresa | 4. |
+|----------| ------------- |
+| Wersja dla leniwych | 5. |
+| Wersja dla bardzo leniwych | 6. |
+
+# 4. Polecenia wpisywane ręcznie (:point_up: nie musisz niczego pobierać)
+```shell
+```
+
+# 5. Polecenia uruchamiane za pomocą `\i`
+## 5.1. Utworzenie użytkownika i bazy danych
 ```shell
 cd postgres
 psql
@@ -37,11 +54,7 @@ czyli metodę autentykacji opartej o hasło.
 
 Następnie należy zrestartować postgresa: `sudo service postgresql restart`.
 
-# 3. Tabele
-_Disclaimer:_ Przyjęty schemat najprawdopodobniej nie odzwierciedla rzeczywistych zależnośći pomiędzy danymi, o te trzeba będzie jeszcze dopytać.
-
-![diagram](https://user-images.githubusercontent.com/48785655/127494257-59081600-07c4-4277-bee6-3acd5ceba941.png)
-
+## 5.2. Tabele
 ```shell
 psql -d "rct-db" -U "rct-user" -W
 # utworzenie tabel:
@@ -61,5 +74,5 @@ select * from mc; # wyświetl wszystkie dane z tabeli mc
 \i fill-b-fields.sql
 ```
 
-# 4. [pythonDBman](https://github.com/xsalonx/cern_RCT_test/tree/master/pythonDBman)
+# 6. [pythonDBman](https://github.com/xsalonx/cern_RCT_test/tree/master/pythonDBman)
 Automatyczne generowanie większej liczby przykładowych rekordów przy pomocy skryptów napisanych w języku Python.
