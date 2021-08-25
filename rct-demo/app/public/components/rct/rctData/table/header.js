@@ -10,7 +10,8 @@ export default function tableHeader(visibleFields, data, checkBoxFunction) {
                     h('.form-check.mv2', [
                         h('input.form-check-input', {
                             type: 'checkbox',
-                            onclick: checkBoxFunction
+                            onclick: checkBoxFunction,
+                            checked: data.hideMarkedRecords,
                         }, ''),
                         h('label.form-check-label', {for: 'hide-marked'}, 'Hide marked')
                     ])
