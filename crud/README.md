@@ -45,23 +45,25 @@ npm init -y
 ```
 
 W tym momencie wygodnie będzie otworzyć folder projektu w aplikacji dedykowanej edytowaniu kodu, np. Visual Studio Code, WebStorm itp..
-Polecenie `npm -y init` utworzy plik `package.json` i uzupełni go domyślnymi ustawieniami (można również wpisywać je samodzielnie, wtedy bez opcji `-y` ). Według domyślnych ustawień plikiem głównym projektu będzie `index.js`.
+Polecenie [`npm -y init`](https://docs.npmjs.com/cli/v7/commands/npm-init) utworzy plik `package.json` i uzupełni go domyślnymi ustawieniami (można również wpisywać je samodzielnie, wtedy bez opcji `-y` ). Według domyślnych ustawień plikiem głównym projektu będzie `index.js`.
 
 ```shell
 touch index.js
 ```
-Na razie wpiszmy w nim np. `console.log('Hello there');`. Zgodnie z przyjętą [konwencją](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/devel.md#npm-scripts) aplikację będziemy uruchamiać poleceniem `npm start`. W tym celu do pliku [`package.json`](https://github.com/Ehevi/crud/edit/main/link-do-pliku-tutaj) należy dopisać skrypt `"start": "node index.js"`. Szybki test, czy działa:
+Na razie wpiszmy w nim np. `console.log('Hello there');`. Zgodnie z przyjętą [konwencją](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/devel.md#npm-scripts) aplikację będziemy uruchamiać poleceniem `npm start`. W tym celu do pliku `package.json` należy dopisać skrypt [`"start": "node index.js"`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/package.json). Szybki test, czy działa:
 
 ![test](https://user-images.githubusercontent.com/48785655/129396425-885d36e7-a8c6-4a14-bdcf-9bc4a4552867.png)
 
+Więcej na temat pliku `package.json` dowiesz się z [oficjalnej dokumentacji](https://docs.npmjs.com/cli/v7/configuring-npm/package-json).
+
 # 3. Interakcja z bazą danych
-Wykorzystamy moduł [`pg`](https://node-postgres.com) ułatwiający pracę z postgresem przy wykorzystaniu node.js'a. Żeby z niego korzystać konieczna jest wcześniejsza jego instalacja:
+Wykorzystamy moduł [`pg`](https://node-postgres.com) ułatwiający pracę z postgresem przy wykorzystaniu node.js'a. Żeby z niego korzystać konieczna jest jego wcześniejsza [instalacja](https://docs.npmjs.com/cli/v7/commands/npm-install):
 ```shell
 npm install pg
 ```
-Po wywołaniu tego polecenia w folderze projektu pojawi się folder `node_modules` oraz plik `package-lock.json`, a do pliku `package.json` zostanie dopisana odpowiednia zależność. W folderze `node_modules` znajdują się moduły wykorzystywane przez aplikację. Są stosunkowo dużymi plikami, dlatego generalnie nie wrzuca się ich np. na GitHuba (tutaj link do pliku .gitignore). Aby zapewnić spójność modułów wykorzystywanych przez różne osoby współpracujące przy danym projekcie, zapis instalowanych zależności jest na bieżąco tworzony w pliku `package-lock.json`. Dzięki niemu proste będzie ich jednoznaczne odtworzenie. Żeby to przetestować usuń folder `node_modules`, a następnie wywołaj polecenie `npm install`. Do folderu `node_modules` ponownie została ściągnięta paczka `pg` oraz wszystkie przez nią wykorzystywane.
+Po wywołaniu tego polecenia w folderze projektu pojawi się folder `node_modules` oraz plik [`package-lock.json`](https://docs.npmjs.com/cli/v7/configuring-npm/package-lock-json), a do pliku `package.json` zostanie dopisana odpowiednia zależność. W folderze `node_modules` znajdują się moduły wykorzystywane przez aplikację. Są stosunkowo dużymi plikami, dlatego generalnie nie wrzuca się ich np. na GitHuba ([`.gitignore`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/.gitignore)). Aby zapewnić spójność modułów wykorzystywanych przez różne osoby współpracujące przy danym projekcie, zapis instalowanych zależności jest na bieżąco tworzony w pliku `package-lock.json`. Dzięki niemu proste będzie ich jednoznaczne odtworzenie. Żeby to przetestować usuń folder `node_modules`, a następnie wywołaj polecenie `npm install` (tym razem specyfikacji, jakie moduły chcesz zainstalować). Do folderu `node_modules` ponownie została ściągnięta paczka `pg` oraz wszystkie przez nią wykorzystywane.
 
-Utwórz folder `db`, a w nim plik [`connection.js`](https://github.com/Ehevi/crud/edit/main/link-do-pliku-tutaj).
+Utwórz folder `db`, a w nim plik [`connection.js`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/db/connection.js).
 ```js
 const { Client } = require("pg");
 
@@ -77,7 +79,7 @@ client.connect();
 
 module.exports = client;
 ```
-Tworzymy w nim klienta, który łączy się z utworzoną wcześniej bazą (por. parametry z punktu 1 - link). Port 5432 to domyślny port, na którym działa postgres.
+Tworzymy w nim klienta, który łączy się z utworzoną wcześniej bazą (por. parametry z [punktu 1](https://github.com/xsalonx/cern_RCT_test/tree/crud/crud#1-przygotowanie-bazy-danych)). Port 5432 to domyślny port, na którym działa postgres.
 
 Wyeksportowane połączenie wykorzystamy teraz w pliku `index.js`.
 
@@ -97,7 +99,7 @@ Poleceniem `npm install --save @aliceo2/web-ui` ściągnij paczkę frameworka i 
 npm install --save @aliceo2/web-ui
 ```
 
-Zaczniemy od uworzenia serwera HTTP. Zapis konfiguracji będzie znajdował się w pliku [`config.js`](https://github.com/Ehevi/crud/edit/main/link-do-pliku-tutaj):
+Zaczniemy od uworzenia serwera HTTP. Zapis konfiguracji będzie znajdował się w pliku [`config.js`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/config.js):
 ```js
 module.exports = {
     jwt: {
@@ -143,13 +145,13 @@ Utwórz ten folder, a w nim plik `index.html`:
 </body>
 </html>
 ```
-Teraz uruchom `npm start` i otwórz przeglądarkę pod adresem [localhost:8080](localhost:8080) (parametry z pliku `config.js`). W przeglądarce uruchom konsolę: `Ctrl + Shift + I`. Konsola przeglądarki jest bardzo przydatna przy [debugowaniu](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/debug.md). Całość generalnie działa, ale już pojawił się pierwszy błąd, mianowicie:
+Teraz uruchom `npm start` i otwórz przeglądarkę pod adresem [localhost:8080](http://localhost:8080) (parametry z pliku `config.js`). W przeglądarce uruchom konsolę: `Ctrl + Shift + I`. Konsola przeglądarki jest bardzo przydatna przy [debugowaniu](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/debug.md). Całość generalnie działa, ale już pojawił się pierwszy błąd, mianowicie:
 
 ![favicon-error](https://user-images.githubusercontent.com/48785655/129437518-03ae41a9-45b2-46c6-b31a-aa96bcd53a6f.png)
 
 Przeglądarka wysłała do serwera zapytanie `GET http://localhost:8080/favicon.ico`, na które otrzymała odpowiedź 404 - Page not found. Żeby taki błąd się nie pojawiał musimy udostępnić żądany plik `favicon.ico`.
 
-W folderze `public` utwórz nowy folder `images`, do którego wklej folder [`favicon`](https://github.com/Ehevi/crud/edit/main/link-do-pliku-tutaj) ([źródło](https://favicon.io/emoji-favicons/microscope/)) - lub znajdź i wklej inny obrazek, który uważasz za ładniejszy. Następnie zmodyfikuj sekcję `head` pliku `index.html`:
+W folderze `public` utwórz nowy folder `images`, do którego wklej folder [`favicon`](https://github.com/xsalonx/cern_RCT_test/tree/master/crud/public/images/favicon) ([źródło](https://favicon.io/emoji-favicons/microscope/)) - lub znajdź i wklej inny obrazek, który uważasz za ładniejszy. Następnie zmodyfikuj sekcję `head` pliku `index.html`:
 ```html
 <head>
     <link rel="icon" href="./images/favicon/favicon.ico">
@@ -161,7 +163,7 @@ Ponownie uruchom aplikację i przeglądarkę. Błąd zniknął, a obok tytułu s
 
 ![fav](https://user-images.githubusercontent.com/48785655/129437983-3769515c-963b-4174-82a0-c0adf0c2eb48.png)
 
-Kolejny element, który należy poprawić, to fakt, że aktualnie informacje [JSON Web Token](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/json-tokens.md) są wyświetlane w adresie URL. Zmodyfikuj sekcję `body` pliku `index.html`:
+Kolejny element, który należy poprawić, to fakt, że aktualnie dane, w celu których ukrycia wykorzystujemy [token](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/json-tokens.md) są wyświetlane w adresie URL. Zmodyfikuj sekcję `body` pliku `index.html`:
 ```html
 <body>
     <script type="module">
@@ -171,11 +173,14 @@ Kolejny element, który należy poprawić, to fakt, że aktualnie informacje [JS
     <h1>Hello world!</h1>
 </body>
 ```
-
-Po wywołaniu [funkcji](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/Frontend/js/src/sessionService.js) ze skryptu, dane są dostępne po stronie klienta poprzez obiekt `sessionService`. Dopisz do skryptu linię `console.log(sessionService.session);`. Wyświetlone dane to te same, które wcześniej były dopisywane do adresu URL, dokładniejszy ich opis znajdziesz [JSON Web Token](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/json-tokens.md).
+Po wywołaniu [funkcji](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/Frontend/js/src/sessionService.js) ze skryptu, dane są dostępne po stronie klienta poprzez obiekt `sessionService`. Dopisz do skryptu linię `console.log(sessionService.session);`. Wyświetlone dane to te same, które wcześniej były dopisywane do adresu URL, dokładniejszy ich opis znajdziesz [tutaj](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/json-tokens.md).
 
 # 5. CRUD
 Wykorzystamy publiczne metody serwera, aby obsłużyć operacje CRUD wykonywane na bazie danych.
+
+| [Create](https://github.com/xsalonx/cern_RCT_test/tree/master/crud#create-post) | [Read](https://github.com/xsalonx/cern_RCT_test/tree/master/crud#read-get) | [Update](https://github.com/xsalonx/cern_RCT_test/tree/master/crud#update-patch) | [Delete](https://github.com/xsalonx/cern_RCT_test/tree/master/crud#delete-delete) |
+| :---:   | :-: | :-: | :-: |
+| `POST` | `GET` | `PATCH` | `DELETE` |
 
 ## Read (`GET`)
 Zmodyfikuj plik `index.js`:
@@ -185,13 +190,17 @@ const db = require('./db/connection.js');
 const config = require('./config.js');
 const httpServer = new HttpServer(config.http, config.jwt);
 
+const log = new Log('Crud Tutorial');
+
 httpServer.addStaticPath('./public');
 
 httpServer.get("/getData", async function(req, res, next) {
     try {
+      log.info("Getting data from database");
       const results = await db.query("SELECT * FROM data ORDER BY id");
       return res.json(results.rows);
     } catch (err) {
+      log.error('Select attempt failed!');
       return next(err);
     }
   }, { public: true });
@@ -201,11 +210,12 @@ Według przyjętej we frameworku reguły (patrz [tutaj](https://github.com/Alice
 `{ public: true }` wyłącza weryfikację tokenu, bez tego przy aktualnej konfiguracji zobaczysz błąd 403.
 
 ### Proste filtrowanie
-Wykorzystamy adres URL do przesyłania prostych zapytań do serwera w formie `?klucz=wartość`. Zmodyfikuj zdefiniowaną wcześniej obsługę zapytania `GET`:
+Wykorzystamy adres URL do przesyłania prostych zapytań do serwera w formacie `?klucz=wartość`. Zmodyfikuj zdefiniowaną wcześniej obsługę zapytania `GET`:
 ```js
 httpServer.get("/getData", async function(req, res, next) {
     try {
-        const filters = req.query;
+        log.info("Getting data from database");
+	const filters = req.query;
         const results = await db.query("SELECT * FROM data ORDER BY id");
 
         const filteredResults = results.rows.filter(row => {
@@ -220,6 +230,7 @@ httpServer.get("/getData", async function(req, res, next) {
 	if (filteredResults.length < 1) return res.send("No matching results");
         return res.json(filteredResults);
     } catch (err) {
+      log.error('Select attempt failed!');
       return next(err);
     }
   }, {public: true});
@@ -266,13 +277,15 @@ httpServer.post("/insert", async function(req, res, next) {
         var date = req.body.date;
         var value = req.body.value;
 
-        const result = await db.query(
+        log.info(`Inserting data: value='${value}', date='${date}'`);
+	const result = await db.query(
           "INSERT INTO data (value, date) VALUES ($1, $2) RETURNING *",
           [value, date]
         );
         return res.json(result.rows[0]);
     } catch (err) {
-        return next(err);
+        log.error('Insert attempt failed!');
+	return next(err);
     }
 }, { public: true });
 ```
@@ -284,12 +297,14 @@ httpServer.patch("/update/:id", async function(req, res, next) {
     const value = req.body.value;
     const date = req.body.date;
 
+    log.info(`Updating data item with id=${id} to: value='${value}', date='${date}`);
     const result = await db.query(
       "UPDATE data SET value=$1, date=$2 WHERE id=$3 RETURNING *",
       [value, date, id]
     );
     return res.json(result.rows[0]);
   } catch (err) {
+    log.error('Update attempt failed!');
     return next(err);
   }
 }, { public: true });
@@ -299,11 +314,13 @@ httpServer.patch("/update/:id", async function(req, res, next) {
 ```js
 httpServer.delete("/delete/:id", async function(req, res, next) {
   try {
+    log.info(`Deleting data item with id=${req.params.id}`);
     const result = await db.query("DELETE FROM data WHERE id=$1", [
       req.params.id
     ]);
     return res.json({ message: "Deleted" });
   } catch (err) {
+    log.error('Delete attempt failed!');
     return next(err);
   }
 }, { public: true });
@@ -391,6 +408,7 @@ Przeczytaj [artykuł wprowadzający](https://github.com/AliceO2Group/WebUi/blob/
 Zarówno model jak i widok mogą być (i zazwyczaj są) podzielone na mniejsze elementy składowe, odpowiednio na podmodele i podwidoki. Aby zwiększyć czytelność i ułatwić organizację kodu przechowuje się je w osobnych plikach/folderach.
 
 # 7. Uwzględnienie MVC w aplikacji `crud`
+## 7.1. Wyświetlanie danych
 __Do czego dążymy:__ przycisk w oknie przeglądarki, którego naciśnięcie (_użytkownik_ -> kontroler) spowoduje pobranie danych z bazy (_kontroler_ -> model) i ich wyświetlenie (_model_ -> widok -> _użytkownik_).
 
 ### Model
@@ -421,7 +439,7 @@ export default class Model extends Observable {
 ```
 
 ### Widok
-Za widok będzie odpowiedzialny plik [`view.js`](https://github.com/Ehevi/link-do-pliku) w folderze public. Rozważmy dwa przypadki:
+Za całokształt widoku będzie odpowiedzialny plik [`view.js`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/public/view.js) w folderze public. Rozważmy dwa przypadki:
 - a) przypadek "podstawowy" - dane niezaładowane
 - b) dane załadowane
 
@@ -536,26 +554,25 @@ export default function view(model) {
 
 Uruchom aplikację i sprawdź jej działanie.
 
-Na tym etapie mamy już działającą aplikację pozwalającą na wyświetlenie danych pobranych z bazy. Rozbudujmy ją o pozostałe operacje składowe akronimu CRUD:
-
+## 7.2. Rozbudowa frontendu o pozostałe operacje składowe akronimu CRUD:
 #### `DELETE`
 W tabeli obok pobranych danych umieścimy przycisk :heavy_multiplication_x:, którego naciśnięcie spowoduje usunięcie związanego z nim wiersza.
 
-##### Do pliku `Model.js`dopisz:
+##### Do modelu dopisz:
 ```js
 async delete(id) {
-      const response = await fetchClient(`/api/delete/${id}`, {
+    const response = await fetchClient(`/api/delete/${id}`, {
         method: 'DELETE',
-      });
-      this.getData();
-    }
+    });
+    this.getData();
+}
 ```
 
 ##### Zmodyfikuj header w pliku `loaded-view.js` tak, aby dołożyć dodatkową kolumnę na usuwanie:
 ```js
-    const header = h('thead',
-            h('tr',
-                h('th', 'id'),
+const header = h('thead',
+	h('tr',
+        	h('th', 'id'),
                 h('th', 'value'),
                 h('th', 'date'),
                 h('th', 'delete')
@@ -600,7 +617,7 @@ Uruchom aplikację i sprawdź jej działanie.
 
 #### `INSERT`
 Dodamy stały element załadowanego widoku aplikacji umożliwiający wstawianie nowych danych:
-##### Do pliku `Model.js`dopisz:
+##### Do modelu dopisz:
 ```js
 async insert(value, date) {
       const response = await fetchClient('/api/insert', {
@@ -671,13 +688,12 @@ export default function loadedView(model) {
         )
     );
 }
-
 ```
 
 #### `UPDATE`
 Wykorzystamy utworzony wcześniej komponent formularza do implementacji obsługi aktualizacji danych. Dodamy nową kolumnę w tabeli z danymi. W kolumnie będzie znajdował się przycisk, którego naciśnięcie spowoduje rozwinięcie formularza ("dropdown"):
 
-##### Do pliku `Model.js`dopisz:
+##### Do modelu dopisz:
 ```js
 async update(id, value, date) {
       const response = await fetchClient(`/api/update/${id}`, {
@@ -696,7 +712,7 @@ async update(id, value, date) {
       this.notify();
     }
 ```
-oraz w funkcji getData dodaj pobieranym z bazy elementom właściwość isDropdownVisible:
+oraz w funkcji getData dodaj pobieranym z bazy elementom własność isDropdownVisible:
 ```js
 const content = await response.json().then(data => {
         for(const item of data.map(item => {item.isDropdownVisible = false; return item;})) {
@@ -765,7 +781,7 @@ return [
 
 Nie zapomnij dopisać linii `import form from '../loaded/form.js';` na górze pliku.
 
-# 7. Obsługa filtrowania danych
+# 8. Obsługa filtrowania danych
 Aby uniknąć błędów w obsłudze zapytania "getData" do serwera HTTP usuń z pliku `index.js` linię `if (filteredResults.length < 1) return res.send("No matching results");`. Brak danych pasujących do kryterium będzie obsługiwany w wyższych warstwach aplikacji.
 
 Do pliku `Model.js` dopisz:
@@ -887,16 +903,85 @@ oraz dodaj odpowiedni import na górze pliku: `import filter from './filter.js';
 
 Uruchom aplikację.
 
-# 8. Ostylowanie aplikacji
-1. najpierw zobacz [tu](https://aliceo2group.github.io/WebUi/Framework/docs/reference/frontend-css.html)
-2. rightClick + Inspect...
-3. CSS, załączanie pliku CSS do index.html
+# 9. Ostylowanie aplikacji
+Napisana aplikacja jest już w pełni fukncjonalna. Jednak jej mało atrakcyjny wygląd negatywnie wpłynie na wrażenia korzystającego z niej użytkownika.
 
-## W folderze public utwórz folder `styles`, a w nim plik [`custom.css`](https://github.com/Ehevi/link-do-pliku) i załącz go w pliku `index.html` w sekcji head:
+W najprostszym przypadku style definiowane są w plikach CSS (_Cascading Style Sheets_: Kaskadowe Arkusze Stylów).
+
+### Przykład
+- opis stylowania buttona w pliku custom.css
+
+W folderze public utwórz folder `styles`, a w nim plik [`custom.css`](https://github.com/xsalonx/cern_RCT_test/blob/master/crud/public/styles/custom.css).
+```css
+/* fancyButton design from http://grohit.com/ */
+
+.fancyButton {
+    width: 300px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.fancyButton a {
+    text-decoration: none;
+    border: 2px solid #3C403D;
+    padding: 15px;
+    color: #3C403D;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+}
+
+span {
+    position: relative;
+    z-index: 3;
+}
+
+.fancyButton a::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: -2px;
+    width: calc(100% + 6px);
+    /*100% plus double the times left values*/
+    height: calc(100% - 10px);
+    background-color: #DADED4;
+    transition: all 0.5s ease-in-out;
+    transform: scaleY(1);
+}
+  
+.fancyButton a:hover::before {
+    transform: scaleY(0);
+}
+
+.fancyButton a::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: -5px;
+    width: calc(100% - 10px);
+    /*100% plus double the times left values*/
+    height: calc(100% + 10px);
+    background-color: #DADED4;
+    transition: all 0.5s ease-in-out;
+    transform: scaleX(1);
+}
+  
+.fancyButton a:hover::after {
+    transform: scaleX(0);
+}
+```
+
+## Arkusz załącz w pliku `index.html` w sekcji head:
+// załączanie pliku CSS do index.html
 ```html
 <head>
     <link rel="stylesheet" href="/css/src/bootstrap.css">
-    <--link rel="stylesheet" href="styles/custom.css">
+    <link rel="stylesheet" href="styles/custom.css">
     <!--favicon source: https://favicon.io/emoji-favicons/microscope/-->
     <link rel="icon" href="./images/favicon/favicon.ico">
     <meta charset="UTF-8">
@@ -905,6 +990,7 @@ Uruchom aplikację.
 ```
 
 ## Ostyluj komponent `button` (w pliku button.js):
+przypisanie klasy do elementu
 ```js
 export default function button(label, onClickAction) {
     return h('div.fancyButton', {onclick: onClickAction},
@@ -913,9 +999,14 @@ export default function button(label, onClickAction) {
 }
 ```
 
-# 9. Więcej opisu do stylowania aplikacji
+... stylowanie strony przed załadowaniem danych
+... stylowanie komponentów strony z załadowanymi danymi
 
-# 10. Taki ładny spinner dodamy
+# 10. Więcej opisu do stylowania aplikacji: plik bootstrap w plikach frameworka
+- przygotowany arkusz we Frameworku - najpierw zobacz [tu](https://aliceo2group.github.io/WebUi/Framework/docs/reference/frontend-css.html)
+- rightClick + Inspect
+
+# 11. Taki ładny spinner dodamy
 Utwórz komponent `spinner.js` w folderze public/components:
 ```js
 import { h } from '/js/src/index.js';
@@ -937,12 +1028,13 @@ export default function spinner() {
 }
 ```
 
-Będziemy wyświetlać go w czasie ładowania danych. Mamy ich na razie bardzo mało, więc nakażemy aplikacji na kilka sekund iść spać. W utils/sleep.js napisz:
+Będziemy wyświetlać go w czasie ładowania danych. Mamy ich na razie bardzo mało, więc nakażemy aplikacji na kilka sekund iść spać. W `utils/sleep.js` napisz:
 ```js
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 ```
+
 W pliku Model.js `import { sleep } from './utils/sleep.js';`. W konstruktorze dodaj własność `this.spinner = false;`
 Dalej dopisz:
 ```js
@@ -971,7 +1063,10 @@ export default function view(model) {
 
 Uruchom aplikację i podziwiaj spinner w czasie ładowania danych.
 
-# 11 .Dalej:
+# 12. Dalej:
 - Model: routy dla CRUDa, fetchClient
 - await, asynchroniczność [AJAX](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/async-calls.md): co to, po co, dlaczego
 - może jakiś wykres wrzucić? coś [stąd](https://github.com/AliceO2Group/WebUi/blob/dev/Framework/docs/guide/charts.md) np.
+
+# 13. Zakończenie
+Porównaj efekt końcowy z zawartością tego folderu.
