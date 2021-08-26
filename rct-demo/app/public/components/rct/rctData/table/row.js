@@ -1,8 +1,8 @@
 import { h } from '/js/src/index.js';
-import { serialIf } from '../../../../utils/utils.js';
+import { reduceSerialIf } from '../../../../utils/utils.js';
 
 export default function row(model, visibleFields, data, item, cellsButtons) {
-    return h(serialIf(
+    return h(reduceSerialIf(
                     'tr',
                     ['.bg-grey', '.d-none'],
                     ['.bg-warning', ''],

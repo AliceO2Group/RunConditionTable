@@ -1,3 +1,6 @@
+/**
+ * class responsible for parsing url params, payloads of client request to sql queries
+ */
 class ReqParser {
 
     constructor() {}
@@ -22,6 +25,7 @@ class ReqParser {
         const valueEntries = Object.entries(payload.data);
         const keys = valueEntries.map(([k, v]) => k);
         const values = valueEntries.map(([k, v]) => v);
+        // TODO situation when value is given as string with white characters is not handled
         return `INSERT INTO ${payload.targetTable}("${keys.join('\", \"')}") VALUES(${values.join(', ')});`;
     }
 }

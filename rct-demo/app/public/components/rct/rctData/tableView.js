@@ -8,6 +8,13 @@ import siteController from "./siteController.js";
 import postingDataConfig from "../postingDataConfig.js";
 import {postForm} from "../postingData.js";
 
+/**
+ * creates vnode containing table of fetched data (main content)
+ * and additional features like page controller or columns visibility controller
+ * @param model
+ * @returns {*}
+ */
+
 export default function tableView(model) {
 
     const params = model.router.params;

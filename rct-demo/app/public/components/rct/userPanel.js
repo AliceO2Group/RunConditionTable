@@ -1,5 +1,5 @@
 import { h, switchCase } from '/js/src/index.js';
-import { serialIf } from '../../utils/utils.js';
+import { reduceSerialIf } from '../../utils/utils.js';
 import header from '../common/header.js';
 import viewButton from '../common/viewButton.js';
 import home from "./home.js";
@@ -7,7 +7,11 @@ import rctDataView from "./rctData/rctDataView.js";
 import sidebar from "./sidebar.js";
 
 
-
+/**
+ * creates vnode containing sidebar used to change content and content
+ * @param model
+ * @returns {*}
+ */
 export default function userPanel(model) {
     const url = model.router.getUrl();
     return h('.flex-column.absolute-fill', [

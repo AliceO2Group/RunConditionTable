@@ -1,4 +1,6 @@
-
+/**
+ * class responsible for client authentication (and probably something more in future)
+ */
 class AuthControlManager {
     constructor(httpserver, loggedUsers, log) {
         console.assert(httpserver !== null);

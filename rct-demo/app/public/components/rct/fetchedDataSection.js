@@ -63,6 +63,7 @@ function multiButtonController(model, sectionName, index) {
     ]);
 }
 
+
 export default function fetchedDataSection(model, sectionName, label) {
     const section = model.fetchedData[sectionName]
     const buttons = [];

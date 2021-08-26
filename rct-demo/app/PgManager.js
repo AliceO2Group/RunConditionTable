@@ -10,6 +10,11 @@ async function select(client, command) {
     return res;
 }
 
+/**
+ * this class handle communication with postgres database using 'pg' package
+ * logging is handled here, because client log in as database user,
+ * so backend must communicate with database in order to check client credentials
+ */
 class PgManager {
     constructor(httpserver, loggedUsers, log) {
         console.assert(httpserver !== null);
@@ -155,6 +160,11 @@ class PgManager {
     async #getDate(req, res) {
         await this.#execDataReq(req, res, 'SELECT NOW();')
     }
+
+
+    /**
+     * methods below allow httpServer to bind methods above to particular endpoints
+     */
 
     bindLogging(name) {
         this.httpserver.post(name, (req, res) => this.#login(req, res));
