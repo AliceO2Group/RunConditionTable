@@ -8,6 +8,7 @@ import handleClick from "../../../utils/handleClick.js";
  *  appropriate lambda expression generating button with defined behaviour
  *  regarding <model, item(particular row given as object), name(of column)>
  *  e.g:
+ *  @example
 const pagesCellsButtons = {
     main: {
         period: (model, item, name) => {
@@ -18,11 +19,10 @@ const pagesCellsButtons = {
     },
     // ...,
 }
- means that in section main in column period cells will be buttons which will redirect
- to section runs with fetched data from table runs related to chosen period.
-
-
+ * means that in section main in column period cells will be buttons which will redirect
+ * to section runs with fetched data from table runs related to chosen period.
  */
+
 const pagesCellsButtons = {
     main: {
         period: (model, item, name) => {

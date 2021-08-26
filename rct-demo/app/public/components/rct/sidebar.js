@@ -16,6 +16,11 @@ function higherLevelButton(model, section, index, label, view) {
 
 }
 
+/**
+ * Provides navigation between particular views
+ * @param model
+ * @returns {*}
+ */
 export default function sidebar(model) {
     return h('.mySidebar.flex-column.bg-gray-lighter', [
         viewButton(model, 'Home', (e) => handleClick(model, e), '', '/home/?section=home'),

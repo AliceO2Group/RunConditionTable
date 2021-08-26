@@ -1,7 +1,14 @@
 import postingDataConfig from "./postingDataConfig.js";
 import {h, fetchClient} from '/js/src/index.js';
 
-
+/**
+ * returns vnode, row in table containing input fields and
+ * button submit which allows to post data row e.g. to flags table
+ * At which columns there will be input is defined in 'postingDataConfig.js'
+ * @param model
+ * @param data
+ * @returns {*}
+ */
 export function postForm(model, data) {
     const params = model.router.params;
     const pageMetadata = postingDataConfig[params.section];
@@ -16,6 +23,8 @@ export function postForm(model, data) {
     }).concat([h('button.btn', {onclick: () => postData(model, data)}, 'submit')]))
 }
 
+
+const reqEndpoint = '/api/Rct-Data/insert-data'
 async function postData(model, data) {
     const params = model.router.params;
     const pageMetadata = postingDataConfig[params.section];
@@ -30,7 +39,6 @@ async function postData(model, data) {
         }
     }
 
-    const reqEndpoint = '/api/Rct-Data/insert-data'
     const response = await fetchClient(reqEndpoint, {
         method: 'POST',
         headers: {'Content-type': 'application/json; charset=UTF-8'},
