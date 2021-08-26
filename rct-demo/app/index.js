@@ -25,7 +25,7 @@ let loggedUsers = {
 }
 
 // HTTP server
-// Instanciate the HTTP server
+// Instantiate the HTTP server
 const httpServer = new HttpServer(config.http, config.jwt);
 console.log("ip address: " + httpServer.ipAddress);
 
