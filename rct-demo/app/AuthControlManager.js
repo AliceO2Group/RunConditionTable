@@ -4,7 +4,7 @@
 class AuthControlManager {
     constructor(httpserver, loggedUsers, log) {
         console.assert(httpserver !== null);
-        console.assert(loggedUsers != null);
+        console.assert(loggedUsers !== null);
 
         this.loggedUsers = loggedUsers;
         this.httpserver = httpserver;

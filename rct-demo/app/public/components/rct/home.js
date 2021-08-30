@@ -5,5 +5,5 @@ import spinner from "../spinner.js";
 
 
 export default function home(model) {
-    return h('.flex-wrap.justify-center', [h('h.title', 'welcome :)')].concat(range(0, 20).map(() => spinner())));
+    return h('.flex-wrap.justify-center', [h('h.title', 'welcome :)')]/*(.concat(range(0, 20).map(() => spinner()))*/);
 }
