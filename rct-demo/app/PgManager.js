@@ -126,8 +126,6 @@ class PgManager {
         }
     }
 
-
-
     async #execDataInsert(req, res) {
         if (this.loggedUsers.tokenToUserData[req.query.token]) {
             const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
