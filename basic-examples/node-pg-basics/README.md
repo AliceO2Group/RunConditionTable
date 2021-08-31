@@ -1,1 +1,5 @@
-# Skrótowy opis co się dzieje w jakim pliku tego folderu
+# Uruchomienie aplikacji
+```shell
+npm install
+npm start
+```
