@@ -105,7 +105,7 @@ Przejdź do folderu, w którym znajdują się skrypty. Od głównego katalogu re
 cd rct-demo/rct-intro/pythonDBman/postgresql_scripts
 ```
 
-Uruchom psql jako superuser (użytkownik `postgres` powiązany z bazą `postgres`). Na systemach linuxowych domyślnie zadziała polecenie `psql`, natomiast na Windowsie `runpsql` + najprawdopodobniej najpierw trzeba edytować zmienną środowiskową Path o np. `C:\Program Files\PostgreSQL\13\scripts`.
+Uruchom psql jako superuser (użytkownik `postgres` powiązany z bazą `postgres`). Na systemach linuxowych domyślnie zadziała polecenie `psql`, natomiast na Windowsie `runpsql` + najprawdopodobniej najpierw trzeba edytować zmienną środowiskową Path o coś w rodzaju `C:\Program Files\PostgreSQL\13\scripts`.
 ```shell
 \i create-user.sql # tworzy nowego użytkownika z hasłem, oczywiście można równoważnie wpisać do konsoli zawartość skryptu
 \du # wyświetl listę użytkowników, powinien pojawić się nowy użytkownik; żeby wyjść: q
