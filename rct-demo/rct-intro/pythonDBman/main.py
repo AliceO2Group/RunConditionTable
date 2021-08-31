@@ -1,35 +1,32 @@
 import psycopg2
 
-from recordsGenerator import *
+import sys
+from recordsGenerators import *
+from execScripts import exec_scripts
 
-
-def clear_cern_db():
-    print('clearing cern_db')
-    connection = connect_cern_db()
+def clear_rct_db(host, user, password, dbname):
+    print('clearing rct_db')
+    connection = connect_rct_db(host, user, password, dbname)
     cur = connection.cursor()
 
     cur.execute('DELETE FROM periods;')  # cascade deleting each row from each table;
     connection.commit()
     cur.execute('SELECT tablename from pg_tables;')
-    tablesnames = cur.fetchall()
-    tablesnames = [e[0] for e in tablesnames]
-    tablesnames = [t for t in tablesnames if t[:3] != 'pg_' and t[:4] != 'sql_']
+    tablesNames = cur.fetchall()
+    tablesNames = [e[0] for e in tablesNames]
+    tablesNames = [t for t in tablesNames if t[:3] != 'pg_' and t[:4] != 'sql_']
 
-    for tn in tablesnames:
-        seqname = tn + "_id_seq"
-        cur.execute(f'ALTER SEQUENCE \"{seqname}\" RESTART WITH 1;')
-        connection.commit()
+    for tn in tablesNames:
+        seqName = tn + "_id_seq"
+        cur.execute(f'ALTER SEQUENCE \"{seqName}\" RESTART WITH 1;')
+
+    connection.commit()
     cur.close()
     connection.close()
 
 
-def insert(tableName, genF, connection=None):
+def insert(tableName, genF, cur):
     print('inserting to: ' + tableName)
-    disc = False
-    if connection is not None:
-        disc = True
-    if connection is None:
-        connection = connect_cern_db()
 
     recs = genF()
     rs = [
@@ -38,29 +35,49 @@ def insert(tableName, genF, connection=None):
 
     # print(rs)
 
-    cur = connection.cursor()
     for r in rs:
         try:
             cur.execute(f'INSERT INTO {tableName} VALUES {r};')
-            connection.commit()
         except psycopg2.IntegrityError as e:
             print(e)
         except psycopg2.InternalError as e:
             print(e)
+
+
+def gen_rct_db_data(host, user, password, dbname):
+    connection = connect_rct_db(host, user, password, dbname)
+    cur = connection.cursor()
+    insert('periods', lambda: gen_periods_records(200), cur)
+    insert('b_fields', lambda: gen_b_field(host, user, password, dbname), cur)
+    insert('runs', lambda: gen_runs(host, user, password, dbname, repeat=False), cur)
+    insert('mc', lambda: gen_monte_carlo(host, user, password, dbname), cur)
+    insert('flags', lambda: gen_flags(host, user, password, dbname), cur)
+
+    print('done')
+    connection.commit()
     cur.close()
-
-    if disc:
-        connection.close()
-
-
-def gen_cern_db_data():
-    insert('periods', lambda: gen_periods_records(200))
-    insert('b_fields', gen_b_field)
-    insert('runs', lambda: gen_runs(repeat=False))
-    insert('mc', gen_monte_carlo)
-    insert('flags', gen_flags)
+    connection.close()
 
 
 if __name__ == '__main__':
-    clear_cern_db()
-    gen_cern_db_data()
+    host = 'localhost'
+    user = 'rct-user'
+    password = 'rct-passwd'
+    dbname = 'rct-db'
+
+    if len(sys.argv) > 1:
+        user = sys.argv[1]
+        password = sys.argv[2]
+        dbname = sys.argv[3]
+
+
+    scriptsPathPrefix = sys.path[0] + "/postgresql_scripts/"
+    scriptsNames = [
+        'periods.sql',
+        'runs.sql',
+        'b-fields.sql',
+        'mc.sql',
+        'flags.sql'
+    ]
+    exec_scripts(host, user, password, dbname, scriptsPathPrefix, scriptsNames)
+    gen_rct_db_data(host, user, password, dbname)

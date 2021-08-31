@@ -6,7 +6,14 @@ import pagesCellsButtons from "./pagesCellsButtons.js";
 import siteController from "./siteController.js";
 
 import postingDataConfig from "../postingDataConfig.js";
-import {postForm} from "../postingData.js";
+import {postForm} from "../postForm.js";
+
+/**
+ * creates vnode containing table of fetched data (main content)
+ * and additional features like page controller or columns visibility controller
+ * @param model
+ * @returns {*}
+ */
 
 export default function tableView(model) {
 

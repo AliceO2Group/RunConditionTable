@@ -3,6 +3,12 @@ import tableView from "./tableView.js";
 import spinner from "../../spinner.js";
 import viewButton from "../../common/viewButton.js";
 
+
+/**
+ * create vnode tableView if data are fetched otherwise shows spinner
+ * @param model
+ * @returns {*}
+ */
 export default function rctDataView(model) {
     const params = model.router.params;
     var data = model.fetchedData[params.section][params.index];

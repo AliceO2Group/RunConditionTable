@@ -2,7 +2,29 @@ import RCTDATA_SECTIONS from "../../../RCTDATA_SECTIONS.js";
 import viewButton from '../../common/viewButton.js';
 import handleClick from "../../../utils/handleClick.js";
 
-//** modify in order to create appropriate behaviour*/
+
+/** Configuration what buttons at which cells and which sections are supposed
+ *  to appear is done using object below which contains
+ *  appropriate lambda expression generating button with defined behaviour
+ *  regarding <model, item(particular row given as object), name(of column)>
+ *  e.g:
+ *  @example
+
+const pagesCellsButtons = {
+    main: {
+        period: (model, item, name) => {
+            return viewButton(model, item.period, (e) =>
+                    handleClick(model, e), '',
+                `/api/Rct-Data/?section=runsPerPeriod&index=${item.period}&view=runs&period=${item.period}&rowsOnPage=50&page=1`);
+        },
+    },
+    // ...,
+}
+
+ * means that in section main in column period cells will be buttons which will redirect
+ * to section runs with fetched data from table runs related to chosen period.
+ */
+
 const pagesCellsButtons = {
     main: {
         period: (model, item, name) => {
@@ -23,7 +45,9 @@ const pagesCellsButtons = {
 
 }
 
-for (var p in pagesCellsButtons) {
+
+// checking correctness of configuration
+for (let p in pagesCellsButtons) {
     if (pagesCellsButtons.hasOwnProperty(p)) {
         if (! RCTDATA_SECTIONS.includes(p))
             throw Error('incorrect configuration');

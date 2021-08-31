@@ -16,6 +16,10 @@ export default class ModelLogged extends Observable {
         // Setup router
         this.router = new QueryRouter();
         this.router.observe(this.handleLocationChange.bind(this));
+        // allow to use back and forward buttons
+        // without harm, because router handle location change
+        this.router.bubbleTo(this)
+
         this.handleLocationChange(); // Init first page
     }
 

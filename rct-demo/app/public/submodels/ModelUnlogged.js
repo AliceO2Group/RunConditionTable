@@ -1,4 +1,4 @@
-import {Observable, fetchClient, WebSocketClient} from '/js/src/index.js';
+import {Observable, fetchClient, WebSocketClient, sessionService} from '/js/src/index.js';
 
 
 export default class ModelUnlogged extends Observable {
@@ -27,7 +27,7 @@ export default class ModelUnlogged extends Observable {
                 }
             } else {
                 if (content.type === 'res') {
-                    sessionStorage.token =  sesService.session.token;
+                    sessionStorage.token =  sessionService.session.token;
 
                     this.parent.mode = "mLogged";
                     this.notify();

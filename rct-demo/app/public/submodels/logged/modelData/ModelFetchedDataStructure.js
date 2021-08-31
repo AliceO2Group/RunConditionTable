@@ -1,11 +1,15 @@
 
 import RCTDATA_SECTIONS from "../../../RCTDATA_SECTIONS.js";
 
-
+/**
+ * Object of this class provide that many FetchedData objects are organized,
+ * each is available as ModelFetchedDataStructure_Object[sectionName][index]
+ * where index is unique identifier of particular data set in chosen section
+ */
 export default class ModelFetchedDataStructure {
     constructor() {
-        for (var prop of RCTDATA_SECTIONS) {
-            this[prop] = {};
+        for (let sectionName of RCTDATA_SECTIONS) {
+            this[sectionName] = {};
         }
     }
 
@@ -15,11 +19,11 @@ export default class ModelFetchedDataStructure {
             console.log(this);
         else {
             const pObj = {};
-            for (var prop in RCTDATA_SECTIONS) {
-                pObj[prop] = [];
-                for (var p in this[prop]) {
-                    if (this[prop].hasOwnProperty(p))
-                        pObj[prop].push(p);
+            for (let sectionName in RCTDATA_SECTIONS) {
+                pObj[sectionName] = [];
+                for (let p in this[sectionName]) {
+                    if (this[sectionName].hasOwnProperty(p))
+                        pObj[sectionName].push(p);
                 }
             }
             console.log(pObj);
@@ -27,8 +31,8 @@ export default class ModelFetchedDataStructure {
     }
 
     clear() {
-        for (var prop in RCTDATA_SECTIONS) {
-            this[prop] = {};
+        for (let sectionName in RCTDATA_SECTIONS) {
+            this[sectionName] = {};
         }
     }
 
