@@ -18,12 +18,15 @@ _Disclaimer:_ Przyjęty schemat bazy danych (rysunek poniżej) został stworzony
 
 # 4. Polecenia wpisywane ręcznie (:point_up: nie musisz niczego pobierać)
 Uruchom psql z jako superuser (użytkownik `postgres` powiązany z bazą `postgres`).
+
+![psql-windows](https://user-images.githubusercontent.com/48785655/131549882-0778cf21-3853-41bb-8c0b-c78e390cecc6.png)
+
 Utwórz użytkownika i bazę danych, z których będzie korzystać aplikacja.
 ```shell
-\du
+\du # wyświetl listę użytkowników
 CREATE USER "rct-user" WITH PASSWORD 'rct-passwd';
 \du
-\l
+\l # wyświetl listę baz danych
 CREATE DATABASE "rct-db";
 \l
 ALTER DATABASE "rct-db" OWNER TO "rct-user";
@@ -120,8 +123,9 @@ Praca użytkownika z bazą danych:
 ```shell
 psql -d "rct-db" -U "rct-user" -W
 ```
-(na Windowsie uzupełnij odpowiednie dane po uruchomieniu )
-Po wprowadzeniu hasła (`rct-passwd`) można sprawdzić parametry połączenia za pomocą polecenia `\conninfo`.
+(na Windowsie uzupełnij odpowiednie dane po uruchomieniu `runpsql`):
+
+![rct-db connection](https://user-images.githubusercontent.com/48785655/131550027-82f35994-ff9a-4a4e-a674-7bb707b4b3e4.png)
 
 W przypadku błędu `psql: error: FATAL:  Peer authentication failed for user "rct-user"`, warto sprawdzić i ewentualnie zmodyfikować zawartość pliku `pg_hba.conf` (Ubuntu: `sudo nano /etc/postgresql/13/main/pg_hba.conf`). Jeżeli metoda autentykacji ustawiona jest na `peer`, to postgres będzie używał nazwy konta systemu operacyjnego jako nazwy bazy danych i nazwy użytkownika. Problem może rozwiązać zmiana linijki:
 ```
@@ -159,14 +163,9 @@ select * from mc; # wyświetl wszystkie dane z tabeli mc
 
 # 6. [pythonDBman](https://github.com/xsalonx/cern_RCT_test/tree/master/pythonDBman)
 Automatyczne generowanie większej liczby przykładowych rekordów przy pomocy skryptów napisanych w języku Python.
-Założyliśmy, że jako superuser wykonano skrypty:
-1. **create-user.sql**
-2. **create-database.sql**
-   
-Utworzona zostanie baza **"rct-db"** oraz użytkowanik **"rct-user"** z hasłem **"rct-passwd"**.
-// Można stworzyć bazę i użytkownika używając własnych nazw i hasła.
+Jako superuser wykonaj skrypty z punktu 5.1. - utworzony zostanie użytkownik `rct-user` z hasłem `rct-passwd` oraz baza `rct-db`. Oczywiście można stworzyć bazę i użytkownika używając własnych nazw i hasła.
 
-Wykonaj skrypt ***main.py*** w ***/rct-demo/rct-intro/pythonDBman/***, spowoduje on utworzenie poszczególnych tebel i wypełnienie ich losowymi danymi.
+Wykonaj skrypt `main.py` w ***/rct-demo/rct-intro/pythonDBman/***, spowoduje on utworzenie poszczególnych tebel i wypełnienie ich losowymi danymi.
 
 Jeśli w kroku pierwszym utworzono bazę i użytkowanika używając własnych nazw i hasła, należy je podać jako argumenty skryptu `main.py` w kolejności \<nazwa użytkowanika\>, \<hasło\>, \<nazwa bazy danych\>.
 *uwaga: do komunikacji z bazą z poziomu pyton-a potrzebna jest biblioteka [psycopg2](https://www.psycopg.org/docs/install.html)*
