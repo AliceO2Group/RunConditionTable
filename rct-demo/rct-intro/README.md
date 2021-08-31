@@ -11,7 +11,7 @@ _Disclaimer:_ Przyjęty schemat bazy danych (rysunek poniżej) został stworzony
 
 # 3. Zacznij od wybranego przez siebie punktu:
 
-| Wersja dla lubiących pisać / chcących poćwiczyć lub nauczyć się Postgresa | 4. |
+| Wersja dla lubiących pisać / chcących poćwiczyć lub nauczyć się psql | 4. |
 |----------| ------------- |
 | Wersja dla leniwych | 5. |
 | Wersja dla bardzo leniwych | 6. |
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS public.b_fields
 Do zobaczenia listy relacji (tabel) znajdujących się w bazie służy polecenie `\dt`.
 
 # 5. Polecenia uruchamiane za pomocą `\i`
-Jeżeli pisanie (kopiowanie) okaże się zbyt męczące, przydatne jest polecenie `\i`. W celu uruchomienia aplikacji i tak zapewne konieczne jest skolonowanie tego repozytorium (`git clone https://github.com/xsalonx/cern-rct-demo.git`).
+Jeżeli pisanie (kopiowanie) okaże się zbyt męczące, przydatne jest polecenie `\i <ścieżka-do-pliku>`. W celu uruchomienia aplikacji i tak zapewne konieczne jest skolonowanie tego repozytorium (`git clone https://github.com/xsalonx/cern-rct-demo.git`).
 ## 5.1. Utworzenie użytkownika i bazy danych
 Przejdź do folderu, w którym znajdują się skrypty. Od głównego katalogu repozytorium ścieżka wygląda następująco:
 ```shell
@@ -161,7 +161,7 @@ select * from mc; # wyświetl wszystkie dane z tabeli mc
 \i fill-b-fields.sql
 ```
 
-# 6. [pythonDBman](https://github.com/xsalonx/cern_RCT_test/tree/master/pythonDBman)
+# 6. Generowanie przykładowych rekordów do tabel: [pythonDBman](https://github.com/xsalonx/cern_RCT_test/tree/master/pythonDBman)
 Automatyczne generowanie większej liczby przykładowych rekordów przy pomocy skryptów napisanych w języku Python.
 Jako superuser wykonaj skrypty z punktu [5.1.](https://github.com/xsalonx/cern-rct-demo/tree/master/rct-demo/rct-intro#51-utworzenie-u%C5%BCytkownika-i-bazy-danych) - utworzony zostanie użytkownik `rct-user` z hasłem `rct-passwd` oraz baza `rct-db`. Oczywiście można stworzyć bazę i użytkownika używając własnych nazw i hasła.
 
