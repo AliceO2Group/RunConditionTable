@@ -70,4 +70,9 @@ window.model = model;
 
 </script>
 </head>
-<body></body>
+<body>
+  <script type="module">
+    import sessionService from '/js/src/sessionService.js';
+    sessionService.loadAndHideParameters();
+  </script>
+</body>
