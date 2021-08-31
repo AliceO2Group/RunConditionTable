@@ -9,7 +9,7 @@ _Disclaimer:_ Przyjęty schemat bazy danych (rysunek poniżej) został stworzony
 
 ![diagram](https://user-images.githubusercontent.com/48785655/127494257-59081600-07c4-4277-bee6-3acd5ceba941.png)
 
-# 3. Wybierz jedną ze ścieżek:
+# 3. Zacznij od wybranego przez siebie punktu:
 
 | Wersja dla lubiących pisać / chcących poćwiczyć lub nauczyć się Postgresa | 4. |
 |----------| ------------- |
@@ -163,10 +163,10 @@ select * from mc; # wyświetl wszystkie dane z tabeli mc
 
 # 6. [pythonDBman](https://github.com/xsalonx/cern_RCT_test/tree/master/pythonDBman)
 Automatyczne generowanie większej liczby przykładowych rekordów przy pomocy skryptów napisanych w języku Python.
-Jako superuser wykonaj skrypty z punktu 5.1. - utworzony zostanie użytkownik `rct-user` z hasłem `rct-passwd` oraz baza `rct-db`. Oczywiście można stworzyć bazę i użytkownika używając własnych nazw i hasła.
+Jako superuser wykonaj skrypty z punktu [5.1.](https://github.com/xsalonx/cern-rct-demo/tree/master/rct-demo/rct-intro#51-utworzenie-u%C5%BCytkownika-i-bazy-danych) - utworzony zostanie użytkownik `rct-user` z hasłem `rct-passwd` oraz baza `rct-db`. Oczywiście można stworzyć bazę i użytkownika używając własnych nazw i hasła.
 
-Wykonaj skrypt `main.py` w ***/rct-demo/rct-intro/pythonDBman/***, spowoduje on utworzenie poszczególnych tebel i wypełnienie ich losowymi danymi.
+Wykonaj skrypt `main.py`, który spowoduje utworzenie poszczególnych tebel i wypełnienie ich losowymi danymi.
 
-Jeśli w kroku pierwszym utworzono bazę i użytkowanika używając własnych nazw i hasła, należy je podać jako argumenty skryptu `main.py` w kolejności \<nazwa użytkowanika\>, \<hasło\>, \<nazwa bazy danych\>.
-*uwaga: do komunikacji z bazą z poziomu pyton-a potrzebna jest biblioteka [psycopg2](https://www.psycopg.org/docs/install.html)*
-`pip install psycopg2-binary`
+Jeśli w kroku pierwszym utworzono bazę i użytkowanika używając własnych nazw i hasła, należy je podać jako argumenty skryptu `main.py` w kolejności `\<nazwa użytkowanika\>, \<hasło\>, \<nazwa bazy danych\>`.
+
+*Uwaga:* do komunikacji z bazą z poziomu python-a potrzebna jest biblioteka [psycopg2](https://www.psycopg.org/docs/install.html) (`pip install psycopg2-binary`)
