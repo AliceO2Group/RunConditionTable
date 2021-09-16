@@ -1,5 +1,5 @@
 {
-  "name": "rct-demo-app",
+  "name": "charts",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,12 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aliceo2/web-ui": "^1.18.2",
-    "less": "^4.1.1",
-    "pg": "^8.6.0"
+    "@aliceo2/web-ui": "^1.19.0"
   }
 }
