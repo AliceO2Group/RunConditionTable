@@ -1,30 +1,27 @@
 import psycopg2 as pypg
 
-
 from connect import connect_rct_db
 
+
 def get_script(path):
-    scriptcode = ""
     with open(path) as f:
-        scriptcode = f.read()
-    return scriptcode
+        script_code = f.read()
+    return script_code
 
 
-def exec_scripts(host, user, password, dbname, scriptsPathPrefix, scriptsNames):
+def exec_scripts(host, user, password, dbname, scripts_path_prefix, scripts_names):
     connection = connect_rct_db(host, user, password, dbname)
     cur = connection.cursor()
 
-    for sn in scriptsNames:
-        path = scriptsPathPrefix + sn
-        scriptCode = get_script(path)
-        if scriptCode == "":
+    for sn in scripts_names:
+        path = scripts_path_prefix + sn
+        script_code = get_script(path)
+        if script_code == "":
             print("error: could not read script from: " + path)
             exit(1)
-        print(f"{sn}:\n{scriptCode}\n\n")
-        cur.execute(scriptCode)
+        print(f"{sn}:\n{script_code}\n\n")
+        cur.execute(script_code)
 
     connection.commit()
     cur.close()
     connection.close()
-
-
