@@ -10,9 +10,9 @@
 		import sessionService from '/js/src/sessionService.js';
 
 		sessionService.loadAndHideParameters();
-		if (sessionStorage.hasOwnProperty('token') && sessionStorage.token !== 'null') {
+		if (localStorage.hasOwnProperty('token') && localStorage.token !== 'null') {
 			console.log("Try to relog");
-			sessionService.session.token = sessionStorage.token;
+			sessionService.session.token = localStorage.token;
 		}
 	</script>
 
@@ -34,7 +34,7 @@
 		window.model = model;
 
 		// TODO
-		if (sessionStorage.hasOwnProperty('token') && sessionStorage.token !== 'null') {
+		if (localStorage.hasOwnProperty('token') && localStorage.token !== 'null') {
 			model.controlServerRequest();
 			model.mode = 'mLogged'
 			model.notify();

@@ -27,7 +27,7 @@ export default class ModelUnlogged extends Observable {
                 }
             } else {
                 if (content.type === 'res') {
-                    sessionStorage.token =  sessionService.session.token;
+                    localStorage.token =  sessionService.session.token;
 
                     this.parent.mode = "mLogged";
                     this.notify();
