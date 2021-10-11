@@ -30,7 +30,6 @@ export default function loggingSite(model) {
                 inputForm("dbname", "dbname", "rct-db"),
                 inputForm("username", "username", "username"),
                 inputForm("password", "password", "password", true),),
-
             container(loginButton, registerButton),
         ])
     )

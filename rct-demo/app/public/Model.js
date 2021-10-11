@@ -34,7 +34,7 @@ export default class Model extends Observable {
         console.log('status', status);
         if (status === '403' || status === 403) {
             console.log('_tokenExpirationHandler');
-            sessionStorage.clear();
+            localStorage['token'] = undefined;
             alert('Auth token expired!');
             this.mLogged.router.go('/', true);
             document.location.reload(true);
