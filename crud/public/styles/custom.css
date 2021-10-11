@@ -16,15 +16,17 @@ body {
 h1 {
     color: #3C403D;
     font-size: 200px;
+    font-weight: 100;
     margin-bottom: 0px;
     text-align: center;
 }
 
 h3 {
     position: relative;
-    top: -90px;
+    top: -70px;
     color: #3C403D;
     font-size: 50px;
+    font-weight: 100;
     opacity: 70%;
     text-align: center;
 }
@@ -145,3 +147,9 @@ tr .fancyButton {
 table {
     padding-top: 100px;
 }
+
+acronym[title] {
+    border-bottom: none !important;
+    cursor: inherit !important;
+    text-decoration: none !important;
+  }
