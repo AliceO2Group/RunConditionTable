@@ -41,10 +41,11 @@ export default class FetchedData {
      * @returns {Promise<void>}
      */
     async fetch() {
-        this.fetched = false;
+        this.setUnfetched()
         // for loading icon (spinner) displaying;
         this.model.notify();
-        const reqEndpoint = this.url.pathname + this.url.search + (this.totalRecordsNumber === null || this.totalRecordsNumber === undefined ? '&count-records=true' : '');
+        const reqEndpoint = this.getReqEndpoint();
+
         const response = await fetchClient(reqEndpoint, {
             method: 'GET',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
@@ -55,25 +56,41 @@ export default class FetchedData {
         this.model.parent._tokenExpirationHandler(status);
 
         if (content.type === 'err') {
-            console.error(content.data);
-            alert('err', content.data);
+            this.handleError(content)
         } else {
 
-            this.fields = content.data.fields.map(item => {
-                item.marked = true;
-                return item;
-            });
-            this.rows = content.data.rows.map(item => {
-                item.marked = false;
-                return item;
-            });
-            this.fetched = true;
-            if (this.totalRecordsNumber === null || this.totalRecordsNumber === undefined) {
-                this.totalRecordsNumber = content.data.totalRecordsNumber;
-            }
+            this.parseFetchedFields(content)
+            this.parseFetchedRows(content)
+            this.setFetched()
+            this.setInfoAboutTotalRecordsNumber(content)
+
         }
         this.model.notify();
     }
+    getReqEndpoint() {
+        return this.url.pathname + this.url.search +
+            ((this.totalRecordsNumber === null || this.totalRecordsNumber === undefined) ? '&count-records=true' : '');
+    }
+    parseFetchedFields(content) {
+        this.fields = content.data.fields.map(item => {
+            item.marked = true;
+            return item;
+        });
+    }
+    parseFetchedRows(content) {
+        this.rows = content.data.rows.map(item => {
+            item.marked = false;
+            return item;
+        });
+    }
+    setInfoAboutTotalRecordsNumber(content) {
+        if (this.totalRecordsNumber === null || this.totalRecordsNumber === undefined) {
+            this.totalRecordsNumber = content.data.totalRecordsNumber;
+        }
+    }
+
+
+
 
     changeFiltering(/**???*/) {
         // TODO
@@ -82,7 +99,7 @@ export default class FetchedData {
 
     changePage(page) {
         console.assert(page < this.totalRecordsNumber / this.rowsOnPage + 1);
-        this.fetched = false;
+        this.setUnfetched()
         this.url = replaceUrlParams(this.url, [['page', page]]);
         this.model.router.go(this.url);
     }
@@ -110,4 +127,17 @@ export default class FetchedData {
     //     this.p
     //
     // }
+
+    handleError(content) {
+        console.error(content.data);
+        alert('err', content.data);
+    }
+
+    setFetched() {
+        this.fetched = true;
+    }
+    setUnfetched() {
+        this.fetched = false
+    }
 }
+

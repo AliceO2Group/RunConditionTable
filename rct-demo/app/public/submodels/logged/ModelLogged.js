@@ -46,14 +46,7 @@ export default class ModelLogged extends Observable {
         const params = this.router.params;
         const url = this.router.getUrl();
 
-        console.assert(url.pathname === rctDataServerPathname)
-        console.assert(params.hasOwnProperty('section') && params.hasOwnProperty('index'));
-        console.assert(params.hasOwnProperty('view'));
-        console.assert(params.hasOwnProperty('rowsOnPage'));
-        console.assert(params.hasOwnProperty('page'));
-
-        console.assert(this.fetchedData.hasOwnProperty(params.section));
-
+        this.assertConditionsForReqForData(url, params)
 
         if (! this.fetchedData[params.section][params.index]) {
             this.fetchedData[params.section][params.index] = new FetchedData(this, url);
@@ -87,4 +80,19 @@ export default class ModelLogged extends Observable {
         this.notify();
     }
 
+
+
+
+    assertConditionsForReqForData(url, params) {
+        console.assert(url.pathname === rctDataServerPathname)
+        console.assert(params.hasOwnProperty('section') && params.hasOwnProperty('index'));
+        console.assert(params.hasOwnProperty('view'));
+        console.assert(params.hasOwnProperty('rowsOnPage'));
+        console.assert(params.hasOwnProperty('page'));
+
+        console.assert(this.fetchedData.hasOwnProperty(params.section));
+    }
+
+
 }
+
