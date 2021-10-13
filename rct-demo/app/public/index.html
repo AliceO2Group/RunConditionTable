@@ -10,10 +10,12 @@
 		import sessionService from '/js/src/sessionService.js';
 
 		sessionService.loadAndHideParameters();
-		if (localStorage.hasOwnProperty('token') && localStorage.token !== 'null') {
-			console.log("Try to relog");
-			sessionService.session.token = localStorage.token;
-		}
+
+		// TODO it behaves strangely
+		// if (localStorage.token !== null && localStorage.token !== undefined) {
+		// 	console.log("Try to relog", localStorage.token);
+		// 	sessionService.session.token = localStorage.token;
+		// }
 	</script>
 
 	<!-- Main application controller -->
@@ -34,7 +36,7 @@
 		window.model = model;
 
 		// TODO
-		if (localStorage.hasOwnProperty('token') && localStorage.token !== 'null') {
+		if (localStorage.token !== null && localStorage.token !== undefined) {
 			model.controlServerRequest();
 			model.mode = 'mLogged'
 			model.notify();

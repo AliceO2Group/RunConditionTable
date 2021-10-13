@@ -19,17 +19,24 @@ export default class FetchedData {
         this.name = name;
         this.model = model;
         this.url = url;
+
         this.fields = null;
         this.rows = null;
         this.fetched = false;
 
-        const params = Object.fromEntries(url.searchParams.entries());
+        this.totalRecordsNumber = null;
+        this.hideMarkedRecords = false;
+
+        this.rowsOnPage = null;
+        this.site = null;
+        this.setRowsOnSiteAndSite()
+
+    }
+
+    setRowsOnSiteAndSite() {
+        const params = Object.fromEntries(this.url.searchParams.entries());
         this.rowsOnPage = params.hasOwnProperty('rowsOnPage') ? params.rowsOnPage : defaultRowsOnPage;
         this.site = params.hasOwnProperty('page') ? params.page : defaultPage;
-
-        this.totalRecordsNumber = null;
-
-        this.hideMarkedRecords = false;
     }
 
     /**
@@ -55,6 +62,7 @@ export default class FetchedData {
         const status = response.status;
         this.model.parent._tokenExpirationHandler(status);
 
+        // TODO remoteData
         if (content.type === 'err') {
             this.handleError(content)
         } else {
@@ -67,6 +75,8 @@ export default class FetchedData {
         }
         this.model.notify();
     }
+
+
     getReqEndpoint() {
         return this.url.pathname + this.url.search +
             ((this.totalRecordsNumber === null || this.totalRecordsNumber === undefined) ? '&count-records=true' : '');

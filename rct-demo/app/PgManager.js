@@ -1,13 +1,9 @@
 const {Client} = require('pg');
 const ReqParser = require('./ReqParser.js');
-//TODO everywhere? add handling error when client unexpectedly disconnect;
 //TODO removing clients;
 
-//TODO often token expire unexpectedly to fast;
-
 async function select(client, command) {
-    const res = await client.query(command);
-    return res;
+    return await client.query(command);
 }
 
 /**
@@ -28,12 +24,11 @@ class PgManager {
 
     #login(req, res) {
         const body = req.body;
-        console.log('user try to log in ', body);
+        console.log(body)
+        let client = this.loggedUsers.tokenToUserData[req.query.token];
 
-
-        var client = this.loggedUsers.tokenToUserData[req.query.token];
         console.log(client);
-        if (client === undefined || client === null) {
+        if (!client) {
             client = new Client({
                 user: body.username,
                 host: 'localhost',
@@ -45,15 +40,14 @@ class PgManager {
             (async () => await client.connect())();
         }
         select(client, 'SELECT NOW();')
-            .then(async sqlRes => {
-                res.json({type: 'res', data: sqlRes.rows});
+            .then(async dbRes => {
+                res.json({data: dbRes.rows});
                 this.loggedUsers.tokenToUserData[req.query.token] = {
                     pgClient: client,
                     loginDate: new Date(),
                 }
-                console.log(this.loggedUsers);
             }).catch(e => {
-            res.json({type: 'err', data: e.code})
+            this.responseWithStatus(res, 401, JSON.stringify(e.code));
         });
     }
 
@@ -64,13 +58,13 @@ class PgManager {
             this.loggedUsers.tokenToUserData[req.query.token] = null;
         }
         if (found) {
-            res.json({type: 'res', data: 'OK'});
+            res.json({message: 'successfully logout'});
         } else {
-            res.json({type: 'err', data: 'NOUSER'});
+            this.responseWithStatus(res, 409, 'no such user')
         }
     }
 
-    #verifysqlQuery(query) {
+    #verifySqlQuery(query) {
         // TODO To handling hacking;
         return true;
     }
@@ -79,84 +73,69 @@ class PgManager {
         return this.parser.parseDataReq(query);
     }
 
+    async #exec(req, res, dbResponseHandler, query=null) {
+        const userData = this.loggedUsers.tokenToUserData[req.query.token]
+        const client = userData.pgClient;
 
-    async #execDataReq(req, res, query = null) {
-        if (this.loggedUsers.tokenToUserData[req.query.token]) {
-            const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
+        if (userData && client) {
             if (query === null) {
                 query = this.#parseReqQToSqlQ(req.query);
             }
             console.log(new Date(), query);
-            if (client) {
-                if (this.#verifysqlQuery(query)) {
-                    await select(client, query)
-                        .then((dbRes) => {
-                            const fields = dbRes.fields;
-                            let rows = dbRes.rows;
-                            const data = {};
-                            console.log(req.query);
-                            if (req.query['count-records'] === 'true') {
-                                data['totalRecordsNumber'] = rows.length;
-                                const offset = req.query.rowsOnPage * (req.query.page - 1);
-                                const limit = req.query.rowsOnPage;
-                                rows = rows.slice(offset, offset + limit);
-                            }
-                            // console.log(data);
 
-                            data['rows'] = rows;
-                            data['fields'] = fields;
-
-                            res.json({
-                                type: 'res', data: data
-                            });
-                        }).catch(e => {
-                            console.log(e);
-                            res.json({type: 'err', data: e.code});
-                        })
-                } else {
-                    res.json(req, query, 'This query is malicious');
-                }
+            if (this.#verifySqlQuery(query)) {
+                await select(client, query)
+                    .then((dbRes) => {dbResponseHandler(req, res, dbRes)})
+                    .catch(e => {
+                        console.log(e);
+                        res.json({data: e.code});
+                    })
             } else {
-                console.log('invalid token or no such client');
-                res.json({type: 'err', data: 'invalid token or no such user'});
+                res.json(req, query, 'This query is malicious');
             }
+
         } else {
-            console.log('invalid token or no such client');
-            res.json({type: 'err', data: 'invalid token or no such user'});
+            this.responseWithStatus(res, 401,'invalid token or no such user')
         }
     }
 
-    async #execDataInsert(req, res) {
-        if (this.loggedUsers.tokenToUserData[req.query.token]) {
-            const client = this.loggedUsers.tokenToUserData[req.query.token].pgClient;
-            const query = this.parser.parseInsertDataReq(req.body.payload);
-            console.log(new Date(), query);
-
-            if (client) {
-                if (this.#verifysqlQuery(query)) {
-                    await select(client, query)
-                        .then(() => {
-                            res.json({type: 'res', data: 'data inserted'});
-                        })
-                        .catch(e => {
-                            console.error(e);
-                            res.json({type: 'err', data: e.code});
-                        })
-                } else {
-                    res.json(req, query, 'This query is malicious');
-                }
-            } else {
-                console.log('invalid token or no such client');
-                res.json({type: 'err', data: 'invalid token or no such user'});
+    async #execDataReq(req, res, query = null) {
+        const dbResponseHandler = (req, res, dbRes) => {
+            const fields = dbRes.fields;
+            let rows = dbRes.rows;
+            const data = {};
+            console.log(req.query);
+            if (req.query['count-records'] === 'true') {
+                data['totalRecordsNumber'] = rows.length;
+                const offset = req.query.rowsOnPage * (req.query.page - 1);
+                const limit = req.query.rowsOnPage;
+                rows = rows.slice(offset, offset + limit);
             }
-        } else {
-            console.log('invalid token or no such client');
-            res.json({type: 'err', data: 'invalid token or no such user'});
+
+            data['rows'] = rows;
+            data['fields'] = fields;
+
+            res.json({data: data});
         }
+        await this.#exec(req, res, dbResponseHandler, query)
     }
+
+    async #execDataInsert(req, res, query=null) {
+        const dbResponseHandler = (req, res, dbRes) => {
+            res.json({type: 'res', data: 'data inserted'});
+        }
+        await this.#exec(req, res, dbResponseHandler, query)
+    }
+
+
 
     async #getDate(req, res) {
         await this.#execDataReq(req, res, 'SELECT NOW();')
+    }
+
+    responseWithStatus(res, status, message) {
+        console.log(message);
+        res.status(status).json({message: message})
     }
 
 
@@ -164,12 +143,13 @@ class PgManager {
      * methods below allow httpServer to bind methods above to particular endpoints
      */
 
+
     bindLogging(name) {
         this.httpserver.post(name, (req, res) => this.#login(req, res));
     }
 
     bindLogout(name) {
-        this.httpserver.post(name, (req, res) => this.#logout(req, res));
+        this.httpserver.get(name, (req, res) => this.#logout(req, res));
     }
 
     bindGetDbData(name) {

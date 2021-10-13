@@ -1,4 +1,4 @@
-import {fetchClient, Observable, QueryRouter} from '/js/src/index.js';
+import {fetchClient, Observable, QueryRouter, Loader} from '/js/src/index.js';
 import FetchedData from "./modelData/FetchedData.js";
 import ModelFetchedDataStructure from "./modelData/ModelFetchedDataStructure.js";
 const rctDataServerPathname = '/api/Rct-Data/';
@@ -9,16 +9,11 @@ export default class ModelLogged extends Observable {
         this.parent = parent;
 
         this.fetchedData = new ModelFetchedDataStructure();
-
-        // TODO;
-        this.username = null;
-
-        // Setup router
         this.router = new QueryRouter();
         this.router.observe(this.handleLocationChange.bind(this));
-        // allow to use back and forward buttons
-        // without harm, because router handle location change
         this.router.bubbleTo(this)
+
+        this.loader = new Loader()
 
         this.handleLocationChange(); // Init first page
     }
@@ -58,25 +53,20 @@ export default class ModelLogged extends Observable {
     }
 
     async logout() {
-        const response = await fetchClient('/api/logout', {
-            method: 'POST',
-            headers: {'Content-type': 'application/json; charset=UTF-8'},
-        });
-        const content = await response.json();
-        const status = response.status;
+        const endpoint = '/api/logout'
+        const {result, status, ok} = this.loader.post(endpoint)
         this.parent._tokenExpirationHandler(status);
 
-        if (content.type === 'err') {
-            alert("Some error occurred: " + content.data);
-        } else {
-            if (content.type === 'res') {
-                alert('successfully logged out');
-            }
-        }
-        sessionStorage.token = null;
+        localStorage.token = null;
         this.parent.mode = "mUnlogged";
-        this.router.go('/');
 
+        if (!ok) {
+            alert("Some error occurred: " + JSON.stringify(result));
+        } else {
+            alert('successfully logged out');
+        }
+
+        this.router.go('/');
         this.notify();
     }
 
