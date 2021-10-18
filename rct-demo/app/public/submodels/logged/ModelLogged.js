@@ -1,6 +1,6 @@
 import {fetchClient, Observable, QueryRouter, Loader} from '/js/src/index.js';
 import FetchedData from "./modelData/FetchedData.js";
-import ModelFetchedDataStructure from "./modelData/ModelFetchedDataStructure.js";
+import FetchedDataManager from "./modelData/FetchedDataManager.js";
 const rctDataServerPathname = '/api/Rct-Data/';
 
 export default class ModelLogged extends Observable {
@@ -8,7 +8,7 @@ export default class ModelLogged extends Observable {
         super();
         this.parent = parent;
 
-        this.fetchedData = new ModelFetchedDataStructure();
+        this.fetchedData = new FetchedDataManager();
         this.router = new QueryRouter();
         this.router.observe(this.handleLocationChange.bind(this));
         this.router.bubbleTo(this)
@@ -30,7 +30,6 @@ export default class ModelLogged extends Observable {
             case '/home/':
                 break;
             default:
-                // default route, replace the current one not handled
                 // this.router.go('/home', false);
                 break;
         }

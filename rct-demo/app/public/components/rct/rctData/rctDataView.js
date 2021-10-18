@@ -11,7 +11,7 @@ import viewButton from "../../common/viewButton.js";
  */
 export default function rctDataView(model) {
     const params = model.router.params;
-    var data = model.fetchedData[params.section][params.index];
+    let data = model.fetchedData[params.section][params.index];
 
     if (!data) {
         console.error('tableView error; data===null');
@@ -24,6 +24,7 @@ export default function rctDataView(model) {
         h('p', model.router.params.section),
         // TODO here might be filtering;
         h('div.tableDiv', []),
+
         data.fetched ? tableView(model) : h('.item-center.justify-center', [
             viewButton(model, 'reload data', () => data.fetch(), 'reload-btn'),
             spinner()]

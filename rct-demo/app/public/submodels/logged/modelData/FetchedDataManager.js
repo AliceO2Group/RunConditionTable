@@ -6,12 +6,14 @@ import RCTDATA_SECTIONS from "../../../RCTDATA_SECTIONS.js";
  * each is available as ModelFetchedDataStructure_Object[sectionName][index]
  * where index is unique identifier of particular data set in chosen section
  */
-export default class ModelFetchedDataStructure {
+export default class FetchedDataManager {
     constructor() {
         for (let sectionName of RCTDATA_SECTIONS) {
             this[sectionName] = {};
         }
     }
+
+
 
 
     consoleLogStructure(full=false) {

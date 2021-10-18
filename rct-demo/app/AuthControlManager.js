@@ -1,11 +1,8 @@
 /**
- * class responsible for client authentication (and probably something more in future)
+ * class responsible for checking if token expired
  */
 class AuthControlManager {
     constructor(httpserver, loggedUsers, log) {
-        console.assert(httpserver !== null);
-        console.assert(loggedUsers !== null);
-
         this.loggedUsers = loggedUsers;
         this.httpserver = httpserver;
         this.log = log;
