@@ -25,9 +25,18 @@ class ReqParser {
         const valueEntries = Object.entries(payload.data);
         const keys = valueEntries.map(([k, v]) => k);
         const values = valueEntries.map(([k, v]) => v);
-        // TODO situation when value is given as string with white characters is not handled
-        return `INSERT INTO ${payload.targetTable}("${keys.join('\", \"')}") VALUES(${values.join(', ')});`;
+        return `INSERT INTO ${payload.targetTable}("${keys.join('\", \"')}") VALUES(${parseValues(values).join(', ')});`;
     }
+}
+
+const parseValues = (values) => {
+    return values.map(v => {
+        console.log(v)
+        if (isNaN(v) && v !== 'DEFAULT')
+            return `\'${v}\'`
+        else
+            return v
+    })
 }
 
 module.exports = ReqParser;
