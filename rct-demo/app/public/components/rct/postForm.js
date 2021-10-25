@@ -1,6 +1,9 @@
 import postingDataConfig from "./postingDataConfig.js";
 import {h, fetchClient} from '/js/src/index.js';
 
+
+
+// TODO move it to model
 /**
  * returns vnode, row in table containing input fields and
  * button submit which allows to post data row e.g. to flags table

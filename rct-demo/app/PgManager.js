@@ -122,7 +122,7 @@ class PgManager {
 
     async #execDataInsert(req, res, query=null) {
         const dbResponseHandler = (req, res, dbRes) => {
-            res.json({type: 'res', data: 'data inserted'});
+            res.json({data: 'data inserted'});
         }
         await this.#exec(req, res, dbResponseHandler, query)
     }
