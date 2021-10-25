@@ -124,6 +124,9 @@ class PgManager {
         const dbResponseHandler = (req, res, dbRes) => {
             res.json({data: 'data inserted'});
         }
+        if (!query) {
+            query = this.parser.parseInsertDataReq(req.query.payload)
+        }
         await this.#exec(req, res, dbResponseHandler, query)
     }
 
