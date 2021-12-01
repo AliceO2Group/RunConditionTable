@@ -1,17 +1,17 @@
 import {fetchClient, Observable, QueryRouter, Loader} from '/js/src/index.js';
 import FetchedData from "./modelData/FetchedData.js";
 import FetchedDataManager from "./modelData/FetchedDataManager.js";
-const rctDataServerPathname = '/api/Rct-Data/';
 
 export default class ModelLogged extends Observable {
     constructor(parent) {
         super();
         this.parent = parent;
 
-        this.fetchedData = new FetchedDataManager();
         this.router = new QueryRouter();
         this.router.observe(this.handleLocationChange.bind(this));
         this.router.bubbleTo(this)
+
+        this.fetchedData = new FetchedDataManager(this.router, this);
 
         this.loader = new Loader()
 
@@ -23,7 +23,7 @@ export default class ModelLogged extends Observable {
         const url = this.router.getUrl();
         switch (url.pathname) {
             case '/api/Rct-Data/':
-                this.reqForData()
+                this.fetchedData.reqForData()
                     .then(r => {})
                     .catch(e => {console.error(e)});
             break;
@@ -36,24 +36,11 @@ export default class ModelLogged extends Observable {
     }
 
 
-    async reqForData() {
-        const params = this.router.params;
-        const url = this.router.getUrl();
 
-        this.assertConditionsForReqForData(url, params)
-
-        if (! this.fetchedData[params.section][params.index]) {
-            this.fetchedData[params.section][params.index] = new FetchedData(this, url);
-        }
-        if (! this.fetchedData[params.section][params.index].fetched)
-            await this.fetchedData[params.section][params.index].fetch();
-
-        return this.fetchedData[params.section][params.index];
-    }
 
     async logout() {
-        const endpoint = '/api/logout'
-        const {result, status, ok} = this.loader.post(endpoint)
+        const logoutEndpoint = '/api/logout'
+        const {result, status, ok} = this.loader.post(logoutEndpoint)
         this.parent._tokenExpirationHandler(status);
 
         localStorage.token = null;
@@ -72,15 +59,7 @@ export default class ModelLogged extends Observable {
 
 
 
-    assertConditionsForReqForData(url, params) {
-        console.assert(url.pathname === rctDataServerPathname)
-        console.assert(params.hasOwnProperty('section') && params.hasOwnProperty('index'));
-        console.assert(params.hasOwnProperty('view'));
-        console.assert(params.hasOwnProperty('rowsOnPage'));
-        console.assert(params.hasOwnProperty('page'));
 
-        console.assert(this.fetchedData.hasOwnProperty(params.section));
-    }
 
 
 }

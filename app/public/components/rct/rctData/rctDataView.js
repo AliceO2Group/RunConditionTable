@@ -15,7 +15,7 @@ export default function rctDataView(model) {
 
     if (!data) {
         console.error('tableView error; data===null');
-        data = model.reqForData();
+        data = model.fetchedData.reqForData();
         model.fetchedData[params.section][params.index] = data;
     }
 

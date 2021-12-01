@@ -11,17 +11,23 @@ export default class ModelUnlogged extends Observable {
 
     async login(username, password, dbname) {
 
-        const {result, status, ok} = await this.loader.post(
+        const {result, status, ok} = await this.postLoginPasses(username, password, dbname)
+        this.parent._tokenExpirationHandler(status);
+        if (ok)
+            this.keepSessionInBrowser()
+    }
+
+
+    postLoginPasses(username, password, dbname) {
+        return this.loader.post(
             this.logginEndpoint,
             {username: username, password: password, dbname: dbname}
         )
-        this.parent._tokenExpirationHandler(status);
-
-        if (ok) {
-            localStorage.token =  sessionService.session.token;
-            this.parent.mode = "mLogged";
-            this.notify();
-        }
+    }
+    keepSessionInBrowser() {
+        localStorage.token =  sessionService.session.token;
+        this.parent.mode = "mLogged";
+        this.notify();
     }
 
 }
