@@ -36,12 +36,10 @@ export default class FetchedDataManager {
         let index = params.index
         const url = this.router.getUrl();
 
-        console.log("router url", url)
         const data = this[section][index]
         if (!data || force)
             await this.req(true);
         else if (data.payload.url !== url.pathname + url.search) {
-            console.log("cdcacasdcscascascasccsc");
             await this.req(false);
         }
     }
@@ -64,7 +62,6 @@ export default class FetchedDataManager {
 
         let reqEndpoint = this.getReqEndpoint(url, countAllRecord);
         let {result, status, ok} = await this.model.loader.get(reqEndpoint);
-        console.log("result", result, "ok", ok);
 
         if (!ok)
             this[section][index] = RemoteData.failure({"status": status, "url": url});
