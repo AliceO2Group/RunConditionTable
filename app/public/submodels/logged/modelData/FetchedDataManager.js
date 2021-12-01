@@ -23,38 +23,58 @@ export default class FetchedDataManager {
         }
     }
     /**
-     * function request server for data set defined by url field,
+     * function ask server for data set defined by url field,
      * when first after creating object request is performed,
      * to url is added additional param 'count-records',
      * which inform backend to calculate the total number of rows in target view
      * this information is used to create site navigation
      */
 
-    async reqForData() {
+    async reqForData(force=false) {
         const params = this.router.params;
         let section = params.section
         let index = params.index
-        
-        const url = this.router.getUrl();``
+        const url = this.router.getUrl();
+
+        console.log("router url", url)
+        const data = this[section][index]
+        if (!data || force)
+            await this.req(true);
+        else if (data.payload.url !== url.pathname + url.search) {
+            console.log("cdcacasdcscascascasccsc");
+            await this.req(false);
+        }
+    }
+
+    async req(countAllRecord) {
+        const params = this.router.params;
+        let section = params.section
+        let index = params.index
+
+        const url = this.router.getUrl();
 
         this.assertConditionsForReqForData(url, params)
+        let totalRecordsNumber = null;
+        if (!countAllRecord)
+            totalRecordsNumber = this[section][index].payload.totalRecordsNumber
 
         this[section][index] = RemoteData.Loading();
+        this[section][index].payload = {"url": url}
         this.model.notify();
 
-        let reqEndpoint = this.getReqEndpoint(url);
+        let reqEndpoint = this.getReqEndpoint(url, countAllRecord);
         let {result, status, ok} = await this.model.loader.get(reqEndpoint);
         console.log("result", result, "ok", ok);
 
         if (!ok)
-            this[section][index] = RemoteData.failure(status);
+            this[section][index] = RemoteData.failure({"status": status, "url": url});
         else
-            this[section][index] = RemoteData.Success(new FetchedData(url, result));
+            this[section][index] = RemoteData.Success(new FetchedData(url, result, totalRecordsNumber));
         this.model.notify();
     }
 
-    getReqEndpoint(url) {
-        return url.pathname + url.search + '&count-records=true';
+    getReqEndpoint(url, countAllRecord) {
+        return url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
     }
 
     changePage(page) {
@@ -64,6 +84,17 @@ export default class FetchedDataManager {
 
         const url = this[section][index].payload.changeKeptPage(page)
         this.router.go(url);
+    }
+
+
+    changeItemStatus(item) {
+        item.marked = !item.marked;
+        this.model.notify();
+    }
+
+    changeRecordsVisibility(data) {
+        data.hideMarkedRecords = !data.hideMarkedRecords;
+        this.model.notify();
     }
 
 

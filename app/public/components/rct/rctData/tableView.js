@@ -28,11 +28,11 @@ export default function tableView(model) {
     return h('div.p3', [
         fieldsVisibilityControl(model, data, fields),
         siteController(model, data),
-        viewButton(model, 'reload data', () => model.fetchedData.reqForData(), 'reload-btn'), ' ', // TODO move up
+        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'), ' ', // TODO move up
         h('table.table', {id: 'data-table-' + data.url}, [
 
             // h('caption', data.name),
-            tableHeader(visibleFields, data, () => data.changeRecordsVisibility(data)),
+            tableHeader(visibleFields, data, () => model.fetchedData.changeRecordsVisibility(data)),
             tableBody(model, visibleFields, data, cellsButtons, params)
 
         ])
@@ -46,7 +46,7 @@ function fieldsVisibilityControl(mode, data, fields) {
     return h('.flex-row.p3.justify-start', fields.map(f =>
         h('span.p1.thin-border', [
             h('.d-block.w-100', h('input.p3', {
-                onclick: () => data.changeItemStatus(f),
+                onclick: () => mode.fetchedData.changeItemStatus(f),
                 checked: f.marked,
                 type: 'checkbox'
             })),

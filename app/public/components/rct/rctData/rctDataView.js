@@ -31,14 +31,14 @@ export default function rctDataView(model) {
 
 function spinnerAndReloadView(model) {
     return h('.item-center.justify-center', [
-        viewButton(model, 'reload data', () => model.fetchedData.reqForData(), 'reload-btn'),
+        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'),
         spinner()]
     )
 }
 
 function failureStatusAndReload(model, status) {
     return h('.item-center.justify-center', [
-        viewButton(model, 'reload data', () => model.fetchedData.reqForData(), 'reload-btn'),
+        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'),
         h('', status)]
     )
 }

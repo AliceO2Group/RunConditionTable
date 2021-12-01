@@ -15,7 +15,7 @@ const defaultPage = 1;
  */
 
 export default class FetchedData {
-    constructor(url, content) {
+    constructor(url, content, totalRecordsNumber=null) {
         this.url = url;
 
         this.fields = null;
@@ -29,7 +29,11 @@ export default class FetchedData {
 
         this.parseFetchedFields(content)
         this.parseFetchedRows(content)
-        this.setInfoAboutTotalRecordsNumber(content)
+        if (!totalRecordsNumber)
+            this.setInfoAboutTotalRecordsNumber(content)
+        else
+            this.totalRecordsNumber = totalRecordsNumber;
+
         this.setSiteAndRowsOnSite()
 
     }
@@ -77,15 +81,7 @@ export default class FetchedData {
     }
 
 
-    changeItemStatus(item) {
-        item.marked = !item.marked;
-        this.model.notify();
-    }
 
-    changeRecordsVisibility(data) {
-        data.hideMarkedRecords = !data.hideMarkedRecords;
-        this.model.notify();
-    }
 
     clear() {
         this.fields = null;
