@@ -15,7 +15,7 @@ export default function siteController(model, data) {
     const mapArrayToButtons = (arr) => arr.map(i => {
         const page = i + 1;
         const url = replaceUrlParams(data.url, [['page', page]]);
-        return viewButton(model, page, () => data.changePage(page), '', url.pathname + url.search, '', '.m1', true);
+        return viewButton(model, page, () => model.fetchedData.changePage(page), '', url.pathname + url.search, '', '.m1', true);
     })
     const pagesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnPage);
     const currentPage = Number(Object.fromEntries(data.url.searchParams.entries())['page']);
@@ -40,20 +40,20 @@ export default function siteController(model, data) {
     return h('.flex-row', [
         'page:',
         // move to first page
-        currentPage > 1 ? siteChangingController(() => data.changePage(1), '<<') : '',
+        currentPage > 1 ? siteChangingController(() => model.fetchedData.changePage(1), '<<') : '',
         // move to middle of pages range [first, current]
-        currentPage > 3 ? siteChangingController(() => data.changePage(Math.floor(currentPage / 2)), '|') : '',
+        currentPage > 3 ? siteChangingController(() => model.fetchedData.changePage(Math.floor(currentPage / 2)), '|') : '',
         // move one page back
-        currentPage > 1 ? siteChangingController(() => data.changePage(currentPage - 1), '<'): '',
+        currentPage > 1 ? siteChangingController(() => model.fetchedData.changePage(currentPage - 1), '<'): '',
         mapArrayToButtons(leftButtonsR),
         leftThreeDotsPresent ? '...' : '',
         mapArrayToButtons(middleButtonsR),
         rightThreeDotsPresent ? '...' : '',
         mapArrayToButtons(rightButtonsR),
         // analogically as above
-        currentPage < pagesNumber ? siteChangingController(() => data.changePage(currentPage + 1), '>') : '',
-        currentPage < pagesNumber - 2 ? siteChangingController(() => data.changePage(currentPage + Math.floor((pagesNumber - currentPage) / 2)), '|') : '',
-        currentPage < pagesNumber ? siteChangingController(() => data.changePage(pagesNumber), '>>'): '',
+        currentPage < pagesNumber ? siteChangingController(() => model.fetchedData.changePage(currentPage + 1), '>') : '',
+        currentPage < pagesNumber - 2 ? siteChangingController(() => model.fetchedData.changePage(currentPage + Math.floor((pagesNumber - currentPage) / 2)), '|') : '',
+        currentPage < pagesNumber ? siteChangingController(() => model.fetchedData.changePage(pagesNumber), '>>'): '',
     ]);
 
 }

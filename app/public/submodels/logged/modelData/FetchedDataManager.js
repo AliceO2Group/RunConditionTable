@@ -22,6 +22,13 @@ export default class FetchedDataManager {
             this[sectionName] = {};
         }
     }
+    /**
+     * function request server for data set defined by url field,
+     * when first after creating object request is performed,
+     * to url is added additional param 'count-records',
+     * which inform backend to calculate the total number of rows in target view
+     * this information is used to create site navigation
+     */
 
     async reqForData() {
         const params = this.router.params;
@@ -32,8 +39,7 @@ export default class FetchedDataManager {
 
         this.assertConditionsForReqForData(url, params)
 
-        if (! this[section][index]) 
-            this[section][index] = RemoteData.Loading();
+        this[section][index] = RemoteData.Loading();
         this.model.notify();
 
         let reqEndpoint = this.getReqEndpoint(url);
@@ -51,6 +57,14 @@ export default class FetchedDataManager {
         return url.pathname + url.search + '&count-records=true';
     }
 
+    changePage(page) {
+        const params = this.router.params;
+        let section = params.section
+        let index = params.index
+
+        const url = this[section][index].payload.changeKeptPage(page)
+        this.router.go(url);
+    }
 
 
     assertConditionsForReqForData(url, params) {

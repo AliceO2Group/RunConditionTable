@@ -28,7 +28,7 @@ export default function tableView(model) {
     return h('div.p3', [
         fieldsVisibilityControl(model, data, fields),
         siteController(model, data),
-        viewButton(model, 'reload data', () => data.fetch(), 'reload-btn'), ' ', // TODO move up
+        viewButton(model, 'reload data', () => model.fetchedData.reqForData(), 'reload-btn'), ' ', // TODO move up
         h('table.table', {id: 'data-table-' + data.url}, [
 
             // h('caption', data.name),

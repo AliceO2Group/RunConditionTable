@@ -40,41 +40,6 @@ export default class FetchedData {
         this.site = params.hasOwnProperty('page') ? params.page : defaultPage;
     }
 
-    /**
-     * function request server for data set defined by url field,
-     * when first after creating object request is performed,
-     * to url is added additional param 'count-records',
-     * which inform backend to calculate the total number of rows in target view
-     * this information is used to create site navigation
-     * @returns {Promise<void>}
-     */
-
-    async fetch() {
-        const reqEndpoint = this.getReqEndpoint();
-
-        const response = await fetchClient(reqEndpoint, {
-            method: 'GET',
-            headers: {'Content-type': 'application/json; charset=UTF-8'},
-        });
-
-        const content = await response.json()
-        const status = response.status;
-        this.model.parent._tokenExpirationHandler(status);
-
-        // TODO remoteData
-        if (content.type === 'err') {
-            this.handleError(content)
-        } else {
-
-            this.parseFetchedFields(content)
-            this.parseFetchedRows(content)
-            this.setFetched()
-            this.setInfoAboutTotalRecordsNumber(content)
-
-        }
-        this.model.notify();
-    }
-
 
     getReqEndpoint(url) {
         return url.pathname + url.search +
@@ -106,11 +71,9 @@ export default class FetchedData {
         this.fetch().then(r => {}).catch(e => {console.error(e)});
     }
 
-    changePage(page) {
-        console.assert(page < this.totalRecordsNumber / this.rowsOnPage + 1);
-        this.setUnfetched()
+    changeKeptPage(page) {
         this.url = replaceUrlParams(this.url, [['page', page]]);
-        this.model.router.go(this.url);
+        return this.url;
     }
 
 
@@ -140,13 +103,6 @@ export default class FetchedData {
     handleError(content) {
         console.error(content.data);
         alert('err', content.data);
-    }
-
-    setFetched() {
-        this.fetched = true;
-    }
-    setUnfetched() {
-        this.fetched = false
     }
 }
 
