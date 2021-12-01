@@ -18,7 +18,7 @@ import {postForm} from "../postForm.js";
 export default function tableView(model) {
 
     const params = model.router.params;
-    const data = model.fetchedData[params.section][params.index];
+    const data = model.fetchedData[params.section][params.index].payload;
 
     const cellsButtons = pagesCellsButtons[params.section];
 

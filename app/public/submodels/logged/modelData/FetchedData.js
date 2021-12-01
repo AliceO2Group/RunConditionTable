@@ -15,25 +15,26 @@ const defaultPage = 1;
  */
 
 export default class FetchedData {
-    constructor(model, url, name='table') {
-        this.name = name;
-        this.model = model;
+    constructor(url, content) {
         this.url = url;
 
         this.fields = null;
         this.rows = null;
-        this.fetched = false;
 
         this.totalRecordsNumber = null;
         this.hideMarkedRecords = false;
 
         this.rowsOnPage = null;
         this.site = null;
-        this.setRowsOnSiteAndSite()
+
+        this.parseFetchedFields(content)
+        this.parseFetchedRows(content)
+        this.setInfoAboutTotalRecordsNumber(content)
+        this.setSiteAndRowsOnSite()
 
     }
 
-    setRowsOnSiteAndSite() {
+    setSiteAndRowsOnSite() {
         const params = Object.fromEntries(this.url.searchParams.entries());
         this.rowsOnPage = params.hasOwnProperty('rowsOnPage') ? params.rowsOnPage : defaultRowsOnPage;
         this.site = params.hasOwnProperty('page') ? params.page : defaultPage;
@@ -47,10 +48,8 @@ export default class FetchedData {
      * this information is used to create site navigation
      * @returns {Promise<void>}
      */
+
     async fetch() {
-        this.setUnfetched()
-        // for loading icon (spinner) displaying;
-        this.model.notify();
         const reqEndpoint = this.getReqEndpoint();
 
         const response = await fetchClient(reqEndpoint, {
@@ -77,9 +76,9 @@ export default class FetchedData {
     }
 
 
-    getReqEndpoint() {
-        return this.url.pathname + this.url.search +
-            ((this.totalRecordsNumber === null || this.totalRecordsNumber === undefined) ? '&count-records=true' : '');
+    getReqEndpoint(url) {
+        return url.pathname + url.search +
+            ((this.totalRecordsNumber) ? '&count-records=true' : '');
     }
     parseFetchedFields(content) {
         this.fields = content.data.fields.map(item => {

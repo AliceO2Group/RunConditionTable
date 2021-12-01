@@ -1,7 +1,11 @@
+import {RemoteData, Loader} from '/js/src/index.js';
 
 import RCTDATA_SECTIONS from "../../../RCTDATA_SECTIONS.js";
 import FetchedData from "./FetchedData.js";
+
 const rctDataServerPathname = '/api/Rct-Data/';
+const defaultRowsOnPage = 100;
+const defaultPage = 1;
 
 /**
  * Object of this class provide that many FetchedData objects are organized,
@@ -12,6 +16,8 @@ export default class FetchedDataManager {
     constructor(router, model) {
         this.model = model
         this.router = router;
+        this.loader = new Loader();
+        
         for (let sectionName of RCTDATA_SECTIONS) {
             this[sectionName] = {};
         }
@@ -19,17 +25,30 @@ export default class FetchedDataManager {
 
     async reqForData() {
         const params = this.router.params;
+        let section = params.section
+        let index = params.index
+        
         const url = this.router.getUrl();``
 
         this.assertConditionsForReqForData(url, params)
 
-        if (! this[params.section][params.index]) {
-            this[params.section][params.index] = new FetchedData(this.model, url);
-        }
-        if (! this[params.section][params.index].fetched)
-            await this[params.section][params.index].fetch();
+        if (! this[section][index]) 
+            this[section][index] = RemoteData.Loading();
+        this.model.notify();
 
-        return this[params.section][params.index];
+        let reqEndpoint = this.getReqEndpoint(url);
+        let {result, status, ok} = await this.model.loader.get(reqEndpoint);
+        console.log("result", result, "ok", ok);
+
+        if (!ok)
+            this[section][index] = RemoteData.failure(status);
+        else
+            this[section][index] = RemoteData.Success(new FetchedData(url, result));
+        this.model.notify();
+    }
+
+    getReqEndpoint(url) {
+        return url.pathname + url.search + '&count-records=true';
     }
 
 
@@ -41,6 +60,7 @@ export default class FetchedDataManager {
         console.assert(params.hasOwnProperty('rowsOnPage'));
         console.assert(params.hasOwnProperty('page'));
 
+        console.log(this)
         console.assert(this.hasOwnProperty(params.section));
     }
 

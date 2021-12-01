@@ -29,6 +29,8 @@
 		mount(document.body, view, model, debug);
 
 		window.model = model;
+		// mock login
+		model.mUnlogged.login('rct-user', 'rct-passwd', 'rct-db');
 
 		// TODO
 		// if (localStorage.token !== null && localStorage.token !== undefined) {

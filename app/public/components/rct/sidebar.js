@@ -6,12 +6,18 @@ import viewButton from "../common/viewButton.js";
 import handleClick from "../../utils/handleClick.js";
 import fetchedDataSection from "./fetchedDataSection.js";
 
-
 function higherLevelButton(model, section, index, label, view) {
     let pathNQuery = `/api/Rct-Data/?section=${section}&index=${index}&view=${view}&rowsOnPage=50&page=1`;
+
     const fdata = model.fetchedData[section][index];
     if (fdata !== undefined && fdata !== null)
-        pathNQuery = fdata.url.pathname + fdata.url.search;
+        pathNQuery = fdata.match({
+            NotAsked: () => pathNQuery,
+            Loading: () => pathNQuery,
+            Success: (data) => data.url,
+            Failure: (status) => pathNQuery
+        })
+
     return viewButton(model, label, (e) => handleClick(model, e), '', pathNQuery);
 
 }
