@@ -14,10 +14,9 @@ function higherLevelButton(model, section, index, label, view) {
         pathNQuery = fdata.match({
             NotAsked: () => pathNQuery,
             Loading: () => pathNQuery,
-            Success: (data) => data.url,
+            Success: (data) => data.url.pathname + data.url.search,
             Failure: (status) => pathNQuery
         })
-
     return viewButton(model, label, (e) => handleClick(model, e), '', pathNQuery);
 
 }

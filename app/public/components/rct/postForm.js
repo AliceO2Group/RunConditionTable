@@ -55,6 +55,6 @@ async function postData(model, data) {
 
     const content = await response.json();
     alert(content.data);
-    await data.fetch();
+    await model.fetchedData.reqForData(true);
     model.notify();
 }

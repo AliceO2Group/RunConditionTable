@@ -75,13 +75,6 @@ export default class FetchedData {
         this.fetch().then(r => {}).catch(e => {console.error(e)});
     }
 
-    changeKeptPage(page) {
-        this.url = replaceUrlParams(this.url, [['page', page]]);
-        return this.url;
-    }
-
-
-
 
     clear() {
         this.fields = null;

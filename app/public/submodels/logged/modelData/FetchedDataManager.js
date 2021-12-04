@@ -2,6 +2,7 @@ import {RemoteData, Loader} from '/js/src/index.js';
 
 import RCTDATA_SECTIONS from "../../../RCTDATA_SECTIONS.js";
 import FetchedData from "./FetchedData.js";
+import {replaceUrlParams, url2Str} from "../../../utils/utils.js";
 
 const rctDataServerPathname = '/api/Rct-Data/';
 const defaultRowsOnPage = 100;
@@ -39,15 +40,17 @@ export default class FetchedDataManager {
         const data = this[section][index]
         if (!data || force)
             await this.req(true);
-        else if (data.payload.url !== url.pathname + url.search) {
+        else if (url2Str(data.payload.url) !== url2Str(url)) {
+            console.log("second type reqForData")
+
             await this.req(false);
         }
     }
 
     async req(countAllRecord) {
         const params = this.router.params;
-        let section = params.section
-        let index = params.index
+        const section = params.section
+        const index = params.index
 
         const url = this.router.getUrl();
 
@@ -57,7 +60,7 @@ export default class FetchedDataManager {
             totalRecordsNumber = this[section][index].payload.totalRecordsNumber
 
         this[section][index] = RemoteData.Loading();
-        this[section][index].payload = {"url": url}
+        this[section][index].payload = {"url": url} // TODO maybe it should be considered in WebUI
         this.model.notify();
 
         let reqEndpoint = this.getReqEndpoint(url, countAllRecord);
@@ -75,12 +78,11 @@ export default class FetchedDataManager {
     }
 
     changePage(page) {
-        const params = this.router.params;
-        let section = params.section
-        let index = params.index
+        console.log("change page")
+        const url = this.router.getUrl();
 
-        const url = this[section][index].payload.changeKeptPage(page)
-        this.router.go(url);
+        const newUrl = replaceUrlParams(url, [['page', page]]);
+        this.router.go(newUrl);
     }
 
 
@@ -101,8 +103,6 @@ export default class FetchedDataManager {
         console.assert(params.hasOwnProperty('view'));
         console.assert(params.hasOwnProperty('rowsOnPage'));
         console.assert(params.hasOwnProperty('page'));
-
-        console.log(this)
         console.assert(this.hasOwnProperty(params.section));
     }
 

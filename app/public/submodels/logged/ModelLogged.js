@@ -1,5 +1,4 @@
-import {fetchClient, Observable, QueryRouter, Loader} from '/js/src/index.js';
-import FetchedData from "./modelData/FetchedData.js";
+import {Observable, QueryRouter, Loader} from '/js/src/index.js';
 import FetchedDataManager from "./modelData/FetchedDataManager.js";
 
 export default class ModelLogged extends Observable {
