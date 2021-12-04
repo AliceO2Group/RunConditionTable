@@ -22,7 +22,7 @@ export default function row(model, visibleFields, data, item, cellsButtons) {
                         style: 'margin-left=0',
                         type: 'checkbox',
                         checked: item.marked,
-                        onclick: () => data.changeItemStatus(item)
+                        onclick: () => model.fetchedData.changeItemStatus(item)
                     }))
 
                 ]))

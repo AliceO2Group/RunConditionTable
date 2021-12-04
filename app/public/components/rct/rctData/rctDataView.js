@@ -11,22 +11,33 @@ import viewButton from "../../common/viewButton.js";
  */
 export default function rctDataView(model) {
     const params = model.router.params;
-    var data = model.fetchedData[params.section][params.index];
-
-    if (!data) {
-        console.error('tableView error; data===null');
-        data = model.reqForData();
-        model.fetchedData[params.section][params.index] = data;
-    }
+    let data = model.fetchedData[params.section][params.index];
 
     return h('.homePage', [
         h('h1.title', 'rct data view'),
         h('p', model.router.params.section),
         // TODO here might be filtering;
         h('div.tableDiv', []),
-        data.fetched ? tableView(model) : h('.item-center.justify-center', [
-            viewButton(model, 'reload data', () => data.fetch(), 'reload-btn'),
-            spinner()]
-        ),
+
+        data.match({
+            NotAsked: () => h('', 'not asked'),
+            Loading: () => spinnerAndReloadView(model),
+            Success: (data) => tableView(model),
+            Failure: (status) => failureStatusAndReload(model, status)
+        })
     ]);
+}
+
+function spinnerAndReloadView(model) {
+    return h('.item-center.justify-center', [
+        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'),
+        spinner()]
+    )
+}
+
+function failureStatusAndReload(model, status) {
+    return h('.item-center.justify-center', [
+        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'),
+        h('', status)]
+    )
 }

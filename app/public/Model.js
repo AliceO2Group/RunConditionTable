@@ -33,8 +33,7 @@ export default class Model extends Observable {
     _tokenExpirationHandler(status) {
         console.log('status', status);
         if (status === '403' || status === 403) {
-            console.log('_tokenExpirationHandler');
-            localStorage['token'] = undefined;
+            localStorage.token = null;
             alert('Auth token expired!');
             this.mLogged.router.go('/', true);
             document.location.reload(true);
@@ -46,12 +45,8 @@ export default class Model extends Observable {
             method: 'POST',
             headers: {'Content-type': 'application/json; charset=UTF-8'},
         })
-        console.log('controlServerRequest - response', response);
         const content = await response.json();
-        console.log('controlServerRequest - content', content);
-
-        const status = response.status;
-        this._tokenExpirationHandler(status);
+        this._tokenExpirationHandler(response.status);
     }
 }
 

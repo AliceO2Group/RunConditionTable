@@ -8,7 +8,7 @@ function sectionTitle(label) {
 
 function multiButtonController(model, sectionName, index) {
     const section = model.fetchedData[sectionName]
-    const url = section[index].url;
+    const url = section[index].payload.url;
     const dropdownID = "dropdown-" + url;
     const button1 = viewButton(model, index, (e) => handleClick(model, e), '', url.pathname + url.search, '.margin0', '');
     return h('.flex-row.appearance.w-100.m1.justify-between', [

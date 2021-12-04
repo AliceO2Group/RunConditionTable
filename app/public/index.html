@@ -10,31 +10,30 @@
 		import sessionService from '/js/src/sessionService.js';
 
 		sessionService.loadAndHideParameters();
-		// if (localStorage.hasOwnProperty('token') && localStorage.token !== 'null') {
-		// 	console.log("Try to relog");
+
+		// TODO it behaves strangely
+		// if (localStorage.token !== null && localStorage.token !== undefined) {
+		// 	console.log("Try to relog", localStorage.token);
 		// 	sessionService.session.token = localStorage.token;
 		// }
 	</script>
 
 	<!-- Main application controller -->
 	<script type="module">
-
-
-		// Import MVC
 		import {mount} from '/js/src/index.js';
 		import view from './view.js';
 		import Model from './Model.js';
 
-		// Start application
 		const model = new Model();
 		const debug = true; // shows when redraw is done
 		mount(document.body, view, model, debug);
 
-		// Expose model to interact with it the browser's console
 		window.model = model;
+		// mock login
+		model.mUnlogged.login('rct-user', 'rct-passwd', 'rct-db');
 
 		// TODO
-		// if (localStorage.hasOwnProperty('token') && localStorage.token !== 'null') {
+		// if (localStorage.token !== null && localStorage.token !== undefined) {
 		// 	model.controlServerRequest();
 		// 	model.mode = 'mLogged'
 		// 	model.notify();

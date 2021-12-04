@@ -12,28 +12,21 @@
  * or submit itself to any jurisdiction.
  */
 
-// Import the backend classes
 const { HttpServer, Log } = require('@aliceo2/web-ui');
 
-// Define configuration for JWT tokens and HTTP server
 const config = require('./config.js');
 
-// Get logger instance
 const log = new Log('Tutorial');
 let loggedUsers = {
     tokenToUserData: {},
 }
 
-// HTTP server
-// Instantiate the HTTP server
 const httpServer = new HttpServer(config.http, config.jwt);
 console.log("ip address: " + httpServer.ipAddress);
 
-// Server static content in public directory
 httpServer.addStaticPath('./public');
 httpServer.addStaticPath('./public', '/login');
 
-// serving less.js file --- probably not the best possible solution...
 httpServer.addStaticPath('./node_modules/less/dist', '/scripts');
 
 const PgManager = require('./PgManager.js');
