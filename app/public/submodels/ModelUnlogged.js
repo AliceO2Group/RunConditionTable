@@ -1,6 +1,5 @@
 import {Observable, fetchClient, WebSocketClient, sessionService, Loader} from '/js/src/index.js';
 
-
 export default class ModelUnlogged extends Observable {
     constructor(parent) {
         super();

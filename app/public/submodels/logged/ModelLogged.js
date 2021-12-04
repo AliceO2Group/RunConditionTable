@@ -5,7 +5,6 @@ export default class ModelLogged extends Observable {
     constructor(parent) {
         super();
         this.parent = parent;
-
         this.router = new QueryRouter();
         this.router.observe(this.handleLocationChange.bind(this));
         this.router.bubbleTo(this)
@@ -35,8 +34,6 @@ export default class ModelLogged extends Observable {
     }
 
 
-
-
     async logout() {
         const logoutEndpoint = '/api/logout'
         const {result, status, ok} = this.loader.post(logoutEndpoint)
@@ -62,4 +59,3 @@ export default class ModelLogged extends Observable {
 
 
 }
-

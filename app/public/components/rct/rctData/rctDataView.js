@@ -13,7 +13,6 @@ export default function rctDataView(model) {
     const params = model.router.params;
     let data = model.fetchedData[params.section][params.index];
 
-
     return h('.homePage', [
         h('h1.title', 'rct data view'),
         h('p', model.router.params.section),

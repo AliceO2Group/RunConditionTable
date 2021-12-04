@@ -1,5 +1,6 @@
 const {Client} = require('pg');
 const ReqParser = require('./ReqParser.js');
+
 //TODO removing clients;
 
 async function select(client, command) {
@@ -131,7 +132,6 @@ class PgManager {
     }
 
 
-
     async #getDate(req, res) {
         await this.#execDataReq(req, res, 'SELECT NOW();')
     }
@@ -145,7 +145,6 @@ class PgManager {
     /**
      * methods below allow httpServer to bind methods above to particular endpoints
      */
-
 
     bindLogging(name) {
         this.httpserver.post(name, (req, res) => this.#login(req, res));

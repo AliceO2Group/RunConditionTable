@@ -8,5 +8,4 @@ module.exports = {
       hostname: 'localhost',
       tls: false
     },
-
   };

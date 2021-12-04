@@ -10,6 +10,7 @@ export function replaceUrlParams(url, entries) {
     for (let [k, v] of entries) {
         currentParams[k] = v;
     }
+
     const search = '?' + (Object.entries(currentParams).map(([k, v]) => `${k}=${v}`)).join('&');
     return new URL(url.origin + url.pathname + search);
 }

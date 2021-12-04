@@ -21,12 +21,12 @@ let loggedUsers = {
     tokenToUserData: {},
 }
 
-
 const httpServer = new HttpServer(config.http, config.jwt);
 console.log("ip address: " + httpServer.ipAddress);
 
 httpServer.addStaticPath('./public');
 httpServer.addStaticPath('./public', '/login');
+
 httpServer.addStaticPath('./node_modules/less/dist', '/scripts');
 
 const PgManager = require('./PgManager.js');

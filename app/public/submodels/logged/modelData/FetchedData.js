@@ -67,14 +67,10 @@ export default class FetchedData {
         }
     }
 
-
-
-
     changeFiltering(/**???*/) {
         // TODO
         this.fetch().then(r => {}).catch(e => {console.error(e)});
     }
-
 
     clear() {
         this.fields = null;
@@ -94,4 +90,3 @@ export default class FetchedData {
         alert('err', content.data);
     }
 }
-
