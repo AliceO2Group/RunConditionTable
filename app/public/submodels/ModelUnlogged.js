@@ -4,7 +4,7 @@ export default class ModelUnlogged extends Observable {
     constructor(parent) {
         super();
         this.parent = parent;
-        this.logginEndpoint = '/api/login';
+        this.logginEndpoint = '/api/login/';
         this.loader = new Loader();
     }
 

@@ -42,7 +42,7 @@ class PgManager {
         }
         select(client, 'SELECT NOW();')
             .then(async dbRes => {
-                res.json({data: dbRes.rows});
+                await res.json({data: dbRes.rows});
                 this.loggedUsers.tokenToUserData[req.query.token] = {
                     pgClient: client,
                     loginDate: new Date(),
@@ -52,6 +52,7 @@ class PgManager {
         });
     }
 
+    // TODO here or in frontend behaves oddly
     #logout(req, res) {
         let found = false
         if (this.loggedUsers.tokenToUserData[req.query.token]) {
@@ -59,7 +60,7 @@ class PgManager {
             this.loggedUsers.tokenToUserData[req.query.token] = null;
         }
         if (found) {
-            res.json({message: 'successfully logout'});
+            this.responseWithStatus(res, 200, 'successfully logout');
         } else {
             this.responseWithStatus(res, 409, 'no such user')
         }
@@ -151,7 +152,7 @@ class PgManager {
     }
 
     bindLogout(name) {
-        this.httpserver.get(name, (req, res) => this.#logout(req, res));
+        this.httpserver.post(name, (req, res) => this.#logout(req, res));
     }
 
     bindGetDbData(name) {

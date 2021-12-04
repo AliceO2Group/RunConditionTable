@@ -5,8 +5,7 @@ import FetchedData from "./FetchedData.js";
 import {replaceUrlParams, url2Str} from "../../../utils/utils.js";
 
 const rctDataServerPathname = '/api/Rct-Data/';
-const defaultRowsOnPage = 100;
-const defaultPage = 1;
+
 
 /**
  * Object of this class provide that many FetchedData objects are organized,

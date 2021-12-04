@@ -35,7 +35,7 @@ export default class ModelLogged extends Observable {
 
 
     async logout() {
-        const logoutEndpoint = '/api/logout'
+        const logoutEndpoint = '/api/logout/'
         const {result, status, ok} = this.loader.post(logoutEndpoint)
         this.parent._tokenExpirationHandler(status);
 

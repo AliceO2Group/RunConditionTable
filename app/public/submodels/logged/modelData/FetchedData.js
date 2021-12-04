@@ -1,7 +1,3 @@
-
-import {fetchClient} from '/js/src/index.js';
-import {replaceUrlParams} from "../../../utils/utils.js";
-
 const defaultRowsOnPage = 100;
 const defaultPage = 1;
 
