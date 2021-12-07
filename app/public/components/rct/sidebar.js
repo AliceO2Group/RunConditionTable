@@ -1,7 +1,7 @@
 import {h, iconLayers, iconHome} from "/js/src/index.js";
 import fetchedDataSection from "./fetchedDataSection.js";
 
-function pathNQuery(section, index, label, view) {
+function pathNQuery(section, index, view) {
     return `/api/Rct-Data/?section=${section}&index=${index}&view=${view}&rowsOnPage=50&page=1`;
 }
 
@@ -33,27 +33,25 @@ export default function sidebar(model) {
     h('a.menu-item', {
         title: 'Periods',
         style: 'display:flex',
-        href: pathNQuery('main', '_0', 'main view', 'periods'),
+        href: pathNQuery('main', '_0', 'periods'),
         onclick: (e) => model.router.handleLinkEvent(e),
         class: model.page === 'layoutList' ? 'selected' : ''
       }, [
         h('span', iconLayers(), ' ', 'Periods')
     ]),
 
-    h('.menu-title', 'Runs per period'),
     fetchedDataSection(model, 'runsPerPeriod', 'Runs per period'),
 
     h('.menu-title', 'Monte Carlo'),
     h('a.menu-item', {
         title: 'Monte Carlo',
         style: 'display:flex',
-        href: pathNQuery('mc', '_0', 'main view', 'mc'),
+        href: pathNQuery('mc', '_0', 'mc'),
         onclick: (e) => model.router.handleLinkEvent(e),
         class: model.page === 'layoutList' ? 'selected' : ''
       }, [
         h('span', iconLayers(), ' ', 'Monte Carlo simulations')
     ]),
 
-    h('.menu-title', 'Flagging'),
     fetchedDataSection(model, 'flags', 'QA Expert Flagging'),
 ];

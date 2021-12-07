@@ -2,10 +2,6 @@ import viewButton from "../common/viewButton.js";
 import {h} from '/js/src/index.js'
 import handleClick from "../../utils/handleClick.js";
 
-function sectionTitle(label) {
-    return h('.sectionTitle', label)
-}
-
 function multiButtonController(model, sectionName, index) {
     const section = model.fetchedData[sectionName]
     const url = section[index].payload.url;
@@ -76,7 +72,7 @@ export default function fetchedDataSection(model, sectionName, label) {
     }
 
     return h('.flex-wrap.item-center.justify-center', [
-        sectionTitle(label),
+        h('.sectionTitle', label),
         h('.flex-column', buttons)
     ]);
 }
