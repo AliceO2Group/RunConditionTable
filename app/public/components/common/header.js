@@ -1,4 +1,4 @@
-import viewButton from './viewButton.js';
+// import viewButton from './viewButton.js';
 import { h, iconHome, iconPerson } from '/js/src/index.js';
 
 export default function header(model) {
@@ -6,7 +6,8 @@ export default function header(model) {
         h('.flex-grow', [
             h('button.btn', iconHome()),
             ' ',
-            viewButton(model, 'logout', () => model.logout()),
+            h('button.btn', iconPerson()),
+            // viewButton(model, 'logout', () => model.logout()),
             // the one below won't work:
             // h('button.btn', iconPerson(), {onclick: () => model.logout()}),
             ' ',
