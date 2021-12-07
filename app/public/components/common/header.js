@@ -1,13 +1,16 @@
 import viewButton from './viewButton.js';
-import { h } from '/js/src/index.js';
+import { h, iconHome, iconPerson } from '/js/src/index.js';
 
 export default function header(model) {
-    return h('.header', {id: 'header'}, [
-        viewButton(model, 'settings', () => alert('TODO')),
-        h('h4.title', 'TODO Some useful tools will be placed here (like exports etc.?)'),
-        h('.header-right', [
-            h('.search', h('input', {id: 'main-panel-search', placeholder: 'search', type: 'input'})),
+    return h('.flex-row.p2', [
+        h('.flex-grow', [
+            h('button.btn', iconHome()),
+            ' ',
             viewButton(model, 'logout', () => model.logout()),
-        ]), ' ',
+            // the one below won't work:
+            // h('button.btn', iconPerson(), {onclick: () => model.logout()}),
+            ' ',
+            h('span.f4.gray', 'Run Condition Table'),
+        ])
     ]);
 }
