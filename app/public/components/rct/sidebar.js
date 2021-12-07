@@ -1,24 +1,8 @@
-import {h} from "/js/src/index.js";
-
-// TODO, sidebar should be nicer'
-// TODO, add using filtering, to uri construction;
-import viewButton from "../common/viewButton.js";
-import handleClick from "../../utils/handleClick.js";
+import {h, iconLayers, iconHome} from "/js/src/index.js";
 import fetchedDataSection from "./fetchedDataSection.js";
 
-function higherLevelButton(model, section, index, label, view) {
-    let pathNQuery = `/api/Rct-Data/?section=${section}&index=${index}&view=${view}&rowsOnPage=50&page=1`;
-
-    const fdata = model.fetchedData[section][index];
-    if (fdata !== undefined && fdata !== null)
-        pathNQuery = fdata.match({
-            NotAsked: () => pathNQuery,
-            Loading: () => pathNQuery,
-            Success: (data) => data.url.pathname + data.url.search,
-            Failure: (status) => pathNQuery
-        })
-    return viewButton(model, label, (e) => handleClick(model, e), '', pathNQuery);
-
+function pathNQuery(section, index, label, view) {
+    return `/api/Rct-Data/?section=${section}&index=${index}&view=${view}&rowsOnPage=50&page=1`;
 }
 
 /**
@@ -28,19 +12,48 @@ function higherLevelButton(model, section, index, label, view) {
  * @returns {*}
  */
 export default function sidebar(model) {
-    return h('.mySidebar.flex-column.bg-gray-lighter', [
-        viewButton(model, 'Home', (e) => handleClick(model, e), '', '/home/?section=home'),
-        h('.m1'),
-
-        fetchedDataSection(model, null, 'Periods'),
-        higherLevelButton(model, 'main', '_0', 'main view', 'periods'),
-        fetchedDataSection(model, 'runsPerPeriod', 'Runs per period'),
-        fetchedDataSection(model, null, 'Monte Carlo'),
-        higherLevelButton(model, 'mc', '_0', 'main view', 'mc'),
-
-        // button(model, 'Pass QA Statistics Summary', () => {
-        //     return undefined;
-        // }),
-        fetchedDataSection(model, 'flags', 'QA Expert Flagging'),
-    ]);
+    return h('nav.sidebar.sidebar-content.scroll-y.flex-column', [
+        sidebarMenu(model)
+      ]);
 }
+
+  const sidebarMenu = (model) => [
+    h('.menu-title', 'Home'),
+    h('a.menu-item', {
+      title: 'Home',
+      style: 'display:flex',
+      href: '/home/?section=home',
+      onclick: (e) => model.router.handleLinkEvent(e),
+      class: model.page === 'layoutList' ? 'selected' : ''
+    }, [
+      h('span', iconHome(), ' ', 'Main (home) page')
+    ]),
+
+    h('.menu-title', 'Periods'),
+    h('a.menu-item', {
+        title: 'Periods',
+        style: 'display:flex',
+        href: pathNQuery('main', '_0', 'main view', 'periods'),
+        onclick: (e) => model.router.handleLinkEvent(e),
+        class: model.page === 'layoutList' ? 'selected' : ''
+      }, [
+        h('span', iconLayers(), ' ', 'Periods')
+    ]),
+
+    h('.menu-title', 'Runs per period'),
+    fetchedDataSection(model, 'runsPerPeriod', 'Runs per period'),
+
+    h('.menu-title', 'Monte Carlo'),
+    h('a.menu-item', {
+        title: 'Monte Carlo',
+        style: 'display:flex',
+        href: pathNQuery('mc', '_0', 'main view', 'mc'),
+        onclick: (e) => model.router.handleLinkEvent(e),
+        class: model.page === 'layoutList' ? 'selected' : ''
+      }, [
+        h('span', iconLayers(), ' ', 'Monte Carlo simulations')
+    ]),
+
+    h('.menu-title', 'Flagging'),
+    fetchedDataSection(model, 'flags', 'QA Expert Flagging'),
+];
