@@ -31,7 +31,7 @@ fi
 
 
 RCT_ETC_DIRECTORY=/etc/run-condition-table/
-rm -rf RCT_ETC_DIRECTORY
+rm -rf $RCT_ETC_DIRECTORY
 mkdir $RCT_ETC_DIRECTORY
 RCT_CONFIG_FILE=$RCT_ETC_DIRECTORY"rct.config"
 
@@ -41,7 +41,7 @@ mkdir $INSTALLATION_DIRECTORY
 cp -r . $INSTALLATION_DIRECTORY
 
 APP_CONFIG_FILE="$INSTALLATION_DIRECTORY/app/config.js"
-for ((i=2; i<=$#; i++)); do
+for ((i=1; i<=$#; i++)); do
   next_i=$(($i+1))
   next_arg=${!next_i}
   if [ "${!i}" = "--port" ] && [[ "$next_arg" =~ ^[0-9]+$ ]]; then  ## TODO informing about errors
