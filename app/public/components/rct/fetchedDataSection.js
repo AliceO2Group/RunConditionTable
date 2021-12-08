@@ -6,7 +6,6 @@ function multiButtonController(model, sectionName, index) {
     const dropdownID = "dropdown-" + url;
 
     const mainButton = h('a.menu-item', {
-//        title: 'index',
         style: 'display:flex',
         href: url.pathname + url.search,
         onclick: (e) => model.router.handleLinkEvent(e),
