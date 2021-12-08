@@ -1,35 +1,36 @@
-import {h, iconPin} from '/js/src/index.js'
+import {h, iconPin, iconEllipses, iconShareBoxed, iconReload, iconTrash} from '/js/src/index.js'
 
 function multiButtonController(model, sectionName, index) {
     const section = model.fetchedData[sectionName]
     const url = section[index].payload.url;
     const dropdownID = "dropdown-" + url;
-    
+
     const mainButton = h('a.menu-item', {
-        title: 'index',
+//        title: 'index',
         style: 'display:flex',
         href: url.pathname + url.search,
         onclick: (e) => model.router.handleLinkEvent(e),
         class: model.page === 'layoutList' ? 'selected' : ''
-      }, [
-        h('span', iconPin(), ' ', index)
-      ]);
+    }, [
+        h('span', iconPin(), ' ', index),
+        h('span.gray.ph2', {
+            onmouseenter: () => {
+                document.getElementById(dropdownID).classList.toggle('dropdown-open');
+            },
+            onmouseleave: () => {
+                setTimeout( () => {
+                    if (!document.getElementById(dropdownID).classList.contains('dropdown-opened'))
+                        document.getElementById(dropdownID).classList.remove('dropdown-open');
+                }, 100);
+            }
+        },
+        iconEllipses()),
+    ]);
 
     return h('.flex-row.appearance.w-100.m1.justify-between', [
         mainButton,
-        h('.microBtnContainer.dropdown', {id: dropdownID, name: 'section-object-dropdown'}, [
-            h('svg.icon', {fill: "currentcolor", viewBox: "0 0 8 8",
-                onmouseenter: () => {
-                    document.getElementById(dropdownID).classList.toggle('dropdown-open');
-                },
-                onmouseleave: () => {
-                    setTimeout( () => {
-                        if (!document.getElementById(dropdownID).classList.contains('dropdown-opened'))
-                            document.getElementById(dropdownID).classList.remove('dropdown-open');
-                    }, 100);
-                }
-            },
-                h('path', {d: "M0 2l4 4 4-4h-8z", name:"caret-bottom"})),
+        h('.dropdown', {id: dropdownID, name: 'section-object-dropdown'}, [
+            
             h('.dropdown-menu', {
                 onmouseenter: () => {
                     document.getElementById(dropdownID).classList.toggle('dropdown-opened');
@@ -39,19 +40,19 @@ function multiButtonController(model, sectionName, index) {
                     document.getElementById(dropdownID).classList.remove('dropdown-opened');
                 }
             },[
-                h('a.microBtn', {
+                h('a.menu-item', {
                     onclick: () => {
                         model.router.go('/home/?section=home'); // TODO
                         model.fetchedData.delete(sectionName, index);
                         model.notify();
                     }
-                }, 'X'),
-                h('a.microBtn', {
+                }, iconTrash()), // close
+                h('a.menu-item', {
                     onclick: () => {
                         section[index].fetch();
                     }
-                }, 'R'),
-                h('a.microBtn', {
+                }, iconReload()), // reload
+                h('a.menu-item', {
                     onclick: () => {
                         navigator.clipboard.writeText(url.toString())
                             .then(r => {
@@ -61,7 +62,7 @@ function multiButtonController(model, sectionName, index) {
                                 console.error(e)
                             });
                     }
-                }, 'C')
+                }, iconShareBoxed()) // copy
             ])]
         )
     ]);
