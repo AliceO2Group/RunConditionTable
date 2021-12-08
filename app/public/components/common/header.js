@@ -1,13 +1,32 @@
-import viewButton from './viewButton.js';
-import { h } from '/js/src/index.js';
+// import viewButton from './viewButton.js';
+import { h, iconHome, iconPerson } from '/js/src/index.js';
 
 export default function header(model) {
-    return h('.header', {id: 'header'}, [
-        viewButton(model, 'settings', () => alert('TODO')),
-        h('h4.title', 'TODO Some useful tools will be placed here (like exports etc.?)'),
-        h('.header-right', [
-            h('.search', h('input', {id: 'main-panel-search', placeholder: 'search', type: 'input'})),
-            viewButton(model, 'logout', () => model.logout()),
-        ]), ' ',
+    return h('.flex-row.p2', [
+        h('.w-50', [
+            h('button.btn', iconHome()),
+            ' ',
+            h('button.btn', iconPerson()),
+            // viewButton(model, 'logout', () => model.logout()),
+            // the one below won't work:
+            // h('button.btn', iconPerson(), {onclick: () => model.logout()}),
+            ' ',
+            h('span.f4.gray', 'Run Condition Table'),
+        ]),
+        h('.w-50', headerSpecific(model)),
     ]);
+}
+
+const headerSpecific = (model) => {
+    switch (model.router.params.section) {
+        case 'main': return title('Periods');
+        case 'runsPerPeriod': return title('Runs per Period');
+        case 'mc': return title('Monte Carlo');
+        case 'flags': return title('Flags');
+        default: return null;
+    }
+  };
+
+const title = (text) => {
+    return h('b.f4', text);
 }

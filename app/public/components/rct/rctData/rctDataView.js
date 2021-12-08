@@ -14,8 +14,6 @@ export default function rctDataView(model) {
     let data = model.fetchedData[params.section][params.index];
 
     return h('.homePage', [
-        h('h1.title', 'rct data view'),
-        h('p', model.router.params.section),
         // TODO here might be filtering;
         h('div.tableDiv', []),
 
