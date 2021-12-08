@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# $1 :=: hostname
-# $2 :=: port
+# arguments syntax [--hostname <hostname>] | [--port <port>]
+# as in default config.js:
+#     default hostname : localhost
+#     default port : 8080
 
 UNIT_NAME="run-condition-table"
 
@@ -63,4 +65,7 @@ chmod -w $RCT_CONFIG_FILE;
 systemctl daemon-reload
 systemctl stop $UNIT_NAME
 systemctl start $UNIT_NAME
-systemctl status $UNIT_NAME
+systemctl status $UNIT_NAME -n3
+
+echo "installed in: "$INSTALLATION_DIRECTORY
+echo "metadata in: "$RCT_ETC_DIRECTORY

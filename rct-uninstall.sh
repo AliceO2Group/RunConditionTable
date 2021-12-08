@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# remove everything related to RCT
 
 RCT_ETC_DIRECTORY=/etc/run-condition-table/
 RCT_CONFIG_FILE=$RCT_ETC_DIRECTORY"rct.config"
