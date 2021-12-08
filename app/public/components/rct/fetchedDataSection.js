@@ -1,14 +1,22 @@
-import viewButton from "../common/viewButton.js";
-import {h} from '/js/src/index.js'
-import handleClick from "../../utils/handleClick.js";
+import {h, iconPin} from '/js/src/index.js'
 
 function multiButtonController(model, sectionName, index) {
     const section = model.fetchedData[sectionName]
     const url = section[index].payload.url;
     const dropdownID = "dropdown-" + url;
-    const button1 = viewButton(model, index, (e) => handleClick(model, e), '', url.pathname + url.search, '.margin0', '');
+    
+    const mainButton = h('a.menu-item', {
+        title: 'index',
+        style: 'display:flex',
+        href: url.pathname + url.search,
+        onclick: (e) => model.router.handleLinkEvent(e),
+        class: model.page === 'layoutList' ? 'selected' : ''
+      }, [
+        h('span', iconPin(), ' ', index)
+      ]);
+
     return h('.flex-row.appearance.w-100.m1.justify-between', [
-        button1,
+        mainButton,
         h('.microBtnContainer.dropdown', {id: dropdownID, name: 'section-object-dropdown'}, [
             h('svg.icon', {fill: "currentcolor", viewBox: "0 0 8 8",
                 onmouseenter: () => {
@@ -71,8 +79,10 @@ export default function fetchedDataSection(model, sectionName, label) {
         }
     }
 
-    return h('.flex-wrap.item-center.justify-center', [
+    return h('.flex-wrap', [
         h('.sectionTitle', label),
-        h('.flex-column', buttons)
+        h('.flex-wrap.item-center.justify-center', [
+            h('.flex-column', buttons)
+        ])
     ]);
 }
