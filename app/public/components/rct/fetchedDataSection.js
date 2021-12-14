@@ -1,7 +1,7 @@
 import {h, iconPin, iconEllipses, iconShareBoxed, iconReload, iconTrash} from '/js/src/index.js'
 
 function multiButtonController(model, sectionName, index) {
-    const section = model.fetchedData[sectionName]
+    const section = model.fetchedData[sectionName];
     const url = section[index].payload.url;
     const dropdownID = "dropdown-" + url;
 
@@ -9,10 +9,10 @@ function multiButtonController(model, sectionName, index) {
         style: 'display:flex',
         href: url.pathname + url.search,
         onclick: (e) => model.router.handleLinkEvent(e),
-        class: model.page === 'layoutList' ? 'selected' : ''
+        class: model.router.params.index === index ? 'myActiveButton' : ''
     }, [
         h('span', iconPin(), ' ', index),
-        h('span.gray.ph2', {
+        h('span.ph2', {
             onmouseenter: () => {
                 document.getElementById(dropdownID).classList.toggle('dropdown-open');
             },
@@ -21,7 +21,8 @@ function multiButtonController(model, sectionName, index) {
                     if (!document.getElementById(dropdownID).classList.contains('dropdown-opened'))
                         document.getElementById(dropdownID).classList.remove('dropdown-open');
                 }, 100);
-            }
+            },
+            class: model.router.params.index === index ? 'gray-darker' : 'gray'
         },
         iconEllipses()),
     ]);
@@ -79,8 +80,10 @@ export default function fetchedDataSection(model, sectionName, label) {
         }
     }
 
+    // console.log(`${sectionName === model.router.params.section}: ${sectionName}`);
+
     return h('.flex-wrap', [
-        h('.sectionTitle', label),
+        h('.sectionTitle', {class: model.router.params.section === sectionName ? 'currentMenuItem' : ''}, label),
         h('.flex-wrap.item-center.justify-center', [
             h('.flex-column', buttons)
         ])

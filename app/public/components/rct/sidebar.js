@@ -18,37 +18,43 @@ export default function sidebar(model) {
 }
 
   const sidebarMenu = (model) => [
-    h('.menu-title', 'Home'),
+    h('.menu-title', {
+      class: model.router.params.section === 'home' ? 'currentMenuItem' : ''
+    }, 'Home'),
     h('a.menu-item', {
       title: 'Home',
       style: 'display:flex',
       href: '/home/?section=home',
       onclick: (e) => model.router.handleLinkEvent(e),
-      class: model.page === 'layoutList' ? 'selected' : ''
+      class: model.router.params.section === 'home' ? 'myActiveButton' : ''
     }, [
       h('span', iconHome(), ' ', 'Main (home) page')
     ]),
 
-    h('.menu-title', 'Periods'),
+    h('.menu-title', {
+      class: model.router.params.section === 'main' ? 'currentMenuItem' : ''
+    }, 'Periods'),
     h('a.menu-item', {
         title: 'Periods',
         style: 'display:flex',
         href: pathNQuery('main', '_0', 'periods'),
         onclick: (e) => model.router.handleLinkEvent(e),
-        class: model.page === 'layoutList' ? 'selected' : ''
+        class: model.router.params.section === 'main' ? 'myActiveButton' : ''
       }, [
         h('span', iconLayers(), ' ', 'Periods')
     ]),
 
     fetchedDataSection(model, 'runsPerPeriod', 'Runs per period'),
 
-    h('.menu-title', 'Monte Carlo'),
+    h('.menu-title', {
+      class: model.router.params.section === 'mc' ? 'currentMenuItem' : ''
+    }, 'Monte Carlo'),
     h('a.menu-item', {
         title: 'Monte Carlo',
         style: 'display:flex',
         href: pathNQuery('mc', '_0', 'mc'),
         onclick: (e) => model.router.handleLinkEvent(e),
-        class: model.page === 'layoutList' ? 'selected' : ''
+        class: model.router.params.section === 'mc' ? 'myActiveButton' : ''
       }, [
         h('span', iconLayers(), ' ', 'Monte Carlo simulations')
     ]),
