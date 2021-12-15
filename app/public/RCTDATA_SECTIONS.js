@@ -4,6 +4,6 @@
  */
 
 
-const RCTDATA_SECTIONS = ['periods', 'runsPerPeriod', 'mc', 'flags'];
+const RCTDATA_SECTIONS = ['periods', 'runsPerPeriod', 'dataPasses', 'mc', 'flags'];
 
 export default RCTDATA_SECTIONS;

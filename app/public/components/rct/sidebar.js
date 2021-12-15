@@ -1,5 +1,6 @@
 import {h, iconLayers, iconHome} from "/js/src/index.js";
 import fetchedDataSection from "./fetchedDataSection.js";
+import aloneSectionButton from "./aloneSectionButton.js";
 
 function pathNQuery(section, index, view) {
     return `/api/Rct-Data/?section=${section}&index=${index}&view=${view}&rowsOnPage=50&page=1`;
@@ -17,47 +18,9 @@ export default function sidebar(model) {
       ]);
 }
 
-  const sidebarMenu = (model) => [
-    h('.menu-title', {
-      class: model.router.params.section === 'home' ? 'currentMenuItem' : ''
-    }, 'Home'),
-    h('a.menu-item', {
-      title: 'Home',
-      style: 'display:flex',
-      href: '/home/?section=home',
-      onclick: (e) => model.router.handleLinkEvent(e),
-      class: model.router.params.section === 'home' ? 'myActiveButton' : ''
-    }, [
-      h('span', iconHome(), ' ', 'Main (home) page')
-    ]),
-
-    h('.menu-title', {
-      class: model.router.params.section === 'periods' ? 'currentMenuItem' : ''
-    }, 'Periods'),
-    h('a.menu-item', {
-        title: 'Periods',
-        style: 'display:flex',
-        href: pathNQuery('periods', '_0', 'periods'),
-        onclick: (e) => model.router.handleLinkEvent(e),
-        class: model.router.params.section === 'main' ? 'myActiveButton' : ''
-      }, [
-        h('span', iconLayers(), ' ', 'Periods')
-    ]),
-
+const sidebarMenu = (model) => [
+    aloneSectionButton(model, 'Periods', 'periods', '_0', 'periods'),
     fetchedDataSection(model, 'runsPerPeriod', 'Runs per period'),
-
-    h('.menu-title', {
-      class: model.router.params.section === 'mc' ? 'currentMenuItem' : ''
-    }, 'Monte Carlo'),
-    h('a.menu-item', {
-        title: 'Monte Carlo',
-        style: 'display:flex',
-        href: pathNQuery('mc', '_0', 'mc'),
-        onclick: (e) => model.router.handleLinkEvent(e),
-        class: model.router.params.section === 'mc' ? 'myActiveButton' : ''
-      }, [
-        h('span', iconLayers(), ' ', 'Monte Carlo simulations')
-    ]),
-
+    aloneSectionButton(model, "Monte Carlo", 'mc', '_0', 'mc'),
     fetchedDataSection(model, 'flags', 'QA Expert Flagging'),
 ];
