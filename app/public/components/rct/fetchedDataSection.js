@@ -74,7 +74,7 @@ export default function fetchedDataSection(model, sectionName, label) {
     const buttons = [];
     if (sectionName !== null) {
         for (let index in section) {
-            if (section.hasOwnProperty(index) && section[index] !== undefined && section[index] !== null) {
+            if (section.hasOwnProperty(index) && section[index]) {
                 buttons.push(multiButtonController(model, sectionName, index));
             }
         }

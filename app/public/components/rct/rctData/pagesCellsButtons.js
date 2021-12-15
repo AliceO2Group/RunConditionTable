@@ -1,6 +1,7 @@
 import RCTDATA_SECTIONS from "../../../RCTDATA_SECTIONS.js";
 import viewButton from '../../common/viewButton.js';
 import handleClick from "../../../utils/handleClick.js";
+import {h} from "/js/src/index.js";
 
 
 /** Configuration what buttons at which cells and which sections are supposed
@@ -28,19 +29,31 @@ const pagesCellsButtons = {
 const pagesCellsButtons = {
     periods: {
         name: (model, item, name) => {
-            return viewButton(model, item.name, (e) =>
+            return [
+                h('', item.name),
+                viewButton(model, `runs`, (e) =>
                 handleClick(model, e), '',
-                `/api/Rct-Data/?section=runsPerPeriod&index=${item.name}&view=runs&name=${item.name}&rowsOnPage=50&page=1`);
+                `/api/Rct-Data/?section=runsPerPeriod&index=${item.name}&view=runs&name=${item.name}&rowsOnPage=50&page=1`),
+
+                viewButton(model, 'data passes', (e) =>
+                        handleClick(model, e), '',
+                    `/api/Rct-Data/?section=dataPasses&index=${item.name}&view=dataPasses&name=${item.name}&rowsOnPage=50&page=1`),
+
+                viewButton(model, 'MC', (e) =>
+                        handleClick(model, e), '',
+                    `/api/Rct-Data/?section=mc&index=${item.name}&view=mc&name=${item.name}&rowsOnPage=50&page=1`),
+            ];
         },
     },
+    dataPasses: {},
+    mc: {},
     runsPerPeriod: {
-        id: (model, item, name) => {
-            return viewButton(model, item.id, (e) => handleClick(model, e), '',
-                `/api/Rct-Data/?section=flags&index=${item.id}&view=flags&run_id=${item.id}&rowsOnPage=50&page=1`);
+        run_number: (model, item, name) => {
+            return viewButton(model, item.run_number, (e) => handleClick(model, e), '',
+                `/api/Rct-Data/?section=flags&index=${item.run_number}&view=flags&run_id=${item.run_number}&rowsOnPage=50&page=1`);
         }
     },
     flags: {},
-    mc: {},
     // ...,
 
 }
