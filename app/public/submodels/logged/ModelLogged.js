@@ -10,10 +10,16 @@ export default class ModelLogged extends Observable {
         this.router.bubbleTo(this)
 
         this.fetchedData = new FetchedDataManager(this.router, this);
+        
+        this.searchFieldsVisible = false;
 
         this.loader = new Loader()
 
         this.handleLocationChange(); // Init first page
+    }
+
+    changeSearchFieldsVisibility() {
+        this.searchFieldsVisible = !this.searchFieldsVisible;
     }
 
     handleLocationChange() {

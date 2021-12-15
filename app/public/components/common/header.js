@@ -33,10 +33,14 @@ const title = (text) => {
 }
 
 const functionalities = (model) => {
-    if (model.router.params.section == 'home')
         return h('.button-group.text-right',
             h('button.btn', iconDataTransferDownload()),
-            h('button.btn', iconMagnifyingGlass()),
+            h('button.btn', {
+                className: model.searchFieldsVisible? 'active': '',
+                onclick: () => {
+                    model.changeSearchFieldsVisibility();
+                    model.notify();
+                }
+            }, iconMagnifyingGlass()),
         );
-    return null;
 }

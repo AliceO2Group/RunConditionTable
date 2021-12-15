@@ -26,8 +26,10 @@ export default function tableView(model) {
     const fields = data.fields;
     const visibleFields = fields.filter(f => f.marked);
 
+    const filteringPanel = model.searchFieldsVisible? filter(model) : ' ';
+
     return h('div.p3', [
-        filter(model),
+        filteringPanel,
         siteController(model, data),
         viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'), ' ', // TODO move up
         h('table.table', {id: 'data-table-' + data.url}, [
