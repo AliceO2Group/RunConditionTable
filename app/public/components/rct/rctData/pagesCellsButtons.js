@@ -11,7 +11,7 @@ import handleClick from "../../../utils/handleClick.js";
  *  @example
 
 const pagesCellsButtons = {
-    main: {
+    periods: {
         period: (model, item, name) => {
             return viewButton(model, item.period, (e) =>
                     handleClick(model, e), '',
@@ -26,11 +26,11 @@ const pagesCellsButtons = {
  */
 
 const pagesCellsButtons = {
-    main: {
+    periods: {
         name: (model, item, name) => {
             return viewButton(model, item.name, (e) =>
                 handleClick(model, e), '',
-                `/api/Rct-Data/?section=runsPerPeriod&index=${item.name}&view=runs&period=${item.name}&rowsOnPage=50&page=1`);
+                `/api/Rct-Data/?section=runsPerPeriod&index=${item.name}&view=runs&name=${item.name}&rowsOnPage=50&page=1`);
         },
     },
     runsPerPeriod: {

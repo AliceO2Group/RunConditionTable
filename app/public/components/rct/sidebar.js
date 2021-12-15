@@ -32,12 +32,12 @@ export default function sidebar(model) {
     ]),
 
     h('.menu-title', {
-      class: model.router.params.section === 'main' ? 'currentMenuItem' : ''
+      class: model.router.params.section === 'periods' ? 'currentMenuItem' : ''
     }, 'Periods'),
     h('a.menu-item', {
         title: 'Periods',
         style: 'display:flex',
-        href: pathNQuery('main', '_0', 'periods'),
+        href: pathNQuery('periods', '_0', 'periods'),
         onclick: (e) => model.router.handleLinkEvent(e),
         class: model.router.params.section === 'main' ? 'myActiveButton' : ''
       }, [
