@@ -1,5 +1,3 @@
-
-
 .margin0 {
     margin: 0 0 0 0;
 }
@@ -21,4 +19,12 @@
     margin: 3px;
     cursor: pointer;
 
+}
+
+.myActiveButton {
+    background-color: var(--color-gray) !important;
+}
+
+.currentMenuItem {
+    text-decoration: underline;
 }
