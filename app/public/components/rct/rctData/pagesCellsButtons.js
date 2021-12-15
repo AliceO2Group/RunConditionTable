@@ -27,10 +27,10 @@ const pagesCellsButtons = {
 
 const pagesCellsButtons = {
     main: {
-        period: (model, item, name) => {
-            return viewButton(model, item.period, (e) =>
+        name: (model, item, name) => {
+            return viewButton(model, item.name, (e) =>
                 handleClick(model, e), '',
-                `/api/Rct-Data/?section=runsPerPeriod&index=${item.period}&view=runs&period=${item.period}&rowsOnPage=50&page=1`);
+                `/api/Rct-Data/?section=runsPerPeriod&index=${item.name}&view=runs&period=${item.name}&rowsOnPage=50&page=1`);
         },
     },
     runsPerPeriod: {

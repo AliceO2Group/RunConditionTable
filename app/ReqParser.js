@@ -9,13 +9,14 @@ class ReqParser {
         const dataSubsetQueryPart = (query) => query['count-records'] === 'true' ? '' : `LIMIT ${query.rowsOnPage} OFFSET ${query.rowsOnPage * (query.page - 1)}`;
         switch (query.view) {
             case 'periods':
-                return `SELECT * FROM ${query.view} ${dataSubsetQueryPart(query)};`;
-            case 'mc':
-                return `SELECT * FROM ${query.view} ${dataSubsetQueryPart(query)};`;
-            case 'runs':
-                return `SELECT * FROM ${query.view} WHERE period_id = (SELECT id FROM periods WHERE periods.period = '${query.period}') ${dataSubsetQueryPart(query)};`;
-            case 'flags':
-                return `SELECT * FROM ${query.view} WHERE run_id = ${query.run_id} ${dataSubsetQueryPart(query)};`;
+                return `SELECT name, year, (SELECT beam_type from beams_dictionary as bd where bd.id = v.beam) as beam, energy FROM ${query.view} as v ${dataSubsetQueryPart(query)};`;
+            // case 'runs':
+            //     return `SELECT * FROM ${query.view} WHERE period_id = (SELECT id FROM periods WHERE periods.period = '${query.period}') ${dataSubsetQueryPart(query)};`;
+            // case 'flags':
+            //     return `SELECT * FROM ${query.view} WHERE run_id = ${query.run_id} ${dataSubsetQueryPart(query)};`;
+
+            // case 'mc':
+            //     return `SELECT * FROM ${query.view} ${dataSubsetQueryPart(query)};`;
             default:
                 return 'SELECT NOW()';
         }
