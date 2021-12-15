@@ -49,7 +49,9 @@ function multiButtonController(model, sectionName, index) {
                 }, iconTrash()), // close
                 h('a.menu-item', {
                     onclick: () => {
-                        section[index].fetch();
+                        // TODO
+                        // model.fetchedData.req(true, section[index].url)
+                        // section[index].fetch();
                     }
                 }, iconReload()), // reload
                 h('a.menu-item', {
