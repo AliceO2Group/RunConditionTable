@@ -7,6 +7,7 @@ import siteController from "./siteController.js";
 
 import postingDataConfig from "../postingDataConfig.js";
 import {postForm} from "../postForm.js";
+import filter from './table/filter.js';
 
 /**
  * creates vnode containing table of fetched data (main content)
@@ -26,7 +27,7 @@ export default function tableView(model) {
     const visibleFields = fields.filter(f => f.marked);
 
     return h('div.p3', [
-        fieldsVisibilityControl(model, data, fields),
+        filter(model),
         siteController(model, data),
         viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'), ' ', // TODO move up
         h('table.table', {id: 'data-table-' + data.url}, [
@@ -39,22 +40,6 @@ export default function tableView(model) {
     ])
 
 }
-
-
-
-function fieldsVisibilityControl(mode, data, fields) {
-    return h('.flex-row.p3.justify-start', fields.map(f =>
-        h('span.p1.thin-border', [
-            h('.d-block.w-100', h('input.p3', {
-                onclick: () => mode.fetchedData.changeItemStatus(f),
-                checked: f.marked,
-                type: 'checkbox'
-            })),
-            h('p', f.name)
-        ])
-    ))
-}
-
 
 function tableBody(model, visibleFields, data, cellsButtons, params) {
     return h('tbody', {id: 'table-body-' + data.url},
