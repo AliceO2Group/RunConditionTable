@@ -26,7 +26,7 @@ export default class ModelLogged extends Observable {
         const params = this.router.params;
         const url = this.router.getUrl();
         switch (url.pathname) {
-            case '/api/Rct-Data/':
+            case '/Rct-Data/':
                 this.fetchedData.reqForData()
                     .then(r => {})
                     .catch(e => {console.error(e)});

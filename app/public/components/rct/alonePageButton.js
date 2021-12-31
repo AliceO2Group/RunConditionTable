@@ -1,6 +1,6 @@
 import {h, iconLayers, iconHome} from "/js/src/index.js";
 function pathNQuery(page, index) {
-    return `/api/Rct-Data/?page=${page}&index=${index}&rowsOnSite=50&site=1`;
+    return `/Rct-Data/?page=${page}&index=${index}&rowsOnSite=50&site=1`;
 }
 export default function alonePageButton(model, title, page, index) {
     return [h('.menu-title', {

@@ -4,8 +4,8 @@ import RCT_DATA_PAGES from "../../../RCT_DATA_PAGES.js";
 import FetchedData from "./FetchedData.js";
 import {replaceUrlParams, url2Str} from "../../../utils/utils.js";
 
-const rctDataServerPathname = '/api/Rct-Data/';
-
+const rctDataServerPathname = '/Rct-Data/';
+const apiPrefix = '/api'
 
 /**
  * Object of this class provide that many FetchedData objects are organized,
@@ -73,7 +73,7 @@ export default class FetchedDataManager {
     }
 
     getReqEndpoint(url, countAllRecord) {
-        return url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
+        return apiPrefix + url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
     }
 
     changeSite(site) {

@@ -22,7 +22,7 @@ export default function userPanel(model) {
 
           h('section.outline-gray.flex-grow.relative', [
             h('.scroll-y.absolute-fill.bg-white', {id: 'main-content'}, [
-                url.pathname === '/api/Rct-Data/' ? rctDataView(model) : '', //home(model),
+                url.pathname === '/Rct-Data/' ? rctDataView(model) : '', //home(model),
             ])
           ]),
         ])
