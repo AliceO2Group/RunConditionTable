@@ -40,20 +40,20 @@ export default function siteController(model, data) {
     return h('.flex-row', [
         'site:',
         // move to first site
-        currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(1), '<<') : '',
+        currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(1), '<<') : ' ',
         // move to middle of sites range [first, current]
-        currentSite > 3 ? siteChangingController(() => model.fetchedData.changeSite(Math.floor(currentSite / 2)), '|') : '',
+        currentSite > 3 ? siteChangingController(() => model.fetchedData.changeSite(Math.floor(currentSite / 2)), '|') : ' ',
         // move one site back
-        currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(currentSite - 1), '<'): '',
+        currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(currentSite - 1), '<'): ' ',
         mapArrayToButtons(leftButtonsR),
         leftThreeDotsPresent ? '...' : '',
         mapArrayToButtons(middleButtonsR),
         rightThreeDotsPresent ? '...' : '',
         mapArrayToButtons(rightButtonsR),
         // analogically as above
-        currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(currentSite + 1), '>') : '',
-        currentSite < sitesNumber - 2 ? siteChangingController(() => model.fetchedData.changeSite(currentSite + Math.floor((sitesNumber - currentSite) / 2)), '|') : '',
-        currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(sitesNumber), '>>'): '',
+        currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(currentSite + 1), '>') : ' ',
+        currentSite < sitesNumber - 2 ? siteChangingController(() => model.fetchedData.changeSite(currentSite + Math.floor((sitesNumber - currentSite) / 2)), '|') : ' ',
+        currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(sitesNumber), '>>'): ' ',
     ]);
 
 }
