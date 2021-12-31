@@ -9,7 +9,7 @@ function multiButtonController(model, pageName, index) {
         style: 'display:flex',
         href: url.pathname + url.search,
         onclick: (e) => model.router.handleLinkEvent(e),
-        class: model.router.params.index === index ? 'myActiveButton' : ''
+        class: model.router.getUrl().href === url.href ? 'myActiveButton' : ''
     }, [
         h('span', iconPin(), ' ', index),
         h('span.ph2', {
@@ -30,7 +30,7 @@ function multiButtonController(model, pageName, index) {
     return h('.flex-row.appearance.w-100.m1.justify-between', [
         mainButton,
         h('.dropdown', {id: dropdownID, name: 'page-object-dropdown'}, [
-            
+
             h('.dropdown-menu', {
                 onmouseenter: () => {
                     document.getElementById(dropdownID).classList.toggle('dropdown-opened');
