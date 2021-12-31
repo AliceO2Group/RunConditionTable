@@ -31,7 +31,7 @@ export default function tableView(model) {
     return h('div.p3', [
         filteringPanel,
         siteController(model, data),
-        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'), ' ', // TODO move up
+        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'), ' ',
         h('table.table', {id: 'data-table-' + data.url}, [
 
             // h('caption', data.name),
@@ -45,6 +45,7 @@ export default function tableView(model) {
 
 function tableBody(model, visibleFields, data, cellsButtons, params) {
     return h('tbody', {id: 'table-body-' + data.url},
-        [postingDataConfig.hasOwnProperty(params.page) ? postForm(model, data) : ''].concat(data.rows.map(item => row(model, visibleFields, data, item, cellsButtons)))
+        [postingDataConfig.hasOwnProperty(params.page) ? postForm(model, data) : '']
+            .concat(data.rows.map(item => row(model, visibleFields, data, item, cellsButtons)))
     );
 }

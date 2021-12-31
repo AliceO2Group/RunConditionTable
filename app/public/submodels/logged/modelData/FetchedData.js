@@ -41,10 +41,6 @@ export default class FetchedData {
     }
 
 
-    getReqEndpoint(url) {
-        return url.pathname + url.search +
-            ((this.totalRecordsNumber) ? '&count-records=true' : '');
-    }
     parseFetchedFields(content) {
         this.fields = content.data.fields.map(item => {
             item.marked = true;

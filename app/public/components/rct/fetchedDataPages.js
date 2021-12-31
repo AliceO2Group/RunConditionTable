@@ -1,8 +1,7 @@
 import {h, iconPin, iconEllipses, iconShareBoxed, iconReload, iconTrash} from '/js/src/index.js'
 
-//TODO change naming of functions below
 
-export default function fetchedDataPage(model, pageName, label) {
+export default function fetchedDataPages(model, pageName, label) {
     const page = model.fetchedData[pageName]
     const buttons = [];
     if (pageName !== null) {

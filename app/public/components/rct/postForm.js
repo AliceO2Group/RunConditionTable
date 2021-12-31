@@ -13,7 +13,7 @@ import {h, fetchClient} from '/js/src/index.js';
  */
 export function postForm(model, data) {
     const params = model.router.params;
-    const pageMetadata = postingDataConfig[params.section];
+    const pageMetadata = postingDataConfig[params.page];
     return h('tr', data.fields.map(f => {
         if (pageMetadata !== undefined
             && pageMetadata['excludedFields'] !== undefined
