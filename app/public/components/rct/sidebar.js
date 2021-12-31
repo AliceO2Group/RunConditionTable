@@ -1,6 +1,6 @@
 import {h, iconLayers, iconHome} from "/js/src/index.js";
 import fetchedDataSection from "./fetchedDataSection.js";
-import aloneSectionButton from "./aloneSectionButton.js";
+import alonePageButton from "./alonePageButton.js";
 
 /**
  * Provides navigation between particular views, is divide to sections,
@@ -16,9 +16,8 @@ export default function sidebar(model) {
 }
 
 const sidebarMenu = (model) => [
-    aloneSectionButton(model, 'Periods', 'periods', '_0', 'periods'),
+    alonePageButton(model, 'Periods', 'periods', '_0'),
     fetchedDataSection(model, 'dataPasses', "Data Passes"),
-    // aloneSectionButton(model, "Monte Carlo", 'mc', '_0', 'mc'),
     fetchedDataSection(model, 'mc', "Monte Carlo"),
     fetchedDataSection(model, 'runsPerPeriod', 'Runs per period'),
     fetchedDataSection(model, 'flags', 'QA Expert Flagging'),

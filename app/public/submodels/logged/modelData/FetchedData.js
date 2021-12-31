@@ -1,11 +1,11 @@
-const defaultRowsOnPage = 100;
-const defaultPage = 1;
+const defaultRowsOnSite = 100;
+const defaultSite = 1;
 
 
 /**
  * Object of this class is used to hold data fetched from backend
  * set of data held in this structure are fully defined by the url given as on of constructor arguments
- * when some filtering parameters are or page, etc. is changed
+ * when some filtering parameters are or site, etc. is changed
  * the url is also changed in order to be consistent with data
  *
  */
@@ -20,7 +20,7 @@ export default class FetchedData {
         this.totalRecordsNumber = null;
         this.hideMarkedRecords = false;
 
-        this.rowsOnPage = null;
+        this.rowsOnsite = null;
         this.site = null;
 
         this.parseFetchedFields(content)
@@ -36,8 +36,8 @@ export default class FetchedData {
 
     setSiteAndRowsOnSite() {
         const params = Object.fromEntries(this.url.searchParams.entries());
-        this.rowsOnPage = params.hasOwnProperty('rowsOnPage') ? params.rowsOnPage : defaultRowsOnPage;
-        this.site = params.hasOwnProperty('page') ? params.page : defaultPage;
+        this.rowsOnsite = params.hasOwnProperty('rowsOnsite') ? params.rowsOnsite : defaultRowsOnSite;
+        this.site = params.hasOwnProperty('site') ? params.site : defaultSite;
     }
 
 
@@ -65,7 +65,7 @@ export default class FetchedData {
 
     changeFiltering(/**???*/) {
         // TODO
-        this.fetch().then(r => {}).catch(e => {console.error(e)});
+        //this.fetch().then(r => {}).catch(e => {console.error(e)});
     }
 
     clear() {

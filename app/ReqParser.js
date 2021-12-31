@@ -1,16 +1,19 @@
 /**
  * class responsible for parsing url params, payloads of client request to sql queries
  */
+
+// const RCT_DATA_PAGES = ['periods', 'runsPerPeriod', 'dataPasses', 'mc', 'flags'];
+
 class ReqParser {
 
     constructor() {}
 
     parseDataReq(query) {
-        const dataSubsetQueryPart = (query) => query['count-records'] === 'true' ? '' : `LIMIT ${query.rowsOnPage} OFFSET ${query.rowsOnPage * (query.page - 1)}`;
-        switch (query.view) {
+        const dataSubsetQueryPart = (query) => query['count-records'] === 'true' ? '' : `LIMIT ${query.rowsOnSite} OFFSET ${query.rowsOnSite * (query.site - 1)}`;
+        switch (query.page) {
             case 'periods':
-                return `SELECT name, year, (SELECT beam_type from beams_dictionary as bd where bd.id = v.beam) as beam, energy FROM ${query.view} as v ${dataSubsetQueryPart(query)};`;
-            case 'runs':
+                return `SELECT name, year, (SELECT beam_type from beams_dictionary as bd where bd.id = v.beam) as beam, energy FROM periods as v ${dataSubsetQueryPart(query)};`;
+            case 'runsPerPeriod':
                 return `SELECT * FROM runs WHERE period_id = (SELECT id FROM periods WHERE periods.name = '${query.name}') ${dataSubsetQueryPart(query)};`;
             case 'dataPasses':
                 return `SELECT * FROM data_passes as dp where exists (select * from runs as r inner join data_passes_runs as dpr on r.id = dpr.run_id INNER JOIN data_passes as dp on dp.id = dpr.production_id where r.period_id = (select id from periods as p where p.name = \'${query.name}\')) ${dataSubsetQueryPart(query)};`;

@@ -1,8 +1,8 @@
 import {h, iconPin, iconEllipses, iconShareBoxed, iconReload, iconTrash} from '/js/src/index.js'
 
-function multiButtonController(model, sectionName, index) {
-    const section = model.fetchedData[sectionName];
-    const url = section[index].payload.url;
+function multiButtonController(model, pageName, index) {
+    const page = model.fetchedData[pageName];
+    const url = page[index].payload.url;
     const dropdownID = "dropdown-" + url;
 
     const mainButton = h('a.menu-item', {
@@ -29,7 +29,7 @@ function multiButtonController(model, sectionName, index) {
 
     return h('.flex-row.appearance.w-100.m1.justify-between', [
         mainButton,
-        h('.dropdown', {id: dropdownID, name: 'section-object-dropdown'}, [
+        h('.dropdown', {id: dropdownID, name: 'page-object-dropdown'}, [
             
             h('.dropdown-menu', {
                 onmouseenter: () => {
@@ -42,16 +42,16 @@ function multiButtonController(model, sectionName, index) {
             },[
                 h('a.menu-item', {
                     onclick: () => {
-                        model.router.go('/home/?section=home'); // TODO
-                        model.fetchedData.delete(sectionName, index);
+                        model.router.go('/home/?page=home'); // TODO
+                        model.fetchedData.delete(pageName, index);
                         model.notify();
                     }
                 }, iconTrash()), // close
                 h('a.menu-item', {
                     onclick: () => {
                         // TODO
-                        // model.fetchedData.req(true, section[index].url)
-                        // section[index].fetch();
+                        // model.fetchedData.req(true, page[index].url)
+                        // page[index].fetch();
                     }
                 }, iconReload()), // reload
                 h('a.menu-item', {
@@ -71,21 +71,20 @@ function multiButtonController(model, sectionName, index) {
 }
 
 
-export default function fetchedDataSection(model, sectionName, label) {
-    const section = model.fetchedData[sectionName]
+export default function fetchedDataPage(model, pageName, label) {
+    const page = model.fetchedData[pageName]
     const buttons = [];
-    if (sectionName !== null) {
-        for (let index in section) {
-            if (section.hasOwnProperty(index) && section[index]) {
-                buttons.push(multiButtonController(model, sectionName, index));
+    if (pageName !== null) {
+        for (let index in page) {
+            if (page.hasOwnProperty(index) && page[index]) {
+                buttons.push(multiButtonController(model, pageName, index));
             }
         }
     }
 
-    // console.log(`${sectionName === model.router.params.section}: ${sectionName}`);
 
     return h('.flex-wrap', [
-        h('.sectionTitle', {class: model.router.params.section === sectionName ? 'currentMenuItem' : ''}, label),
+        h('.pageTitle', {class: model.router.params.page === pageName ? 'currentMenuItem' : ''}, label),
         h('.flex-wrap.item-center.justify-center', [
             h('.flex-column', buttons)
         ])

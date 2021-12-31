@@ -16,7 +16,7 @@ const createInputField = (field, command) => h('td', h('input.form-control', {
 
 export default function filter(model) {
     const params = model.router.params;
-    const data = model.fetchedData[params.section][params.index].payload;
+    const data = model.fetchedData[params.page][params.index].payload;
     const fields = data.fields;
 
     return h('table.table-filters', [
