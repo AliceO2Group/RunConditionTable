@@ -30,28 +30,28 @@ export default class FetchedDataManager {
      * this information is used to create site navigation
      */
 
-    async reqForData(force=false) {
+    async reqForData(force=false, url=null) {
         const params = this.router.params;
         let page = params.page
         let index = params.index
-        const url = this.router.getUrl();
+        if (url === null)
+            url = this.router.getUrl();
 
         const data = this[page][index]
         if (!data || force)
-            await this.req(true);
+            await this.req(true, url);
         else if (url2Str(data.payload.url) !== url2Str(url)) {
             console.log("second type reqForData")
 
-            await this.req(false);
+            await this.req(false, url);
         }
     }
 
-    async req(countAllRecord) {
+    async req(countAllRecord, url) {
         const params = this.router.params;
         const page = params.page
         const index = params.index
 
-        const url = this.router.getUrl();
 
         this.assertConditionsForReqForData(url, params)
         let totalRecordsNumber = null;

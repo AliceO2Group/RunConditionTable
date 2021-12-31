@@ -1,5 +1,5 @@
 import {h, iconLayers, iconHome} from "/js/src/index.js";
-import fetchedDataSection from "./fetchedDataSection.js";
+import fetchedDataSection from "./fetchedDataPage.js";
 import alonePageButton from "./alonePageButton.js";
 
 /**
