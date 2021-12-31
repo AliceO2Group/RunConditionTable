@@ -31,10 +31,10 @@ export default class ModelLogged extends Observable {
                     .then(r => {})
                     .catch(e => {console.error(e)});
             break;
-            case '/home/':
+            case '/__home/':
                 break;
             default:
-                // this.router.go('/home', false);
+                // this.router.go('/__home', false);
                 break;
         }
     }

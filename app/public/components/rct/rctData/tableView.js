@@ -5,8 +5,8 @@ import row from './table/row.js';
 import pagesCellsButtons from "./pagesCellsButtons.js";
 import siteController from "./siteController.js";
 
-import postingDataConfig from "../postingDataConfig.js";
-import {postForm} from "../postForm.js";
+import postingDataConfig from "./posting/postingDataConfig.js";
+import {postForm} from "./posting/postForm.js";
 import filter from './table/filter.js';
 
 /**

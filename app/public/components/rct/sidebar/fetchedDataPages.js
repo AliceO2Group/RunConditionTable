@@ -92,7 +92,7 @@ const revealedButtonControllerObj = (dropdownID) => {
 const deletePageButton = (model, pageName, index) => {
     return h('a.menu-item', {
         onclick: () => {
-            model.router.go('/home/?page=home'); // TODO
+            model.router.go('/__home/?page=__home'); // TODO
             model.fetchedData.delete(pageName, index);
             model.notify();
         }

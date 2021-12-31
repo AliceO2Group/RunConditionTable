@@ -1,5 +1,5 @@
 import {h, iconLayers, iconHome} from "/js/src/index.js";
-import fetchedDataSection from "./fetchedDataPages.js";
+import fetchedDataPages from "./fetchedDataPages.js";
 import alonePageButton from "./alonePageButton.js";
 
 /**
@@ -17,8 +17,8 @@ export default function sidebar(model) {
 
 const sidebarMenu = (model) => [
     alonePageButton(model, 'Periods', 'periods', '_0'),
-    fetchedDataSection(model, 'dataPasses', "Data Passes"),
-    fetchedDataSection(model, 'mc', "Monte Carlo"),
-    fetchedDataSection(model, 'runsPerPeriod', 'Runs per period'),
-    fetchedDataSection(model, 'flags', 'QA Expert Flagging'),
+    fetchedDataPages(model, 'dataPasses', "Data Passes"),
+    fetchedDataPages(model, 'mc', "Monte Carlo"),
+    fetchedDataPages(model, 'runsPerPeriod', 'Runs per period'),
+    fetchedDataPages(model, 'flags', 'QA Expert Flagging'),
 ];

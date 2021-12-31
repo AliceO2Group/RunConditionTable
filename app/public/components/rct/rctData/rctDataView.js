@@ -1,6 +1,6 @@
 import {h} from '/js/src/index.js';
 import tableView from "./tableView.js";
-import spinner from "../../spinner.js";
+import spinner from "../../common/spinner.js";
 import viewButton from "../../common/viewButton.js";
 
 
