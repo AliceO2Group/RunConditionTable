@@ -49,7 +49,7 @@ for ((i=1; i<=$#; i++)); do
   if [ "${!i}" = "--port" ] && [[ "$next_arg" =~ ^[0-9]+$ ]]; then  ## TODO informing about errors
     sed -i -E "s/port *: *[0-9]+ *,/port: $next_arg,/" $APP_CONFIG_FILE
   fi
-  if [ "${!i}" = "--hostname" ] && [[ -n "${!next_i}" ]]; then
+  if [ "${!i}" = "--hostname" ] && [[ -n "$next_arg" ]]; then
       sed -i -E "s/hostname *: *.+ *,/hostname: $next_arg,/" $APP_CONFIG_FILE
   fi
 done
