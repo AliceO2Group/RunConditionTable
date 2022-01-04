@@ -1,6 +1,6 @@
 import {h} from '/js/src/index.js';
 import tableView from "./tableView.js";
-import spinner from "../../spinner.js";
+import spinner from "../../common/spinner.js";
 import viewButton from "../../common/viewButton.js";
 
 
@@ -11,7 +11,7 @@ import viewButton from "../../common/viewButton.js";
  */
 export default function rctDataView(model) {
     const params = model.router.params;
-    let data = model.fetchedData[params.section][params.index];
+    let data = model.fetchedData[params.page][params.index];
 
     return h('.homePage', [
         h('div.tableDiv', []),

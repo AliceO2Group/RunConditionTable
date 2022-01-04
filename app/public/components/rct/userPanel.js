@@ -1,8 +1,9 @@
 import { h, switchCase } from '/js/src/index.js';
 import { reduceSerialIf } from '../../utils/utils.js';
 import header from '../common/header.js';
+import __home from "./__home.js";
 import rctDataView from "./rctData/rctDataView.js";
-import sidebar from "./sidebar.js";
+import sidebar from "./sidebar/sidebar.js";
 
 
 /**
@@ -21,7 +22,7 @@ export default function userPanel(model) {
 
           h('section.outline-gray.flex-grow.relative', [
             h('.scroll-y.absolute-fill.bg-white', {id: 'main-content'}, [
-                url.pathname === '/api/Rct-Data/' ? rctDataView(model) : '',
+                url.pathname === '/Rct-Data/' ? rctDataView(model) : '', //__home(model),
             ])
           ]),
         ])

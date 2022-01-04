@@ -109,14 +109,13 @@ class PgManager {
             console.log(req.query);
             if (req.query['count-records'] === 'true') {
                 data['totalRecordsNumber'] = rows.length;
-                const offset = req.query.rowsOnPage * (req.query.page - 1);
-                const limit = req.query.rowsOnPage;
+                const offset = req.query.rowsOnSite * (req.query.site - 1);
+                const limit = req.query.rowsOnSite;
                 rows = rows.slice(offset, offset + limit);
             }
 
             data['rows'] = rows;
             data['fields'] = fields;
-
             res.json({data: data});
         }
         await this.#exec(req, res, dbResponseHandler, query)

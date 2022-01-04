@@ -1,16 +1,16 @@
 import {RemoteData, Loader} from '/js/src/index.js';
 
-import RCTDATA_SECTIONS from "../../../RCTDATA_SECTIONS.js";
+import RCT_DATA_PAGES from "../../../RCT_DATA_PAGES.js";
 import FetchedData from "./FetchedData.js";
 import {replaceUrlParams, url2Str} from "../../../utils/utils.js";
 
-const rctDataServerPathname = '/api/Rct-Data/';
-
+const rctDataServerPathname = '/Rct-Data/';
+const apiPrefix = '/api'
 
 /**
  * Object of this class provide that many FetchedData objects are organized,
- * each is available as ModelFetchedDataStructure_Object[sectionName][index]
- * where index is unique identifier of particular data set in chosen section
+ * each is available as ModelFetchedDataStructure_Object[pageName][index]
+ * where index is unique identifier of particular data set in chosen page
  */
 export default class FetchedDataManager {
     constructor(router, model) {
@@ -18,8 +18,8 @@ export default class FetchedDataManager {
         this.router = router;
         this.loader = new Loader();
         
-        for (let sectionName of RCTDATA_SECTIONS) {
-            this[sectionName] = {};
+        for (let pageName of RCT_DATA_PAGES) {
+            this[pageName] = {};
         }
     }
     /**
@@ -30,57 +30,57 @@ export default class FetchedDataManager {
      * this information is used to create site navigation
      */
 
-    async reqForData(force=false) {
+    async reqForData(force=false, url=null) {
         const params = this.router.params;
-        let section = params.section
+        let page = params.page
         let index = params.index
-        const url = this.router.getUrl();
+        if (url === null)
+            url = this.router.getUrl();
 
-        const data = this[section][index]
+        const data = this[page][index]
         if (!data || force)
-            await this.req(true);
+            await this.req(true, url);
         else if (url2Str(data.payload.url) !== url2Str(url)) {
             console.log("second type reqForData")
 
-            await this.req(false);
+            await this.req(false, url);
         }
     }
 
-    async req(countAllRecord) {
+    async req(countAllRecord, url) {
         const params = this.router.params;
-        const section = params.section
+        const page = params.page
         const index = params.index
 
-        const url = this.router.getUrl();
 
         this.assertConditionsForReqForData(url, params)
         let totalRecordsNumber = null;
         if (!countAllRecord)
-            totalRecordsNumber = this[section][index].payload.totalRecordsNumber
+            totalRecordsNumber = this[page][index].payload.totalRecordsNumber
 
-        this[section][index] = RemoteData.Loading();
-        this[section][index].payload = {"url": url} // TODO maybe it should be considered in WebUI
+        this[page][index] = RemoteData.Loading();
+        this[page][index].payload = {"url": url} // TODO maybe it should be considered in WebUI
         this.model.notify();
 
         let reqEndpoint = this.getReqEndpoint(url, countAllRecord);
         let {result, status, ok} = await this.model.loader.get(reqEndpoint);
 
         if (!ok)
-            this[section][index] = RemoteData.failure({"status": status, "url": url});
+            this[page][index] = RemoteData.failure({"status": status, "url": url});
         else
-            this[section][index] = RemoteData.Success(new FetchedData(url, result, totalRecordsNumber));
+            this[page][index] = RemoteData.Success(new FetchedData(url, result, totalRecordsNumber));
         this.model.notify();
     }
 
     getReqEndpoint(url, countAllRecord) {
-        return url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
+        return apiPrefix + url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
     }
 
-    changePage(page) {
-        console.log("change page")
+    changeSite(site) {
+        console.log("change site")
         const url = this.router.getUrl();
 
-        const newUrl = replaceUrlParams(url, [['page', page]]);
+        const newUrl = replaceUrlParams(url, [['site', site]]);
         this.router.go(newUrl);
     }
 
@@ -98,11 +98,10 @@ export default class FetchedDataManager {
 
     assertConditionsForReqForData(url, params) {
         console.assert(url.pathname === rctDataServerPathname)
-        console.assert(params.hasOwnProperty('section') && params.hasOwnProperty('index'));
-        console.assert(params.hasOwnProperty('view'));
-        console.assert(params.hasOwnProperty('rowsOnPage'));
-        console.assert(params.hasOwnProperty('page'));
-        console.assert(this.hasOwnProperty(params.section));
+        console.assert(params.hasOwnProperty('page') && params.hasOwnProperty('index'));
+        console.assert(params.hasOwnProperty('rowsOnSite'));
+        console.assert(params.hasOwnProperty('site'));
+        console.assert(this.hasOwnProperty(params.page));
     }
 
     consoleLogStructure(full=false) {
@@ -110,11 +109,11 @@ export default class FetchedDataManager {
             console.log(this);
         else {
             const pObj = {};
-            for (let sectionName in RCTDATA_SECTIONS) {
-                pObj[sectionName] = [];
-                for (let p in this[sectionName]) {
-                    if (this[sectionName].hasOwnProperty(p))
-                        pObj[sectionName].push(p);
+            for (let pageName in RCT_DATA_PAGES) {
+                pObj[pageName] = [];
+                for (let p in this[pageName]) {
+                    if (this[pageName].hasOwnProperty(p))
+                        pObj[pageName].push(p);
                 }
             }
             console.log(pObj);
@@ -122,8 +121,8 @@ export default class FetchedDataManager {
     }
 
     clear() {
-        for (let sectionName in RCTDATA_SECTIONS) {
-            this[sectionName] = {};
+        for (let pageName in RCT_DATA_PAGES) {
+            this[pageName] = {};
         }
     }
 

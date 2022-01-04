@@ -18,7 +18,7 @@ export default function header(model) {
 
 const headerSpecific = (model) => {
     switch (model.router.params.section) {
-        case 'home': return title('Home Page');
+        case '__home': return title('Home Page');
         case 'main': return title('Periods');
         case 'runsPerPeriod': return title('Runs per Period');
         case 'mc': return title('Monte Carlo');
