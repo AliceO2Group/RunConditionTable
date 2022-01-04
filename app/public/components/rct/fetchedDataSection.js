@@ -31,15 +31,7 @@ function multiButtonController(model, sectionName, index) {
         mainButton,
         h('.dropdown', {id: dropdownID, name: 'section-object-dropdown'}, [
             
-            h('.dropdown-menu', {
-                onmouseenter: () => {
-                    document.getElementById(dropdownID).classList.toggle('dropdown-opened');
-                },
-                onmouseleave: () => {
-                    document.getElementById(dropdownID).classList.remove('dropdown-open');
-                    document.getElementById(dropdownID).classList.remove('dropdown-opened');
-                }
-            },[
+            h('.dropdown-menu', [
                 h('a.menu-item', {
                     onclick: () => {
                         model.router.go('/home/?section=home'); // TODO

@@ -31,7 +31,7 @@ export default function tableView(model) {
     return h('div.p3', [
         filteringPanel,
         siteController(model, data),
-        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'), ' ', // TODO move up
+        
         h('table.table', {id: 'data-table-' + data.url}, [
 
             // h('caption', data.name),

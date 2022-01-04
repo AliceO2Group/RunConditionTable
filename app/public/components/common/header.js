@@ -1,14 +1,13 @@
-import { h, iconHome, iconPerson, iconDataTransferDownload, iconMagnifyingGlass } from '/js/src/index.js';
+import { h, iconHome, iconPerson, iconDataTransferDownload, iconMagnifyingGlass, iconReload } from '/js/src/index.js';
 
 export default function header(model) {
     return h('.flex-row.p2', [
         h('.w-50', [
             h('button.btn', iconHome()),
             ' ',
-            h('button.btn', iconPerson()),
-            // viewButton(model, 'logout', () => model.logout()),
-            // the one below won't work:
-            // h('button.btn', iconPerson(), {onclick: () => model.logout()}),
+            h('button.btn', {
+                onclick: () => model.logout()
+            }, iconPerson()),
             ' ',
             h('span.f4.gray', 'Run Condition Table'),
         ]),
@@ -34,6 +33,13 @@ const title = (text) => {
 
 const functionalities = (model) => {
         return h('.button-group.text-right',
+            // rowsOnPage(model),
+            h('button.btn', {
+                onclick: () => {
+                    model.fetchedData.reqForData(true);
+                    model.notify();
+                }
+            }, iconReload()),
             h('button.btn', iconDataTransferDownload()),
             h('button.btn', {
                 className: model.searchFieldsVisible? 'active': '',
@@ -41,6 +47,51 @@ const functionalities = (model) => {
                     model.changeSearchFieldsVisibility();
                     model.notify();
                 }
-            }, iconMagnifyingGlass()),
+            }, iconMagnifyingGlass())
         );
+}
+
+const dropdownId = 'dropdown-rows-on-page-id';
+
+const rowsOnPage = (model) => {
+    return [
+    h('button.btn', {
+        onclick: () => {
+            if (document.getElementById(dropdownId).classList.contains('dropdown-opened'))
+                document.getElementById(dropdownId).classList.remove('dropdown-open');
+            else document.getElementById(dropdownId).classList.toggle('dropdown-open');
+    }}, 'rowsOnPage'),
+    h('.dropdown', {
+        id: dropdownId,
+        name: 'section-object-dropdown'
+    }, [
+        h('.dropdown-menu', [
+            h('button.btn', {
+                onclick: (e) => {
+                    model.fetchedData.rowsOnPage = 5;
+                    model.router.params.rowsOnPage = 5;
+                    console.log(model.router.params.rowsOnPage);
+                    model.router.handleLinkEvent(e);
+                    //model.notify();
+                    //model.fetchedData.reqForData(true)
+                    //model.notify();
+                }
+            }, '5'),
+            h('button.btn', {
+                onclick: () => {
+                    model.fetchedData.rowsOnPage = 10;
+                    model.fetchedData.reqForData(true)
+                    model.notify();
+                }
+            }, '10'),
+            h('button.btn', {
+                onclick: () => {
+                    model.fetchedData.rowsOnPage = 15;
+                    model.fetchedData.reqForData(true)
+                    model.notify();
+                }
+            }, '15'),
+        ])
+    ])
+    ]
 }
