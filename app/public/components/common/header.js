@@ -1,4 +1,5 @@
 import { h, iconHome, iconPerson, iconDataTransferDownload, iconMagnifyingGlass, iconReload } from '/js/src/index.js';
+import downloadCSV from './csvExport.js';
 
 export default function header(model) {
     return h('.flex-row.p2', [
@@ -40,7 +41,11 @@ const functionalities = (model) => {
                     model.notify();
                 }
             }, iconReload()),
-            h('button.btn', iconDataTransferDownload()),
+            h('button.btn', {
+                onclick: () => {
+                    downloadCSV(model);
+                }
+            }, iconDataTransferDownload()),
             h('button.btn', {
                 className: model.searchFieldsVisible? 'active': '',
                 onclick: () => {
@@ -52,6 +57,12 @@ const functionalities = (model) => {
 }
 
 const dropdownId = 'dropdown-rows-on-page-id';
+
+/*
+const downloadCSV = () => {
+    console.log("downloading ");
+}
+*/
 
 const rowsOnPage = (model) => {
     return [
