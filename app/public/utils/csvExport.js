@@ -4,13 +4,8 @@ const preparedData = (data) => {
     var fields = data.payload.fields.map(field => field.name);
     // console.log(fields);
 
-    //var replacer = function(key, value) { return value === null ? '' : value } 
-    var csv = rows.map(function(row){
-        return fields.map(function(fieldName){
-        return JSON.stringify(row[fieldName], replacer)
-    }).join(',')
-    })
-    csv.unshift(fields.join(',')) // add header column
+    var csv = rows.map((row) => fields.map((field) => JSON.stringify(row[field], replacer)).join(','));
+    csv.unshift(fields.join(',')); // add header column
     csv = csv.join('\r\n');
     console.log(csv)
 

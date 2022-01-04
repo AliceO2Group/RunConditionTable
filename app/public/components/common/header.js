@@ -1,5 +1,5 @@
 import { h, iconHome, iconPerson, iconDataTransferDownload, iconMagnifyingGlass, iconReload } from '/js/src/index.js';
-import downloadCSV from './csvExport.js';
+import downloadCSV from '../../utils/csvExport.js';
 
 export default function header(model) {
     return h('.flex-row.p2', [
