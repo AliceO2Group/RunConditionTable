@@ -38,19 +38,19 @@ const mainButton = (model, url, pageName, index, dropdownID) => {
         href: url.pathname + url.search,
         onclick: (e) => model.router.handleLinkEvent(e),
         class: model.router.getUrl().href === url.href ? 'selected' : ''
-    }, deleteCopyReloadButtonsController(model, index, dropdownID));
+    }, deleteCopyReloadButtonsController(model, index, dropdownID, pageName));
 }
 
-const deleteCopyReloadButtonsController = (model, index, dropdownID) => {
+const deleteCopyReloadButtonsController = (model, index, dropdownID, pageName) => {
     return [
         h('span', iconPin(), ' ', index),
         h('span.ph2',
-            hiddenButtonsControllerObj(model, index, dropdownID),
+            hiddenButtonsControllerObj(model, index, dropdownID, pageName),
             iconEllipses()),
     ]
 }
 
-const hiddenButtonsControllerObj = (model, index, dropdownID) => {
+const hiddenButtonsControllerObj = (model, index, dropdownID, pageName) => {
     return {
         onmouseenter: () => {
             document.getElementById(dropdownID).classList.toggle('dropdown-open');
@@ -61,7 +61,7 @@ const hiddenButtonsControllerObj = (model, index, dropdownID) => {
                     document.getElementById(dropdownID).classList.remove('dropdown-open');
             }, 100);
         },
-        class: model.router.params.index === index ? 'white' : 'gray'
+        class: (model.router.params.index === index) && model.router.params.page === pageName ? 'white' : 'gray'
     }
 }
 
