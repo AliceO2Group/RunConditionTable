@@ -21,10 +21,6 @@
 
 }
 
-.myActiveButton {
-    background-color: var(--color-gray) !important;
-}
-
 .currentMenuItem {
     text-decoration: underline;
 }

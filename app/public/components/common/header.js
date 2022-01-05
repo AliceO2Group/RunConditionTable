@@ -58,11 +58,6 @@ const functionalities = (model) => {
 
 const dropdownId = 'dropdown-rows-on-page-id';
 
-/*
-const downloadCSV = () => {
-    console.log("downloading ");
-}
-*/
 
 const rowsOnPage = (model) => {
     return [

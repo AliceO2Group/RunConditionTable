@@ -37,7 +37,7 @@ const mainButton = (model, url, pageName, index, dropdownID) => {
         style: 'display:flex',
         href: url.pathname + url.search,
         onclick: (e) => model.router.handleLinkEvent(e),
-        class: model.router.getUrl().href === url.href ? 'myActiveButton' : ''
+        class: model.router.getUrl().href === url.href ? 'selected' : ''
     }, deleteCopyReloadButtonsController(model, index, dropdownID));
 }
 
@@ -61,7 +61,7 @@ const hiddenButtonsControllerObj = (model, index, dropdownID) => {
                     document.getElementById(dropdownID).classList.remove('dropdown-open');
             }, 100);
         },
-        class: model.router.params.index === index ? 'gray-darker' : 'gray'
+        class: model.router.params.index === index ? 'white' : 'gray'
     }
 }
 
