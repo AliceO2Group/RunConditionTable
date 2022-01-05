@@ -1,6 +1,6 @@
 import {h} from '/js/src/index.js';
 
-export default function home(model) {
+export default function __home(model) {
     return h('.flex-wrap.justify-center', [
         h('table.table table-sm', [
             h('thead', [

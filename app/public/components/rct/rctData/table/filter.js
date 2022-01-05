@@ -2,29 +2,53 @@ import inputForm from '../../../common/inputForm.js';
 import { h } from '/js/src/index.js';
 import viewButton from '../../../common/viewButton.js';
 
-async function handleFilter(model) {
-    const idWanted = document.getElementById('idWanted').value;
-    const yearWanted = document.getElementById('yearWanted').value;
-    const periodWanted = document.getElementById('periodWanted').value;
-    const beamWanted = document.getElementById('beamWanted').value;
-    const energyWanted = document.getElementById('energyWanted').value;
-    const bFieldWanted = document.getElementById('bFieldWanted').value;
-    const statisticsWanted = document.getElementById('statisticsWanted').value;
+export default function filter(model) {
+    const params = model.router.params;
+    const data = model.fetchedData[params.page][params.index].payload;
+    const fields = data.fields;
 
-    const res = await model.filter(idWanted, yearWanted, periodWanted, beamWanted, energyWanted, bFieldWanted, statisticsWanted);
-    console.log("filter executed!");
+    return h('table.table-filters', [
+        h('tbody', [
+            labelsRow(model, fields),
+            matchOrLowerBoundsInputs(fields),
+            excludeOrUpperBoundsInputs(fields),
+        ])
+    ]);
 }
 
-export default function filter(exec){//model){//exec) {
+const labelsRow = (model, fields) => {
     return h('tr', [
-                //h('th', {scope: "col"}, inputForm('id', 'idWanted', 'search'),),
-                //h('th', {scope: "col"}, inputForm('year', 'yearWanted', 'search'),),
-                //h('th', {scope: "col"}, inputForm('period', 'periodWanted', 'search'),),
-                //h('th', {scope: "col"}, inputForm('beam', 'beamWanted', 'search'),),
-                //h('th', {scope: "col"}, inputForm('energy', 'energyWanted', 'search'),),
-                h('th', {scope: "col"}, inputForm('b field', 'bFieldWanted', 'search'),),
-                h('th', {scope: "col"}, inputForm('statistics', 'statisticsWanted', 'search'),),
-                //h('th', {scope: "col"}, button('Search', handleFilter(model), ''),),
-                h('th', {scope: "col"}, viewButton('Search', exec, ''),),
-            ])
+        h('.btn-group.w-50',
+            h('td', [describingField('filter input type')]
+                .concat(fields.map((field) => createClickableLabel(model, field))))
+        )
+    ])
 }
+const matchOrLowerBoundsInputs = (fields) => {
+    return h('tr', [
+        h('td', [describingField('match or lower bound')]
+            .concat(fields.map((field) => createInputField(field, 'match'))))
+    ]);
+}
+const excludeOrUpperBoundsInputs = (fields) => {
+    return h('tr', [
+        h('td', [describingField('exclude or upper bound')]
+            .concat(fields.map((field) => createInputField(field, 'exclude'))))
+    ])
+}
+
+const describingField = (name) => h('td', h('.container', {
+    style: 'width:120px',
+}, name));
+
+const createClickableLabel = (model, field) => h('td', h('button.btn.filterLabel', {
+    style: 'width:120px',
+    onclick: () => model.fetchedData.changeItemStatus(field),
+    className: field.marked ? 'active' : ''
+}, field.name));
+
+const createInputField = (field, command) => h('td', h('input.form-control', {
+    style: 'width:120px',
+    type: 'text',
+    placeholder: '',
+}));

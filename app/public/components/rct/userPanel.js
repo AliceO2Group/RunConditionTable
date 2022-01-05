@@ -1,9 +1,9 @@
 import { h, switchCase } from '/js/src/index.js';
 import { reduceSerialIf } from '../../utils/utils.js';
 import header from '../common/header.js';
-import home from "./home.js";
+import __home from "./__home.js";
 import rctDataView from "./rctData/rctDataView.js";
-import sidebar from "./sidebar.js";
+import sidebar from "./sidebar/sidebar.js";
 
 
 /**
@@ -17,20 +17,12 @@ export default function userPanel(model) {
         h('header.shadow-level2.level2', [
           header(model),
         ]),
-        // content below menu bar
         h('.flex-grow.flex-row.outline-gray', [
           sidebar(model),
 
-          // content
           h('section.outline-gray.flex-grow.relative', [
             h('.scroll-y.absolute-fill.bg-white', {id: 'main-content'}, [
-                // TODO handling more cases;
-                url.pathname === '/api/Rct-Data/' ? rctDataView(model) : home(model),
-                // TODO why this one below doesn't work;
-                // switchCase(url.pathname, {
-                //     '/home/': home(model),
-                //     '/api/Rct-Data/': currentTableView(model),
-                // }, home(model))
+                url.pathname === '/Rct-Data/' ? rctDataView(model) : '', //__home(model),
             ])
           ]),
         ])

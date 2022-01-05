@@ -31,15 +31,7 @@ function multiButtonController(model, sectionName, index) {
         mainButton,
         h('.dropdown', {id: dropdownID, name: 'section-object-dropdown'}, [
             
-            h('.dropdown-menu', {
-                onmouseenter: () => {
-                    document.getElementById(dropdownID).classList.toggle('dropdown-opened');
-                },
-                onmouseleave: () => {
-                    document.getElementById(dropdownID).classList.remove('dropdown-open');
-                    document.getElementById(dropdownID).classList.remove('dropdown-opened');
-                }
-            },[
+            h('.dropdown-menu', [
                 h('a.menu-item', {
                     onclick: () => {
                         model.router.go('/home/?section=home'); // TODO
@@ -49,7 +41,9 @@ function multiButtonController(model, sectionName, index) {
                 }, iconTrash()), // close
                 h('a.menu-item', {
                     onclick: () => {
-                        section[index].fetch();
+                        // TODO
+                        // model.fetchedData.req(true, section[index].url)
+                        // section[index].fetch();
                     }
                 }, iconReload()), // reload
                 h('a.menu-item', {
@@ -74,7 +68,7 @@ export default function fetchedDataSection(model, sectionName, label) {
     const buttons = [];
     if (sectionName !== null) {
         for (let index in section) {
-            if (section.hasOwnProperty(index) && section[index] !== undefined && section[index] !== null) {
+            if (section.hasOwnProperty(index) && section[index]) {
                 buttons.push(multiButtonController(model, sectionName, index));
             }
         }

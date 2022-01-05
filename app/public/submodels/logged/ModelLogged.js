@@ -10,25 +10,31 @@ export default class ModelLogged extends Observable {
         this.router.bubbleTo(this)
 
         this.fetchedData = new FetchedDataManager(this.router, this);
+        
+        this.searchFieldsVisible = false;
 
         this.loader = new Loader()
 
         this.handleLocationChange(); // Init first page
     }
 
+    changeSearchFieldsVisibility() {
+        this.searchFieldsVisible = !this.searchFieldsVisible;
+    }
+
     handleLocationChange() {
         const params = this.router.params;
         const url = this.router.getUrl();
         switch (url.pathname) {
-            case '/api/Rct-Data/':
+            case '/Rct-Data/':
                 this.fetchedData.reqForData()
                     .then(r => {})
                     .catch(e => {console.error(e)});
             break;
-            case '/home/':
+            case '/__home/':
                 break;
             default:
-                // this.router.go('/home', false);
+                // this.router.go('/__home', false);
                 break;
         }
     }

@@ -5,8 +5,9 @@ import row from './table/row.js';
 import pagesCellsButtons from "./pagesCellsButtons.js";
 import siteController from "./siteController.js";
 
-import postingDataConfig from "../postingDataConfig.js";
-import {postForm} from "../postForm.js";
+import postingDataConfig from "./posting/postingDataConfig.js";
+import {postForm} from "./posting/postForm.js";
+import filter from './table/filter.js';
 
 /**
  * creates vnode containing table of fetched data (main content)
@@ -18,20 +19,22 @@ import {postForm} from "../postForm.js";
 export default function tableView(model) {
 
     const params = model.router.params;
-    const data = model.fetchedData[params.section][params.index].payload;
+    const data = model.fetchedData[params.page][params.index].payload;
 
-    const cellsButtons = pagesCellsButtons[params.section];
+    const cellsButtons = pagesCellsButtons[params.page];
 
     const fields = data.fields;
     const visibleFields = fields.filter(f => f.marked);
 
+    const filteringPanel = model.searchFieldsVisible? filter(model) : ' ';
+
     return h('div.p3', [
-        fieldsVisibilityControl(model, data, fields),
+        filteringPanel,
         siteController(model, data),
-        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'), ' ', // TODO move up
+        
         h('table.table', {id: 'data-table-' + data.url}, [
 
-            // h('caption', data.name),
+            // h('caption', data.namsse),
             tableHeader(visibleFields, data, () => model.fetchedData.changeRecordsVisibility(data)),
             tableBody(model, visibleFields, data, cellsButtons, params)
 
@@ -40,24 +43,9 @@ export default function tableView(model) {
 
 }
 
-
-
-function fieldsVisibilityControl(mode, data, fields) {
-    return h('.flex-row.p3.justify-start', fields.map(f =>
-        h('span.p1.thin-border', [
-            h('.d-block.w-100', h('input.p3', {
-                onclick: () => mode.fetchedData.changeItemStatus(f),
-                checked: f.marked,
-                type: 'checkbox'
-            })),
-            h('p', f.name)
-        ])
-    ))
-}
-
-
 function tableBody(model, visibleFields, data, cellsButtons, params) {
     return h('tbody', {id: 'table-body-' + data.url},
-        [postingDataConfig.hasOwnProperty(params.section) ? postForm(model, data) : ''].concat(data.rows.map(item => row(model, visibleFields, data, item, cellsButtons)))
+        [postingDataConfig.hasOwnProperty(params.page) ? postForm(model, data) : '']
+            .concat(data.rows.map(item => row(model, visibleFields, data, item, cellsButtons)))
     );
 }

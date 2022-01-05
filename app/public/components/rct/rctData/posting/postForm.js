@@ -13,7 +13,7 @@ import {h, fetchClient} from '/js/src/index.js';
  */
 export function postForm(model, data) {
     const params = model.router.params;
-    const pageMetadata = postingDataConfig[params.section];
+    const pageMetadata = postingDataConfig[params.page];
     return h('tr', data.fields.map(f => {
         if (pageMetadata !== undefined
             && pageMetadata['excludedFields'] !== undefined
@@ -29,7 +29,7 @@ export function postForm(model, data) {
 const reqEndpoint = '/api/Rct-Data/insert-data'
 async function postData(model, data) {
     const params = model.router.params;
-    const pageMetadata = postingDataConfig[params.section];
+    const pageMetadata = postingDataConfig[params.page];
 
     const dataObj = {}
     for (let f of data.fields) {
