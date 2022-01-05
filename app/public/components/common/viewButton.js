@@ -6,7 +6,7 @@ export default function viewButton(model, label, onclickAction, id = '', href = 
     if (model.router && href !== undefined) {
         const url = model.router.getUrl();
         if (href === (url.pathname + url.search) || (href.hasOwnProperty('href') && (href.href === url.href)))
-            buttonType += 'selected';
+            buttonType += ' currentPage';
     }
 
     if (typeof(href) !== "undefined" && !forceButton)

@@ -24,3 +24,8 @@
 .currentMenuItem {
     text-decoration: underline;
 }
+
+.currentPage {
+    background-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+}
