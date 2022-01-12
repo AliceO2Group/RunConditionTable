@@ -15,6 +15,7 @@ export default class ModelLogged extends Observable {
 
         this.loader = new Loader()
 
+
         this.handleLocationChange(); // Init first page
     }
 
@@ -26,15 +27,17 @@ export default class ModelLogged extends Observable {
         const params = this.router.params;
         const url = this.router.getUrl();
         switch (url.pathname) {
-            case '/Rct-Data/':
-                this.fetchedData.reqForData()
-                    .then(r => {})
-                    .catch(e => {console.error(e)});
-            break;
-            case '/__home/':
+            case '/a/':
                 break;
             default:
-                // this.router.go('/__home', false);
+                if (url.pathname === "/") {
+                    this.router.go('periods/?&rowsOnSite=50&site=1')
+                } else {
+                    console.log("asdf")
+                    // this.fetchedData.reqForData()
+                    //     .then(r => {})
+                    //     .catch(e => {console.error(e)});
+                }
                 break;
         }
     }

@@ -1,3 +1,5 @@
+import * as assert from "assert";
+import * as path from "path";
 
 export const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i], b[i]]);
 export const reduceSerialIf = (n, ifTrue, ifFalse, conditions) =>
@@ -21,4 +23,20 @@ export function range(from, to) {
 
 export function url2Str(url) {
     return url.pathname + url.search
+}
+
+
+export function getPathElems(pathname) {
+    console.assert(pathname[0] === '/')
+    console.assert(pathname.slice(-1) === '/')
+    return pathname.slice(1, -1).split('/')
+}
+
+export function getPathElem(pathname, i) {
+    return getPathElems(pathname)[i];
+}
+
+export function urlSearchToParams(search) {
+    console.assert(search[0] === '?')
+    return Object.fromEntries(search.slice(2).split('\&').map((ent) => ent.split('=')))
 }

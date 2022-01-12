@@ -12,7 +12,6 @@ import sidebar from "./sidebar/sidebar.js";
  * @returns {*}
  */
 export default function userPanel(model) {
-    const url = model.router.getUrl();
     return h('.flex-column.absolute-fill', [
         h('header.shadow-level2.level2', [
           header(model),
@@ -22,7 +21,7 @@ export default function userPanel(model) {
 
           h('section.outline-gray.flex-grow.relative', [
             h('.scroll-y.absolute-fill.bg-white', {id: 'main-content'}, [
-                url.pathname === '/Rct-Data/' ? rctDataView(model) : '', //__home(model),
+                rctDataView(model)
             ])
           ]),
         ])

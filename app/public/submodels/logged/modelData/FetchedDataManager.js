@@ -2,10 +2,11 @@ import {RemoteData, Loader} from '/js/src/index.js';
 
 import RCT_DATA_PAGES from "../../../RCT_DATA_PAGES.js";
 import FetchedData from "./FetchedData.js";
-import {replaceUrlParams, url2Str} from "../../../utils/utils.js";
+import {getPathElems, replaceUrlParams, url2Str} from "../../../utils/utils.js";
+import * as path from "path";
 
-const rctDataServerPathname = '/Rct-Data/';
-const apiPrefix = '/api'
+const rctDataServerPathname = '';
+const apiPrefix = '/api/Rct-Data'
 
 /**
  * Object of this class provide that many FetchedData objects are organized,
@@ -31,26 +32,26 @@ export default class FetchedDataManager {
      */
 
     async reqForData(force=false, url=null) {
-        const params = this.router.params;
-        let page = params.page
-        let index = params.index
+
         if (url === null)
             url = this.router.getUrl();
+        const pathIdents = getPathElems(url.pathname)
+        let page = pathIdents[0]
+        let index = defaultIndex(pathIdents[1])
 
         const data = this[page][index]
         if (!data || force)
             await this.req(true, url);
         else if (url2Str(data.payload.url) !== url2Str(url)) {
             console.log("second type reqForData")
-
             await this.req(false, url);
         }
     }
 
     async req(countAllRecord, url) {
-        const params = this.router.params;
-        const page = params.page
-        const index = params.index
+        const pathIdents = getPathElems(url.pathname)
+        let page = pathIdents[0]
+        let index = defaultIndex(pathIdents[1])
 
 
         this.assertConditionsForReqForData(url, params)
@@ -97,8 +98,6 @@ export default class FetchedDataManager {
 
 
     assertConditionsForReqForData(url, params) {
-        console.assert(url.pathname === rctDataServerPathname)
-        console.assert(params.hasOwnProperty('page') && params.hasOwnProperty('index'));
         console.assert(params.hasOwnProperty('rowsOnSite'));
         console.assert(params.hasOwnProperty('site'));
         console.assert(this.hasOwnProperty(params.page));

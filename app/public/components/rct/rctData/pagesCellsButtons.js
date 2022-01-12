@@ -33,15 +33,15 @@ const pagesCellsButtons = {
                 h('', item.name),
                 viewButton(model, `runs`, (e) =>
                 handleClick(model, e), '',
-                `/Rct-Data/?page=runsPerPeriod&index=${item.name}&name=${item.name}&rowsOnSite=50&site=1`),
+                `/?page=runsPerPeriod&index=${item.name}&name=${item.name}&rowsOnSite=50&site=1`),
 
                 viewButton(model, 'data passes', (e) =>
                         handleClick(model, e), '',
-                    `/Rct-Data/?page=dataPasses&index=${item.name}&name=${item.name}&rowsOnSite=50&site=1`),
+                    `/?page=dataPasses&index=${item.name}&name=${item.name}&rowsOnSite=50&site=1`),
 
                 viewButton(model, 'MC', (e) =>
                         handleClick(model, e), '',
-                    `/Rct-Data/?page=mc&index=${item.name}&name=${item.name}&rowsOnSite=50&site=1`),
+                    `/?page=mc&index=${item.name}&name=${item.name}&rowsOnSite=50&site=1`),
             ];
         },
     },
@@ -50,7 +50,7 @@ const pagesCellsButtons = {
     runsPerPeriod: {
         run_number: (model, item, name) => {
             return viewButton(model, item.run_number, (e) => handleClick(model, e), '',
-                `/Rct-Data/?page=flags&index=${item.run_number}&run_id=${item.run_number}&rowsOnSite=50&site=1`);
+                `/?page=flags&index=${item.run_number}&run_id=${item.run_number}&rowsOnSite=50&site=1`);
         }
     },
     flags: {},

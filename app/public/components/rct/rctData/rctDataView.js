@@ -9,19 +9,22 @@ import viewButton from "../../common/viewButton.js";
  * @param model
  * @returns {*}
  */
+
+
 export default function rctDataView(model) {
     const params = model.router.params;
-    let data = model.fetchedData[params.page][params.index];
+    const pathIden = model.router.getUrl().pathname.slice(1, -1).split('/')
+    let data = model.fetchedData[pathIden[0]][defaultIndex(pathIden[1])];
 
     return h('.homePage', [
         h('div.tableDiv', []),
 
-        data.match({
+        data ? data.match({
             NotAsked: () => h('', 'not asked'),
             Loading: () => spinnerAndReloadView(model),
             Success: (data) => tableView(model),
             Failure: (status) => failureStatusAndReload(model, status)
-        })
+        }) : h('', "data null :: Arrr...")
     ]);
 }
 

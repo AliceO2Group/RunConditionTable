@@ -47,6 +47,7 @@ class PgManager {
                     pgClient: client,
                     loginDate: new Date(),
                 }
+                console.log(this.loggedUsers);
             }).catch(e => {
             this.responseWithStatus(res, 401, JSON.stringify(e.code));
         });
@@ -77,6 +78,12 @@ class PgManager {
 
     async #exec(req, res, dbResponseHandler, query=null) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token]
+        if (!userData) {
+            const mess = 'probably user send request for data before server processed is login';
+            console.log(mess)
+            this.responseWithStatus(res, 500, mess)
+            return;
+        }
         const client = userData.pgClient;
 
         if (userData && client) {
