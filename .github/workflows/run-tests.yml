@@ -1,0 +1,30 @@
+name: Tests
+
+on: [push]
+
+jobs:
+  test:
+    name: Tests on macos-latest
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: (cd app)
+      - run: (npm install)
+      - run: (npm test)
+  coverage:
+    name: Tests & coverage on ubuntu-18.04
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: (cd app)
+      - run: (npm install)
+      - run: (npm run coverage)
+  
