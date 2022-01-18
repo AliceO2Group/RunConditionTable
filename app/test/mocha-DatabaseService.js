@@ -16,7 +16,7 @@ describe('DatabaseService test suite', function() {
         it('should successfully send data about the project', function() {
             const databaseService = new DatabaseService({}, new Log(''));
             res = {
-                // status: sinon.fake.returns(),
+                status: sinon.fake.returns(),
             };
             const data = '';
             databaseService.getDate(null, res);

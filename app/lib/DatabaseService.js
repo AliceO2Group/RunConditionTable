@@ -66,7 +66,7 @@ class DatabaseService {
 
 
     #parseReqToSql(query) {
-        return this.parser.parseDataReq(query);
+        return this.parser.parseDataReq(query) ;
     }
 
     async #exec(req, res, dbResponseHandler, query=null) {
