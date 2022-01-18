@@ -1,8 +1,10 @@
 import { h } from '/js/src/index.js';
+import {getPathElems} from "../../../../utils/utils.js";
+import {defaultIndex} from "../../../../utils/defaults.js";
 
 export default function filter(model) {
-    const params = model.router.params;
-    const data = model.fetchedData[params.page][params.index].payload;
+    const pathIdent = getPathElems(this.router.getUrl().pathname);
+    const data = model.fetchedData[pathIdent[0]][defaultIndex(pathIdent[1])].payload;
     const fields = data.fields;
 
     return h('table.table-filters', [

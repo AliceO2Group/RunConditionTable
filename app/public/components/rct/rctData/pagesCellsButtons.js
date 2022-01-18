@@ -26,6 +26,7 @@ const pagesCellsButtons = {
  * to page runs with fetched data from table runs related to chosen period.
  */
 
+//TODO ENDPOINTs
 const pagesCellsButtons = {
     periods: {
         name: (model, item, name) => {

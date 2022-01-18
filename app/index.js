@@ -15,6 +15,9 @@
 const { HttpServer, Log } = require('@aliceo2/web-ui');
 
 const config = require('./config.js');
+const applicationProperties = require('./public/applicationProperties.js');
+const EndP = applicationProperties.endpoints;
+const methods = applicationProperties.methods;
 
 const log = new Log('Tutorial');
 let loggedUsers = {
@@ -31,13 +34,13 @@ httpServer.addStaticPath('./node_modules/less/dist', '/scripts');
 
 const DatabaseService = require('./lib/DatabaseService.js');
 const databaseService = new DatabaseService(loggedUsers, log);
-httpServer.post('/login', (req, res) => databaseService.login(req, res));
-httpServer.post('/logout', (req, res) => databaseService.logout(req, res));
-httpServer.get('/RCT-Data', (req, res) => databaseService.execDataReq(req, res));
-httpServer.post('/date', (req, res) => databaseService.execDataInsert(req, res));
-httpServer.get('/Rct-Data/insert-data', (req, res) => databaseService.getDate(req, res));
+httpServer.post(EndP.login, (req, res) => databaseService.login(req, res));
+httpServer.post(EndP.logout, (req, res) => databaseService.logout(req, res));
+httpServer.get(EndP.rctData, (req, res) => databaseService.execDataReq(req, res));
+httpServer.post(EndP.insertData, (req, res) => databaseService.execDataInsert(req, res));
+httpServer.get(EndP.date, (req, res) => databaseService.getDate(req, res));
 
 
 const AuthControlManager = require('./lib/AuthControlManager.js');
 const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);
-authControlManager.bindToTokenControl('/auth-control');
+authControlManager.bindToTokenControl(EndP.authControl);

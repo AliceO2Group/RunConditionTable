@@ -1,6 +1,7 @@
 import {h} from "/js/src/index.js";
 import fetchedDataPages from "./fetchedDataPages.js";
 import alonePageButton from "./alonePageButton.js";
+import applicationProperties from "../../../applicationProperties.js";
 
 /**
  * Provides navigation between particular views, is divide to sections,
@@ -14,11 +15,11 @@ export default function sidebar(model) {
         sidebarMenu(model)
       ]);
 }
-
+const pagesNames = applicationProperties.pageNames;
 const sidebarMenu = (model) => [
-    alonePageButton(model, 'Periods', 'periods'),
-    fetchedDataPages(model, 'dataPasses', "Data Passes"),
-    fetchedDataPages(model, 'mc', "Monte Carlo"),
-    fetchedDataPages(model, 'runsPerPeriod', 'Runs per period'),
-    fetchedDataPages(model, 'flags', 'QA Expert Flagging'),
+    alonePageButton(model, 'Periods', pagesNames.periods),
+    fetchedDataPages(model, pagesNames.dataPasses, "Data Passes"),
+    fetchedDataPages(model, pagesNames.mc, "Monte Carlo"),
+    fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period'),
+    fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging'),
 ];

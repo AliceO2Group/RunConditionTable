@@ -77,8 +77,8 @@ const rowsOnPage = (model) => {
                 onclick: (e) => {
                     model.fetchedData.rowsOnPage = 5;
                     model.router.params.rowsOnPage = 5;
-                    console.log(model.router.params.rowsOnPage);
                     model.router.handleLinkEvent(e);
+                    // TODO
                     //model.notify();
                     //model.fetchedData.reqForData(true)
                     //model.notify();

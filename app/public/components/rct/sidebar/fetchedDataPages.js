@@ -4,7 +4,7 @@ import {h, iconPin, iconEllipses, iconShareBoxed, iconReload, iconTrash} from '/
 export default function fetchedDataPages(model, pageName, label) {
     const page = model.fetchedData[pageName]
     const buttons = [];
-    if (pageName !== null) {
+    if (pageName) {
         for (let index in page) {
             if (page.hasOwnProperty(index) && page[index]) {
                 buttons.push(multiButtonController(model, pageName, index));
