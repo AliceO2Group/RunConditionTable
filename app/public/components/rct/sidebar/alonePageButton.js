@@ -1,5 +1,5 @@
 import {h, iconLayers, iconHome} from "/js/src/index.js";
-import {getPathElem} from "../../../utils/utils";
+import {getPathElem} from "../../../utils/utils.js";
 
 function pathNQuery(page, index) {
     return `/${page}/${index}/?&rowsOnSite=50&site=1`;
