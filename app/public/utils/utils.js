@@ -1,5 +1,3 @@
-import * as assert from "assert";
-import * as path from "path";
 
 export const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i], b[i]]);
 export const reduceSerialIf = (n, ifTrue, ifFalse, conditions) =>

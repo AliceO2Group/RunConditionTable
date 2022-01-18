@@ -31,7 +31,7 @@ export default class ModelLogged extends Observable {
                 break;
             default:
                 if (url.pathname === "/") {
-                    this.router.go('periods/?&rowsOnSite=50&site=1')
+                    this.router.go('/periods/?&rowsOnSite=50&site=1')
                 } else {
                     console.log("asdf")
                     // this.fetchedData.reqForData()

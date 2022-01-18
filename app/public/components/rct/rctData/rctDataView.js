@@ -14,6 +14,7 @@ import viewButton from "../../common/viewButton.js";
 export default function rctDataView(model) {
     const params = model.router.params;
     const pathIden = model.router.getUrl().pathname.slice(1, -1).split('/')
+    console.log(pathIden)
     let data = model.fetchedData[pathIden[0]][defaultIndex(pathIden[1])];
 
     return h('.homePage', [

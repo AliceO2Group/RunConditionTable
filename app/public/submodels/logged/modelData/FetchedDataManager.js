@@ -3,7 +3,6 @@ import {RemoteData, Loader} from '/js/src/index.js';
 import RCT_DATA_PAGES from "../../../RCT_DATA_PAGES.js";
 import FetchedData from "./FetchedData.js";
 import {getPathElems, replaceUrlParams, url2Str} from "../../../utils/utils.js";
-import * as path from "path";
 
 const rctDataServerPathname = '';
 const apiPrefix = '/api/Rct-Data'
@@ -100,7 +99,6 @@ export default class FetchedDataManager {
     assertConditionsForReqForData(url, params) {
         console.assert(params.hasOwnProperty('rowsOnSite'));
         console.assert(params.hasOwnProperty('site'));
-        console.assert(this.hasOwnProperty(params.page));
     }
 
     consoleLogStructure(full=false) {

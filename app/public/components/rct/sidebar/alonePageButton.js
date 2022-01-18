@@ -2,12 +2,13 @@ import {h, iconLayers, iconHome} from "/js/src/index.js";
 import {getPathElem} from "../../../utils/utils.js";
 
 function pathNQuery(page, index) {
-    return `/${page}/${index}/?&rowsOnSite=50&site=1`;
+    return `/${page}/${index}/?rowsOnSite=50&site=1`;
 }
 
 export default function alonePageButton(model, title, page, index) {
 
     const currentPage = getPathElem(model.router.getUrl().pathname, 0)
+    console.log(`AlonePageButton.js currentPage:${currentPage}`)
     return [h('.menu-title', {
         class: currentPage === page ? 'currentMenuItem' : ''
     }, title),
