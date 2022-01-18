@@ -28,7 +28,6 @@ class PgManager {
         console.log(body)
         let client = this.loggedUsers.tokenToUserData[req.query.token];
 
-        console.log(client);
         if (!client) {
             client = new Client({
                 user: body.username,
@@ -40,6 +39,8 @@ class PgManager {
 
             (async () => await client.connect())();
         }
+        console.log("Logging client: ", client);
+
         select(client, 'SELECT NOW();')
             .then(async dbRes => {
                 await res.json({data: dbRes.rows});
@@ -48,11 +49,10 @@ class PgManager {
                     loginDate: new Date(),
                 }
             }).catch(e => {
-            this.responseWithStatus(res, 401, JSON.stringify(e.code));
+            this.responseWithStatus(res, 401, e.code);
         });
     }
 
-    // TODO here or in frontend behaves oddly
     #logout(req, res) {
         let found = false
         if (this.loggedUsers.tokenToUserData[req.query.token]) {
@@ -66,36 +66,32 @@ class PgManager {
         }
     }
 
-    #verifySqlQuery(query) {
-        // TODO To handling hacking;
-        return true;
-    }
 
-    #parseReqQToSqlQ(query) {
+    #parseReqToSql(query) {
         return this.parser.parseDataReq(query);
     }
 
     async #exec(req, res, dbResponseHandler, query=null) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token]
+        if (!userData) {
+            const mess = 'probably user send request for data before server processed its login';
+            console.log(mess, req.query)
+            this.responseWithStatus(res, 500, mess)
+            return;
+        }
         const client = userData.pgClient;
 
-        if (userData && client) {
-            if (query === null) {
-                query = this.#parseReqQToSqlQ(req.query);
-            }
+        if (client) {
+            if (query === null)
+                query = this.#parseReqToSql(req.query);
+
             console.log(new Date(), query);
-
-            if (this.#verifySqlQuery(query)) {
-                await select(client, query)
-                    .then((dbRes) => {dbResponseHandler(req, res, dbRes)})
-                    .catch(e => {
-                        console.log(e);
-                        res.json({data: e.code});
-                    })
-            } else {
-                res.json(req, query, 'This query is malicious');
-            }
-
+            await select(client, query)
+                .then((dbRes) => {dbResponseHandler(req, res, dbRes)})
+                .catch(e => {
+                    console.log(e);
+                    res.json({data: e.code});
+                })
         } else {
             this.responseWithStatus(res, 401,'invalid token or no such user')
         }
@@ -118,6 +114,7 @@ class PgManager {
             data['fields'] = fields;
             res.json({data: data});
         }
+
         await this.#exec(req, res, dbResponseHandler, query)
     }
 
@@ -125,9 +122,9 @@ class PgManager {
         const dbResponseHandler = (req, res, dbRes) => {
             res.json({data: 'data inserted'});
         }
-        if (!query) {
+        if (!query)
             query = this.parser.parseInsertDataReq(req.body.payload)
-        }
+
         await this.#exec(req, res, dbResponseHandler, query)
     }
 

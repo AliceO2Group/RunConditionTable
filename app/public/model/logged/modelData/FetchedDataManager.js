@@ -2,10 +2,10 @@ import {RemoteData, Loader} from '/js/src/index.js';
 
 import RCT_DATA_PAGES from "../../../RCT_DATA_PAGES.js";
 import FetchedData from "./FetchedData.js";
-import {replaceUrlParams, url2Str} from "../../../utils/utils.js";
+import {getPathElems, replaceUrlParams, url2Str} from "../../../utils/utils.js";
+import {defaultIndex} from "../../../utils/defaults.js";
 
-const rctDataServerPathname = '/Rct-Data/';
-const apiPrefix = '/api'
+const apiPrefix = '/api/RCT-Data'
 
 /**
  * Object of this class provide that many FetchedData objects are organized,
@@ -31,29 +31,28 @@ export default class FetchedDataManager {
      */
 
     async reqForData(force=false, url=null) {
-        const params = this.router.params;
-        let page = params.page
-        let index = params.index
+
         if (url === null)
             url = this.router.getUrl();
+        const pathIdents = getPathElems(url.pathname)
+        let page = pathIdents[0]
+        let index = defaultIndex(pathIdents[1])
 
         const data = this[page][index]
         if (!data || force)
             await this.req(true, url);
         else if (url2Str(data.payload.url) !== url2Str(url)) {
-            console.log("second type reqForData")
-
             await this.req(false, url);
         }
     }
 
     async req(countAllRecord, url) {
-        const params = this.router.params;
-        const page = params.page
-        const index = params.index
+        const pathIdents = getPathElems(url.pathname)
+        let page = pathIdents[0]
+        let index = defaultIndex(pathIdents[1])
 
 
-        this.assertConditionsForReqForData(url, params)
+        this.assertConditionsForReqForData(url, this.router.params)
         let totalRecordsNumber = null;
         if (!countAllRecord)
             totalRecordsNumber = this[page][index].payload.totalRecordsNumber
@@ -63,7 +62,9 @@ export default class FetchedDataManager {
         this.model.notify();
 
         let reqEndpoint = this.getReqEndpoint(url, countAllRecord);
+        console.log(`FetchedDataManager::: req() :: reqEndpoint: ${reqEndpoint}`)
         let {result, status, ok} = await this.model.loader.get(reqEndpoint);
+        this.model.parent._tokenExpirationHandler(status);
 
         if (!ok)
             this[page][index] = RemoteData.failure({"status": status, "url": url});
@@ -73,7 +74,12 @@ export default class FetchedDataManager {
     }
 
     getReqEndpoint(url, countAllRecord) {
-        return apiPrefix + url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
+        // TODO it will be if handling such endpoints is handled on backend side
+        // return apiPrefix + url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
+        // TODO below there is temporary solution
+        const pathIdent = getPathElems(url.pathname)
+        return apiPrefix + '/' + url.search + `&page=${pathIdent[0]}` + (pathIdent[1] ? `&index=${pathIdent[1]}` : '');
+
     }
 
     changeSite(site) {
@@ -97,12 +103,13 @@ export default class FetchedDataManager {
 
 
     assertConditionsForReqForData(url, params) {
-        console.assert(url.pathname === rctDataServerPathname)
-        console.assert(params.hasOwnProperty('page') && params.hasOwnProperty('index'));
         console.assert(params.hasOwnProperty('rowsOnSite'));
         console.assert(params.hasOwnProperty('site'));
-        console.assert(this.hasOwnProperty(params.page));
     }
+
+
+
+
 
     consoleLogStructure(full=false) {
         if (full)

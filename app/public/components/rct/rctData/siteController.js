@@ -3,7 +3,7 @@ import {range, replaceUrlParams} from "../../../utils/utils.js";
 import {h} from '/js/src/index.js';
 
 const visibleNeighbourButtonsRange = 2;
-const maxVisibleButtons = 10; // maximal number of visible buttons
+const maxVisibleButtons = 10;
 
 /**
  * creates a container containing buttons handling changes of sites
@@ -45,11 +45,13 @@ export default function siteController(model, data) {
         currentSite > 3 ? siteChangingController(() => model.fetchedData.changeSite(Math.floor(currentSite / 2)), '|') : ' ',
         // move one site back
         currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(currentSite - 1), '<'): ' ',
+
         mapArrayToButtons(leftButtonsR),
         leftThreeDotsPresent ? '...' : '',
         mapArrayToButtons(middleButtonsR),
         rightThreeDotsPresent ? '...' : '',
         mapArrayToButtons(rightButtonsR),
+
         // analogically as above
         currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(currentSite + 1), '>') : ' ',
         currentSite < sitesNumber - 2 ? siteChangingController(() => model.fetchedData.changeSite(currentSite + Math.floor((sitesNumber - currentSite) / 2)), '|') : ' ',

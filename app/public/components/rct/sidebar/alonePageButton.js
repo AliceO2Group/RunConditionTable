@@ -1,19 +1,22 @@
-import {h, iconLayers, iconHome} from "/js/src/index.js";
+import {h, iconLayers} from "/js/src/index.js";
+import {getPathElem} from "../../../utils/utils.js";
 
 function pathNQuery(page, index) {
-    return `/Rct-Data/?page=${page}&index=${index}&rowsOnSite=50&site=1`;
+    return `/${page}${index ? '/'+index : ''}/?rowsOnSite=50&site=1`;
 }
 
-export default function alonePageButton(model, title, page, index) {
+export default function alonePageButton(model, title, page, index=null) {
+
+    const currentPage = getPathElem(model.router.getUrl().pathname, 0)
     return [h('.menu-title', {
-        class: model.router.params.page === page ? 'currentMenuItem' : ''
+        class: currentPage === page ? 'currentMenuItem' : ''
     }, title),
         h('a.menu-item', {
             title: title,
             style: 'display:flex',
             href: pathNQuery(page, index),
             onclick: (e) => model.router.handleLinkEvent(e),
-            class: model.router.params.page === page? 'selected' : ''
+            class: currentPage === page? 'selected' : ''
         }, [
             h('span', iconLayers(), ' ', title)
         ])]
