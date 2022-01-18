@@ -3,9 +3,9 @@ import {RemoteData, Loader} from '/js/src/index.js';
 import RCT_DATA_PAGES from "../../../RCT_DATA_PAGES.js";
 import FetchedData from "./FetchedData.js";
 import {getPathElems, replaceUrlParams, url2Str} from "../../../utils/utils.js";
+import {defaultIndex} from "../../../utils/defaults.js";
 
-const rctDataServerPathname = '';
-const apiPrefix = '/api/Rct-Data'
+const apiPrefix = '/api/RCT-Data'
 
 /**
  * Object of this class provide that many FetchedData objects are organized,
@@ -42,7 +42,6 @@ export default class FetchedDataManager {
         if (!data || force)
             await this.req(true, url);
         else if (url2Str(data.payload.url) !== url2Str(url)) {
-            console.log("second type reqForData")
             await this.req(false, url);
         }
     }
@@ -53,7 +52,7 @@ export default class FetchedDataManager {
         let index = defaultIndex(pathIdents[1])
 
 
-        this.assertConditionsForReqForData(url, params)
+        this.assertConditionsForReqForData(url, this.router.params)
         let totalRecordsNumber = null;
         if (!countAllRecord)
             totalRecordsNumber = this[page][index].payload.totalRecordsNumber
@@ -63,7 +62,9 @@ export default class FetchedDataManager {
         this.model.notify();
 
         let reqEndpoint = this.getReqEndpoint(url, countAllRecord);
+        console.log(`FetchedDataManager::: req() :: reqEndpoint: ${reqEndpoint}`)
         let {result, status, ok} = await this.model.loader.get(reqEndpoint);
+        this.model.parent._tokenExpirationHandler(status);
 
         if (!ok)
             this[page][index] = RemoteData.failure({"status": status, "url": url});
@@ -73,7 +74,12 @@ export default class FetchedDataManager {
     }
 
     getReqEndpoint(url, countAllRecord) {
-        return apiPrefix + url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
+        // TODO it will be if handling such endpoints is handled on backend side
+        // return apiPrefix + url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
+        // TODO below there is temporary solution
+        const pathIdent = getPathElems(url.pathname)
+        return apiPrefix + '/' + url.search + `&page=${pathIdent[0]}` + (pathIdent[1] ? `&index=${pathIdent[1]}` : '');
+
     }
 
     changeSite(site) {
@@ -100,6 +106,10 @@ export default class FetchedDataManager {
         console.assert(params.hasOwnProperty('rowsOnSite'));
         console.assert(params.hasOwnProperty('site'));
     }
+
+
+
+
 
     consoleLogStructure(full=false) {
         if (full)

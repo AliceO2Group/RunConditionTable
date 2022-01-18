@@ -1,7 +1,5 @@
-import { h, switchCase } from '/js/src/index.js';
-import { reduceSerialIf } from '../../utils/utils.js';
+import { h } from '/js/src/index.js';
 import header from '../common/header.js';
-import __home from "./__home.js";
 import rctDataView from "./rctData/rctDataView.js";
 import sidebar from "./sidebar/sidebar.js";
 

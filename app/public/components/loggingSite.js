@@ -1,5 +1,4 @@
 import { h } from '/js/src/index.js';
-import sessionService from '/js/src/sessionService.js';
 import inputForm from './common/inputForm.js';
 import viewButton from './common/viewButton.js';
 import container from './common/container.js';

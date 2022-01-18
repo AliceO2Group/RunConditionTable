@@ -1,9 +1,9 @@
 
 export const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i], b[i]]);
-export const reduceSerialIf = (n, ifTrue, ifFalse, conditions) =>
+export const reduceSerialIf = (initValue, ifTrue, ifFalse, conditions, accFunction) =>
     zip(zip(ifTrue, ifFalse), conditions).reduce(
-        (acc, ent) => acc + (Boolean(ent[1]) ? ent[0][0] : ent[0][1]),
-        n)
+        (acc, ent) => accFunction(acc + (Boolean(ent[1]) ? ent[0][0] : ent[0][1])),
+        initValue)
 
 export function replaceUrlParams(url, entries) {
     const currentParams = Object.fromEntries(url.searchParams.entries());
@@ -34,7 +34,7 @@ export function getPathElem(pathname, i) {
     return getPathElems(pathname)[i];
 }
 
-export function urlSearchToParams(search) {
+export function urlSearchToParamsObject(search) {
     console.assert(search[0] === '?')
     return Object.fromEntries(search.slice(2).split('\&').map((ent) => ent.split('=')))
 }

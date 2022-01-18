@@ -1,12 +1,14 @@
-import {Observable, QueryRouter, Loader} from '/js/src/index.js';
+import {Observable, Loader} from '/js/src/index.js';
 import FetchedDataManager from "./modelData/FetchedDataManager.js";
 
-export default class ModelLogged extends Observable {
+
+export default class Submodel1 extends Observable {
     constructor(parent) {
         super();
         this.parent = parent;
-        this.router = new QueryRouter();
-        this.router.observe(this.handleLocationChange.bind(this));
+        this.router = parent.router;
+        this.routerCallback = this.handleLocationChange.bind(this);
+        this.router.observe(this.routerCallback);
         this.router.bubbleTo(this)
 
         this.fetchedData = new FetchedDataManager(this.router, this);
@@ -24,7 +26,6 @@ export default class ModelLogged extends Observable {
     }
 
     handleLocationChange() {
-        const params = this.router.params;
         const url = this.router.getUrl();
         switch (url.pathname) {
             case '/a/':
@@ -33,10 +34,9 @@ export default class ModelLogged extends Observable {
                 if (url.pathname === "/") {
                     this.router.go('/periods/?&rowsOnSite=50&site=1')
                 } else {
-                    console.log("asdf")
-                    // this.fetchedData.reqForData()
-                    //     .then(r => {})
-                    //     .catch(e => {console.error(e)});
+                    this.fetchedData.reqForData()
+                        .then(r => {})
+                        .catch(e => {console.error(e)});
                 }
                 break;
         }
@@ -49,7 +49,7 @@ export default class ModelLogged extends Observable {
         this.parent._tokenExpirationHandler(status);
 
         localStorage.token = null;
-        this.parent.mode = "mUnlogged";
+        this.parent.mode = "default";
 
         if (!ok) {
             alert("Some error occurred: " + JSON.stringify(result));
@@ -60,11 +60,4 @@ export default class ModelLogged extends Observable {
         this.router.go('/');
         this.notify();
     }
-
-
-
-
-
-
-
 }

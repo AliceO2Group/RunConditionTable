@@ -59,11 +59,6 @@ export default class FetchedData {
         }
     }
 
-    changeFiltering(/**???*/) {
-        // TODO
-        //this.fetch().then(r => {}).catch(e => {console.error(e)});
-    }
-
     clear() {
         this.fields = null;
         this.rows = null;
@@ -71,14 +66,4 @@ export default class FetchedData {
         this.hideMarkedRecords = false;
     }
 
-    // delete() {
-    //     const params = this.url.searchParams.entries();
-    //     this.p
-    //
-    // }
-
-    handleError(content) {
-        console.error(content.data);
-        alert('err', content.data);
-    }
 }

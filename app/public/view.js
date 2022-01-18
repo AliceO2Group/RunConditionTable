@@ -14,8 +14,15 @@
 
 import userPanel from './components/rct/userPanel.js';
 import loggingSite from './components/loggingSite.js';
- 
-// The view
+import {switchCase} from "/js/src/index.js";
+
 export default function view(model) {
-    return model.mode === "mLogged" ? userPanel(model.mLogged) : loggingSite(model.mUnlogged);
+    console.log(`View ::: model.mode : ${model.mode}`)
+    return switchCase(
+        model.mode,
+        {
+            submodel1: (() => userPanel(model.submodel1)),
+        },
+        (() => loggingSite(model))
+    )()/*!!!*/;
 }

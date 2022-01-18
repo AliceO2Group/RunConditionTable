@@ -1,5 +1,6 @@
 import { h, iconHome, iconPerson, iconDataTransferDownload, iconMagnifyingGlass, iconReload } from '/js/src/index.js';
 import downloadCSV from '../../utils/csvExport.js';
+import {getPathElem} from "../../utils/utils.js";
 
 export default function header(model) {
     return h('.flex-row.p2', [
@@ -18,7 +19,7 @@ export default function header(model) {
 }
 
 const headerSpecific = (model) => {
-    switch (model.router.params.section) {
+    switch (getPathElem(model.router.getUrl().pathname, 1)) {
         case '__home': return title('Home Page');
         case 'main': return title('Periods');
         case 'runsPerPeriod': return title('Runs per Period');

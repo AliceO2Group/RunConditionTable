@@ -1,1 +1,1 @@
-const defaultIndex = (_index) => _index ? _index : "_0";
+export const defaultIndex = (_index) => _index ? _index : "_0";

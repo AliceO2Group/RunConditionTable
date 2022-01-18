@@ -3,10 +3,11 @@ import { reduceSerialIf } from '../../../../utils/utils.js';
 
 export default function row(model, visibleFields, data, item, cellsButtons) {
     return h(reduceSerialIf(
-                    'tr',
-                    ['.bg-grey', '.d-none'],
-                    ['.bg-warning', ''],
-                    [!item.marked, data.hideMarkedRecords && item.marked]
+        'tr',
+        ['.bg-grey', '.d-none'],
+        ['.bg-warning', ''],
+        [!item.marked, data.hideMarkedRecords && item.marked],
+        (a, b) => a + b
                 ), visibleFields.map(f => {
                         const n = f.name;
                         if (item.hasOwnProperty(n)) {

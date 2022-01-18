@@ -18,11 +18,10 @@
 		// }
 	</script>
 
-	<!-- Main application controller -->
 	<script type="module">
 		import {mount} from '/js/src/index.js';
 		import view from './view.js';
-		import Model from './Model.js';
+		import Model from './model/Model.js';
 
 		const model = new Model();
 		const debug = true; // shows when redraw is done
@@ -30,7 +29,7 @@
 
 		window.model = model;
 		// mock login
-		model.mUnlogged.login('rct-user', 'rct-passwd', 'rct-db-v2');
+		model.login('rct-user', 'rct-passwd', 'rct-db-v2');
 
 		// TODO
 		// if (localStorage.token !== null && localStorage.token !== undefined) {

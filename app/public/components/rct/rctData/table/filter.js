@@ -1,6 +1,4 @@
-import inputForm from '../../../common/inputForm.js';
 import { h } from '/js/src/index.js';
-import viewButton from '../../../common/viewButton.js';
 
 export default function filter(model) {
     const params = model.router.params;

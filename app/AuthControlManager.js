@@ -13,7 +13,7 @@ class AuthControlManager {
     }
 
     bindToTokenControl(name) {
-        this.httpserver.post(name, (req, res) => this.#tokenControl(req, res))
+        this.httpserver.get(name, (req, res) => this.#tokenControl(req, res))
     };
 
 }
