@@ -27,7 +27,7 @@ class ReqParser {
         }
     }
 
-    parseInsertDataReq(payload) {
+    parseInsertDataReq(payload) {lib
         const valueEntries = Object.entries(payload.data);
         const keys = valueEntries.map(([k, v]) => k);
         const values = valueEntries.map(([k, v]) => v);

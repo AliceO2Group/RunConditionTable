@@ -12,18 +12,16 @@ async function select(client, command) {
  * logging is handled here, because client log in as database user,
  * so backend must communicate with database in order to check client credentials
  */
-class PgManager {
-    constructor(httpserver, loggedUsers, log) {
-        console.assert(httpserver !== null);
+class DatabaseService {
+    constructor(loggedUsers, log) {
         console.assert(loggedUsers != null);
 
         this.loggedUsers = loggedUsers;
-        this.httpserver = httpserver;
         this.log = log;
         this.parser = new ReqParser();
     }
 
-    #login(req, res) {
+    login(req, res) {
         const body = req.body;
         console.log(body)
         let client = this.loggedUsers.tokenToUserData[req.query.token];
@@ -53,7 +51,7 @@ class PgManager {
         });
     }
 
-    #logout(req, res) {
+    logout(req, res) {
         let found = false
         if (this.loggedUsers.tokenToUserData[req.query.token]) {
             found = true;
@@ -68,7 +66,7 @@ class PgManager {
 
 
     #parseReqToSql(query) {
-        return this.parser.parseDataReq(query);
+        return this.parser.parseDataReq(query) ;
     }
 
     async #exec(req, res, dbResponseHandler, query=null) {
@@ -97,7 +95,7 @@ class PgManager {
         }
     }
 
-    async #execDataReq(req, res, query = null) {
+    async execDataReq(req, res, query = null) {
         const dbResponseHandler = (req, res, dbRes) => {
             const fields = dbRes.fields;
             let rows = dbRes.rows;
@@ -118,7 +116,7 @@ class PgManager {
         await this.#exec(req, res, dbResponseHandler, query)
     }
 
-    async #execDataInsert(req, res, query=null) {
+    async execDataInsert(req, res, query=null) {
         const dbResponseHandler = (req, res, dbRes) => {
             res.json({data: 'data inserted'});
         }
@@ -129,8 +127,8 @@ class PgManager {
     }
 
 
-    async #getDate(req, res) {
-        await this.#execDataReq(req, res, 'SELECT NOW();')
+    async getDate(req, res) {
+        await this.execDataReq(req, res, 'SELECT NOW();')
     }
 
     responseWithStatus(res, status, message) {
@@ -138,31 +136,6 @@ class PgManager {
         res.status(status).json({message: message})
     }
 
-
-    /**
-     * methods below allow httpServer to bind methods above to particular endpoints
-     */
-
-    bindLogging(name) {
-        this.httpserver.post(name, (req, res) => this.#login(req, res));
-    }
-
-    bindLogout(name) {
-        this.httpserver.post(name, (req, res) => this.#logout(req, res));
-    }
-
-    bindGetDbData(name) {
-        this.httpserver.get(name, (req, res) => this.#execDataReq(req, res));
-    }
-
-    bindInsertDbData(name) {
-        this.httpserver.post(name, (req, res) => this.#execDataInsert(req, res));
-    }
-
-    bindDate(name) {
-        this.httpserver.get(name, (req, res) => this.#getDate(req, res));
-    }
-
 }
 
-module.exports = PgManager;
+module.exports = DatabaseService;

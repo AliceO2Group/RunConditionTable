@@ -29,14 +29,15 @@ httpServer.addStaticPath('./public', '/login');
 
 httpServer.addStaticPath('./node_modules/less/dist', '/scripts');
 
-const PgManager = require('./PgManager.js');
-const pgManager = new PgManager(httpServer, loggedUsers, log);
-pgManager.bindLogging('/login');
-pgManager.bindLogout('/logout');
-pgManager.bindGetDbData('/RCT-Data');
-pgManager.bindDate('/date');
-pgManager.bindInsertDbData('/Rct-Data/insert-data');
+const DatabaseService = require('./lib/DatabaseService.js');
+const databaseService = new DatabaseService(loggedUsers, log);
+httpServer.post('/login', (req, res) => databaseService.login(req, res));
+httpServer.post('/logout', (req, res) => databaseService.logout(req, res));
+httpServer.get('/RCT-Data', (req, res) => databaseService.execDataReq(req, res));
+httpServer.post('/date', (req, res) => databaseService.execDataInsert(req, res));
+httpServer.get('/Rct-Data/insert-data', (req, res) => databaseService.getDate(req, res));
 
-const AuthControlManager = require('./AuthControlManager.js');
+
+const AuthControlManager = require('./lib/AuthControlManager.js');
 const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);
 authControlManager.bindToTokenControl('/auth-control');
