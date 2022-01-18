@@ -30,12 +30,12 @@ httpServer.addStaticPath('./public', '/login');
 httpServer.addStaticPath('./node_modules/less/dist', '/scripts');
 
 const DatabaseService = require('./lib/DatabaseService.js');
-const pgManager = new DatabaseService(loggedUsers, log);
-httpServer.post('/login', (req, res) => pgManager.login(req, res));
-httpServer.post('/logout', (req, res) => pgManager.logout(req, res));
-httpServer.get('/RCT-Data', (req, res) => pgManager.execDataReq(req, res));
-httpServer.post('/date', (req, res) => pgManager.execDataInsert(req, res));
-httpServer.get('/Rct-Data/insert-data', (req, res) => pgManager.getDate(req, res));
+const databaseService = new DatabaseService(loggedUsers, log);
+httpServer.post('/login', (req, res) => databaseService.login(req, res));
+httpServer.post('/logout', (req, res) => databaseService.logout(req, res));
+httpServer.get('/RCT-Data', (req, res) => databaseService.execDataReq(req, res));
+httpServer.post('/date', (req, res) => databaseService.execDataInsert(req, res));
+httpServer.get('/Rct-Data/insert-data', (req, res) => databaseService.getDate(req, res));
 
 
 const AuthControlManager = require('./lib/AuthControlManager.js');
