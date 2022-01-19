@@ -15,7 +15,7 @@ export default function sidebar(model) {
         sidebarMenu(model)
       ]);
 }
-const pagesNames = applicationProperties.pageNames;
+const pagesNames = applicationProperties.pagesNames;
 const sidebarMenu = (model) => [
     alonePageButton(model, 'Periods', pagesNames.periods),
     fetchedDataPages(model, pagesNames.dataPasses, "Data Passes"),

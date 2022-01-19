@@ -1,3 +1,7 @@
+/**
+ * here are defined public application properties
+ * */
+
 
 const applicationProperties = {
     endpoints: {
@@ -18,7 +22,20 @@ const applicationProperties = {
         authControl: 'get',
 
     },
-    pageNames: {
+
+    dataReqParams: {
+        countRecords: 'count-records',
+        site: 'site',
+        rowsOnSite: 'rows-on-site',
+
+    },
+    dataRespondFields: {
+        totalRowsCount: 'totalRowsCount',
+        rows: 'rows',
+        fields: 'fields',
+    },
+
+    pagesNames: {
         periods: 'periods',
         dataPasses: 'dataPasses',
         mc: 'mc',
@@ -28,4 +45,5 @@ const applicationProperties = {
     }
 }
 
-export default applicationProperties
+module.exports = applicationProperties
+// export default applicationProperties

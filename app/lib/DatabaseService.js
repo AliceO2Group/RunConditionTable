@@ -1,5 +1,9 @@
 const {Client} = require('pg');
 const ReqParser = require('./ReqParser.js');
+const config = require('../config.js');
+const applicationProperties = require('../public/applicationProperties.js');
+const dataReqParams = applicationProperties.dataReqParams;
+const dataRespondFields = applicationProperties.dataRespondFields;
 
 //TODO removing clients;
 
@@ -12,6 +16,7 @@ async function select(client, command) {
  * logging is handled here, because client log in as database user,
  * so backend must communicate with database in order to check client credentials
  */
+
 class DatabaseService {
     constructor(loggedUsers, log) {
         console.assert(loggedUsers != null);
@@ -29,10 +34,10 @@ class DatabaseService {
         if (!client) {
             client = new Client({
                 user: body.username,
-                host: 'localhost',
+                host: config.database.hostname,
                 database: body.dbname,
                 password: body.password,
-                port: 5432,
+                port: config.database.port,
             });
 
             (async () => await client.connect())();
@@ -72,8 +77,8 @@ class DatabaseService {
     async #exec(req, res, dbResponseHandler, query=null) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token]
         if (!userData) {
-            const mess = 'probably user send request for data before server processed its login';
-            console.log(mess, req.query)
+            const mess = 'ARR... probably user send request for data before server processed its login';
+            console.error(mess, req.query)
             this.responseWithStatus(res, 500, mess)
             return;
         }
@@ -101,15 +106,15 @@ class DatabaseService {
             let rows = dbRes.rows;
             const data = {};
             console.log(req.query);
-            if (req.query['count-records'] === 'true') {
-                data['totalRecordsNumber'] = rows.length;
+            if (req.query[dataReqParams.countRecords] === 'true') {
+                data[dataRespondFields.totalRowsCount] = rows.length;
                 const offset = req.query.rowsOnSite * (req.query.site - 1);
                 const limit = req.query.rowsOnSite;
                 rows = rows.slice(offset, offset + limit);
             }
 
-            data['rows'] = rows;
-            data['fields'] = fields;
+            data[dataRespondFields.rows] = rows;
+            data[dataRespondFields.fields] = fields;
             res.json({data: data});
         }
 
