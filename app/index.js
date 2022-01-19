@@ -15,7 +15,7 @@
 const { HttpServer, Log } = require('@aliceo2/web-ui');
 
 const config = require('./config.js');
-const applicationProperties = require('./public/applicationProperties.js');
+const applicationProperties = require('./public/applicationProperties.json');
 const EndP = applicationProperties.endpoints;
 const methods = applicationProperties.methods;
 

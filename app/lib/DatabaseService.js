@@ -1,7 +1,7 @@
 const {Client} = require('pg');
 const ReqParser = require('./ReqParser.js');
 const config = require('../config.js');
-const applicationProperties = require('../public/applicationProperties.js');
+const applicationProperties = require('../public/applicationProperties.json');
 const dataReqParams = applicationProperties.dataReqParams;
 const dataRespondFields = applicationProperties.dataRespondFields;
 

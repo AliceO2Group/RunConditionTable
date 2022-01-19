@@ -2,7 +2,6 @@ import postingDataConfig from "./postingDataConfig.js";
 import {h, fetchClient} from '/js/src/index.js';
 import applicationProperties from "../../../../applicationProperties.js";
 
-
 // TODO move it to model
 /**
  * returns vnode, row in table containing input fields and
@@ -27,10 +26,10 @@ export function postForm(model, data) {
 }
 
 
-const reqEndpoint = '/api/' + applicationProperties.endpoints.insertData;
 async function postData(model, data) {
     const params = model.router.params;
     const pageMetadata = postingDataConfig[params.page];
+    const reqEndpoint = '/api' + applicationProperties.endpoints.insertData;
 
     const dataObj = {}
     for (let f of data.fields) {

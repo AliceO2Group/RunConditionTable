@@ -1,7 +1,8 @@
 import viewButton from "../../common/viewButton.js";
 import {range, replaceUrlParams} from "../../../utils/utils.js";
 import {h} from '/js/src/index.js';
-
+import applicationProperties from "../../../applicationProperties.js";
+const siteParamName = applicationProperties.dataReqParams.site;
 const visibleNeighbourButtonsRange = 2;
 const maxVisibleButtons = 10;
 
@@ -14,11 +15,11 @@ const maxVisibleButtons = 10;
 export default function siteController(model, data) {
     const mapArrayToButtons = (arr) => arr.map(i => {
         const site = i + 1;
-        const url = replaceUrlParams(data.url, [['site', site]]);
+        const url = replaceUrlParams(data.url, [[siteParamName, site]]);
         return viewButton(model, site, () => model.fetchedData.changeSite(site), '', url.pathname + url.search, '', '.m1', true);
     })
     const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnsite);
-    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())['site']);
+    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
     const currentSiteIdx = currentSite - 1;
 
     const middleButtonsR = range(Math.max(0, currentSiteIdx - visibleNeighbourButtonsRange),
