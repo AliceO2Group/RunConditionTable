@@ -1,8 +1,9 @@
-import RCT_DATA_PAGES from "../../../RCT_DATA_PAGES.js";
 import viewButton from '../../common/viewButton.js';
 import handleClick from "../../../utils/handleClick.js";
 import {h} from "/js/src/index.js";
-
+import applicationProperties from "../../../applicationProperties.js";
+const dataReqParams = applicationProperties.dataReqParams;
+const pagesNames = applicationProperties.pagesNames;
 
 /** Configuration what buttons at which cells and which pages are supposed
  *  to appear is done using object below which contains
@@ -16,6 +17,7 @@ const pagesCellsButtons = {
         period: (model, item, name) => {
             return viewButton(model, item.period, (e) =>
                     handleClick(model, e), '',
+                    TODO : this pattern is deprecated
                 `/Rct-Data/?page=runsPerPeriod&index=${item.period}&period=${item.period}&rowsOnSite=50&site=1`);
         },
     },
@@ -32,16 +34,16 @@ const pagesCellsButtons = {
             return [
                 h('', item.name),
                 viewButton(model, `runs`, (e) =>
-                handleClick(model, e), '',
-                `/runsPerPeriod/${item.name}/?rowsOnSite=50&site=1`),
+                    handleClick(model, e), '',
+                    `/${pagesNames.runsPerPeriod}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`),
 
                 viewButton(model, 'data passes', (e) =>
                         handleClick(model, e), '',
-                    `/dataPasses/${item.name}/?rowsOnSite=50&site=1`),
+                    `/${pagesNames.dataPasses}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`),
 
                 viewButton(model, 'MC', (e) =>
                         handleClick(model, e), '',
-                    `/mc/${item.name}/?rowsOnSite=50&site=1`),
+                    `/${pagesNames.mc}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`),
             ];
         },
     },
@@ -50,7 +52,7 @@ const pagesCellsButtons = {
     runsPerPeriod: {
         run_number: (model, item, name) => {
             return viewButton(model, item.run_number, (e) => handleClick(model, e), '',
-                `/flags/${item.run_number}/?rowsOnSite=50&site=1`);
+                `/${pagesNames.flags}/${item.run_number}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
         }
     },
     flags: {},
@@ -62,7 +64,7 @@ const pagesCellsButtons = {
 // checking correctness of configuration
 for (let p in pagesCellsButtons) {
     if (pagesCellsButtons.hasOwnProperty(p)) {
-        if (! RCT_DATA_PAGES.includes(p))
+        if (! pagesNames.hasOwnProperty(p))
             throw Error('incorrect configuration');
     }
 }

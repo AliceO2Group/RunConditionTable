@@ -1,11 +1,11 @@
 import {RemoteData, Loader} from '/js/src/index.js';
 
-import RCT_DATA_PAGES from "../../../RCT_DATA_PAGES.js";
 import FetchedData from "./FetchedData.js";
 import {getPathElems, replaceUrlParams, url2Str} from "../../../utils/utils.js";
 import {defaultIndex} from "../../../utils/defaults.js";
-
-const apiPrefix = '/api/RCT-Data'
+import applicationProperties from "../../../applicationProperties.js";
+const dataReqParams = applicationProperties.dataReqParams;
+const pagesNames = applicationProperties.pagesNames;
 
 /**
  * Object of this class provide that many FetchedData objects are organized,
@@ -17,9 +17,10 @@ export default class FetchedDataManager {
         this.model = model
         this.router = router;
         this.loader = new Loader();
-        
-        for (let pageName of RCT_DATA_PAGES) {
-            this[pageName] = {};
+
+        for (let n in pagesNames) {
+            if (pagesNames.hasOwnProperty(n))
+                this[n] = {};
         }
     }
     /**
@@ -74,11 +75,12 @@ export default class FetchedDataManager {
     }
 
     getReqEndpoint(url, countAllRecord) {
+        const apiPrefix = '/api' + applicationProperties.endpoints.rctData;
         // TODO it will be if handling such endpoints is handled on backend side
         // return apiPrefix + url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
         // TODO below there is temporary solution
         const pathIdent = getPathElems(url.pathname)
-        return apiPrefix + '/' + url.search + `&page=${pathIdent[0]}` + (pathIdent[1] ? `&index=${pathIdent[1]}` : '');
+        return apiPrefix + url.search + `&page=${pathIdent[0]}` + (pathIdent[1] ? `&index=${pathIdent[1]}` : '');
 
     }
 
@@ -86,7 +88,7 @@ export default class FetchedDataManager {
         console.log("change site")
         const url = this.router.getUrl();
 
-        const newUrl = replaceUrlParams(url, [['site', site]]);
+        const newUrl = replaceUrlParams(url, [[dataReqParams.site, site]]);
         this.router.go(newUrl);
     }
 
@@ -103,33 +105,15 @@ export default class FetchedDataManager {
 
 
     assertConditionsForReqForData(url, params) {
-        console.assert(params.hasOwnProperty('rowsOnSite'));
-        console.assert(params.hasOwnProperty('site'));
+        console.assert(params.hasOwnProperty(dataReqParams.rowsOnSite));
+        console.assert(params.hasOwnProperty(dataReqParams.site));
     }
 
-
-
-
-
-    consoleLogStructure(full=false) {
-        if (full)
-            console.log(this);
-        else {
-            const pObj = {};
-            for (let pageName in RCT_DATA_PAGES) {
-                pObj[pageName] = [];
-                for (let p in this[pageName]) {
-                    if (this[pageName].hasOwnProperty(p))
-                        pObj[pageName].push(p);
-                }
-            }
-            console.log(pObj);
-        }
-    }
 
     clear() {
-        for (let pageName in RCT_DATA_PAGES) {
-            this[pageName] = {};
+        for (let n in pagesNames) {
+            if (pagesNames.hasOwnProperty(n))
+                this[n] = {};
         }
     }
 

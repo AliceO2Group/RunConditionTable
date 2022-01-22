@@ -1,7 +1,7 @@
 const defaultRowsOnSite = 100;
 const defaultSite = 1;
 
-
+import applicationProperties from "../../../applicationProperties.js";
 /**
  * Object of this class is used to hold data fetched from backend
  * set of data held in this structure are fully defined by the url given as on of constructor arguments
@@ -13,6 +13,7 @@ const defaultSite = 1;
 export default class FetchedData {
     constructor(url, content, totalRecordsNumber=null) {
         this.url = url;
+        console.log(content)
 
         this.fields = null;
         this.rows = null;
@@ -36,8 +37,9 @@ export default class FetchedData {
 
     setSiteAndRowsOnSite() {
         const params = Object.fromEntries(this.url.searchParams.entries());
-        this.rowsOnsite = params.hasOwnProperty('rowsOnsite') ? params.rowsOnsite : defaultRowsOnSite;
-        this.site = params.hasOwnProperty('site') ? params.site : defaultSite;
+        const appPropParams = applicationProperties.dataReqParams;
+        this.rowsOnsite = params.hasOwnProperty(appPropParams.rowsOnsite) ? params[appPropParams.rowsOnsite] : defaultRowsOnSite;
+        this.site = params.hasOwnProperty(appPropParams.site) ? params[appPropParams.site] : defaultSite;
     }
 
 
@@ -58,12 +60,4 @@ export default class FetchedData {
             this.totalRecordsNumber = content.data.totalRecordsNumber;
         }
     }
-
-    clear() {
-        this.fields = null;
-        this.rows = null;
-        this.fetched = false;
-        this.hideMarkedRecords = false;
-    }
-
 }

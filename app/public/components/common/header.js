@@ -20,7 +20,6 @@ export default function header(model) {
 
 const headerSpecific = (model) => {
     switch (getPathElem(model.router.getUrl().pathname, 1)) {
-        case '__home': return title('Home Page');
         case 'main': return title('Periods');
         case 'runsPerPeriod': return title('Runs per Period');
         case 'mc': return title('Monte Carlo');
@@ -77,8 +76,8 @@ const rowsOnPage = (model) => {
                 onclick: (e) => {
                     model.fetchedData.rowsOnPage = 5;
                     model.router.params.rowsOnPage = 5;
-                    console.log(model.router.params.rowsOnPage);
                     model.router.handleLinkEvent(e);
+                    // TODO
                     //model.notify();
                     //model.fetchedData.reqForData(true)
                     //model.notify();

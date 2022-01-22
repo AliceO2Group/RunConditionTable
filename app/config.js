@@ -1,3 +1,7 @@
+/**
+ * here are private properties for backend */
+
+
 module.exports = {
     jwt: {
       secret: 'supersecret',
@@ -8,4 +12,8 @@ module.exports = {
       hostname: 'localhost',
       tls: false
     },
+    database: {
+        hostname: 'localhost',
+        port: 5432,
+    }
   };

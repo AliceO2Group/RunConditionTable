@@ -1,8 +1,10 @@
 import {h, iconLayers} from "/js/src/index.js";
 import {getPathElem} from "../../../utils/utils.js";
+import applicationProperties from "../../../applicationProperties.js";
+const dataReqParams = applicationProperties.dataReqParams;
 
 function pathNQuery(page, index) {
-    return `/${page}${index ? '/'+index : ''}/?rowsOnSite=50&site=1`;
+    return `/${page}${index ? '/'+index : ''}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
 }
 
 export default function alonePageButton(model, title, page, index=null) {

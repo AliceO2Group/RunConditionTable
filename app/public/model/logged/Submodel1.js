@@ -1,5 +1,8 @@
 import {Observable, Loader} from '/js/src/index.js';
 import FetchedDataManager from "./modelData/FetchedDataManager.js";
+import applicationProperties from "../../applicationProperties.js";
+const dataReqParams = applicationProperties.dataReqParams;
+const pagesNames = applicationProperties.pagesNames;
 
 
 export default class Submodel1 extends Observable {
@@ -28,11 +31,9 @@ export default class Submodel1 extends Observable {
     handleLocationChange() {
         const url = this.router.getUrl();
         switch (url.pathname) {
-            case '/a/':
-                break;
             default:
                 if (url.pathname === "/") {
-                    this.router.go('/periods/?&rowsOnSite=50&site=1')
+                    this.router.go(`/periods/?&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`)
                 } else {
                     this.fetchedData.reqForData()
                         .then(r => {})

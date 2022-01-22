@@ -1,10 +1,11 @@
 import {h, iconPin, iconEllipses, iconShareBoxed, iconReload, iconTrash} from '/js/src/index.js'
+import {getPathElems} from "../../../utils/utils.js";
 
 
 export default function fetchedDataPages(model, pageName, label) {
     const page = model.fetchedData[pageName]
     const buttons = [];
-    if (pageName !== null) {
+    if (pageName) {
         for (let index in page) {
             if (page.hasOwnProperty(index) && page[index]) {
                 buttons.push(multiButtonController(model, pageName, index));
@@ -51,6 +52,7 @@ const deleteCopyReloadButtonsController = (model, index, dropdownID, pageName) =
 }
 
 const hiddenButtonsControllerObj = (model, index, dropdownID, pageName) => {
+    const pathIdent = getPathElems(model.router.getUrl().pathname);
     return {
         onmouseenter: () => {
             document.getElementById(dropdownID).classList.toggle('dropdown-open');
@@ -61,7 +63,7 @@ const hiddenButtonsControllerObj = (model, index, dropdownID, pageName) => {
                     document.getElementById(dropdownID).classList.remove('dropdown-open');
             }, 100);
         },
-        class: (model.router.params.index === index) && model.router.params.page === pageName ? 'white' : 'gray'
+        class: (pathIdent[1] === index) && pathIdent[0] === pageName ? 'white' : 'gray'
     }
 }
 
@@ -92,7 +94,7 @@ const revealedButtonControllerObj = (dropdownID) => {
 const deletePageButton = (model, pageName, index) => {
     return h('a.menu-item', {
         onclick: () => {
-            model.router.go('/__home/?page=__home'); // TODO
+            model.router.go('/'); // TODO
             model.fetchedData.delete(pageName, index);
             model.notify();
         }
