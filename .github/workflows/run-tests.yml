@@ -37,6 +37,5 @@ jobs:
       - name: Send codecov report for Control
         uses: codecov/codecov-action@v2
         with:
-          files: app/coverage.lcov
           directory: app
           fail_ci_if_error: true
