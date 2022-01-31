@@ -3,3 +3,4 @@ node_modules
 tmp
 volatile
 app/package-lock.json
+app/.nyc_output/*
