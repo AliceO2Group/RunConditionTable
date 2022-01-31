@@ -34,8 +34,8 @@ jobs:
       - run: (npm ci)
       - run: (npm run coverage)
       - run: (./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov)
-      - name: Send codecov report for Control
+      - name: Send codecov report for RunConditionTable
         uses: codecov/codecov-action@v2
         with:
-          directory: app
+          token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
