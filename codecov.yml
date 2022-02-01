@@ -1,0 +1,20 @@
+codecov:
+  notify:
+    after_n_builds: 1
+coverage:
+  range: 50...80
+  precision: 2
+  round: nearest
+  status:
+    project:
+      default:
+        target: 50%
+        threshold: 0%
+        if_not_found: success
+        if_ci_failed: error
+ignore:
+  - app/node_modules/*
+  - app/coverage/*
+  - app/.nyc_output/*
+  - app/coverage.lcov
+comment: false
