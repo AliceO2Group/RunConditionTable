@@ -19,12 +19,12 @@
  * class responsible for parsing url params, payloads of client request to sql queries
  */
 
-import applicationProperties from '../public/applicationProperties.json';
+import applicationProperties from '../public/applicationProperties.js';
 
 const pagesNames = applicationProperties.pagesNames;
 const dataReqParams = applicationProperties.dataReqParams;
 console.log(applicationProperties, 'parser');
-class ReqParser {
+export default class ReqParser {
 
     constructor() {}
 
@@ -65,5 +65,3 @@ const parseValues = (values) => {
             return v;
     })
 }
-
-module.exports = ReqParser;

@@ -15,10 +15,11 @@
 
 
 
-import {Client} from 'pg';
+import pg from 'pg';
+const Client = pg.Client;
 import ReqParser from './ReqParser.js';
 import config from '../config.js';
-import applicationProperties from '../public/applicationProperties.json';
+import applicationProperties from '../public/applicationProperties.js';
 
 const dataReqParams = applicationProperties.dataReqParams;
 const dataRespondFields = applicationProperties.dataRespondFields;

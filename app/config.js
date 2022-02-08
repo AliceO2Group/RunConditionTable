@@ -2,7 +2,7 @@
  * here are private properties for backend */
 
 
-module.exports = {
+export default {
     jwt: {
       secret: 'supersecret',
       expiration: '10m'

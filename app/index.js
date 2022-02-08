@@ -15,7 +15,7 @@
 import { HttpServer, Log } from '@aliceo2/web-ui';
 
 import config from './config.js';
-import applicationProperties from './public/applicationProperties.json';
+import applicationProperties from './public/applicationProperties.js';
 import AuthControlManager from './lib/AuthControlManager.js';
 import DatabaseService from './lib/DatabaseService.js';
 

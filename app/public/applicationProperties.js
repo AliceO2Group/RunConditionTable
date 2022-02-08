@@ -1,21 +1,42 @@
-/**
- * @license
- * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
- * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
- * All rights not expressly granted are reserved.
- *
- * This software is distributed under the terms of the GNU General Public
- * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
- *
- * In applying this license CERN does not waive the privileges and immunities
- * granted to it by virtue of its status as an Intergovernmental Organization
- * or submit itself to any jurisdiction.
- */
+const applicationProperties = {
+    "endpoints": {
+        "login": "/login/",
+        "logout": "/logout/",
+        "rctData": "/RCT-Data/",
+        "insertData": "/Rct-Data/insert-data/",
+        "authControl": "/auth-control/",
+        "date": "/date/"
 
+    },
+    "methods": {
+        "login": "post",
+        "logout": "post",
+        "rctData": "get",
+        "date": "get",
+        "insertData": "post",
+        "authControl": "get"
 
+    },
 
+    "dataReqParams": {
+        "countRecords": "count-records",
+        "site": "site",
+        "rowsOnSite": "rows-on-site"
 
-const response = await fetch('./applicationProperties.json');
-const applicationProperties = await response.json();
-console.log("applicationProperties.js inasdfnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnst")
+    },
+    "dataRespondFields": {
+        "totalRowsCount": "totalRowsCount",
+        "rows": "rows",
+        "fields": "fields"
+    },
+
+    "pagesNames": {
+        "periods": "periods",
+        "dataPasses": "dataPasses",
+        "mc": "mc",
+        "runsPerPeriod": "runsPerPeriod",
+        "flags": "flags"
+    }
+}
+
 export default applicationProperties;
