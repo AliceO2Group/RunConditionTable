@@ -12,10 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-const { HttpServer, Log } = require('@aliceo2/web-ui');
+import { HttpServer, Log } from '@aliceo2/web-ui';
 
-const config = require('./config.js');
-const applicationProperties = require('./public/applicationProperties.json');
+import config from './config.js';
+import applicationProperties from './public/applicationProperties.json';
+import AuthControlManager from './lib/AuthControlManager.js';
+import DatabaseService from './lib/DatabaseService.js';
+
+
 const EndP = applicationProperties.endpoints;
 const methods = applicationProperties.methods;
 
@@ -29,10 +33,9 @@ console.log("ip address: " + httpServer.ipAddress);
 
 httpServer.addStaticPath('./public');
 httpServer.addStaticPath('./public', '/login');
-
 httpServer.addStaticPath('./node_modules/less/dist', '/scripts');
 
-const DatabaseService = require('./lib/DatabaseService.js');
+
 const databaseService = new DatabaseService(loggedUsers, log);
 httpServer.post(EndP.login, (req, res) => databaseService.login(req, res));
 httpServer.post(EndP.logout, (req, res) => databaseService.logout(req, res));
@@ -41,6 +44,5 @@ httpServer.post(EndP.insertData, (req, res) => databaseService.execDataInsert(re
 httpServer.get(EndP.date, (req, res) => databaseService.getDate(req, res));
 
 
-const AuthControlManager = require('./lib/AuthControlManager.js');
 const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);
 authControlManager.bindToTokenControl(EndP.authControl);

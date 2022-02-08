@@ -15,10 +15,11 @@
 
 
 
-const {Client} = require('pg');
-const ReqParser = require('./ReqParser.js');
-const config = require('../config.js');
-const applicationProperties = require('../public/applicationProperties.json');
+import {Client} from 'pg';
+import ReqParser from './ReqParser.js';
+import config from '../config.js';
+import applicationProperties from '../public/applicationProperties.json';
+
 const dataReqParams = applicationProperties.dataReqParams;
 const dataRespondFields = applicationProperties.dataRespondFields;
 
@@ -34,7 +35,7 @@ async function select(client, command) {
  * so backend must communicate with database in order to check client credentials
  */
 
-class DatabaseService {
+export default class DatabaseService {
     constructor(loggedUsers, log) {
         console.assert(loggedUsers != null);
 
@@ -160,4 +161,3 @@ class DatabaseService {
 
 }
 
-module.exports = DatabaseService;

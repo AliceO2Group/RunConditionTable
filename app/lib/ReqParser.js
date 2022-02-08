@@ -19,7 +19,8 @@
  * class responsible for parsing url params, payloads of client request to sql queries
  */
 
-const applicationProperties = require('../public/applicationProperties.json');
+import applicationProperties from '../public/applicationProperties.json';
+
 const pagesNames = applicationProperties.pagesNames;
 const dataReqParams = applicationProperties.dataReqParams;
 console.log(applicationProperties, 'parser');
