@@ -17,8 +17,12 @@ module.exports = {
       port: 5432,
     },
     bookkeepingRuns: {
-      url: 'rct-bookkeeping.cern.ch:4000/api/runs',
+      url: 'http://rct-bookkeeping.cern.ch:4000/api/runs',
       //hostname: 'localhost',
       //port: 8081
     },
+    dev: {
+      proxy: 'socks://localhost:12345'
+      // proxy: ''
+  }
   };

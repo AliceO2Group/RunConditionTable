@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha --exit test/**/mocha-*",
     "start": "node index.js",
-    "coverage": "nyc npm run test"
+    "coverage": "nyc npm run test",
+    "bk": "node bkIndex.js"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +15,8 @@
   "dependencies": {
     "@aliceo2/web-ui": "^1.18.2",
     "less": "^4.1.1",
-    "pg": "^8.6.0"
+    "pg": "^8.6.0",
+    "socks-proxy-agent": "^6.1.1"
   },
   "devDependencies": {
     "mocha": "^9.1.4",
