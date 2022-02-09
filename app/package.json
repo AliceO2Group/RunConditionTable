@@ -6,8 +6,7 @@
   "scripts": {
     "test": "mocha --exit test/**/mocha-*",
     "start": "node index.js",
-    "coverage": "nyc npm run test",
-    "bk": "node bkIndex.js"
+    "coverage": "nyc npm run test"
   },
   "keywords": [],
   "author": "",

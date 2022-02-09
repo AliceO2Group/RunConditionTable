@@ -52,3 +52,7 @@ httpServer.get(EndP.date, (req, res) => databaseService.getDate(req, res));
 const AuthControlManager = require('./lib/AuthControlManager.js');
 const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);
 authControlManager.bindToTokenControl(EndP.authControl);
+
+const BookkeepingService = require('./lib/BookkeepingService.js');
+const bookkeepingService = new BookkeepingService();
+bookkeepingService.getRuns();
