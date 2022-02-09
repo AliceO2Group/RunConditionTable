@@ -19,28 +19,43 @@
  const config = require('../config.js')
  
  class BookkeepingService {
-     constructor() {
-         this.endpoint = config.bookkeepingRuns.url;
-         this.opts = parse(this.endpoint);
+    constructor() {
+        this.endpoint = config.bookkeepingRuns.url;
+        this.opts = parse(this.endpoint);
  
-         let proxy = config.dev.proxy.trim();
-         if (proxy !== '') {
-             console.log('using proxy server %j', proxy);
-             this.proxyAgent = new SocksProxyAgent(proxy);
-             this.opts.agent = this.proxyAgent;
-         }
-     }
+        let proxy = config.dev.proxy.trim();
+        if (proxy !== '') {
+            console.log('using proxy server %j', proxy);
+            this.proxyAgent = new SocksProxyAgent(proxy);
+            this.opts.agent = this.proxyAgent;
+        }
+    }
  
  
-     getRuns () {
-         console.log('attempting to GET %j', this.endpoint);
-         get(this.opts, function (res) {
-             console.log('"response" event!', res.headers);
-             res.on('data', function (chunk) {
-                 console.log(JSON.parse(chunk));
-             })
-         })
-     }
+    getRuns () {
+        let parsedData = '';
+        console.log('attempting to GET %j', this.endpoint);
+        get(this.opts, function (res) {
+            console.log('"response" event!', res.headers);
+            res.setEncoding('utf8');
+            let rawData = '';
+            res.on('data', (chunk) => { rawData += chunk; });
+            res.on('end', () => {
+                try {
+                    parsedData = JSON.parse(rawData);
+                    console.log(parsedData);
+                } catch (e) {
+                    console.error(e.message);
+                }
+            });
+            /*
+            res.on('data', function (chunk) {
+                console.log(JSON.parse(chunk));
+            })
+            */
+        });
+        return parsedData;
+    }
  }
  
  module.exports = BookkeepingService;

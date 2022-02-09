@@ -55,4 +55,6 @@ authControlManager.bindToTokenControl(EndP.authControl);
 
 const BookkeepingService = require('./lib/BookkeepingService.js');
 const bookkeepingService = new BookkeepingService();
-bookkeepingService.getRuns();
+
+const runs = bookkeepingService.getRuns();
+console.log(runs);
