@@ -19,7 +19,6 @@
 import {Observable, Loader} from '/js/src/index.js';
 import FetchedDataManager from "./modelData/FetchedDataManager.js";
 import {RCT} from "../../config.js";
-// import { bookkeepingRuns } from '../../../config.js';
 const dataReqParams = RCT.dataReqParams;
 const pagesNames = RCT.pagesNames;
 

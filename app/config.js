@@ -1,7 +1,3 @@
-/**
- * here are private properties for backend */
-
-
 module.exports = {
     jwt: {
       secret: 'supersecret',
@@ -22,6 +18,7 @@ module.exports = {
     dev: {
       proxy: 'socks://localhost:12345'
     },
+    // properties that will be provided to frontend in the public folder
     public: {
       endpoints: {
         "login": "/login/",
