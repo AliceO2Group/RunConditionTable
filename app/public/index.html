@@ -37,6 +37,13 @@
 	</script>
 
 	<script type="module">
+		// Import COG Public Configuration
+		import {COG} from './config.js';
+		console.log(COG);
+		window.COG = COG;
+  	</script>
+
+	<script type="module">
 		import {mount} from '/js/src/index.js';
 		import view from './view.js';
 		import Model from './model/Model.js';

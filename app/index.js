@@ -14,10 +14,18 @@
 
 const { HttpServer, Log } = require('@aliceo2/web-ui');
 
-const config = require('./config.js');
 const applicationProperties = require('./public/applicationProperties.json');
 const EndP = applicationProperties.endpoints;
 const methods = applicationProperties.methods;
+
+const config = require('./lib/config/configProvider.js');
+const {buildPublicConfig} = require('./lib/config/publicConfigProvider.js');
+
+// -------------------------------------------------------
+
+buildPublicConfig(config);
+
+config.http.iframeCsp = (config?.grafana?.url) ? [ config.grafana.url ] : [];
 
 const log = new Log('Tutorial');
 let loggedUsers = {
