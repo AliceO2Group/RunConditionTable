@@ -26,13 +26,9 @@ function buildPublicConfig(config) {
   if (publicConfigExist) {
     fs.rmSync(publicConfigPath);
   }
-  const publicConfig = {
-    BKP_URL: _getBookkeepingURL(config),
-    REFRESH_TASK: config?.utils?.refreshTask || 10000,
-    REFRESH_ENVS: config?.utils?.refreshEnvs || 10000,
-  };
+  const publicConfig = _getPublic(config);
   let codeStr = `/* eslint-disable quote-props */\n`
-    + `const publicConfig = ${JSON.stringify(publicConfig, null, 2)}; \nexport {publicConfig as COG};\n`;
+    + `const publicConfig = ${JSON.stringify(publicConfig, null, 2)}; \nexport {publicConfig as RCT};\n`;
   fs.writeFileSync(publicConfigPath, codeStr);
 }
 
@@ -47,6 +43,11 @@ function _getBookkeepingURL(config) {
   return (bkp?.url) ? `${bkp.url}` : '';
 }
 
+function _getPublic(config) {
+  const public = config?.public;
+  return public? public : '';
+}
+
 module.exports = {
-  buildPublicConfig, _getBookkeepingURL
+  buildPublicConfig, _getBookkeepingURL, _getPublic
 };

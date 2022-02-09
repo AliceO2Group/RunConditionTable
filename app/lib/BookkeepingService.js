@@ -16,7 +16,7 @@
  const { parse } = require('url');
  const { get } = require('http');
  const SocksProxyAgent = require('socks-proxy-agent');
- const config = require('../config.js')
+ const config = require('./config/configProvider.js');
  
  class BookkeepingService {
     constructor() {
@@ -43,7 +43,7 @@
             res.on('end', () => {
                 try {
                     parsedData = JSON.parse(rawData);
-                    console.log(parsedData);
+                    //console.log(parsedData);
                 } catch (e) {
                     console.error(e.message);
                 }

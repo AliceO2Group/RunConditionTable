@@ -18,8 +18,8 @@
 
 import {h, iconLayers} from "/js/src/index.js";
 import {getPathElem} from "../../../utils/utils.js";
-import applicationProperties from "../../../applicationProperties.js";
-const dataReqParams = applicationProperties.dataReqParams;
+import {RCT} from "../../../config.js";
+const dataReqParams = RCT.dataReqParams;
 
 function pathNQuery(page, index) {
     return `/${page}${index ? '/'+index : ''}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;

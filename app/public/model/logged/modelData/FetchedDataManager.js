@@ -20,9 +20,9 @@ import {RemoteData, Loader} from '/js/src/index.js';
 import FetchedData from "./FetchedData.js";
 import {getPathElems, replaceUrlParams, url2Str} from "../../../utils/utils.js";
 import {defaultIndex} from "../../../utils/defaults.js";
-import applicationProperties from "../../../applicationProperties.js";
-const dataReqParams = applicationProperties.dataReqParams;
-const pagesNames = applicationProperties.pagesNames;
+import {RCT} from "../../../config.js"
+const dataReqParams = RCT.dataReqParams;
+const pagesNames = RCT.pagesNames;
 
 /**
  * Object of this class provide that many FetchedData objects are organized,
@@ -92,7 +92,7 @@ export default class FetchedDataManager {
     }
 
     getReqEndpoint(url, countAllRecord) {
-        const apiPrefix = '/api' + applicationProperties.endpoints.rctData;
+        const apiPrefix = '/api' + RCT.endpoints.rctData;
         // TODO it will be if handling such endpoints is handled on backend side
         // return apiPrefix + url.pathname + url.search + (countAllRecord ? '&count-records=true' : '');
         // TODO below there is temporary solution

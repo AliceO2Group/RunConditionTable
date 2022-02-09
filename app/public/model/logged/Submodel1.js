@@ -18,9 +18,10 @@
 
 import {Observable, Loader} from '/js/src/index.js';
 import FetchedDataManager from "./modelData/FetchedDataManager.js";
-import applicationProperties from "../../applicationProperties.js";
-const dataReqParams = applicationProperties.dataReqParams;
-const pagesNames = applicationProperties.pagesNames;
+import {RCT} from "../../config.js";
+// import { bookkeepingRuns } from '../../../config.js';
+const dataReqParams = RCT.dataReqParams;
+const pagesNames = RCT.pagesNames;
 
 
 export default class Submodel1 extends Observable {
@@ -78,5 +79,33 @@ export default class Submodel1 extends Observable {
 
         this.router.go('/');
         this.notify();
+    }
+
+    async fetchBookkeeping() {
+        console.log('hello there');
+        
+        /*const endpoint = '/api/bookkeeping/'
+        
+        const response = await fetchClient(endpoint, {
+            //TODO
+            method: 'POST',
+            headers: {'Content-type': 'application/json; charset=UTF-8'},
+            body: JSON.stringify({
+                payload: {
+                    targetTable: '',
+                    data: '',
+                }
+            })
+        });
+    
+        const content = await response.json();
+        alert(content.data);
+        model.notify();
+        /*
+        const {result, status, ok} = this.loader.get(endpoint);
+        console.log("result: " + result);
+        console.log("status: " + status);
+        console.log("ok: " + ok);
+        */
     }
 }

@@ -13,7 +13,7 @@
 */
 
 const {Log} = require('@aliceo2/web-ui');
-const log = new Log(`${process.env.npm_config_log_label ?? 'cog'}/config`);
+const log = new Log(`${process.env.npm_config_log_label ?? 'RCT'}/config`);
 
 const fs = require('fs');
 const path = require('path');

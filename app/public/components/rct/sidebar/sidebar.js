@@ -17,8 +17,8 @@
 import {h} from "/js/src/index.js";
 import fetchedDataPages from "./fetchedDataPages.js";
 import alonePageButton from "./alonePageButton.js";
-import applicationProperties from "../../../applicationProperties.js";
-const pagesNames = applicationProperties.pagesNames;
+import {RCT} from "../../../config.js";
+const pagesNames = RCT.pagesNames;
 
 /**
  * Provides navigation between particular views, is divide to sections,

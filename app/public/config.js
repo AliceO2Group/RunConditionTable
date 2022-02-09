@@ -1,7 +1,38 @@
 /* eslint-disable quote-props */
 const publicConfig = {
-  "BKP_URL": "http://rct-bookkeeping.cern.ch:4000/api/runs",
-  "REFRESH_TASK": 10000,
-  "REFRESH_ENVS": 10000
+  "endpoints": {
+    "login": "/login/",
+    "logout": "/logout/",
+    "rctData": "/RCT-Data/",
+    "insertData": "/Rct-Data/insert-data/",
+    "authControl": "/auth-control/",
+    "date": "/date/",
+    "bookkeeping": "/bookkeeping/"
+  },
+  "methods": {
+    "login": "post",
+    "logout": "post",
+    "rctData": "get",
+    "date": "get",
+    "insertData": "post",
+    "authControl": "get"
+  },
+  "dataReqParams": {
+    "countRecords": "count-records",
+    "site": "site",
+    "rowsOnSite": "rows-on-site"
+  },
+  "dataRespondFields": {
+    "totalRowsCount": "totalRowsCount",
+    "rows": "rows",
+    "fields": "fields"
+  },
+  "pagesNames": {
+    "periods": "periods",
+    "dataPasses": "dataPasses",
+    "mc": "mc",
+    "runsPerPeriod": "runsPerPeriod",
+    "flags": "flags"
+  }
 }; 
-export {publicConfig as COG};
+export {publicConfig as RCT};
