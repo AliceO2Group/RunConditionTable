@@ -13,13 +13,12 @@
  */
 
 
-
-
 const {Client} = require('pg');
 const ReqParser = require('./ReqParser.js');
 const config = require('./config/configProvider.js');
-const dataReqParams = config.public.dataReqParams;
-const dataRespondFields = config.public.dataRespondFields;
+const {Log} = require("@aliceo2/web-ui");
+const DRP = config.public.dataReqParams;
+const DRF = config.public.dataRespondFields;
 
 //TODO removing clients;
 
@@ -34,31 +33,30 @@ async function select(client, command) {
  */
 
 class DatabaseService {
-    constructor(loggedUsers, log) {
+    constructor(loggedUsers) {
         console.assert(loggedUsers != null);
 
         this.loggedUsers = loggedUsers;
-        this.log = log;
+        this.logger = new Log();
         this.parser = new ReqParser();
     }
 
     login(req, res) {
         const body = req.body;
-        console.log(body)
         let client = this.loggedUsers.tokenToUserData[req.query.token];
 
         if (!client) {
             client = new Client({
-                user: body.username,
                 host: config.database.hostname,
-                database: body.dbname,
-                password: body.password,
                 port: config.database.port,
+                database: config.database.dbname,
+                user: config.database.dbuser,
+                password: body.password,
             });
 
             (async () => await client.connect())();
         }
-        console.log("Logging client: ", client);
+        this.logger.info("Logging client: ", );
 
         select(client, 'SELECT NOW();')
             .then(async dbRes => {
@@ -66,7 +64,9 @@ class DatabaseService {
                 this.loggedUsers.tokenToUserData[req.query.token] = {
                     pgClient: client,
                     loginDate: new Date(),
+                    name: body.username
                 }
+                this.logger.info("Logged client: ", );
             }).catch(e => {
             this.responseWithStatus(res, 401, e.code);
         });
@@ -102,7 +102,7 @@ class DatabaseService {
 
         if (client) {
             if (query === null)
-                query = this.#parseReqToSql(req.query);
+                query = this.#parseReqToSql({...req.query, ...req.params});
 
             console.log(new Date(), query);
             await select(client, query)
@@ -112,7 +112,7 @@ class DatabaseService {
                     res.json({data: e.code});
                 })
         } else {
-            this.responseWithStatus(res, 401,'invalid token or no such user')
+            this.responseWithStatus(res, 401,'no user with such token')
         }
     }
 
@@ -121,16 +121,17 @@ class DatabaseService {
             const fields = dbRes.fields;
             let rows = dbRes.rows;
             const data = {};
-            console.log(req.query);
-            if (req.query[dataReqParams.countRecords] === 'true') {
-                data[dataRespondFields.totalRowsCount] = rows.length;
-                const offset = req.query.rowsOnSite * (req.query.site - 1);
-                const limit = req.query.rowsOnSite;
+
+            if (req.query[DRP.countRecords] === 'true') {
+                data[DRF.totalRowsCount] = rows.length;
+                const offset = req.query[DRP.rowsOnSite] * (req.query[DRP.site] - 1);
+                const limit = req.query[DRP.rowsOnSite];
                 rows = rows.slice(offset, offset + limit);
             }
 
-            data[dataRespondFields.rows] = rows;
-            data[dataRespondFields.fields] = fields;
+            data[DRF.rows] = rows;
+            data[DRF.fields] = fields;
+
             res.json({data: data});
         }
 
@@ -153,7 +154,7 @@ class DatabaseService {
     }
 
     responseWithStatus(res, status, message) {
-        console.log(message);
+        this.logger.error(message);
         res.status(status).json({message: message})
     }
 

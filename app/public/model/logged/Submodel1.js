@@ -49,6 +49,7 @@ export default class Submodel1 extends Observable {
     handleLocationChange() {
         const url = this.router.getUrl();
         switch (url.pathname) {
+            // TODO consider if switch will be useful
             default:
                 if (url.pathname === "/") {
                     this.router.go(`/periods/?&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`)
