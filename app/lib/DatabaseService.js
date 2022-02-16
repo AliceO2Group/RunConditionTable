@@ -159,7 +159,7 @@ class DatabaseService {
     }
 
     async insertBookkeepingRuns(req, res, runs) {
-        console.log(runs);
+        console.log('insert bookkeeping runs', runs);
     }
 
 }

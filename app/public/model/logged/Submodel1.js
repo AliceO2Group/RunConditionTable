@@ -16,7 +16,7 @@
 
 
 
-import {Observable, Loader} from '/js/src/index.js';
+import {Observable, Loader, fetchClient} from '/js/src/index.js';
 import FetchedDataManager from "./modelData/FetchedDataManager.js";
 import {RCT} from "../../config.js";
 const dataReqParams = RCT.dataReqParams;
@@ -84,7 +84,7 @@ export default class Submodel1 extends Observable {
     async fetchBookkeeping() {
         console.log('hello there');
         
-        /*const endpoint = '/api/bookkeeping/'
+        const endpoint = '/api/bookkeeping/'
         
         const response = await fetchClient(endpoint, {
             //TODO
@@ -101,11 +101,11 @@ export default class Submodel1 extends Observable {
         const content = await response.json();
         alert(content.data);
         model.notify();
-        /*
+
         const {result, status, ok} = this.loader.get(endpoint);
         console.log("result: " + result);
         console.log("status: " + status);
         console.log("ok: " + ok);
-        */
+
     }
 }

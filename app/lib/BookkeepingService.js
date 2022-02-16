@@ -13,52 +13,87 @@
  * or submit itself to any jurisdiction.
  */
 
+
 const { parse } = require('url');
- const { get } = require('http');
+ const http = require('http');
  const SocksProxyAgent = require('socks-proxy-agent');
  const config = require('./config/configProvider.js');
-const {Log} = require("@aliceo2/web-ui");
- 
- class BookkeepingService {
-    constructor() {
-        this.endpoint = config.bookkeepingRuns.url;
-        this.opts = parse(this.endpoint);
-        this.logger = new Log();
+ const {Log} = require("@aliceo2/web-ui");
 
-        let proxy = config.dev.proxy.trim();
-        if (proxy !== '') {
-            this.logger.info('using proxy server %j', proxy);
-            this.proxyAgent = new SocksProxyAgent(proxy);
-            this.opts.agent = this.proxyAgent;
-        }
-    }
- 
- 
-    getRuns () {
-        let parsedData = '';
-        this.logger.info('attempting to GET %j', this.endpoint);
-        const logger = this.logger
-        get(this.opts, function (res) {
-            logger.info('"response" event!', res.headers);
-            res.setEncoding('utf8');
-            let rawData = '';
-            res.on('data', (chunk) => { rawData += chunk; });
-            res.on('end', () => {
-                try {
-                    parsedData = JSON.parse(rawData);
-                    //console.log(parsedData);
-                } catch (e) {
-                    console.error(e.message);
-                }
-            });
-            /*
-            res.on('data', function (chunk) {
-                console.log(JSON.parse(chunk));
-            })
-            */
-        });
-        return parsedData;
-    }
+
+
+const wait = (seconds) =>
+    new Promise(resolve =>
+        setTimeout(() =>
+            resolve(true), seconds * 1000))
+
+
+ class BookkeepingService {
+     constructor() {
+         this.endpoint = config.bookkeepingRuns.url;
+         this.opts = parse(this.endpoint);
+         this.logger = new Log();
+
+         let proxy = config.dev.proxy.trim();
+         if (proxy !== '') {
+             this.logger.info('using proxy server %j', proxy);
+             this.proxyAgent = new SocksProxyAgent(proxy);
+             this.opts.agent = this.proxyAgent;
+         }
+     }
+
+
+
+     async getRuns() {
+         return new Promise(async (resolve, reject) => {
+
+             let rawData = '';
+
+             const req = http.request(this.opts, res => {
+                 res.on('data', chunk => rawData += chunk);
+                 res.on('end', () => {
+                     const data = JSON.parse(rawData);
+                     resolve(data);
+                 });
+             });
+             req.on('error', e => {
+                 console.log(`ERROR httpGet: ${e}`);
+                 reject(e);
+             });
+             req.end();
+         });
+     }
+
+
+
+
+     getRuns__() {
+         let parsedData = {};
+         this.logger.info('attempting to GET %j', this.endpoint);
+         const logger = this.logger
+
+         const req = http.get(this.opts, res => {
+                 logger.info('response event!', res.headers);
+                 res.setEncoding('utf8');
+                 let rawData = '';
+                 res.on('data', (chunk) => {
+                     rawData += chunk;
+                 });
+                 res.on('end', () => {
+                     try {
+                         parsedData.a = JSON.parse(rawData);
+                         // console.log(parsedData.a);
+                     } catch (e) {
+                         console.error(e.message);
+                     }
+                 });
+             }
+         );
+
+         req.end();
+         return parsedData;
+     }
+
  }
- 
+
  module.exports = BookkeepingService;
