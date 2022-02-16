@@ -17,10 +17,9 @@
 
 const {Client} = require('pg');
 const ReqParser = require('./ReqParser.js');
-const config = require('../config.js');
-const applicationProperties = require('../public/applicationProperties.json');
-const dataReqParams = applicationProperties.dataReqParams;
-const dataRespondFields = applicationProperties.dataRespondFields;
+const config = require('./config/configProvider.js');
+const dataReqParams = config.public.dataReqParams;
+const dataRespondFields = config.public.dataRespondFields;
 
 //TODO removing clients;
 
@@ -156,6 +155,10 @@ class DatabaseService {
     responseWithStatus(res, status, message) {
         console.log(message);
         res.status(status).json({message: message})
+    }
+
+    async insertBookkeepingRuns(req, res, runs) {
+        console.log(runs);
     }
 
 }

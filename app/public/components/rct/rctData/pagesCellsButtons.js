@@ -17,9 +17,9 @@
 import viewButton from '../../common/viewButton.js';
 import handleClick from "../../../utils/handleClick.js";
 import {h} from "/js/src/index.js";
-import applicationProperties from "../../../applicationProperties.js";
-const dataReqParams = applicationProperties.dataReqParams;
-const pagesNames = applicationProperties.pagesNames;
+import {RCT} from "../../../config.js";
+const dataReqParams = RCT.dataReqParams;
+const pagesNames = RCT.pagesNames;
 
 /** Configuration what buttons at which cells and which pages are supposed
  *  to appear is done using object below which contains

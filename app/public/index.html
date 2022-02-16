@@ -37,12 +37,19 @@
 	</script>
 
 	<script type="module">
+		// Import RCT Public Configuration
+		import {RCT} from './config.js';
+		console.log(RCT);
+		window.RCT = RCT;
+  	</script>
+
+	<script type="module">
 		import {mount} from '/js/src/index.js';
 		import view from './view.js';
 		import Model from './model/Model.js';
-		import applicationProperties from './applicationProperties.js';
-		console.log('index html::: applicationProperties : ');
-		console.log(applicationProperties);
+		import {RCT} from './config.js';
+		console.log('index html::: RCT (props) : ');
+		console.log(RCT);
 
 		const model = new Model();
 		const debug = true; // shows when redraw is done

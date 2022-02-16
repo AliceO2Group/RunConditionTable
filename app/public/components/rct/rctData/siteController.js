@@ -18,8 +18,8 @@
 import viewButton from "../../common/viewButton.js";
 import {range, replaceUrlParams} from "../../../utils/utils.js";
 import {h} from '/js/src/index.js';
-import applicationProperties from "../../../applicationProperties.js";
-const siteParamName = applicationProperties.dataReqParams.site;
+import {RCT} from "../../../config.js";
+const siteParamName = RCT.dataReqParams.site;
 const visibleNeighbourButtonsRange = 2;
 const maxVisibleButtons = 10;
 

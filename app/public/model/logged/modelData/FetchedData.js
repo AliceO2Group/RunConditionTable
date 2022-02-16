@@ -18,7 +18,7 @@
 const defaultRowsOnSite = 100;
 const defaultSite = 1;
 
-import applicationProperties from "../../../applicationProperties.js";
+import {RCT} from "../../../config.js";
 /**
  * Object of this class is used to hold data fetched from backend
  * set of data held in this structure are fully defined by the url given as on of constructor arguments
@@ -54,7 +54,7 @@ export default class FetchedData {
 
     setSiteAndRowsOnSite() {
         const params = Object.fromEntries(this.url.searchParams.entries());
-        const appPropParams = applicationProperties.dataReqParams;
+        const appPropParams = RCT.dataReqParams;
         this.rowsOnsite = params.hasOwnProperty(appPropParams.rowsOnsite) ? params[appPropParams.rowsOnsite] : defaultRowsOnSite;
         this.site = params.hasOwnProperty(appPropParams.site) ? params[appPropParams.site] : defaultSite;
     }

@@ -14,10 +14,17 @@
 
 const { HttpServer, Log } = require('@aliceo2/web-ui');
 
-const config = require('./config.js');
-const applicationProperties = require('./public/applicationProperties.json');
-const EndP = applicationProperties.endpoints;
-const methods = applicationProperties.methods;
+const config = require('./lib/config/configProvider.js');
+const {buildPublicConfig} = require('./lib/config/publicConfigProvider.js');
+
+const EndP = config.public.endpoints;
+const methods = config.public.methods;
+
+// -------------------------------------------------------
+
+buildPublicConfig(config);
+
+config.http.iframeCsp = (config?.grafana?.url) ? [ config.grafana.url ] : [];
 
 const log = new Log('Tutorial');
 let loggedUsers = {
@@ -44,3 +51,11 @@ httpServer.get(EndP.date, (req, res) => databaseService.getDate(req, res));
 const AuthControlManager = require('./lib/AuthControlManager.js');
 const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);
 authControlManager.bindToTokenControl(EndP.authControl);
+
+
+
+const BookkeepingService = require('./lib/BookkeepingService.js');
+const bookkeepingService = new BookkeepingService();
+const runs = bookkeepingService.getRuns();
+console.log(runs);
+httpServer.post(EndP.bookkeeping, (req, res) => databaseService.insertBookkeepingRuns(req, res, runs));
