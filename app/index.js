@@ -43,7 +43,8 @@ const DatabaseService = require('./lib/DatabaseService.js');
 const databaseService = new DatabaseService(loggedUsers, log);
 httpServer.post(EndP.login, (req, res) => databaseService.login(req, res));
 httpServer.post(EndP.logout, (req, res) => databaseService.logout(req, res));
-httpServer.get(EndP.rctData, (req, res) => databaseService.execDataReq(req, res));
+httpServer.get(EndP.rctData + ':page/', (req, res) => databaseService.execDataReq(req, res));
+httpServer.get(EndP.rctData + ':page/:index/', (req, res) => databaseService.execDataReq(req, res));
 httpServer.post(EndP.insertData, (req, res) => databaseService.execDataInsert(req, res));
 httpServer.get(EndP.date, (req, res) => databaseService.getDate(req, res));
 

@@ -5,3 +5,4 @@ volatile
 app/package-lock.json
 app/.nyc_output/*
 app/coverage*
+public/config.js

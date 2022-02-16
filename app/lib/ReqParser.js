@@ -21,15 +21,16 @@
 
 const config = require('./config/configProvider.js');
 const pagesNames = config.public.pagesNames;
-const dataReqParams = config.public.dataReqParams;
-console.log(config, 'parser');
+const DRP = config.public.dataReqParams;
+
 class ReqParser {
 
     constructor() {}
 
     parseDataReq(query) {
-        const dataSubsetQueryPart = (query) => query[dataReqParams.countRecords] === 'true' ? '' :
-            `LIMIT ${query[dataReqParams.rowsOnSite]} OFFSET ${query[dataReqParams.rowsOnSite] * (query[dataReqParams.site] - 1)}`;
+        console.log('parser ::: ', query)
+        const dataSubsetQueryPart = (query) => query[DRP.countRecords] === 'true' ? '' :
+            `LIMIT ${query[DRP.rowsOnSite]} OFFSET ${query[DRP.rowsOnSite] * (query[DRP.site] - 1)}`;
 
         switch (query.page) {
             case pagesNames.periods:

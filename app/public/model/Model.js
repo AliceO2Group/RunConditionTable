@@ -29,19 +29,19 @@ export default class Model extends Observable {
     }
 
 
-    async login(username, password, dbname) {
+    async login(username, password) {
 
-        const {result, status, ok} = await this.postLoginPasses(username, password, dbname)
+        const {result, status, ok} = await this.postLoginPasses(username, password)
         this._tokenExpirationHandler(status);
         if (ok)
             this.handleSuccessInLogin()
     }
 
 
-    postLoginPasses(username, password, dbname) {
+    postLoginPasses(username, password) {
         return this.loader.post(
             this.logginEndpoint,
-            {username: username, password: password, dbname: dbname}
+            {username: username, password: password}
         )
     }
     handleSuccessInLogin() {
