@@ -16,6 +16,7 @@
 
 const { parse } = require('url');
  const http = require('http');
+ const https = require('https');
  const SocksProxyAgent = require('socks-proxy-agent');
  const config = require('./config/configProvider.js');
  const {Log} = require("@aliceo2/web-ui");
@@ -30,7 +31,7 @@ const wait = (seconds) =>
 
  class BookkeepingService {
      constructor() {
-         this.endpoint = config.bookkeepingRuns.url;
+         this.endpoint = config.bookkeepingRuns.urlOldBookkeeping;
          this.opts = parse(this.endpoint);
          this.logger = new Log();
 
@@ -39,6 +40,20 @@ const wait = (seconds) =>
              this.logger.info('using proxy server %j', proxy);
              this.proxyAgent = new SocksProxyAgent(proxy);
              this.opts.agent = this.proxyAgent;
+         }
+         const protocol = this.endpoint.split(':')[0]
+         switch (protocol) {
+             case 'http':
+                 this.client = http;
+                 console.log('proto http')
+                 break;
+             case 'https':
+                 this.client = https;
+                 console.log('proto https')
+                 break;
+             default:
+                 console.log('unspecified protocol in url')
+                 break;
          }
      }
 
@@ -49,7 +64,7 @@ const wait = (seconds) =>
 
              let rawData = '';
 
-             const req = http.request(this.opts, res => {
+             const req = this.client.request(this.opts, res => {
                  res.on('data', chunk => rawData += chunk);
                  res.on('end', () => {
                      const data = JSON.parse(rawData);

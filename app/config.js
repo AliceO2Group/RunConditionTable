@@ -16,7 +16,8 @@ module.exports = {
 
     },
     bookkeepingRuns: {
-        url: 'http://rct-bookkeeping.cern.ch:4000/api/runs'
+        url: 'http://rct-bookkeeping.cern.ch:4000/api/runs',
+        urlOldBookkeeping: 'https://ali-bookkeeping.cern.ch/api/runs/',
     },
     dev: {
         proxy: 'socks://localhost:12345'
