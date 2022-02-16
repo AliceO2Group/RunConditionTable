@@ -19,7 +19,7 @@ import {getPathElems} from "../../../../utils/utils.js";
 import {defaultIndex} from "../../../../utils/defaults.js";
 
 export default function filter(model) {
-    const pathIdent = getPathElems(this.router.getUrl().pathname);
+    const pathIdent = getPathElems(model.router.getUrl().pathname);
     const data = model.fetchedData[pathIdent[0]][defaultIndex(pathIdent[1])].payload;
     const fields = data.fields;
 
