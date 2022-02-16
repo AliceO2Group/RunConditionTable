@@ -23,10 +23,8 @@ const path = require('path');
  * It can be first argument of command line OR by default config.js
  */
 
-// Default configuration file
 let configFile = path.join(__dirname, './../../config.js');
 
-// Replace if provided by command line
 if (process.argv.length >= 3 && /\.js$/.test(process.argv[2])) {
   configFile = process.argv[2];
 }

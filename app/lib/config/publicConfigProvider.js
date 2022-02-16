@@ -28,7 +28,9 @@ function buildPublicConfig(config) {
   }
   const publicConfig = _getPublic(config);
   let codeStr = `/* eslint-disable quote-props */\n`
-    + `const publicConfig = ${JSON.stringify(publicConfig, null, 2)}; \nexport {publicConfig as RCT};\n`;
+      + `const publicConfig = ${JSON.stringify(publicConfig, null, 2)};\n`
+      + `export {publicConfig as RCT};\n`;
+
   fs.writeFileSync(publicConfigPath, codeStr);
 }
 
