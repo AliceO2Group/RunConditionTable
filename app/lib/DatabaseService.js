@@ -16,6 +16,7 @@
 const {Client} = require('pg');
 const ReqParser = require('./ReqParser.js');
 const config = require('./config/configProvider.js');
+const {Log} = require("@aliceo2/web-ui");
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataRespondFields;
 
@@ -32,17 +33,16 @@ async function select(client, command) {
  */
 
 class DatabaseService {
-    constructor(loggedUsers, log) {
+    constructor(loggedUsers) {
         console.assert(loggedUsers != null);
 
         this.loggedUsers = loggedUsers;
-        this.log = log;
+        this.logger = new Log();
         this.parser = new ReqParser();
     }
 
     login(req, res) {
         const body = req.body;
-        console.log(body)
         let client = this.loggedUsers.tokenToUserData[req.query.token];
 
         if (!client) {
@@ -50,13 +50,13 @@ class DatabaseService {
                 host: config.database.hostname,
                 port: config.database.port,
                 database: config.database.dbname,
-                user: body.username,
+                user: config.database.dbuser,
                 password: body.password,
             });
 
             (async () => await client.connect())();
         }
-        console.log("Logging client: ", client);
+        this.logger.info("Logging client: ", );
 
         select(client, 'SELECT NOW();')
             .then(async dbRes => {
@@ -64,7 +64,9 @@ class DatabaseService {
                 this.loggedUsers.tokenToUserData[req.query.token] = {
                     pgClient: client,
                     loginDate: new Date(),
+                    name: body.username
                 }
+                this.logger.info("Logged client: ", );
             }).catch(e => {
             this.responseWithStatus(res, 401, e.code);
         });
@@ -152,7 +154,7 @@ class DatabaseService {
     }
 
     responseWithStatus(res, status, message) {
-        this.log.error(message);
+        this.logger.error(message);
         res.status(status).json({message: message})
     }
 

@@ -10,7 +10,8 @@ module.exports = {
     },
     database: {
         hostname: 'localhost',
-        dbname: 'rct-db',
+        dbname: 'rct-db-v2',
+        dbuser: 'rct-user',
         port: 5432,
 
     },

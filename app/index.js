@@ -16,17 +16,11 @@ const { HttpServer, Log } = require('@aliceo2/web-ui');
 
 const config = require('./lib/config/configProvider.js');
 const {buildPublicConfig} = require('./lib/config/publicConfigProvider.js');
-
-const EndP = config.public.endpoints;
-const methods = config.public.methods;
-
-// -------------------------------------------------------
-
 buildPublicConfig(config);
+const EP = config.public.endpoints;
 
-config.http.iframeCsp = (config?.grafana?.url) ? [ config.grafana.url ] : [];
 
-const log = new Log('Tutorial');
+const logger = new Log('Tutorial');
 let loggedUsers = {
     tokenToUserData: {},
 }
@@ -40,18 +34,18 @@ httpServer.addStaticPath('./public', '/login');
 httpServer.addStaticPath('./node_modules/less/dist', '/scripts');
 
 const DatabaseService = require('./lib/DatabaseService.js');
-const databaseService = new DatabaseService(loggedUsers, log);
-httpServer.post(EndP.login, (req, res) => databaseService.login(req, res));
-httpServer.post(EndP.logout, (req, res) => databaseService.logout(req, res));
-httpServer.get(EndP.rctData + ':page/', (req, res) => databaseService.execDataReq(req, res));
-httpServer.get(EndP.rctData + ':page/:index/', (req, res) => databaseService.execDataReq(req, res));
-httpServer.post(EndP.insertData, (req, res) => databaseService.execDataInsert(req, res));
-httpServer.get(EndP.date, (req, res) => databaseService.getDate(req, res));
+const databaseService = new DatabaseService(loggedUsers, logger);
+httpServer.post(EP.login, (req, res) => databaseService.login(req, res));
+httpServer.post(EP.logout, (req, res) => databaseService.logout(req, res));
+httpServer.get(EP.rctData + ':page/', (req, res) => databaseService.execDataReq(req, res));
+httpServer.get(EP.rctData + ':page/:index/', (req, res) => databaseService.execDataReq(req, res));
+httpServer.post(EP.insertData, (req, res) => databaseService.execDataInsert(req, res));
+httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
 
 
 const AuthControlManager = require('./lib/AuthControlManager.js');
-const authControlManager = new AuthControlManager(httpServer, loggedUsers, log);
-authControlManager.bindToTokenControl(EndP.authControl);
+const authControlManager = new AuthControlManager(httpServer, loggedUsers, logger);
+authControlManager.bindToTokenControl(EP.authControl);
 
 
 
@@ -59,4 +53,4 @@ const BookkeepingService = require('./lib/BookkeepingService.js');
 const bookkeepingService = new BookkeepingService();
 const runs = bookkeepingService.getRuns();
 console.log(runs);
-httpServer.post(EndP.bookkeeping, (req, res) => databaseService.insertBookkeepingRuns(req, res, runs));
+httpServer.post(EP.bookkeeping, (req, res) => databaseService.insertBookkeepingRuns(req, res, runs));

@@ -32,6 +32,7 @@ function buildPublicConfig(config) {
       + `export {publicConfig as RCT};\n`;
 
   fs.writeFileSync(publicConfigPath, codeStr);
+  console.log('public config installed')
 }
 
 /**

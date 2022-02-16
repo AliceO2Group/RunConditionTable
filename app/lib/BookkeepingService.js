@@ -13,19 +13,21 @@
  * or submit itself to any jurisdiction.
  */
 
- const { parse } = require('url');
+const { parse } = require('url');
  const { get } = require('http');
  const SocksProxyAgent = require('socks-proxy-agent');
  const config = require('./config/configProvider.js');
+const {Log} = require("@aliceo2/web-ui");
  
  class BookkeepingService {
     constructor() {
         this.endpoint = config.bookkeepingRuns.url;
         this.opts = parse(this.endpoint);
- 
+        this.logger = new Log();
+
         let proxy = config.dev.proxy.trim();
         if (proxy !== '') {
-            console.log('using proxy server %j', proxy);
+            this.logger.info('using proxy server %j', proxy);
             this.proxyAgent = new SocksProxyAgent(proxy);
             this.opts.agent = this.proxyAgent;
         }
@@ -34,9 +36,10 @@
  
     getRuns () {
         let parsedData = '';
-        console.log('attempting to GET %j', this.endpoint);
+        this.logger.info('attempting to GET %j', this.endpoint);
+        const logger = this.logger
         get(this.opts, function (res) {
-            console.log('"response" event!', res.headers);
+            logger.info('"response" event!', res.headers);
             res.setEncoding('utf8');
             let rawData = '';
             res.on('data', (chunk) => { rawData += chunk; });

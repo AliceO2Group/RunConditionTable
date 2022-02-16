@@ -73,7 +73,7 @@ export default class FetchedData {
         });
     }
     setInfoAboutTotalRecordsNumber(content) {
-        if (this.totalRecordsNumber === null || this.totalRecordsNumber === undefined) {
+        if (! this.totalRecordsNumber) {
             this.totalRecordsNumber = content.data.totalRecordsNumber;
         }
     }
