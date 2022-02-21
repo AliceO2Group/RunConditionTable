@@ -12,20 +12,16 @@
  * or submit itself to any jurisdiction.
  */
 
-
-
-
+import {getPathElems} from "./utils.js";
+import {defaultIndex} from "./defaults.js";
 
 const preparedData = (data) => {
-    var rows = data.payload.rows;
-    // console.log(json);
-    var fields = data.payload.fields.map(field => field.name);
-    // console.log(fields);
+    const rows = data.payload.rows;
+    const fields = data.payload.fields.map(field => field.name);
 
-    var csv = rows.map((row) => fields.map((field) => JSON.stringify(row[field], replacer)).join(','));
+    let csv = rows.map((row) => fields.map((field) => JSON.stringify(row[field], replacer)).join(','));
     csv.unshift(fields.join(',')); // add header column
     csv = csv.join('\r\n');
-    console.log(csv)
 
     return csv;
 }
@@ -35,16 +31,19 @@ const replacer = (key, value) => {
 }
 
 export default function downloadCSV(model) {
-    const page = model.router.params.page;
-    const index = model.router.params.index;
+    const url = model.router.getUrl();
+    const pathIdents = getPathElems(url.pathname)
+    const page = pathIdents[0]
+    const index = defaultIndex(pathIdents[1])
+    
     const fileName = `${page}${page === `periods`? '': `-${index}`}`;
     
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += preparedData(model.fetchedData[page][index]);
+    csvContent += preparedData(model.fetchedData[page][index]); 
     
-    var encodedUri = encodeURI(csvContent);
+    const encodedUri = encodeURI(csvContent);
     
-    var link = document.createElement("a");
+    let link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", fileName);
     document.body.appendChild(link); 
