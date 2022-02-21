@@ -41,9 +41,9 @@ export default function downloadCSV(model) {
     let csvContent = "data:text/csv;charset=utf-8,";
     csvContent += preparedData(model.fetchedData[page][index]); 
     
-    var encodedUri = encodeURI(csvContent);
+    const encodedUri = encodeURI(csvContent);
     
-    var link = document.createElement("a");
+    let link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", fileName);
     document.body.appendChild(link); 
