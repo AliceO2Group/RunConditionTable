@@ -15,6 +15,6 @@
 const BookkeepingService = require('./lib/BookkeepingService.js')
 const bookkeepingService = new BookkeepingService();
 
-bookkeepingService.getRuns()//.then(r => console.log(r))
+bookkeepingService.getRuns().then(r => console.log(r))
 
 

@@ -15,9 +15,11 @@ module.exports = {
         port: 5432,
 
     },
+    // TODO https://httptoolkit.tech/blog/node-https-vulnerability/
     bookkeepingRuns: {
         url: 'http://rct-bookkeeping.cern.ch:4000/api/runs',
-        urlOldBookkeeping: 'https://ali-bookkeeping.cern.ch/api/runs/',
+        urlAli: 'https://ali-bookkeeping.cern.ch/api/runs/',
+        rejectUnauthorized: false,
     },
     dev: {
         proxy: 'socks://localhost:12345'

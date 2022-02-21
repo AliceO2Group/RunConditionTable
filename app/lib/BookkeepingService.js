@@ -31,8 +31,9 @@ const wait = (seconds) =>
 
  class BookkeepingService {
      constructor() {
-         this.endpoint = config.bookkeepingRuns.urlOldBookkeeping;
+         this.endpoint = config.bookkeepingRuns.urlAli;
          this.opts = parse(this.endpoint);
+         this.opts.rejectUnauthorized = config.bookkeepingRuns.rejectUnauthorized;
          this.logger = new Log();
 
          let proxy = config.dev.proxy.trim();
