@@ -15,6 +15,12 @@
 const BookkeepingService = require('./lib/BookkeepingService.js')
 const bookkeepingService = new BookkeepingService();
 
-bookkeepingService.getRuns().then(r => console.log(r))
+// bookkeepingService.getRuns().then(r => console.log(r))
+
+const cas = require('ssl-root-cas');
+let caList = cas.create()
+caList = caList.concat(process.env.PROJECT_PATH + 'certs/first-chain.pem')
+caList = caList.concat(process.env.PROJECT_PATH + 'certs/second-chain.pem')
+
 
 

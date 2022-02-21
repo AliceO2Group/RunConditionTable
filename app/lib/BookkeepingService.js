@@ -15,11 +15,11 @@
 
 
 const { parse } = require('url');
- const http = require('http');
- const https = require('https');
- const SocksProxyAgent = require('socks-proxy-agent');
- const config = require('./config/configProvider.js');
- const {Log} = require("@aliceo2/web-ui");
+const http = require('http');
+const https = require('https');
+const SocksProxyAgent = require('socks-proxy-agent');
+const config = require('./config/configProvider.js');
+const {Log} = require("@aliceo2/web-ui");
 
 
 
