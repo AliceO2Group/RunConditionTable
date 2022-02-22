@@ -6,7 +6,8 @@
   "scripts": {
     "certs": "bash make-root-ca-and-certificates.sh 'localhost'",
     "start": "node serve.js 8043 &",
-    "test": "bash test.sh"
+    "test": "bash test.sh",
+    "clean": "rm -Rf certs"
   },
   "repository": {
     "type": "git",
