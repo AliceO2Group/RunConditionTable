@@ -33,9 +33,14 @@ class ReqParser {
 
         switch (query.page) {
             case pagesNames.periods:
-                return `SELECT name, year, (SELECT beam_type from beams_dictionary as bd where bd.id = v.beam) as beam, energy FROM periods as v ${dataSubsetQueryPart(query)};`;
+                return `SELECT name, year, (SELECT beam_type from beams_dictionary as bd where bd.id = v.beam) as beam, energy
+                        FROM periods as v 
+                        ${dataSubsetQueryPart(query)};`;
             case pagesNames.runsPerPeriod:
-                return `SELECT * FROM runs WHERE period_id = (SELECT id FROM periods WHERE periods.name = '${query.index}') ${dataSubsetQueryPart(query)};`;
+                return `SELECT *
+                        FROM runs
+                        WHERE period_id = (SELECT id FROM periods WHERE periods.name = '${query.index}')
+                         ${dataSubsetQueryPart(query)};`;
             case pagesNames.dataPasses:
                 return `SELECT * FROM data_passes as dp where exists (select * from runs as r inner join data_passes_runs as dpr on r.id = dpr.run_id INNER JOIN data_passes as dp on dp.id = dpr.production_id where r.period_id = (select id from periods as p where p.name = \'${query.index}\')) ${dataSubsetQueryPart(query)};`;
             case pagesNames.mc:
