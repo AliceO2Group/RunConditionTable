@@ -7,7 +7,7 @@ var request = require('request');
 
 var ca = fs.readFileSync(path.join(__dirname, 'certs', 'client', 'chain.pem'));
 var port = process.argv[2] || 8043;
-var hostname = process.argv[3] || 'localhost.daplie.com';
+var hostname = process.argv[3] || 'localhost';
 
 var options = {
       url: 'https://' + hostname + ':' + port

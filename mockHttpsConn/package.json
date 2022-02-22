@@ -4,6 +4,8 @@
   "description": "The end off all your self-sign certificate woes (in node.js at least)",
   "main": "serve.js",
   "scripts": {
+    "certs": "bash make-root-ca-and-certificates.sh 'localhost'",
+    "start": "node serve.js 8043 &",
     "test": "bash test.sh"
   },
   "repository": {
@@ -28,5 +30,6 @@
   },
   "homepage": "https://git.coolaj86.com/coolaj86/nodejs-self-signed-certificate-example",
   "dependencies": {
+    "request": "^2.88.2"
   }
 }

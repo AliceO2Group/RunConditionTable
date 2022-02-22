@@ -18,6 +18,8 @@ function app(req, res) {
 
 server = https.createServer(options, app).listen(port, function () {
   port = server.address().port;
+  console.log(`Port: ${port}`);
+  console.log(`Address: ${server.address().port}`);
   console.log('Listening on https://127.0.0.1:' + port);
   console.log('Listening on https://' + server.address().address + ':' + port);
   console.log('Listening on https://localhost.daplie.com:' + port);
