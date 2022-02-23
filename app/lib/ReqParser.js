@@ -35,17 +35,34 @@ class ReqParser {
         console.log(page);
 
         let filtering = false;
+        let matchParams = [];
+    //  let excludeParams = [];
 
         for (const [key, value] of Object.entries(query)) {
             for (const [filterKey, filterValue] of Object.entries(filteringParams[page])) {
                 if (key === filterValue) {
-                    console.log(`requested ${filterKey} = ${value}`);
+                    const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
+                    console.log(queryParam);
+                    matchParams.push({queryParam, value});
+
+                    console.log(`requested ${queryParam} = ${value}`);
                     filtering = true;
                 }
             }
         }
 
-        const filteringPart = (query) => filtering === true? `WHERE ${query.page}.year = '2021'` : '';
+        const filteringPart = (query) => {
+            if (matchParams.length > 0) {
+                console.log(matchParams);
+
+                let output = 'WHERE ';
+                matchParams.forEach(({queryParam, value}) => {
+                    output += `${query.page}.${queryParam}='${value}'`;
+                });
+                console.log(output);
+                return output;
+            } else return '';
+        }
 
         const dataSubsetQueryPart = (query) => query[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${query[DRP.rowsOnSite]} OFFSET ${query[DRP.rowsOnSite] * (query[DRP.site] - 1)}`;
