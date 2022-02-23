@@ -22,6 +22,7 @@
 const config = require('./config/configProvider.js');
 const pagesNames = config.public.pagesNames;
 const DRP = config.public.dataReqParams;
+const filteringParams = config.public.filteringParams;
 
 class ReqParser {
 
@@ -29,13 +30,32 @@ class ReqParser {
 
     parseDataReq(query) {
         console.log(query);
+
+        const page = query.page;
+        console.log(page);
+
+        let filtering = false;
+
+        for (const [key, value] of Object.entries(query)) {
+            for (const [filterKey, filterValue] of Object.entries(filteringParams[page])) {
+                if (key === filterValue) {
+                    console.log(`requested ${filterKey} = ${value}`);
+                    filtering = true;
+                }
+            }
+        }
+
+        const filteringPart = (query) => filtering === true? `WHERE ${query.page}.year = '2021'` : '';
+
         const dataSubsetQueryPart = (query) => query[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${query[DRP.rowsOnSite]} OFFSET ${query[DRP.rowsOnSite] * (query[DRP.site] - 1)}`;
 
         switch (query.page) {
             case pagesNames.periods:
-                return `SELECT name, year, (SELECT beam_type from beams_dictionary as bd where bd.id = v.beam) as beam, energy
-                        FROM periods as v 
+                const v = query.page;
+                return `SELECT name, year, (SELECT beam_type from beams_dictionary as bd where bd.id = ${v}.beam) as beam, energy
+                        FROM ${v}
+                        ${filteringPart(query)}
                         ${dataSubsetQueryPart(query)};`;
             case pagesNames.runsPerPeriod:
                 return `SELECT *
