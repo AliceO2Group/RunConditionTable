@@ -59,6 +59,19 @@ module.exports = {
             mc: "mc",
             runsPerPeriod: "runsPerPeriod",
             flags: "flags"
+        },
+
+        filteringParams: {
+            periods: {
+                nameMatch: "name-match",
+                yearMatch: "year-match",
+                beamMatch: "beam-match",
+                energyMatch: "energy-match",
+                nameExclude: "name-exclude",
+                yearExclude: "year-exclude",
+                beamExclude: "beam-exclude",
+                energyExclude: "energy-exclude"
+            }
         }
     }
 };

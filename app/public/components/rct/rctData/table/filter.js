@@ -17,18 +17,69 @@
 import { h } from '/js/src/index.js';
 import {getPathElems} from "../../../../utils/utils.js";
 import {defaultIndex} from "../../../../utils/defaults.js";
+import {RCT} from "../../../../config.js";
+const dataReqParams = RCT.dataReqParams;
 
 export default function filter(model) {
     const pathIdent = getPathElems(model.router.getUrl().pathname);
     const data = model.fetchedData[pathIdent[0]][defaultIndex(pathIdent[1])].payload;
     const fields = data.fields;
+    
+    const commands = ['match', 'exclude'];
+    let inputFieldIds = [];
+
+    commands.forEach((command) => {
+        fields.forEach(field => {
+            inputFieldIds.push(`${field.name}-${command}`);
+        });
+    });
 
     return h('table.table-filters', [
         h('tbody', [
             labelsRow(model, fields),
             matchOrLowerBoundsInputs(fields),
             excludeOrUpperBoundsInputs(fields),
-        ])
+        ]),
+        h('button.btn', {
+            onclick: () => {
+                const url = model.router.getUrl();
+                console.log(`current URL: ${url}`);
+
+                let urlSearchParams = [];
+
+                for (const [key, param] of Object.entries(inputFieldIds)) {
+                    if (document.getElementById(param)?.value != '')
+                        urlSearchParams.push(param);
+                }
+
+                if (urlSearchParams.length > 0) {
+                    const search = `?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&`+ (Object.entries(urlSearchParams).map(([k, v]) => {
+                        const val = document.getElementById(v)?.value;
+                        return (val != null && val != '')? `${v}=${val}` : '';
+                    })).join('&');
+                    
+                    console.log(search);
+    
+                    const newUrl = new URL(url.origin + url.pathname + search);
+                    console.log(newUrl);
+                    model.router.go(newUrl);
+                } else {
+                    ///const newUrl = new URL(url.origin + url.pathname);
+                    // console.log(newUrl);
+                    model.router.go('/');
+                }
+
+                // model.router.go(newUrl);
+                // model.notify();
+            }
+        }, 'Submit'),
+        h('button.btn', {
+            onclick: () => {
+                inputFieldIds.forEach(inputFieldId => {
+                        document.getElementById(inputFieldId).value=''
+                    });
+            }
+        }, 'Clear filters')
     ]);
 }
 
@@ -63,8 +114,13 @@ const createClickableLabel = (model, field) => h('td', h('button.btn.filterLabel
     className: field.marked ? 'active' : ''
 }, field.name));
 
-const createInputField = (field, command) => h('td', h('input.form-control', {
-    style: 'width:120px',
-    type: 'text',
-    placeholder: '',
-}));
+const createInputField = (field, command) => {
+    const fieldId = `${field.name}-${command}`;
+
+    return h('td', h('input.form-control', {
+        style: 'width:120px',
+        type: 'text',
+        placeholder: '',
+        id: fieldId,
+    }));
+};
