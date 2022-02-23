@@ -115,9 +115,9 @@ const createInputField = (field, command) => {
     const fieldId = `${field.name}-${command}`;
 
     return h('td', h('input.form-control', {
-    style: 'width:120px',
-    type: 'text',
-    placeholder: '',
-    id: fieldId,
-}))};
-
+        style: 'width:120px',
+        type: 'text',
+        placeholder: '',
+        id: fieldId,
+    }));
+};

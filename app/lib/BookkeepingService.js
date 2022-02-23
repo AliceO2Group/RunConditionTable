@@ -27,7 +27,7 @@ const {Log} = require("@aliceo2/web-ui");
 
         let proxy = config.dev.proxy.trim();
         if (proxy !== '') {
-            this.logger.info('using proxy server %j', proxy);
+            this.logger.info(`using proxy server ${proxy}`);
             this.proxyAgent = new SocksProxyAgent(proxy);
             this.opts.agent = this.proxyAgent;
         }
@@ -36,10 +36,11 @@ const {Log} = require("@aliceo2/web-ui");
  
     getRuns () {
         let parsedData = '';
-        this.logger.info('attempting to GET %j', this.endpoint);
+        this.logger.info(`attempting to GET ${this.endpoint}`);
         const logger = this.logger
         get(this.opts, function (res) {
-            logger.info('"response" event!', res.headers);
+            logger.info('"response" event!');
+            // console.log(res.headers);
             res.setEncoding('utf8');
             let rawData = '';
             res.on('data', (chunk) => { rawData += chunk; });
