@@ -36,38 +36,38 @@ export default function filter(model) {
                 const url = model.router.getUrl();
                 console.log(`current URL: ${url}`);
 
-                let urlParams = [];
+                console.log(inputFieldIds);
+
+                let urlSearchParams = [];
 
                 for (const [key, param] of Object.entries(inputFieldIds)) {
-                    console.log(`${key}: ${param}`);
                     if (document.getElementById(param)?.value != '')
-                        urlParams.push(param);
+                        urlSearchParams.push(param);
                 }
 
-                console.log(urlParams);
+                if (urlSearchParams.length > 0) {
+                    const search = '?' + (Object.entries(urlSearchParams).map(([k, v]) => {
+                        const val = document.getElementById(v)?.value;
+                        return (val != null && val != '')? `${v}=${val}` : '';
+                    })).join('&');
+                    
+                    console.log(search);
+    
+                    const newUrl = new URL(url.origin + url.pathname + search);
+                    console.log(newUrl);
+                } else {
+                    // const newUrl = new URL(url.origin + url.pathname);
+                    // console.log(newUrl);
+                    model.router.go('/');
+                }
 
-
-                const search = '?' + (Object.entries(urlParams).map(([k, v]) => {
-                    const val = document.getElementById(v).value;
-                    console.log(val);
-                    if(val != null && val != '') return `${v}=${val}`;
-                    return '';
-                })).join('&');
-                
-                console.log(search);
-
-                const currUrl = model.router.getUrl();
-
-                const newUrl = new URL(currUrl.origin + currUrl.pathname + search);
-                console.log(newUrl);
-                model.router.go(newUrl);
+                // model.router.go(newUrl);
                 // model.notify();
             }
         }, 'Submit'),
         h('button.btn', {
             onclick: () => {
                 inputFieldIds.forEach(inputFieldId => {
-                        console.log(inputFieldId);
                         document.getElementById(inputFieldId).value=''
                     });
             }
@@ -116,11 +116,10 @@ const createInputField = (field, command) => {
     placeholder: '',
     id: fieldId,
     // onchange: log,
-    onblur: log,
+    // onblur: log,
 }))};
 
 function log(e) {
     console.log(`${e.target.value}`);
-
     console.log(inputFieldIds);
 }
