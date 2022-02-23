@@ -24,7 +24,6 @@ export default function filter(model) {
     const pathIdent = getPathElems(model.router.getUrl().pathname);
     const data = model.fetchedData[pathIdent[0]][defaultIndex(pathIdent[1])].payload;
     const fields = data.fields;
-    // let inputFieldIds;
 
     return h('table.table-filters', [
         h('tbody', [
@@ -34,7 +33,35 @@ export default function filter(model) {
         ]),
         h('button.btn', {
             onclick: () => {
-                // model.router.go(/* */);
+                const url = model.router.getUrl();
+                console.log(`current URL: ${url}`);
+
+                let urlParams = [];
+
+                for (const [key, param] of Object.entries(inputFieldIds)) {
+                    console.log(`${key}: ${param}`);
+                    if (document.getElementById(param)?.value != '')
+                        urlParams.push(param);
+                }
+
+                console.log(urlParams);
+
+
+                const search = '?' + (Object.entries(urlParams).map(([k, v]) => {
+                    const val = document.getElementById(v).value;
+                    console.log(val);
+                    if(val != null && val != '') return `${v}=${val}`;
+                    return '';
+                })).join('&');
+                
+                console.log(search);
+
+                const currUrl = model.router.getUrl();
+
+                const newUrl = new URL(currUrl.origin + currUrl.pathname + search);
+                console.log(newUrl);
+                model.router.go(newUrl);
+                // model.notify();
             }
         }, 'Submit'),
         h('button.btn', {
@@ -96,18 +123,4 @@ function log(e) {
     console.log(`${e.target.value}`);
 
     console.log(inputFieldIds);
-
-
-    /*
-    const input = document.querySelector(inputFieldId);
-    const log = document.getElementById('values');
-    */
-    
-    // input.addEventListener('input', updateValue);
-
-    /*
-    function updateValue(e) {
-        log.textContent = e.target.value;
-    }
-    */
 }
