@@ -17,6 +17,8 @@
 import { h } from '/js/src/index.js';
 import {getPathElems} from "../../../../utils/utils.js";
 import {defaultIndex} from "../../../../utils/defaults.js";
+import {RCT} from "../../../../config.js";
+const dataReqParams = RCT.dataReqParams;
 
 export default function filter(model) {
     const pathIdent = getPathElems(model.router.getUrl().pathname);
@@ -51,7 +53,7 @@ export default function filter(model) {
                 }
 
                 if (urlSearchParams.length > 0) {
-                    const search = '?' + (Object.entries(urlSearchParams).map(([k, v]) => {
+                    const search = `?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&`+ (Object.entries(urlSearchParams).map(([k, v]) => {
                         const val = document.getElementById(v)?.value;
                         return (val != null && val != '')? `${v}=${val}` : '';
                     })).join('&');
@@ -60,8 +62,9 @@ export default function filter(model) {
     
                     const newUrl = new URL(url.origin + url.pathname + search);
                     console.log(newUrl);
+                    model.router.go(newUrl);
                 } else {
-                    // const newUrl = new URL(url.origin + url.pathname);
+                    ///const newUrl = new URL(url.origin + url.pathname);
                     // console.log(newUrl);
                     model.router.go('/');
                 }

@@ -28,6 +28,7 @@ class ReqParser {
     constructor() {}
 
     parseDataReq(query) {
+        console.log(query);
         const dataSubsetQueryPart = (query) => query[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${query[DRP.rowsOnSite]} OFFSET ${query[DRP.rowsOnSite] * (query[DRP.site] - 1)}`;
 
