@@ -18,12 +18,19 @@ import { h } from '/js/src/index.js';
 import {getPathElems} from "../../../../utils/utils.js";
 import {defaultIndex} from "../../../../utils/defaults.js";
 
-let inputFieldIds = [];
-
 export default function filter(model) {
     const pathIdent = getPathElems(model.router.getUrl().pathname);
     const data = model.fetchedData[pathIdent[0]][defaultIndex(pathIdent[1])].payload;
     const fields = data.fields;
+    
+    const commands = ['match', 'exclude'];
+    let inputFieldIds = [];
+
+    commands.forEach((command) => {
+        fields.forEach(field => {
+            inputFieldIds.push(`${field.name}-${command}`);
+        });
+    });
 
     return h('table.table-filters', [
         h('tbody', [
@@ -35,8 +42,6 @@ export default function filter(model) {
             onclick: () => {
                 const url = model.router.getUrl();
                 console.log(`current URL: ${url}`);
-
-                console.log(inputFieldIds);
 
                 let urlSearchParams = [];
 
@@ -108,18 +113,11 @@ const createClickableLabel = (model, field) => h('td', h('button.btn.filterLabel
 
 const createInputField = (field, command) => {
     const fieldId = `${field.name}-${command}`;
-    inputFieldIds.push(fieldId);
 
     return h('td', h('input.form-control', {
     style: 'width:120px',
     type: 'text',
     placeholder: '',
     id: fieldId,
-    // onchange: log,
-    // onblur: log,
 }))};
 
-function log(e) {
-    console.log(`${e.target.value}`);
-    console.log(inputFieldIds);
-}
