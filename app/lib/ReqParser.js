@@ -80,7 +80,20 @@ class ReqParser {
                         WHERE period_id = (SELECT id FROM periods WHERE periods.name = '${query.index}')
                          ${dataSubsetQueryPart(query)};`;
             case pagesNames.dataPasses:
-                return `SELECT * FROM data_passes as dp where exists (select * from runs as r inner join data_passes_runs as dpr on r.id = dpr.run_id INNER JOIN data_passes as dp on dp.id = dpr.production_id where r.period_id = (select id from periods as p where p.name = \'${query.index}\')) ${dataSubsetQueryPart(query)};`;
+                return `SELECT *
+                        FROM data_passes as dp
+                        WHERE exists (
+                                    SELECT *
+                                    from runs as r
+                                    INNER JOIN
+                                    data_passes_runs as dpr
+                                        ON r.id = dpr.run_id
+                                    INNER JOIN data_passes as dp
+                                        ON dp.id = dpr.production_id
+                                    WHERE r.period_id = (
+                                                        SELECT id FROM periods AS p where p.name = \'${query.index}\')
+                                                        )
+                                    ${dataSubsetQueryPart(query)};`;
             case pagesNames.mc:
                 return `SELECT * FROM simulation_passes as sp where exists (select * from runs as r inner join simulation_passes_runs as spr on r.id = spr.run_id INNER JOIN simulation_passes as sp on sp.id = spr.simulation_pass_id where r.period_id = (select id from periods as p where p.name = \'${query.index}\')) ${dataSubsetQueryPart(query)};`;
 
