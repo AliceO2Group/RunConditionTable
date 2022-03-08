@@ -69,9 +69,11 @@ class ReqParser {
 
         switch (query.page) {
             case pagesNames.periods:
-                const v = query.page;
-                return `SELECT name, year, (SELECT beam_type from beams_dictionary as bd where bd.id = ${v}.beam) as beam, energy
-                        FROM ${v}
+                return `SELECT name, year, (
+                                        SELECT beam_type
+                                        from beams_dictionary
+                                        as bd where bd.id = p.beam_type_id) as beam
+                        FROM periods as p
                         ${filteringPart(query)}
                         ${dataSubsetQueryPart(query)};`;
             case pagesNames.runsPerPeriod:
