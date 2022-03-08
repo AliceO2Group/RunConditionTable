@@ -39,6 +39,7 @@ class ReqParser {
     //  let excludeParams = [];
 
         for (const [key, value] of Object.entries(query)) {
+            if (filteringParams[page])
             for (const [filterKey, filterValue] of Object.entries(filteringParams[page])) {
                 if (key === filterValue) {
                     const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
