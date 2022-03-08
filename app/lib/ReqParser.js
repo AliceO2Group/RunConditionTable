@@ -98,7 +98,22 @@ class ReqParser {
                                                         )
                                     ${dataSubsetQueryPart(query)};`;
             case pagesNames.mc:
-                return `SELECT * FROM simulation_passes as sp where exists (select * from runs as r inner join simulation_passes_runs as spr on r.id = spr.run_id INNER JOIN simulation_passes as sp on sp.id = spr.simulation_pass_id where r.period_id = (select id from periods as p where p.name = \'${query.index}\')) ${dataSubsetQueryPart(query)};`;
+                return `SELECT * 
+                        FROM simulation_passes as sp 
+                        where exists (
+                                    select * 
+                                    from runs as r 
+                                    inner join simulation_passes_runs as spr 
+                                        on r.id = spr.run_id 
+                                    INNER JOIN simulation_passes as sp 
+                                        on sp.id = spr.simulation_pass_id 
+                                    where r.period_id = (
+                                                        select id 
+                                                        from periods as p 
+                                                        where p.name = \'${query.index}\'
+                                                        )
+                                    ) 
+                        ${dataSubsetQueryPart(query)};`;
 
             // case 'flags':
             //     return `SELECT * FROM ${query.view} WHERE run_id = ${query.run_id} ${dataSubsetQueryPart(query)};`;
