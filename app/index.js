@@ -48,9 +48,10 @@ const authControlManager = new AuthControlManager(httpServer, loggedUsers, logge
 authControlManager.bindToTokenControl(EP.authControl);
 
 
-
+/*
 const BookkeepingService = require('./lib/BookkeepingService.js');
 const bookkeepingService = new BookkeepingService();
 const runs = bookkeepingService.getRuns();
 console.log(runs);
 httpServer.post(EP.bookkeeping, (req, res) => databaseService.insertBookkeepingRuns(req, res, runs));
+*/
