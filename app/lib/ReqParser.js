@@ -24,6 +24,14 @@ const pagesNames = config.public.pagesNames;
 const DRP = config.public.dataReqParams;
 const filteringParams = config.public.filteringParams;
 
+const p = 'periods'; // query.page
+const r = 'runs';
+const dp = 'data_passes';
+const dpr = 'data_passes_runs';
+const sp = 'simulation_passes';
+const spr = 'simulation_passes_runs';
+const qcf = 'quality_control_flags';
+
 class ReqParser {
 
     constructor() {}
@@ -39,15 +47,16 @@ class ReqParser {
     //  let excludeParams = [];
 
         for (const [key, value] of Object.entries(query)) {
-            if (filteringParams[page])
-            for (const [filterKey, filterValue] of Object.entries(filteringParams[page])) {
-                if (key === filterValue) {
-                    const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
-                    console.log(queryParam);
-                    matchParams.push({queryParam, value});
+            if (filteringParams[page]) {
+                for (const [filterKey, filterValue] of Object.entries(filteringParams[page])) {
+                    if (key === filterValue) {
+                        const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
+                        console.log(queryParam);
+                        matchParams.push({queryParam, value});
 
-                    console.log(`requested ${queryParam} = ${value}`);
-                    filtering = true;
+                        console.log(`requested ${queryParam} = ${value}`);
+                        filtering = true;
+                    }
                 }
             }
         }
@@ -71,10 +80,11 @@ class ReqParser {
         switch (query.page) {
             case pagesNames.periods:
                 return `SELECT name, year, (
-                                        SELECT beam_type
-                                        from beams_dictionary
-                                        as bd where bd.id = p.beam_type_id) as beam
-                        FROM periods as p
+                                            SELECT beam_type
+                                            from beams_dictionary as bd
+                                            where bd.id = ${p}.beam_type_id
+                                        ) as beam
+                        FROM ${p}
                         ${filteringPart(query)}
                         ${dataSubsetQueryPart(query)};`;
             case pagesNames.runsPerPeriod:
