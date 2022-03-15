@@ -67,7 +67,7 @@ class ReqParser {
 
                 let output = 'WHERE ';
                 matchParams.forEach(({queryParam, value}) => {
-                    output += `${query.page}.${queryParam}='${value}'`;
+                    output += `${queryParam}='${value}'`;
                 });
                 console.log(output);
                 return output;
@@ -81,46 +81,61 @@ class ReqParser {
             case pagesNames.periods:
                 return `SELECT name, year, (
                                             SELECT beam_type
-                                            from beams_dictionary as bd
-                                            where bd.id = ${p}.beam_type_id
-                                        ) as beam
-                        FROM ${p}
+                                            FROM beams_dictionary
+                                            AS bd where bd.id = p.beam_type_id
+                                            ) AS beam,
+                                        (
+                                            SELECT string_agg(distinct energy_per_beam, ', ')
+                                            FROM runs as r
+                                            WHERE r.period_id = p.id
+                                            GROUP BY r.period_id
+                                        ) AS energy
+                        FROM periods AS p
                         ${filteringPart(query)}
                         ${dataSubsetQueryPart(query)};`;
+
             case pagesNames.runsPerPeriod:
                 return `SELECT *
                         FROM runs
-                        WHERE period_id = (SELECT id FROM periods WHERE periods.name = '${query.index}')
+                        WHERE period_id = (
+                                            SELECT id 
+                                            FROM periods 
+                                            WHERE periods.name = '${query.index}'
+                                          )
                          ${dataSubsetQueryPart(query)};`;
+
             case pagesNames.dataPasses:
                 return `SELECT *
-                        FROM data_passes as dp
+                        FROM data_passes AS dp
                         WHERE exists (
                                     SELECT *
-                                    from runs as r
+                                    FROM runs AS r
                                     INNER JOIN
-                                    data_passes_runs as dpr
+                                    data_passes_runs AS dpr
                                         ON r.id = dpr.run_id
-                                    INNER JOIN data_passes as dp
+                                    INNER JOIN data_passes AS dp
                                         ON dp.id = dpr.production_id
                                     WHERE r.period_id = (
-                                                        SELECT id FROM periods AS p where p.name = \'${query.index}\')
+                                                        SELECT id 
+                                                        FROM periods AS p 
+                                                        WHERE p.name = \'${query.index}\')
                                                         )
                                     ${dataSubsetQueryPart(query)};`;
+
             case pagesNames.mc:
                 return `SELECT * 
-                        FROM simulation_passes as sp 
-                        where exists (
-                                    select * 
-                                    from runs as r 
-                                    inner join simulation_passes_runs as spr 
-                                        on r.id = spr.run_id 
-                                    INNER JOIN simulation_passes as sp 
-                                        on sp.id = spr.simulation_pass_id 
-                                    where r.period_id = (
-                                                        select id 
-                                                        from periods as p 
-                                                        where p.name = \'${query.index}\'
+                        FROM simulation_passes AS sp 
+                        WHERE exists (
+                                    SELECT * 
+                                    FROM runs AS r 
+                                    INNER JOIN simulation_passes_runs AS spr 
+                                        ON r.id = spr.run_id 
+                                    INNER JOIN simulation_passes AS sp 
+                                        ON sp.id = spr.simulation_pass_id 
+                                    WHERE r.period_id = (
+                                                        SELECT id 
+                                                        FROM periods as p 
+                                                        WHERE p.name = \'${query.index}\'
                                                         )
                                     ) 
                         ${dataSubsetQueryPart(query)};`;
