@@ -70,12 +70,12 @@ module.exports = {
                 exclude: {   
                 },
                 from: {
-                    yearFrom: "year-from",
-                    energyFrom: "energy-from",
+                    year: "year-from",
+                    energy: "energy-from",
                 },
                 to: {
-                    yearTo: "year-to",
-                    yearFrom: "year-from",
+                    year: "year-to",
+                    energy: "energy-to",
                 },
                 /*
                 nameMatch: "name-match",
