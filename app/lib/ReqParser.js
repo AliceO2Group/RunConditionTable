@@ -97,8 +97,8 @@ class ReqParser {
         let filtering = false;
         let matchParams = [];
         let excludeParams = [];
-        let filterFrom = [];
-        let filterTo = [];
+        let fromParams = [];
+        let toParams = [];
 
         for (const [key, value] of Object.entries(query)) {
             if (key.includes('match') && filteringParams[page]?.match) {
@@ -129,15 +129,29 @@ class ReqParser {
         }
 
         const filteringPart = (query) => {
-            let paramsLeft = matchParams.length;
-            if (paramsLeft > 0) {
-                console.log(matchParams);
+            let output = 'WHERE ';
 
-                let output = 'WHERE ';
-                matchParams.forEach(({queryParam, value}) => {
-                    output += `${queryParam} LIKE '${value}'`;
-                    paramsLeft-- > 1? output += ' AND ' : '';
-                });
+            if (matchParams.length > 0 || excludeParams.length > 0 || fromParams.length > 0 || toParams.length > 0) {
+                // match
+                let paramsLeft = matchParams.length;
+                if (paramsLeft > 0) {
+                    console.log(matchParams);
+
+                    matchParams.forEach(({queryParam, value}) => {
+                        output += `${queryParam} LIKE '${value}'`;
+                        paramsLeft-- > 1? output += ' AND ' : '';
+                    });
+                }
+
+                // exclude
+                // ...
+
+                // from
+                // ...
+
+                // to
+                // ...
+
                 console.log(output);
                 return output;
             } else {
