@@ -96,9 +96,9 @@ class ReqParser {
 
         let filtering = false;
         let matchParams = [];
-    //  let excludeParams = [];
-        let filterFrom = 0;
-        let filterTo = 0;
+        let excludeParams = [];
+        let filterFrom = [];
+        let filterTo = [];
 
         for (const [key, value] of Object.entries(query)) {
             if (key.includes('match') && filteringParams[page]?.match) {
@@ -115,26 +115,28 @@ class ReqParser {
                 }
             }
 
-            if (key.includes('exclude')) {
+            if (key.includes('exclude') && filteringParams[page]?.exclude) {
                 console.log('exclude requested!')
             }
             
-            if (key.includes('from')) {
+            if (key.includes('from') && filteringParams[page]?.from) {
                 console.log('from requested!')
             }
 
-            if (key.includes('to') && key !== 'token') {
+            if (key.includes('to') && key !== 'token' && filteringParams[page]?.to) {
                 console.log('to requested!')
             }
         }
 
         const filteringPart = (query) => {
-            if (matchParams.length > 0) {
+            let paramsLeft = matchParams.length;
+            if (paramsLeft > 0) {
                 console.log(matchParams);
 
                 let output = 'WHERE ';
                 matchParams.forEach(({queryParam, value}) => {
                     output += `${queryParam} LIKE '${value}'`;
+                    paramsLeft-- > 1? output += ' AND ' : '';
                 });
                 console.log(output);
                 return output;
