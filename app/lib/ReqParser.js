@@ -93,24 +93,38 @@ class ReqParser {
         console.log(query);
 
         const page = query.page;
-        console.log(page);
 
         let filtering = false;
         let matchParams = [];
     //  let excludeParams = [];
+        let filterFrom = 0;
+        let filterTo = 0;
 
         for (const [key, value] of Object.entries(query)) {
-            if (filteringParams[page]) {
-                for (const [filterKey, filterValue] of Object.entries(filteringParams[page])) {
+            if (key.includes('match') && filteringParams[page]?.match) {
+                for (const [filterKey, filterValue] of Object.entries(filteringParams[page].match)) {
                     if (key === filterValue) {
-                        const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
-                        console.log(queryParam);
-                        matchParams.push({queryParam, value});
-
-                        console.log(`requested ${queryParam} = ${value}`);
-                        filtering = true;
+                            const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
+                            console.log(queryParam);
+                            matchParams.push({queryParam, value});
+    
+                            console.log(`requested ${queryParam} = ${value}`);
+                            filtering = true;
                     }
+                    
                 }
+            }
+
+            if (key.includes('exclude')) {
+                console.log('exclude requested!')
+            }
+            
+            if (key.includes('from')) {
+                console.log('from requested!')
+            }
+
+            if (key.includes('to') && key !== 'token') {
+                console.log('to requested!')
             }
         }
 
@@ -120,11 +134,14 @@ class ReqParser {
 
                 let output = 'WHERE ';
                 matchParams.forEach(({queryParam, value}) => {
-                    output += `${queryParam}='${value}'`;
+                    output += `${queryParam} LIKE '${value}'`;
                 });
                 console.log(output);
                 return output;
-            } else return '';
+            } else {
+                console.log('no filtering params found')
+            }
+            return '';
         }
 
         const dataSubsetQueryPart = (query) => query[DRP.countRecords] === 'true' ? '' :

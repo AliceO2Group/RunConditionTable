@@ -63,6 +63,21 @@ module.exports = {
 
         filteringParams: {
             periods: {
+                match: {
+                    name: "name-match",
+                    beam: "beam-match",
+                },
+                exclude: {   
+                },
+                from: {
+                    yearFrom: "year-from",
+                    energyFrom: "energy-from",
+                },
+                to: {
+                    yearTo: "year-to",
+                    yearFrom: "year-from",
+                },
+                /*
                 nameMatch: "name-match",
                 yearMatch: "year-match",
                 beamMatch: "beam-match",
@@ -71,6 +86,7 @@ module.exports = {
                 yearExclude: "year-exclude",
                 beamExclude: "beam-exclude",
                 energyExclude: "energy-exclude"
+                */
             }
         }
     }
