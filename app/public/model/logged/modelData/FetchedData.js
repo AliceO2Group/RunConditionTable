@@ -19,6 +19,7 @@ const defaultRowsOnSite = 100;
 const defaultSite = 1;
 
 import {RCT} from "../../../config.js";
+const DRF = RCT.dataRespondFields;
 /**
  * Object of this class is used to hold data fetched from backend
  * set of data held in this structure are fully defined by the url given as on of constructor arguments
@@ -74,7 +75,7 @@ export default class FetchedData {
     }
     setInfoAboutTotalRecordsNumber(content) {
         if (! this.totalRecordsNumber) {
-            this.totalRecordsNumber = content.data.totalRecordsNumber;
+            this.totalRecordsNumber = content.data[DRF.totalRowsCount];
         }
     }
 }

@@ -156,8 +156,37 @@ class ReqParser {
                         FROM mc_view
                         ${dataSubsetQueryPart(query)};`;
 
-            // case 'flags':
-            //     return `SELECT * FROM ${query.view} WHERE run_id = ${query.run_id} ${dataSubsetQueryPart(query)};`;
+            case 'flags':
+                return `WITH flags_view AS (
+                            SELECT 
+                                qcf.id, 
+                                qcf.start, 
+                                qcf.end, 
+                                ftd.flag, 
+                                qcf.comment, 
+                                dpr.production_id,
+                                string_agg(distinct ds.name, ',') 
+
+                            FROM quality_control_flags AS qcf
+                            INNER JOIN data_passes_runs as dpr
+                                ON dpr.id = qcf.pass_run_id
+                            INNER JOIN runs_detectors as rd
+                                ON qcf.run_detector_id = rd.id
+                            INNER JOIN detectors_subsystems AS ds
+                                ON ds.id = rd.detector_id
+                            INNER JOIN flags_types_dictionary as ftd
+                                ON ftd.id = qcf.flag_type_id
+                            
+                            
+                            WHERE rd.run_id = ${query.index}
+                            GROUP BY rd.id, qcf.id, ftd.flag, dpr.production_id
+                            
+                            )
+
+                        SELECT * 
+                        FROM flags_view
+                        
+                        ${dataSubsetQueryPart(query)};`;
             default:
                 return 'SELECT NOW()';
         }
