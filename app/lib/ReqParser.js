@@ -24,7 +24,8 @@ const pagesNames = config.public.pagesNames;
 const DRP = config.public.dataReqParams;
 const filteringParams = config.public.filteringParams;
 
-const period_view = `WITH period_view AS (
+const period_view = `
+    WITH period_view AS (
     SELECT name, year, (
                         SELECT beam_type
                         FROM beams_dictionary
@@ -39,7 +40,8 @@ const period_view = `WITH period_view AS (
     FROM periods AS p
     )`;
 
-const runs_per_period_view = (query) => `WITH runs_per_period_view AS (
+const runs_per_period_view = (query) => `
+    WITH runs_per_period_view AS (
     SELECT *
     FROM runs
     WHERE period_id = (
@@ -47,9 +49,10 @@ const runs_per_period_view = (query) => `WITH runs_per_period_view AS (
                         FROM periods 
                         WHERE periods.name = '${query.index}'
                         )
-)`;
+    )`;
 
-const data_passes_view = (query) => `WITH data_passes_view AS (
+const data_passes_view = (query) => `
+    WITH data_passes_view AS (
     SELECT *
     FROM data_passes AS dp
     WHERE exists (
@@ -65,9 +68,10 @@ const data_passes_view = (query) => `WITH data_passes_view AS (
                                         FROM periods AS p 
                                         WHERE p.name = \'${query.index}\')
                                         )
-)`;
+    )`;
 
-const mc_view = (query) => `WITH mc_view AS (
+const mc_view = (query) => `
+    WITH mc_view AS (
     SELECT * 
     FROM simulation_passes AS sp 
     WHERE exists (
@@ -83,7 +87,32 @@ const mc_view = (query) => `WITH mc_view AS (
                                         WHERE p.name = \'${query.index}\'
                                         )
                     ) 
-)`;
+    )`;
+
+const flags_view = (query) => `
+    WITH flags_view AS (
+        SELECT 
+            qcf.id, 
+            qcf.start, 
+            qcf.end, 
+            ftd.flag, 
+            qcf.comment, 
+            dpr.production_id,
+            ds.name
+
+        FROM quality_control_flags AS qcf
+        INNER JOIN data_passes_runs as dpr
+            ON dpr.id = qcf.pass_run_id
+        INNER JOIN runs_detectors as rd
+            ON qcf.run_detector_id = rd.id
+        INNER JOIN detectors_subsystems AS ds
+            ON ds.id = rd.detector_id
+        INNER JOIN flags_types_dictionary as ftd
+            ON ftd.id = qcf.flag_type_id
+        
+        WHERE rd.run_id = ${query.index}
+        
+    )`;
 
 class ReqParser {
 
@@ -156,8 +185,12 @@ class ReqParser {
                         FROM mc_view
                         ${dataSubsetQueryPart(query)};`;
 
-            // case 'flags':
-            //     return `SELECT * FROM ${query.view} WHERE run_id = ${query.run_id} ${dataSubsetQueryPart(query)};`;
+            case pagesNames.flags:
+                return `${flags_view(query)}
+                        SELECT * 
+                        FROM flags_view
+                        ${dataSubsetQueryPart(query)};`;
+
             default:
                 return 'SELECT NOW()';
         }
