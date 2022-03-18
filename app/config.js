@@ -67,7 +67,9 @@ module.exports = {
                     name: "name-match",
                     beam: "beam-match",
                 },
-                exclude: {   
+                exclude: {
+                    name: "name-exclude",
+                    beam: "beam-exclude",
                 },
                 from: {
                     year: "year-from",

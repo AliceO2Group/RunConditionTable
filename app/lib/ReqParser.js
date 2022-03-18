@@ -94,7 +94,6 @@ class ReqParser {
 
         const page = query.page;
 
-        let filtering = false;
         let matchParams = [];
         let excludeParams = [];
         let fromParams = [];
@@ -105,59 +104,62 @@ class ReqParser {
                 for (const [filterKey, filterValue] of Object.entries(filteringParams[page].match)) {
                     if (key === filterValue) {
                             const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
-                            console.log(queryParam);
                             matchParams.push({queryParam, value});
-    
-                            console.log(`requested ${queryParam} = ${value}`);
-                            filtering = true;
                     }
                     
                 }
             }
 
             if (key.includes('exclude') && filteringParams[page]?.exclude) {
-                console.log('exclude requested!')
+                for (const [filterKey, filterValue] of Object.entries(filteringParams[page].exclude)) {
+                    if (key === filterValue) {
+                        const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
+                        excludeParams.push({queryParam, value});
+                    }
+                }
             }
             
             if (key.includes('from') && filteringParams[page]?.from) {
-                console.log('from requested!')
+                for (const [filterKey, filterValue] of Object.entries(filteringParams[page].from)) {
+                    if (key === filterValue) {
+                        const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
+                        fromParams.push({queryParam, value});
+                    }
+                }
             }
 
             if (key.includes('to') && key !== 'token' && filteringParams[page]?.to) {
-                console.log('to requested!')
+                for (const [filterKey, filterValue] of Object.entries(filteringParams[page].to)) {
+                    if (key === filterValue) {
+                        const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
+                        toParams.push({queryParam, value});
+                    }
+                }
             }
         }
 
-        const filteringPart = (query) => {
-            let output = 'WHERE ';
+        const filteringPart = () => {
+            const matchPhrase = matchParams.map((filter) =>
+                `${filter.queryParam} LIKE '${filter.value}'`
+            ).join(' AND ');
 
-            if (matchParams.length > 0 || excludeParams.length > 0 || fromParams.length > 0 || toParams.length > 0) {
-                // match
-                let paramsLeft = matchParams.length;
-                if (paramsLeft > 0) {
-                    console.log(matchParams);
+            const excludePhrase = excludeParams.map(({queryParam, value}) =>
+                `${queryParam} NOT LIKE '${value}'`
+            ).join(' AND ');
 
-                    matchParams.forEach(({queryParam, value}) => {
-                        output += `${queryParam} LIKE '${value}'`;
-                        paramsLeft-- > 1? output += ' AND ' : '';
-                    });
-                }
+            const fromPhrase = fromParams.map(({queryParam, value}) =>
+                `${queryParam} >= '${value}'`
+            ).join(' AND ');
 
-                // exclude
-                // ...
+            const toPhrase = toParams.map(({queryParam, value}) =>
+                `${queryParam} <= '${value}'`
+            ).join(' AND ');
 
-                // from
-                // ...
-
-                // to
-                // ...
-
-                console.log(output);
-                return output;
-            } else {
-                console.log('no filtering params found')
-            }
-            return '';
+            const filtersPhrase = [matchPhrase, excludePhrase, fromPhrase, toPhrase].filter(
+                    value => {return value?.length > 0}
+                ).join(' AND ');
+            
+            return filtersPhrase?.length > 0 ? `WHERE ${filtersPhrase}` : '';
         }
 
         const dataSubsetQueryPart = (query) => query[DRP.countRecords] === 'true' ? '' :
@@ -168,7 +170,7 @@ class ReqParser {
                 return `${period_view}
                         SELECT name, year, beam, energy
                         FROM period_view
-                        ${filteringPart(query)}
+                        ${filteringPart()}
                         ${dataSubsetQueryPart(query)};`;
 
             case pagesNames.runsPerPeriod:
