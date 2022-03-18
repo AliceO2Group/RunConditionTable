@@ -40,8 +40,11 @@ const period_view = `WITH period_view AS (
     )`;
 
 const runs_per_period_view = (query) => `WITH runs_per_period_view AS (
-    SELECT *
-    FROM runs
+    SELECT p.name, r.run_number, r.start, r.end, r."B_field", r.energy_per_beam, r."IR", r.filling_scheme, r.triggers_conf,
+        r.fill_number, r."runType", r.mu, r."timeTrgStart", r."timeTrgEnd"
+    FROM runs AS r
+        INNER JOIN periods AS p
+        ON p.id = r.period_id
     WHERE period_id = (
                         SELECT id 
                         FROM periods 
