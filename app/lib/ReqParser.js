@@ -103,41 +103,21 @@ class ReqParser {
         let toParams = [];
 
         for (const [key, value] of Object.entries(query)) {
-            if (key.includes('match') && filteringParams[page]?.match) {
-                for (const [filterKey, filterValue] of Object.entries(filteringParams[page].match)) {
-                    if (key === filterValue) {
-                            const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
-                            matchParams.push({queryParam, value});
-                    }
-                    
-                }
+            const queryParam = key.substr(0, key.lastIndexOf('-'));
+            if (key.includes('match')) {
+                matchParams.push({queryParam, value});
             }
-
-            if (key.includes('exclude') && filteringParams[page]?.exclude) {
-                for (const [filterKey, filterValue] of Object.entries(filteringParams[page].exclude)) {
-                    if (key === filterValue) {
-                        const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
-                        excludeParams.push({queryParam, value});
-                    }
-                }
+        
+            if (key.includes('exclude')) {
+                excludeParams.push({queryParam, value});
             }
             
-            if (key.includes('from') && filteringParams[page]?.from) {
-                for (const [filterKey, filterValue] of Object.entries(filteringParams[page].from)) {
-                    if (key === filterValue) {
-                        const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
-                        fromParams.push({queryParam, value});
-                    }
-                }
+            if (key.includes('from')) {
+                fromParams.push({queryParam, value});
             }
 
-            if (key.includes('to') && key !== 'token' && filteringParams[page]?.to) {
-                for (const [filterKey, filterValue] of Object.entries(filteringParams[page].to)) {
-                    if (key === filterValue) {
-                        const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
-                        toParams.push({queryParam, value});
-                    }
-                }
+            if (key.includes('to') && key !== 'token') {
+                toParams.push({queryParam, value});
             }
         }
 
