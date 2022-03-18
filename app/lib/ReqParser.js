@@ -40,10 +40,12 @@ const period_view = `
     FROM periods AS p
     )`;
 
-const runs_per_period_view = (query) => `
-    WITH runs_per_period_view AS (
-    SELECT *
-    FROM runs
+const runs_per_period_view = (query) => `WITH runs_per_period_view AS (
+    SELECT p.name, r.run_number, r.start, r.end, r."B_field", r.energy_per_beam, r."IR", r.filling_scheme, r.triggers_conf,
+        r.fill_number, r."runType", r.mu, r."timeTrgStart", r."timeTrgEnd"
+    FROM runs AS r
+        INNER JOIN periods AS p
+        ON p.id = r.period_id
     WHERE period_id = (
                         SELECT id 
                         FROM periods 
@@ -123,70 +125,52 @@ class ReqParser {
 
         const page = query.page;
 
-        let filtering = false;
         let matchParams = [];
         let excludeParams = [];
         let fromParams = [];
         let toParams = [];
 
         for (const [key, value] of Object.entries(query)) {
-            if (key.includes('match') && filteringParams[page]?.match) {
-                for (const [filterKey, filterValue] of Object.entries(filteringParams[page].match)) {
-                    if (key === filterValue) {
-                            const queryParam = filterValue.substr(0, filterValue.lastIndexOf('-'));
-                            console.log(queryParam);
-                            matchParams.push({queryParam, value});
-    
-                            console.log(`requested ${queryParam} = ${value}`);
-                            filtering = true;
-                    }
-                    
-                }
+            const queryParam = key.substr(0, key.lastIndexOf('-'));
+            if (key.includes('match')) {
+                matchParams.push({queryParam, value});
             }
-
-            if (key.includes('exclude') && filteringParams[page]?.exclude) {
-                console.log('exclude requested!')
+        
+            if (key.includes('exclude')) {
+                excludeParams.push({queryParam, value});
             }
             
-            if (key.includes('from') && filteringParams[page]?.from) {
-                console.log('from requested!')
+            if (key.includes('from')) {
+                fromParams.push({queryParam, value});
             }
 
-            if (key.includes('to') && key !== 'token' && filteringParams[page]?.to) {
-                console.log('to requested!')
+            if (key.includes('to') && key !== 'token') {
+                toParams.push({queryParam, value});
             }
         }
 
-        const filteringPart = (query) => {
-            let output = 'WHERE ';
+        const filteringPart = () => {
+            const matchPhrase = matchParams.map((filter) =>
+                `${filter.queryParam} LIKE '${filter.value}'`
+            ).join(' AND ');
 
-            if (matchParams.length > 0 || excludeParams.length > 0 || fromParams.length > 0 || toParams.length > 0) {
-                // match
-                let paramsLeft = matchParams.length;
-                if (paramsLeft > 0) {
-                    console.log(matchParams);
+            const excludePhrase = excludeParams.map(({queryParam, value}) =>
+                `${queryParam} NOT LIKE '${value}'`
+            ).join(' AND ');
 
-                    matchParams.forEach(({queryParam, value}) => {
-                        output += `${queryParam} LIKE '${value}'`;
-                        paramsLeft-- > 1? output += ' AND ' : '';
-                    });
-                }
+            const fromPhrase = fromParams.map(({queryParam, value}) =>
+                `${queryParam} >= '${value}'`
+            ).join(' AND ');
 
-                // exclude
-                // ...
+            const toPhrase = toParams.map(({queryParam, value}) =>
+                `${queryParam} <= '${value}'`
+            ).join(' AND ');
 
-                // from
-                // ...
-
-                // to
-                // ...
-
-                console.log(output);
-                return output;
-            } else {
-                console.log('no filtering params found')
-            }
-            return '';
+            const filtersPhrase = [matchPhrase, excludePhrase, fromPhrase, toPhrase].filter(
+                    value => {return value?.length > 0}
+                ).join(' AND ');
+            
+            return filtersPhrase?.length > 0 ? `WHERE ${filtersPhrase}` : '';
         }
 
         const dataSubsetQueryPart = (query) => query[DRP.countRecords] === 'true' ? '' :
@@ -197,7 +181,7 @@ class ReqParser {
                 return `${period_view}
                         SELECT name, year, beam, energy
                         FROM period_view
-                        ${filteringPart(query)}
+                        ${filteringPart()}
                         ${dataSubsetQueryPart(query)};`;
 
             case pagesNames.runsPerPeriod:
