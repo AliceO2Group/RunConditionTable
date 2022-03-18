@@ -30,32 +30,25 @@ export default function filter(model) {
     const data = model.fetchedData[page][index].payload;
     const fields = data.fields;
 
-    const filteringParams = RCT.filteringParams.pages[page];
-    console.log("filteringParams")
-    console.log(filteringParams)
+    const pagesFilteringParams = RCT.filteringParams.pages[page];
+    const filteringTypes = RCT.filteringParams.types;
+    console.log("filteringParams");
+    console.log(pagesFilteringParams);
+    console.log(filteringTypes);
 
-
-    const commands = ['match', 'exclude'];
-    let inputFieldIds = [];
-
-    commands.forEach((command) => {
-        fields.forEach(field => {
-            inputFieldIds.push(`${field.name}-${command}`);
-        });
-    });
 
     //TODO use some buttons creator
     return h('table.table-filters', [
         h('tbody', [
             labelsRow(model, fields),
-            matchOrLowerBoundsInputs(fields),
-            excludeOrUpperBoundsInputs(fields),
+            matchOrLowerBoundsInputs(fields, pagesFilteringParams),
+            excludeOrUpperBoundsInputs(fields, pagesFilteringParams),
         ]),
         h('button.btn', {
-            onclick: onclickSubmit(model, inputFieldIds)
+            onclick: onclickSubmit(model, pagesFilteringParams, filteringTypes)
         }, 'Submit'),
         h('button.btn', {
-            onclick: onclickClear(model, inputFieldIds)
+            onclick: onclickClear(model, pagesFilteringParams, filteringTypes)
         }, 'Clear filters')
     ]);
 }
@@ -68,16 +61,32 @@ const labelsRow = (model, fields) => {
         )
     ])
 }
-const matchOrLowerBoundsInputs = (fields) => {
+const matchOrLowerBoundsInputs = (fields, pagesFilteringParams, filteringTypes) => {
     return h('tr', [
         h('td', [describingField('match or lower bound')]
-            .concat(fields.map((field) => createInputField(field, 'match'))))
+            .concat(fields.map((field) => {
+                if (pagesFilteringParams[field] === filteringTypes.matchExcludeType)
+                    return createInputField(field, "match")
+                else if (pagesFilteringParams[field] === filteringTypes.fromToType)
+                    return createInputField(field, "from")
+                else
+                    console.error("probably incorrect configuration of filtering types");
+            }
+            )))
     ]);
 }
 const excludeOrUpperBoundsInputs = (fields) => {
     return h('tr', [
         h('td', [describingField('exclude or upper bound')]
-            .concat(fields.map((field) => createInputField(field, 'exclude'))))
+            .concat(fields.map((field) => {
+                if (pagesFilteringParams[field] === filteringTypes.matchExcludeType)
+                    return createInputField(field, "exclude")
+                else if (pagesFilteringParams[field] === filteringTypes.fromToType)
+                    return createInputField(field, "to")
+                else
+                    console.error("probably incorrect configuration of filtering types");
+            }
+            )))
     ])
 }
 

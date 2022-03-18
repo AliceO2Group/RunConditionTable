@@ -114,8 +114,13 @@ module.exports = {
                 size : fromToType,
             },
 
-            flags: {
-                
+            flags: { 
+                start : fromToType, 
+                end : fromToType, 
+                flag : matchExcludeType, 
+                comment : matchExcludeType, 
+                production_id : fromToType,
+                name : matchExcludeType
             }
             
 
