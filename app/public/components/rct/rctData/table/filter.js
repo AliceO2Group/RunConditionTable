@@ -20,11 +20,21 @@ import {defaultIndex} from "../../../../utils/defaults.js";
 import {RCT} from "../../../../config.js";
 const dataReqParams = RCT.dataReqParams;
 
+
+//TODO change filtering params on something like filtering types ...
+
 export default function filter(model) {
     const pathIdent = getPathElems(model.router.getUrl().pathname);
-    const data = model.fetchedData[pathIdent[0]][defaultIndex(pathIdent[1])].payload;
+    const page = pathIdent[0]
+    const index = defaultIndex(pathIdent[1]);
+    const data = model.fetchedData[page][index].payload;
     const fields = data.fields;
-    
+
+    const filteringParams = RCT.filteringParams.pages[page];
+    console.log("filteringParams")
+    console.log(filteringParams)
+
+
     const commands = ['match', 'exclude'];
     let inputFieldIds = [];
 
@@ -34,6 +44,7 @@ export default function filter(model) {
         });
     });
 
+    //TODO use some buttons creator
     return h('table.table-filters', [
         h('tbody', [
             labelsRow(model, fields),
@@ -41,44 +52,10 @@ export default function filter(model) {
             excludeOrUpperBoundsInputs(fields),
         ]),
         h('button.btn', {
-            onclick: () => {
-                const url = model.router.getUrl();
-                console.log(`current URL: ${url}`);
-
-                let urlSearchParams = [];
-
-                for (const [key, param] of Object.entries(inputFieldIds)) {
-                    if (document.getElementById(param)?.value != '')
-                        urlSearchParams.push(param);
-                }
-
-                if (urlSearchParams.length > 0) {
-                    const search = `?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&`+ (Object.entries(urlSearchParams).map(([k, v]) => {
-                        const val = document.getElementById(v)?.value;
-                        return (val != null && val != '')? `${v}=${val}` : '';
-                    })).join('&');
-                    
-                    console.log(search);
-    
-                    const newUrl = new URL(url.origin + url.pathname + search);
-                    console.log(newUrl);
-                    model.router.go(newUrl);
-                } else {
-                    ///const newUrl = new URL(url.origin + url.pathname);
-                    // console.log(newUrl);
-                    model.router.go('/');
-                }
-
-                // model.router.go(newUrl);
-                // model.notify();
-            }
+            onclick: onclickSubmit(model, inputFieldIds)
         }, 'Submit'),
         h('button.btn', {
-            onclick: () => {
-                inputFieldIds.forEach(inputFieldId => {
-                        document.getElementById(inputFieldId).value=''
-                    });
-            }
+            onclick: onclickClear(model, inputFieldIds)
         }, 'Clear filters')
     ]);
 }
@@ -124,3 +101,43 @@ const createInputField = (field, command) => {
         id: fieldId,
     }));
 };
+
+
+const onclickSubmit = (model, inputFieldIds) => {
+    return () => {
+        const url = model.router.getUrl();
+
+        let urlSearchParams = [];
+
+        for (const [key, param] of Object.entries(inputFieldIds)) {
+            if (document.getElementById(param)?.value != '')
+                urlSearchParams.push(param);
+        }
+
+        if (urlSearchParams.length > 0) {
+            const search = `?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&`+
+             (Object.entries(urlSearchParams).map(([k, v]) => {
+                const val = document.getElementById(v)?.value;
+                return (val?.length > 0)? `${v}=${val}` : '';
+            })).join('&');
+            
+
+            const newUrl = new URL(url.origin + url.pathname + search);
+            model.router.go(newUrl);
+        } else {
+            ///const newUrl = new URL(url.origin + url.pathname);
+            model.router.go('/');
+        }
+
+        // model.router.go(newUrl);
+        // model.notify();
+    }
+}
+
+const onclickClear = (model, inputFieldIds) => {
+    return () => {
+        inputFieldIds.forEach(inputFieldId => {
+                document.getElementById(inputFieldId).value=''
+            });
+    }
+}
