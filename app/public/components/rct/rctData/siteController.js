@@ -35,8 +35,7 @@ export default function siteController(model, data) {
         const url = replaceUrlParams(data.url, [[siteParamName, site]]);
         return viewButton(model, site, () => model.fetchedData.changeSite(site), '', url.pathname + url.search, '', '.m1', true);
     })
-    console.log("data");
-    console.log(data)
+   
     const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnsite);
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
     const currentSiteIdx = currentSite - 1;

@@ -15,40 +15,37 @@
 
 
 import { h } from '/js/src/index.js';
-import {getPathElems} from "../../../../utils/utils.js";
-import {defaultIndex} from "../../../../utils/defaults.js";
 import {RCT} from "../../../../config.js";
 const dataReqParams = RCT.dataReqParams;
 
 
-//TODO change filtering params on something like filtering types ...
-
 export default function filter(model) {
-    const pathIdent = getPathElems(model.router.getUrl().pathname);
-    const page = pathIdent[0]
-    const index = defaultIndex(pathIdent[1]);
-    const data = model.fetchedData[page][index].payload;
+    
+    const data = model.getCurrentData();
     const fields = data.fields;
 
-    const pagesFilteringParams = RCT.filteringParams.pages[page];
+    const dataPointer = model.getCurrentDataPointer();
+
+    const pageFilteringTypes = RCT.filteringParams.pages[dataPointer.page];
     const filteringTypes = RCT.filteringParams.types;
-    console.log("filteringParams");
-    console.log(pagesFilteringParams);
-    console.log(filteringTypes);
+    
+    const upperInputIds = getUpperInputIds(fields, pageFilteringTypes, filteringTypes);
+    const lowerInputIds = getLowerInputIds(fields, pageFilteringTypes, filteringTypes);
+    const inputsIds = upperInputIds.concat(lowerInputIds);
 
+    const params = model.router.params
 
-    //TODO use some buttons creator
     return h('table.table-filters', [
         h('tbody', [
             labelsRow(model, fields),
-            matchOrLowerBoundsInputs(fields, pagesFilteringParams),
-            excludeOrUpperBoundsInputs(fields, pagesFilteringParams),
+            inputsRow(params, upperInputIds, "match/from"),
+            inputsRow(params, lowerInputIds, "exclude/to"),
         ]),
         h('button.btn', {
-            onclick: onclickSubmit(model, pagesFilteringParams, filteringTypes)
+            onclick: onclickSubmit(model, inputsIds)
         }, 'Submit'),
         h('button.btn', {
-            onclick: onclickClear(model, pagesFilteringParams, filteringTypes)
+            onclick: onclickClear(model, inputsIds)
         }, 'Clear filters')
     ]);
 }
@@ -61,34 +58,18 @@ const labelsRow = (model, fields) => {
         )
     ])
 }
-const matchOrLowerBoundsInputs = (fields, pagesFilteringParams, filteringTypes) => {
+
+
+const inputsRow = (params, inputsIds, description) => {
     return h('tr', [
-        h('td', [describingField('match or lower bound')]
-            .concat(fields.map((field) => {
-                if (pagesFilteringParams[field] === filteringTypes.matchExcludeType)
-                    return createInputField(field, "match")
-                else if (pagesFilteringParams[field] === filteringTypes.fromToType)
-                    return createInputField(field, "from")
-                else
-                    console.error("probably incorrect configuration of filtering types");
+        h('td', [describingField(description)]
+            .concat(inputsIds.map(id => {
+                return createInputField(id, params[id]);
             }
             )))
     ]);
 }
-const excludeOrUpperBoundsInputs = (fields) => {
-    return h('tr', [
-        h('td', [describingField('exclude or upper bound')]
-            .concat(fields.map((field) => {
-                if (pagesFilteringParams[field] === filteringTypes.matchExcludeType)
-                    return createInputField(field, "exclude")
-                else if (pagesFilteringParams[field] === filteringTypes.fromToType)
-                    return createInputField(field, "to")
-                else
-                    console.error("probably incorrect configuration of filtering types");
-            }
-            )))
-    ])
-}
+
 
 const describingField = (name) => h('td', h('.container', {
     style: 'width:120px',
@@ -100,53 +81,87 @@ const createClickableLabel = (model, field) => h('td', h('button.btn.filterLabel
     className: field.marked ? 'active' : ''
 }, field.name));
 
-const createInputField = (field, command) => {
-    const fieldId = `${field.name}-${command}`;
 
+const createInputField = (inputId, currentValue) => {
     return h('td', h('input.form-control', {
         style: 'width:120px',
         type: 'text',
-        placeholder: '',
-        id: fieldId,
+        value: currentValue ? currentValue : '',
+        id: inputId,
     }));
 };
 
 
-const onclickSubmit = (model, inputFieldIds) => {
+const onclickSubmit = (model, inputsIds) => {
     return () => {
+
+        const filteringParamsPhrase = inputsIds
+            .map(inputId => [
+                inputId, 
+                document.getElementById(inputId)?.value
+            ])
+            .filter(([id, v]) => v?.length > 0)
+            .map(([id, v]) => `${id}=${v}`)
+            .join('&')
+
+        console.log(filteringParamsPhrase)
+        const newSearch = `?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&` + filteringParamsPhrase
+
         const url = model.router.getUrl();
-
-        let urlSearchParams = [];
-
-        for (const [key, param] of Object.entries(inputFieldIds)) {
-            if (document.getElementById(param)?.value != '')
-                urlSearchParams.push(param);
-        }
-
-        if (urlSearchParams.length > 0) {
-            const search = `?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&`+
-             (Object.entries(urlSearchParams).map(([k, v]) => {
-                const val = document.getElementById(v)?.value;
-                return (val?.length > 0)? `${v}=${val}` : '';
-            })).join('&');
-            
-
-            const newUrl = new URL(url.origin + url.pathname + search);
-            model.router.go(newUrl);
-        } else {
-            ///const newUrl = new URL(url.origin + url.pathname);
-            model.router.go('/');
-        }
-
-        // model.router.go(newUrl);
-        // model.notify();
+        const newUrl = new URL(url.origin + url.pathname + newSearch);
+        model.router.go(newUrl);
     }
 }
 
-const onclickClear = (model, inputFieldIds) => {
+
+
+const onclickClear = (model, inputsIds) => {
     return () => {
-        inputFieldIds.forEach(inputFieldId => {
-                document.getElementById(inputFieldId).value=''
+        inputsIds.forEach(inputId => {
+                document.getElementById(inputId).value=''
             });
+        onclickSubmit(model, inputsIds)();
     }
 }
+
+const getUpperInputIds = (fields, pageFilteringTypes, filteringTypes) => {
+    return fields.map(f => filedName2MatchFromType(f.name, pageFilteringTypes, filteringTypes))
+}
+
+const getLowerInputIds = (fields, pagesFilteringTypes, filteringTypes) => {
+    return fields.map(f => filedName2ExcludeToType(f.name, pagesFilteringTypes, filteringTypes))
+}
+
+
+const filedName2MatchFromType = (fieldName, pageFilteringTypes, filteringTypes) => {
+    if (pageFilteringTypes[fieldName] === filteringTypes.matchExcludeType)
+        return `${fieldName}-match`;
+    else if (pageFilteringTypes[fieldName] === filteringTypes.fromToType)
+        return `${fieldName}-from`;
+    else
+        console.error("probably incorrect configuration of filtering types");
+}
+
+const filedName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes) => {
+    if (pagesFilteringParams[fieldName] === filteringTypes.matchExcludeType)
+        return `${fieldName}-exclude`;
+    else if (pagesFilteringParams[fieldName] === filteringTypes.fromToType)
+        return `${fieldName}-to`;
+    else
+        console.error("probably incorrect configuration of filtering types");
+}
+
+
+
+// const saveFiteringParams = (model, upperInputIds, lowerInputIds) => {
+//     const fields = model.getCurrentData().fields
+
+//     fields.forEach(f => f.filtering = {})
+//     zip(fields, upperInputIds).forEach(([f, id]) => {
+//         f.filtering[id] = document.getElementById(id)?.value;
+//     })
+//     zip(fields, lowerInputIds).forEach(([f, id]) => {
+//         f.filtering[id] = document.getElementById(id)?.value;
+//     })
+    
+// }

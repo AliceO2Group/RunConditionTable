@@ -31,7 +31,6 @@ const DRF = RCT.dataRespondFields;
 export default class FetchedData {
     constructor(url, content, totalRecordsNumber=null) {
         this.url = url;
-        console.log(content)
 
         this.fields = null;
         this.rows = null;

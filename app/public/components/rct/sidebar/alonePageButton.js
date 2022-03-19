@@ -14,29 +14,44 @@
 
 
 
-
-
 import {h, iconLayers} from "/js/src/index.js";
-import {getPathElem} from "../../../utils/utils.js";
 import {RCT} from "../../../config.js";
 const dataReqParams = RCT.dataReqParams;
 
-function pathNQuery(page, index) {
+function defaultHref(page, index) {
     return `/${page}${index ? '/'+index : ''}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
 }
 
 export default function alonePageButton(model, title, page, index=null) {
 
-    const currentPage = getPathElem(model.router.getUrl().pathname, 0)
+    const currentPointer = model.getCurrentDataPointer();
+    const currentPage = currentPointer.page;
+
+    const remoteData = model.getRemoteData(page, index);
+    const data = remoteData.payload
+
+    const dataHref = remoteData.match({
+        NotAsked: () => {console.error("fatal error" ); return "..."},
+        Loading: () => data.url.href,
+        Success: () => data.url.href,
+        Failure: (status) => {
+            alert("error with url: ", data.url); 
+            console.error("error occured for url", data.url, status); 
+            defaultHref(page, index)
+        }
+    })
+
+
+
     return [h('.menu-title', {
         class: currentPage === page ? 'currentMenuItem' : ''
     }, title),
         h('a.menu-item', {
             title: title,
             style: 'display:flex',
-            href: pathNQuery(page, index),
+            href: dataHref,
             onclick: (e) => model.router.handleLinkEvent(e),
-            class: currentPage === page? 'selected' : ''
+            class: currentPage === page ? 'selected' : ''
         }, [
             h('span', iconLayers(), ' ', title)
         ])]

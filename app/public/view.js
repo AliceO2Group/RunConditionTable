@@ -17,7 +17,6 @@ import loggingSite from './components/loggingSite.js';
 import {switchCase} from "/js/src/index.js";
 
 export default function view(model) {
-    console.log(`View ::: model.mode : ${model.mode}`)
     return switchCase(
         model.mode,
         {
