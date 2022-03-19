@@ -28,8 +28,8 @@ import {defaultIndex} from "../../../utils/defaults.js"
 
 
 export default function rctDataView(model) {
-    const pathIden = model.router.getUrl().pathname.slice(1, -1).split('/')
-    let data = model.fetchedData[pathIden[0]][defaultIndex(pathIden[1])];
+    const dataPointer = model.getCurrentDataPointer()
+    let data = model.fetchedData[dataPointer.page][dataPointer.index];
 
     return h('.homePage', [
         h('div.tableDiv', []),

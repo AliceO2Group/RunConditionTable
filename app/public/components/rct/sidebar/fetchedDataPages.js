@@ -16,7 +16,6 @@
 
 
 import {h, iconPin, iconEllipses, iconShareBoxed, iconReload, iconTrash} from '/js/src/index.js'
-import {getPathElems} from "../../../utils/utils.js";
 
 
 export default function fetchedDataPages(model, pageName, label) {
@@ -69,7 +68,7 @@ const deleteCopyReloadButtonsController = (model, index, dropdownID, pageName) =
 }
 
 const hiddenButtonsControllerObj = (model, index, dropdownID, pageName) => {
-    const pathIdent = getPathElems(model.router.getUrl().pathname);
+    const dataPointer = model.getCurrentDataPointer()
     return {
         onmouseenter: () => {
             document.getElementById(dropdownID).classList.toggle('dropdown-open');
@@ -80,7 +79,7 @@ const hiddenButtonsControllerObj = (model, index, dropdownID, pageName) => {
                     document.getElementById(dropdownID).classList.remove('dropdown-open');
             }, 100);
         },
-        class: (pathIdent[1] === index) && pathIdent[0] === pageName ? 'white' : 'gray'
+        class: (dataPointer.index === index) && dataPointer.page === pageName ? 'white' : 'gray'
     }
 }
 

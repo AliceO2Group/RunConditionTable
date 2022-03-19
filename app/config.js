@@ -80,7 +80,7 @@ module.exports = {
                     name : matchExcludeType,
                     run_number : fromToType, 
                     start : fromToType, 
-                    end : fromToType, 
+                    ende : fromToType, 
                     B_field : matchExcludeType, 
                     energy_per_beam : fromToType, 
                     IR : matchExcludeType, 
@@ -115,7 +115,7 @@ module.exports = {
     
                 flags: { 
                     start : fromToType, 
-                    end : fromToType, 
+                    ende : fromToType, 
                     flag : matchExcludeType, 
                     comment : matchExcludeType, 
                     production_id : fromToType,

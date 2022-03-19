@@ -93,12 +93,7 @@ export default class FetchedDataManager {
 
     getReqEndpoint(url, countAllRecord) {
         const apiPrefix = '/api' + RCT.endpoints.rctData;
-        // TODO it will be if handling such endpoints is handled on backend side
         return apiPrefix + url.pathname.substring(1) + url.search + (countAllRecord ? '&count-records=true' : '');
-        // TODO below there is temporary solution
-        // const pathIdent = getPathElems(url.pathname)
-        // return apiPrefix + url.search + `&page=${pathIdent[0]}` + (pathIdent[1] ? `&index=${pathIdent[1]}` : '');
-
     }
 
     changeSite(site) {

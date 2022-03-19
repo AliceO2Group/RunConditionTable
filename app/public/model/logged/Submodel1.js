@@ -22,7 +22,6 @@ import {RCT} from "../../config.js";
 import {getPathElems} from "../../../../utils/utils.js";
 import {defaultIndex} from "../../../../utils/defaults.js";
 const dataReqParams = RCT.dataReqParams;
-const pagesNames = RCT.pagesNames;
 
 
 export default class Submodel1 extends Observable {

@@ -44,37 +44,38 @@ const pagesCellsButtons = {
  * to page runs with fetched data from table runs related to chosen period.
  */
 
-const pagesCellsButtons = {
-    periods: {
-        name: (model, item, name) => {
-            return [
-                h('', item.name),
-                viewButton(model, `runs`, (e) =>
+const pagesCellsButtons = {}
+
+
+pagesCellsButtons[pagesNames.periods] = {
+    name: (model, item, name) => {
+        return [
+            h('', item.name),
+            viewButton(model, `runs`, (e) =>
+                handleClick(model, e), '',
+                `/${pagesNames.runsPerPeriod}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`),
+
+            viewButton(model, 'data passes', (e) =>
                     handleClick(model, e), '',
-                    `/${pagesNames.runsPerPeriod}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`),
+                `/${pagesNames.dataPasses}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`),
 
-                viewButton(model, 'data passes', (e) =>
-                        handleClick(model, e), '',
-                    `/${pagesNames.dataPasses}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`),
-
-                viewButton(model, 'MC', (e) =>
-                        handleClick(model, e), '',
-                    `/${pagesNames.mc}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`),
-            ];
-        },
+            viewButton(model, 'MC', (e) =>
+                    handleClick(model, e), '',
+                `/${pagesNames.mc}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`),
+        ];
     },
-    dataPasses: {},
-    mc: {},
-    runsPerPeriod: {
-        run_number: (model, item, name) => {
-            return viewButton(model, item.run_number, (e) => handleClick(model, e), '',
-                `/${pagesNames.flags}/${item.run_number}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
-        }
-    },
-    flags: {},
-    // ...,
-
 }
+
+pagesCellsButtons[pagesNames.dataPasses] = {}
+pagesCellsButtons[pagesNames.mc] = {}
+pagesCellsButtons[pagesNames.runsPerPeriod] = {
+    run_number: (model, item, name) => {
+        return viewButton(model, item.run_number, (e) => handleClick(model, e), '',
+            `/${pagesNames.flags}/${item.run_number}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
+    }
+}
+
+pagesCellsButtons[pagesNames.flags] = {}
 
 
 // checking correctness of configuration
