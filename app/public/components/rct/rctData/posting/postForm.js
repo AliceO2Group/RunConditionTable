@@ -28,6 +28,8 @@ import {RCT} from "../../../../config.js";
  * @returns {*}
  */
 export function postForm(model, data) {
+    alert("TODO")
+    return
     const params = model.router.params;
     const pageMetadata = postingDataConfig[params.page];
     return h('tr', data.fields.map(f => {
@@ -43,6 +45,8 @@ export function postForm(model, data) {
 
 
 async function postData(model, data) {
+    alert("TODO")
+    return
     const params = model.router.params;
     const pageMetadata = postingDataConfig[params.page];
     const reqEndpoint = '/api' + RCT.endpoints.insertData;

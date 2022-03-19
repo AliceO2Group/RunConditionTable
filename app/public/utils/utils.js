@@ -52,5 +52,7 @@ export function getPathElem(pathname, i) {
 
 export function urlSearchToParamsObject(search) {
     console.assert(search[0] === '?')
-    return Object.fromEntries(search.slice(2).split('\&').map((ent) => ent.split('=')))
+    return Object.fromEntries(
+        search.slice(2).split('\&').map((ent) => ent.split('='))
+        )
 }

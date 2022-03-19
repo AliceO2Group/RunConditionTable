@@ -1,3 +1,6 @@
+const matchExcludeType = "match-exclude-type"
+const fromToType = "from-to-type"
+
 module.exports = {
     jwt: {
         secret: 'supersecret',
@@ -62,16 +65,76 @@ module.exports = {
         },
 
         filteringParams: {
-            periods: {
-                nameMatch: "name-match",
-                yearMatch: "year-match",
-                beamMatch: "beam-match",
-                energyMatch: "energy-match",
-                nameExclude: "name-exclude",
-                yearExclude: "year-exclude",
-                beamExclude: "beam-exclude",
-                energyExclude: "energy-exclude"
-            }
+            types: {
+                matchExcludeType : matchExcludeType,
+                fromToType : fromToType            
+            },
+            pages: {
+                periods: {
+                    name: matchExcludeType,
+                    year: fromToType,
+                    beam: matchExcludeType,
+                    energy: fromToType
+                },
+                runsPerPeriod: {
+                    name : matchExcludeType,
+                    run_number : fromToType, 
+                    start : fromToType, 
+                    ende : fromToType, 
+                    B_field : matchExcludeType, 
+                    energy_per_beam : fromToType, 
+                    IR : matchExcludeType, 
+                    filling_scheme : fromToType, 
+                    triggers_conf : matchExcludeType,
+                    fill_number : fromToType, 
+                    runType : matchExcludeType, 
+                    mu : matchExcludeType, 
+                    timeTrgStart : fromToType, 
+                    timeTrgEnd : fromToType,
+                },
+    
+                mc: {
+                    name : matchExcludeType,
+                    description : matchExcludeType, 
+                    jira : matchExcludeType, 
+                    ML : matchExcludeType, 
+                    PWG	: matchExcludeType,
+                    number_of_events : fromToType,
+                },
+    
+                dataPasses: {
+                    name : matchExcludeType,
+                    description : matchExcludeType,	
+                    pass_type : matchExcludeType,	
+                    jira : matchExcludeType,	
+                    ML : matchExcludeType,	
+                    number_of_events : fromToType,	
+                    software_version : matchExcludeType,	
+                    size : fromToType,
+                },
+    
+                flags: { 
+                    start : fromToType, 
+                    ende : fromToType, 
+                    flag : matchExcludeType, 
+                    comment : matchExcludeType, 
+                    production_id : fromToType,
+                    name : matchExcludeType
+                }
+            },
+
         }
     }
 };
+
+
+const pagesNames = {
+    periods: "periods",
+    dataPasses: "dataPasses",
+    mc: "mc",
+    runsPerPeriod: "runsPerPeriod",
+    flags: "flags"
+}
+
+
+// TODO config validation

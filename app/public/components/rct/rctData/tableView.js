@@ -24,8 +24,6 @@ import siteController from "./siteController.js";
 import postingDataConfig from "./posting/postingDataConfig.js";
 import {postForm} from "./posting/postForm.js";
 import filter from './table/filter.js';
-import {getPathElems} from "../../../utils/utils.js";
-import {defaultIndex} from "../../../utils/defaults.js";
 
 /**
  * creates vnode containing table of fetched data (main content)
@@ -36,10 +34,10 @@ import {defaultIndex} from "../../../utils/defaults.js";
 
 export default function tableView(model) {
 
-    const pathIdents = getPathElems(model.router.getUrl().pathname)
-    const data = model.fetchedData[pathIdents[0]][defaultIndex(pathIdents[1])].payload;
+    const dataPointer = model.getCurrentDataPointer()
+    const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
 
-    const cellsButtons = pagesCellsButtons[pathIdents[0]];
+    const cellsButtons = pagesCellsButtons[dataPointer.page];
 
     const fields = data.fields;
     const visibleFields = fields.filter(f => f.marked);
@@ -52,7 +50,7 @@ export default function tableView(model) {
         
         h('table.table', {id: 'data-table-' + data.url}, [
             tableHeader(visibleFields, data, () => model.fetchedData.changeRecordsVisibility(data)),
-            tableBody(model, visibleFields, data, cellsButtons, pathIdents[0])
+            tableBody(model, visibleFields, data, cellsButtons, dataPointer.page)
         ])
     ])
 

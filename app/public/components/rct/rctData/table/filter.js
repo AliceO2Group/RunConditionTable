@@ -15,70 +15,37 @@
 
 
 import { h } from '/js/src/index.js';
-import {getPathElems} from "../../../../utils/utils.js";
-import {defaultIndex} from "../../../../utils/defaults.js";
 import {RCT} from "../../../../config.js";
 const dataReqParams = RCT.dataReqParams;
 
-export default function filter(model) {
-    const pathIdent = getPathElems(model.router.getUrl().pathname);
-    const data = model.fetchedData[pathIdent[0]][defaultIndex(pathIdent[1])].payload;
-    const fields = data.fields;
-    
-    const commands = ['match', 'exclude'];
-    let inputFieldIds = [];
 
-    commands.forEach((command) => {
-        fields.forEach(field => {
-            inputFieldIds.push(`${field.name}-${command}`);
-        });
-    });
+export default function filter(model) {
+    
+    const data = model.getCurrentData();
+    const fields = data.fields;
+
+    const dataPointer = model.getCurrentDataPointer();
+
+    const pageFilteringTypes = RCT.filteringParams.pages[dataPointer.page];
+    const filteringTypes = RCT.filteringParams.types;
+    
+    const upperInputIds = getUpperInputIds(fields, pageFilteringTypes, filteringTypes);
+    const lowerInputIds = getLowerInputIds(fields, pageFilteringTypes, filteringTypes);
+    const inputsIds = upperInputIds.concat(lowerInputIds);
+
+    const params = model.router.params
 
     return h('table.table-filters', [
         h('tbody', [
             labelsRow(model, fields),
-            matchOrLowerBoundsInputs(fields),
-            excludeOrUpperBoundsInputs(fields),
+            inputsRow(params, upperInputIds, "match/from"),
+            inputsRow(params, lowerInputIds, "exclude/to"),
         ]),
         h('button.btn', {
-            onclick: () => {
-                const url = model.router.getUrl();
-                console.log(`current URL: ${url}`);
-
-                let urlSearchParams = [];
-
-                for (const [key, param] of Object.entries(inputFieldIds)) {
-                    if (document.getElementById(param)?.value != '')
-                        urlSearchParams.push(param);
-                }
-
-                if (urlSearchParams.length > 0) {
-                    const search = `?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&`+ (Object.entries(urlSearchParams).map(([k, v]) => {
-                        const val = document.getElementById(v)?.value;
-                        return (val != null && val != '')? `${v}=${val}` : '';
-                    })).join('&');
-                    
-                    console.log(search);
-    
-                    const newUrl = new URL(url.origin + url.pathname + search);
-                    console.log(newUrl);
-                    model.router.go(newUrl);
-                } else {
-                    ///const newUrl = new URL(url.origin + url.pathname);
-                    // console.log(newUrl);
-                    model.router.go('/');
-                }
-
-                // model.router.go(newUrl);
-                // model.notify();
-            }
+            onclick: onclickSubmit(model, inputsIds)
         }, 'Submit'),
         h('button.btn', {
-            onclick: () => {
-                inputFieldIds.forEach(inputFieldId => {
-                        document.getElementById(inputFieldId).value=''
-                    });
-            }
+            onclick: onclickClear(model, inputsIds)
         }, 'Clear filters')
     ]);
 }
@@ -91,18 +58,18 @@ const labelsRow = (model, fields) => {
         )
     ])
 }
-const matchOrLowerBoundsInputs = (fields) => {
+
+
+const inputsRow = (params, inputsIds, description) => {
     return h('tr', [
-        h('td', [describingField('match or lower bound')]
-            .concat(fields.map((field) => createInputField(field, 'match'))))
+        h('td', [describingField(description)]
+            .concat(inputsIds.map(id => {
+                return createInputField(id, params[id]);
+            }
+            )))
     ]);
 }
-const excludeOrUpperBoundsInputs = (fields) => {
-    return h('tr', [
-        h('td', [describingField('exclude or upper bound')]
-            .concat(fields.map((field) => createInputField(field, 'exclude'))))
-    ])
-}
+
 
 const describingField = (name) => h('td', h('.container', {
     style: 'width:120px',
@@ -114,13 +81,87 @@ const createClickableLabel = (model, field) => h('td', h('button.btn.filterLabel
     className: field.marked ? 'active' : ''
 }, field.name));
 
-const createInputField = (field, command) => {
-    const fieldId = `${field.name}-${command}`;
 
+const createInputField = (inputId, currentValue) => {
     return h('td', h('input.form-control', {
         style: 'width:120px',
         type: 'text',
-        placeholder: '',
-        id: fieldId,
+        value: currentValue ? currentValue : '',
+        id: inputId,
     }));
 };
+
+
+const onclickSubmit = (model, inputsIds) => {
+    return () => {
+
+        const filteringParamsPhrase = inputsIds
+            .map(inputId => [
+                inputId, 
+                document.getElementById(inputId)?.value
+            ])
+            .filter(([id, v]) => v?.length > 0)
+            .map(([id, v]) => `${id}=${v}`)
+            .join('&')
+
+        console.log(filteringParamsPhrase)
+        const newSearch = `?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&` + filteringParamsPhrase
+
+        const url = model.router.getUrl();
+        const newUrl = new URL(url.origin + url.pathname + newSearch);
+        model.router.go(newUrl);
+    }
+}
+
+
+
+const onclickClear = (model, inputsIds) => {
+    return () => {
+        inputsIds.forEach(inputId => {
+                document.getElementById(inputId).value=''
+            });
+        onclickSubmit(model, inputsIds)();
+    }
+}
+
+const getUpperInputIds = (fields, pageFilteringTypes, filteringTypes) => {
+    return fields.map(f => filedName2MatchFromType(f.name, pageFilteringTypes, filteringTypes))
+}
+
+const getLowerInputIds = (fields, pagesFilteringTypes, filteringTypes) => {
+    return fields.map(f => filedName2ExcludeToType(f.name, pagesFilteringTypes, filteringTypes))
+}
+
+
+const filedName2MatchFromType = (fieldName, pageFilteringTypes, filteringTypes) => {
+    if (pageFilteringTypes[fieldName] === filteringTypes.matchExcludeType)
+        return `${fieldName}-match`;
+    else if (pageFilteringTypes[fieldName] === filteringTypes.fromToType)
+        return `${fieldName}-from`;
+    else
+        console.error("probably incorrect configuration of filtering types");
+}
+
+const filedName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes) => {
+    if (pagesFilteringParams[fieldName] === filteringTypes.matchExcludeType)
+        return `${fieldName}-exclude`;
+    else if (pagesFilteringParams[fieldName] === filteringTypes.fromToType)
+        return `${fieldName}-to`;
+    else
+        console.error("probably incorrect configuration of filtering types");
+}
+
+
+
+// const saveFiteringParams = (model, upperInputIds, lowerInputIds) => {
+//     const fields = model.getCurrentData().fields
+
+//     fields.forEach(f => f.filtering = {})
+//     zip(fields, upperInputIds).forEach(([f, id]) => {
+//         f.filtering[id] = document.getElementById(id)?.value;
+//     })
+//     zip(fields, lowerInputIds).forEach(([f, id]) => {
+//         f.filtering[id] = document.getElementById(id)?.value;
+//     })
+    
+// }

@@ -19,8 +19,9 @@
 import {Observable, Loader} from '/js/src/index.js';
 import FetchedDataManager from "./modelData/FetchedDataManager.js";
 import {RCT} from "../../config.js";
+import {getPathElems} from "../../../../utils/utils.js";
+import {defaultIndex} from "../../../../utils/defaults.js";
 const dataReqParams = RCT.dataReqParams;
-const pagesNames = RCT.pagesNames;
 
 
 export default class Submodel1 extends Observable {
@@ -107,5 +108,33 @@ export default class Submodel1 extends Observable {
         console.log("status: " + status);
         console.log("ok: " + ok);
         */
+    }
+
+    getCurrentDataPointer() {
+        const pathIdent = getPathElems(this.router.getUrl().pathname);
+        const page = pathIdent[0]
+        const index = defaultIndex(pathIdent[1]);
+        return {
+            page: page,
+            index: index
+        }
+    }
+
+    getCurrentData() {
+        const dataPointer = this.getCurrentDataPointer();
+        return this.fetchedData[dataPointer.page][dataPointer.index].payload;
+    } 
+
+    getCurrentRemoteData() {
+        const dataPointer = this.getCurrentDataPointer();
+        return this.fetchedData[dataPointer.page][dataPointer.index];
+    }
+
+    getData(page, index=null) {
+        return this.fetchedData[page][defaultIndex(index)].payload
+    }
+
+    getRemoteData(page, index=null) {
+        return this.fetchedData[page][defaultIndex(index)]
     }
 }
