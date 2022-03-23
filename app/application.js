@@ -18,8 +18,9 @@ const { HttpServer, Log } = require('@aliceo2/web-ui');
 const config = require('./lib/config/configProvider.js');
 const {buildPublicConfig} = require('./lib/config/publicConfigProvider.js');
 const AuthControlManager = require('./lib/AuthControlManager.js');
-const DatabaseService = require('./lib/DatabaseService.js');
+const DatabaseService = require('./lib/database/DatabaseService.js');
 const EP = config.public.endpoints;
+const path = require("path")
 
 
 class RunConditionTableApplication {
@@ -27,9 +28,9 @@ class RunConditionTableApplication {
         this.loggedUsers = {
             tokenToUserData: {},
         }
-        this.logger = Log('RCT-application')
+        this.logger = new Log('RCT-application')
         this.httpServer = new HttpServer(config.http, config.jwt);
-        this.databaseService = new DatabaseService(loggedUsers, logger);
+        this.databaseService = new DatabaseService(this.loggedUsers);
 
         this.defineStaticRoutes();
         this.defineEndpoints()
@@ -40,11 +41,11 @@ class RunConditionTableApplication {
 
 
     defineStaticRoutes() {
-        httpServer = this.httpServer;
+        const httpServer = this.httpServer;
 
-        httpServer.addStaticPath('./public');
-        httpServer.addStaticPath('./public', '/login');
-        httpServer.addStaticPath('./node_modules/less/dist', '/scripts');
+        httpServer.addStaticPath(path.join(__dirname, 'public'));
+        httpServer.addStaticPath(path.join(__dirname, 'public'), '/login');
+        httpServer.addStaticPath(path.join(__dirname, '..', 'node_modules', 'less/dist'), '/scripts');
     }
 
     defineEndpoints() {
@@ -61,8 +62,8 @@ class RunConditionTableApplication {
 
 
     buildAuthControl() {
-        this.authControlManager = new AuthControlManager(httpServer, loggedUsers, logger);
-        authControlManager.bindToTokenControl(EP.authControl);
+        this.authControlManager = new AuthControlManager(this.httpServer);
+        this.authControlManager.bindToTokenControl(EP.authControl);
     }
 
     isInTestMode() {
@@ -106,4 +107,4 @@ class RunConditionTableApplication {
     }
 }
 
-module.export = RunConditionTableApplication;
+module.exports = RunConditionTableApplication;

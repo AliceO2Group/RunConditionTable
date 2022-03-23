@@ -16,8 +16,9 @@
     "test": "mocha --exit test/**/mocha-*",
     "coverage": "nyc npm run test && npm run covergae:report",
     "coverage:report": "nyc report --report-html --report=json",
-    "eslint": "eslint . --ext .js",
+    "eslint": "eslint . --ext .js --format html --output-file ./reports/static-analysis.html",
     "eslint:fix": "npm run eslint -- --fix",
+    "eslint:out": "eslint-output *.js",
     "start:prod": "node main.js",
     "start:dev": "nodemon --watch main.js --watch app --ignore app/public"
   },
@@ -38,6 +39,8 @@
     "docs/"
   ],
   "devDependencies": {
+    "eslint": "8.10.0",
+    "eslint-output": "^3.0.1",
     "mocha": "^9.2.1",
     "nodemon": "^2.0.15",
     "nyc": "^15.1.0",

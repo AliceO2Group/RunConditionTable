@@ -18,10 +18,10 @@
  * class responsible for checking if token expired
  */
 class AuthControlManager {
-    constructor(httpserver, loggedUsers, log) {
+    constructor(httpserver, loggedUsers=null) {
         this.loggedUsers = loggedUsers;
         this.httpserver = httpserver;
-        this.log = log;
+        // this.log = log;
     }
 
     #tokenControl(req, res) {
