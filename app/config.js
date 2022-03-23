@@ -9,7 +9,8 @@ module.exports = {
     http: {
         port: 8081,
         hostname: 'localhost',
-        tls: false
+        tls: false,
+        autoListen: false,
     },
     database: {
         hostname: 'localhost',

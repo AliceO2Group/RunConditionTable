@@ -1,23 +1,42 @@
 {
-  "name": "rct-demo-app",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@aliceo2/RunConditionTable",
+  "version": "0.1.0",
+  "main": "main.js",
+  "author": "ALICEO2",
+  "keywords": [
+    "CERN",
+    "ALICEO2"
+  ],
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AliceO2Group/RunConditionTable"
+  },
   "scripts": {
     "test": "mocha --exit test/**/mocha-*",
-    "start": "node index.js",
-    "coverage": "nyc npm run test",
-    "dev": "nodemon --watch index.js --watch lib --watch public --ignore public/config.js --watch config.js"
+    "coverage": "nyc npm run test && npm run covergae:report",
+    "coverage:report": "nyc report --report-html --report=json",
+    "eslint": "eslint . --ext .js",
+    "eslint:fix": "npm run eslint -- --fix",
+    "start:prod": "node main.js",
+    "start:dev": "nodemon --watch main.js --watch app --ignore app/public"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@aliceo2/web-ui": "^1.18.2",
     "less": "^4.1.1",
     "pg": "^8.6.0",
     "socks-proxy-agent": "^6.1.1"
   },
+  "bundledDependencies": [
+    "@aliceo2/web-ui",
+    "less",
+    "pg",
+    "socks-proxy-agent"
+  ],
+  "files": [
+    "lib/",
+    "docs/"
+  ],
   "devDependencies": {
     "mocha": "^9.2.1",
     "nodemon": "^2.0.15",
