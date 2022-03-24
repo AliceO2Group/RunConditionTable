@@ -12,10 +12,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const { Client } = require('pg');
-const ReqParser = require('../ReqParser.js');
-const config = require('../config/configProvider.js');
 const { Log } = require('@aliceo2/web-ui');
+const { Client } = require('pg');
+const ReqParser = require('./ReqParser.js');
+const config = require('./../config/configProvider.js');
 
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataRespondFields;

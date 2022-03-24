@@ -13,10 +13,10 @@
     "url": "https://github.com/AliceO2Group/RunConditionTable"
   },
   "scripts": {
-    "test": "npm run eslint && mocha --exit test/**/mocha-*",
+    "test": "npm run eslint && mocha --exit tests/**/mocha-*",
     "coverage": "nyc npm run test && npm run covergae:report",
     "coverage:report": "nyc report --report-html --report=json",
-    "eslint": "eslint ./app --ext .js --format html --output-file ./reports/static-analysis.html",
+    "eslint": "eslint app --ext .js --format html --output-file ./reports/static-analysis.html",
     "reports:show": "open ./reports/*",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:out": "eslint-output *.js",

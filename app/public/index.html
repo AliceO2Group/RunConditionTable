@@ -13,9 +13,6 @@
 */
 -->
 
-
-
-
 <!doctype html>
 <head>
 	<title>RCT prototype</title>
@@ -23,7 +20,6 @@
 	<script src="scripts/less.js" type="text/javascript"></script>
 	<script src="/js/src/compatibility.js"></script>
 
-	<!-- Load the session service, parse variables provided by server in the query -->
 	<script type="module">
 		import sessionService from '/js/src/sessionService.js';
 
@@ -37,7 +33,6 @@
 	</script>
 
 	<script type="module">
-		// Import RCT Public Configuration
 		import {RCT} from './config.js';
 		console.log(RCT);
 		window.RCT = RCT;
@@ -48,15 +43,12 @@
 		import view from './view.js';
 		import Model from './model/Model.js';
 		import {RCT} from './config.js';
-		console.log('index html::: RCT (props) : ');
-		console.log(RCT);
 
 		const model = new Model();
 		const debug = true; // shows when redraw is done
 		mount(document.body, view, model, debug);
 
 		window.model = model;
-		// mock login
 		model.login('rct-user', 'rct-passwd', 'rct-db-v2');
 
 		// TODO

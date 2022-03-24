@@ -26,7 +26,7 @@ function buildPublicConfig(config) {
     const codeStr = '/* eslint-disable object-curly-spacing */\n' +
     '/* eslint-disable comma-dangle */\n' +
     '/* eslint-disable indent */\n' +
-    '/* eslint-disable quotes *\n/' +
+    '/* eslint-disable quotes */\n' +
     '/* eslint-disable quote-props */\n'
       + `const publicConfig = ${JSON.stringify(publicConfig, null, 2)};\n`
       + 'export { publicConfig as RCT };\n';

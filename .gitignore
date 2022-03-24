@@ -7,3 +7,4 @@ package-lock.json
 coverage*
 app/public/config.js
 reports
+*.ipynb_checkpoints
