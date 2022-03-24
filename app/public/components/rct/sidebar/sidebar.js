@@ -12,13 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
-
-
-import {h} from "/js/src/index.js";
-import fetchedDataPages from "./fetchedDataPages.js";
-import alonePageButton from "./alonePageButton.js";
-import {RCT} from "../../../config.js";
-const pagesNames = RCT.pagesNames;
+import { h } from '/js/src/index.js';
+import fetchedDataPages from './fetchedDataPages.js';
+import alonePageButton from './alonePageButton.js';
+import { RCT } from '../../../config.js';
+const { pagesNames } = RCT;
 
 /**
  * Provides navigation between particular views, is divide to sections,
@@ -28,17 +26,12 @@ const pagesNames = RCT.pagesNames;
  */
 
 export default function sidebar(model) {
-    return h('nav.sidebar.sidebar-content.scroll-y.flex-column', [
-        sidebarMenu(model)
-      ]);
+    return h('nav.sidebar.sidebar-content.scroll-y.flex-column', [sidebarMenu(model)]);
 }
-const sidebarMenu = (model) => {
-
-    return [
-        alonePageButton(model, 'Periods', pagesNames.periods),
-        fetchedDataPages(model, pagesNames.dataPasses, "Data Passes"),
-        fetchedDataPages(model, pagesNames.mc, "Monte Carlo"),
-        fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period'),
-        fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging'),
-    ]
-};
+const sidebarMenu = (model) => [
+    alonePageButton(model, 'Periods', pagesNames.periods),
+    fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes'),
+    fetchedDataPages(model, pagesNames.mc, 'Monte Carlo'),
+    fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period'),
+    fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging'),
+];

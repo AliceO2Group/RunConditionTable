@@ -12,14 +12,12 @@
  * or submit itself to any jurisdiction.
  */
 
-
-
-
 const defaultRowsOnSite = 100;
 const defaultSite = 1;
 
-import {RCT} from "../../../config.js";
+import { RCT } from '../../../config.js';
 const DRF = RCT.dataRespondFields;
+
 /**
  * Object of this class is used to hold data fetched from backend
  * set of data held in this structure are fully defined by the url given as on of constructor arguments
@@ -29,7 +27,7 @@ const DRF = RCT.dataRespondFields;
  */
 
 export default class FetchedData {
-    constructor(url, content, totalRecordsNumber=null) {
+    constructor(url, content, totalRecordsNumber = null) {
         this.url = url;
 
         this.fields = null;
@@ -41,37 +39,38 @@ export default class FetchedData {
         this.rowsOnsite = null;
         this.site = null;
 
-        this.parseFetchedFields(content)
-        this.parseFetchedRows(content)
-        if (!totalRecordsNumber)
-            this.setInfoAboutTotalRecordsNumber(content)
-        else
+        this.parseFetchedFields(content);
+        this.parseFetchedRows(content);
+        if (!totalRecordsNumber) {
+            this.setInfoAboutTotalRecordsNumber(content);
+        } else {
             this.totalRecordsNumber = totalRecordsNumber;
+        }
 
-        this.setSiteAndRowsOnSite()
-
+        this.setSiteAndRowsOnSite();
     }
 
     setSiteAndRowsOnSite() {
         const params = Object.fromEntries(this.url.searchParams.entries());
-        const appPropParams = RCT.dataReqParams;
-        this.rowsOnsite = params.hasOwnProperty(appPropParams.rowsOnsite) ? params[appPropParams.rowsOnsite] : defaultRowsOnSite;
-        this.site = params.hasOwnProperty(appPropParams.site) ? params[appPropParams.site] : defaultSite;
+        const DRP = RCT.dataReqParams;
+        this.rowsOnsite = params[DRP.rowsOnsite] ? params[DRP.rowsOnsite] : defaultRowsOnSite;
+        this.site = params[DRP.site] ? params[DRP.site] : defaultSite;
     }
 
-
     parseFetchedFields(content) {
-        this.fields = content.data.fields.map(item => {
+        this.fields = content.data.fields.map((item) => {
             item.marked = true;
             return item;
         });
     }
+
     parseFetchedRows(content) {
-        this.rows = content.data.rows.map(item => {
+        this.rows = content.data.rows.map((item) => {
             item.marked = false;
             return item;
         });
     }
+
     setInfoAboutTotalRecordsNumber(content) {
         if (! this.totalRecordsNumber) {
             this.totalRecordsNumber = content.data[DRF.totalRowsCount];

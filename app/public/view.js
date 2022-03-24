@@ -14,14 +14,10 @@
 
 import userPanel from './components/rct/userPanel.js';
 import loggingSite from './components/loggingSite.js';
-import {switchCase} from "/js/src/index.js";
+import { switchCase } from '/js/src/index.js';
 
 export default function view(model) {
-    return switchCase(
-        model.mode,
-        {
-            submodel1: (() => userPanel(model.submodel1)),
-        },
-        (() => loggingSite(model))
-    )()/*!!!*/;
+    return switchCase(model.mode, {
+        submodel1: () => userPanel(model.submodel1),
+    }, () => loggingSite(model))()/*!!!*/;
 }

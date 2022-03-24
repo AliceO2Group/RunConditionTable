@@ -83,8 +83,8 @@
             "never"
         ],
         "function-paren-newline": [
-            "error",
-            "never"
+            "warn",
+            { "minItems": 5 }
         ],
         "indent": [
             "error",
@@ -203,11 +203,11 @@
             "error",
             {
                 "require": {
-                    "FunctionDeclaration": true,
-                    "MethodDefinition": true,
-                    "ClassDeclaration": true,
-                    "ArrowFunctionExpression": true,
-                    "FunctionExpression": true
+                    "FunctionDeclaration": false,
+                    "MethodDefinition": false,
+                    "ClassDeclaration": false,
+                    "ArrowFunctionExpression": false,
+                    "FunctionExpression": false
                 }
             }
         ],

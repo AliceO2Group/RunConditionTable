@@ -12,17 +12,12 @@
  * or submit itself to any jurisdiction.
  */
 
-
-
-
-
-import {Observable, Loader} from '/js/src/index.js';
-import FetchedDataManager from "./modelData/FetchedDataManager.js";
-import {RCT} from "../../config.js";
-import {getPathElems} from "../../../../utils/utils.js";
-import {defaultIndex} from "../../../../utils/defaults.js";
-const dataReqParams = RCT.dataReqParams;
-
+import { Observable, Loader, Log } from '/js/src/index.js';
+import FetchedDataManager from './modelData/FetchedDataManager.js';
+import { RCT } from '../../config.js';
+import { getPathElems } from '../../../../utils/utils.js';
+import { defaultIndex } from '../../../../utils/defaults.js';
+const { dataReqParams } = RCT;
 
 export default class Submodel1 extends Observable {
     constructor(parent) {
@@ -31,14 +26,14 @@ export default class Submodel1 extends Observable {
         this.router = parent.router;
         this.routerCallback = this.handleLocationChange.bind(this);
         this.router.observe(this.routerCallback);
-        this.router.bubbleTo(this)
+        this.router.bubbleTo(this);
 
         this.fetchedData = new FetchedDataManager(this.router, this);
-        
+
         this.searchFieldsVisible = false;
 
-        this.loader = new Loader()
-
+        this.loader = new Loader();
+        this.logger = new Log(Submodel1.class);
 
         this.handleLocationChange(); // Init first page
     }
@@ -52,28 +47,29 @@ export default class Submodel1 extends Observable {
         switch (url.pathname) {
             // TODO consider if switch will be useful
             default:
-                if (url.pathname === "/") {
-                    this.router.go(`/periods/?&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`)
+                if (url.pathname === '/') {
+                    this.router.go(`/periods/?&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
                 } else {
                     this.fetchedData.reqForData()
-                        .then(r => {})
-                        .catch(e => {console.error(e)});
+                        .then(() => {})
+                        .catch((e) => {
+                            this.logger.error(e);
+                        });
                 }
                 break;
         }
     }
 
-
     async logout() {
-        const logoutEndpoint = '/api/logout/'
-        const {result, status, ok} = this.loader.post(logoutEndpoint)
+        const logoutEndpoint = '/api/logout/';
+        const { result, status, ok } = this.loader.post(logoutEndpoint);
         this.parent._tokenExpirationHandler(status);
 
         localStorage.token = null;
-        this.parent.mode = "default";
+        this.parent.mode = 'default';
 
         if (!ok) {
-            alert("Some error occurred: " + JSON.stringify(result));
+            alert(`Some error occurred: ${JSON.stringify(result)}`);
         } else {
             alert('successfully logged out');
         }
@@ -82,59 +78,34 @@ export default class Submodel1 extends Observable {
         this.notify();
     }
 
-    async fetchBookkeeping() {
-        console.log('hello there');
-        
-        /*const endpoint = '/api/bookkeeping/'
-        
-        const response = await fetchClient(endpoint, {
-            //TODO
-            method: 'POST',
-            headers: {'Content-type': 'application/json; charset=UTF-8'},
-            body: JSON.stringify({
-                payload: {
-                    targetTable: '',
-                    data: '',
-                }
-            })
-        });
-    
-        const content = await response.json();
-        alert(content.data);
-        model.notify();
-        /*
-        const {result, status, ok} = this.loader.get(endpoint);
-        console.log("result: " + result);
-        console.log("status: " + status);
-        console.log("ok: " + ok);
-        */
+    getDataPointerFromUrl(url) {
+        const pathIdent = getPathElems(url.pathname);
+        const [page, index] = pathIdent;
+        return {
+            page: page,
+            index: defaultIndex(index),
+        };
     }
 
     getCurrentDataPointer() {
-        const pathIdent = getPathElems(this.router.getUrl().pathname);
-        const page = pathIdent[0]
-        const index = defaultIndex(pathIdent[1]);
-        return {
-            page: page,
-            index: index
-        }
+        return this.getDataPointerFromUrl(this.router.getUrl().pathname);
     }
 
     getCurrentData() {
         const dataPointer = this.getCurrentDataPointer();
         return this.fetchedData[dataPointer.page][dataPointer.index].payload;
-    } 
+    }
 
     getCurrentRemoteData() {
         const dataPointer = this.getCurrentDataPointer();
         return this.fetchedData[dataPointer.page][dataPointer.index];
     }
 
-    getData(page, index=null) {
-        return this.fetchedData[page][defaultIndex(index)].payload
+    getData(page, index = null) {
+        return this.fetchedData[page][defaultIndex(index)].payload;
     }
 
-    getRemoteData(page, index=null) {
-        return this.fetchedData[page][defaultIndex(index)]
+    getRemoteData(page, index = null) {
+        return this.fetchedData[page][defaultIndex(index)];
     }
 }

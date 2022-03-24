@@ -12,47 +12,43 @@
  * or submit itself to any jurisdiction.
  */
 
-
-
-import {h, iconLayers} from "/js/src/index.js";
-import {RCT} from "../../../config.js";
-const dataReqParams = RCT.dataReqParams;
+import { h, iconLayers } from '/js/src/index.js';
+import { RCT } from '../../../config.js';
+const { dataReqParams } = RCT;
 
 function defaultHref(page, index) {
-    return `/${page}${index ? '/'+index : ''}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
+    return `/${page}${index ? `/${index}` : ''}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
 }
 
-export default function alonePageButton(model, title, page, index=null) {
-
+export default function alonePageButton(model, title, page, index = null) {
     const currentPointer = model.getCurrentDataPointer();
     const currentPage = currentPointer.page;
 
     const remoteData = model.getRemoteData(page, index);
-    const data = remoteData.payload
+    const data = remoteData.payload;
 
     const dataHref = remoteData.match({
-        NotAsked: () => {console.error("fatal error" ); return "..."},
+        NotAsked: () => {
+            throw 'fatal';
+        },
         Loading: () => data.url.href,
         Success: () => data.url.href,
         Failure: (status) => {
-            alert("error with url: ", data.url); 
-            console.error("error occured for url", data.url, status); 
-            defaultHref(page, index)
-        }
-    })
+            alert('error with url: ', data.url, status);
+            defaultHref(page, index);
+        },
+    });
 
-
-
-    return [h('.menu-title', {
-        class: currentPage === page ? 'currentMenuItem' : ''
-    }, title),
+    return [
+        h('.menu-title', {
+            class: currentPage === page ? 'currentMenuItem' : '',
+        }, title),
         h('a.menu-item', {
             title: title,
             style: 'display:flex',
             href: dataHref,
             onclick: (e) => model.router.handleLinkEvent(e),
-            class: currentPage === page ? 'selected' : ''
-        }, [
-            h('span', iconLayers(), ' ', title)
-        ])]
+            class: currentPage === page ? 'selected' : '',
+        }, [h('span', iconLayers(), ' ', title)]),
+    ];
 }

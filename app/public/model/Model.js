@@ -12,8 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
-import {Observable, sessionService, QueryRouter, Loader} from '/js/src/index.js';
-import Submodel1 from "./logged/Submodel1.js";
+import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
+import Submodel1 from './logged/Submodel1.js';
 
 export default class Model extends Observable {
     constructor() {
@@ -24,58 +24,47 @@ export default class Model extends Observable {
 
         this.mode = 'default'; // TODO delete or give meaning to this statement;
         this.submodel1 = null;
-        this.logginEndpoint = "/api/login/"
-
+        this.logginEndpoint = '/api/login/';
     }
-
 
     async login(username, password) {
-
-        const {result, status, ok} = await this.postLoginPasses(username, password)
+        const { status, ok } = await this.postLoginPasses(username, password);
         this._tokenExpirationHandler(status);
-        if (ok)
-            this.handleSuccessInLogin()
+        if (ok) {
+            this.handleSuccessInLogin();
+        }
     }
-
 
     postLoginPasses(username, password) {
-        return this.loader.post(
-            this.logginEndpoint,
-            {username: username, password: password}
-        )
+        return this.loader.post(this.logginEndpoint, { username: username, password: password });
     }
+
     handleSuccessInLogin() {
-        localStorage.token =  sessionService.session.token;
+        localStorage.token = sessionService.session.token;
         this.submodel1 = new Submodel1(this);
         this.submodel1.bubbleTo(this);
-        this.mode = "submodel1";
+        this.mode = 'submodel1';
         this.notify();
     }
 
-
-
     _tokenExpirationHandler(status) {
-        console.log('status', status);
         if (status == 403) {
             localStorage.token = null;
             alert('Auth token expired!');
             this.router.unobserve(this.router.submodel1.routerCallback);
             this.router.go('/', true);
             this.submodel1 = null;
-            this.mode = "default";
+            this.mode = 'default';
             document.location.reload(true);
         }
     }
 
     async controlServerRequest(name = '/api/auth-control/') {
-        const {result, status, ok} = this.loader.get(name);
+        const { status } = this.loader.get(name);
         this._tokenExpirationHandler(status);
     }
 
     restoreSession() {
         //TODO
     }
-
 }
-
-

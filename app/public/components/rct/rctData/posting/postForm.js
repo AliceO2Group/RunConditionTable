@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 /**
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
@@ -12,49 +13,38 @@
  * or submit itself to any jurisdiction.
  */
 
-
-
-import postingDataConfig from "./postingDataConfig.js";
-import {h, fetchClient} from '/js/src/index.js';
-import {RCT} from "../../../../config.js";
+import postingDataConfig from './postingDataConfig.js';
+import { h, fetchClient } from '/js/src/index.js';
+import { RCT } from '../../../../config.js';
 
 // TODO move it to model
-/**
- * returns vnode, row in table containing input fields and
- * button submit which allows to post data row e.g. to flags table
- * At which columns there will be input is defined in 'postingDataConfig.js'
- * @param model
- * @param data
- * @returns {*}
- */
 export function postForm(model, data) {
-    alert("TODO")
-    return
-    const params = model.router.params;
+    alert('TODO');
+    return;
+    const { params } = model.router;
     const pageMetadata = postingDataConfig[params.page];
-    return h('tr', data.fields.map(f => {
+    return h('tr', data.fields.map((f) => {
         if (pageMetadata !== undefined
             && pageMetadata['excludedFields'] !== undefined
             && pageMetadata['excludedFields'].includes(f.name)) {
             return h('td', '.');
         } else {
-            return h('td', h('form', h('input', {id: 'input-form-' + f.name})));
+            return h('td', h('form', h('input', { id: `input-form-${f.name}` })));
         }
-    }).concat([h('button.btn', {onclick: () => postData(model, data)}, 'submit')]))
+    }).concat([h('button.btn', { onclick: () => postData(model, data) }, 'submit')]));
 }
 
-
 async function postData(model, data) {
-    alert("TODO")
-    return
-    const params = model.router.params;
+    alert('TODO');
+    return;
+    const { params } = model.router;
     const pageMetadata = postingDataConfig[params.page];
-    const reqEndpoint = '/api' + RCT.endpoints.insertData;
+    const reqEndpoint = `/api${RCT.endpoints.insertData}`;
 
-    const dataObj = {}
-    for (let f of data.fields) {
+    const dataObj = {};
+    for (const f of data.fields) {
         if (!pageMetadata.excludedFields.includes(f.name)) {
-            let input = document.getElementById('input-form-' + f.name);
+            const input = document.getElementById(`input-form-${f.name}`);
             dataObj[f.name] = input.value;
         } else {
             dataObj[f.name] = 'DEFAULT';
@@ -64,13 +54,13 @@ async function postData(model, data) {
     const response = await fetchClient(reqEndpoint, {
         //TODO
         method: 'POST',
-        headers: {'Content-type': 'application/json; charset=UTF-8'},
+        headers: { 'Content-type': 'application/json; charset=UTF-8' },
         body: JSON.stringify({
             payload: {
                 targetTable: pageMetadata.targetTable,
                 data: dataObj,
-            }
-        })
+            },
+        }),
     });
 
     const content = await response.json();

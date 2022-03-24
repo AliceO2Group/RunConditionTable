@@ -12,8 +12,6 @@
  * or submit itself to any jurisdiction.
  */
 
-
-
 import { h, iconHome, iconPerson, iconDataTransferDownload, iconMagnifyingGlass, iconReload } from '/js/src/index.js';
 import downloadCSV from '../../utils/csvExport.js';
 
@@ -23,11 +21,11 @@ export default function header(model) {
             h('button.btn', iconHome()),
             ' ',
             h('button.btn', {
-                onclick: () => model.logout()
+                onclick: () => model.logout(),
             }, iconPerson()),
             ' ',
             h('button.btn', {
-                onclick: () => model.fetchBookkeeping()
+                onclick: () => model.fetchBookkeeping(),
             }, 'fetch bookkeeping'),
             h('span.f4.gray', 'Run Condition Table'),
         ]),
@@ -44,50 +42,42 @@ const headerSpecific = (model) => {
         case 'flags': return title('Flags');
         default: return null;
     }
-  };
+};
 
-const title = (text) => {
-    return h('b.f4', text);
-}
+const title = (text) => h('b.f4', text);
 
-const functionalities = (model) => {
-        return h('.button-group.text-right',
-            // rowsOnPage(model),
-            h('button.btn', {
-                onclick: () => {
-                    model.fetchedData.reqForData(true);
-                    model.notify();
-                }
-            }, iconReload()),
-            h('button.btn', {
-                onclick: () => {
-                    downloadCSV(model);
-                }
-            }, iconDataTransferDownload()),
-            h('button.btn', {
-                className: model.searchFieldsVisible? 'active': '',
-                onclick: () => {
-                    model.changeSearchFieldsVisibility();
-                    model.notify();
-                }
-            }, iconMagnifyingGlass())
-        );
-}
+const functionalities = (model) => h('.button-group.text-right', h('button.btn', {
+    onclick: () => {
+        model.fetchedData.reqForData(true);
+        model.notify();
+    },
+}, iconReload()), h('button.btn', {
+    onclick: () => {
+        downloadCSV(model);
+    },
+}, iconDataTransferDownload()), h('button.btn', {
+    className: model.searchFieldsVisible ? 'active' : '',
+    onclick: () => {
+        model.changeSearchFieldsVisibility();
+        model.notify();
+    },
+}, iconMagnifyingGlass()));
 
 const dropdownId = 'dropdown-rows-on-page-id';
 
-
-const rowsOnPage = (model) => {
-    return [
+// eslint-disable-next-line no-unused-vars
+const rowsOnPage = (model) => [
     h('button.btn', {
         onclick: () => {
-            if (document.getElementById(dropdownId).classList.contains('dropdown-opened'))
+            if (document.getElementById(dropdownId).classList.contains('dropdown-opened')) {
                 document.getElementById(dropdownId).classList.remove('dropdown-open');
-            else document.getElementById(dropdownId).classList.toggle('dropdown-open');
-    }}, 'rowsOnPage'),
+            } else {
+                document.getElementById(dropdownId).classList.toggle('dropdown-open');
+            }
+        } }, 'rowsOnPage'),
     h('.dropdown', {
         id: dropdownId,
-        name: 'section-object-dropdown'
+        name: 'section-object-dropdown',
     }, [
         h('.dropdown-menu', [
             h('button.btn', {
@@ -95,27 +85,29 @@ const rowsOnPage = (model) => {
                     model.fetchedData.rowsOnPage = 5;
                     model.router.params.rowsOnPage = 5;
                     model.router.handleLinkEvent(e);
-                    // TODO
-                    //model.notify();
-                    //model.fetchedData.reqForData(true)
-                    //model.notify();
-                }
+
+                    /*
+                     *  TODO
+                     * model.notify();
+                     * model.fetchedData.reqForData(true)
+                     * model.notify();
+                     */
+                },
             }, '5'),
             h('button.btn', {
                 onclick: () => {
                     model.fetchedData.rowsOnPage = 10;
-                    model.fetchedData.reqForData(true)
+                    model.fetchedData.reqForData(true);
                     model.notify();
-                }
+                },
             }, '10'),
             h('button.btn', {
                 onclick: () => {
                     model.fetchedData.rowsOnPage = 15;
-                    model.fetchedData.reqForData(true)
+                    model.fetchedData.reqForData(true);
                     model.notify();
-                }
+                },
             }, '15'),
-        ])
-    ])
-    ]
-}
+        ]),
+    ]),
+];

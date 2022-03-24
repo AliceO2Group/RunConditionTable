@@ -12,72 +12,59 @@
  * or submit itself to any jurisdiction.
  */
 
-
-
-
 const config = require('../config/configProvider.js');
-const pagesNames = config.public.pagesNames;
+
+const { pagesNames } = config.public;
 const DRP = config.public.dataReqParams;
 
 /**
- * class responsible for parsing url params, payloads of client request to sql queries
+ * Class responsible for parsing url params, payloads of client request to sql queries
  */
 class ReqParser {
-
     constructor() {}
 
     parseDataReq(query) {
-        console.log(query);
-
-        const page = query.page;
-
-        let matchParams = [];
-        let excludeParams = [];
-        let fromParams = [];
-        let toParams = [];
+        const matchParams = [];
+        const excludeParams = [];
+        const fromParams = [];
+        const toParams = [];
 
         for (const [key, value] of Object.entries(query)) {
             const queryParam = key.substring(0, key.lastIndexOf('-'));
             if (key.includes('match')) {
-                matchParams.push({queryParam, value});
+                matchParams.push({ queryParam, value });
             }
-        
+
             if (key.includes('exclude')) {
-                excludeParams.push({queryParam, value});
+                excludeParams.push({ queryParam, value });
             }
-            
+
             if (key.includes('from')) {
-                fromParams.push({queryParam, value});
+                fromParams.push({ queryParam, value });
             }
 
             if (key.includes('to') && key !== 'token') {
-                toParams.push({queryParam, value});
+                toParams.push({ queryParam, value });
             }
         }
 
         const filteringPart = () => {
             const matchPhrase = matchParams.map((filter) =>
-                `"${filter.queryParam}" LIKE '${filter.value}'`
-            ).join(' AND ');
+                `"${filter.queryParam}" LIKE '${filter.value}'`).join(' AND ');
 
-            const excludePhrase = excludeParams.map(({queryParam, value}) =>
-                `"${queryParam}" NOT LIKE '${value}'`
-            ).join(' AND ');
+            const excludePhrase = excludeParams.map(({ queryParam, value }) =>
+                `"${queryParam}" NOT LIKE '${value}'`).join(' AND ');
 
-            const fromPhrase = fromParams.map(({queryParam, value}) =>
-                `"${queryParam}" >= ${value}`
-            ).join(' AND ');
+            const fromPhrase = fromParams.map(({ queryParam, value }) =>
+                `"${queryParam}" >= ${value}`).join(' AND ');
 
-            const toPhrase = toParams.map(({queryParam, value}) =>
-                `"${queryParam}" <= ${value}`
-            ).join(' AND ');
+            const toPhrase = toParams.map(({ queryParam, value }) =>
+                `"${queryParam}" <= ${value}`).join(' AND ');
 
-            const filtersPhrase = [matchPhrase, excludePhrase, fromPhrase, toPhrase].filter(
-                    value => {return value?.length > 0}
-                ).join(' AND ');
-            
+            const filtersPhrase = [matchPhrase, excludePhrase, fromPhrase, toPhrase].filter((value) => value?.length > 0).join(' AND ');
+
             return filtersPhrase?.length > 0 ? `WHERE ${filtersPhrase}` : '';
-        }
+        };
 
         const dataSubsetQueryPart = (query) => query[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${query[DRP.rowsOnSite]} OFFSET ${query[DRP.rowsOnSite] * (query[DRP.site] - 1)}`;
@@ -126,23 +113,21 @@ class ReqParser {
 
     parseInsertDataReq(payload) {
         const valueEntries = Object.entries(payload.data);
-        const keys = valueEntries.map(([k, v]) => k);
-        const values = valueEntries.map(([k, v]) => v);
-        return `INSERT INTO ${payload.targetTable}("${keys.join('\", \"')}") VALUES(${parseValues(values).join(', ')});`;
+        const keys = valueEntries.map(([k, _]) => k);
+        const values = valueEntries.map(([_, v]) => v);
+        return `INSERT INTO ${payload.targetTable}("${keys.join('", "')}") VALUES(${parseValues(values).join(', ')});`;
     }
 }
 
-const parseValues = (values) => {
-    return values.map(v => {
-        if (isNaN(v) && v !== 'DEFAULT')
-            return `\'${v}\'`;
-        else
-            return v;
-    })
-}
+const parseValues = (values) => values.map((v) => {
+    if (isNaN(v) && v !== 'DEFAULT') {
+        return `'${v}'`;
+    } else {
+        return v;
+    }
+});
 
 module.exports = ReqParser;
-
 
 const period_view = `
     WITH period_view AS (
@@ -213,7 +198,7 @@ const data_passes_view = (query) => `
                         WHERE r.period_id = (
                                             SELECT id 
                                             FROM periods AS p 
-                                            WHERE p.name = \'${query.index}\')
+                                            WHERE p.name = '${query.index}')
                                             )
         )`;
 
@@ -238,7 +223,7 @@ const mc_view = (query) => `
                         WHERE r.period_id = (
                                             SELECT id 
                                             FROM periods as p 
-                                            WHERE p.name = \'${query.index}\'
+                                            WHERE p.name = '${query.index}'
                                             )
                         ) 
         )`;
