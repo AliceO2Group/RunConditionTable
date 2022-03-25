@@ -7,5 +7,5 @@ package-lock.json
 coverage*
 app/public/config.js
 reports
-dbman/.ipynb_checkpoints
-dbman/cached
+database/.ipynb_checkpoints
+database/cached
