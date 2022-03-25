@@ -14,7 +14,8 @@
     ],
     "ignorePatterns": [
         "node_modules/",
-        "database/dbman/"
+        "database/",
+        "tests/",
     ],
     "rules": {
         "array-bracket-newline": [

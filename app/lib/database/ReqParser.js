@@ -12,6 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
+const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
 
 const { pagesNames } = config.public;
@@ -21,7 +22,9 @@ const DRP = config.public.dataReqParams;
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
 class ReqParser {
-    constructor() {}
+    constructor() {
+        this.logger = new Log(ReqParser.name);
+    }
 
     parseDataReq(query) {
         const matchParams = [];

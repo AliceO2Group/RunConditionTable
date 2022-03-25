@@ -40,5 +40,5 @@ function _getPublic(config) {
 }
 
 module.exports = {
-    buildPublicConfig, _getPublic,
+    buildPublicConfig,
 };

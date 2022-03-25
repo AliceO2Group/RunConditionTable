@@ -16,13 +16,10 @@ const { Log } = require('@aliceo2/web-ui');
 const { Client } = require('pg');
 const ReqParser = require('./ReqParser.js');
 const config = require('./../config/configProvider.js');
+const { emit } = require('nodemon');
 
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataRespondFields;
-
-async function select(client, command) {
-    return await client.query(command);
-}
 
 /**
  * This class handle communication with postgres database using 'pg' package
@@ -33,7 +30,7 @@ async function select(client, command) {
 class DatabaseService {
     constructor(loggedUsers) {
         this.loggedUsers = loggedUsers;
-        this.logger = new Log(DatabaseService.class);
+        this.logger = new Log(DatabaseService.name);
         this.parser = new ReqParser();
     }
 
@@ -42,25 +39,31 @@ class DatabaseService {
         let client = this.loggedUsers.tokenToUserData[req.query.token];
 
         if (!client) {
+            this.logger.info('Logging new client: ');
             client = new Client({
                 host: config.database.hostname,
                 port: config.database.port,
                 database: config.database.dbname,
                 user: config.database.dbuser,
-                password: body.password,
+                password: config.database.password,
             });
 
-            (async () => await client.connect())();
+            (async () => await client.connect())()
+                .catch((e) => {
+                    this.logger.error(e);
+                });
+        } else {
+            this.logger.info('Restoring session with client');
         }
-        this.logger.info('Logging client: ');
 
-        select(client, 'SELECT NOW();')
+        client.query('SELECT NOW();')
             .then(async (dbRes) => {
                 await res.json({ data: dbRes.rows });
                 this.loggedUsers.tokenToUserData[req.query.token] = {
                     pgClient: client,
                     loginDate: new Date(),
                     name: body.username,
+                    lastReqTime: new Date(),
                 };
                 this.logger.info('Logged client: ');
             }).catch((e) => {
@@ -69,12 +72,15 @@ class DatabaseService {
     }
 
     logout(req, res) {
-        let found = false;
-        if (this.loggedUsers.tokenToUserData[req.query.token]) {
-            found = true;
-            this.loggedUsers.tokenToUserData[req.query.token] = null;
+        const { token } = req.query;
+        const clientData = this.loggedUsers.tokenToUserData[token];
+        if (clientData) {
+            this.loggedUsers.tokenToUserData[token] = undefined;
+            clientData.pgClient.end((e) => {
+                this.logger.error(e);
+            });
         }
-        if (found) {
+        if (clientData) {
             this.responseWithStatus(res, 200, 'successfully logout');
         } else {
             this.responseWithStatus(res, 409, 'no such user');
@@ -100,13 +106,12 @@ class DatabaseService {
                 query = this.parseReqToSql({ ...req.query, ...req.params });
             }
 
-            this.logger.log(new Date(), query);
-            await select(client, query)
+            client.query(query)
                 .then((dbRes) => {
                     dbResponseHandler(req, res, dbRes);
                 })
                 .catch((e) => {
-                    this.logger.log(e);
+                    this.logger.error(e);
                     res.json({ data: e.code });
                 });
         } else {
@@ -154,6 +159,30 @@ class DatabaseService {
     responseWithStatus(res, status, message) {
         this.logger.error(message);
         res.status(status).json({ message: message });
+    }
+
+    async disconnect() {
+        const promises = Object.entries(this.loggedUsers.tokenToUserData).map(([_, data]) => {
+            this.logger.info(`ending for ${data.name}`);
+            return data.pgClient.end();
+        });
+        return Promise.all(promises);
+    }
+
+    async setAdminConnection() {
+        this.adminClient = new Client({
+            host: config.database.hostname,
+            port: config.database.port,
+            database: config.database.dbname,
+            user: config.database.dbuser,
+            password: config.database.password,
+        });
+
+        await this.adminClient.connect()
+            .catch((e) => {
+                this.logger.error(e);
+                process.emit('SIGINT');
+            });
     }
 }
 

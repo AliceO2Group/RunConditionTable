@@ -14,10 +14,10 @@ module.exports = {
     },
     database: {
         hostname: 'localhost',
-        dbname: 'rct-db-v3',
+        dbname: 'rct-db',
         dbuser: 'rct-user',
+        password: 'rct-passwd',
         port: 5432,
-
     },
     bookkeepingRuns: {
         url: 'http://rct-bookkeeping.cern.ch:4000/api/runs',

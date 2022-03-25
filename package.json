@@ -19,7 +19,6 @@
     "eslint": "eslint app --ext .js --format html --output-file ./reports/static-analysis.html",
     "reports:show": "open ./reports/*",
     "eslint:fix": "npm run eslint -- --fix",
-    "eslint:out": "eslint-output *.js",
     "start:prod": "node main.js",
     "start:dev": "nodemon --watch main.js --watch app --ignore app/public"
   },

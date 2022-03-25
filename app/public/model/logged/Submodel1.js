@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { Observable, Loader, Log } from '/js/src/index.js';
+import { Observable, Loader } from '/js/src/index.js';
 import FetchedDataManager from './modelData/FetchedDataManager.js';
 import { RCT } from '../../config.js';
 import { getPathElems } from '../../../../utils/utils.js';
@@ -33,7 +33,6 @@ export default class Submodel1 extends Observable {
         this.searchFieldsVisible = false;
 
         this.loader = new Loader();
-        this.logger = new Log(Submodel1.class);
 
         this.handleLocationChange(); // Init first page
     }
@@ -52,8 +51,7 @@ export default class Submodel1 extends Observable {
                 } else {
                     this.fetchedData.reqForData()
                         .then(() => {})
-                        .catch((e) => {
-                            this.logger.error(e);
+                        .catch(() => {
                         });
                 }
                 break;
@@ -88,7 +86,7 @@ export default class Submodel1 extends Observable {
     }
 
     getCurrentDataPointer() {
-        return this.getDataPointerFromUrl(this.router.getUrl().pathname);
+        return this.getDataPointerFromUrl(this.router.getUrl());
     }
 
     getCurrentData() {

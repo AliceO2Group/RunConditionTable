@@ -23,7 +23,7 @@ class BookkeepingService {
     constructor() {
         this.endpoint = config.bookkeepingRuns.url;
         this.opts = parse(this.endpoint);
-        this.logger = new Log('BookkeepingInterface');
+        this.logger = new Log(BookkeepingService.name);
 
         const proxy = config.dev.proxy.trim();
         if (proxy !== '') {

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
@@ -12,25 +13,22 @@
  * or submit itself to any jurisdiction.
  */
 
-
-
-
 const DatabaseService = require('../lib/DatabaseService.js');
 const assert = require('assert');
 const sinon = require('sinon');
-const {Log} = require("@aliceo2/web-ui");
+const { Log } = require('@aliceo2/web-ui');
 
-describe('DatabaseService test suite', function() {
-    describe('Check Initialization of DatabaseService', function() {
-        it('should successfully initialize the DatabaseService', function() {
+describe('DatabaseService test suite', () => {
+    describe('Check Initialization of DatabaseService', () => {
+        it('should successfully initialize the DatabaseService', () => {
             assert.doesNotThrow(() => {
                 new DatabaseService({}, new Log('Tutorial'));
             });
         });
     });
 
-    describe('ApplicationService getData test suite', function() {
-        it('should successfully send data about the project', function() {
+    describe('ApplicationService getData test suite', () => {
+        it('should successfully send data about the project', () => {
             const databaseService = new DatabaseService({}, new Log(''));
             res = {
                 status: sinon.fake.returns(),
@@ -38,9 +36,12 @@ describe('DatabaseService test suite', function() {
             const data = '';
             databaseService.getDate(null, res);
             console.log(res);
-            // assert.ok(res.status.calledWith(200));
-            // assert.ok(res.json.calledWith(data));
-            // assert.ok(res.)
+
+            /*
+             * Assert.ok(res.status.calledWith(200));
+             * assert.ok(res.json.calledWith(data));
+             * assert.ok(res.)
+             */
         });
     });
 });

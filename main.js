@@ -13,14 +13,13 @@
  */
 
 const RunConditionTableApplication = require('./app/application.js');
+
 const runConditionTableApplication = new RunConditionTableApplication();
 
-runConditionTableApplication.run()
-    .then(r => r)
-    .catch(e => e)
+runConditionTableApplication.run();
 
 /**
- * signals handlers
+ * Signals handlers
  */
 const signals = ['SIGTERM', 'SIGINT', 'SIGHUP'];
 signals.forEach((event) => process.on(event, runConditionTableApplication.stop.bind(runConditionTableApplication)));

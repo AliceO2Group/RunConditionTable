@@ -29,7 +29,7 @@ class RunConditionTableApplication {
         this.loggedUsers = {
             tokenToUserData: {},
         };
-        this.logger = new Log('RCT-application');
+        this.logger = new Log(RunConditionTableApplication.name);
         this.httpServer = new HttpServer(config.http, config.jwt);
         this.databaseService = new DatabaseService(this.loggedUsers);
 
@@ -77,10 +77,8 @@ class RunConditionTableApplication {
         this.logger.info('Starting RCT app...');
 
         try {
-            /*
-             * Await this.databaseService.start();
-             * await this.servicesSync.start();
-             */
+            //Await this.servicesSync.start();
+            await this.databaseService.setAdminConnection();
             await this.httpServer.listen();
         } catch (error) {
             this.logger.error(`Error while starting RCT app: ${error}`);
@@ -94,10 +92,9 @@ class RunConditionTableApplication {
         this.logger.info('Stopping RCT app...');
 
         try {
-            /*
-             * Await this.databaseService.stop();
-             * await this.servicesSync.stop();
-             */
+            await this.databaseService.disconnect()
+                .catch((e) => this.logger.error(e));
+            // Await this.servicesSync.stop();
             await this.httpServer.close();
         } catch (error) {
             this.logger.error(`Error while stopping RCT app: ${error}`);
