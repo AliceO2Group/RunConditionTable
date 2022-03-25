@@ -2,38 +2,37 @@ name: Tests
 on:
   pull_request:
   push:
-    branches:
-      - 'master'
 jobs:
   test:
-    name: Tests on macos-latest
-    runs-on: macOS-latest
+    name: static analysis
+    runs-on: ubuntu-18.04
     defaults:
       run:
-        working-directory: ./app
+        working-directory: ./
     steps:
       - uses: actions/checkout@v2
       - name: Setup node
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: '14.16.x'
-      - run: (npm ci)
-      - run: (npm test)
+      - run: npm ci
+      - run: npm run static
+
   coverage:
     name: Tests & coverage on ubuntu-18.04
     runs-on: ubuntu-18.04
     defaults:
       run:
-        working-directory: ./app
+        working-directory: ./
     steps:
       - uses: actions/checkout@v2
       - name: Setup node
         uses: actions/setup-node@v2
         with:
           node-version: '14.16.x'
-      - run: (npm ci)
-      - run: (npm run coverage)
-      - run: (./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov)
+      - run: npm ci
+      - run: npm run coverage
+      - run: ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
       - name: Send codecov report for RunConditionTable
         uses: codecov/codecov-action@v2
         with:
