@@ -4,7 +4,7 @@ tmp
 volatile
 package-lock.json
 .nyc_output
-coverage
+coverage*
 app/public/config.js
 reports
 database/.ipynb_checkpoints

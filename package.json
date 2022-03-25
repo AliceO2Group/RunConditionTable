@@ -17,8 +17,8 @@
     "eslint:fix": "npm run eslint -- --fix",
     "static": "npm run eslint",
     "test": "npm run static && mocha --exit tests/**/mocha-*",
+    "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run test && npm run coverage:report",
-    "coverage:report": "nyc report --report-html --report=json",
     "reports:show": "open ./reports/*",
 
     "start:dev": "nodemon --watch main.js --watch app --ignore app/public",

@@ -2,6 +2,8 @@ name: Tests
 on:
   pull_request:
   push:
+    branches:
+      - master
 jobs:
   test:
     name: static analysis
@@ -19,7 +21,7 @@ jobs:
       - run: npm run static
 
   coverage:
-    name: Tests & coverage on ubuntu-18.04
+    name: tests and coverage
     runs-on: ubuntu-18.04
     defaults:
       run:

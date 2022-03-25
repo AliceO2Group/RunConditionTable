@@ -14,5 +14,7 @@ coverage:
         if_ci_failed: error
 ignore:
   - ./node_modules/*
+  - ./coverage/*
   - ./.nyc_output/*
+  - ./coverage.lcov
 comment: false
