@@ -19,7 +19,7 @@ import { getPathElems } from '../../../../utils/utils.js';
 import { defaultIndex } from '../../../../utils/defaults.js';
 const { dataReqParams } = RCT;
 
-export default class Submodel1 extends Observable {
+export default class PrimaryModel extends Observable {
     constructor(parent) {
         super();
         this.parent = parent;
@@ -105,5 +105,10 @@ export default class Submodel1 extends Observable {
 
     getRemoteData(page, index = null) {
         return this.fetchedData[page][defaultIndex(index)];
+    }
+
+    handleClick(e) {
+        this.router.handleLinkEvent(e);
+        this.notify();
     }
 }

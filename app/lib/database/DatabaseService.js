@@ -14,9 +14,8 @@
 
 const { Log } = require('@aliceo2/web-ui');
 const { Client } = require('pg');
-const ReqParser = require('./ReqParser.js');
+const QueryBuilder = require('./QueryBuilder.js');
 const config = require('./../config/configProvider.js');
-const { emit } = require('nodemon');
 
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataRespondFields;
@@ -31,7 +30,7 @@ class DatabaseService {
     constructor(loggedUsers) {
         this.loggedUsers = loggedUsers;
         this.logger = new Log(DatabaseService.name);
-        this.parser = new ReqParser();
+        this.queryBuilder = new QueryBuilder();
     }
 
     login(req, res) {
@@ -87,8 +86,8 @@ class DatabaseService {
         }
     }
 
-    parseReqToSql(query) {
-        return this.parser.parseDataReq(query) ;
+    buildQuery(params) {
+        return this.queryBuilder.build(params) ;
     }
 
     async exec(req, res, dbResponseHandler, query = null) {
@@ -103,7 +102,7 @@ class DatabaseService {
 
         if (client) {
             if (query === null) {
-                query = this.parseReqToSql({ ...req.query, ...req.params });
+                query = this.buildQuery({ ...req.query, ...req.params });
             }
 
             client.query(query)
@@ -146,7 +145,7 @@ class DatabaseService {
             res.json({ data: 'data inserted' });
         };
         if (!query) {
-            query = this.parser.parseInsertDataReq(req.body.payload);
+            query = this.queryBuilder.parseInsertDataReq(req.body.payload);
         }
 
         await this.exec(req, res, dbResponseHandler, query);

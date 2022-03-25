@@ -13,7 +13,7 @@
  */
 
 import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
-import Submodel1 from './logged/Submodel1.js';
+import PrimaryModel from './logged/PrimaryModel.js';
 
 export default class Model extends Observable {
     constructor() {
@@ -22,28 +22,28 @@ export default class Model extends Observable {
         this.router.bubbleTo(this);
         this.loader = new Loader();
 
-        this.mode = 'default'; // TODO delete or give meaning to this statement;
-        this.submodel1 = null;
+        this.mode = null;
         this.logginEndpoint = '/api/login/';
+        this.login('physicist');
     }
 
-    async login(username, password) {
-        const { status, ok } = await this.postLoginPasses(username, password);
+    async login(username) {
+        const { status, ok } = await this.postLoginPasses(username);
         this._tokenExpirationHandler(status);
         if (ok) {
-            this.handleSuccessInLogin();
+            this.setPrimary();
         }
     }
 
-    postLoginPasses(username, password) {
-        return this.loader.post(this.logginEndpoint, { username: username, password: password });
+    postLoginPasses(username) {
+        return this.loader.post(this.logginEndpoint, { username: username });
     }
 
-    handleSuccessInLogin() {
+    setPrimary() {
         localStorage.token = sessionService.session.token;
-        this.submodel1 = new Submodel1(this);
-        this.submodel1.bubbleTo(this);
-        this.mode = 'submodel1';
+        this.primary = new PrimaryModel(this);
+        this.primary.bubbleTo(this);
+        this.mode = 'primary';
         this.notify();
     }
 

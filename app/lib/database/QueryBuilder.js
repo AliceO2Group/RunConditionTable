@@ -21,18 +21,18 @@ const DRP = config.public.dataReqParams;
 /**
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
-class ReqParser {
+class QueryBuilder {
     constructor() {
-        this.logger = new Log(ReqParser.name);
+        this.logger = new Log(QueryBuilder.name);
     }
 
-    parseDataReq(query) {
+    build(params) {
         const matchParams = [];
         const excludeParams = [];
         const fromParams = [];
         const toParams = [];
 
-        for (const [key, value] of Object.entries(query)) {
+        for (const [key, value] of Object.entries(params)) {
             const queryParam = key.substring(0, key.lastIndexOf('-'));
             if (key.includes('match')) {
                 matchParams.push({ queryParam, value });
@@ -69,45 +69,45 @@ class ReqParser {
             return filtersPhrase?.length > 0 ? `WHERE ${filtersPhrase}` : '';
         };
 
-        const dataSubsetQueryPart = (query) => query[DRP.countRecords] === 'true' ? '' :
-            `LIMIT ${query[DRP.rowsOnSite]} OFFSET ${query[DRP.rowsOnSite] * (query[DRP.site] - 1)}`;
+        const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
+            `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
 
-        switch (query.page) {
+        switch (params.page) {
             case pagesNames.periods:
                 return `${period_view}
                         SELECT name, year, beam, string_agg(energy::varchar, ',') as energy
                         FROM period_view
                         ${filteringPart()}
                         GROUP BY name, year, beam
-                        ${dataSubsetQueryPart(query)};`;
+                        ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.runsPerPeriod:
-                return `${runs_per_period_view(query)}
+                return `${runs_per_period_view(params)}
                         SELECT *
                         FROM runs_per_period_view
                         ${filteringPart()}
-                        ${dataSubsetQueryPart(query)};`;
+                        ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.dataPasses:
-                return `${data_passes_view(query)}
+                return `${data_passes_view(params)}
                         SELECT *
                         FROM data_passes_view
                         ${filteringPart()}
-                        ${dataSubsetQueryPart(query)};`;
+                        ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.mc:
-                return `${mc_view(query)}
+                return `${mc_view(params)}
                         SELECT * 
                         FROM mc_view
                         ${filteringPart()}
-                        ${dataSubsetQueryPart(query)};`;
+                        ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.flags:
-                return `${flags_view(query)}
+                return `${flags_view(params)}
                         SELECT * 
                         FROM flags_view
                         ${filteringPart()}
-                        ${dataSubsetQueryPart(query)};`;
+                        ${dataSubsetQueryPart(params)};`;
 
             default:
                 return 'SELECT NOW()';
@@ -130,7 +130,7 @@ const parseValues = (values) => values.map((v) => {
     }
 });
 
-module.exports = ReqParser;
+module.exports = QueryBuilder;
 
 const period_view = `
     WITH period_view AS (
