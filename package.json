@@ -16,21 +16,23 @@
     "eslint": "eslint app --ext .js --format html --output-file ./reports/static-analysis.html",
     "eslint:fix": "npm run eslint -- --fix",
     "static": "npm run eslint",
-    "test": "npm run static && mocha --exit tests/**/mocha-*",
+    "reports:show": "open ./reports/*",
 
+    "test": "mocha --exit tests/**/mocha-*",
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run test && npm run coverage:report",
-    "reports:show": "open ./reports/*",
 
     "start:dev": "nodemon --watch main.js --watch app --ignore app/public",
     "start:prod": "node main.js"
   },
+
   "dependencies": {
     "@aliceo2/web-ui": "^1.18.2",
     "less": "^4.1.1",
     "pg": "^8.6.0",
     "socks-proxy-agent": "^6.1.1"
   },
+
   "bundledDependencies": [
     "@aliceo2/web-ui",
     "less",
@@ -38,7 +40,7 @@
     "socks-proxy-agent"
   ],
   "files": [
-    "lib/",
+    "app/",
     "docs/"
   ],
   "devDependencies": {
