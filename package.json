@@ -1,5 +1,5 @@
 {
-  "name": "@aliceo2/RunConditionTable",
+  "name": "@aliceo2/run-condition-table",
   "version": "0.1.0",
   "main": "main.js",
   "author": "ALICEO2",
@@ -17,7 +17,7 @@
     "eslint:fix": "npm run eslint -- --fix",
     "static": "npm run eslint",
     "test": "npm run static && mocha --exit tests/**/mocha-*",
-    
+
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run test && npm run coverage:report",
     "reports:show": "open ./reports/*",
