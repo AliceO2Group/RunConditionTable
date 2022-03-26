@@ -13,10 +13,6 @@
 # * or submit itself to any jurisdiction.
 # */
 
-
-
-
-
 # remove everything related to RCT
 
 RCT_ETC_DIRECTORY=/etc/run-condition-table

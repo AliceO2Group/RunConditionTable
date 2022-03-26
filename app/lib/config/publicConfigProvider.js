@@ -10,47 +10,35 @@
  * In applying this license CERN does not waive the privileges and immunities
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
-*/
+ */
 
 const fs = require('fs');
 const path = require('path');
 
-/**
- * Removes (if exists) and creates a new config file which is to be sent to the client side for fixed configurations
- * The configuration file is based on `config.js` file
- * @param {JSON} config 
- */
 function buildPublicConfig(config) {
-  const publicConfigPath = path.join(__dirname, './../../public/config.js');
-  const publicConfigExist = fs.existsSync(publicConfigPath);
-  if (publicConfigExist) {
-    fs.rmSync(publicConfigPath);
-  }
-  const publicConfig = _getPublic(config);
-  let codeStr = `/* eslint-disable quote-props */\n`
+    const publicConfigPath = path.join(__dirname, './../../public/config.js');
+    const publicConfigExist = fs.existsSync(publicConfigPath);
+    if (publicConfigExist) {
+        fs.rmSync(publicConfigPath);
+    }
+    const publicConfig = _getPublic(config);
+
+    const codeStr = '/* eslint-disable object-curly-spacing */\n' +
+    '/* eslint-disable comma-dangle */\n' +
+    '/* eslint-disable indent */\n' +
+    '/* eslint-disable quotes */\n' +
+    '/* eslint-disable quote-props */\n'
       + `const publicConfig = ${JSON.stringify(publicConfig, null, 2)};\n`
-      + `export {publicConfig as RCT};\n`;
+      + 'export { publicConfig as RCT };\n';
 
-  fs.writeFileSync(publicConfigPath, codeStr);
-  console.log('public config installed')
-}
-
-/**
- * Builds the URL of the Bookkeeping GUI and returns it as a string
- * Returns empty string if no configuration is provided for Bookkeeping
- * @param {JSON} config - server configuration
- * @returns {string}
- */
-function _getBookkeepingURL(config) {
-  const bkp = config?.bookkeepingRuns;
-  return (bkp?.url) ? `${bkp.url}` : '';
+    fs.writeFileSync(publicConfigPath, codeStr);
 }
 
 function _getPublic(config) {
-  const public = config?.public;
-  return public? public : '';
+    const publicConfig = config?.public;
+    return publicConfig ? publicConfig : '';
 }
 
 module.exports = {
-  buildPublicConfig, _getBookkeepingURL, _getPublic
+    buildPublicConfig,
 };

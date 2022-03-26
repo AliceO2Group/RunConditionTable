@@ -12,8 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-//TODO remove it
-export default function handleClick(model, e) {
-    model.router.handleLinkEvent(e);
-    model.notify();
-}
+const RunConditionTableApplication = require('./app/application.js');
+
+const runConditionTableApplication = new RunConditionTableApplication();
+
+runConditionTableApplication.run();
+
+/**
+ * Signals handlers
+ */
+const signals = ['SIGTERM', 'SIGINT', 'SIGHUP'];
+signals.forEach((event) => process.on(event, runConditionTableApplication.stop.bind(runConditionTableApplication)));

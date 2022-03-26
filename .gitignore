@@ -2,7 +2,10 @@
 node_modules
 tmp
 volatile
-app/package-lock.json
-app/.nyc_output/*
-app/coverage*
+package-lock.json
+.nyc_output
+coverage*
 app/public/config.js
+reports
+database/.ipynb_checkpoints
+database/cached

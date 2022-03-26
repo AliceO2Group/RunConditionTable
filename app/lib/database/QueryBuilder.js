@@ -12,112 +12,102 @@
  * or submit itself to any jurisdiction.
  */
 
+const { Log } = require('@aliceo2/web-ui');
+const config = require('../config/configProvider.js');
 
-
-
-const config = require('./config/configProvider.js');
-const pagesNames = config.public.pagesNames;
+const { pagesNames } = config.public;
 const DRP = config.public.dataReqParams;
 
 /**
- * class responsible for parsing url params, payloads of client request to sql queries
+ * Class responsible for parsing url params, payloads of client request to sql queries
  */
-class ReqParser {
+class QueryBuilder {
+    constructor() {
+        this.logger = new Log(QueryBuilder.name);
+    }
 
-    constructor() {}
+    build(params) {
+        const matchParams = [];
+        const excludeParams = [];
+        const fromParams = [];
+        const toParams = [];
 
-    parseDataReq(query) {
-        console.log(query);
-
-        const page = query.page;
-
-        let matchParams = [];
-        let excludeParams = [];
-        let fromParams = [];
-        let toParams = [];
-
-        for (const [key, value] of Object.entries(query)) {
+        for (const [key, value] of Object.entries(params)) {
             const queryParam = key.substring(0, key.lastIndexOf('-'));
             if (key.includes('match')) {
-                matchParams.push({queryParam, value});
+                matchParams.push({ queryParam, value });
             }
-        
+
             if (key.includes('exclude')) {
-                excludeParams.push({queryParam, value});
+                excludeParams.push({ queryParam, value });
             }
-            
+
             if (key.includes('from')) {
-                fromParams.push({queryParam, value});
+                fromParams.push({ queryParam, value });
             }
 
             if (key.includes('to') && key !== 'token') {
-                toParams.push({queryParam, value});
+                toParams.push({ queryParam, value });
             }
         }
 
         const filteringPart = () => {
             const matchPhrase = matchParams.map((filter) =>
-                `"${filter.queryParam}" LIKE '${filter.value}'`
-            ).join(' AND ');
+                `"${filter.queryParam}" LIKE '${filter.value}'`).join(' AND ');
 
-            const excludePhrase = excludeParams.map(({queryParam, value}) =>
-                `"${queryParam}" NOT LIKE '${value}'`
-            ).join(' AND ');
+            const excludePhrase = excludeParams.map(({ queryParam, value }) =>
+                `"${queryParam}" NOT LIKE '${value}'`).join(' AND ');
 
-            const fromPhrase = fromParams.map(({queryParam, value}) =>
-                `"${queryParam}" >= ${value}`
-            ).join(' AND ');
+            const fromPhrase = fromParams.map(({ queryParam, value }) =>
+                `"${queryParam}" >= ${value}`).join(' AND ');
 
-            const toPhrase = toParams.map(({queryParam, value}) =>
-                `"${queryParam}" <= ${value}`
-            ).join(' AND ');
+            const toPhrase = toParams.map(({ queryParam, value }) =>
+                `"${queryParam}" <= ${value}`).join(' AND ');
 
-            const filtersPhrase = [matchPhrase, excludePhrase, fromPhrase, toPhrase].filter(
-                    value => {return value?.length > 0}
-                ).join(' AND ');
-            
+            const filtersPhrase = [matchPhrase, excludePhrase, fromPhrase, toPhrase].filter((value) => value?.length > 0).join(' AND ');
+
             return filtersPhrase?.length > 0 ? `WHERE ${filtersPhrase}` : '';
-        }
+        };
 
-        const dataSubsetQueryPart = (query) => query[DRP.countRecords] === 'true' ? '' :
-            `LIMIT ${query[DRP.rowsOnSite]} OFFSET ${query[DRP.rowsOnSite] * (query[DRP.site] - 1)}`;
+        const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
+            `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
 
-        switch (query.page) {
+        switch (params.page) {
             case pagesNames.periods:
                 return `${period_view}
                         SELECT name, year, beam, string_agg(energy::varchar, ',') as energy
                         FROM period_view
                         ${filteringPart()}
                         GROUP BY name, year, beam
-                        ${dataSubsetQueryPart(query)};`;
+                        ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.runsPerPeriod:
-                return `${runs_per_period_view(query)}
+                return `${runs_per_period_view(params)}
                         SELECT *
                         FROM runs_per_period_view
                         ${filteringPart()}
-                        ${dataSubsetQueryPart(query)};`;
+                        ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.dataPasses:
-                return `${data_passes_view(query)}
+                return `${data_passes_view(params)}
                         SELECT *
                         FROM data_passes_view
                         ${filteringPart()}
-                        ${dataSubsetQueryPart(query)};`;
+                        ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.mc:
-                return `${mc_view(query)}
+                return `${mc_view(params)}
                         SELECT * 
                         FROM mc_view
                         ${filteringPart()}
-                        ${dataSubsetQueryPart(query)};`;
+                        ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.flags:
-                return `${flags_view(query)}
+                return `${flags_view(params)}
                         SELECT * 
                         FROM flags_view
                         ${filteringPart()}
-                        ${dataSubsetQueryPart(query)};`;
+                        ${dataSubsetQueryPart(params)};`;
 
             default:
                 return 'SELECT NOW()';
@@ -126,23 +116,21 @@ class ReqParser {
 
     parseInsertDataReq(payload) {
         const valueEntries = Object.entries(payload.data);
-        const keys = valueEntries.map(([k, v]) => k);
-        const values = valueEntries.map(([k, v]) => v);
-        return `INSERT INTO ${payload.targetTable}("${keys.join('\", \"')}") VALUES(${parseValues(values).join(', ')});`;
+        const keys = valueEntries.map(([k, _]) => k);
+        const values = valueEntries.map(([_, v]) => v);
+        return `INSERT INTO ${payload.targetTable}("${keys.join('", "')}") VALUES(${parseValues(values).join(', ')});`;
     }
 }
 
-const parseValues = (values) => {
-    return values.map(v => {
-        if (isNaN(v) && v !== 'DEFAULT')
-            return `\'${v}\'`;
-        else
-            return v;
-    })
-}
+const parseValues = (values) => values.map((v) => {
+    if (isNaN(v) && v !== 'DEFAULT') {
+        return `'${v}'`;
+    } else {
+        return v;
+    }
+});
 
-module.exports = ReqParser;
-
+module.exports = QueryBuilder;
 
 const period_view = `
     WITH period_view AS (
@@ -213,7 +201,7 @@ const data_passes_view = (query) => `
                         WHERE r.period_id = (
                                             SELECT id 
                                             FROM periods AS p 
-                                            WHERE p.name = \'${query.index}\')
+                                            WHERE p.name = '${query.index}')
                                             )
         )`;
 
@@ -238,7 +226,7 @@ const mc_view = (query) => `
                         WHERE r.period_id = (
                                             SELECT id 
                                             FROM periods as p 
-                                            WHERE p.name = \'${query.index}\'
+                                            WHERE p.name = '${query.index}'
                                             )
                         ) 
         )`;

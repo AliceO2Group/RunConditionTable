@@ -13,8 +13,8 @@ coverage:
         if_not_found: success
         if_ci_failed: error
 ignore:
-  - app/node_modules/*
-  - app/coverage/*
-  - app/.nyc_output/*
-  - app/coverage.lcov
+  - ./node_modules/*
+  - ./coverage/*
+  - ./.nyc_output/*
+  - ./coverage.lcov
 comment: false

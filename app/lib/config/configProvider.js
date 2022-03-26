@@ -10,9 +10,10 @@
  * In applying this license CERN does not waive the privileges and immunities
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
-*/
+ */
 
-const {Log} = require('@aliceo2/web-ui');
+const { Log } = require('@aliceo2/web-ui');
+
 const log = new Log(`${process.env.npm_config_log_label ?? 'RCT'}/config`);
 
 const fs = require('fs');
@@ -23,20 +24,17 @@ const path = require('path');
  * It can be first argument of command line OR by default config.js
  */
 
-let configFile = path.join(__dirname, './../../config.js');
-
-if (process.argv.length >= 3 && /\.js$/.test(process.argv[2])) {
-  configFile = process.argv[2];
-}
+let configFile = path.join(__dirname, './../../../config.js');
 
 try {
-  configFile = fs.realpathSync(configFile);
+    configFile = fs.realpathSync(configFile);
 } catch (err) {
-  log.error(`Unable to read config file: ${err.message}`);
-  process.exit(1);
+    log.error(`Unable to read config file: ${err.message}`);
+    process.exit(1);
 }
 
 const config = require(configFile);
+
 Log.configure(config);
 log.info(`Read config file "${configFile}"`);
 

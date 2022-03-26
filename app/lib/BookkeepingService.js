@@ -14,52 +14,46 @@
  */
 
 const { parse } = require('url');
- const { get } = require('http');
- const SocksProxyAgent = require('socks-proxy-agent');
- const config = require('./config/configProvider.js');
-const {Log} = require("@aliceo2/web-ui");
- 
- class BookkeepingService {
+const { get } = require('http');
+const SocksProxyAgent = require('socks-proxy-agent');
+const config = require('./config/configProvider.js');
+const { Log } = require('@aliceo2/web-ui');
+
+class BookkeepingService {
     constructor() {
         this.endpoint = config.bookkeepingRuns.url;
         this.opts = parse(this.endpoint);
-        this.logger = new Log();
+        this.logger = new Log(BookkeepingService.name);
 
-        let proxy = config.dev.proxy.trim();
+        const proxy = config.dev.proxy.trim();
         if (proxy !== '') {
             this.logger.info(`using proxy server ${proxy}`);
             this.proxyAgent = new SocksProxyAgent(proxy);
             this.opts.agent = this.proxyAgent;
         }
     }
- 
- 
-    getRuns () {
+
+    getRuns() {
         let parsedData = '';
         this.logger.info(`attempting to GET ${this.endpoint}`);
-        const logger = this.logger
-        get(this.opts, function (res) {
+        const { logger } = this;
+        get(this.opts, (res) => {
             logger.info('"response" event!');
-            // console.log(res.headers);
             res.setEncoding('utf8');
             let rawData = '';
-            res.on('data', (chunk) => { rawData += chunk; });
+            res.on('data', (chunk) => {
+                rawData += chunk;
+            });
             res.on('end', () => {
                 try {
                     parsedData = JSON.parse(rawData);
-                    //console.log(parsedData);
                 } catch (e) {
-                    console.error(e.message);
+                    this.logger.error(e.message);
                 }
             });
-            /*
-            res.on('data', function (chunk) {
-                console.log(JSON.parse(chunk));
-            })
-            */
         });
         return parsedData;
     }
- }
- 
- module.exports = BookkeepingService;
+}
+
+module.exports = BookkeepingService;

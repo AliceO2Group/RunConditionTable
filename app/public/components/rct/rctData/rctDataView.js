@@ -12,24 +12,20 @@
  * or submit itself to any jurisdiction.
  */
 
-
-
-import {h} from '/js/src/index.js';
-import tableView from "./tableView.js";
-import spinner from "../../common/spinner.js";
-import viewButton from "../../common/viewButton.js";
-import {defaultIndex} from "../../../utils/defaults.js"
+import { h } from '/js/src/index.js';
+import tableView from './tableView.js';
+import spinner from '../../common/spinner.js';
+import viewButton from '../../common/viewButton.js';
 
 /**
- * create vnode tableView if data are fetched otherwise shows spinner
+ * Create vnode tableView if data are fetched otherwise shows spinner
  * @param model
  * @returns {*}
  */
 
-
 export default function rctDataView(model) {
-    const dataPointer = model.getCurrentDataPointer()
-    let data = model.fetchedData[dataPointer.page][dataPointer.index];
+    const dataPointer = model.getCurrentDataPointer();
+    const data = model.fetchedData[dataPointer.page][dataPointer.index];
 
     return h('.homePage', [
         h('div.tableDiv', []),
@@ -38,21 +34,21 @@ export default function rctDataView(model) {
             NotAsked: () => h('', 'not asked'),
             Loading: () => spinnerAndReloadView(model),
             Success: () => tableView(model),
-            Failure: (status) => failureStatusAndReload(model, status)
-        }) : h('', "data null :: Arrr...")
+            Failure: (status) => failureStatusAndReload(model, status),
+        }) : h('', 'data null :: Arrr...'),
     ]);
 }
 
 function spinnerAndReloadView(model) {
     return h('.item-center.justify-center', [
         viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'),
-        spinner()]
-    )
+        spinner(),
+    ]);
 }
 
 function failureStatusAndReload(model, status) {
     return h('.item-center.justify-center', [
         viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'),
-        h('', status)]
-    )
+        h('', status),
+    ]);
 }

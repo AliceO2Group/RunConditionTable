@@ -1,0 +1,52 @@
+{
+  "name": "@aliceo2/run-condition-table",
+  "version": "0.1.0",
+  "main": "main.js",
+  "author": "ALICEO2",
+  "keywords": [
+    "CERN",
+    "ALICEO2"
+  ],
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AliceO2Group/RunConditionTable"
+  },
+  "scripts": {
+    "eslint": "eslint app --ext .js --format html --output-file ./reports/static-analysis.html",
+    "eslint:fix": "npm run eslint -- --fix",
+    "static": "npm run eslint",
+    "test": "npm run static && mocha --exit tests/**/mocha-*",
+
+    "coverage:report": "nyc report --report=html --report=json",
+    "coverage": "nyc npm run test && npm run coverage:report",
+    "reports:show": "open ./reports/*",
+
+    "start:dev": "nodemon --watch main.js --watch app --ignore app/public",
+    "start:prod": "node main.js"
+  },
+  "dependencies": {
+    "@aliceo2/web-ui": "^1.18.2",
+    "less": "^4.1.1",
+    "pg": "^8.6.0",
+    "socks-proxy-agent": "^6.1.1"
+  },
+  "bundledDependencies": [
+    "@aliceo2/web-ui",
+    "less",
+    "pg",
+    "socks-proxy-agent"
+  ],
+  "files": [
+    "lib/",
+    "docs/"
+  ],
+  "devDependencies": {
+    "eslint": "8.10.0",
+    "eslint-output": "^3.0.1",
+    "mocha": "^9.2.1",
+    "nodemon": "^2.0.15",
+    "nyc": "^15.1.0",
+    "sinon": "^12.0.1"
+  }
+}
