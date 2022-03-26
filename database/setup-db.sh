@@ -14,11 +14,8 @@ rm ~postgres/$CREATE_SCRIPT
 
 if [ "$1" = "--dev" ]; then
 
-  NOTEBOOK_NAME="mock/mockData.ipynb"
-  CONDA_DIR=/opt/anaconda3/
-  CONDA_BIN=/opt/anaconda3/bin/
-  source $CONDA_DIR/etc/profile.d/conda.sh
-  conda activate base
-  RCT_USER=$RCT_USER RCT_DATABASE=$RCT_DATABASE RCT_PASSWORD=$RCT_PASSWORD RCT_DATABASE_HOST=$RCT_DATABASE_HOST ipython --TerminalIPythonApp.file_to_run=$NOTEBOOK_NAME $RCT_DATABASE $RCT_USER
+  SCRIPT_PATH="mock/mockData.py"
+  RCT_USER=$RCT_USER RCT_DATABASE=$RCT_DATABASE RCT_PASSWORD=$RCT_PASSWORD RCT_DATABASE_HOST=$RCT_DATABASE_HOST \
+    python -m $SCRIPT_PATH
 
 fi

@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const RunConditionTableApplication = require('./app/application.js');
+const RunConditionTableApplication = require('./application.js');
 
 const runConditionTableApplication = new RunConditionTableApplication();
 

@@ -1,0 +1,6 @@
+*
+
+!app
+!package*.json
+!test
+!database

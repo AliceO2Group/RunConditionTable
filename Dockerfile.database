@@ -1,0 +1,25 @@
+FROM postgres:13.6-alpine3.15 as db-base
+
+
+WORKDIR /postgres/run
+
+
+EXPOSE 5432
+
+RUN apk update && apk upgrade
+RUN apk add --no-cache \
+    bash
+
+
+
+
+FROM db-base as db-development
+
+RUN apk add --no-cache \
+    python3 py3-pip
+
+
+
+
+
+

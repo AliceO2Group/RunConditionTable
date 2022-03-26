@@ -1,0 +1,14 @@
+services:
+  application:
+    build:
+      context: ./
+      dockerfile: Dockerfile.application
+    environment:
+      TMP=TMP
+  
+  database:
+    build: 
+      context: ./
+      dockerfile: Dockerfile.database
+    environment:
+      - TMP=TMP

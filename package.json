@@ -22,8 +22,10 @@
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run test && npm run coverage:report",
 
-    "start:dev": "nodemon --watch main.js --watch app --ignore app/public",
-    "start:prod": "node main.js"
+    "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
+    "start:prod": "node app/main.js",
+
+    "tmp": "node ./tmp/*"
   },
 
   "dependencies": {
