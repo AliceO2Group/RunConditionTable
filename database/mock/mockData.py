@@ -6,9 +6,8 @@
 # In[1]:
 
 
-import os 
+import os
 import sys
-
 
 cachedDirPath = "./cached/"
 if os.environ.get('RCT_MOCKDATA_GENERATOR_DEL_CACHE') == 'true':
