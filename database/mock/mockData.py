@@ -14,7 +14,6 @@ if os.environ.get('RCT_MOCKDATA_GENERATOR_DEL_CACHE') == 'true':
     os.system("rm -rf cached >/dev/null 2>&1")
 os.system("mkdir -p cached >/dev/null 2>&1")
 
-
 # In[2]:
 
 
