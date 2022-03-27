@@ -545,7 +545,7 @@ tablesAndNames = [(beams_dictionary_df, 'beams_dictionary'),
 
 for (t, n) in tablesAndNames:
     print(f'inserting table {n}')
-    insert_table_row_by_row(t, n, logExceptions=True)
+    insert_table_row_by_row(t, n, logExceptions=False)
     print(f'table {n} inserted')
 
 
