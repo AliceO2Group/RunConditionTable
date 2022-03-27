@@ -7,6 +7,6 @@ if ! git diff --cached --quiet -- "$NOTEBOOK_PATH"; then
         echo "Unable to perform because can not find jupyter nbconvert" >&2
         exit 1
     fi
-    echo "Converting $NOTEBOOK_FILE to python scrip"
+    echo "Converting $NOTEBOOK_FILE to python script"
     jupyter nbconvert $NOTEBOOK_PATH --to script
 fi
