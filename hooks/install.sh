@@ -24,5 +24,6 @@ for dir in "$HOOKS_DIR/*/"; do
         done < $ss
 
         cp $TMP_SCRIPT $TARGET_SCRIPT
+        rm $TMP_SCRIPT
     done
 done
