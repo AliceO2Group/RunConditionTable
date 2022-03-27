@@ -18,6 +18,7 @@ for dir in "$HOOKS_DIR/*/"; do
         TARGET_SCRIPT="$HOOKS_INSTALATION_DIRECTORY/$HOOK_TYPE"
 
         echo "" > $TMP_SCRIPT
+        chmod +x $TMP_SCRIPT
         while read line; do
             echo $line >> $TMP_SCRIPT
         done < $ss
