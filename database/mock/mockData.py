@@ -9,10 +9,10 @@
 import os
 import sys
 
-cachedDirPath = "./cached/"
+cachedDirPath = os.environ.get('CACHED_PATH') + '/'
 if os.environ.get('RCT_MOCKDATA_GENERATOR_DEL_CACHE') == 'true':
-    os.system("rm -rf cached >/dev/null 2>&1")
-os.system("mkdir -p cached >/dev/null 2>&1")
+    os.system(f"rm -rf {cachedDirPath} >/dev/null 2>&1")
+os.system(f"mkdir -p {cachedDirPath} >/dev/null 2>&1")
 
 
 # In[2]:
@@ -492,7 +492,7 @@ def isfloat(s):
         b = False
     return b
 
-def insert_row(row, targetTableName, counter, logExceptions, logstep=1000):
+def insert_row(row, targetTableName, counter, logExceptions, logstep=1000, wholeDataSize=''):
     selectors_stm = "(\"id\", \"" + "\", \"".join(row.index) + "\")"
     values = [str(a) for a in row]
     values_list = "(DEFAULT, " + ", ".join([s if isfloat(s) else f"\'{s}\'" for s in values])+ ")"
@@ -510,13 +510,13 @@ def insert_row(row, targetTableName, counter, logExceptions, logstep=1000):
         connection.rollback()       
     counter[1] += 1
     if counter[0] % logstep:
-        print(f'inserting to table {targetTableName} {counter}', end='\x1b\r')
+        print(f'inserting to table {targetTableName} {counter} / {wholeDataSize}', end='\x1b\r')
         
 def insert_table_row_by_row(df: pd.DataFrame, targetTableName: str, logExceptions=True):
     counter = [0, 0]
     print(f'inserting to table {targetTableName} {counter}', end='\x1b\r')
     df.drop(columns=['id']).apply(lambda r:
-                                      insert_row(r, targetTableName, counter, logExceptions),
+                                      insert_row(r, targetTableName, counter, logExceptions, wholeDataSize=len(df)),
                                   axis=1)
     print(f'inserting to table {targetTableName} {counter}')
 
