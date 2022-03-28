@@ -7,26 +7,30 @@ WORKDIR /postgres/run
 RUN apt update -y
 RUN apt install -y \
     bash \
-    sudo
+    sudo \
+    procps
 
 ENV POSTGRES_PASSWORD=postgres
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_DB=postgres
 ENV PGDATA=/var/lib/postgresql/data/pgdata
+ENV POSTGRES_HOST_AUTH_METHOD=md5
 
 COPY ./database /docker-entrypoint-initdb.d/
 
 FROM db-base as db-development
-
-RUN apt install -y \
-    python3 \
-    python3-pip
-
-RUN python3 -m pip install pandas numpy psycopg2-binary
-
+ENV MODE=production
 ENV DEV=true
-# ENV POSTGRES_HOST_AUTH_METHOD=true
 
+# RUN apt install -y \
+#     python3 \
+#     python3-pip \
+#     vim
+
+# RUN python3 -m pip install pandas numpy psycopg2-binary
+
+FROM db-base as db-test
+ENV MODE=test
 
 
 
