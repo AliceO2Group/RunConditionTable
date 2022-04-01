@@ -24,7 +24,7 @@ const path = require('path');
  * It can be first argument of command line OR by default config.js
  */
 
-let configFile = path.join(__dirname, './../../config.js');
+let configFile = path.join(__dirname, './../../config/index.js');
 
 try {
     configFile = fs.realpathSync(configFile);

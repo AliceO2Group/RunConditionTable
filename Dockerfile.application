@@ -1,7 +1,7 @@
 
 FROM node:16.9.1-alpine3.12 as base
 
-WORKDIR /usr/src/app
+WORKDIR /opt/RunConditionTable
 
 EXPOSE 8081
 
@@ -27,10 +27,15 @@ COPY . .
 
 
 FROM developmentdependencies as development
-CMD [ "npm", "run", "start:dev" ]
+ENV ENV_MODE=development
+CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "60", "--", "npm", "run", "start:dev" ]
 
 FROM developmentdependencies as test
-CMD [ "npm", "run", "coverage" ]
+ENV ENV_MODE=test
+CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "60", "--", "npm", "run", "coverage" ]
 
+FROM base as production
+ENV ENV_MODE=production
+CMD ["npm", "run", "start:prod"]
 
 
