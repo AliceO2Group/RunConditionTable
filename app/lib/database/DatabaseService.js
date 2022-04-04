@@ -165,7 +165,7 @@ class DatabaseService {
             this.logger.info(`ending for ${data.name}`);
             return data.pgClient.end();
         });
-        return Promise.all(promises);
+        return Promise.all(promises.concat([this.adminClient.end()]));
     }
 
     async setAdminConnection() {
