@@ -57,7 +57,7 @@ rm -rf $INSTALLATION_DIRECTORY
 mkdir $INSTALLATION_DIRECTORY
 cp -r . $INSTALLATION_DIRECTORY
 
-APP_CONFIG_FILE="$INSTALLATION_DIRECTORY/app/config.js"
+APP_CONFIG_FILE="$INSTALLATION_DIRECTORY/config.js"
 for ((i=1; i<=$#; i++)); do
   next_i=$(($i+1))
   next_arg=${!next_i}
@@ -70,9 +70,9 @@ for ((i=1; i<=$#; i++)); do
 done
 
 
-cd "$INSTALLATION_DIRECTORY/app" && npm install ; cd -
+cd "$INSTALLATION_DIRECTORY" && npm install ; cd -
 
-service-systemd --add --service $UNIT_NAME --cwd "$INSTALLATION_DIRECTORY/app" --app "$INSTALLATION_DIRECTORY/app/index.js"
+service-systemd --add --service $UNIT_NAME --cwd "$INSTALLATION_DIRECTORY" --app "$INSTALLATION_DIRECTORY/main.js"
 
 echo "UnitName=$UNIT_NAME" > $RCT_CONFIG_FILE
 chmod -w $RCT_CONFIG_FILE;
