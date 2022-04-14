@@ -35,8 +35,8 @@ export default function filter(model) {
     return h('table.table-filters', [
         h('tbody', [
             labelsRow(model, fields),
-            inputsRow(params, upperInputIds, 'match/from'),
-            inputsRow(params, lowerInputIds, 'exclude/to'),
+            inputsRow(params, upperInputIds, pageFilteringTypes),
+            inputsRow(params, lowerInputIds, pageFilteringTypes),
         ]),
         h('button.btn', {
             onclick: onclickSubmit(model, inputsIds),
@@ -51,8 +51,8 @@ const labelsRow = (model, fields) => h('tr', [
     h('td', [].concat(fields.map((field) => createClickableLabel(model, field)))),
 ]);
 
-const inputsRow = (params, inputsIds, description) => h('tr', [
-    h('td',[].concat(inputsIds.map((id) => createInputField(id, params[id], description)))),
+const inputsRow = (params, inputsIds, pageFilteringTypes) => h('tr', [
+    h('td',[].concat(inputsIds.map((id) => createInputField(id, params[id], pageFilteringTypes)))),
 ]);
 
 const createClickableLabel = (model, field) =>
@@ -62,11 +62,11 @@ tooltip(
         onclick: () => model.fetchedData.changeItemStatus(field),
         className: field.marked ? 'active' : '',
     }, field.name)),
-    field.marked ? 'Hide' : 'Display',
+    field.marked ? 'hide' : 'display',
     false
 );
 
-const createInputField = (inputId, currentValue, tooltipText) =>
+const createInputField = (inputId, currentValue, pageFilteringTypes) =>
 tooltip(
     h('td', h('input.form-control', {
         style: 'width:120px',
@@ -74,7 +74,7 @@ tooltip(
         value: currentValue ? currentValue : '',
         id: inputId,
     })),
-    tooltipText,
+    inputId.substring(inputId.indexOf('-') + 1),
     false
 )
 
