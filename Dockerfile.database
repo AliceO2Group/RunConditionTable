@@ -18,9 +18,9 @@ ENV POSTGRES_HOST_AUTH_METHOD=md5
 
 COPY ./database /docker-entrypoint-initdb.d/
 
-FROM db-base as db-development
-ENV MODE=production
-ENV DEV=true
+FROM db-base as development
+ENV ENV_MODE=development
+ENV MOCK_DB=true
 
 # RUN apt install -y \
 #     python3 \
@@ -29,8 +29,11 @@ ENV DEV=true
 
 # RUN python3 -m pip install pandas numpy psycopg2-binary
 
-FROM db-base as db-test
-ENV MODE=test
+FROM db-base as test
+ENV ENV_MODE=test
+
+FROM db-base as production
+ENV ENV_MODE=production
 
 
 

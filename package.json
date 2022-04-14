@@ -13,28 +13,29 @@
     "url": "https://github.com/AliceO2Group/RunConditionTable"
   },
   "scripts": {
-    "eslint": "eslint app --ext .js --format html --output-file ./reports/static-analysis.html",
+    "eslint": "mkdir -p ./reports; eslint app --ext .js --format html --output-file ./reports/static/$(if [ \"$RUNNING_ENV\" = \"DOCKER\" ]; then echo \"from-docker/static-analysis.html\"; else echo \"locally/static-analysis.html\"; fi)",
     "eslint:fix": "npm run eslint -- --fix",
     "static": "npm run eslint",
     "reports:show": "open ./reports/*",
 
-    "test": "mocha --exit tests/**/mocha-*",
+    "test": "mkdir -p ./reports; mocha --exit test/**/mocha-*",
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run test && npm run coverage:report",
 
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:prod": "node app/main.js",
 
+    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml up --build",
+    "docker:test": "mkdir -p reports; docker-compose -f docker-compose.yml -f docker-compose-test.yml up --build --abort-on-container-exit",
+
     "tmp": "node ./tmp/*"
   },
-
   "dependencies": {
     "@aliceo2/web-ui": "^1.18.2",
     "less": "^4.1.1",
     "pg": "^8.6.0",
     "socks-proxy-agent": "^6.1.1"
   },
-
   "bundledDependencies": [
     "@aliceo2/web-ui",
     "less",
@@ -46,7 +47,7 @@
     "docs/"
   ],
   "devDependencies": {
-    "eslint": "8.10.0",
+    "eslint": "^8.10.0",
     "eslint-output": "^3.0.1",
     "mocha": "^9.2.1",
     "nodemon": "^2.0.15",

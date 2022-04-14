@@ -1,7 +1,6 @@
 #!/bin/bash
 
 #if localy run < sudo -H -u postgres bash -c "./setup-db.sh --dev" > in <root>/database directory
-
 if [ ! $(whoami) = "postgres" ]; then
   echo "script must be run as postgres or using < sudo -H -u postgres bash -c \"PATH_TO<setup-db.sh> [--dev]\" " >&2
   exit 1;
@@ -15,7 +14,8 @@ RCT_PASSWORD="rct-passwd"
 RCT_DATABASE_HOST="localhost"
 CREATE_TABLES_SQL="$SCRIPTS_DIR/create-tables.sql"
 
-# disconnect everyone from database in order to recreate it
+
+# disconnect everyone from database in order to recreate it //if dev locally it is helpful
 psql -c "select pg_terminate_backend(pid) from pg_stat_activity where datname='$RCT_DATABASE';"
 
 psql -c "DROP DATABASE IF EXISTS \"$RCT_DATABASE\""
@@ -32,7 +32,7 @@ psql -d $RCT_DATABASE -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public
 
 
 
-if [ "$DEV" = "true" ] || [ "$1" == "--dev" ]; then
+if [ "$MOCK_DB" = "true" ] || [ "$1" == "--mock" ]; then
   SCRIPT_PATH="$SCRIPTS_DIR/mock/mockData.py"
   MOCK_DATA="$SCRIPTS_DIR/mock/mock.tar"
   pg_restore -d $RCT_DATABASE $MOCK_DATA

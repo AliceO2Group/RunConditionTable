@@ -13,7 +13,7 @@ module.exports = {
         autoListen: false,
     },
     database: {
-        hostname: 'localhost',
+        hostname: 'database',
         dbname: 'rct-db',
         dbuser: 'rct-user',
         password: 'rct-passwd',
