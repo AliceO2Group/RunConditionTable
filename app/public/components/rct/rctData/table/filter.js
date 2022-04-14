@@ -52,7 +52,7 @@ const labelsRow = (model, fields) => h('tr', [
 ]);
 
 const inputsRow = (params, inputsIds, description) => h('tr', [
-    h('td',[].concat(inputsIds.map((id) => createInputField(id, params[id])))),
+    h('td',[].concat(inputsIds.map((id) => createInputField(id, params[id], description)))),
 ]);
 
 const createClickableLabel = (model, field) =>
@@ -74,7 +74,7 @@ h('td', h('button.btn.filterLabel', {
 }, tooltip(field.name, 'filter input type')));
 
 
-const createInputField = (inputId, currentValue) =>
+const createInputField = (inputId, currentValue, tooltipText) =>
 tooltip(
     h('td', h('input.form-control', {
         style: 'width:120px',
@@ -82,7 +82,7 @@ tooltip(
         value: currentValue ? currentValue : '',
         id: inputId,
     })),
-    'match/from'
+    tooltipText
 )
 /*
 h('td', h('input.form-control', {
