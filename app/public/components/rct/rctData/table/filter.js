@@ -48,7 +48,7 @@ export default function filter(model) {
 }
 
 const labelsRow = (model, fields) => h('tr', [
-    h('.btn-group.w-50', h('td', [].concat(fields.map((field) => createClickableLabel(model, field))))),
+    h('td', [].concat(fields.map((field) => createClickableLabel(model, field)))),
 ]);
 
 const inputsRow = (params, inputsIds, description) => h('tr', [
@@ -56,23 +56,15 @@ const inputsRow = (params, inputsIds, description) => h('tr', [
 ]);
 
 const createClickableLabel = (model, field) =>
-/*
 tooltip(
-    h('td', h('button.btn.filterLabel', {
+    h('td', h('button.btn', {
         style: 'width:120px',
         onclick: () => model.fetchedData.changeItemStatus(field),
         className: field.marked ? 'active' : '',
     }, field.name)),
-    'filter input type'
+    field.marked ? 'Hide' : 'Display',
+    false
 );
-*/
-
-h('td', h('button.btn.filterLabel', {
-    style: 'width:120px',
-    onclick: () => model.fetchedData.changeItemStatus(field),
-    className: field.marked ? 'active' : '',
-}, tooltip(field.name, 'filter input type', false)));
-
 
 const createInputField = (inputId, currentValue, tooltipText) =>
 tooltip(
