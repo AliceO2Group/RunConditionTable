@@ -14,6 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
+import tooltip from '../../../common/tooltip.js';
 const { dataReqParams } = RCT;
 
 export default function filter(model) {
@@ -47,31 +48,51 @@ export default function filter(model) {
 }
 
 const labelsRow = (model, fields) => h('tr', [
-    h('.btn-group.w-50', h('td', [describingField('filter input type')]
-        .concat(fields.map((field) => createClickableLabel(model, field))))),
+    h('.btn-group.w-50', h('td', [].concat(fields.map((field) => createClickableLabel(model, field))))),
 ]);
 
 const inputsRow = (params, inputsIds, description) => h('tr', [
-    h('td', [describingField(description)]
-        .concat(inputsIds.map((id) => createInputField(id, params[id])))),
+    h('td',[].concat(inputsIds.map((id) => createInputField(id, params[id])))),
 ]);
 
-const describingField = (name) => h('td', h('.container', {
-    style: 'width:120px',
-}, name));
+const createClickableLabel = (model, field) =>
+/*
+tooltip(
+    h('td', h('button.btn.filterLabel', {
+        style: 'width:120px',
+        onclick: () => model.fetchedData.changeItemStatus(field),
+        className: field.marked ? 'active' : '',
+    }, field.name)),
+    'filter input type'
+);
+*/
 
-const createClickableLabel = (model, field) => h('td', h('button.btn.filterLabel', {
+h('td', h('button.btn.filterLabel', {
     style: 'width:120px',
     onclick: () => model.fetchedData.changeItemStatus(field),
     className: field.marked ? 'active' : '',
-}, field.name));
+}, tooltip(field.name, 'filter input type')));
 
-const createInputField = (inputId, currentValue) => h('td', h('input.form-control', {
+
+const createInputField = (inputId, currentValue) =>
+tooltip(
+    h('td', h('input.form-control', {
+        style: 'width:120px',
+        type: 'text',
+        value: currentValue ? currentValue : '',
+        id: inputId,
+    })),
+    'match/from'
+)
+/*
+h('td', h('input.form-control', {
     style: 'width:120px',
     type: 'text',
     value: currentValue ? currentValue : '',
     id: inputId,
-}));
+}, tooltip('', 'match/from')
+));
+*/
 
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds

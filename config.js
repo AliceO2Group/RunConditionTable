@@ -14,7 +14,7 @@ module.exports = {
     },
     database: {
         hostname: 'localhost',
-        dbname: 'rct-db',
+        dbname: 'rct-db-v3',
         dbuser: 'rct-user',
         password: 'rct-passwd',
         port: 5432,
