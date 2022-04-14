@@ -71,7 +71,7 @@ h('td', h('button.btn.filterLabel', {
     style: 'width:120px',
     onclick: () => model.fetchedData.changeItemStatus(field),
     className: field.marked ? 'active' : '',
-}, tooltip(field.name, 'filter input type')));
+}, tooltip(field.name, 'filter input type', false)));
 
 
 const createInputField = (inputId, currentValue, tooltipText) =>
@@ -82,17 +82,9 @@ tooltip(
         value: currentValue ? currentValue : '',
         id: inputId,
     })),
-    tooltipText
+    tooltipText,
+    false
 )
-/*
-h('td', h('input.form-control', {
-    style: 'width:120px',
-    type: 'text',
-    value: currentValue ? currentValue : '',
-    id: inputId,
-}, tooltip('', 'match/from')
-));
-*/
 
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds

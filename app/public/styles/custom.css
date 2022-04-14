@@ -46,3 +46,7 @@
     background-color: var(--color-primary) !important;
     color: var(--color-white) !important;
 }
+
+.noBorderBottom {
+    border-bottom: 0px !important;
+}

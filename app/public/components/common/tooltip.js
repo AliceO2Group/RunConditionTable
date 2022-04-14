@@ -14,10 +14,9 @@
 
  import { h } from '/js/src/index.js';
 
- export default function tooltip(component, tooltipText) {
-     return h('div.tooltip',
+ export default function tooltip(component, tooltipText, underline) {
+    return h(`div.tooltip${underline? '':'.noBorderBottom'}`,
                 component,
-                //h('label', labelText),
                 h('span.tooltiptext', tooltipText)
             );
  }
