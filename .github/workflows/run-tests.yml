@@ -20,8 +20,8 @@ jobs:
         with:
           node-version: '14.16.x'
       - run: npm ci
-      - run: npm run coverage
-      - run: ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
+      - run: npm run docker:test
+      # - run: ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
       - name: Send codecov report for RunConditionTable
         uses: codecov/codecov-action@v2
         with:
