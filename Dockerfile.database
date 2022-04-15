@@ -31,6 +31,8 @@ ENV MOCK_DB=true
 
 FROM db-base as test
 ENV ENV_MODE=test
+ENV MOCK_DB=true
+
 
 FROM db-base as production
 ENV ENV_MODE=production

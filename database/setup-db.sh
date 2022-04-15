@@ -35,7 +35,7 @@ psql -d $RCT_DATABASE -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public
 if [ "$MOCK_DB" = "true" ] || [ "$1" == "--mock" ]; then
   SCRIPT_PATH="$SCRIPTS_DIR/mock/mockData.py"
   MOCK_DATA="$SCRIPTS_DIR/mock/mock.tar"
-  pg_restore -d $RCT_DATABASE $MOCK_DATA
+  # pg_restore -d $RCT_DATABASE $MOCK_DATA
   # psql -d $RCT_DATABASE -c "select * from periods;"
   # whereis python3
 
