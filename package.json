@@ -26,7 +26,7 @@
     "start:prod": "node main.js"
   },
   "dependencies": {
-    "@aliceo2/web-ui": "^1.18.2",
+    "@aliceo2/web-ui": "^1.23.1",
     "less": "^4.1.1",
     "pg": "^8.6.0",
     "socks-proxy-agent": "^6.1.1"

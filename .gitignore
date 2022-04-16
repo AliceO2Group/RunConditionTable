@@ -9,3 +9,4 @@ app/public/config.js
 reports
 database/.ipynb_checkpoints
 database/cached
+config.js

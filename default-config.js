@@ -36,6 +36,7 @@ module.exports = {
             date: '/date/',
             bookkeeping: '/bookkeeping/',
         },
+
         methods: {
             login: 'post',
             logout: 'post',
@@ -77,6 +78,7 @@ module.exports = {
                     beam: matchExcludeType,
                     energy: fromToType,
                 },
+
                 runsPerPeriod: {
                     name: matchExcludeType,
                     run_number: fromToType,
@@ -123,7 +125,6 @@ module.exports = {
                     name: matchExcludeType,
                 },
             },
-
         },
     },
 };
