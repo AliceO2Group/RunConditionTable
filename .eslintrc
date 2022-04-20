@@ -16,6 +16,7 @@
         "node_modules/",
         "database/",
         "tests/",
+        "tmp/"
     ],
     "rules": {
         "array-bracket-newline": [
