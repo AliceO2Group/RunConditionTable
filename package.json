@@ -16,14 +16,6 @@
     "eslint": "mkdir -p ./reports; eslint app --ext .js --format html --output-file ./reports/static/$(if [ \"$RUNNING_ENV\" = \"DOCKER\" ]; then echo \"from-docker/static-analysis.html\"; else echo \"locally/static-analysis.html\"; fi)",
     "eslint:fix": "npm run eslint -- --fix",
     "static": "npm run eslint",
-<<<<<<< HEAD
-    "test": "npm run static && mocha --exit tests/**/mocha-*",
-    "coverage:report": "nyc report --report=html --report=json",
-    "coverage": "nyc npm run test && npm run coverage:report",
-    "reports:show": "open ./reports/*",
-    "start:dev": "nodemon --watch main.js --watch app --ignore app/public",
-    "start:prod": "node main.js"
-=======
     "reports:show": "open ./reports/*",
 
     "test": "mkdir -p ./reports; mocha --exit test/**/mocha-*",
@@ -38,7 +30,6 @@
 
     "clean": "rm -rf ./reports; rm -rf .nyc_output",
     "tmp": "node ./tmp/*"
->>>>>>> master
   },
   "dependencies": {
     "@aliceo2/web-ui": "^1.18.2",
