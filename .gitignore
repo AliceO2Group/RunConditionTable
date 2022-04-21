@@ -10,3 +10,4 @@ database/.ipynb_checkpoints
 database**/cached
 database/tmpdata
 *__pycache__
+scratch
