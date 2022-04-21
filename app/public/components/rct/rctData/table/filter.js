@@ -39,8 +39,8 @@ export default function filter(model) {
             h('table',
                 h('tbody',
                     labelsRow(model, fields),
-                    inputsRow(params, upperInputIds, pageFilteringTypes),
-                    inputsRow(params, lowerInputIds, pageFilteringTypes),
+                    inputsRow(params, upperInputIds),
+                    inputsRow(params, lowerInputIds),
                 ),
             )
         ),
@@ -57,8 +57,8 @@ const labelsRow = (model, fields) => h('tr',
     fields.map((field) => createClickableLabel(model, field))
 );
 
-const inputsRow = (params, inputsIds, pageFilteringTypes) => h('tr',
-    inputsIds.map((id) => createInputField(id, params[id], pageFilteringTypes)),
+const inputsRow = (params, inputsIds) => h('tr',
+    inputsIds.map((id) => createInputField(id, params[id])),
 );
 
 const createClickableLabel = (model, field) =>
@@ -72,7 +72,7 @@ tooltip(
     makeTooltipsTableCellLike
 );
 
-const createInputField = (inputId, currentValue, pageFilteringTypes) =>
+const createInputField = (inputId, currentValue) =>
 tooltip(
     h('td', h('input.form-control', {
         style: 'width:120px',

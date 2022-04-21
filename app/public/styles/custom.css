@@ -42,7 +42,10 @@
 }
 
 .tooltip:hover {
-    display: block !important;
+    position: inherit !important;
+    background-color: blueviolet;
+}
+
+.tooltip:hover .tooltiptext {
     position: absolute !important;
-    background-color: blue;
 }
