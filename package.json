@@ -13,15 +13,32 @@
     "url": "https://github.com/AliceO2Group/RunConditionTable"
   },
   "scripts": {
-    "eslint": "eslint app --ext .js --format html --output-file ./reports/static-analysis.html",
+    "eslint": "mkdir -p ./reports; eslint app --ext .js --format html --output-file ./reports/static/$(if [ \"$RUNNING_ENV\" = \"DOCKER\" ]; then echo \"from-docker/static-analysis.html\"; else echo \"locally/static-analysis.html\"; fi)",
     "eslint:fix": "npm run eslint -- --fix",
     "static": "npm run eslint",
+<<<<<<< HEAD
     "test": "npm run static && mocha --exit tests/**/mocha-*",
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run test && npm run coverage:report",
     "reports:show": "open ./reports/*",
     "start:dev": "nodemon --watch main.js --watch app --ignore app/public",
     "start:prod": "node main.js"
+=======
+    "reports:show": "open ./reports/*",
+
+    "test": "mkdir -p ./reports; mocha --exit test/**/mocha-*",
+    "coverage:report": "nyc report --report=html --report=json",
+    "coverage": "nyc npm run test && npm run coverage:report ",
+
+    "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
+    "start:prod": "node app/main.js",
+
+    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml up --build",
+    "docker:test": "mkdir -p reports; docker-compose -f docker-compose.yml -f docker-compose-test.yml up --build --abort-on-container-exit",
+
+    "clean": "rm -rf ./reports; rm -rf .nyc_output",
+    "tmp": "node ./tmp/*"
+>>>>>>> master
   },
   "dependencies": {
     "@aliceo2/web-ui": "^1.18.2",
@@ -36,11 +53,11 @@
     "socks-proxy-agent"
   ],
   "files": [
-    "lib/",
+    "app/",
     "docs/"
   ],
   "devDependencies": {
-    "eslint": "8.10.0",
+    "eslint": "^8.10.0",
     "eslint-output": "^3.0.1",
     "mocha": "^9.2.1",
     "nodemon": "^2.0.15",

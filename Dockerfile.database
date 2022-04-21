@@ -1,0 +1,44 @@
+FROM postgres:14.2-bullseye as db-base
+
+
+WORKDIR /postgres/run
+
+
+RUN apt update -y
+RUN apt install -y \
+    bash \
+    sudo \
+    procps
+
+ENV POSTGRES_PASSWORD=postgres
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_DB=postgres
+ENV PGDATA=/var/lib/postgresql/data/pgdata
+ENV POSTGRES_HOST_AUTH_METHOD=md5
+
+COPY ./database /docker-entrypoint-initdb.d/
+
+FROM db-base as development
+ENV ENV_MODE=development
+ENV MOCK_DB=true
+
+# RUN apt install -y \
+#     python3 \
+#     python3-pip \
+#     vim
+
+# RUN python3 -m pip install pandas numpy psycopg2-binary
+
+FROM db-base as test
+ENV ENV_MODE=test
+ENV MOCK_DB=true
+
+
+FROM db-base as production
+ENV ENV_MODE=production
+
+
+
+
+
+

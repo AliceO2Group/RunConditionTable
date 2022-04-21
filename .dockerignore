@@ -1,0 +1,9 @@
+
+*
+
+!app
+!package*.json
+!test
+!database
+!.nycrc
+!scripts

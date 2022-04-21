@@ -1,4 +1,3 @@
-.idea
 node_modules
 tmp
 volatile
@@ -8,4 +7,6 @@ coverage*
 app/public/config.js
 reports
 database/.ipynb_checkpoints
-database/cached
+database**/cached
+database/tmpdata
+*__pycache__
