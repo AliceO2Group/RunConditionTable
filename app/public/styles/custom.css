@@ -35,11 +35,6 @@
     overflow-x: auto !important;
     overflow-y: hidden !important;
     width: 100%;
-    z-index: 49 !important;
-}
-
-.below-scrollable {
-    z-index: 2 !important;
 }
 
 .table-cell-like {
@@ -48,7 +43,6 @@
 
 .tooltip:hover {
     display: block !important;
-    z-index: 99999 !important;
     position: absolute !important;
     background-color: blue;
 }

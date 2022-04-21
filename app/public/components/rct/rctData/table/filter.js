@@ -44,10 +44,10 @@ export default function filter(model) {
                 ),
             )
         ),
-        h('button.btn.below-scrollable', {
+        h('button.btn', {
             onclick: onclickSubmit(model, inputsIds),
         }, 'Submit'),
-        h('button.btn.below-scrollable', {
+        h('button.btn', {
             onclick: onclickClear(model, inputsIds),
         }, 'Clear filters'),
     );
