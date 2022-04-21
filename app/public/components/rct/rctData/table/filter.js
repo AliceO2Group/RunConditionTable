@@ -17,6 +17,8 @@ import { RCT } from '../../../../config.js';
 import tooltip from '../../../common/tooltip.js';
 const { dataReqParams } = RCT;
 
+const makeTooltipsTableCellLike = true;
+
 export default function filter(model) {
     const data = model.getCurrentData();
     const { fields } = data;
@@ -32,38 +34,42 @@ export default function filter(model) {
 
     const { params } = model.router;
 
-    return h('table.table-filters', [
-        h('tbody', [
-            labelsRow(model, fields),
-            inputsRow(params, upperInputIds, pageFilteringTypes),
-            inputsRow(params, lowerInputIds, pageFilteringTypes),
-        ]),
-        h('button.btn', {
+    return h('div',
+        h('div.x-scrollable',
+            h('table',
+                h('tbody',
+                    labelsRow(model, fields),
+                    inputsRow(params, upperInputIds, pageFilteringTypes),
+                    inputsRow(params, lowerInputIds, pageFilteringTypes),
+                ),
+            )
+        ),
+        h('button.btn.below-scrollable', {
             onclick: onclickSubmit(model, inputsIds),
         }, 'Submit'),
-        h('button.btn', {
+        h('button.btn.below-scrollable', {
             onclick: onclickClear(model, inputsIds),
         }, 'Clear filters'),
-    ]);
+    );
 }
 
-const labelsRow = (model, fields) => h('tr', [
-    h('td', [].concat(fields.map((field) => createClickableLabel(model, field)))),
-]);
+const labelsRow = (model, fields) => h('tr',
+    fields.map((field) => createClickableLabel(model, field))
+);
 
-const inputsRow = (params, inputsIds, pageFilteringTypes) => h('tr', [
-    h('td',[].concat(inputsIds.map((id) => createInputField(id, params[id], pageFilteringTypes)))),
-]);
+const inputsRow = (params, inputsIds, pageFilteringTypes) => h('tr',
+    inputsIds.map((id) => createInputField(id, params[id], pageFilteringTypes)),
+);
 
 const createClickableLabel = (model, field) =>
 tooltip(
-    h('td', h('button.btn', {
+    h('th', h('button.btn', {
         style: 'width:120px',
         onclick: () => model.fetchedData.changeItemStatus(field),
         className: field.marked ? 'active' : '',
     }, field.name)),
     field.marked ? 'hide' : 'display',
-    false
+    makeTooltipsTableCellLike
 );
 
 const createInputField = (inputId, currentValue, pageFilteringTypes) =>
@@ -75,7 +81,7 @@ tooltip(
         id: inputId,
     })),
     inputId.substring(inputId.indexOf('-') + 1),
-    false
+    makeTooltipsTableCellLike
 )
 
 const onclickSubmit = (model, inputsIds) => () => {
@@ -126,20 +132,3 @@ const filedName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes
         throw 'probably incorrect configuration of filtering types';
     }
 };
-
-/*
- * Const saveFiteringParams = (model, upperInputIds, lowerInputIds) => {
- *     const fields = model.getCurrentData().fields
- */
-
-/*
- *     Fields.forEach(f => f.filtering = {})
- *     zip(fields, upperInputIds).forEach(([f, id]) => {
- *         f.filtering[id] = document.getElementById(id)?.value;
- *     })
- *     zip(fields, lowerInputIds).forEach(([f, id]) => {
- *         f.filtering[id] = document.getElementById(id)?.value;
- *     })
- */
-
-// }

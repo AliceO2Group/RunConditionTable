@@ -14,8 +14,8 @@
 
  import { h } from '/js/src/index.js';
 
- export default function tooltip(component, tooltipText, underline) {
-    return h(`div.tooltip${underline? '':'.noBorderBottom'}`,
+ export default function tooltip(component, tooltipText, tableCellLike=false, underline=false) {
+    return h(`div.tooltip${!underline && '.noBorderBottom'}${tableCellLike && '.table-cell-like'}`,
                 component,
                 h('span.tooltiptext', tooltipText)
             );

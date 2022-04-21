@@ -50,3 +50,33 @@
 .noBorderBottom {
     border-bottom: 0px !important;
 }
+
+.x-scrollable {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    width: 100%;
+    z-index: 49 !important;
+    /*min-height: 165px;*/
+}
+
+.below-scrollable {
+    z-index: 2 !important;
+}
+
+.table-cell-like {
+    display: table-cell !important;
+}
+
+.tooltiptext::after {
+    z-index: 99999 !important;
+    position: absolute !important;
+    background-color: blueviolet;
+    display: block;
+}
+
+.tooltip:hover {
+    display: block !important;
+    z-index: 99999 !important;
+    position: absolute !important;
+    background-color: blueviolet;
+}
