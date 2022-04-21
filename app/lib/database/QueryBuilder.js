@@ -156,7 +156,7 @@ const runs_per_period_view = (query) => `
             p.name, 
             r.run_number, 
             r.start, 
-            r.end AS ende, 
+            r.end AS end, 
             r."B_field", 
             r.energy_per_beam, 
             r."IR", 
@@ -236,7 +236,7 @@ const flags_view = (query) => `
         SELECT
             --qcf.id, 
             qcf.start, 
-            qcf.end AS ende, 
+            qcf.end AS end, 
             ftd.flag, 
             qcf.comment, 
             dpr.production_id,
