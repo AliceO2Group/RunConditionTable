@@ -3,9 +3,6 @@ services:
   application:
     build: 
       target: development
-    ports:
-      - target: 8081
-        published: 8081
 
     volumes:
       - type: bind

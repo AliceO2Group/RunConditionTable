@@ -5,3 +5,5 @@ services:
     ports:
       - target: 8081
         published: 80
+      - target: 8081
+        published: 443
