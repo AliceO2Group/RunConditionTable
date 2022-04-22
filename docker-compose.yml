@@ -3,9 +3,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.application
-    ports:
-      - target: 8081
-        published: 8081
     environment:
       - RUNNING_ENV=DOCKER
     
