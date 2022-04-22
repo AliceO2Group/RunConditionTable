@@ -51,7 +51,6 @@ export default class FetchedDataManager {
             url = this.router.getUrl();
         }
         const { page, index } = this.model.getDataPointerFromUrl(url);
-
         const data = this[page][index];
         if (!data || force) {
             await this.req(true, url);
@@ -74,7 +73,6 @@ export default class FetchedDataManager {
         this.model.notify();
 
         const reqEndpoint = this.getReqEndpoint(url, countAllRecord);
-        console.log(reqEndpoint);
         const { result, status, ok } = await this.model.loader.get(reqEndpoint);
         this.model.parent._tokenExpirationHandler(status);
 

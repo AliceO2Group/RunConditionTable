@@ -63,7 +63,7 @@ const data_passes_view = (query) => `
                         data_passes_runs AS dpr
                             ON r.id = dpr.run_id
                         INNER JOIN data_passes AS dp
-                            ON dp.id = dpr.production_id
+                            ON dp.id = dpr.data_pass_id
                         WHERE r.period_id = (
                                             SELECT id 
                                             FROM periods AS p 

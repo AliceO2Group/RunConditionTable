@@ -13,7 +13,7 @@
     "url": "https://github.com/AliceO2Group/RunConditionTable"
   },
   "scripts": {
-    "eslint": "eslint app --ext .js --format html --output-file ./reports/static/$(if [ \"$RUNNING_ENV\" = \"DOCKER\" ]; then echo \"from-docker\"; else echo \"locally\"; fi)/static-analysis.html",
+    "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html",
     "eslint:fix": "npm run eslint -- --fix",
     "static": "npm run eslint",
 
@@ -21,7 +21,7 @@
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run coverage:test && npm run coverage:report ",
 
-    "test": "npm run static; npm run coverage; if [ \"RUNNING_ENV\" = \"DOCKER\" ]; then chmod 666 -R ./reports; fi #TODO platform independent",
+    "test": "mkdir -pv ./reports; npm run static; npm run coverage; if [ \"RUNNING_ENV\" = \"DOCKER\" ]; then chmod -R o+w ./reports; else echo \"asdfasdfasdf\"; fi #TODO platform independent",
 
     "reports:show": "open ./reports/**/*.html",
 

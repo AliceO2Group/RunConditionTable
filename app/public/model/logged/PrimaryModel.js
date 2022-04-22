@@ -15,7 +15,6 @@
 import { Observable, Loader } from '/js/src/index.js';
 import FetchedDataManager from './modelData/FetchedDataManager.js';
 import { RCT } from '../../config.js';
-import { urlSearchToParamsObject } from '../../../../utils/utils.js';
 import { defaultIndex } from '../../../../utils/defaults.js';
 const { dataReqParams } = RCT;
 
@@ -43,18 +42,14 @@ export default class PrimaryModel extends Observable {
 
     handleLocationChange() {
         const url = this.router.getUrl();
-        console.log(this.router.getUrl());
         switch (url.pathname) {
             case '/':
-                if (this.router.params['page'] === undefined) {
-                    console.log('def');
+                if (! this.router.params['page']) {
                     this.router.go(`/?page=periods&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
                 } else {
-                    console.log('req');
                     this.fetchedData.reqForData()
                         .then(() => {})
-                        .catch(() => {
-                        });
+                        .catch(() => {});
                 }
                 break;
             case '/admin/':
@@ -84,7 +79,7 @@ export default class PrimaryModel extends Observable {
     }
 
     getDataPointerFromUrl(url) {
-        const pointer = urlSearchToParamsObject(url.search);
+        const pointer = Object.fromEntries(new URLSearchParams(url.search));
         return {
             page: pointer.page,
             index: defaultIndex(pointer.index),
