@@ -28,11 +28,11 @@ COPY . .
 
 FROM developmentdependencies as development
 ENV ENV_MODE=development
-CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "60", "--", "npm", "run", "start:dev" ]
+CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "start:dev" ]
 
 FROM developmentdependencies as test
 ENV ENV_MODE=test
-CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "60", "--", "npm", "run", "test" ]
+CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "test" ]
 
 FROM base as production
 ENV ENV_MODE=production
