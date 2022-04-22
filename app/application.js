@@ -54,8 +54,7 @@ class RunConditionTableApplication {
 
         httpServer.post(EP.login, (req, res) => databaseService.login(req, res));
         httpServer.post(EP.logout, (req, res) => databaseService.logout(req, res));
-        httpServer.get(`${EP.rctData}:page/`, (req, res) => databaseService.execDataReq(req, res));
-        httpServer.get(`${EP.rctData}:page/:index/`, (req, res) => databaseService.execDataReq(req, res));
+        httpServer.get(EP.rctData, (req, res) => databaseService.execDataReq(req, res));
         httpServer.post(EP.insertData, (req, res) => databaseService.execDataInsert(req, res));
         httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
     }

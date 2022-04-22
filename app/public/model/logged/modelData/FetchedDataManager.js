@@ -74,6 +74,7 @@ export default class FetchedDataManager {
         this.model.notify();
 
         const reqEndpoint = this.getReqEndpoint(url, countAllRecord);
+        console.log(reqEndpoint);
         const { result, status, ok } = await this.model.loader.get(reqEndpoint);
         this.model.parent._tokenExpirationHandler(status);
 

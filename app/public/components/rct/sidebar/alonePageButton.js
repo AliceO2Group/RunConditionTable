@@ -17,7 +17,7 @@ import { RCT } from '../../../config.js';
 const { dataReqParams } = RCT;
 
 function defaultHref(page, index) {
-    return `/${page}${index ? `/${index}` : ''}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
+    return `/?page=${page}${index ? `&${index}` : ''}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
 }
 
 export default function alonePageButton(model, title, page, index = null) {
