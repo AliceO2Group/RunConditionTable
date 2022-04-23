@@ -1,0 +1,21 @@
+services:
+  application:
+    build:
+      context: ./
+      dockerfile: Dockerfile.application
+    ports:
+      - target: 8081
+        published: 8081
+    environment:
+      - RUNNING_ENV=DOCKER
+    
+  
+  database:
+    build: 
+      context: ./
+      dockerfile: Dockerfile.database
+    ports:
+      - target: 5423
+        published: 5432
+    environment:
+      - RUNNING_ENV=DOCKER

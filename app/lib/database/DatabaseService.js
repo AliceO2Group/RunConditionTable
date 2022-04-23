@@ -25,7 +25,6 @@ const DRF = config.public.dataRespondFields;
  * logging is handled here, because client log in as database user,
  * so backend must communicate with database in order to check client credentials
  */
-
 class DatabaseService {
     constructor(loggedUsers) {
         this.loggedUsers = loggedUsers;
@@ -33,7 +32,7 @@ class DatabaseService {
         this.queryBuilder = new QueryBuilder();
     }
 
-    login(req, res) {
+    async login(req, res) {
         const { body } = req;
         let client = this.loggedUsers.tokenToUserData[req.query.token];
 
@@ -47,7 +46,7 @@ class DatabaseService {
                 password: config.database.password,
             });
 
-            (async () => await client.connect())()
+            await client.connect()
                 .catch((e) => {
                     this.logger.error(e);
                 });
@@ -70,7 +69,7 @@ class DatabaseService {
             });
     }
 
-    logout(req, res) {
+    async logout(req, res) {
         const { token } = req.query;
         const clientData = this.loggedUsers.tokenToUserData[token];
         if (clientData) {
@@ -179,8 +178,8 @@ class DatabaseService {
 
         await this.adminClient.connect()
             .catch((e) => {
-                this.logger.error(e);
-                process.emit('SIGINT');
+                this.logger.error("error when trying to establish admin connection", e);
+                // process.emit('SIGINT');
             });
     }
 }

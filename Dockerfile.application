@@ -1,0 +1,41 @@
+
+FROM node:16.9.1-alpine3.12 as base
+
+WORKDIR /opt/RunConditionTable
+
+EXPOSE 8081
+
+RUN apk add --no-cache \
+    bash=5.0.17-r0
+
+
+FROM base as developmentdependencies
+
+RUN apk add --no-cache \
+    chromium=86.0.4240.111-r0 \
+    freetype=2.10.4-r0 \
+    freetype-dev=2.10.4-r0 \
+    git=2.26.3-r1 \
+    harfbuzz=2.6.6-r0 \
+    ca-certificates=20211220-r0 \
+    ttf-freefont=20120503-r1
+
+COPY package*.json ./
+
+RUN npm --silent ci
+COPY . .
+
+
+FROM developmentdependencies as development
+ENV ENV_MODE=development
+CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "60", "--", "npm", "run", "start:dev" ]
+
+FROM developmentdependencies as test
+ENV ENV_MODE=test
+CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "60", "--", "npm", "run", "test" ]
+
+FROM base as production
+ENV ENV_MODE=production
+CMD ["npm", "run", "start:prod"]
+
+

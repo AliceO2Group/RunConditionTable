@@ -1,12 +1,13 @@
-.idea
 node_modules
 tmp
-volatile
 package-lock.json
 .nyc_output
 coverage*
 app/public/config.js
 reports
 database/.ipynb_checkpoints
-database/cached
 config.js
+database**/cached
+database/tmpdata
+*__pycache__
+scratch
