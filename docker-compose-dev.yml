@@ -9,6 +9,8 @@ services:
         read_only: false
         source: ./app
         target: /opt/RunConditionTable/app
+    environment:
+      - CERN_SOCKS=${CERN_SOCKS}
 
     restart: "no"
 

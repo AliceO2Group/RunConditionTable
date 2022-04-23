@@ -77,10 +77,11 @@ CREATE TABLE public.data_passes (
 	pass_type integer NOT NULL,
 	jira text,
 	ml text,
-	number_of_events integer NOT NULL,
-	software_version text NOT NULL,
-	size real NOT NULL,
-	CONSTRAINT data_passes_pkey PRIMARY KEY (id)
+	number_of_events integer,
+	software_version text,
+	size real,
+	CONSTRAINT data_passes_pkey PRIMARY KEY (id),
+	CONSTRAINT dp_name_unique UNIQUE (name)
 
 );
 -- ddl-end --
@@ -108,7 +109,8 @@ CREATE TABLE public.data_passes_runs (
 	id integer NOT NULL DEFAULT nextval('public.data_passes_runs_id_seq'::regclass),
 	run_id integer NOT NULL,
 	data_pass_id integer NOT NULL,
-	CONSTRAINT data_passes_runs_pkey PRIMARY KEY (id)
+	CONSTRAINT data_passes_runs_pkey PRIMARY KEY (id),
+	CONSTRAINT dpr_pair_unique UNIQUE (run_id,data_pass_id)
 
 );
 -- ddl-end --
@@ -135,7 +137,8 @@ ALTER SEQUENCE public.detectors_subsystems_id_seq OWNER TO postgres;
 CREATE TABLE public.detectors_subsystems (
 	id integer NOT NULL DEFAULT nextval('public.detectors_subsystems_id_seq'::regclass),
 	name character varying(10) NOT NULL,
-	CONSTRAINT detectors_subsystems_pkey PRIMARY KEY (id)
+	CONSTRAINT detectors_subsystems_pkey PRIMARY KEY (id),
+	CONSTRAINT ds_name_unique UNIQUE (name)
 
 );
 -- ddl-end --
@@ -162,7 +165,8 @@ ALTER SEQUENCE public.flags_types_dictionary_id_seq OWNER TO postgres;
 CREATE TABLE public.flags_types_dictionary (
 	id integer NOT NULL DEFAULT nextval('public.flags_types_dictionary_id_seq'::regclass),
 	flag text NOT NULL,
-	CONSTRAINT flags_types_dictionary_pkey PRIMARY KEY (id)
+	CONSTRAINT flags_types_dictionary_pkey PRIMARY KEY (id),
+	CONSTRAINT ftp_name_unique UNIQUE (flag)
 
 );
 -- ddl-end --
@@ -189,7 +193,8 @@ ALTER SEQUENCE public.pass_types_id_seq OWNER TO postgres;
 CREATE TABLE public.pass_types (
 	id integer NOT NULL DEFAULT nextval('public.pass_types_id_seq'::regclass),
 	pass_type character varying(10) NOT NULL,
-	CONSTRAINT pass_types_pkey PRIMARY KEY (id)
+	CONSTRAINT pass_types_pkey PRIMARY KEY (id),
+	CONSTRAINT pt_name_unique UNIQUE (pass_type)
 
 );
 -- ddl-end --
@@ -218,7 +223,8 @@ CREATE TABLE public.periods (
 	name character varying(12) NOT NULL,
 	year integer NOT NULL,
 	beam_type_id integer NOT NULL,
-	CONSTRAINT periods_pkey PRIMARY KEY (id)
+	CONSTRAINT periods_pkey PRIMARY KEY (id),
+	CONSTRAINT p_name_unique UNIQUE (name)
 
 );
 -- ddl-end --
@@ -293,7 +299,8 @@ CREATE TABLE public.runs_detectors (
 	id integer NOT NULL DEFAULT nextval('public.runs_detectors_id_seq'::regclass),
 	detector_id integer NOT NULL,
 	run_id integer NOT NULL,
-	CONSTRAINT runs_detectors_pkey PRIMARY KEY (id)
+	CONSTRAINT runs_detectors_pkey PRIMARY KEY (id),
+	CONSTRAINT rd_pair_unique UNIQUE (detector_id,run_id)
 
 );
 -- ddl-end --
@@ -318,7 +325,8 @@ CREATE TABLE public.runs (
 	mu character varying(25),
 	time_trg_start bigint NOT NULL,
 	time_trg_end bigint NOT NULL,
-	CONSTRAINT runs_pkey PRIMARY KEY (id)
+	CONSTRAINT runs_pkey PRIMARY KEY (id),
+	CONSTRAINT run_number_unique UNIQUE (run_number)
 
 );
 -- ddl-end --
@@ -362,7 +370,8 @@ CREATE TABLE public.simulation_passes (
 	ml text,
 	pwg text,
 	number_of_events integer,
-	CONSTRAINT simulation_passes_pkey PRIMARY KEY (id)
+	CONSTRAINT simulation_passes_pkey PRIMARY KEY (id),
+	CONSTRAINT sp_name_unique UNIQUE (name)
 
 );
 -- ddl-end --
@@ -447,13 +456,6 @@ REFERENCES public.data_passes_runs (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: period_fk | type: CONSTRAINT --
--- ALTER TABLE public.runs DROP CONSTRAINT IF EXISTS period_fk CASCADE;
-ALTER TABLE public.runs ADD CONSTRAINT period_fk FOREIGN KEY (period_id)
-REFERENCES public.periods (id) MATCH SIMPLE
-ON DELETE CASCADE ON UPDATE NO ACTION;
--- ddl-end --
-
 -- object: run_fk | type: CONSTRAINT --
 -- ALTER TABLE public.runs_detectors DROP CONSTRAINT IF EXISTS run_fk CASCADE;
 ALTER TABLE public.runs_detectors ADD CONSTRAINT run_fk FOREIGN KEY (run_id)
@@ -466,6 +468,13 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE public.runs_detectors ADD CONSTRAINT detector_fk FOREIGN KEY (detector_id)
 REFERENCES public.detectors_subsystems (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: period_fk | type: CONSTRAINT --
+-- ALTER TABLE public.runs DROP CONSTRAINT IF EXISTS period_fk CASCADE;
+ALTER TABLE public.runs ADD CONSTRAINT period_fk FOREIGN KEY (period_id)
+REFERENCES public.periods (id) MATCH SIMPLE
+ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: sim_passes_fk | type: CONSTRAINT --

@@ -10,3 +10,4 @@ reports
 database**/cached/
 *__pycache__
 scratch
+certs

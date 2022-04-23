@@ -17,6 +17,7 @@ const config = require('../config/configProvider.js');
 const views = require("./viewsDefinitions.js") 
 const { pagesNames } = config.public;
 const DRP = config.public.dataReqParams;
+const Utils = require("../Utils.js");
 
 /**
  * Class responsible for parsing url params, payloads of client request to sql queries
@@ -114,20 +115,6 @@ class QueryBuilder {
         }
     }
 
-    parseInsertDataReq(payload) {
-        const valueEntries = Object.entries(payload.data);
-        const keys = valueEntries.map(([k, _]) => k);
-        const values = valueEntries.map(([_, v]) => v);
-        return `INSERT INTO ${payload.targetTable}("${keys.join('", "')}") VALUES(${parseValues(values).join(', ')});`;
-    }
 }
-
-const parseValues = (values) => values.map((v) => {
-    if (isNaN(v) && v !== 'DEFAULT') {
-        return `'${v}'`;
-    } else {
-        return v;
-    }
-});
 
 module.exports = QueryBuilder;

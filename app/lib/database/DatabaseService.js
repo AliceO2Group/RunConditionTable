@@ -38,13 +38,7 @@ class DatabaseService {
 
         if (!client) {
             this.logger.info('Logging new client: ');
-            client = new Client({
-                host: config.database.hostname,
-                port: config.database.port,
-                database: config.database.dbname,
-                user: config.database.dbuser,
-                password: config.database.password,
-            });
+            client = new Client(config.database);
 
             await client.connect()
                 .catch((e) => {
@@ -159,6 +153,7 @@ class DatabaseService {
         res.status(status).json({ message: message });
     }
 
+    
     async disconnect() {
         const promises = Object.entries(this.loggedUsers.tokenToUserData).map(([_, data]) => {
             this.logger.info(`ending for ${data.name}`);
@@ -168,13 +163,7 @@ class DatabaseService {
     }
 
     async setAdminConnection() {
-        this.adminClient = new Client({
-            host: config.database.hostname,
-            port: config.database.port,
-            database: config.database.dbname,
-            user: config.database.dbuser,
-            password: config.database.password,
-        });
+        this.adminClient = new Client(config.database);
 
         await this.adminClient.connect()
             .catch((e) => {

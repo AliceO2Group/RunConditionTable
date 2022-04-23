@@ -6,7 +6,7 @@ MAIN_SCRIPT_NAME=$(basename $0)
 #if localy run < sudo -H -u postgres bash -c "./setup-db.sh --dev" > in <root>/database/ directory
 if [ ! $(whoami) = "postgres" ]; then
   echo "script must be run as postgres or using < sudo -H -u postgres bash -c \"$MAIN_SCRIPT_NAME [--mock [--python]]\" " >&2
-  echo "see $SCRIPTS_DIR/local-development/local-setup.sh"
+  echo "see $SCRIPTS_DIR/local-dev/local-setup.sh"
   exit 1;
 fi
 
@@ -41,9 +41,9 @@ if [ "$MOCK_DB" = "true" ] || [ "$1" == "--mock" ]; then
     echo "restoring database data from $MOCK_DATA"
     pg_restore -d $RCT_DATABASE $MOCK_DATA
   else 
+    # TODO '--big-data' flag
 
-    CACHED_PATH="$SCRIPTS_DIR/local-development/cached"
-
+    CACHED_PATH="$SCRIPTS_DIR/local-dev/cached"
     RCT_USER=$RCT_USER \
     RCT_DATABASE=$RCT_DATABASE \
     RCT_PASSWORD=$RCT_PASSWORD \

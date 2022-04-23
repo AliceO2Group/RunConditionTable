@@ -13,6 +13,8 @@
  * or submit itself to any jurisdiction.
  */
 
+/* eslint-disable */
+
 const DatabaseService = require('../app/lib/database/DatabaseService.js');
 const assert = require('assert');
 const sinon = require('sinon');
@@ -27,21 +29,18 @@ describe('DatabaseService test suite', () => {
         });
     });
 
-    // describe('ApplicationService getData test suite', () => {
-    //     it('should successfully send data about the project', () => {
-    //         const databaseService = new DatabaseService({});
-    //         res = {
-    //             status: sinon.fake.returns(),
-    //         };
-    //         const data = '';
-    //         databaseService.getDate(null, res);
-    //         console.log(res);
-
-    //         /*
-    //          * Assert.ok(res.status.calledWith(200));
-    //          * assert.ok(res.json.calledWith(data));
-    //          * assert.ok(res.)
-    //          */
-    //     });
-    // });
+    describe('ApplicationService getData test suite', () => {
+        it('should successfully send data about the project', () => {
+            const databaseService = new DatabaseService({});
+            res = {
+                status: sinon.fake.returns(),
+            };
+            const data = '';
+            databaseService.getDate(null, res);
+            console.log(res);
+            
+            assert.ok(res.status.calledWith(200));
+            assert.ok(res.json.calledWith(data));
+        });
+    });
 });
