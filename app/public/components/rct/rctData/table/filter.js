@@ -34,7 +34,7 @@ export default function filter(model) {
     return h('div',
         h('div.x-scrollable',
             h('table',
-                h('tbody.tableScrollable',
+                h('tbody',
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds),
                     inputsRow(params, lowerInputIds),

@@ -15,64 +15,6 @@
 import { h, iconHome, iconPerson, iconDataTransferDownload, iconMagnifyingGlass, iconReload } from '/js/src/index.js';
 import downloadCSV from '../../utils/csvExport.js';
 
-function magOnClick() {
-    console.log('mag was clicked!');
-    setTimeout(() => {
-        var found = document.getElementsByClassName('tableScrollable');
-		if (found.length > 0) {
-			console.log('found!');
-			var index;
-			var css;
-			var index2;
-				
-			var tableScrollable = found[0];
-            tableScrollable.addEventListener('mouseenter', function(ev) {
-                console.log(`mouse entered ${ev.target.tagName}`);
-            })
-			var tooltipCells = document.getElementsByClassName('tooltipCell');
-			
-            for (var i = 0; i < tooltipCells.length; i++) {
-                tooltipCells[i].addEventListener('mouseenter', function(ev) {
-					console.log('mouse enter registered!');
-					console.log(ev.target.tagName);
-                        
-                    if (ev.target.tagName === 'TD' || ev.target.tagName === 'INPUT') {
-                        var rect = ev.target.getBoundingClientRect();
-
-						console.log(rect);
-
-                        /*
-						css = document.getElementById('css');
-						index = css.sheet.insertRule(`.tooltip:hover .span::before {
-                            background-color: black !important;
-                            position: absolute;
-                            left: ${rect.x + 50}px !important;
-                            top: ${rect.top}px !important;
-                        }`, 0);
-                        index2 = css.sheet.insertRule(`.tooltip:hover .span::after {
-                            background-color: black !important;
-                            position: absolute;
-                            left: ${rect.right}px !important;
-                            top: ${rect.top}px !important;
-                        }`, 0);
-                        console.log(css.sheet);
-                        */
-                    } else if (css && css.sheet) {
-                        console.log('some error probably :(');
-                        // css.sheet.removeRule(index)
-                        // css.sheet.removeRule(index2)
-                    }
-
-							
-							// index = css.sheet.insertRule(`.tooltip span::before{left:${left - 50}px;top:${top}px}`, 0);
-    						// index2 = css.sheet.insertRule(`.tooltip span::after{left:${left - 50}px;top:${top + 20}px}`, 0);
-					  
-                }, true);
-			}
-	    } else console.log("Not found :(");
-    }, 100);
-}
-
 export default function header(model) {
     return h('.flex-row.p2', [
         h('.w-50', [
@@ -118,6 +60,5 @@ const functionalities = (model) => h('.button-group.text-right', h('button.btn',
     onclick: () => {
         model.changeSearchFieldsVisibility();
         model.notify();
-        magOnClick();
     },
 }, iconMagnifyingGlass()));
