@@ -14,22 +14,22 @@
 5. npm run docker:test - run static analysis and codecov on docker containers, results are available in '\<root\>/reports/'
 6. npm run docker:dev - run two containers, one for database and one for application, changes in local repo force to restart application on docker, see nodeom, also script: npm run start:dev
 
-## reaching CERN network
-1. if application is running on docker env var RUNNING_ENV is set to 'DOCKER' so if going to use socket-proxy to reach cern network set env var CERN_SOCKS to 'true'.
+## Reaching CERN network
+1. If the application is running on docker env, var `RUNNING_ENV` is set to `DOCKER`. To reach the CERN network using socket-proxy, you need to set env var `CERN_SOCKS` to `true`.
 ```bash
 export CERN_SOCKS='true'
 ```
-Then it will use host's socket at 'socks://172.200.200.1:12345' so you must open localy ssh socket via command:
+Application will use host's socket at 'socks://172.200.200.1:12345', so you need to locally open ssh socket via command:
 ```bash
 ssh -D 172.200.200.1:12345 <user>@<host>
 ```
-2. if application is <b>NOT</b> running on docker and you want to reach cern network you must specify exact socket you've opened in CERN_SOCKS env var e.g. 
-```bash
-export CERN_SOCKS='socks://localhost:12345'
-```
-after opening such socket via ssh
+2. If the application is <b>NOT</b> running on docker and you want to reach the CERN network, you need to specify the socket you are going to use on your own. First open the socket via ssh:
 ```bash
 ssh -D localhost:12345 <user>@<host>
+```
+Then save the address of the socket you've opened in CERN_SOCKS env var e.g. 
+```bash
+export CERN_SOCKS='socks://localhost:12345'
 ```
 
 ### database
