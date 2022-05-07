@@ -14,8 +14,8 @@ services:
     build: 
       context: ./
       dockerfile: Dockerfile.database
-    # ports:
-    #   - target: 5423
-    #     published: 5432
+    ports:
+      - target: 5423
+        published: 5432
     environment:
       - RUNNING_ENV=DOCKER
