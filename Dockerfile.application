@@ -25,7 +25,7 @@ RUN apk add --no-cache \
 
 
 FROM devdependencies as development
-ENV ENV_MODE=development
+ENV ENV_MODE=dev
 COPY ./.git ./.git
 COPY ./.gitignore ./
 RUN ls -al

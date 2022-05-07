@@ -41,7 +41,7 @@ class ServicesSynchronizer {
             this.logger.info(`using proxy/socks '${proxy}' to CERN network`);
             this.opts.agent = new SocksProxyAgent(proxy);
         } else {
-            this.logger.info('service do not user proxy/socks ro CERN network');
+            this.logger.info('service do not use proxy/socks to reach CERN network');
         }
     }
 

@@ -44,8 +44,20 @@ class ResProvider {
     }
 
     static socksProvider() {
-        const socks = process.env.CERN_SOCKS;
-        return socks;
+        logger.warn(`CERN_SOCKS set to '${process.env.CERN_SOCKS}'`);
+        let socks = undefined;
+        if (process.env.CERN_SOCKS) {
+            socks = process.env.CERN_SOCKS.trim();
+            if (socks.match(/socks:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+/)) {
+                return socks;
+            }
+        }
+
+        if (process.env.RUNNING_ENV == 'DOCKER' && process.env.CERN_SOCKS == 'true') {
+            socks = 'socks://172.200.200.1:12345';
+            return socks;
+        }
+        return undefined;
     }
 }
 logger = new Log(ResProvider.name);
