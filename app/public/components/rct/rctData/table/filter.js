@@ -14,10 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
-import tooltip from '../../../common/tooltip.js';
 const { dataReqParams } = RCT;
-
-const makeTooltipsTableCellLike = true;
 
 export default function filter(model) {
     const data = model.getCurrentData();
@@ -34,8 +31,7 @@ export default function filter(model) {
 
     const { params } = model.router;
 
-    return h('div', 
-        // h('style', {id: 'css'}),
+    return h('div',
         h('div.x-scrollable',
             h('table',
                 h('tbody.tableScrollable',
@@ -43,14 +39,16 @@ export default function filter(model) {
                     inputsRow(params, upperInputIds),
                     inputsRow(params, lowerInputIds),
                 ),
+            ),
+            h('div.abs',
+                h('button.btn', {
+                    onclick: onclickSubmit(model, inputsIds),
+                }, 'Submit'),
+                h('button.btn', {
+                    onclick: onclickClear(model, inputsIds),
+                }, 'Clear filters'),
             )
-        ),
-        h('button.btn', {
-            onclick: onclickSubmit(model, inputsIds),
-        }, 'Submit'),
-        h('button.btn', {
-            onclick: onclickClear(model, inputsIds),
-        }, 'Clear filters'),
+        )
     );
 }
 
@@ -75,7 +73,7 @@ const createClickableLabel = (model, field) =>
 
 const createInputField = (inputId, currentValue) =>
 h('th.my-tooltip.noBorderBottom.table-cell-like',
-    h('div.inh', 
+    h('div.rel', 
         h('input.form-control', {
             style: 'width:120px',
             type: 'text',
@@ -83,21 +81,8 @@ h('th.my-tooltip.noBorderBottom.table-cell-like',
             id: inputId,
         }),
         h('span.tooltiptext', `${inputId.substring(inputId.indexOf('-') + 1)}`)
-    )// ,
-    // h('span.tooltiptext', `${inputId.substring(inputId.indexOf('-') + 1)}`)
+    )
 );
-/*
-tooltip(
-    h('td', h('input.form-control.tooltipCell', {
-        style: 'width:120px',
-        type: 'text',
-        value: currentValue ? currentValue : '',
-        id: inputId,
-    })),
-    inputId.substring(inputId.indexOf('-') + 1),
-    makeTooltipsTableCellLike
-)
-*/
 
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
@@ -147,28 +132,3 @@ const filedName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes
         throw 'probably incorrect configuration of filtering types';
     }
 };
-
-/*
-var list = document.querySelector('section');
-var index;
-var css;
-var index2;
-
-list.addEventListener('mouseenter', function(ev) {
-  if (ev.target.tagName === 'SPAN') {
-    console.log(ev.target);
-    var rect = ev.target.getBoundingClientRect();
-    var top = rect.top;
-    var bottom = rect.bottom;
-    var left = rect.right;
-    
-    css = document.getElementById('css');
-    index = css.sheet.insertRule(`.tip span::before{left:${left - 50}px;top:${top}px}`, 0);
-    index2 = css.sheet.insertRule(`.tip span::after{left:${left - 50}px;top:${top + 20}px}`, 0);
-  } else if (css && css.sheet) {
-   css.sheet.removeRule(index)
-   css.sheet.removeRule(index2)
-  }
-}, true);4
-
-*/

@@ -35,6 +35,7 @@
     overflow-x: auto !important;
     overflow-y: hidden !important;
     width: 100%;
+    padding-bottom: 40px;
 }
 
 .table-cell-like {
@@ -42,25 +43,16 @@
 }
 
 .tooltip:hover .tooltiptext {
-    
-    /*
-    position: absolute !important;
-    */
     right: 0% !important;
     bottom: -100%;
-    /* border: blanchedalmond !important; */
 }
 
 .my-tooltip:hover .tooltiptext {
     visibility: visible;
-
-    /* overflow: visible !important; */
 }
 
-.inh {
+.rel {
     position: relative;
-    display: flex;
-    /* overflow: visible; */
 }
 
 .my-tooltip .tooltiptext {
@@ -72,25 +64,13 @@
     padding: 3px;
     border-radius: 6px;
     position: absolute;
-
-    /*
-    position: sticky;
-    left: 50%;
-    */
-
-    /* position: inherit; */
-    /* z-index: 1 !important; */
     z-index: 1 !important;
     bottom: -100%;
-    /* background: transparent !important; */
-    /* overflow: visible; not changing much... */
 }
 
 .my-tooltiptext::after {
     content: "";
     position: absolute;
-    /* position: inherit; */
-    /* bottom: 100% !important; doesn't change much... */
     left: 50%;
     margin-left: -15px;
     border-width: 5px;
@@ -98,12 +78,6 @@
     border-color: transparent transparent #555 transparent;
 }
 
-/*
-.my-tooltip::-webkit-scrollbar {
-    background: transparent;
-}
-*/
-
-.my-tooltip:hover::-webkit-scrollbar {
-    z-index: 0;
+.abs {
+    position: absolute !important;
 }
