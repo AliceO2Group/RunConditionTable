@@ -36,8 +36,9 @@ export default function header(model) {
 
 const headerSpecific = (model) => {
     switch (model.getCurrentDataPointer().page) {
-        case 'main': return title('Periods');
+        case 'periods': return title('Periods');
         case 'runsPerPeriod': return title('Runs per Period');
+        case 'dataPasses': return title('Data passess');
         case 'mc': return title('Monte Carlo');
         case 'flags': return title('Flags');
         default: return null;
