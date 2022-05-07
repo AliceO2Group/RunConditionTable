@@ -17,7 +17,9 @@
  export default function tooltip(component, tooltipText, tableCellLike=false, underline=false) {
     return h(`div.tooltip${!underline && '.noBorderBottom'}${tableCellLike && '.table-cell-like'}`,
                 component,
-                h('span.tooltiptext', tooltipText)
+                // h('div.tooltiptext-wrapper', 
+                    h('span.tooltiptext', tooltipText)
+                //)
             );
  }
  

@@ -34,10 +34,11 @@ export default function filter(model) {
 
     const { params } = model.router;
 
-    return h('div',
+    return h('div', 
+        // h('style', {id: 'css'}),
         h('div.x-scrollable',
             h('table',
-                h('tbody',
+                h('tbody.tableScrollable',
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds),
                     inputsRow(params, lowerInputIds),
@@ -62,19 +63,32 @@ const inputsRow = (params, inputsIds) => h('tr',
 );
 
 const createClickableLabel = (model, field) =>
-tooltip(
-    h('th', h('button.btn', {
-        style: 'width:120px',
-        onclick: () => model.fetchedData.changeItemStatus(field),
-        className: field.marked ? 'active' : '',
-    }, field.name)),
-    field.marked ? 'hide' : 'display',
-    makeTooltipsTableCellLike
-);
+    h('th.tooltip.noBorderBottom.table-cell-like',
+        h('button.btn.tooltipCell', {
+                style: 'width:120px',
+                onclick: () => model.fetchedData.changeItemStatus(field),
+                className: field.marked ? 'active' : '',
+            }, field.name,
+            h('span.tooltiptext', field.marked ? 'hide' : 'display')
+        ),
+    );
 
 const createInputField = (inputId, currentValue) =>
+h('th.my-tooltip.noBorderBottom.table-cell-like',
+    h('div.inh', 
+        h('input.form-control', {
+            style: 'width:120px',
+            type: 'text',
+            value: currentValue ? currentValue : '',
+            id: inputId,
+        }),
+        h('span.tooltiptext', `${inputId.substring(inputId.indexOf('-') + 1)}`)
+    )// ,
+    // h('span.tooltiptext', `${inputId.substring(inputId.indexOf('-') + 1)}`)
+);
+/*
 tooltip(
-    h('td', h('input.form-control', {
+    h('td', h('input.form-control.tooltipCell', {
         style: 'width:120px',
         type: 'text',
         value: currentValue ? currentValue : '',
@@ -83,6 +97,7 @@ tooltip(
     inputId.substring(inputId.indexOf('-') + 1),
     makeTooltipsTableCellLike
 )
+*/
 
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
@@ -132,3 +147,28 @@ const filedName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes
         throw 'probably incorrect configuration of filtering types';
     }
 };
+
+/*
+var list = document.querySelector('section');
+var index;
+var css;
+var index2;
+
+list.addEventListener('mouseenter', function(ev) {
+  if (ev.target.tagName === 'SPAN') {
+    console.log(ev.target);
+    var rect = ev.target.getBoundingClientRect();
+    var top = rect.top;
+    var bottom = rect.bottom;
+    var left = rect.right;
+    
+    css = document.getElementById('css');
+    index = css.sheet.insertRule(`.tip span::before{left:${left - 50}px;top:${top}px}`, 0);
+    index2 = css.sheet.insertRule(`.tip span::after{left:${left - 50}px;top:${top + 20}px}`, 0);
+  } else if (css && css.sheet) {
+   css.sheet.removeRule(index)
+   css.sheet.removeRule(index2)
+  }
+}, true);4
+
+*/
