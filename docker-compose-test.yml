@@ -9,7 +9,6 @@ services:
         source: ./reports
         target: /opt/RunConditionTable/reports
         
-
     restart: "no"
 
   database:

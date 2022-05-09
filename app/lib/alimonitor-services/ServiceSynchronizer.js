@@ -26,13 +26,27 @@ class ServicesSynchronizer {
         this.logger = new Log(ServicesSynchronizer.name);
         this.opts = {
             rejectUnauthorized: false,
-            pfx: ResProvider.servicesInterfacePfxCertProvider(),
+            pfx: ResProvider.securityFilesProvider(
+                ['myCertificate.p12'],
+                'pfx - pkcs12 cert',
+                'RCT_CERT_PATH',
+            ),
+            cert: ResProvider.securityFilesProvider(
+                ['cert.pem'],
+                'cert.pem',
+                'RCT_CERT_PEM_PATH',
+            ),
+            key: ResProvider.securityFilesProvider(
+                ['privkey.pem', 'key.pem'],
+                'privkey.pem',
+                'RCT_PRIVKEY_PEM_PATH',
+            ),
+            passphrase: ResProvider.passphraseProvider(),
             headers: {
                 Accept:	'application/json',
                 'Accept-Language':	'en-US,en;q=0.5',
                 Connection:	'keep-alive',
-                // eslint-disable-next-line max-len
-                'User-Agent': 'Mozilla/5.0', //TODO examine why it doesn't work without it, https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
+                'User-Agent': 'Mozilla/5.0',
             },
         };
 

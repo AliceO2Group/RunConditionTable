@@ -29,7 +29,7 @@ export default function row(
                 return h('td', item[n]);
             }
         } else {
-            return h('td', `${n}__tmp_`);
+            return h('td', '_');
         }
     }).concat([
         h('td', h('input.form-check-input.p1.mh4.justify-center.relative', {
