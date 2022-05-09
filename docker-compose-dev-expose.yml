@@ -1,0 +1,6 @@
+
+services:
+  application:
+    ports:
+      - target: 8081
+        published: 8081

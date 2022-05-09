@@ -1,5 +1,4 @@
-const matchExcludeType = 'match-exclude-type';
-const fromToType = 'from-to-type';
+const path = require('path');
 
 module.exports = {
     jwt: {
@@ -12,120 +11,33 @@ module.exports = {
         tls: false,
         autoListen: false,
     },
+    winston: {
+        file: path.join(__dirname, '..', '..', 'reports/logs.txt'),
+    },
     database: {
-        hostname: 'database',
-        dbname: 'rct-db',
-        dbuser: 'rct-user',
+        host: 'database',
+        database: 'rct-db',
+        user: 'rct-user',
         password: 'rct-passwd',
         port: 5432,
     },
-    bookkeepingRuns: {
-        url: 'http://rct-bookkeeping.cern.ch:4000/api/runs',
-    },
-    dev: {
-        proxy: 'socks://localhost:12345',
-    },
-
-    public: { // Properties that will be provided to frontend in the public folder
-        endpoints: {
-            login: '/login/',
-            logout: '/logout/',
-            rctData: '/RCT-Data/',
-            insertData: '/Rct-Data/insert-data/',
-            authControl: '/auth-control/',
-            date: '/date/',
-            bookkeeping: '/bookkeeping/',
-        },
-        methods: {
-            login: 'post',
-            logout: 'post',
-            rctData: 'get',
-            date: 'get',
-            insertData: 'post',
-            authControl: 'get',
-        },
-
-        dataReqParams: {
-            countRecords: 'count-records',
-            site: 'site',
-            rowsOnSite: 'rows-on-site',
-        },
-
-        dataRespondFields: {
-            totalRowsCount: 'totalRowsCount',
-            rows: 'rows',
-            fields: 'fields',
-        },
-
-        pagesNames: {
-            periods: 'periods',
-            dataPasses: 'dataPasses',
-            mc: 'mc',
-            runsPerPeriod: 'runsPerPeriod',
-            flags: 'flags',
-        },
-
-        filteringParams: {
-            types: {
-                matchExcludeType: matchExcludeType,
-                fromToType: fromToType,
+    services: {
+        bookkeeping: {
+            url: {
+                rct: 'http://rct-bookkeeping.cern.ch:4000/api/runs',
+                ali: 'https://ali-bookkeeping.cern.ch/api/runs',
             },
-            pages: {
-                periods: {
-                    name: matchExcludeType,
-                    year: fromToType,
-                    beam: matchExcludeType,
-                    energy: fromToType,
-                },
-                runsPerPeriod: {
-                    name: matchExcludeType,
-                    run_number: fromToType,
-                    start: fromToType,
-                    end: fromToType,
-                    B_field: matchExcludeType,
-                    energy_per_beam: fromToType,
-                    IR: matchExcludeType,
-                    filling_scheme: fromToType,
-                    triggers_conf: matchExcludeType,
-                    fill_number: fromToType,
-                    runType: matchExcludeType,
-                    mu: matchExcludeType,
-                    timeTrgStart: fromToType,
-                    timeTrgEnd: fromToType,
-                },
-
-                mc: {
-                    name: matchExcludeType,
-                    description: matchExcludeType,
-                    jira: matchExcludeType,
-                    ML: matchExcludeType,
-                    PWG: matchExcludeType,
-                    number_of_events: fromToType,
-                },
-
-                dataPasses: {
-                    name: matchExcludeType,
-                    description: matchExcludeType,
-                    pass_type: matchExcludeType,
-                    jira: matchExcludeType,
-                    ML: matchExcludeType,
-                    number_of_events: fromToType,
-                    software_version: matchExcludeType,
-                    size: fromToType,
-                },
-
-                flags: {
-                    start: fromToType,
-                    end: fromToType,
-                    flag: matchExcludeType,
-                    comment: matchExcludeType,
-                    production_id: fromToType,
-                    name: matchExcludeType,
-                },
+        },
+        monalisa: {
+            url: {
+                rawData: 'https://alimonitor.cern.ch/production/raw.jsp?res_path=json',
+                // eslint-disable-next-line max-len
+                rawDataDetalied: 'https://alimonitor.cern.ch/production/raw_details.jsp?timesel=0&filter_jobtype=OCT+-+async+production+for+pilot+beam+pass+3%2C+O2-2763&res_path=json',
             },
-
         },
     },
+
+    public: require('./public.js'),
 };
 
 // TODO config validation

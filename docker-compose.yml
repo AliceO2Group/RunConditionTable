@@ -3,19 +3,27 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.application
-    ports:
-      - target: 8081
-        published: 8081
     environment:
       - RUNNING_ENV=DOCKER
+    networks:
+      - rct-network
     
-  
   database:
     build: 
       context: ./
       dockerfile: Dockerfile.database
-    ports:
-      - target: 5423
-        published: 5432
     environment:
       - RUNNING_ENV=DOCKER
+    networks:
+      - rct-network
+networks:
+  rct-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.200.200.0/24"
+          gateway: "172.200.200.1"
+      
+
+

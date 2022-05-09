@@ -16,7 +16,8 @@
         "node_modules/",
         "database/",
         "tests/",
-        "tmp/"
+        "tmp/",
+        "scratch/"
     ],
     "rules": {
         "array-bracket-newline": [
@@ -80,13 +81,9 @@
             "error",
             "always"
         ],
-        "function-call-argument-newline": [
-            "error",
-            "never"
-        ],
         "function-paren-newline": [
-            "warn",
-            { "minItems": 5 }
+            "error",
+            "consistent"
         ],
         "indent": [
             "error",

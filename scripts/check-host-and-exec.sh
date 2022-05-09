@@ -39,6 +39,7 @@ SUCCESS=$(timeout $TIMEOUT_SEC\s bash -c "host_scan $HOST $PORT $TIMEOUT_SEC")
 echo $?
 if [ "$SUCCESS" = "true" ]; then
     echo "$HOST:$PORT is reachable"
+    echo running "$CMD_ARGS"
     $CMD_ARGS
     exit 0;
 else

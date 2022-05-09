@@ -33,8 +33,8 @@ export default function siteController(model, data) {
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
     const currentSiteIdx = currentSite - 1;
 
-    const middleButtonsR = range(
-        Math.max(0, currentSiteIdx - visibleNeighbourButtonsRange), Math.min(sitesNumber, currentSiteIdx + visibleNeighbourButtonsRange + 1));
+    // eslint-disable-next-line max-len
+    const middleButtonsR = range(Math.max(0, currentSiteIdx - visibleNeighbourButtonsRange), Math.min(sitesNumber, currentSiteIdx + visibleNeighbourButtonsRange + 1));
 
     const leftButtonsR = range(0, Math.min(middleButtonsR[0], Math.floor((maxVisibleButtons - (2 * visibleNeighbourButtonsRange + 1)) / 2)));
 
