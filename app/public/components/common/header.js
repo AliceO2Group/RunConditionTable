@@ -36,8 +36,9 @@ export default function header(model) {
 
 const headerSpecific = (model) => {
     switch (model.getCurrentDataPointer().page) {
-        case 'main': return title('Periods');
+        case 'periods': return title('Periods');
         case 'runsPerPeriod': return title('Runs per Period');
+        case 'dataPasses': return title('Data passess');
         case 'mc': return title('Monte Carlo');
         case 'flags': return title('Flags');
         default: return null;
@@ -62,52 +63,3 @@ const functionalities = (model) => h('.button-group.text-right', h('button.btn',
         model.notify();
     },
 }, iconMagnifyingGlass()));
-
-const dropdownId = 'dropdown-rows-on-page-id';
-
-// eslint-disable-next-line no-unused-vars
-const rowsOnPage = (model) => [
-    h('button.btn', {
-        onclick: () => {
-            if (document.getElementById(dropdownId).classList.contains('dropdown-opened')) {
-                document.getElementById(dropdownId).classList.remove('dropdown-open');
-            } else {
-                document.getElementById(dropdownId).classList.toggle('dropdown-open');
-            }
-        } }, 'rowsOnPage'),
-    h('.dropdown', {
-        id: dropdownId,
-        name: 'section-object-dropdown',
-    }, [
-        h('.dropdown-menu', [
-            h('button.btn', {
-                onclick: (e) => {
-                    model.fetchedData.rowsOnPage = 5;
-                    model.router.params.rowsOnPage = 5;
-                    model.router.handleLinkEvent(e);
-
-                    /*
-                     *  TODO
-                     * model.notify();
-                     * model.fetchedData.reqForData(true)
-                     * model.notify();
-                     */
-                },
-            }, '5'),
-            h('button.btn', {
-                onclick: () => {
-                    model.fetchedData.rowsOnPage = 10;
-                    model.fetchedData.reqForData(true);
-                    model.notify();
-                },
-            }, '10'),
-            h('button.btn', {
-                onclick: () => {
-                    model.fetchedData.rowsOnPage = 15;
-                    model.fetchedData.reqForData(true);
-                    model.notify();
-                },
-            }, '15'),
-        ]),
-    ]),
-];

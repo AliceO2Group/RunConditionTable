@@ -31,53 +31,64 @@ export default function filter(model) {
 
     const { params } = model.router;
 
-    return h('table.table-filters', [
-        h('tbody', [
-            labelsRow(model, fields),
-            inputsRow(params, upperInputIds, 'match/from'),
-            inputsRow(params, lowerInputIds, 'exclude/to'),
-        ]),
-        h('button.btn', {
-            onclick: onclickSubmit(model, inputsIds),
-        }, 'Submit'),
-        h('button.btn', {
-            onclick: onclickClear(model, inputsIds),
-        }, 'Clear filters'),
-    ]);
+    return h('div',
+        h('div.x-scrollable',
+            h('table',
+                h('tbody',
+                    labelsRow(model, fields),
+                    inputsRow(params, upperInputIds),
+                    inputsRow(params, lowerInputIds),
+                ),
+            ),
+            h('div.abs',
+                h('button.btn', {
+                    onclick: onclickSubmit(model, inputsIds),
+                }, 'Submit'),
+                h('button.btn', {
+                    onclick: onclickClear(model, inputsIds),
+                }, 'Clear filters'),
+            )
+        )
+    );
 }
 
-const labelsRow = (model, fields) => h('tr', [
-    h('.btn-group.w-50', h('td', [describingField('filter input type')]
-        .concat(fields.map((field) => createClickableLabel(model, field))))),
-]);
+const labelsRow = (model, fields) => h('tr',
+    fields.map((field) => createClickableLabel(model, field))
+);
 
-const inputsRow = (params, inputsIds, description) => h('tr', [
-    h('td', [describingField(description)]
-        .concat(inputsIds.map((id) => createInputField(id, params[id])))),
-]);
+const inputsRow = (params, inputsIds) => h('tr',
+    inputsIds.map((id) => createInputField(id, params[id])),
+);
 
-const describingField = (name) => h('td', h('.container', {
-    style: 'width:120px',
-}, name));
+const createClickableLabel = (model, field) =>
+    h('th.tooltip.noBorderBottom.table-cell-like',
+        h('button.btn.tooltipCell', {
+                style: 'width:120px',
+                onclick: () => model.fetchedData.changeItemStatus(field),
+                className: field.marked ? 'active' : '',
+            }, field.name,
+            h('span.tooltiptext', field.marked ? 'hide' : 'display')
+        ),
+    );
 
-const createClickableLabel = (model, field) => h('td', h('button.btn.filterLabel', {
-    style: 'width:120px',
-    onclick: () => model.fetchedData.changeItemStatus(field),
-    className: field.marked ? 'active' : '',
-}, field.name));
-
-const createInputField = (inputId, currentValue) => h('td', h('input.form-control', {
-    style: 'width:120px',
-    type: 'text',
-    value: currentValue ? currentValue : '',
-    id: inputId,
-}));
+const createInputField = (inputId, currentValue) =>
+h('th.my-tooltip.noBorderBottom.table-cell-like',
+    h('div.rel', 
+        h('input.form-control', {
+            style: 'width:120px',
+            type: 'text',
+            value: currentValue ? currentValue : '',
+            id: inputId,
+        }),
+        h('span.tooltiptext', `${inputId.substring(inputId.indexOf('-') + 1)}`)
+    )
+);
 
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
         .map((inputId) => [
             inputId,
-            document.getElementById(inputId)?.value,
+            [...document.getElementById(inputId)?.value].map(c => c == '%'? '%25' : c).join(''),
         ])
         .filter(([_, v]) => v?.length > 0)
         .map(([id, v]) => `${id}=${v}`)
@@ -121,20 +132,3 @@ const filedName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes
         throw 'probably incorrect configuration of filtering types';
     }
 };
-
-/*
- * Const saveFiteringParams = (model, upperInputIds, lowerInputIds) => {
- *     const fields = model.getCurrentData().fields
- */
-
-/*
- *     Fields.forEach(f => f.filtering = {})
- *     zip(fields, upperInputIds).forEach(([f, id]) => {
- *         f.filtering[id] = document.getElementById(id)?.value;
- *     })
- *     zip(fields, lowerInputIds).forEach(([f, id]) => {
- *         f.filtering[id] = document.getElementById(id)?.value;
- *     })
- */
-
-// }
