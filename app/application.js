@@ -15,11 +15,13 @@
 const { HttpServer, Log } = require('@aliceo2/web-ui');
 const config = require('./lib/config/configProvider.js');
 const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
-const AuthControlManager = require('./lib/AuthControlManager.js');
+const AuthControlManager = require('./lib/other/AuthControlManager.js');
 const DatabaseService = require('./lib/database/DatabaseService.js');
 const path = require('path');
+const BookkeepingService = require('./lib/alimonitor-services/BookkeepingService.js');
 
 const EP = config.public.endpoints;
+Log.configure(config);
 
 /**
  * RunConditionTable application
@@ -37,6 +39,7 @@ class RunConditionTableApplication {
         }
         this.logger = new Log(RunConditionTableApplication.name);
         this.databaseService = new DatabaseService(this.loggedUsers);
+        this.bookkeepingService = new BookkeepingService();
 
         this.defineStaticRoutes();
         this.defineEndpoints();
@@ -59,8 +62,7 @@ class RunConditionTableApplication {
 
         httpServer.post(EP.login, (req, res) => databaseService.login(req, res));
         httpServer.post(EP.logout, (req, res) => databaseService.logout(req, res));
-        httpServer.get(`${EP.rctData}:page/`, (req, res) => databaseService.execDataReq(req, res));
-        httpServer.get(`${EP.rctData}:page/:index/`, (req, res) => databaseService.execDataReq(req, res));
+        httpServer.get(EP.rctData, (req, res) => databaseService.execDataReq(req, res));
         httpServer.post(EP.insertData, (req, res) => databaseService.execDataInsert(req, res));
         httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
     }
@@ -70,23 +72,18 @@ class RunConditionTableApplication {
         this.authControlManager.bindToTokenControl(EP.authControl);
     }
 
-    isInTestMode() {
-        return process.env.NODE_ENV === 'test';
-    }
-
-    getAddress() {
-        return this.httpServer.address();
-    }
-
     async run() {
         this.logger.info('Starting RCT app...');
 
         try {
-            //Await this.servicesSync.start();
             await this.databaseService.setAdminConnection();
+            await this.bookkeepingService.setupConnection();
+            // eslint-disable-next-line capitalized-comments
+            // this.bookkeepingService.setSyncRunsTask();
             await this.httpServer.listen();
         } catch (error) {
             this.logger.error(`Error while starting RCT app: ${error}`);
+            await this.stop();
             return Promise.reject(error);
         }
 
@@ -96,17 +93,39 @@ class RunConditionTableApplication {
     async stop() {
         this.logger.info('Stopping RCT app...');
 
+        const errHandler = (e) => this.logger.error(`Error while stopping RCT app: ${e}`);
         try {
             await this.databaseService.disconnect()
-                .catch((e) => this.logger.error(e));
-            // Await this.servicesSync.stop();
+                .catch(errHandler);
+            await this.bookkeepingService.close()
+                .catch(errHandler);
             await this.httpServer.close();
-        } catch (error) {
-            this.logger.error(`Error while stopping RCT app: ${error}`);
-            return Promise.reject(error);
+        } catch (err) {
+            this.logger.error(errHandler(err));
+            return Promise.reject(err);
         }
 
         this.logger.info('RCT app stopped');
+    }
+
+    isInTestMode() {
+        return process.env.ENV_MODE === 'test';
+    }
+
+    isInDevMode() {
+        return process.env.ENV_MODE === 'dev';
+    }
+
+    isInProdMode() {
+        return process.env.ENV_MODE === 'prod';
+    }
+
+    getEnvMode() {
+        return process.env.ENV_MODE;
+    }
+
+    getAddress() {
+        return this.httpServer.address();
     }
 }
 

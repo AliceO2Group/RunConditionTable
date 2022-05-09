@@ -14,9 +14,10 @@
 
 const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
-
+const views = require("./viewsDefinitions.js") 
 const { pagesNames } = config.public;
 const DRP = config.public.dataReqParams;
+const Utils = require("../Utils.js");
 
 /**
  * Class responsible for parsing url params, payloads of client request to sql queries
@@ -74,7 +75,7 @@ class QueryBuilder {
 
         switch (params.page) {
             case pagesNames.periods:
-                return `${period_view}
+                return `${views.period_view}
                         SELECT name, year, beam, string_agg(energy::varchar, ',') as energy
                         FROM period_view
                         ${filteringPart()}
@@ -82,28 +83,28 @@ class QueryBuilder {
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.runsPerPeriod:
-                return `${runs_per_period_view(params)}
+                return `${views.runs_per_period_view(params)}
                         SELECT *
                         FROM runs_per_period_view
                         ${filteringPart()}
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.dataPasses:
-                return `${data_passes_view(params)}
+                return `${views.data_passes_view(params)}
                         SELECT *
                         FROM data_passes_view
                         ${filteringPart()}
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.mc:
-                return `${mc_view(params)}
+                return `${views.mc_view(params)}
                         SELECT * 
                         FROM mc_view
                         ${filteringPart()}
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.flags:
-                return `${flags_view(params)}
+                return `${views.flags_view(params)}
                         SELECT * 
                         FROM flags_view
                         ${filteringPart()}
@@ -114,144 +115,6 @@ class QueryBuilder {
         }
     }
 
-    parseInsertDataReq(payload) {
-        const valueEntries = Object.entries(payload.data);
-        const keys = valueEntries.map(([k, _]) => k);
-        const values = valueEntries.map(([_, v]) => v);
-        return `INSERT INTO ${payload.targetTable}("${keys.join('", "')}") VALUES(${parseValues(values).join(', ')});`;
-    }
 }
 
-const parseValues = (values) => values.map((v) => {
-    if (isNaN(v) && v !== 'DEFAULT') {
-        return `'${v}'`;
-    } else {
-        return v;
-    }
-});
-
 module.exports = QueryBuilder;
-
-const period_view = `
-    WITH period_view AS (
-        SELECT DISTINCT
-            --p.id    
-            p.name, 
-            p.year, 
-            (
-                SELECT beam_type
-                FROM beams_dictionary
-                AS bd where bd.id = p.beam_type_id
-            ) AS beam,
-            r.energy_per_beam::integer as energy
-        FROM periods AS p
-        INNER JOIN runs as r
-            ON r.period_id = p.id
-    )`;
-
-const runs_per_period_view = (query) => `
-    WITH runs_per_period_view AS (
-        SELECT
-            --r.id
-            p.name, 
-            r.run_number, 
-            r.start, 
-            r.end AS ende, 
-            r."B_field", 
-            r.energy_per_beam, 
-            r."IR", 
-            r.filling_scheme, 
-            r.triggers_conf,
-            r.fill_number, 
-            r."runType", 
-            r.mu, 
-            r."timeTrgStart", 
-            r."timeTrgEnd"
-        FROM runs AS r
-            INNER JOIN periods AS p
-            ON p.id = r.period_id
-        WHERE period_id = (
-                            SELECT id 
-                            FROM periods 
-                            WHERE periods.name = '${query.index}'
-                            )
-        )`;
-
-const data_passes_view = (query) => `
-    WITH data_passes_view AS (
-        SELECT
-            --dp.id
-            dp.name,
-            dp.description,
-            dp.pass_type,
-            dp.jira,
-            dp."ML",
-            dp.number_of_events,
-            dp.software_version,
-            dp.size
-        FROM data_passes AS dp
-        WHERE exists (
-                        SELECT *
-                        FROM runs AS r
-                        INNER JOIN
-                        data_passes_runs AS dpr
-                            ON r.id = dpr.run_id
-                        INNER JOIN data_passes AS dp
-                            ON dp.id = dpr.production_id
-                        WHERE r.period_id = (
-                                            SELECT id 
-                                            FROM periods AS p 
-                                            WHERE p.name = '${query.index}')
-                                            )
-        )`;
-
-const mc_view = (query) => `
-    WITH mc_view AS (
-        SELECT
-            --sp.id
-            sp.name,
-            sp.description,
-            sp.jira,
-            sp."ML",
-            sp."PWG",
-            sp.number_of_events
-        FROM simulation_passes AS sp 
-        WHERE exists (
-                        SELECT * 
-                        FROM runs AS r 
-                        INNER JOIN simulation_passes_runs AS spr 
-                            ON r.id = spr.run_id 
-                        INNER JOIN simulation_passes AS sp 
-                            ON sp.id = spr.simulation_pass_id 
-                        WHERE r.period_id = (
-                                            SELECT id 
-                                            FROM periods as p 
-                                            WHERE p.name = '${query.index}'
-                                            )
-                        ) 
-        )`;
-
-const flags_view = (query) => `
-    WITH flags_view AS (
-        SELECT
-            --qcf.id, 
-            qcf.start, 
-            qcf.end AS ende, 
-            ftd.flag, 
-            qcf.comment, 
-            dpr.production_id,
-            ds.name
-
-        FROM quality_control_flags AS qcf
-        INNER JOIN data_passes_runs as dpr
-            ON dpr.id = qcf.pass_run_id
-        INNER JOIN runs_detectors as rd
-            ON qcf.run_detector_id = rd.id
-        INNER JOIN detectors_subsystems AS ds
-            ON ds.id = rd.detector_id
-        INNER JOIN flags_types_dictionary as ftd
-            ON ftd.id = qcf.flag_type_id
-        
-        WHERE rd.run_id = ${query.index}
-        
-    )`;

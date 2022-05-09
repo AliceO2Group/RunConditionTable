@@ -51,17 +51,19 @@ pagesCellsButtons[pagesNames.periods] = {
         h('', item.name),
         viewButton(
             model, 'runs', (e) =>
-                handleClick(model, e), '', `/${pagesNames.runsPerPeriod}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+                // eslint-disable-next-line max-len
+                handleClick(model, e), '', `/?page=${pagesNames.runsPerPeriod}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
         ),
 
         viewButton(
             model, 'data passes', (e) =>
-                handleClick(model, e), '', `/${pagesNames.dataPasses}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+                // eslint-disable-next-line max-len
+                handleClick(model, e), '', `/?page=${pagesNames.dataPasses}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
         ),
 
         viewButton(
             model, 'MC', (e) =>
-                handleClick(model, e), '', `/${pagesNames.mc}/${item.name}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+                handleClick(model, e), '', `/?page=${pagesNames.mc}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
         ),
     ],
 };
@@ -72,7 +74,8 @@ pagesCellsButtons[pagesNames.runsPerPeriod] = {
     // eslint-disable-next-line no-unused-vars
     run_number: (model, item, name) => viewButton(
         model, item.run_number, (e) =>
-            handleClick(model, e), '', `/${pagesNames.flags}/${item.run_number}/?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+            // eslint-disable-next-line max-len
+            handleClick(model, e), '', `/?page=${pagesNames.flags}&index=${item.run_number}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
     ),
 };
 
