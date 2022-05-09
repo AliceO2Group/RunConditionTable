@@ -28,7 +28,7 @@ class ResProvider {
             cert = fs.readFileSync(cert_path);
             logger.info('cert loaded from file');
         } catch (err) {
-            logger.warn('cannot load cert file at $RCT_CERT_PATH');
+            logger.warn(`cannot load cert file at $RCT_CERT_PATH ${err}`);
         }
         if (!cert) {
             try {
@@ -37,7 +37,7 @@ class ResProvider {
                 ));
                 logger.info('cert loaded from statndard file');
             } catch (err) {
-                logger.warn('cannot load cert file at standard');
+                logger.warn(`cannot load cert file from standard location ${err}`);
             }
         }
         return cert;
