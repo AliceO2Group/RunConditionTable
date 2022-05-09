@@ -1,14 +1,12 @@
 node_modules
 tmp
-volatile
 package-lock.json
 .nyc_output
 coverage*
 app/public/config.js
 reports
-database/.ipynb_checkpoints
-database**/cached
-database/tmpdata
+**/.ipynb_checkpoints
+database**/cached/
 *__pycache__
 certs
 scratch

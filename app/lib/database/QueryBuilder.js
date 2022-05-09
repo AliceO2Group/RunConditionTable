@@ -14,9 +14,10 @@
 
 const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
-
+const views = require("./viewsDefinitions.js") 
 const { pagesNames } = config.public;
 const DRP = config.public.dataReqParams;
+const Utils = require("../Utils.js");
 
 /**
  * Class responsible for parsing url params, payloads of client request to sql queries
@@ -74,7 +75,7 @@ class QueryBuilder {
 
         switch (params.page) {
             case pagesNames.periods:
-                return `${period_view}
+                return `${views.period_view}
                         SELECT name, year, beam, string_agg(energy::varchar, ',') as energy
                         FROM period_view
                         ${filteringPart()}
@@ -82,28 +83,28 @@ class QueryBuilder {
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.runsPerPeriod:
-                return `${runs_per_period_view(params)}
+                return `${views.runs_per_period_view(params)}
                         SELECT *
                         FROM runs_per_period_view
                         ${filteringPart()}
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.dataPasses:
-                return `${data_passes_view(params)}
+                return `${views.data_passes_view(params)}
                         SELECT *
                         FROM data_passes_view
                         ${filteringPart()}
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.mc:
-                return `${mc_view(params)}
+                return `${views.mc_view(params)}
                         SELECT * 
                         FROM mc_view
                         ${filteringPart()}
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.flags:
-                return `${flags_view(params)}
+                return `${views.flags_view(params)}
                         SELECT * 
                         FROM flags_view
                         ${filteringPart()}
@@ -114,14 +115,9 @@ class QueryBuilder {
         }
     }
 
-    parseInsertDataReq(payload) {
-        const valueEntries = Object.entries(payload.data);
-        const keys = valueEntries.map(([k, _]) => k);
-        const values = valueEntries.map(([_, v]) => v);
-        return `INSERT INTO ${payload.targetTable}("${keys.join('", "')}") VALUES(${parseValues(values).join(', ')});`;
-    }
 }
 
+<<<<<<< HEAD
 const parseValues = (values) => values.map((v) => {
     if (isNaN(v) && v !== 'DEFAULT') {
         return `'${v}'`;
@@ -255,3 +251,6 @@ const flags_view = (query) => `
         WHERE rd.run_id = ${query.index}
         
     )`;
+=======
+module.exports = QueryBuilder;
+>>>>>>> tmp

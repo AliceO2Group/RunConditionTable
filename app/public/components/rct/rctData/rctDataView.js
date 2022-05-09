@@ -24,8 +24,8 @@ import viewButton from '../../common/viewButton.js';
  */
 
 export default function rctDataView(model) {
-    const dataPointer = model.getCurrentDataPointer();
-    const data = model.fetchedData[dataPointer.page][dataPointer.index];
+    const { page, index } = model.getCurrentDataPointer();
+    const data = model.fetchedData[page][index];
 
     return h('.homePage', [
         h('div.tableDiv', []),
