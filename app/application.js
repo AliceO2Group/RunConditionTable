@@ -31,8 +31,13 @@ class RunConditionTableApplication {
         this.loggedUsers = {
             tokenToUserData: {},
         };
+
+        if (!config.openId) {
+            this.httpServer = new HttpServer(config.http, config.jwt);
+        } else {
+            this.httpServer = new HttpServer(config.http, config.jwt, config.openId);
+        }
         this.logger = new Log(RunConditionTableApplication.name);
-        this.httpServer = new HttpServer(config.http, config.jwt);
         this.databaseService = new DatabaseService(this.loggedUsers);
         this.bookkeepingService = new BookkeepingService();
 
