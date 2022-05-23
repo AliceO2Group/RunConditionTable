@@ -1,4 +1,5 @@
 const path = require('path');
+const ResProvider = require('../lib/ResProvider.js');
 
 module.exports = {
     jwt: {
@@ -11,6 +12,7 @@ module.exports = {
         tls: false,
         autoListen: false,
     },
+    openId: ResProvider.openid(),
     winston: {
         file: path.join(__dirname, '..', '..', 'reports/logs.txt'),
     },

@@ -37,11 +37,21 @@ class Utils {
         });
     }
 
+    static preserveSQLKeywords(words) {
+        return words.map((w) => {
+            if (['end'].includes(w)) {
+                return `"${w}"`;
+            } else {
+                return w;
+            }
+        });
+    }
+
     static simpleBuildInsertQuery(targetTable, valuesObj) {
         const entries = Object.entries(valuesObj);
-        const keys = entries.map((k, _) => k);
-        const values = entries.map((_, v) => v);
-        return `INSERT INTO ${targetTable} (${keys.join(', ')}) 
+        const keys = entries.map(([k, _]) => k);
+        const values = entries.map(([_, v]) => v);
+        return `INSERT INTO ${targetTable} (${Utils.preserveSQLKeywords(keys).join(', ')}) 
                 VALUES(${Utils.parseValuesToSql(values).join(', ')})`;
     }
 }

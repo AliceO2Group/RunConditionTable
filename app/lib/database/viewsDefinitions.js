@@ -22,7 +22,7 @@ const runs_per_period_view = (query) => `
             p.name, 
             r.run_number, 
             r.start, 
-            r.end AS ende, 
+            r.end AS "end", 
             r.b_field, 
             r.energy_per_beam, 
             r.ir, 
@@ -49,13 +49,15 @@ const data_passes_view = (query) => `
             --dp.id
             dp.name,
             dp.description,
-            dp.pass_type,
+            pt.pass_type,
             dp.jira,
             dp.ml,
             dp.number_of_events,
             dp.software_version,
             dp.size
         FROM data_passes AS dp
+        INNER JOIN pass_types AS pt
+            ON pt.id = dp.pass_type
         WHERE exists (
                         SELECT *
                         FROM runs AS r

@@ -10,7 +10,7 @@ services:
         source: ./app
         target: /opt/RunConditionTable/app
     environment:
-      - CERN_SOCKS=${CERN_SOCKS:?'you must specify how your are going to use CERN_SOCKS, see main README'}
+      - CERN_SOCKS=${CERN_SOCKS:-false}
 
     restart: "no"
 

@@ -78,8 +78,7 @@ class RunConditionTableApplication {
         try {
             await this.databaseService.setAdminConnection();
             await this.bookkeepingService.setupConnection();
-            // eslint-disable-next-line capitalized-comments
-            // this.bookkeepingService.setSyncRunsTask();
+            this.bookkeepingService.setSyncRunsTask();
             await this.httpServer.listen();
         } catch (error) {
             this.logger.error(`Error while starting RCT app: ${error}`);

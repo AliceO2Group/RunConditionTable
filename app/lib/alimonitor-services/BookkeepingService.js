@@ -21,6 +21,7 @@ const { Log } = require('@aliceo2/web-ui');
 class BookkeepingService extends ServicesSynchronizer {
     constructor() {
         super();
+        this.taskPeriodMilis = 4000;
         this.logger = new Log(BookkeepingService.name);
         this.endpoints = config.services.bookkeeping.url;
         this.ketpFields = {
@@ -33,12 +34,12 @@ class BookkeepingService extends ServicesSynchronizer {
             detectors: 'detectors',
         };
         this.defaultSyncTimout = 1000;
-        this.syncTasks = [];
+        this.tasks = [];
     }
 
     dataAdjuster(run) {
         run = Utils.filterObject(run, this.ketpFields);
-        run.period_id = 1;
+        run.period_id = 1; // TODO
         run.energy_per_beam = 0;
         run.id = 'DEFAULT';
         if (typeof run.detectors === 'string') {
@@ -49,14 +50,13 @@ class BookkeepingService extends ServicesSynchronizer {
         return run;
     }
 
-    // eslint-disable-next-line no-unused-vars
     async syncer(dbClient, dataRow) {
         return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
     }
 
     syncRuns() {
         return this.syncData(
-            this.endpoints.rct,
+            this.endpoints.ali,
             this.dataAdjuster.bind(this),
             this.syncer.bind(this), (res) => res.data,
         );
@@ -66,25 +66,31 @@ class BookkeepingService extends ServicesSynchronizer {
         return this.syncData(
             this.endpoints.rct,
             this.dataAdjuster.bind(this),
-            async (_, r) => this.logger.debug(r),
+            async (_, r) => this.logger.debug(JSON.stringify(r)),
             (res) => res.data,
         );
     }
 
     setSyncRunsTask() {
-        const task = setInterval(this.syncRuns.bind(this), 1000);
-        this.syncTasks.push(task);
+        const task = setInterval(this.syncRuns.bind(this), this.taskPeriodMilis);
+        this.tasks.push(task);
         return task;
     }
 
-    clearSyncTask() {
-        for (const task of this.syncTasks) {
+    setDebugTask() {
+        const task = setInterval(this.debugDisplaySync.bind(this), this.taskPeriodMilis);
+        this.tasks.push(task);
+        return task;
+    }
+
+    clearTask() {
+        for (const task of this.tasks) {
             clearInterval(task);
         }
     }
 
     async close() {
-        this.clearSyncTask();
+        this.clearTask();
         await this.disconnect();
     }
 }

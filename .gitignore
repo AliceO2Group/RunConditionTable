@@ -8,5 +8,5 @@ reports
 **/.ipynb_checkpoints
 database**/cached/
 *__pycache__
+security
 scratch
-certs
