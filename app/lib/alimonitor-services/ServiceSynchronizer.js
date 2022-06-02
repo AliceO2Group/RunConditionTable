@@ -57,6 +57,8 @@ class ServicesSynchronizer {
         } else {
             this.logger.info('service do not use proxy/socks to reach CERN network');
         }
+
+        this.metaStore = {};
     }
 
     /**
@@ -67,26 +69,35 @@ class ServicesSynchronizer {
      * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database
      * @param {CallableFunction} syncer logic for insert ing data to database
      * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
+     * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
+     * like total pages to see etc., on the whole might be used to any custom logic
      * @returns {Promise} batched promieses for each syncer invokation
      * all parameters should be defined in derived classes
      */
-    async syncData(endpoint, dataAdjuster, syncer, responsePreprocess) {
-        const result = await this.getRawData(endpoint);
-        const rows = responsePreprocess(result)
-            .map((r) => dataAdjuster(r));
+    async syncData(endpoint, dataAdjuster, syncer, responsePreprocess, metaDataHandler = null) {
+        try {
+            const result = await this.getRawData(endpoint);
+            if (metaDataHandler) {
+                metaDataHandler(this.metaStore, result);
+            }
+            const rows = responsePreprocess(result)
+                .map((r) => dataAdjuster(r));
 
-        let i = 0;
-        const dataSize = rows.length;
-        const promises = rows.map((r) => syncer(this.dbclient, r)
-            .then(() => {
-                i++; this.logger.info(`sync procedure per data protion done:: ${i}/${dataSize}`);
-            })
-            .catch((e) => {
-                i++;
-                this.logger.error(`'${e.message}' per data portion ${i}/${dataSize}`);
-            }));
+            let i = 0;
+            const dataSize = rows.length;
+            const promises = rows.map((r) => syncer(this.dbclient, r)
+                .then(() => {
+                    i++; this.logger.info(`sync procedure per data protion done:: ${i}/${dataSize}`);
+                })
+                .catch((e) => {
+                    i++;
+                    this.logger.error(`'${e.message}' per data portion ${i}/${dataSize}`);
+                }));
 
-        await Promise.all(promises);
+            await Promise.all(promises);
+        } catch (error) {
+            this.logger.error(error);
+        }
     }
 
     async getRawData(endpoint) {

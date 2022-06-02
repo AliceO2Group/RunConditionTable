@@ -18,6 +18,9 @@ const ServicesSynchronizer = require('./ServiceSynchronizer.js');
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
 
+/**
+ * BookkeepingService used to synchronize runs
+ */
 class BookkeepingService extends ServicesSynchronizer {
     constructor() {
         super();
@@ -54,12 +57,43 @@ class BookkeepingService extends ServicesSynchronizer {
         return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
     }
 
-    syncRuns() {
-        return this.syncData(
-            this.endpoints.ali,
-            this.dataAdjuster.bind(this),
-            this.syncer.bind(this), (res) => res.data,
-        );
+    metaDataHendler(metaStore, requestJsonResult) {
+        const { meta } = requestJsonResult['meta'];
+        metaStore['pageCount'] = meta['pageCount'];
+        metaStore['totalCount'] = meta['totalCount'];
+    }
+
+    syncTraversStop(state) {
+
+        return true;
+    }
+
+    nextState(state) {
+        return undefined;
+    }
+
+    endpointBuilder(endpoint, state) {
+
+        return undefined;
+    }
+
+    sync() {
+        const pendingSyncs = [];
+        let state = {
+            page: 0,
+            limit: 100,
+        };
+        while (!this.syncTraversStop(state)) {
+            const prom = this.syncData(
+                this.endpoints.ali,
+                this.dataAdjuster.bind(this),
+                this.syncer.bind(this), (res) => res.data,
+            );
+            pendingSyncs.push(prom);
+            state = this.nextState(state);
+        }
+
+        return Promise.all(pendingSyncs);
     }
 
     debugDisplaySync() {
@@ -71,8 +105,8 @@ class BookkeepingService extends ServicesSynchronizer {
         );
     }
 
-    setSyncRunsTask() {
-        const task = setInterval(this.syncRuns.bind(this), this.taskPeriodMilis);
+    setSyncTask() {
+        const task = setInterval(this.sync.bind(this), this.taskPeriodMilis);
         this.tasks.push(task);
         return task;
     }
@@ -83,14 +117,14 @@ class BookkeepingService extends ServicesSynchronizer {
         return task;
     }
 
-    clearTask() {
+    clearTasks() {
         for (const task of this.tasks) {
             clearInterval(task);
         }
     }
 
     async close() {
-        this.clearTask();
+        this.clearTasks();
         await this.disconnect();
     }
 }
