@@ -1,7 +1,11 @@
 {
   "name": "@aliceo2/run-condition-table",
   "version": "0.1.0",
+  "description": "## tests",
   "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
   "author": "ALICEO2",
   "keywords": [
     "CERN",
@@ -15,52 +19,48 @@
   "scripts": {
     "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html",
     "eslint:fix": "npm run eslint -- --fix",
+    "prettier": "npx prettier --write .",
     "static": "npm run eslint",
     "coverage:test": "mocha --exit test/**/mocha-*",
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run coverage:test && npm run coverage:report ",
     "test": "mkdir -pv ./reports; npm run static; npm run coverage; if [ \"RUNNING_ENV\" = \"DOCKER\" ]; then chmod -R o+w ./reports; fi #TODO platform independent",
     "reports:show": "open ./reports/**/*.html",
-    
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:prod": "node app/main.js",
-    
     "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose-expose.yml up --build",
     "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml -f docker-compose-dev-expose.yml up --build",
     "docker:prod:mock": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml -f docker-compose-expose.yml up --build",
     "docker:test": "mkdir -p reports; docker-compose -f docker-compose.yml -f docker-compose-test.yml up --build --abort-on-container-exit",
     "docker:prune": "docker container rm $(docker ps -a --filter name=runconditiontable* -aq) #TODO",
     "clean": "rm -rf ./reports; rm -rf .nyc_output",
-    
     "start:bk": "node app/lib/alimonitor-services/bk-main.js",
     "start:ml": "node app/lib/alimonitor-services/ml-main.js",
-
-    "tmp": "node ./tmp/*.js",
-    "prettier": "npx prettier --write ."
+    "tmp": "node ./tmp/*.js"
   },
-  "dependencies": {
-    "@aliceo2/web-ui": "^1.24.0",
-    "less": "^4.1.1",
-    "pg": "^8.6.0"
+  "bugs": {
+    "url": "https://github.com/AliceO2Group/RunConditionTable/issues"
   },
-  "bundledDependencies": [
-    "@aliceo2/web-ui",
-    "less",
-    "pg",
-    "socks-proxy-agent"
-  ],
+  "homepage": "https://github.com/AliceO2Group/RunConditionTable#readme",
   "files": [
     "app/",
     "docs/"
   ],
+  "dependencies": {
+    "@aliceo2/web-ui": "^1.24.0",
+    "less": "^4.1.2",
+    "mocha": "^10.0.0",
+    "n": "^8.2.0",
+    "npm": "^8.12.0",
+    "pg": "^8.7.3",
+    "socks-proxy-agent": "^7.0.0"
+  },
   "devDependencies": {
-    "eslint": "^8.10.0",
+    "eslint": "^8.16.0",
     "eslint-output": "^3.0.1",
-    "mocha": "^9.2.1",
-    "nodemon": "^2.0.15",
+    "nodemon": "^2.0.16",
     "nyc": "^15.1.0",
     "request": "^2.88.2",
-    "sinon": "^12.0.1",
-    "socks-proxy-agent": "^6.2.0"
+    "sinon": "^14.0.0"
   }
 }
