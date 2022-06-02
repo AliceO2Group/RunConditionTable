@@ -39,6 +39,6 @@ jobs:
               with:
                   node-version: '16.14.x'
             - name: Installing dependencies
-              run: npm install
+              run: npm ci
             - name: Running static analysis
               run: npm run static
