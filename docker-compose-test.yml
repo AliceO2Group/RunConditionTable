@@ -1,21 +1,19 @@
-
 services:
-  application:
-    build: 
-      target: test
-    volumes:
-      - type: bind
-        read_only: false
-        source: ./reports
-        target: /opt/RunConditionTable/reports
-        
+    application:
+        build:
+            target: test
+        volumes:
+            - type: bind
+              read_only: false
+              source: ./reports
+              target: /opt/RunConditionTable/reports
 
-    restart: "no"
+        restart: 'no'
 
-  database:
-    build: 
-      target: test
-    environment:
-      - MOCK_DB=true
-    
-    restart: "no"
+    database:
+        build:
+            target: test
+        environment:
+            - MOCK_DB=true
+
+        restart: 'no'

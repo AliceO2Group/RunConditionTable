@@ -17,12 +17,12 @@
 
 const MonalisaService = require('./MonalisaService.js');
 const monalisaService = new MonalisaService();
-monalisaService.debugDisplaySync()
-    .then((r) => console.log(r))
-    .catch((e) => console.error(e))
+monalisaService
+	.debugDisplaySync()
+	.then((r) => console.log(r))
+	.catch((e) => console.error(e));
 // bookkeepingService.setupConnection()
 //     .then(() => {
 //         bookkeepingService.setSyncRunsTask();
 //         // bookkeepingService.clearSyncTask()
 //     }).catch(console.error)
-

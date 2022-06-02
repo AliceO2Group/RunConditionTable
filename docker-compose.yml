@@ -1,29 +1,26 @@
 services:
-  application:
-    build:
-      context: ./
-      dockerfile: Dockerfile.application
-    environment:
-      - RUNNING_ENV=DOCKER
-    networks:
-      - rct-network
-    
-  database:
-    build: 
-      context: ./
-      dockerfile: Dockerfile.database
-    environment:
-      - RUNNING_ENV=DOCKER
-    networks:
-      - rct-network
+    application:
+        build:
+            context: ./
+            dockerfile: Dockerfile.application
+        environment:
+            - RUNNING_ENV=DOCKER
+        networks:
+            - rct-network
+
+    database:
+        build:
+            context: ./
+            dockerfile: Dockerfile.database
+        environment:
+            - RUNNING_ENV=DOCKER
+        networks:
+            - rct-network
 networks:
-  rct-network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.200.200.0/24"
-          gateway: "172.200.200.1"
-      
-
-
+    rct-network:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: '172.200.200.0/24'
+                  gateway: '172.200.200.1'

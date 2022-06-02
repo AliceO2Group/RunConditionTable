@@ -14,36 +14,36 @@
  */
 
 class Utils {
-    static filterObject(obj, keptFields, suppressUndefined = false) {
-        if (!keptFields) {
-            return obj;
-        }
-        const res = {};
-        for (const [nr, nl] of Object.entries(keptFields)) {
-            if (!suppressUndefined || res[nl]) {
-                res[nl] = obj[nr];
-            }
-        }
-        return res;
-    }
+	static filterObject(obj, keptFields, suppressUndefined = false) {
+		if (!keptFields) {
+			return obj;
+		}
+		const res = {};
+		for (const [nr, nl] of Object.entries(keptFields)) {
+			if (!suppressUndefined || res[nl]) {
+				res[nl] = obj[nr];
+			}
+		}
+		return res;
+	}
 
-    static parseValuesToSql(values) {
-        return values.map((v) => {
-            if (isNaN(v) && v !== 'DEFAULT') {
-                return `'${v}'`;
-            } else {
-                return v;
-            }
-        });
-    }
+	static parseValuesToSql(values) {
+		return values.map((v) => {
+			if (isNaN(v) && v !== 'DEFAULT') {
+				return `'${v}'`;
+			} else {
+				return v;
+			}
+		});
+	}
 
-    static simpleBuildInsertQuery(targetTable, valuesObj) {
-        const entries = Object.entries(valuesObj);
-        const keys = entries.map((k, _) => k);
-        const values = entries.map((_, v) => v);
-        return `INSERT INTO ${targetTable} (${keys.join(', ')}) 
+	static simpleBuildInsertQuery(targetTable, valuesObj) {
+		const entries = Object.entries(valuesObj);
+		const keys = entries.map((k, _) => k);
+		const values = entries.map((_, v) => v);
+		return `INSERT INTO ${targetTable} (${keys.join(', ')}) 
                 VALUES(${Utils.parseValuesToSql(values).join(', ')})`;
-    }
+	}
 }
 
 module.exports = Utils;

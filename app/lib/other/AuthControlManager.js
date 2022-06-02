@@ -16,18 +16,18 @@
  * Class responsible for checking if token expired
  */
 class AuthControlManager {
-    constructor(httpserver, loggedUsers = null) {
-        this.loggedUsers = loggedUsers;
-        this.httpserver = httpserver;
-    }
+	constructor(httpserver, loggedUsers = null) {
+		this.loggedUsers = loggedUsers;
+		this.httpserver = httpserver;
+	}
 
-    tokenControl(req, res) {
-        res.json({ date: new Date() });
-    }
+	tokenControl(req, res) {
+		res.json({ date: new Date() });
+	}
 
-    bindToTokenControl(name) {
-        this.httpserver.get(name, (req, res) => this.tokenControl(req, res));
-    }
+	bindToTokenControl(name) {
+		this.httpserver.get(name, (req, res) => this.tokenControl(req, res));
+	}
 }
 
 module.exports = AuthControlManager;

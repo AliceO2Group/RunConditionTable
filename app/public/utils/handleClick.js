@@ -14,6 +14,6 @@
 
 //TODO remove it
 export default function handleClick(model, e) {
-    model.router.handleLinkEvent(e);
-    model.notify();
+	model.router.handleLinkEvent(e);
+	model.notify();
 }

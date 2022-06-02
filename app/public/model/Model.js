@@ -12,59 +12,64 @@
  * or submit itself to any jurisdiction.
  */
 
-import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
+import {
+	Observable,
+	sessionService,
+	QueryRouter,
+	Loader,
+} from '/js/src/index.js';
 import PrimaryModel from './logged/PrimaryModel.js';
 
 export default class Model extends Observable {
-    constructor() {
-        super();
-        this.router = new QueryRouter();
-        this.router.bubbleTo(this);
-        this.loader = new Loader();
+	constructor() {
+		super();
+		this.router = new QueryRouter();
+		this.router.bubbleTo(this);
+		this.loader = new Loader();
 
-        this.mode = null;
-        this.logginEndpoint = '/api/login/';
-        this.login('physicist');
-    }
+		this.mode = null;
+		this.logginEndpoint = '/api/login/';
+		this.login('physicist');
+	}
 
-    async login(username) {
-        const { status, ok } = await this.postLoginPasses(username);
-        this._tokenExpirationHandler(status);
-        if (ok) {
-            this.setPrimary();
-        }
-    }
+	async login(username) {
+		const { status, ok } = await this.postLoginPasses(username);
+		this._tokenExpirationHandler(status);
+		if (ok) {
+			this.setPrimary();
+		}
+	}
 
-    postLoginPasses(username) {
-        return this.loader.post(this.logginEndpoint, { username: username });
-    }
+	postLoginPasses(username) {
+		return this.loader.post(this.logginEndpoint, { username: username });
+	}
 
-    setPrimary() {
-        localStorage.token = sessionService.session.token;
-        this.primary = new PrimaryModel(this);
-        this.primary.bubbleTo(this);
-        this.mode = 'primary';
-        this.notify();
-    }
+	setPrimary() {
+		localStorage.token = sessionService.session.token;
+		this.primary = new PrimaryModel(this);
+		this.primary.bubbleTo(this);
+		this.mode = 'primary';
+		this.notify();
+	}
 
-    _tokenExpirationHandler(status) {
-        if (status == 403) {
-            localStorage.token = null;
-            alert('Auth token expired!');
-            this.router.unobserve(this.router.submodel1.routerCallback);
-            this.router.go('/', true);
-            this.submodel1 = null;
-            this.mode = 'default';
-            document.location.reload(true);
-        }
-    }
+	_tokenExpirationHandler(status) {
+		if (status == 403) {
+			localStorage.token = null;
+			alert('Auth token expired!');
+			this.router.unobserve(this.router.submodel1.routerCallback);
+			this.router.go('/', true);
+			this.submodel1 = null;
+			this.mode = 'default';
+			document.location.reload(true);
+		}
+	}
 
-    async controlServerRequest(name = '/api/auth-control/') {
-        const { status } = this.loader.get(name);
-        this._tokenExpirationHandler(status);
-    }
+	async controlServerRequest(name = '/api/auth-control/') {
+		const { status } = this.loader.get(name);
+		this._tokenExpirationHandler(status);
+	}
 
-    restoreSession() {
-        //TODO
-    }
+	restoreSession() {
+		//TODO
+	}
 }

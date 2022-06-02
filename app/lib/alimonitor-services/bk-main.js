@@ -17,12 +17,12 @@
 
 const BookkeepingService = require('./BookkeepingService.js');
 const bookkeepingService = new BookkeepingService();
-bookkeepingService.debugDisplaySync()
-    .then((r) => console.log(r))
-    .catch((e) => console.error(e))
+bookkeepingService
+	.debugDisplaySync()
+	.then((r) => console.log(r))
+	.catch((e) => console.error(e));
 // bookkeepingService.setupConnection()
 //     .then(() => {
 //         bookkeepingService.setSyncRunsTask();
 //         // bookkeepingService.clearSyncTask()
 //     }).catch(console.error)
-

@@ -26,12 +26,14 @@ const { pagesNames } = RCT;
  */
 
 export default function sidebar(model) {
-    return h('nav.sidebar.sidebar-content.scroll-y.flex-column', [sidebarMenu(model)]);
+	return h('nav.sidebar.sidebar-content.scroll-y.flex-column', [
+		sidebarMenu(model),
+	]);
 }
 const sidebarMenu = (model) => [
-    alonePageButton(model, 'Periods', pagesNames.periods),
-    fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes'),
-    fetchedDataPages(model, pagesNames.mc, 'Monte Carlo'),
-    fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period'),
-    fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging'),
+	alonePageButton(model, 'Periods', pagesNames.periods),
+	fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes'),
+	fetchedDataPages(model, pagesNames.mc, 'Monte Carlo'),
+	fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period'),
+	fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging'),
 ];

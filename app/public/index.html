@@ -13,10 +13,10 @@
 */
 -->
 
-<!doctype html>
+<!DOCTYPE html>
 <head>
 	<title>RCT prototype</title>
-	<link rel="stylesheet/less" type="text/css" href="styles/styles.less">
+	<link rel="stylesheet/less" type="text/css" href="styles/styles.less" />
 	<script src="scripts/less.js" type="text/javascript"></script>
 	<script src="/js/src/compatibility.js"></script>
 
@@ -33,15 +33,15 @@
 	</script>
 
 	<script type="module">
-		import {RCT} from './config.js';
+		import { RCT } from './config.js';
 		window.RCT = RCT;
-  	</script>
+	</script>
 
 	<script type="module">
-		import {mount} from '/js/src/index.js';
+		import { mount } from '/js/src/index.js';
 		import view from './view.js';
 		import Model from './model/Model.js';
-		import {RCT} from './config.js';
+		import { RCT } from './config.js';
 
 		const model = new Model();
 		const debug = true; // shows when redraw is done

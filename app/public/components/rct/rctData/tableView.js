@@ -30,34 +30,43 @@ import filter from './table/filter.js';
  */
 
 export default function tableView(model) {
-    const dataPointer = model.getCurrentDataPointer();
-    const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
+	const dataPointer = model.getCurrentDataPointer();
+	const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
 
-    const cellsButtons = pagesCellsButtons[dataPointer.page];
+	const cellsButtons = pagesCellsButtons[dataPointer.page];
 
-    const { fields } = data;
-    const visibleFields = fields.filter((f) => f.marked);
+	const { fields } = data;
+	const visibleFields = fields.filter((f) => f.marked);
 
-    const filteringPanel = model.searchFieldsVisible ? filter(model) : ' ';
+	const filteringPanel = model.searchFieldsVisible ? filter(model) : ' ';
 
-    return h('div.p3', [
-        filteringPanel,
-        siteController(model, data),
+	return h('div.p3', [
+		filteringPanel,
+		siteController(model, data),
 
-        h('table.table', { id: `data-table-${data.url}` }, [
-            tableHeader(visibleFields, data, () => model.fetchedData.changeRecordsVisibility(data)),
-            tableBody(
-                model, visibleFields, data, cellsButtons, dataPointer.page,
-            ),
-        ]),
-    ]);
+		h('table.table', { id: `data-table-${data.url}` }, [
+			tableHeader(visibleFields, data, () =>
+				model.fetchedData.changeRecordsVisibility(data)
+			),
+			tableBody(
+				model,
+				visibleFields,
+				data,
+				cellsButtons,
+				dataPointer.page
+			),
+		]),
+	]);
 }
 
-function tableBody(
-    model, visibleFields, data, cellsButtons, page,
-) {
-    return h('tbody', { id: `table-body-${data.url}` }, [postingDataConfig[page] ? postForm(model, data) : '']
-        .concat(data.rows.map((item) => row(
-            model, visibleFields, data, item, cellsButtons,
-        ))));
+function tableBody(model, visibleFields, data, cellsButtons, page) {
+	return h(
+		'tbody',
+		{ id: `table-body-${data.url}` },
+		[postingDataConfig[page] ? postForm(model, data) : ''].concat(
+			data.rows.map((item) =>
+				row(model, visibleFields, data, item, cellsButtons)
+			)
+		)
+	);
 }

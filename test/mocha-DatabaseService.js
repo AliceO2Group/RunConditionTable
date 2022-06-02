@@ -21,26 +21,26 @@ const sinon = require('sinon');
 const { Log } = require('@aliceo2/web-ui');
 
 describe('DatabaseService test suite', () => {
-    describe('Check Initialization of DatabaseService', () => {
-        it('should successfully initialize the DatabaseService', () => {
-            assert.doesNotThrow(() => {
-                new DatabaseService({});
-            });
-        });
-    });
+	describe('Check Initialization of DatabaseService', () => {
+		it('should successfully initialize the DatabaseService', () => {
+			assert.doesNotThrow(() => {
+				new DatabaseService({});
+			});
+		});
+	});
 
-    describe('ApplicationService getData test suite', () => {
-        it('should successfully send data about the project', () => {
-            const databaseService = new DatabaseService({});
-            res = {
-                status: sinon.fake.returns(),
-            };
-            const data = '';
-            databaseService.getDate(null, res);
-            console.log(res);
-            
-            assert.ok(res.status.calledWith(200));
-            assert.ok(res.json.calledWith(data));
-        });
-    });
+	describe('ApplicationService getData test suite', () => {
+		it('should successfully send data about the project', () => {
+			const databaseService = new DatabaseService({});
+			res = {
+				status: sinon.fake.returns(),
+			};
+			const data = '';
+			databaseService.getDate(null, res);
+			console.log(res);
+
+			assert.ok(res.status.calledWith(200));
+			assert.ok(res.json.calledWith(data));
+		});
+	});
 });

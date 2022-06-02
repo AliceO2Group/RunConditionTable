@@ -16,29 +16,30 @@ const fs = require('fs');
 const path = require('path');
 
 function buildPublicConfig(config) {
-    const publicConfigPath = path.join(__dirname, './../../public/config.js');
-    const publicConfigExist = fs.existsSync(publicConfigPath);
-    if (publicConfigExist) {
-        fs.rmSync(publicConfigPath);
-    }
-    const publicConfig = _getPublic(config);
+	const publicConfigPath = path.join(__dirname, './../../public/config.js');
+	const publicConfigExist = fs.existsSync(publicConfigPath);
+	if (publicConfigExist) {
+		fs.rmSync(publicConfigPath);
+	}
+	const publicConfig = _getPublic(config);
 
-    const codeStr = '/* eslint-disable object-curly-spacing */\n' +
-    '/* eslint-disable comma-dangle */\n' +
-    '/* eslint-disable indent */\n' +
-    '/* eslint-disable quotes */\n' +
-    '/* eslint-disable quote-props */\n'
-      + `const publicConfig = ${JSON.stringify(publicConfig, null, 2)};\n`
-      + 'export { publicConfig as RCT };\n';
+	const codeStr =
+		'/* eslint-disable object-curly-spacing */\n' +
+		'/* eslint-disable comma-dangle */\n' +
+		'/* eslint-disable indent */\n' +
+		'/* eslint-disable quotes */\n' +
+		'/* eslint-disable quote-props */\n' +
+		`const publicConfig = ${JSON.stringify(publicConfig, null, 2)};\n` +
+		'export { publicConfig as RCT };\n';
 
-    fs.writeFileSync(publicConfigPath, codeStr);
+	fs.writeFileSync(publicConfigPath, codeStr);
 }
 
 function _getPublic(config) {
-    const publicConfig = config?.public;
-    return publicConfig ? publicConfig : '';
+	const publicConfig = config?.public;
+	return publicConfig ? publicConfig : '';
 }
 
 module.exports = {
-    buildPublicConfig,
+	buildPublicConfig,
 };

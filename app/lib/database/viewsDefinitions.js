@@ -122,4 +122,10 @@ const flags_view = (query) => `
         
     )`;
 
-module.exports = {period_view, runs_per_period_view, mc_view, data_passes_view, flags_view}
+module.exports = {
+	period_view,
+	runs_per_period_view,
+	mc_view,
+	data_passes_view,
+	flags_view,
+};
