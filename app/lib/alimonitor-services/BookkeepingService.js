@@ -18,6 +18,10 @@ const ServicesSynchronizer = require('./ServiceSynchronizer.js');
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
 
+function delay(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 /**
  * BookkeepingService used to synchronize runs
  */
@@ -57,41 +61,52 @@ class BookkeepingService extends ServicesSynchronizer {
         return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
     }
 
-    metaDataHendler(metaStore, requestJsonResult) {
-        const { meta } = requestJsonResult['meta'];
-        metaStore['pageCount'] = meta['pageCount'];
-        metaStore['totalCount'] = meta['totalCount'];
+    metaDataHandler(requestJsonResult) {
+        const { page } = requestJsonResult['meta'];
+        this.metaStore['pageCount'] = page['pageCount'];
+        this.metaStore['totalCount'] = page['totalCount'];
     }
 
     syncTraversStop(state) {
-
-        return true;
+        if (state['page'] == this.metaStore['pageCount']) {
+            return true;
+        }
+        // if (state['page'] > 100) {
+        //     return true;
+        // }
+        return false;
     }
 
     nextState(state) {
-        return undefined;
+        state['page'] += 1;
+        return state;
     }
 
     endpointBuilder(endpoint, state) {
-
-        return undefined;
+        return `${endpoint}/?page[offset]=${state['page']}&page[limit]=${state['limit']}`;
     }
 
-    sync() {
+    async sync() {
         const pendingSyncs = [];
         let state = {
             page: 0,
             limit: 100,
         };
         while (!this.syncTraversStop(state)) {
+            this.logger.debug(`page=${state['page']}`);
             const prom = this.syncData(
-                this.endpoints.ali,
+                this.endpointBuilder(this.endpoints.ali, state),
                 this.dataAdjuster.bind(this),
-                this.syncer.bind(this), (res) => res.data,
+                this.syncer.bind(this),
+                (res) => res.data,
+                this.metaDataHandler.bind(this),
             );
             pendingSyncs.push(prom);
+            await prom;
             state = this.nextState(state);
+            await delay(10);
         }
+        this.logger.info('bookkeeping sync trvers called ended');
 
         return Promise.all(pendingSyncs);
     }

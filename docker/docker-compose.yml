@@ -1,8 +1,8 @@
 services:
   application:
     build:
-      context: ./
-      dockerfile: Dockerfile.application
+      context: ../
+      dockerfile: docker/Dockerfile.application
     environment:
       - RUNNING_ENV=DOCKER
     networks:
@@ -10,15 +10,20 @@ services:
     volumes:
       - type: bind
         read_only: true
-        source: ./security
+        source: ../security
         target: /opt/RunConditionTable/security
     
   database:
     build: 
-      context: ./
-      dockerfile: Dockerfile.database
+      context: ../
+      dockerfile: docker/Dockerfile.database
     environment:
       - RUNNING_ENV=DOCKER
+    volumes:
+      - type: bind
+        read_only: true
+        source: ../database
+        target: /docker-entrypoint-initdb.d
     networks:
       - rct-network
 networks:

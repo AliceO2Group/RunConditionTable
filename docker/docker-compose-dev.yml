@@ -1,0 +1,35 @@
+
+services:
+  application:
+    build: 
+      target: development
+
+    volumes:
+      - type: bind
+        read_only: false
+        source: ../app
+        target: /opt/RunConditionTable/app
+      - type: bind
+        read_only: true
+        source: ../scripts
+        target: /opt/RunConditionTable/scripts
+      - type: bind
+        read_only: true
+        source: ../package.json
+        target: /opt/RunConditionTable/package.json
+      - type: bind
+        read_only: true
+        source: ../package-lock.json
+        target: /opt/RunConditionTable/package-lock.json
+    environment:
+      - CERN_SOCKS=${CERN_SOCKS:-false}
+
+    restart: "no"
+
+  database:
+    build: 
+      target: development
+    environment:
+      - MOCK_DB=true
+
+    restart: "no"

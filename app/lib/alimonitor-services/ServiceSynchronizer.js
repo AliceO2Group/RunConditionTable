@@ -78,7 +78,7 @@ class ServicesSynchronizer {
         try {
             const result = await this.getRawData(endpoint);
             if (metaDataHandler) {
-                metaDataHandler(this.metaStore, result);
+                metaDataHandler(result);
             }
             const rows = responsePreprocess(result)
                 .map((r) => dataAdjuster(r));
@@ -87,11 +87,12 @@ class ServicesSynchronizer {
             const dataSize = rows.length;
             const promises = rows.map((r) => syncer(this.dbclient, r)
                 .then(() => {
-                    i++; this.logger.info(`sync procedure per data protion done:: ${i}/${dataSize}`);
+                    i++;
+                    // this.logger.info(`sync procedure per data protion done:: ${i}/${dataSize}`);
                 })
                 .catch((e) => {
                     i++;
-                    this.logger.error(`'${e.message}' per data portion ${i}/${dataSize}`);
+                    // this.logger.error(`'${e.message}' per data portion ${i}/${dataSize}`);
                 }));
 
             await Promise.all(promises);

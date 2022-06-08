@@ -6,11 +6,7 @@ WORKDIR /opt/RunConditionTable
 RUN apk add --no-cache \
     bash=5.0.17-r0
 
-COPY ./app ./app
-COPY ./scripts ./scripts
-COPY ./package*.json ./
 
-RUN npm --silent ci
 
 FROM base as devdependencies
 
@@ -23,12 +19,13 @@ RUN apk add --no-cache \
     ca-certificates=20211220-r0 \
     ttf-freefont=20120503-r1
 
+COPY ./package*.json ./
+RUN npm --silent ci
 
 FROM devdependencies as development
 ENV ENV_MODE=dev
 COPY ./.git ./.git
 COPY ./.gitignore ./
-RUN ls -al
 CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "start:dev" ]
 
 FROM devdependencies as test
@@ -41,6 +38,11 @@ ENV ENV_MODE=test
 CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "test" ]
 
 FROM base as production
+
+COPY ./app ./app
+COPY ./scripts ./scripts
+
+
 ENV ENV_MODE=production
 CMD ["npm", "run", "start:prod"]
 
