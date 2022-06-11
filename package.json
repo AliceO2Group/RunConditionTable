@@ -13,6 +13,8 @@
     "url": "https://github.com/AliceO2Group/RunConditionTable"
   },
   "scripts": {
+    "testmocha": "mocha",
+
     "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html",
     "eslint:fix": "npm run eslint -- --fix",
     "static": "npm run eslint",
@@ -21,7 +23,7 @@
     "coverage": "nyc npm run coverage:test && npm run coverage:report ",
     "test": "mkdir -pv ./reports; npm run static; npm run coverage; if [ \"RUNNING_ENV\" = \"DOCKER\" ]; then chmod -R o+w ./reports; fi #TODO platform independent",
     "reports:show": "open ./reports/**/*.html",
-    
+
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:prod": "node app/main.js",
     
@@ -34,7 +36,7 @@
     
     "start:bk": "node app/lib/alimonitor-services/bk-main.js",
     "start:ml": "node app/lib/alimonitor-services/ml-main.js",
-
+    
     "tmp": "node ./tmp/*.js"
   },
   "dependencies": {
@@ -42,20 +44,15 @@
     "less": "^4.1.3",
     "pg": "^8.7.3"
   },
-  "bundledDependencies": [
-    "@aliceo2/web-ui",
-    "less",
-    "pg",
-    "socks-proxy-agent"
-  ],
   "files": [
     "app/",
     "docs/"
   ],
   "devDependencies": {
+    "chai": "^4.3.6",
     "eslint": "^8.10.0",
     "eslint-output": "^3.0.1",
-    "mocha": "^9.2.1",
+    "mocha": "^10.0.0",
     "nodemon": "^2.0.15",
     "nyc": "^15.1.0",
     "request": "^2.88.2",
