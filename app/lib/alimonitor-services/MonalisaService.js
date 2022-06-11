@@ -24,7 +24,7 @@ class MonalisaService extends ServicesSynchronizer {
         this.logger = new Log(MonalisaService.name);
         this.endpoints = config.services.monalisa.url;
         this.ketpFields = undefined;
-        this.syncTasks = [];
+        this.tasks = [];
     }
 
     dataAdjuster(row) {
@@ -50,7 +50,7 @@ class MonalisaService extends ServicesSynchronizer {
         });
     }
 
-    syncRawData() {
+    syncRawMonalisaData() {
         return this.syncData(
             this.endpoints.rawData,
             this.dataAdjuster.bind(this),
@@ -63,19 +63,25 @@ class MonalisaService extends ServicesSynchronizer {
         return this.syncData(
             this.endpoints.rawData,
             this.dataAdjuster.bind(this),
-            async (_, r) => this.logger.debug(r),
+            async (_, r) => this.logger.debug(JSON.stringify(r)),
             this.rawDataResponsePreprocess,
         );
     }
 
-    setSyncRunsTask() {
-        const task = setInterval(this.syncRawData.bind(this), 1000);
-        this.syncTasks.push(task);
+    setSyncTask() {
+        const task = setInterval(this.syncRawMonalisaData.bind(this), 1000);
+        this.tasks.push(task);
+        return task;
+    }
+
+    setDebugTask() {
+        const task = setInterval(this.debugDisplaySync.bind(this), 1000);
+        this.tasks.push(task);
         return task;
     }
 
     clearSyncTask() {
-        for (const task of this.syncTasks) {
+        for (const task of this.tasks) {
             clearInterval(task);
         }
     }

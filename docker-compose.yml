@@ -1,4 +1,5 @@
 services:
+<<<<<<< HEAD
     application:
         build:
             context: ./
@@ -16,6 +17,30 @@ services:
             - RUNNING_ENV=DOCKER
         networks:
             - rct-network
+=======
+  application:
+    build:
+      context: ./
+      dockerfile: Dockerfile.application
+    environment:
+      - RUNNING_ENV=DOCKER
+    networks:
+      - rct-network
+    volumes:
+      - type: bind
+        read_only: true
+        source: ./security
+        target: /opt/RunConditionTable/security
+    
+  database:
+    build: 
+      context: ./
+      dockerfile: Dockerfile.database
+    environment:
+      - RUNNING_ENV=DOCKER
+    networks:
+      - rct-network
+>>>>>>> master
 networks:
     rct-network:
         driver: bridge

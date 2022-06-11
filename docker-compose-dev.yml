@@ -3,15 +3,15 @@ services:
         build:
             target: development
 
-        volumes:
-            - type: bind
-              read_only: false
-              source: ./app
-              target: /opt/RunConditionTable/app
-        environment:
-            - CERN_SOCKS=${CERN_SOCKS:?'you must specify how your are going to use CERN_SOCKS, see main README'}
+    volumes:
+      - type: bind
+        read_only: false
+        source: ./app
+        target: /opt/RunConditionTable/app
+    environment:
+      - CERN_SOCKS=${CERN_SOCKS:-false}
 
-        restart: 'no'
+    restart: 'no'
 
     database:
         build:

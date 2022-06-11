@@ -14,6 +14,12 @@
 4. npm run docker:test - run static analysis and codecov on docker containers, results are available in '\<root\>/reports/'
 5. npm run docker:dev - run two containers, one for database and one for application, changes in local repo force to restart application on docker, see nodeom, also script: npm run start:dev
 
+## using grid certificates
+In '\<root\>/security/' need to locate grid certifcates. There are to ways.:<br>
+1. cert.pem and privkey.pem from grid certificate
+2. myCertificate.p12 from grid within settin ALIMONITOR_PASSPHRASE env var which hold passphrase to that certificate
+
+
 ## Reaching CERN network
 
 1. If the application is running on docker env, var `RUNNING_ENV` is set to `DOCKER`. To reach the CERN network using socket-proxy, you need to set env var `CERN_SOCKS` to `true`.

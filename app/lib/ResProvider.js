@@ -21,50 +21,76 @@ const path = require('path');
 let logger;
 
 class ResProvider {
-    static servicesInterfacePfxCertProvider() {
-        const cert_path = process.env.RCT_CERT_PATH;
-        let cert;
+    static securityFilesProvider(fileNames, description, envVarName = '_') {
+        const file_path = process.env[envVarName];
+        let securityContent;
         try {
-            cert = fs.readFileSync(cert_path);
-            logger.info('cert loaded from file');
+            securityContent = fs.readFileSync(file_path);
+            logger.info(`${description}: loaded from file`);
         } catch (err) {
-            logger.warn(`cannot load cert file at $RCT_CERT_PATH ${err}`);
+            logger.warn(`cannot load file at ${envVarName} ${err}`);
         }
-        if (!cert) {
-            try {
-                cert = fs.readFileSync(
-                    path.join(__dirname, '..', '..', 'certs', 'ali-cert.p12'),
-                );
-                logger.info('cert loaded from statndard file');
-            } catch (err) {
-                logger.warn(
-                    `cannot load cert file from standard location ${err}`,
-                );
+        if (!securityContent) {
+            for (const fileName of fileNames) {
+                try {
+                    const filePath = path.join(
+                        __dirname, '..', '..', 'security', fileName,
+                    );
+                    securityContent = fs.readFileSync(filePath);
+                    logger.info(`${description}: loaded from file ${filePath}`);
+                    break;
+                // eslint-disable-next-line no-empty
+                } catch (ignore) { }
+            }
+            if (!securityContent) {
+                logger.warn(`${description}: cannot load file from provided files: [${fileNames.join(',')}]`);
             }
         }
-        return cert;
+        return securityContent;
     }
 
     static socksProvider() {
-        logger.warn(`CERN_SOCKS set to '${process.env.CERN_SOCKS}'`);
-        let socks = undefined;
-        if (process.env.CERN_SOCKS) {
-            socks = process.env.CERN_SOCKS.trim();
-            if (
-                socks.match(/socks:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+/)
-            ) {
+        const cern_socks_env_var = process.env.CERN_SOCKS;
+        logger.info(`CERN_SOCKS set to '${cern_socks_env_var}'`);
+        if (process.env.RUNNING_ENV == 'DOCKER' && cern_socks_env_var == 'true') {
+            return 'socks://172.200.200.1:12345';
+        }
+        if (cern_socks_env_var) {
+            if (cern_socks_env_var == 'false') {
+                return null;
+            }
+            const socks = cern_socks_env_var.trim();
+            if (socks.match(/socks:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+/)) {
                 return socks;
+            } else {
+                logger.error(`incorrect format of socks address: ${socks}`);
             }
         }
 
-        if (
-            process.env.RUNNING_ENV == 'DOCKER' &&
-			process.env.CERN_SOCKS == 'true'
-        ) {
-            socks = 'socks://172.200.200.1:12345';
-            return socks;
-        }
         return undefined;
+    }
+
+    static openid() {
+        let openidConfPath = process.env.OPENID_PATH;
+        if (!openidConfPath) {
+            logger.info('not openid conf file path description via env var');
+            openidConfPath = path.join(__dirname, '..', '..', 'security', 'openid.js');
+        }
+        if (fs.existsSync(openidConfPath)) {
+            logger.info('reading openid configuration from file from security directory');
+            return require(openidConfPath);
+        } else {
+            logger.warn('openid configuration file not set');
+        }
+
+        return undefined;
+    }
+
+    static passphraseProvider() {
+        if (process.env.ALIMONITOR_PASSPHRASE) {
+            logger.info('using passphrase');
+        }
+        return process.env.ALIMONITOR_PASSPHRASE;
     }
 }
 logger = new Log(ResProvider.name);

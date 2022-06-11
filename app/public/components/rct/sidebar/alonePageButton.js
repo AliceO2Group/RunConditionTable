@@ -27,19 +27,19 @@ export default function alonePageButton(model, title, page, index = null) {
     const currentPage = currentPointer.page;
 
     const remoteData = model.getRemoteData(page, index);
-    const data = remoteData.payload;
+    const data = remoteData?.payload;
 
-    const dataHref = remoteData.match({
+    const dataHref = data ? remoteData.match({
         NotAsked: () => {
-            throw 'fatal';
+            throw 'fatal error in logic;; need to summon';
         },
         Loading: () => data.url.href,
         Success: () => data.url.href,
         Failure: (status) => {
             alert('error with url: ', data.url, status);
-            defaultHref(page, index);
+            return defaultHref(page, index);
         },
-    });
+    }) : defaultHref(page, index);
 
     return [
         h(

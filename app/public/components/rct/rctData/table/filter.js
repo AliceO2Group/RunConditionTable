@@ -49,88 +49,57 @@ export default function filter(model) {
                     'tbody',
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds),
-                    inputsRow(params, lowerInputIds),
-                ),
-            ),
-            h(
-                'div.abs',
-                h(
-                    'button.btn',
-                    {
-                        onclick: onclickSubmit(model, inputsIds),
-                    },
-                    'Submit',
-                ),
-                h(
-                    'button.btn',
-                    {
-                        onclick: onclickClear(model, inputsIds),
-                    },
-                    'Clear filters',
-                ),
-            ),
-        ),
-    );
+                    inputsRow(params, lowerInputIds))),
+            h('div.abs',
+                h('button.btn', {
+                    onclick: onclickSubmit(model, inputsIds),
+                }, 'Submit'),
+                h('button.btn', {
+                    onclick: onclickClear(model, inputsIds),
+                }, 'Clear filters'))));
 }
 
-const labelsRow = (model, fields) =>
-    h(
-        'tr',
-        fields.map((field) => createClickableLabel(model, field)),
-    );
+const labelsRow = (model, fields) => h('tr',
+    fields.map((field) => createClickableLabel(model, field)));
 
-const inputsRow = (params, inputsIds) =>
-    h(
-        'tr',
-        inputsIds.map((id) => createInputField(id, params[id])),
-    );
+const inputsRow = (params, inputsIds) => h('tr',
+    inputsIds.map((id) => createInputField(id, params[id])));
 
 const createClickableLabel = (model, field) =>
-    h(
-        'th.tooltip.noBorderBottom.table-cell-like',
-        h(
-            'button.btn.tooltipCell',
-            {
-                style: 'width:120px',
-                onclick: () => model.fetchedData.changeItemStatus(field),
-                className: field.marked ? 'active' : '',
-            },
-            field.name,
-            h('span.tooltiptext', field.marked ? 'hide' : 'display'),
-        ),
-    );
+    h('th.tooltip.noBorderBottom.table-cell-like',
+        h('button.btn.tooltipCell', {
+            style: 'width:120px',
+            onclick: () => model.fetchedData.changeItemStatus(field),
+            className: field.marked ? 'active' : '',
+        }, field.name,
+        h('span.tooltiptext', field.marked ? 'hide' : 'display')));
 
 const createInputField = (inputId, currentValue) =>
-    h(
-        'th.my-tooltip.noBorderBottom.table-cell-like',
-        h(
-            'div.rel',
+    h('th.my-tooltip.noBorderBottom.table-cell-like',
+        h('div.rel',
             h('input.form-control', {
                 style: 'width:120px',
                 type: 'text',
                 value: currentValue ? currentValue : '',
                 id: inputId,
             }),
-            h(
-                'span.tooltiptext',
-                `${inputId.substring(inputId.indexOf('-') + 1)}`,
-            ),
-        ),
-    );
+            h('span.tooltiptext', `${inputId.substring(inputId.indexOf('-') + 1)}`)));
 
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
         .map((inputId) => [
             inputId,
-            [...document.getElementById(inputId)?.value || null]
-                .map((c) => c == '%' ? '%25' : c)
-                .join(''),
+            // eslint-disable-next-line no-unsafe-optional-chaining
+            [...document.getElementById(inputId)?.value].map((c) => c == '%' ? '%25' : c).join(''),
         ])
         .filter(([_, v]) => v?.length > 0)
         .map(([id, v]) => `${id}=${v}`)
         .join('&');
 
-    const newSearch = `?${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&${filteringParamsPhrase}`;
+    const { params } = model.router;
+    const newSearch =
+    `?page=${params.page}&index=${params.index}` +
+    `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&${filteringParamsPhrase}`;
 
     const url = model.router.getUrl();
     const newUrl = new URL(url.origin + url.pathname + newSearch);

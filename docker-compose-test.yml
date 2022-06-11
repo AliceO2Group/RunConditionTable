@@ -1,4 +1,5 @@
 services:
+<<<<<<< HEAD
     application:
         build:
             target: test
@@ -9,6 +10,18 @@ services:
               target: /opt/RunConditionTable/reports
 
         restart: 'no'
+=======
+  application:
+    build: 
+      target: test
+    volumes:
+      - type: bind
+        read_only: false
+        source: ./reports
+        target: /opt/RunConditionTable/reports
+        
+    restart: "no"
+>>>>>>> master
 
     database:
         build:
