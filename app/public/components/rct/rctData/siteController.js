@@ -93,7 +93,7 @@ export default function siteController(model, data) {
             ? siteChangingController(
                 () => model.fetchedData.changeSite(1),
                 '<<',
-			  )
+            )
             : ' ',
         // Move to middle of sites range [first, current]
         currentSite > 3
@@ -103,14 +103,14 @@ export default function siteController(model, data) {
                         Math.floor(currentSite / 2),
                     ),
                 '|',
-			  )
+            )
             : ' ',
         // Move one site back
         currentSite > 1
             ? siteChangingController(
                 () => model.fetchedData.changeSite(currentSite - 1),
                 '<',
-			  )
+            )
             : ' ',
 
         mapArrayToButtons(leftButtonsR),
@@ -124,7 +124,7 @@ export default function siteController(model, data) {
             ? siteChangingController(
                 () => model.fetchedData.changeSite(currentSite + 1),
                 '>',
-			  )
+            )
             : ' ',
         // eslint-disable-next-line max-len
         currentSite < sitesNumber - 2
@@ -135,13 +135,13 @@ export default function siteController(model, data) {
 								Math.floor((sitesNumber - currentSite) / 2),
                     ),
                 '|',
-			  )
+            )
             : ' ',
         currentSite < sitesNumber
             ? siteChangingController(
                 () => model.fetchedData.changeSite(sitesNumber),
                 '>>',
-			  )
+            )
             : ' ',
     ]);
 }

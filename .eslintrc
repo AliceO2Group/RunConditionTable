@@ -17,6 +17,9 @@
 		"tmp/",
 		"scratch/"
 	],
+	"plugins": [
+		"smarter-tabs"
+	],
 	"rules": {
 		"array-bracket-newline": [
 			"error",
@@ -186,6 +189,8 @@
 		"sort-keys": "off",
 		"sort-imports": "off",
 		"sort-vars": "off",
+		"no-mixed-spaces-and-tabs": ["warn", "smart-tabs"],
+		"smarter-tabs/smarter-tabs": "warn",
 		"template-curly-spacing": ["error", "never"],
 		"valid-jsdoc": [
 			"error",

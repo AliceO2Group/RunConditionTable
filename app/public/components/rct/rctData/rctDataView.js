@@ -36,7 +36,7 @@ export default function rctDataView(model) {
                 Loading: () => spinnerAndReloadView(model),
                 Success: () => tableView(model),
                 Failure: (status) => failureStatusAndReload(model, status),
-			  })
+            })
             : h('', 'data null :: Arrr...'),
     ]);
 }

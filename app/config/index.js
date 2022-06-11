@@ -32,8 +32,8 @@ module.exports = {
             url: {
                 rawData:
 					'https://alimonitor.cern.ch/production/raw.jsp?res_path=json',
-                // eslint-disable-next-line max-len
                 rawDataDetalied:
+                // eslint-disable-next-line max-len
 					'https://alimonitor.cern.ch/production/raw_details.jsp?timesel=0&filter_jobtype=OCT+-+async+production+for+pilot+beam+pass+3%2C+O2-2763&res_path=json',
             },
         },

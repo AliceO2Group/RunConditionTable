@@ -122,7 +122,7 @@ const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
         .map((inputId) => [
             inputId,
-            [...document.getElementById(inputId)?.value]
+            [...document.getElementById(inputId)?.value || null]
                 .map((c) => c == '%' ? '%25' : c)
                 .join(''),
         ])
