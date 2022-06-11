@@ -16,7 +16,6 @@
  // const RunConditionTableApplication = require('../app/application.js');
  const DatabaseSuite = require('./database');
  const assert = require('assert');
- const sinon = require('sinon');
 
  /*after(() => {
     process.removeAllListeners('SIGTERM');
