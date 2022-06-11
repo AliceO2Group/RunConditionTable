@@ -3,10 +3,13 @@ name: Lint
 on: [push]
 
 jobs:
-  eslint:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: stefanoeb/eslint-action@1.0.2
+      - uses: actions/checkout@v2
         with:
-          files: app/
+          fetch-depth: 0
+      - name: Install dependencies
+        run: npm install
+      - name: Run linter
+        run: npm run eslint
