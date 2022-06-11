@@ -134,14 +134,12 @@ class DatabaseService {
     }
 
     async execDataInsert(req, res, query = null) {
-        const dbResponseHandler = (req, res, _) => {
-            res.json({ data: 'data inserted' });
-        };
-        if (!query) {
-            query = this.queryBuilder.parseInsertDataReq(req.body.payload);
+        if (query) {
+            const dbResponseHandler = (req, res, _) => {
+                res.json({ data: 'data inserted' });
+            };
+            await this.exec(req, res, dbResponseHandler, query);
         }
-
-        await this.exec(req, res, dbResponseHandler, query);
     }
 
     async getDate(req, res) {
