@@ -13,34 +13,33 @@
  */
 
 const preparedData = (data) => {
-	const { rows } = data.payload;
-	const fields = data.payload.fields.map((field) => field.name);
+    const { rows } = data.payload;
+    const fields = data.payload.fields.map((field) => field.name);
 
-	let csv = rows.map((row) =>
-		fields.map((field) => JSON.stringify(row[field], replacer)).join(',')
-	);
-	csv.unshift(fields.join(',')); // Add header column
-	csv = csv.join('\r\n');
+    let csv = rows.map((row) =>
+        fields.map((field) => JSON.stringify(row[field], replacer)).join(','));
+    csv.unshift(fields.join(',')); // Add header column
+    csv = csv.join('\r\n');
 
-	return csv;
+    return csv;
 };
 
-const replacer = (key, value) => (value === null ? '' : value);
+const replacer = (key, value) => value === null ? '' : value;
 
 export default function downloadCSV(model) {
-	const { page, index } = model.getCurrentDataPointer();
+    const { page, index } = model.getCurrentDataPointer();
 
-	const fileName = `${page}${page === 'periods' ? '' : `-${index}`}`;
+    const fileName = `${page}${page === 'periods' ? '' : `-${index}`}`;
 
-	let csvContent = 'data:text/csv;charset=utf-8,';
-	csvContent += preparedData(model.fetchedData[page][index]);
+    let csvContent = 'data:text/csv;charset=utf-8,';
+    csvContent += preparedData(model.fetchedData[page][index]);
 
-	const encodedUri = encodeURI(csvContent);
+    const encodedUri = encodeURI(csvContent);
 
-	const link = document.createElement('a');
-	link.setAttribute('href', encodedUri);
-	link.setAttribute('download', fileName);
-	document.body.appendChild(link);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
 
-	link.click();
+    link.click();
 }

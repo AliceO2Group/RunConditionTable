@@ -27,122 +27,117 @@ Log.configure(config);
  * RunConditionTable application
  */
 class RunConditionTableApplication {
-	constructor() {
-		this.loggedUsers = {
-			tokenToUserData: {},
-		};
+    constructor() {
+        this.loggedUsers = {
+            tokenToUserData: {},
+        };
 
-		if (!config.openId) {
-			this.httpServer = new HttpServer(config.http, config.jwt);
-		} else {
-			this.httpServer = new HttpServer(
-				config.http,
-				config.jwt,
-				config.openId
-			);
-		}
-		this.logger = new Log(RunConditionTableApplication.name);
-		this.databaseService = new DatabaseService(this.loggedUsers);
-		this.bookkeepingService = new BookkeepingService();
+        if (!config.openId) {
+            this.httpServer = new HttpServer(config.http, config.jwt);
+        } else {
+            this.httpServer = new HttpServer(
+                config.http,
+                config.jwt,
+                config.openId,
+            );
+        }
+        this.logger = new Log(RunConditionTableApplication.name);
+        this.databaseService = new DatabaseService(this.loggedUsers);
+        this.bookkeepingService = new BookkeepingService();
 
-		this.defineStaticRoutes();
-		this.defineEndpoints();
-		this.buildAuthControl();
+        this.defineStaticRoutes();
+        this.defineEndpoints();
+        this.buildAuthControl();
 
-		buildPublicConfig(config);
-	}
+        buildPublicConfig(config);
+    }
 
-	defineStaticRoutes() {
-		const { httpServer } = this;
+    defineStaticRoutes() {
+        const { httpServer } = this;
 
-		httpServer.addStaticPath(path.join(__dirname, 'public'));
-		httpServer.addStaticPath(path.join(__dirname, 'public'), '/login');
-		httpServer.addStaticPath(
-			path.join(__dirname, '..', 'node_modules', 'less/dist'),
-			'/scripts'
-		);
-	}
+        httpServer.addStaticPath(path.join(__dirname, 'public'));
+        httpServer.addStaticPath(path.join(__dirname, 'public'), '/login');
+        httpServer.addStaticPath(
+            path.join(__dirname, '..', 'node_modules', 'less/dist'),
+            '/scripts',
+        );
+    }
 
-	defineEndpoints() {
-		const { httpServer } = this;
-		const { databaseService } = this;
+    defineEndpoints() {
+        const { httpServer } = this;
+        const { databaseService } = this;
 
-		httpServer.post(EP.login, (req, res) =>
-			databaseService.login(req, res)
-		);
-		httpServer.post(EP.logout, (req, res) =>
-			databaseService.logout(req, res)
-		);
-		httpServer.get(EP.rctData, (req, res) =>
-			databaseService.execDataReq(req, res)
-		);
-		httpServer.post(EP.insertData, (req, res) =>
-			databaseService.execDataInsert(req, res)
-		);
-		httpServer.get(EP.date, (req, res) =>
-			databaseService.getDate(req, res)
-		);
-	}
+        httpServer.post(EP.login, (req, res) =>
+            databaseService.login(req, res));
+        httpServer.post(EP.logout, (req, res) =>
+            databaseService.logout(req, res));
+        httpServer.get(EP.rctData, (req, res) =>
+            databaseService.execDataReq(req, res));
+        httpServer.post(EP.insertData, (req, res) =>
+            databaseService.execDataInsert(req, res));
+        httpServer.get(EP.date, (req, res) =>
+            databaseService.getDate(req, res));
+    }
 
-	buildAuthControl() {
-		this.authControlManager = new AuthControlManager(this.httpServer);
-		this.authControlManager.bindToTokenControl(EP.authControl);
-	}
+    buildAuthControl() {
+        this.authControlManager = new AuthControlManager(this.httpServer);
+        this.authControlManager.bindToTokenControl(EP.authControl);
+    }
 
-	async run() {
-		this.logger.info('Starting RCT app...');
+    async run() {
+        this.logger.info('Starting RCT app...');
 
-		try {
-			await this.databaseService.setAdminConnection();
-			await this.bookkeepingService.setupConnection();
-			// eslint-disable-next-line capitalized-comments
-			// this.bookkeepingService.setSyncRunsTask();
-			await this.httpServer.listen();
-		} catch (error) {
-			this.logger.error(`Error while starting RCT app: ${error}`);
-			await this.stop();
-			return Promise.reject(error);
-		}
+        try {
+            await this.databaseService.setAdminConnection();
+            await this.bookkeepingService.setupConnection();
+            // eslint-disable-next-line capitalized-comments
+            // this.bookkeepingService.setSyncRunsTask();
+            await this.httpServer.listen();
+        } catch (error) {
+            this.logger.error(`Error while starting RCT app: ${error}`);
+            await this.stop();
+            return Promise.reject(error);
+        }
 
-		this.logger.info('RCT app started');
-	}
+        this.logger.info('RCT app started');
+    }
 
-	async stop() {
-		this.logger.info('Stopping RCT app...');
+    async stop() {
+        this.logger.info('Stopping RCT app...');
 
-		const errHandler = (e) =>
-			this.logger.error(`Error while stopping RCT app: ${e}`);
-		try {
-			await this.databaseService.disconnect().catch(errHandler);
-			await this.bookkeepingService.close().catch(errHandler);
-			await this.httpServer.close();
-		} catch (err) {
-			this.logger.error(errHandler(err));
-			return Promise.reject(err);
-		}
+        const errHandler = (e) =>
+            this.logger.error(`Error while stopping RCT app: ${e}`);
+        try {
+            await this.databaseService.disconnect().catch(errHandler);
+            await this.bookkeepingService.close().catch(errHandler);
+            await this.httpServer.close();
+        } catch (err) {
+            this.logger.error(errHandler(err));
+            return Promise.reject(err);
+        }
 
-		this.logger.info('RCT app stopped');
-	}
+        this.logger.info('RCT app stopped');
+    }
 
-	isInTestMode() {
-		return process.env.ENV_MODE === 'test';
-	}
+    isInTestMode() {
+        return process.env.ENV_MODE === 'test';
+    }
 
-	isInDevMode() {
-		return process.env.ENV_MODE === 'dev';
-	}
+    isInDevMode() {
+        return process.env.ENV_MODE === 'dev';
+    }
 
-	isInProdMode() {
-		return process.env.ENV_MODE === 'prod';
-	}
+    isInProdMode() {
+        return process.env.ENV_MODE === 'prod';
+    }
 
-	getEnvMode() {
-		return process.env.ENV_MODE;
-	}
+    getEnvMode() {
+        return process.env.ENV_MODE;
+    }
 
-	getAddress() {
-		return this.httpServer.address();
-	}
+    getAddress() {
+        return this.httpServer.address();
+    }
 }
 
 module.exports = RunConditionTableApplication;

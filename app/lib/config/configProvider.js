@@ -27,10 +27,10 @@ const path = require('path');
 let configFile = path.join(__dirname, './../../config/index.js');
 
 try {
-	configFile = fs.realpathSync(configFile);
+    configFile = fs.realpathSync(configFile);
 } catch (err) {
-	log.error(`Unable to read config file: ${err.message}`);
-	process.exit(1);
+    log.error(`Unable to read config file: ${err.message}`);
+    process.exit(1);
 }
 
 const config = require(configFile);

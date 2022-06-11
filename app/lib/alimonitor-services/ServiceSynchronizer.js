@@ -22,136 +22,135 @@ const config = require('../config/configProvider.js');
 const ResProvider = require('../ResProvider.js');
 
 class ServicesSynchronizer {
-	constructor() {
-		this.logger = new Log(ServicesSynchronizer.name);
-		this.opts = {
-			rejectUnauthorized: false,
-			pfx: ResProvider.servicesInterfacePfxCertProvider(),
-			headers: {
-				Accept: 'application/json',
-				'Accept-Language': 'en-US,en;q=0.5',
-				Connection: 'keep-alive',
-				// eslint-disable-next-line max-len
-				'User-Agent': 'Mozilla/5.0', //TODO examine why it doesn't work without it, https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
-			},
-		};
+    constructor() {
+        this.logger = new Log(ServicesSynchronizer.name);
+        this.opts = {
+            rejectUnauthorized: false,
+            pfx: ResProvider.servicesInterfacePfxCertProvider(),
+            headers: {
+                Accept: 'application/json',
+                'Accept-Language': 'en-US,en;q=0.5',
+                Connection: 'keep-alive',
+                // eslint-disable-next-line max-len
+                'User-Agent': 'Mozilla/5.0', //TODO examine why it doesn't work without it, https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
+            },
+        };
 
-		const proxy = ResProvider.socksProvider();
-		if (proxy?.length > 0) {
-			this.logger.info(`using proxy/socks '${proxy}' to CERN network`);
-			this.opts.agent = new SocksProxyAgent(proxy);
-		} else {
-			this.logger.info(
-				'service do not use proxy/socks to reach CERN network'
-			);
-		}
-	}
+        const proxy = ResProvider.socksProvider();
+        if (proxy?.length > 0) {
+            this.logger.info(`using proxy/socks '${proxy}' to CERN network`);
+            this.opts.agent = new SocksProxyAgent(proxy);
+        } else {
+            this.logger.info(
+                'service do not use proxy/socks to reach CERN network',
+            );
+        }
+    }
 
-	/**
-	 * Combine logic of fetching data from service
-	 * like bookkeeping and processing
-	 * and inserting to local database
-	 * @param {string} endpoint endpoint to fetch data
-	 * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database
-	 * @param {CallableFunction} syncer logic for insert ing data to database
-	 * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
-	 * @returns {Promise} batched promieses for each syncer invokation
-	 * all parameters should be defined in derived classes
-	 */
-	async syncData(endpoint, dataAdjuster, syncer, responsePreprocess) {
-		const result = await this.getRawData(endpoint);
-		const rows = responsePreprocess(result).map((r) => dataAdjuster(r));
+    /**
+     * Combine logic of fetching data from service
+     * like bookkeeping and processing
+     * and inserting to local database
+     * @param {string} endpoint endpoint to fetch data
+     * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database
+     * @param {CallableFunction} syncer logic for insert ing data to database
+     * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
+     * @returns {Promise} batched promieses for each syncer invokation
+     * all parameters should be defined in derived classes
+     */
+    async syncData(endpoint, dataAdjuster, syncer, responsePreprocess) {
+        const result = await this.getRawData(endpoint);
+        const rows = responsePreprocess(result).map((r) => dataAdjuster(r));
 
-		let i = 0;
-		const dataSize = rows.length;
-		const promises = rows.map((r) =>
-			syncer(this.dbclient, r)
-				.then(() => {
-					i++;
-					this.logger.info(
-						`sync procedure per data protion done:: ${i}/${dataSize}`
-					);
-				})
-				.catch((e) => {
-					i++;
-					this.logger.error(
-						`'${e.message}' per data portion ${i}/${dataSize}`
-					);
-				})
-		);
+        let i = 0;
+        const dataSize = rows.length;
+        const promises = rows.map((r) =>
+            syncer(this.dbclient, r)
+                .then(() => {
+                    i++;
+                    this.logger.info(
+                        `sync procedure per data protion done:: ${i}/${dataSize}`,
+                    );
+                })
+                .catch((e) => {
+                    i++;
+                    this.logger.error(
+                        `'${e.message}' per data portion ${i}/${dataSize}`,
+                    );
+                }));
 
-		await Promise.all(promises);
-	}
+        await Promise.all(promises);
+    }
 
-	async getRawData(endpoint) {
-		return new Promise((resolve, reject) => {
-			let rawData = '';
-			const req = this.checkClientType(endpoint).request(
-				endpoint,
-				this.opts,
-				(res) => {
-					const { statusCode } = res;
-					const contentType = res.headers['content-type'];
+    async getRawData(endpoint) {
+        return new Promise((resolve, reject) => {
+            let rawData = '';
+            const req = this.checkClientType(endpoint).request(
+                endpoint,
+                this.opts,
+                (res) => {
+                    const { statusCode } = res;
+                    const contentType = res.headers['content-type'];
 
-					let error;
-					if (statusCode !== 200) {
-						error = new Error(
-							`Request Failed. Status Code: ${statusCode}`
-						);
-					} else if (!/^application\/json/.test(contentType)) {
-						error = new Error(
-							`Invalid content-type. Expected application/json but received ${contentType}`
-						);
-					}
-					if (error) {
-						this.logger.error(error);
-						res.resume();
-						return;
-					}
+                    let error;
+                    if (statusCode !== 200) {
+                        error = new Error(
+                            `Request Failed. Status Code: ${statusCode}`,
+                        );
+                    } else if (!/^application\/json/.test(contentType)) {
+                        error = new Error(
+                            `Invalid content-type. Expected application/json but received ${contentType}`,
+                        );
+                    }
+                    if (error) {
+                        this.logger.error(error);
+                        res.resume();
+                        return;
+                    }
 
-					res.on('data', (chunk) => {
-						rawData += chunk;
-					});
-					res.on('end', () => {
-						const data = JSON.parse(rawData);
-						resolve(data);
-					});
-				}
-			);
-			req.on('error', (e) => {
-				this.logger.error(`ERROR httpGet: ${e}`);
-				reject(e);
-			});
-			req.end();
-		});
-	}
+                    res.on('data', (chunk) => {
+                        rawData += chunk;
+                    });
+                    res.on('end', () => {
+                        const data = JSON.parse(rawData);
+                        resolve(data);
+                    });
+                },
+            );
+            req.on('error', (e) => {
+                this.logger.error(`ERROR httpGet: ${e}`);
+                reject(e);
+            });
+            req.end();
+        });
+    }
 
-	async setupConnection() {
-		this.dbclient = new Client(config.database);
-		return await this.dbclient
-			.connect()
-			.then(() => this.logger.info('database connection established'));
-	}
+    async setupConnection() {
+        this.dbclient = new Client(config.database);
+        return await this.dbclient
+            .connect()
+            .then(() => this.logger.info('database connection established'));
+    }
 
-	async disconnect() {
-		return await this.dbclient
-			.end()
-			.then(() => this.logger.info('database connection ended'));
-	}
+    async disconnect() {
+        return await this.dbclient
+            .end()
+            .then(() => this.logger.info('database connection ended'));
+    }
 
-	checkClientType(endpoint) {
-		switch (this.opts.protocol || `${endpoint.split(':')[0]}:`) {
-			case 'http:':
-				return http;
-			case 'https:':
-				return https;
-			default:
-				// eslint-disable-next-line no-case-declarations
-				const mess = 'unspecified protocol in url';
-				this.logger.error(mess);
-				throw new Error(mess);
-		}
-	}
+    checkClientType(endpoint) {
+        switch (this.opts.protocol || `${endpoint.split(':')[0]}:`) {
+            case 'http:':
+                return http;
+            case 'https:':
+                return https;
+            default:
+                // eslint-disable-next-line no-case-declarations
+                const mess = 'unspecified protocol in url';
+                this.logger.error(mess);
+                throw new Error(mess);
+        }
+    }
 }
 
 module.exports = ServicesSynchronizer;

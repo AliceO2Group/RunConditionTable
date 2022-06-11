@@ -19,71 +19,71 @@ const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
 
 class MonalisaService extends ServicesSynchronizer {
-	constructor() {
-		super();
-		this.logger = new Log(MonalisaService.name);
-		this.endpoints = config.services.monalisa.url;
-		this.ketpFields = undefined;
-		this.syncTasks = [];
-	}
+    constructor() {
+        super();
+        this.logger = new Log(MonalisaService.name);
+        this.endpoints = config.services.monalisa.url;
+        this.ketpFields = undefined;
+        this.syncTasks = [];
+    }
 
-	dataAdjuster(row) {
-		row = Utils.filterObject(row, this.ketpFields);
-		row.id = 'DEFAULT';
-		return row;
-	}
+    dataAdjuster(row) {
+        row = Utils.filterObject(row, this.ketpFields);
+        row.id = 'DEFAULT';
+        return row;
+    }
 
-	// eslint-disable-next-line no-unused-vars
-	async syncer(dbClient, dataRow) {
-		throw new Error('not implemented');
-		// eslint-disable-next-line no-unreachable
-		return await dbClient.query(
-			Utils.simpleBuildInsertQuery('runs', dataRow)
-		);
-	}
+    // eslint-disable-next-line no-unused-vars
+    async syncer(dbClient, dataRow) {
+        throw new Error('not implemented');
+        // eslint-disable-next-line no-unreachable
+        return await dbClient.query(
+            Utils.simpleBuildInsertQuery('runs', dataRow),
+        );
+    }
 
-	rawDataResponsePreprocess(d) {
-		const entries = Object.entries(d);
-		return entries.map(([prodName, vObj]) => {
-			vObj['name'] = prodName;
-			return vObj;
-		});
-	}
+    rawDataResponsePreprocess(d) {
+        const entries = Object.entries(d);
+        return entries.map(([prodName, vObj]) => {
+            vObj['name'] = prodName;
+            return vObj;
+        });
+    }
 
-	syncRawData() {
-		return this.syncData(
-			this.endpoints.rawData,
-			this.dataAdjuster.bind(this),
-			this.syncer.bind(this),
-			this.rawDataResponsePreprocess
-		);
-	}
+    syncRawData() {
+        return this.syncData(
+            this.endpoints.rawData,
+            this.dataAdjuster.bind(this),
+            this.syncer.bind(this),
+            this.rawDataResponsePreprocess,
+        );
+    }
 
-	debugDisplaySync() {
-		return this.syncData(
-			this.endpoints.rawData,
-			this.dataAdjuster.bind(this),
-			async (_, r) => this.logger.debug(r),
-			this.rawDataResponsePreprocess
-		);
-	}
+    debugDisplaySync() {
+        return this.syncData(
+            this.endpoints.rawData,
+            this.dataAdjuster.bind(this),
+            async (_, r) => this.logger.debug(r),
+            this.rawDataResponsePreprocess,
+        );
+    }
 
-	setSyncRunsTask() {
-		const task = setInterval(this.syncRawData.bind(this), 1000);
-		this.syncTasks.push(task);
-		return task;
-	}
+    setSyncRunsTask() {
+        const task = setInterval(this.syncRawData.bind(this), 1000);
+        this.syncTasks.push(task);
+        return task;
+    }
 
-	clearSyncTask() {
-		for (const task of this.syncTasks) {
-			clearInterval(task);
-		}
-	}
+    clearSyncTask() {
+        for (const task of this.syncTasks) {
+            clearInterval(task);
+        }
+    }
 
-	async close() {
-		this.clearSyncTask();
-		await this.disconnect();
-	}
+    async close() {
+        this.clearSyncTask();
+        await this.disconnect();
+    }
 }
 
 module.exports = MonalisaService;

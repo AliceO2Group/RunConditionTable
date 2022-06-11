@@ -17,48 +17,48 @@ import { RCT } from '../../../config.js';
 const { dataReqParams } = RCT;
 
 function defaultHref(page, index) {
-	return `/?page=${page}${index ? `&${index}` : ''}&${
-		dataReqParams.rowsOnSite
-	}=50&${dataReqParams.site}=1`;
+    return `/?page=${page}${index ? `&${index}` : ''}&${
+        dataReqParams.rowsOnSite
+    }=50&${dataReqParams.site}=1`;
 }
 
 export default function alonePageButton(model, title, page, index = null) {
-	const currentPointer = model.getCurrentDataPointer();
-	const currentPage = currentPointer.page;
+    const currentPointer = model.getCurrentDataPointer();
+    const currentPage = currentPointer.page;
 
-	const remoteData = model.getRemoteData(page, index);
-	const data = remoteData.payload;
+    const remoteData = model.getRemoteData(page, index);
+    const data = remoteData.payload;
 
-	const dataHref = remoteData.match({
-		NotAsked: () => {
-			throw 'fatal';
-		},
-		Loading: () => data.url.href,
-		Success: () => data.url.href,
-		Failure: (status) => {
-			alert('error with url: ', data.url, status);
-			defaultHref(page, index);
-		},
-	});
+    const dataHref = remoteData.match({
+        NotAsked: () => {
+            throw 'fatal';
+        },
+        Loading: () => data.url.href,
+        Success: () => data.url.href,
+        Failure: (status) => {
+            alert('error with url: ', data.url, status);
+            defaultHref(page, index);
+        },
+    });
 
-	return [
-		h(
-			'.menu-title',
-			{
-				class: currentPage === page ? 'currentMenuItem' : '',
-			},
-			title
-		),
-		h(
-			'a.menu-item',
-			{
-				title: title,
-				style: 'display:flex',
-				href: dataHref,
-				onclick: (e) => model.router.handleLinkEvent(e),
-				class: currentPage === page ? 'selected' : '',
-			},
-			[h('span', iconLayers(), ' ', title)]
-		),
-	];
+    return [
+        h(
+            '.menu-title',
+            {
+                class: currentPage === page ? 'currentMenuItem' : '',
+            },
+            title,
+        ),
+        h(
+            'a.menu-item',
+            {
+                title: title,
+                style: 'display:flex',
+                href: dataHref,
+                onclick: (e) => model.router.handleLinkEvent(e),
+                class: currentPage === page ? 'selected' : '',
+            },
+            [h('span', iconLayers(), ' ', title)],
+        ),
+    ];
 }

@@ -26,104 +26,104 @@ const { pagesNames } = RCT;
  * where index is unique identifier of particular data set in chosen page
  */
 export default class FetchedDataManager {
-	constructor(router, model) {
-		this.model = model;
-		this.router = router;
-		this.loader = new Loader();
+    constructor(router, model) {
+        this.model = model;
+        this.router = router;
+        this.loader = new Loader();
 
-		for (const n in pagesNames) {
-			if (Object.prototype.hasOwnProperty.call(pagesNames, n)) {
-				this[n] = {};
-			}
-		}
-	}
+        for (const n in pagesNames) {
+            if (Object.prototype.hasOwnProperty.call(pagesNames, n)) {
+                this[n] = {};
+            }
+        }
+    }
 
-	/**
-	 * Function ask server for data set defined by url field,
-	 * when first after creating object request is performed,
-	 * to url is added additional param 'count-records',
-	 * which inform backend to calculate the total number of rows in target view
-	 * this information is used to create site navigation
-	 */
+    /**
+     * Function ask server for data set defined by url field,
+     * when first after creating object request is performed,
+     * to url is added additional param 'count-records',
+     * which inform backend to calculate the total number of rows in target view
+     * this information is used to create site navigation
+     */
 
-	async reqForData(force = false, url = null) {
-		if (url === null) {
-			url = this.router.getUrl();
-		}
-		const { page, index } = this.model.getDataPointerFromUrl(url);
-		const data = this[page][index];
-		if (!data || force) {
-			await this.req(true, url);
-		} else if (url2Str(data.payload.url) !== url2Str(url)) {
-			await this.req(false, url);
-		}
-	}
+    async reqForData(force = false, url = null) {
+        if (url === null) {
+            url = this.router.getUrl();
+        }
+        const { page, index } = this.model.getDataPointerFromUrl(url);
+        const data = this[page][index];
+        if (!data || force) {
+            await this.req(true, url);
+        } else if (url2Str(data.payload.url) !== url2Str(url)) {
+            await this.req(false, url);
+        }
+    }
 
-	async req(countAllRecord, url) {
-		const { page, index } = this.model.getDataPointerFromUrl(url);
+    async req(countAllRecord, url) {
+        const { page, index } = this.model.getDataPointerFromUrl(url);
 
-		let totalRecordsNumber = null;
-		if (!countAllRecord) {
-			// eslint-disable-next-line prefer-destructuring
-			totalRecordsNumber = this[page][index].payload.totalRecordsNumber;
-		}
+        let totalRecordsNumber = null;
+        if (!countAllRecord) {
+            // eslint-disable-next-line prefer-destructuring
+            totalRecordsNumber = this[page][index].payload.totalRecordsNumber;
+        }
 
-		this[page][index] = RemoteData.Loading();
-		this[page][index].payload = { url: url }; // TODO maybe it should be considered in WebUI
-		this.model.notify();
+        this[page][index] = RemoteData.Loading();
+        this[page][index].payload = { url: url }; // TODO maybe it should be considered in WebUI
+        this.model.notify();
 
-		const reqEndpoint = this.getReqEndpoint(url, countAllRecord);
-		const { result, status, ok } = await this.model.loader.get(reqEndpoint);
-		this.model.parent._tokenExpirationHandler(status);
+        const reqEndpoint = this.getReqEndpoint(url, countAllRecord);
+        const { result, status, ok } = await this.model.loader.get(reqEndpoint);
+        this.model.parent._tokenExpirationHandler(status);
 
-		if (!ok) {
-			this[page][index] = RemoteData.failure({
-				status: status,
-				url: url,
-			});
-		} else {
-			this[page][index] = RemoteData.Success(
-				new FetchedData(url, result, totalRecordsNumber)
-			);
-		}
-		this.model.notify();
-	}
+        if (!ok) {
+            this[page][index] = RemoteData.failure({
+                status: status,
+                url: url,
+            });
+        } else {
+            this[page][index] = RemoteData.Success(
+                new FetchedData(url, result, totalRecordsNumber),
+            );
+        }
+        this.model.notify();
+    }
 
-	getReqEndpoint(url, countAllRecord) {
-		const apiPrefix = `/api${RCT.endpoints.rctData}`;
-		return (
-			apiPrefix +
+    getReqEndpoint(url, countAllRecord) {
+        const apiPrefix = `/api${RCT.endpoints.rctData}`;
+        return (
+            apiPrefix +
 			url.pathname.substring(1) +
 			url.search +
 			(countAllRecord ? '&count-records=true' : '')
-		);
-	}
+        );
+    }
 
-	changeSite(site) {
-		const url = this.router.getUrl();
-		const newUrl = replaceUrlParams(url, [[dataReqParams.site, site]]);
-		this.router.go(newUrl);
-	}
+    changeSite(site) {
+        const url = this.router.getUrl();
+        const newUrl = replaceUrlParams(url, [[dataReqParams.site, site]]);
+        this.router.go(newUrl);
+    }
 
-	changeItemStatus(item) {
-		item.marked = !item.marked;
-		this.model.notify();
-	}
+    changeItemStatus(item) {
+        item.marked = !item.marked;
+        this.model.notify();
+    }
 
-	changeRecordsVisibility(data) {
-		data.hideMarkedRecords = !data.hideMarkedRecords;
-		this.model.notify();
-	}
+    changeRecordsVisibility(data) {
+        data.hideMarkedRecords = !data.hideMarkedRecords;
+        this.model.notify();
+    }
 
-	clear() {
-		for (const n in pagesNames) {
-			if (Object.prototype.hasOwnProperty.call(pagesNames, n)) {
-				this[n] = {};
-			}
-		}
-	}
+    clear() {
+        for (const n in pagesNames) {
+            if (Object.prototype.hasOwnProperty.call(pagesNames, n)) {
+                this[n] = {};
+            }
+        }
+    }
 
-	delete(page, index) {
-		this[page][index] = undefined;
-	}
+    delete(page, index) {
+        this[page][index] = undefined;
+    }
 }

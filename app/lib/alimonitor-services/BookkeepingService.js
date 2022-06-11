@@ -19,77 +19,77 @@ const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
 
 class BookkeepingService extends ServicesSynchronizer {
-	constructor() {
-		super();
-		this.logger = new Log(BookkeepingService.name);
-		this.endpoints = config.services.bookkeeping.url;
-		this.ketpFields = {
-			runNumber: 'run_number',
-			timeO2Start: 'start',
-			timeO2End: 'end',
-			timeTrgStart: 'time_trg_start',
-			timeTrgEnd: 'time_trg_end',
-			runType: 'run_type',
-			detectors: 'detectors',
-		};
-		this.defaultSyncTimout = 1000;
-		this.syncTasks = [];
-	}
+    constructor() {
+        super();
+        this.logger = new Log(BookkeepingService.name);
+        this.endpoints = config.services.bookkeeping.url;
+        this.ketpFields = {
+            runNumber: 'run_number',
+            timeO2Start: 'start',
+            timeO2End: 'end',
+            timeTrgStart: 'time_trg_start',
+            timeTrgEnd: 'time_trg_end',
+            runType: 'run_type',
+            detectors: 'detectors',
+        };
+        this.defaultSyncTimout = 1000;
+        this.syncTasks = [];
+    }
 
-	dataAdjuster(run) {
-		run = Utils.filterObject(run, this.ketpFields);
-		run.period_id = 1;
-		run.energy_per_beam = 0;
-		run.id = 'DEFAULT';
-		if (typeof run.detectors === 'string') {
-			run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
-		}
+    dataAdjuster(run) {
+        run = Utils.filterObject(run, this.ketpFields);
+        run.period_id = 1;
+        run.energy_per_beam = 0;
+        run.id = 'DEFAULT';
+        if (typeof run.detectors === 'string') {
+            run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
+        }
 
-		delete run.detectors; // TODO
-		return run;
-	}
+        delete run.detectors; // TODO
+        return run;
+    }
 
-	// eslint-disable-next-line no-unused-vars
-	async syncer(dbClient, dataRow) {
-		return await dbClient.query(
-			Utils.simpleBuildInsertQuery('runs', dataRow)
-		);
-	}
+    // eslint-disable-next-line no-unused-vars
+    async syncer(dbClient, dataRow) {
+        return await dbClient.query(
+            Utils.simpleBuildInsertQuery('runs', dataRow),
+        );
+    }
 
-	syncRuns() {
-		return this.syncData(
-			this.endpoints.rct,
-			this.dataAdjuster.bind(this),
-			this.syncer.bind(this),
-			(res) => res.data
-		);
-	}
+    syncRuns() {
+        return this.syncData(
+            this.endpoints.rct,
+            this.dataAdjuster.bind(this),
+            this.syncer.bind(this),
+            (res) => res.data,
+        );
+    }
 
-	debugDisplaySync() {
-		return this.syncData(
-			this.endpoints.rct,
-			this.dataAdjuster.bind(this),
-			async (_, r) => this.logger.debug(r),
-			(res) => res.data
-		);
-	}
+    debugDisplaySync() {
+        return this.syncData(
+            this.endpoints.rct,
+            this.dataAdjuster.bind(this),
+            async (_, r) => this.logger.debug(r),
+            (res) => res.data,
+        );
+    }
 
-	setSyncRunsTask() {
-		const task = setInterval(this.syncRuns.bind(this), 1000);
-		this.syncTasks.push(task);
-		return task;
-	}
+    setSyncRunsTask() {
+        const task = setInterval(this.syncRuns.bind(this), 1000);
+        this.syncTasks.push(task);
+        return task;
+    }
 
-	clearSyncTask() {
-		for (const task of this.syncTasks) {
-			clearInterval(task);
-		}
-	}
+    clearSyncTask() {
+        for (const task of this.syncTasks) {
+            clearInterval(task);
+        }
+    }
 
-	async close() {
-		this.clearSyncTask();
-		await this.disconnect();
-	}
+    async close() {
+        this.clearSyncTask();
+        await this.disconnect();
+    }
 }
 
 module.exports = BookkeepingService;

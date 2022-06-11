@@ -18,16 +18,12 @@ import rctDataView from './rctData/rctDataView.js';
 import sidebar from './sidebar/sidebar.js';
 
 export default function userPanel(model) {
-	return h('.flex-column.absolute-fill', [
-		h('header.shadow-level2.level2', [header(model)]),
-		h('.flex-grow.flex-row.outline-gray', [
-			sidebar(model),
+    return h('.flex-column.absolute-fill', [
+        h('header.shadow-level2.level2', [header(model)]),
+        h('.flex-grow.flex-row.outline-gray', [
+            sidebar(model),
 
-			h('section.outline-gray.flex-grow.relative', [
-				h('.scroll-y.absolute-fill.bg-white', { id: 'main-content' }, [
-					rctDataView(model),
-				]),
-			]),
-		]),
-	]);
+            h('section.outline-gray.flex-grow.relative', [h('.scroll-y.absolute-fill.bg-white', { id: 'main-content' }, [rctDataView(model)])]),
+        ]),
+    ]);
 }

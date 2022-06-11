@@ -27,55 +27,55 @@ const DRF = RCT.dataRespondFields;
  */
 
 export default class FetchedData {
-	constructor(url, content, totalRecordsNumber = null) {
-		this.url = url;
+    constructor(url, content, totalRecordsNumber = null) {
+        this.url = url;
 
-		this.fields = null;
-		this.rows = null;
+        this.fields = null;
+        this.rows = null;
 
-		this.totalRecordsNumber = null;
-		this.hideMarkedRecords = false;
+        this.totalRecordsNumber = null;
+        this.hideMarkedRecords = false;
 
-		this.rowsOnsite = null;
-		this.site = null;
+        this.rowsOnsite = null;
+        this.site = null;
 
-		this.parseFetchedFields(content);
-		this.parseFetchedRows(content);
-		if (!totalRecordsNumber) {
-			this.setInfoAboutTotalRecordsNumber(content);
-		} else {
-			this.totalRecordsNumber = totalRecordsNumber;
-		}
+        this.parseFetchedFields(content);
+        this.parseFetchedRows(content);
+        if (!totalRecordsNumber) {
+            this.setInfoAboutTotalRecordsNumber(content);
+        } else {
+            this.totalRecordsNumber = totalRecordsNumber;
+        }
 
-		this.setSiteAndRowsOnSite();
-	}
+        this.setSiteAndRowsOnSite();
+    }
 
-	setSiteAndRowsOnSite() {
-		const params = Object.fromEntries(this.url.searchParams.entries());
-		const DRP = RCT.dataReqParams;
-		this.rowsOnsite = params[DRP.rowsOnsite]
-			? params[DRP.rowsOnsite]
-			: defaultRowsOnSite;
-		this.site = params[DRP.site] ? params[DRP.site] : defaultSite;
-	}
+    setSiteAndRowsOnSite() {
+        const params = Object.fromEntries(this.url.searchParams.entries());
+        const DRP = RCT.dataReqParams;
+        this.rowsOnsite = params[DRP.rowsOnsite]
+            ? params[DRP.rowsOnsite]
+            : defaultRowsOnSite;
+        this.site = params[DRP.site] ? params[DRP.site] : defaultSite;
+    }
 
-	parseFetchedFields(content) {
-		this.fields = content.data.fields.map((item) => {
-			item.marked = true;
-			return item;
-		});
-	}
+    parseFetchedFields(content) {
+        this.fields = content.data.fields.map((item) => {
+            item.marked = true;
+            return item;
+        });
+    }
 
-	parseFetchedRows(content) {
-		this.rows = content.data.rows.map((item) => {
-			item.marked = false;
-			return item;
-		});
-	}
+    parseFetchedRows(content) {
+        this.rows = content.data.rows.map((item) => {
+            item.marked = false;
+            return item;
+        });
+    }
 
-	setInfoAboutTotalRecordsNumber(content) {
-		if (!this.totalRecordsNumber) {
-			this.totalRecordsNumber = content.data[DRF.totalRowsCount];
-		}
-	}
+    setInfoAboutTotalRecordsNumber(content) {
+        if (!this.totalRecordsNumber) {
+            this.totalRecordsNumber = content.data[DRF.totalRowsCount];
+        }
+    }
 }

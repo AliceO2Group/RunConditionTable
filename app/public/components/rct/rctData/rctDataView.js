@@ -24,43 +24,43 @@ import viewButton from '../../common/viewButton.js';
  */
 
 export default function rctDataView(model) {
-	const { page, index } = model.getCurrentDataPointer();
-	const data = model.fetchedData[page][index];
+    const { page, index } = model.getCurrentDataPointer();
+    const data = model.fetchedData[page][index];
 
-	return h('.homePage', [
-		h('div.tableDiv', []),
+    return h('.homePage', [
+        h('div.tableDiv', []),
 
-		data
-			? data.match({
-					NotAsked: () => h('', 'not asked'),
-					Loading: () => spinnerAndReloadView(model),
-					Success: () => tableView(model),
-					Failure: (status) => failureStatusAndReload(model, status),
+        data
+            ? data.match({
+                NotAsked: () => h('', 'not asked'),
+                Loading: () => spinnerAndReloadView(model),
+                Success: () => tableView(model),
+                Failure: (status) => failureStatusAndReload(model, status),
 			  })
-			: h('', 'data null :: Arrr...'),
-	]);
+            : h('', 'data null :: Arrr...'),
+    ]);
 }
 
 function spinnerAndReloadView(model) {
-	return h('.item-center.justify-center', [
-		viewButton(
-			model,
-			'reload data',
-			() => model.fetchedData.reqForData(true),
-			'reload-btn'
-		),
-		spinner(),
-	]);
+    return h('.item-center.justify-center', [
+        viewButton(
+            model,
+            'reload data',
+            () => model.fetchedData.reqForData(true),
+            'reload-btn',
+        ),
+        spinner(),
+    ]);
 }
 
 function failureStatusAndReload(model, status) {
-	return h('.item-center.justify-center', [
-		viewButton(
-			model,
-			'reload data',
-			() => model.fetchedData.reqForData(true),
-			'reload-btn'
-		),
-		h('', status),
-	]);
+    return h('.item-center.justify-center', [
+        viewButton(
+            model,
+            'reload data',
+            () => model.fetchedData.reqForData(true),
+            'reload-btn',
+        ),
+        h('', status),
+    ]);
 }

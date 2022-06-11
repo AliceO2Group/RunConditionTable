@@ -21,51 +21,51 @@ const path = require('path');
 let logger;
 
 class ResProvider {
-	static servicesInterfacePfxCertProvider() {
-		const cert_path = process.env.RCT_CERT_PATH;
-		let cert;
-		try {
-			cert = fs.readFileSync(cert_path);
-			logger.info('cert loaded from file');
-		} catch (err) {
-			logger.warn(`cannot load cert file at $RCT_CERT_PATH ${err}`);
-		}
-		if (!cert) {
-			try {
-				cert = fs.readFileSync(
-					path.join(__dirname, '..', '..', 'certs', 'ali-cert.p12')
-				);
-				logger.info('cert loaded from statndard file');
-			} catch (err) {
-				logger.warn(
-					`cannot load cert file from standard location ${err}`
-				);
-			}
-		}
-		return cert;
-	}
+    static servicesInterfacePfxCertProvider() {
+        const cert_path = process.env.RCT_CERT_PATH;
+        let cert;
+        try {
+            cert = fs.readFileSync(cert_path);
+            logger.info('cert loaded from file');
+        } catch (err) {
+            logger.warn(`cannot load cert file at $RCT_CERT_PATH ${err}`);
+        }
+        if (!cert) {
+            try {
+                cert = fs.readFileSync(
+                    path.join(__dirname, '..', '..', 'certs', 'ali-cert.p12'),
+                );
+                logger.info('cert loaded from statndard file');
+            } catch (err) {
+                logger.warn(
+                    `cannot load cert file from standard location ${err}`,
+                );
+            }
+        }
+        return cert;
+    }
 
-	static socksProvider() {
-		logger.warn(`CERN_SOCKS set to '${process.env.CERN_SOCKS}'`);
-		let socks = undefined;
-		if (process.env.CERN_SOCKS) {
-			socks = process.env.CERN_SOCKS.trim();
-			if (
-				socks.match(/socks:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+/)
-			) {
-				return socks;
-			}
-		}
+    static socksProvider() {
+        logger.warn(`CERN_SOCKS set to '${process.env.CERN_SOCKS}'`);
+        let socks = undefined;
+        if (process.env.CERN_SOCKS) {
+            socks = process.env.CERN_SOCKS.trim();
+            if (
+                socks.match(/socks:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+/)
+            ) {
+                return socks;
+            }
+        }
 
-		if (
-			process.env.RUNNING_ENV == 'DOCKER' &&
+        if (
+            process.env.RUNNING_ENV == 'DOCKER' &&
 			process.env.CERN_SOCKS == 'true'
-		) {
-			socks = 'socks://172.200.200.1:12345';
-			return socks;
-		}
-		return undefined;
-	}
+        ) {
+            socks = 'socks://172.200.200.1:12345';
+            return socks;
+        }
+        return undefined;
+    }
 }
 logger = new Log(ResProvider.name);
 
