@@ -26,8 +26,9 @@
 
  describe('Run Condition Table', () => {
     const Application = require('../app/application.js');
-    const application = new Application({});
+    // const application = new Application({});
     
+    /*
     before(async () => {
         await application.run();
     });
@@ -35,7 +36,7 @@
     after(async () => {
         await application.stop(true);
     });
-
+*/
     describe('Unit Suite', () => {
         describe('Database', DatabaseSuite);
     });
@@ -43,7 +44,7 @@
     describe('App initialization', () => {
         it('should initialize the app instance', () => {
             assert.doesNotThrow(() => {
-                new RunConditionTableApplication({});
+                new Application({});
             });
         });
     });

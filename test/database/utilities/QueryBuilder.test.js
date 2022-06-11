@@ -10,7 +10,6 @@ module.exports = () => {
                 const mockData = [];
                 const result = queryBuilder.build(mockData);
                 expect(result).to.not.be.null;
-                // expect(result.id).to.equal(2);
             });
         });
     });
