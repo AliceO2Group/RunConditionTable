@@ -28,18 +28,18 @@ jobs:
                   token: ${{ secrets.CODECOV_TOKEN }}
                   fail_ci_if_error: true
 
-    static-analysis:
-        runs-on: ubuntu-18.04
-        timeout-minutes: 5
+name: Lint
 
+on: [push]
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - name: Use Node.js 16.14.x
-              uses: actions/setup-node@v2
               with:
-                  node-version: '16.14.x'
-            - name: Installing dependencies
-              run: npm ci
-              run: npm run static
-            - name: Running static analysis
+                fetch-depth: 0
+            - name: Install dependencies
+              run: npm install
+            - name: Run static analysis
               run: npm run eslint
