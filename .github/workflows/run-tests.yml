@@ -40,5 +40,6 @@ jobs:
                   node-version: '16.14.x'
             - name: Installing dependencies
               run: npm ci
+              run: npm run static
             - name: Running static analysis
               run: npm run eslint
