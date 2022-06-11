@@ -134,10 +134,10 @@ class DatabaseService {
     }
 
     async execDataInsert(req, res, query = null) {
-        const dbResponseHandler = (req, res, _) => {
-            res.json({ data: 'data inserted' });
-        };
         if (query) {
+            const dbResponseHandler = (req, res, _) => {
+                res.json({ data: 'data inserted' });
+            };
             await this.exec(req, res, dbResponseHandler, query);
         }
     }

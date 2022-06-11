@@ -12,7 +12,9 @@
  */
 
  const QueryBuilderSuite = require('./QueryBuilder.test');
+ const DatabaseServiceSuite = require('./DataBaseService.test');
 
  module.exports = () => {
      describe('QueryBuilder', QueryBuilderSuite);
+     describe('DatabaseService', DatabaseServiceSuite);
  };
