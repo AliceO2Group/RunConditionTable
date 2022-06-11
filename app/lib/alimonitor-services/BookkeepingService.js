@@ -68,12 +68,9 @@ class BookkeepingService extends ServicesSynchronizer {
     }
 
     syncTraversStop(state) {
-        if (state['page'] == this.metaStore['pageCount']) {
+        if (state['page'] > this.metaStore['pageCount']) {
             return true;
         }
-        // if (state['page'] > 100) {
-        //     return true;
-        // }
         return false;
     }
 
@@ -83,7 +80,9 @@ class BookkeepingService extends ServicesSynchronizer {
     }
 
     endpointBuilder(endpoint, state) {
-        return `${endpoint}/?page[offset]=${state['page']}&page[limit]=${state['limit']}`;
+        const e = `${endpoint}/?page[offset]=${state['page'] * state['limit']}&page[limit]=${state['limit']}`;
+        console.log(e);
+        return e;
     }
 
     async sync() {
@@ -93,7 +92,8 @@ class BookkeepingService extends ServicesSynchronizer {
             limit: 100,
         };
         while (!this.syncTraversStop(state)) {
-            this.logger.debug(`page=${state['page']}`);
+            console.log(state);
+            console.log(this.metaStore);
             const prom = this.syncData(
                 this.endpointBuilder(this.endpoints.ali, state),
                 this.dataAdjuster.bind(this),
@@ -102,9 +102,9 @@ class BookkeepingService extends ServicesSynchronizer {
                 this.metaDataHandler.bind(this),
             );
             pendingSyncs.push(prom);
-            await prom;
+            // await prom;
             state = this.nextState(state);
-            await delay(10);
+            await delay(70);
         }
         this.logger.info('bookkeeping sync trvers called ended');
 
@@ -120,10 +120,12 @@ class BookkeepingService extends ServicesSynchronizer {
         );
     }
 
-    setSyncTask() {
-        const task = setInterval(this.sync.bind(this), this.taskPeriodMilis);
-        this.tasks.push(task);
-        return task;
+    async setSyncTask() {
+        await this.sync();
+        
+        // const task = setInterval(this.sync.bind(this), this.taskPeriodMilis);
+        // this.tasks.push(task);
+        // return task;
     }
 
     setDebugTask() {

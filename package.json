@@ -20,7 +20,7 @@
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run coverage:test && npm run coverage:report ",
     "test": "mkdir -pv ./reports; npm run static; npm run coverage; if [ \"RUNNING_ENV\" = \"DOCKER\" ]; then chmod -R o+w ./reports; fi #TODO platform independent",
-    "reports:show": "open ./reports/**/*.html",
+    "reports:show": "open ./reports/**/*.html #might not work on some systems",
     
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:prod": "node app/main.js",
@@ -30,7 +30,7 @@
     "docker:prod:mock": "docker-compose -f docker/docker-compose.yml -f docker/docker-compose-dev.yml -f docker/docker-compose-expose.yml up --build",
     "docker:test": "mkdir -p reports; docker/docker-compose -f docker/docker-compose.yml -f docker/docker-compose-test.yml up --build --abort-on-container-exit",
     "docker:prune-ex": "docker container rm $(docker ps -a --filter name=runconditiontable* -aq) #TODO",
-    "docker:prune": "cd docker; docker-compose rm --force",
+    "docker:prune": "cd docker; docker-compose rm --stop --force -v ",
     "clean": "rm -rf ./reports; rm -rf .nyc_output",
     
     "start:bk": "node app/lib/alimonitor-services/bk-main.js",

@@ -88,16 +88,16 @@ class ServicesSynchronizer {
             const promises = rows.map((r) => syncer(this.dbclient, r)
                 .then(() => {
                     i++;
-                    // this.logger.info(`sync procedure per data protion done:: ${i}/${dataSize}`);
+                    this.logger.info(`sync procedure per data protion done:: ${i}/${dataSize}`);
                 })
                 .catch((e) => {
                     i++;
-                    // this.logger.error(`'${e.message}' per data portion ${i}/${dataSize}`);
+                    this.logger.error(`'${e.message}' per data portion ${i}/${dataSize}`);
                 }));
 
             await Promise.all(promises);
         } catch (error) {
-            this.logger.error(error);
+            // this.logger.error(error);
         }
     }
 

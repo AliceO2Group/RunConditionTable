@@ -10,14 +10,6 @@ RUN apk add --no-cache \
 
 FROM base as devdependencies
 
-RUN apk add --no-cache \
-    # chromium=86.0.4240.111-r0 \
-    # freetype=2.10.4-r0 \
-    # freetype-dev=2.10.4-r0 \
-    # git=2.26.3-r1 \
-    # harfbuzz=2.6.6-r0 \
-    ca-certificates=20211220-r0 \
-    ttf-freefont=20120503-r1
 
 COPY ./package*.json ./
 RUN npm --silent ci
@@ -33,7 +25,7 @@ COPY ./.eslintrc ./
 COPY ./.nycrc ./
 COPY ./codecov.yml ./
 COPY ./test ./test
-
+COPY ./app ./app
 ENV ENV_MODE=test
 CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "test" ]
 

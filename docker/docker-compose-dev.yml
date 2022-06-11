@@ -22,7 +22,7 @@ services:
         source: ../package-lock.json
         target: /opt/RunConditionTable/package-lock.json
     environment:
-      - CERN_SOCKS=${CERN_SOCKS:-false}
+      - CERN_SOCKS=${CERN_SOCKS:-true}
 
     restart: "no"
 
