@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile.application
     environment:
       - RUNNING_ENV=DOCKER
+      - CERN_SOCKS=${CERN_SOCKS:-true}
+      - ALIMONITOR_PASSPHRASE=${ALIMONITOR_PASSPHRASE}
     networks:
       - rct-network
     volumes:
