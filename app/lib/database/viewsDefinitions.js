@@ -41,6 +41,7 @@ const runs_per_period_view = (query) => `
                             FROM periods 
                             WHERE periods.name = '${query.index}'
                             )
+        ORDER BY r.run_number DESC
         )`;
 
 const data_passes_view = (query) => `
@@ -107,7 +108,7 @@ const flags_view = (query) => `
             qcf.end AS flagEnd, 
             ftd.flag, 
             qcf.comment, 
-            dpr.production_id,
+            dpr.data_pass_id,
             ds.name
 
         FROM quality_control_flags AS qcf

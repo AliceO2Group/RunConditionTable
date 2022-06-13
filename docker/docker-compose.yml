@@ -1,5 +1,7 @@
 services:
   application:
+    stdin_open: true # docker run -i
+    tty: true 
     build:
       context: ../
       dockerfile: docker/Dockerfile.application

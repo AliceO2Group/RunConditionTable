@@ -59,6 +59,11 @@ class ServicesSynchronizer {
         }
 
         this.metaStore = {};
+        this.debug = true;
+    }
+
+    setDebug(debug) {
+        this.debug = ['t', 'T', 'true', 'True'].includes(debug);
     }
 
     /**
@@ -83,21 +88,24 @@ class ServicesSynchronizer {
             const rows = responsePreprocess(result)
                 .map((r) => dataAdjuster(r));
 
-            let i = 0;
+            let correct = 0;
+            let incorrect = 0;
+            const errors = [];
             const dataSize = rows.length;
             const promises = rows.map((r) => syncer(this.dbclient, r)
                 .then(() => {
-                    i++;
-                    this.logger.info(`sync procedure per data protion done:: ${i}/${dataSize}`);
+                    correct++;
                 })
                 .catch((e) => {
-                    i++;
-                    this.logger.error(`'${e.message}' per data portion ${i}/${dataSize}`);
+                    incorrect++;
+                    errors.push(e);
                 }));
 
             await Promise.all(promises);
+            this.logger.info(`sync successful for  ${correct}/${dataSize}`);
+            this.logger.error(`sync unseccessful for ${incorrect}/${dataSize}`);
         } catch (error) {
-            // this.logger.error(error);
+            this.logger.error(error);
         }
     }
 

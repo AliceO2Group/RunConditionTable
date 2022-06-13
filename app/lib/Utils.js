@@ -54,6 +54,15 @@ class Utils {
         return `INSERT INTO ${targetTable} (${Utils.preserveSQLKeywords(keys).join(', ')}) 
                 VALUES(${Utils.parseValuesToSql(values).join(', ')})`;
     }
+
+    static switchCase(caseName, cases, defaultCaseValue) {
+        // eslint-disable-next-line no-prototype-builtins
+        return cases[caseName] ? cases[caseName] : defaultCaseValue;
+    }
+
+    static delay(time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
 }
 
 module.exports = Utils;
