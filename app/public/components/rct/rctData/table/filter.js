@@ -31,7 +31,7 @@ export default function filter(model) {
 
     const { params } = model.router;
 
-    return h('div',
+    return h('div', [
         h('div.x-scrollable',
             h('table',
                 h('tbody',
@@ -44,7 +44,8 @@ export default function filter(model) {
                 }, 'Submit'),
                 h('button.btn', {
                     onclick: onclickClear(model, inputsIds),
-                }, 'Clear filters'))));
+                }, 'Clear filters'))),
+    ]);
 }
 
 const labelsRow = (model, fields) => h('tr',

@@ -64,15 +64,19 @@ class RunConditionTableApplication {
     }
 
     cli(line) {
-        const cmdAndArgs = line.trim().split(/ +/);
-        Utils.switchCase(cmdAndArgs[0], {
-            '': () => {},
-            bk: (args) => {
-                this.bookkeepingCli(args);
-            },
-            app: (args) => this.applicationCli(args),
-        }, this.incorrectCommand())(cmdAndArgs.slice(1));
-        this.rl.prompt();
+        try {
+            const cmdAndArgs = line.trim().split(/ +/);
+            Utils.switchCase(cmdAndArgs[0], {
+                '': () => {},
+                bk: (args) => {
+                    this.bookkeepingCli(args);
+                },
+                app: (args) => this.applicationCli(args),
+            }, this.incorrectCommand())(cmdAndArgs.slice(1));
+            this.rl.prompt();
+        } catch (error) {
+            this.con.error(error);
+        }
     }
 
     applicationCli(args) {
@@ -87,7 +91,7 @@ class RunConditionTableApplication {
             state: () => this.con.log(args[1] ? this.bookkeepingService?.[args[1]] : this.bookkeepingService),
             stop: () => this.bookkeepingService.clearTasks(),
             start: () => this.bookkeepingService.setSyncTask(),
-            debug: () => this.bookkeepingService.setDebug(args[1]),
+            loglev: () => this.bookkeepingService.setLogginLevel(args[1]),
         }, this.incorrectCommand())(args);
     }
 
@@ -125,7 +129,6 @@ class RunConditionTableApplication {
         try {
             await this.databaseService.setAdminConnection();
             await this.bookkeepingService.setupConnection();
-            // this.bookkeepingService.setSyncTask();
             await this.httpServer.listen();
         } catch (error) {
             this.logger.error(`Error while starting RCT app: ${error}`);

@@ -59,11 +59,15 @@ class ServicesSynchronizer {
         }
 
         this.metaStore = {};
-        this.debug = true;
+        this.loglev = 0;
     }
 
-    setDebug(debug) {
-        this.debug = ['t', 'T', 'true', 'True'].includes(debug);
+    setLogginLevel(logginLevel) {
+        logginLevel = parseInt(logginLevel, 10);
+        if (logginLevel < 0 && logginLevel > 3) {
+            throw new Error('Invalid debug level') ;
+        }
+        this.loglev = logginLevel;
     }
 
     /**
@@ -81,6 +85,7 @@ class ServicesSynchronizer {
      */
     async syncData(endpoint, dataAdjuster, syncer, responsePreprocess, metaDataHandler = null) {
         try {
+            const { loglev } = this;
             const result = await this.getRawData(endpoint);
             if (metaDataHandler) {
                 metaDataHandler(result);
@@ -99,11 +104,16 @@ class ServicesSynchronizer {
                 .catch((e) => {
                     incorrect++;
                     errors.push(e);
+                    if (loglev > 1) {
+                        this.logger.error(e.message);
+                    }
                 }));
 
             await Promise.all(promises);
-            this.logger.info(`sync successful for  ${correct}/${dataSize}`);
-            this.logger.error(`sync unseccessful for ${incorrect}/${dataSize}`);
+            if (this.loglev > 0) {
+                this.logger.info(`sync successful for  ${correct}/${dataSize}`);
+                this.logger.error(`sync unseccessful for ${incorrect}/${dataSize}`);
+            }
         } catch (error) {
             this.logger.error(error);
         }

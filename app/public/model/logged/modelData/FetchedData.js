@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const defaultRowsOnSite = 100;
+const defaultRowsOnSite = 50;
 const defaultSite = 1;
 
 import { RCT } from '../../../config.js';
@@ -47,13 +47,14 @@ export default class FetchedData {
             this.totalRecordsNumber = totalRecordsNumber;
         }
 
-        this.setSiteAndRowsOnSite();
+        this.setSiteAndRowsOnSite(url);
     }
 
-    setSiteAndRowsOnSite() {
-        const params = Object.fromEntries(this.url.searchParams.entries());
+    setSiteAndRowsOnSite(url) {
+        const params = Object.fromEntries(url.searchParams.entries());
         const DRP = RCT.dataReqParams;
-        this.rowsOnsite = params[DRP.rowsOnsite] ? params[DRP.rowsOnsite] : defaultRowsOnSite;
+        // TODO examine why it not works;
+        this.rowsOnsite = params['rows-on-site'] ? params['rows-on-site'] : defaultRowsOnSite;
         this.site = params[DRP.site] ? params[DRP.site] : defaultSite;
     }
 

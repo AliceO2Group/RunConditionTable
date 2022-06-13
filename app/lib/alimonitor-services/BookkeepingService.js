@@ -57,6 +57,9 @@ class BookkeepingService extends ServicesSynchronizer {
     }
 
     async syncer(dbClient, dataRow) {
+        if (this.loglev > 2) {
+            console.log(dataRow);
+        }
         return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
     }
 
@@ -90,7 +93,7 @@ class BookkeepingService extends ServicesSynchronizer {
             limit: 100,
         };
         while (!this.syncTraversStop(state)) {
-            if (this.debug) {
+            if (this.loglev) {
                 this.logger.info(state);
                 this.logger.info(this.metaStore);
             }
@@ -123,9 +126,6 @@ class BookkeepingService extends ServicesSynchronizer {
     async setSyncTask() {
         this.forceStop = false;
         await this.sync();
-        // const task = setInterval(await this.sync.bind(this), this.syncTimestamp);
-        // this.tasks.push(task);
-        // return task;
     }
 
     setDebugTask() {
