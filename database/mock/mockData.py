@@ -3,7 +3,7 @@
 
 # https://pythonhosted.org/jupyter_runner/
 
-# In[23]:
+# In[61]:
 
 
 #TODO handling big data for tests
@@ -12,12 +12,12 @@ import sys
 
 cachedDirPath = os.environ.get('CACHED_PATH')
 cachedDirPath = cachedDirPath + "/" if cachedDirPath is not None else "./cached/"
-if os.environ.get('RCT_MOCKDATA_GENERATOR_DEL_CACHE') == 'true':
+if os.environ.get('RCT_MOCKDATA_GENERATOR_DEL_CACHE') != 'false':
     os.system(f"rm -rf {cachedDirPath}")
 os.system(f"mkdir -p {cachedDirPath}")
 
 
-# In[8]:
+# In[62]:
 
 
 RCT_USER = os.environ.get('RCT_USER')
@@ -26,14 +26,14 @@ RCT_DATABASE = os.environ.get('RCT_DATABASE')
 RCT_DATABASE_HOST = os.environ.get('RCT_DATABASE_HOST')
 
 
-# In[9]:
+# In[63]:
 
 
 os.system(sys.executable + " -m pip install pandas")
 os.system(sys.executable + " -m pip install numpy")
 
 
-# In[10]:
+# In[64]:
 
 
 import pandas as pd
@@ -43,7 +43,7 @@ from collections import defaultdict
 from numpy.random import randint, uniform, choice
 
 
-# In[11]:
+# In[65]:
 
 
 gen_rand_letter = lambda: chr(np.random.randint(ord('a'), ord('z')))
@@ -51,13 +51,13 @@ gen_rand_char = lambda: chr(np.random.randint(ord('a'), ord('z')))
 gen_rand_string = lambda n: ''.join([gen_rand_char() for _ in range(n)])
 
 
-# In[12]:
+# In[66]:
 
 
 print("creating tables")
 
 
-# In[13]:
+# In[67]:
 
 
 def read_csv(path):
@@ -66,7 +66,7 @@ def read_csv(path):
 
 # # Beam directory
 
-# In[14]:
+# In[68]:
 
 
 cached_beams_dictionary_df_path = cachedDirPath + "beams_dictionary_df"
@@ -89,7 +89,7 @@ beams_dictionary_df
 
 # # Periods
 
-# In[20]:
+# In[69]:
 
 
 cached_periods_df_path = cachedDirPath + "periods_df"
@@ -119,13 +119,13 @@ periods_df[:10]
 
 # # Runs
 
-# In[ ]:
+# In[70]:
 
 
 gen_B_field = lambda: f'{choice(["+", "-"])}{uniform(0, 2):.7} T'
 
 
-# In[ ]:
+# In[71]:
 
 
 cached_runs_df_path = cachedDirPath + "runs_df"
@@ -189,7 +189,7 @@ runs_df
 
 # ### pass_types
 
-# In[ ]:
+# In[72]:
 
 
 cached_pass_types_df_path = cachedDirPath + "pass_types_df"
@@ -212,14 +212,16 @@ pass_types_df
 
 # ### data_passes
 
-# In[ ]:
+# In[74]:
 
 
 cached_data_passes_df_path = cachedDirPath + "data_passes_df"
 
 
 if not os.path.exists(cached_data_passes_df_path):
-    data_passes_names = [choice(periods_names) + '__' + gen_rand_string(10) for _ in range(70)]
+    data_passes_names = [periods_df[['id','name']].sample().iloc[0] for _ in range(70)]
+    for i in range(len(data_passes_names)):
+        data_passes_names[i]['name']  += '_' + gen_rand_string(10) 
     data_passes_df = pd.DataFrame([
         (i,
         n, 
@@ -229,8 +231,9 @@ if not os.path.exists(cached_data_passes_df_path):
         choice(['ML-', '']),
         randint(10, 100), 
         f'sof-v.{randint(5)}.{randint(5)}-{gen_rand_string(2)}',
-        123456
-        ) for i, n in enumerate(data_passes_names)
+        123456,
+        period_id
+        ) for i, (period_id, n) in enumerate(data_passes_names)
     ])
     data_passes_df.rename(columns={
         0: 'id',
@@ -241,7 +244,8 @@ if not os.path.exists(cached_data_passes_df_path):
         5: 'ml',
         6: 'number_of_events',
         7: 'software_version',
-        8: 'size'
+        8: 'size',
+        9: 'period_id'
     }, inplace=True)
 
     data_passes_df.to_csv(cached_data_passes_df_path)

@@ -30,6 +30,7 @@ class ResProvider {
         } catch (err) {
             logger.warn(`cannot load file at ${envVarName} ${err}`);
         }
+        
         if (!securityContent) {
             for (const fileName of fileNames) {
                 try {
