@@ -23,6 +23,7 @@ const readline = require('readline');
 const Utils = require('./lib/Utils.js');
 
 const { Console } = require('node:console');
+const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
 
 const EP = config.public.endpoints;
 Log.configure(config);
@@ -44,6 +45,7 @@ class RunConditionTableApplication {
         this.logger = new Log(RunConditionTableApplication.name);
         this.databaseService = new DatabaseService(this.loggedUsers);
         this.bookkeepingService = new BookkeepingService();
+        this.monalisaService = new MonalisaService();
 
         this.defineStaticRoutes();
         this.defineEndpoints();
@@ -68,9 +70,8 @@ class RunConditionTableApplication {
             const cmdAndArgs = line.trim().split(/ +/);
             Utils.switchCase(cmdAndArgs[0], {
                 '': () => {},
-                bk: (args) => {
-                    this.bookkeepingCli(args);
-                },
+                bk: (args) => this.bookkeepingCli(args),
+                ml: (args) => this.monalisaCli(args),
                 app: (args) => this.applicationCli(args),
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
@@ -92,6 +93,15 @@ class RunConditionTableApplication {
             stop: () => this.bookkeepingService.clearTasks(),
             start: () => this.bookkeepingService.setSyncTask(),
             loglev: () => this.bookkeepingService.setLogginLevel(args[1]),
+        }, this.incorrectCommand())(args);
+    }
+
+    monalisaCli(args) {
+        Utils.switchCase(args[0], {
+            state: () => this.con.log(args[1] ? this.monalisaService?.[args[1]] : this.monalisaService),
+            stop: () => this.monalisaService.clearTasks(),
+            start: () => this.monalisaService.setSyncTask(),
+            loglev: () => this.monalisaService.setLogginLevel(args[1]),
         }, this.incorrectCommand())(args);
     }
 

@@ -36,15 +36,32 @@ class MonalisaService extends ServicesSynchronizer {
     // eslint-disable-next-line no-unused-vars
     async syncer(dbClient, dataRow) {
         // return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
-        console.log(dataRow);
+        console.log(dataRow.name);
+        this.extractPeriod(dataRow);
+    }
+
+    extractPeriod(rowData) {
+        const productionPrefix = rowData.name.slice(0, 6);
+        const period = {};
+        period.name = productionPrefix;
+        let year = parseInt(productionPrefix.slice(3, 5), 10);
+        if (year > 50) {
+            year += 1900;
+        } else {
+            year += 2000;
+        }
+        period.year = year;
+        period.beam_type = rowData.interaction_type;
+
+        console.log(period);
     }
 
     rawDataResponsePreprocess(d) {
         const entries = Object.entries(d);
         return entries.map(([prodName, vObj]) => {
-            vObj['name'] = prodName;
+            vObj['name'] = prodName.trim();
             return vObj;
-        });
+        }).filter((r) => r.name?.match(/^LHC\d\d[a-zA-Z]_.*$/));
     }
 
     syncRawMonalisaData() {
@@ -65,10 +82,8 @@ class MonalisaService extends ServicesSynchronizer {
         );
     }
 
-    setSyncTask() {
-        const task = setInterval(this.syncRawMonalisaData.bind(this), 1000);
-        this.tasks.push(task);
-        return task;
+    async setSyncTask() {
+        await this.syncRawMonalisaData();
     }
 
     setDebugTask() {
