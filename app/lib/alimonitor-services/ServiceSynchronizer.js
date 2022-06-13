@@ -111,8 +111,12 @@ class ServicesSynchronizer {
 
             await Promise.all(promises);
             if (this.loglev > 0) {
-                this.logger.info(`sync successful for  ${correct}/${dataSize}`);
-                this.logger.error(`sync unseccessful for ${incorrect}/${dataSize}`);
+                if (correct > 0) {
+                    this.logger.info(`sync successful for  ${correct}/${dataSize}`);
+                }
+                if (incorrect > 0) {
+                    this.logger.error(`sync unseccessful for ${incorrect}/${dataSize}`);
+                }
             }
         } catch (error) {
             this.logger.error(error);
