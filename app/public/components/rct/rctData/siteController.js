@@ -82,6 +82,7 @@ function onclickSetRowsOnSite(model) {
     const rowsOnSite = input.value === '' ? input.placeholder : input.value;
     if (rowsOnSite < 1 || rowsOnSite > 200) {
         alert('incorrect number of rows on site must be in range [1, 200]');
+        input.value = 50;
         return;
     }
     model.fetchedData.changeRowsOnSite(rowsOnSite);
