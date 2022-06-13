@@ -35,9 +35,8 @@ class MonalisaService extends ServicesSynchronizer {
 
     // eslint-disable-next-line no-unused-vars
     async syncer(dbClient, dataRow) {
-        throw new Error('not implemented');
-        // eslint-disable-next-line no-unreachable
-        return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
+        // return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
+        console.log(dataRow);
     }
 
     rawDataResponsePreprocess(d) {

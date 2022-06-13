@@ -58,6 +58,7 @@ class BookkeepingService extends ServicesSynchronizer {
 
     async syncer(dbClient, dataRow) {
         if (this.loglev > 2) {
+            // eslint-disable-next-line no-console
             console.log(dataRow);
         }
         return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));

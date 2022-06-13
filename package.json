@@ -32,9 +32,6 @@
     "docker:prune-ex": "docker container rm $(docker ps -a --filter name=runconditiontable* -aq) #TODO",
     "docker:prune": "cd docker; docker-compose rm --stop --force -v ",
     "clean": "rm -rf ./reports; rm -rf .nyc_output",
-    
-    "start:bk": "node app/lib/alimonitor-services/bk-main.js",
-    "start:ml": "node app/lib/alimonitor-services/ml-main.js",
 
     "tmp": "node ./tmp/*.js"
   },
