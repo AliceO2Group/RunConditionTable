@@ -24,9 +24,6 @@ export default function header(model) {
                 onclick: () => model.logout(),
             }, iconPerson()),
             ' ',
-            h('button.btn', {
-                onclick: () => model.fetchBookkeeping(),
-            }, 'fetch bookkeeping'),
             h('span.f4.gray', 'Run Condition Table'),
         ]),
         h('.w-50', headerSpecific(model)),
