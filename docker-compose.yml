@@ -1,10 +1,10 @@
 services:
   application:
-    stdin_open: true # docker run -i
+    stdin_open: true
     tty: true 
     build:
-      context: ../
-      dockerfile: docker/Dockerfile.application
+      context: ./
+      dockerfile: Dockerfile.application
     environment:
       - RUNNING_ENV=DOCKER
     networks:
@@ -12,19 +12,19 @@ services:
     volumes:
       - type: bind
         read_only: true
-        source: ../security
+        source: ./security
         target: /opt/RunConditionTable/security
     
   database:
     build: 
-      context: ../
-      dockerfile: docker/Dockerfile.database
+      context: ./
+      dockerfile: Dockerfile.database
     environment:
       - RUNNING_ENV=DOCKER
     volumes:
       - type: bind
         read_only: true
-        source: ../database
+        source: ./database
         target: /docker-entrypoint-initdb.d
     networks:
       - rct-network

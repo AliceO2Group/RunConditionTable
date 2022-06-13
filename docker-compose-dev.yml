@@ -7,19 +7,19 @@ services:
     volumes:
       - type: bind
         read_only: false
-        source: ../app
+        source: ./app
         target: /opt/RunConditionTable/app
       - type: bind
         read_only: true
-        source: ../scripts
+        source: ./scripts
         target: /opt/RunConditionTable/scripts
       - type: bind
         read_only: true
-        source: ../package.json
+        source: ./package.json
         target: /opt/RunConditionTable/package.json
       - type: bind
         read_only: true
-        source: ../package-lock.json
+        source: ./package-lock.json
         target: /opt/RunConditionTable/package-lock.json
     environment:
       - CERN_SOCKS=${CERN_SOCKS:-true}

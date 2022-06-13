@@ -6,7 +6,7 @@ services:
     volumes:
       - type: bind
         read_only: false
-        source: ../reports
+        source: ./reports
         target: /opt/RunConditionTable/reports
         
     restart: "no"
