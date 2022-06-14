@@ -26,6 +26,7 @@ COPY ./.nycrc ./
 COPY ./codecov.yml ./
 COPY ./test ./test
 COPY ./app ./app
+COPY ./scripts ./scripts
 ENV ENV_MODE=test
 CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "test" ]
 
