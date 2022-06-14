@@ -31,8 +31,8 @@ export const preparedFile = (model) => {
     let csvContent = 'data:text/csv;charset=utf-8,';
     csvContent += preparedData(model.fetchedData[page][index]);
 
-    return { uri: encodeURI(csvContent), fileName: fileName};
-}
+    return { uri: encodeURI(csvContent), fileName: fileName };
+};
 
 const replacer = (key, value) => value === null ? '' : value;
 
