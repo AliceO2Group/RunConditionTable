@@ -15,7 +15,7 @@
   "scripts": {
     "testmocha": "mocha",
 
-    "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html; firefox ./reports/static/static-analysis.html",
+    "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html",
     "eslint:fix": "npm run eslint -- --fix",
     "static": "npm run eslint",
     "coverage:test": "mocha --exit test/*",
@@ -23,17 +23,19 @@
     "coverage": "nyc npm run coverage:test && npm run coverage:report ",
     "test": "mkdir -pv ./reports; npm run static; npm run coverage; if [ \"RUNNING_ENV\" = \"DOCKER\" ]; then chmod -R o+w ./reports; fi #TODO platform independent",
     "reports:show": "open ./reports/**/*.html",
-    
+
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:prod": "node app/main.js",
     
-    "docker:prod": "mkdir -p ./security; docker-compose -f docker-compose.yml -f docker-compose-expose.yml up --build",
-    "docker:dev": "mkdir -p ./security; docker-compose -f docker-compose.yml -f docker-compose-dev.yml -f docker-compose-dev-expose.yml up --build",
-    "docker:prod:mock": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml -f docker-compose-expose.yml -f docker-compose-dev-expose.yml up --build",
-    "docker:test": "mkdir -p ./reports ./security; docker-compose -f docker-compose.yml -f docker-compose-test.yml up --build --abort-on-container-exit",
-    "docker:prune-ex": "docker container rm $(docker ps -a --filter name=runconditiontable* -aq) #TODO",
-    "docker:prune": "docker-compose rm --stop --force -v ",
+    "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose-expose.yml up --build",
+    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml -f docker-compose-dev-expose.yml up --build",
+    "docker:prod:mock": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml -f docker-compose-expose.yml up --build",
+    "docker:test": "mkdir -p reports; mkdir -p security; docker-compose -f docker-compose.yml -f docker-compose-test.yml up --build --abort-on-container-exit",
+    "docker:prune": "docker container rm $(docker ps -a --filter name=runconditiontable* -aq) #TODO",
     "clean": "rm -rf ./reports; rm -rf .nyc_output",
+    
+    "start:bk": "node app/lib/alimonitor-services/bk-main.js",
+    "start:ml": "node app/lib/alimonitor-services/ml-main.js",
     
     "tmp": "node ./tmp/*.js"
   },
