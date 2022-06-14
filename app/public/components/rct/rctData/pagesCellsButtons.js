@@ -76,8 +76,8 @@ pagesCellsButtons[pagesNames.dataPasses] = {
             model, 'runs', (e) =>
                 // eslint-disable-next-line max-len
                 handleClick(model, e), '', `/?page=${pagesNames.runsPerDataPass}&index=${item.name.slice(5)}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
-        )
-    ]
+        ),
+    ],
 };
 pagesCellsButtons[pagesNames.mc] = {};
 pagesCellsButtons[pagesNames.runsPerPeriod] = {

@@ -35,8 +35,9 @@ class MonalisaService extends ServicesSynchronizer {
 
     // eslint-disable-next-line no-unused-vars
     async syncer(dbClient, dataRow) {
+        // eslint-disable-next-line
         // return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
-        console.log(dataRow.name);
+        this.logger.debug(dataRow.name);
         this.extractPeriod(dataRow);
     }
 
@@ -53,7 +54,7 @@ class MonalisaService extends ServicesSynchronizer {
         period.year = year;
         period.beam_type = rowData.interaction_type;
 
-        console.log(period);
+        this.logger.debug(period);
     }
 
     rawDataResponsePreprocess(d) {

@@ -15,7 +15,7 @@
   "scripts": {
     "testmocha": "mocha",
 
-    "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html",
+    "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html; firefox ./reports/static/static-analysis.html",
     "eslint:fix": "npm run eslint -- --fix",
     "static": "npm run eslint",
     "coverage:test": "mocha --exit test/*",
