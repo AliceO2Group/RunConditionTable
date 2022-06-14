@@ -15,6 +15,7 @@
 
  // const RunConditionTableApplication = require('../app/application.js');
  const DatabaseSuite = require('./database');
+ const PublicSuite = require('./public');
  const assert = require('assert');
 
  /*after(() => {
@@ -38,6 +39,7 @@
 */
     describe('Unit Suite', () => {
         describe('Database', DatabaseSuite);
+        describe('Public', PublicSuite);
     });
     
     describe('App initialization', () => {
