@@ -55,7 +55,7 @@ const mainButton = (
 }, deleteCopyReloadButtonsController(model, index, dropdownID, pageName));
 
 const deleteCopyReloadButtonsController = (model, index, dropdownID, pageName) => [
-    h('span', iconPin(), ' ', index),
+    h('span', iconPin(), ' ', index.length > 10 ? `${index.slice(0, 10)}...` : index),
     h('span.ph2', hiddenButtonsControllerObj(model, index, dropdownID, pageName), iconEllipses()),
 ];
 

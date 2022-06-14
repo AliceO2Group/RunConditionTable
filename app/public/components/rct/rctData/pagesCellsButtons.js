@@ -75,7 +75,7 @@ pagesCellsButtons[pagesNames.dataPasses] = {
         viewButton(
             model, 'runs', (e) =>
                 // eslint-disable-next-line max-len
-                handleClick(model, e), '', `/?page=${pagesNames.runsPerDataPass}&index=${item.name.slice(5)}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+                handleClick(model, e), '', `/?page=${pagesNames.runsPerDataPass}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
         ),
     ],
 };
