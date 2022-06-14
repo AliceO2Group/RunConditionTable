@@ -42,6 +42,7 @@ export default function filter(model) {
                 h('button.btn', {
                     onclick: onclickSubmit(model, inputsIds),
                 }, 'Submit'),
+                ' ',
                 h('button.btn', {
                     onclick: onclickClear(model, inputsIds),
                 }, 'Clear filters'))),
@@ -56,7 +57,7 @@ const inputsRow = (params, inputsIds) => h('tr',
 
 const createClickableLabel = (model, field) =>
     h('th.tooltip.noBorderBottom.table-cell-like',
-        h('button.btn.tooltipCell', {
+        h('button.btn', {
             style: 'width:120px',
             onclick: () => model.fetchedData.changeItemStatus(field),
             className: field.marked ? 'active' : '',
@@ -79,7 +80,7 @@ const onclickSubmit = (model, inputsIds) => () => {
         .map((inputId) => [
             inputId,
             // eslint-disable-next-line no-unsafe-optional-chaining
-            [...document.getElementById(inputId)?.value].map((c) => c == '%' ? '%25' : c).join(''),
+            [...document.getElementById(inputId)?.value || null].map((c) => c == '%' ? '%25' : c).join(''),
         ])
         .filter(([_, v]) => v?.length > 0)
         .map(([id, v]) => `${id}=${v}`)
