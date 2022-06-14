@@ -63,6 +63,7 @@ module.exports = {
             dataPasses: 'dataPasses',
             mc: 'mc',
             runsPerPeriod: 'runsPerPeriod',
+            runsPerDataPass: 'runsPerDataPass',
             flags: 'flags',
         },
 

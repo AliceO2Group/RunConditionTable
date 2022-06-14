@@ -35,7 +35,8 @@ const headerSpecific = (model) => {
     switch (model.getCurrentDataPointer().page) {
         case 'periods': return title('Periods');
         case 'runsPerPeriod': return title('Runs per Period');
-        case 'dataPasses': return title('Data passess');
+        case 'runsPerDataPass': return title('Runs per Data pass');
+        case 'dataPasses': return title('Data passes');
         case 'mc': return title('Monte Carlo');
         case 'flags': return title('Flags');
         default: return null;

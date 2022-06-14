@@ -68,7 +68,17 @@ pagesCellsButtons[pagesNames.periods] = {
     ],
 };
 
-pagesCellsButtons[pagesNames.dataPasses] = {};
+pagesCellsButtons[pagesNames.dataPasses] = {
+    // eslint-disable-next-line no-unused-vars
+    name: (model, item, name) => [
+        h('', item.name),
+        viewButton(
+            model, 'runs', (e) =>
+                // eslint-disable-next-line max-len
+                handleClick(model, e), '', `/?page=${pagesNames.runsPerDataPass}&index=${item.name.slice(5)}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+        )
+    ]
+};
 pagesCellsButtons[pagesNames.mc] = {};
 pagesCellsButtons[pagesNames.runsPerPeriod] = {
     // eslint-disable-next-line no-unused-vars
@@ -80,6 +90,7 @@ pagesCellsButtons[pagesNames.runsPerPeriod] = {
 };
 
 pagesCellsButtons[pagesNames.flags] = {};
+pagesCellsButtons[pagesNames.runsPerDataPass] = {};
 
 // Checking correctness of configuration
 for (const p in pagesCellsButtons) {
