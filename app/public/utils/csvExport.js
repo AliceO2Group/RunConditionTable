@@ -13,8 +13,8 @@
  */
 
 const preparedData = (data) => {
-    const { rows } = data.payload;
-    const fields = data.payload.fields.map((field) => field.name);
+    const rows = data.payload.rows.filter((item) => item.marked);
+    const fields = data.payload.fields.filter((item) => item.marked).map((field) => field.name);
 
     let csv = rows.map((row) => fields.map((field) => JSON.stringify(row[field], replacer)).join(','));
     csv.unshift(fields.join(',')); // Add header column
