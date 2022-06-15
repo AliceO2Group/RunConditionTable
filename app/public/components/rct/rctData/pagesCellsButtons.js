@@ -13,7 +13,6 @@
  */
 
 import viewButton from '../../common/viewButton.js';
-import handleClick from '../../../utils/handleClick.js';
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 const { dataReqParams } = RCT;
@@ -50,20 +49,27 @@ pagesCellsButtons[pagesNames.periods] = {
     name: (model, item, name) => [
         h('', item.name),
         viewButton(
-            model, 'runs', (e) =>
-                // eslint-disable-next-line max-len
-                handleClick(model, e), '', `/?page=${pagesNames.runsPerPeriod}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+            model,
+            'runs',
+            (e) => model.handleClick(e),
+            '',
+            `/?page=${pagesNames.runsPerPeriod}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
         ),
 
         viewButton(
-            model, 'data passes', (e) =>
-                // eslint-disable-next-line max-len
-                handleClick(model, e), '', `/?page=${pagesNames.dataPasses}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+            model,
+            'data passes',
+            (e) => model.handleClick(e),
+            '',
+            `/?page=${pagesNames.dataPasses}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
         ),
 
         viewButton(
-            model, 'MC', (e) =>
-                handleClick(model, e), '', `/?page=${pagesNames.mc}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+            model,
+            'MC',
+            (e) => model.handleClick(e),
+            '',
+            `/?page=${pagesNames.mc}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
         ),
     ],
 };
@@ -73,9 +79,11 @@ pagesCellsButtons[pagesNames.dataPasses] = {
     name: (model, item, name) => [
         h('', item.name),
         viewButton(
-            model, 'runs', (e) =>
-                // eslint-disable-next-line max-len
-                handleClick(model, e), '', `/?page=${pagesNames.runsPerDataPass}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+            model,
+            'runs',
+            (e) =>model.handleClick(e),
+            '',
+            `/?page=${pagesNames.runsPerDataPass}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
         ),
     ],
 };
@@ -83,9 +91,11 @@ pagesCellsButtons[pagesNames.mc] = {};
 pagesCellsButtons[pagesNames.runsPerPeriod] = {
     // eslint-disable-next-line no-unused-vars
     run_number: (model, item, name) => viewButton(
-        model, item.run_number, (e) =>
-            // eslint-disable-next-line max-len
-            handleClick(model, e), '', `/?page=${pagesNames.flags}&index=${item.run_number}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+        model,
+        item.run_number,
+        (e) => model.handleClick(model, e),
+        '',
+        `/?page=${pagesNames.flags}&index=${item.run_number}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
     ),
 };
 
