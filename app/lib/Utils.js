@@ -56,8 +56,7 @@ class Utils {
     }
 
     static switchCase(caseName, cases, defaultCaseValue) {
-        // eslint-disable-next-line no-prototype-builtins
-        return cases[caseName] ? cases[caseName] : defaultCaseValue;
+        return Object.prototype.hasOwnProperty.call(cases, caseName) ? cases[caseName] : defaultCaseValue;
     }
 
     static delay(time) {

@@ -79,7 +79,6 @@ const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
         .map((inputId) => [
             inputId,
-            // eslint-disable-next-line no-unsafe-optional-chaining
             [...document.getElementById(inputId)?.value || null].map((c) => c == '%' ? '%25' : c).join(''),
         ])
         .filter(([_, v]) => v?.length > 0)

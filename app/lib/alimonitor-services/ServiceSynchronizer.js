@@ -170,16 +170,16 @@ class ServicesSynchronizer {
     }
 
     checkClientType(endpoint) {
+        const unspecifiedProtocolMessage = 'unspecified protocol in url';
+
         switch (this.opts.protocol || `${endpoint.split(':')[0]}:`) {
             case 'http:':
                 return http;
             case 'https:':
                 return https;
             default:
-                // eslint-disable-next-line no-case-declarations
-                const mess = 'unspecified protocol in url';
-                this.logger.error(mess);
-                throw new Error(mess);
+                this.logger.error(unspecifiedProtocolMessage);
+                throw new Error(unspecifiedProtocolMessage);
         }
     }
 }

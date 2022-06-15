@@ -45,8 +45,7 @@ const { pagesNames } = RCT;
 const pagesCellsButtons = {};
 
 pagesCellsButtons[pagesNames.periods] = {
-    // eslint-disable-next-line no-unused-vars
-    name: (model, item, name) => [
+    name: (model, item) => [
         h('', item.name),
         viewButton(
             model,
@@ -75,8 +74,7 @@ pagesCellsButtons[pagesNames.periods] = {
 };
 
 pagesCellsButtons[pagesNames.dataPasses] = {
-    // eslint-disable-next-line no-unused-vars
-    name: (model, item, name) => [
+    name: (model, item) => [
         h('', item.name),
         viewButton(
             model,
@@ -89,8 +87,7 @@ pagesCellsButtons[pagesNames.dataPasses] = {
 };
 pagesCellsButtons[pagesNames.mc] = {};
 pagesCellsButtons[pagesNames.runsPerPeriod] = {
-    // eslint-disable-next-line no-unused-vars
-    run_number: (model, item, name) => viewButton(
+    run_number: (model, item) => viewButton(
         model,
         item.run_number,
         (e) => model.handleClick(model, e),

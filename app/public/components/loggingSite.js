@@ -1,4 +1,3 @@
-/* eslint-disable function-call-argument-newline */
 /**
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
