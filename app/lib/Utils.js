@@ -51,7 +51,7 @@ class Utils {
         const entries = Object.entries(valuesObj);
         const keys = entries.map(([k, _]) => k);
         const values = entries.map(([_, v]) => v);
-        return `INSERT INTO ${targetTable} (${Utils.preserveSQLKeywords(keys).join(', ')}) 
+        return `INSERT INTO ${targetTable} (${Utils.preserveSQLKeywords(keys).join(', ')})
                 VALUES(${Utils.parseValuesToSql(values).join(', ')})`;
     }
 

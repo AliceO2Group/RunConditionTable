@@ -13,8 +13,6 @@
     "url": "https://github.com/AliceO2Group/RunConditionTable"
   },
   "scripts": {
-    "testmocha": "mocha",
-    
     "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:show": "npm run eslint; firefox ./reports/static/static-analysis.html",
@@ -23,6 +21,7 @@
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run coverage:test && npm run coverage:report ",
     "test": "mkdir -pv ./reports; npm run static; npm run coverage; if [ \"RUNNING_ENV\" = \"DOCKER\" ]; then chmod -R o+w ./reports; fi #TODO platform independent",
+    "test:mocha": "mocha",
     "reports:show": "open ./reports/**/*.html",
 
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
@@ -34,9 +33,6 @@
     "docker:test": "mkdir -p reports; mkdir -p security; docker-compose -f docker-compose.yml -f docker-compose-test.yml up --build --abort-on-container-exit",
     "docker:prune": "docker container rm $(docker ps -a --filter name=runconditiontable* -aq) #TODO",
     "clean": "rm -rf ./reports; rm -rf .nyc_output",
-
-    "start:bk": "node app/lib/alimonitor-services/bk-main.js",
-    "start:ml": "node app/lib/alimonitor-services/ml-main.js",
 
     "tmp": "node ./tmp/*.js"
   },

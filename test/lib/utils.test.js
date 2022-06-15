@@ -12,6 +12,7 @@
  */
 
  const assert = require('assert');
+const { simpleBuildInsertQuery, switchCase } = require('../../app/lib/Utils');
 const Utils = require('../../app/lib/Utils');
 
  module.exports = () => {
@@ -59,6 +60,21 @@ const Utils = require('../../app/lib/Utils');
             it('should return wrap DEFAULT in quotes', () => {
                 assert((Utils.parseValuesToSql(sampleValues3))[2] === "DEFAULT");
             });
-        })
+        });
+
+        describe('Building insert query', () => {
+            const sampleValues = {
+                name: 'LHC00',
+                beam: 'PbPb',
+                energy: 962,
+                year: 2000,
+            };
+
+            const compareString = `INSERT INTO periods (name, beam, energy, year)
+                VALUES('LHC00', 'PbPb', 962, 2000)`
+            it('should create insert query correctly', () => {
+                assert(simpleBuildInsertQuery('periods', sampleValues) === compareString);
+            });
+        });
     });
 };
