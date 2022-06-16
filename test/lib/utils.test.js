@@ -76,6 +76,23 @@ module.exports = () => {
             });
         });
 
+        describe('Preserve SQL keywords', () => {
+            const expectedRes = ['"end"'];
+            const basicCase = ['sth else'];
+            const arrayEquals = (a, b) => {
+                return Array.isArray(a) &&
+                    Array.isArray(b) &&
+                    a.length === b.length &&
+                    a.every((val, index) => val === b[index]);
+            }
+            it('should wrap END keyword in quotes', () => {
+                assert(arrayEquals(Utils.preserveSQLKeywords(['end']), expectedRes));
+            });
+            it('should not affect other words', () => {
+                assert(arrayEquals(Utils.preserveSQLKeywords(basicCase), basicCase));
+            });
+        });
+
         describe('Switchcase', () => {
             const defaultVal = 'default';
             const caseNames = ['a', 'b'];
@@ -101,7 +118,7 @@ module.exports = () => {
                 const start = Date.now();
                 await Utils.delay(delayTime);
                 const end = Date.now();
-                assert(start + delayTime < end);
+                assert(start + delayTime <= end);
               });
            });
     });
