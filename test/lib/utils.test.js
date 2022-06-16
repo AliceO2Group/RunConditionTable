@@ -11,11 +11,10 @@
  * or submit itself to any jurisdiction.
  */
 
- const assert = require('assert');
-const { simpleBuildInsertQuery, switchCase } = require('../../app/lib/Utils');
+const assert = require('assert');
 const Utils = require('../../app/lib/Utils');
 
- module.exports = () => {
+module.exports = () => {
     describe('Utils', () => {        
         describe('Filtering objects', () => {
             const objectSample = {
@@ -73,8 +72,37 @@ const Utils = require('../../app/lib/Utils');
             const compareString = `INSERT INTO periods (name, beam, energy, year)
                 VALUES('LHC00', 'PbPb', 962, 2000)`
             it('should create insert query correctly', () => {
-                assert(simpleBuildInsertQuery('periods', sampleValues) === compareString);
+                assert(Utils.simpleBuildInsertQuery('periods', sampleValues) === compareString);
             });
         });
+
+        describe('Switchcase', () => {
+            const defaultVal = 'default';
+            const caseNames = ['a', 'b'];
+            const cases = {
+                a: () => {return 'a';},
+                b: () => {return 'b';}
+            };
+            const defaultCase = () => {return defaultVal;};
+
+            it('should return correct value for each case', () => {
+                assert(Utils.switchCase(caseNames[0], cases, defaultCase)() === caseNames[0]);
+                assert(Utils.switchCase(caseNames[1], cases, defaultCase)() === caseNames[1]);
+            });
+
+            it('should return default value when called with an unknown case', () => {
+                assert(Utils.switchCase(caseNames[2], cases, defaultCase)() === defaultVal);
+            });
+        });
+
+        describe('Delay', () => {
+            it('Waits requested number of miliseconds', async () => {
+                const delayTime = 100;
+                const start = Date.now();
+                await Utils.delay(delayTime);
+                const end = Date.now();
+                assert(start + delayTime < end);
+              });
+           });
     });
 };
