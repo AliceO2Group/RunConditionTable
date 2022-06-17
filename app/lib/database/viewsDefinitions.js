@@ -48,7 +48,7 @@ const runs_per_data_pass_view = (query) => `
         WITH runs_per_data_pass_view AS (
             SELECT
                 --r.id
-                dp.name, 
+                -- dp.name, 
                 r.run_number, 
                 r.start, 
                 r.end AS "end", 
@@ -67,15 +67,7 @@ const runs_per_data_pass_view = (query) => `
                     ON dp.id=dpr.data_pass_id
                 INNER JOIN runs AS r
                     ON r.id=dpr.run_id
-            WHERE exists(
-                            SELECT *
-                            FROM runs AS r
-                                INNER JOIN data_passes_runs AS dpr
-                                    ON r.id=dpr.run_id
-                                INNER JOIN data_passes AS dp
-                                    ON dp.id=dpr.data_pass_id
-                            WHERE dp.name = '${query.index}'
-                        )
+            WHERE dp.name = '${query.index}'
             ORDER BY r.run_number DESC
             )`;
 
