@@ -34,10 +34,11 @@ export default function header(model) {
 const headerSpecific = (model) => {
     switch (model.getCurrentDataPointer().page) {
         case 'periods': return title('Periods');
-        case 'runsPerPeriod': return title('Runs per Period');
-        case 'dataPasses': return title('Data passess');
-        case 'mc': return title('Monte Carlo');
-        case 'flags': return title('Flags');
+        case 'runsPerPeriod': return title(`Runs per period: ${model.router.params.index}`);
+        case 'runsPerDataPass': return title(`Runs per data pass: ${model.router.params.index}`);
+        case 'dataPasses': return title(`Data passes per period: ${model.router.params.index}`);
+        case 'mc': return title(`Monte Carlo: period ${model.router.params.index}`);
+        case 'flags': return title(`Flags: run number ${model.router.params.index}`);
         default: return null;
     }
 };

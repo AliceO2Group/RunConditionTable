@@ -6,29 +6,18 @@ WORKDIR /opt/RunConditionTable
 RUN apk add --no-cache \
     bash=5.0.17-r0
 
-COPY ./app ./app
-COPY ./scripts ./scripts
-COPY ./package*.json ./
 
-RUN npm --silent ci
 
 FROM base as devdependencies
 
-RUN apk add --no-cache \
-    # chromium=86.0.4240.111-r0 \
-    # freetype=2.10.4-r0 \
-    # freetype-dev=2.10.4-r0 \
-    # git=2.26.3-r1 \
-    # harfbuzz=2.6.6-r0 \
-    ca-certificates=20211220-r0 \
-    ttf-freefont=20120503-r1
 
+COPY ./package*.json ./
+RUN npm --silent ci
 
 FROM devdependencies as development
 ENV ENV_MODE=dev
 COPY ./.git ./.git
 COPY ./.gitignore ./
-RUN ls -al
 CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "start:dev" ]
 
 FROM devdependencies as test
@@ -36,11 +25,17 @@ COPY ./.eslintrc ./
 COPY ./.nycrc ./
 COPY ./codecov.yml ./
 COPY ./test ./test
-
+COPY ./app ./app
+COPY ./scripts ./scripts
 ENV ENV_MODE=test
 CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "test" ]
 
 FROM base as production
+
+COPY ./app ./app
+COPY ./scripts ./scripts
+
+
 ENV ENV_MODE=production
 CMD ["npm", "run", "start:prod"]
 

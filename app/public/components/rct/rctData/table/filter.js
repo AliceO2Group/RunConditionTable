@@ -31,7 +31,7 @@ export default function filter(model) {
 
     const { params } = model.router;
 
-    return h('div',
+    return h('div', [
         h('div.x-scrollable',
             h('table',
                 h('tbody',
@@ -45,7 +45,8 @@ export default function filter(model) {
                 ' ',
                 h('button.btn', {
                     onclick: onclickClear(model, inputsIds),
-                }, 'Clear filters'))));
+                }, 'Clear filters'))),
+    ]);
 }
 
 const labelsRow = (model, fields) => h('tr',
@@ -78,7 +79,6 @@ const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
         .map((inputId) => [
             inputId,
-            // eslint-disable-next-line no-unsafe-optional-chaining
             [...document.getElementById(inputId)?.value || null].map((c) => c == '%' ? '%25' : c).join(''),
         ])
         .filter(([_, v]) => v?.length > 0)

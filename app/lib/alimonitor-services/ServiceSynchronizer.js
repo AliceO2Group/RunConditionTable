@@ -57,6 +57,17 @@ class ServicesSynchronizer {
         } else {
             this.logger.info('service do not use proxy/socks to reach CERN network');
         }
+
+        this.metaStore = {};
+        this.loglev = 0;
+    }
+
+    setLogginLevel(logginLevel) {
+        logginLevel = parseInt(logginLevel, 10);
+        if (!logginLevel || logginLevel < 0 && logginLevel > 3) {
+            throw new Error('Invalid debug level') ;
+        }
+        this.loglev = logginLevel;
     }
 
     /**
@@ -67,26 +78,49 @@ class ServicesSynchronizer {
      * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database
      * @param {CallableFunction} syncer logic for insert ing data to database
      * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
+     * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
+     * like total pages to see etc., on the whole might be used to any custom logic
      * @returns {Promise} batched promieses for each syncer invokation
      * all parameters should be defined in derived classes
      */
-    async syncData(endpoint, dataAdjuster, syncer, responsePreprocess) {
-        const result = await this.getRawData(endpoint);
-        const rows = responsePreprocess(result)
-            .map((r) => dataAdjuster(r));
+    async syncData(endpoint, dataAdjuster, syncer, responsePreprocess, metaDataHandler = null) {
+        try {
+            const { loglev } = this;
+            const result = await this.getRawData(endpoint);
+            if (metaDataHandler) {
+                metaDataHandler(result);
+            }
+            const rows = responsePreprocess(result)
+                .map((r) => dataAdjuster(r));
 
-        let i = 0;
-        const dataSize = rows.length;
-        const promises = rows.map((r) => syncer(this.dbclient, r)
-            .then(() => {
-                i++; this.logger.info(`sync procedure per data protion done:: ${i}/${dataSize}`);
-            })
-            .catch((e) => {
-                i++;
-                this.logger.error(`'${e.message}' per data portion ${i}/${dataSize}`);
-            }));
+            let correct = 0;
+            let incorrect = 0;
+            const errors = [];
+            const dataSize = rows.length;
+            const promises = rows.map((r) => syncer(this.dbclient, r)
+                .then(() => {
+                    correct++;
+                })
+                .catch((e) => {
+                    incorrect++;
+                    errors.push(e);
+                    if (loglev > 1) {
+                        this.logger.error(e.message);
+                    }
+                }));
 
-        await Promise.all(promises);
+            await Promise.all(promises);
+            if (this.loglev > 0) {
+                if (correct > 0) {
+                    this.logger.info(`sync successful for  ${correct}/${dataSize}`);
+                }
+                if (incorrect > 0) {
+                    this.logger.error(`sync unseccessful for ${incorrect}/${dataSize}`);
+                }
+            }
+        } catch (error) {
+            this.logger.error(error);
+        }
     }
 
     async getRawData(endpoint) {
@@ -126,6 +160,7 @@ class ServicesSynchronizer {
 
     async setupConnection() {
         this.dbclient = new Client(config.database);
+
         return await this.dbclient.connect()
             .then(() => this.logger.info('database connection established'));
     }
@@ -136,16 +171,16 @@ class ServicesSynchronizer {
     }
 
     checkClientType(endpoint) {
+        const unspecifiedProtocolMessage = 'unspecified protocol in url';
+
         switch (this.opts.protocol || `${endpoint.split(':')[0]}:`) {
             case 'http:':
                 return http;
             case 'https:':
                 return https;
             default:
-                // eslint-disable-next-line no-case-declarations
-                const mess = 'unspecified protocol in url';
-                this.logger.error(mess);
-                throw new Error(mess);
+                this.logger.error(unspecifiedProtocolMessage);
+                throw new Error(unspecifiedProtocolMessage);
         }
     }
 }

@@ -37,6 +37,7 @@ module.exports = { // Properties that will be provided to frontend in the public
         dataPasses: 'dataPasses',
         mc: 'mc',
         runsPerPeriod: 'runsPerPeriod',
+        runsPerDataPass: 'runsPerDataPass',
         flags: 'flags',
     },
 
@@ -59,7 +60,7 @@ module.exports = { // Properties that will be provided to frontend in the public
                 end: fromToType,
                 b_field: matchExcludeType,
                 energy_per_beam: fromToType,
-                ir: matchExcludeType,
+                ir: fromToType,
                 filling_scheme: fromToType,
                 triggers_conf: matchExcludeType,
                 fill_number: fromToType,

@@ -55,8 +55,21 @@ export default class FetchedDataManager {
         if (!data || force) {
             await this.req(true, url);
         } else if (url2Str(data.payload.url) !== url2Str(url)) {
-            await this.req(false, url);
+            if (this.onlyMayDiffBySite(url, data.payload.url)) {
+                await this.req(false, url);
+            } else {
+                await this.req(true, url);
+            }
         }
+    }
+
+    onlyMayDiffBySite(url1, url2) {
+        const p1 = Object.fromEntries(new URLSearchParams(url1.search));
+        const p2 = Object.fromEntries(new URLSearchParams(url2.search));
+        p1['site'] = undefined;
+        p2['site'] = undefined;
+
+        return JSON.stringify(p1) == JSON.stringify(p2);
     }
 
     async req(countAllRecord, url) {
@@ -92,6 +105,12 @@ export default class FetchedDataManager {
     changeSite(site) {
         const url = this.router.getUrl();
         const newUrl = replaceUrlParams(url, [[dataReqParams.site, site]]);
+        this.router.go(newUrl);
+    }
+
+    changeRowsOnSite(rowsOnSite) {
+        const url = this.router.getUrl();
+        const newUrl = replaceUrlParams(url, [[dataReqParams.rowsOnSite, rowsOnSite]]);
         this.router.go(newUrl);
     }
 

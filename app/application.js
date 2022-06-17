@@ -19,6 +19,11 @@ const AuthControlManager = require('./lib/other/AuthControlManager.js');
 const DatabaseService = require('./lib/database/DatabaseService.js');
 const path = require('path');
 const BookkeepingService = require('./lib/alimonitor-services/BookkeepingService.js');
+const readline = require('readline');
+const Utils = require('./lib/Utils.js');
+
+const { Console } = require('node:console');
+const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
 
 const EP = config.public.endpoints;
 Log.configure(config);
@@ -40,12 +45,68 @@ class RunConditionTableApplication {
         this.logger = new Log(RunConditionTableApplication.name);
         this.databaseService = new DatabaseService(this.loggedUsers);
         this.bookkeepingService = new BookkeepingService();
+        this.monalisaService = new MonalisaService();
 
         this.defineStaticRoutes();
         this.defineEndpoints();
         this.buildAuthControl();
 
         buildPublicConfig(config);
+
+        this.rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+            terminal: true,
+            prompt: '==> ',
+        });
+
+        this.con = new Console({ stdout: process.stdout, stderr: process.stderr });
+
+        this.rl.on('line', (line) => this.cli(line));
+    }
+
+    cli(line) {
+        try {
+            const cmdAndArgs = line.trim().split(/ +/);
+            Utils.switchCase(cmdAndArgs[0], {
+                '': () => {},
+                bk: (args) => this.bookkeepingCli(args),
+                ml: (args) => this.monalisaCli(args),
+                app: (args) => this.applicationCli(args),
+            }, this.incorrectCommand())(cmdAndArgs.slice(1));
+            this.rl.prompt();
+        } catch (error) {
+            this.con.error(error);
+        }
+    }
+
+    applicationCli(args) {
+        Utils.switchCase(args[0], {
+            stop: () => this.stop(),
+            run: () => this.run(),
+        }, this.incorrectCommand())(args);
+    }
+
+    bookkeepingCli(args) {
+        Utils.switchCase(args[0], {
+            state: () => this.con.log(args[1] ? this.bookkeepingService?.[args[1]] : this.bookkeepingService),
+            stop: () => this.bookkeepingService.clearTasks(),
+            start: () => this.bookkeepingService.setSyncTask(),
+            loglev: () => this.bookkeepingService.setLogginLevel(args[1]),
+        }, this.incorrectCommand())(args);
+    }
+
+    monalisaCli(args) {
+        Utils.switchCase(args[0], {
+            state: () => this.con.log(args[1] ? this.monalisaService?.[args[1]] : this.monalisaService),
+            stop: () => this.monalisaService.clearTasks(),
+            start: () => this.monalisaService.setSyncTask(),
+            loglev: () => this.monalisaService.setLogginLevel(args[1]),
+        }, this.incorrectCommand())(args);
+    }
+
+    incorrectCommand() {
+        return () => this.con.log('incorrect command');
     }
 
     defineStaticRoutes() {

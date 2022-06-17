@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="149,365" last-zoom="0.75" max-obj-count="33"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="8,582" last-zoom="0.75" max-obj-count="33"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -87,7 +87,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </sequence>
 
-<table name="data_passes" layers="0" collapse-mode="2" max-obj-count="10" z-value="0">
+<table name="data_passes" layers="0" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="first_layer_data"/>
@@ -101,7 +101,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="description">
 		<type name="text" length="0"/>
 	</column>
-	<column name="pass_type" not-null="true">
+	<column name="pass_type">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="jira">
@@ -118,6 +118,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="size">
 		<type name="real" length="0"/>
+	</column>
+	<column name="period_id" not-null="true">
+		<type name="integer" length="0"/>
 	</column>
 	<constraint name="data_passes_pkey" type="pk-constr" table="public.data_passes">
 		<columns names="id" ref-type="src-columns"/>
@@ -464,9 +467,43 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<procedure name="insert_period" security-type="SECURITY INVOKER">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<language name="plpgsql"/>
+	<parameter name="name" in="true">
+		<type name="varchar" length="0"/>
+	</parameter>
+	<parameter name="year" in="true">
+		<type name="integer" length="0"/>
+	</parameter>
+	<parameter name="_beam_type" in="true">
+		<type name="varchar" length="0"/>
+	</parameter>
+	<definition><![CDATA[DEClARE trg_id int;
+begin
+    select id into trg_id from beams_dictionary where beam_type = _beam_type;
+    if trg_id IS NULL THEN
+        raise notice 'trg_id is null: %', trg_id;
+        insert into beams_dictionary(id, beam_type) VALUES(DEFAULT, _beam_type);
+        select id into trg_id from beams_dictionary where beam_type = _beam_type;
+        raise notice 'trg_id now is not null: %', trg_id;
+
+    else 
+        raise notice 'id: %', trg_id;
+    end if ;
+end;]]></definition>
+</procedure>
+
 <constraint name="pass_type_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.pass_types" table="public.data_passes">
 	<columns names="pass_type" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="period_id_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.periods" table="public.data_passes">
+	<columns names="period_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -552,7 +589,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 custom-color="#983c88"
 	 src-table="public.data_passes"
 	 dst-table="public.pass_types" reference-fk="pass_type_fk"
-	 src-required="false" dst-required="true"/>
+	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_data_passes_runs_data_passes" type="relfk" layers="0"
 	 custom-color="#df6ee6"
@@ -634,6 +671,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 custom-color="#df2ad9"
 	 src-table="public.simulation_passes_runs"
 	 dst-table="public.runs" reference-fk="run_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_data_passes_periods" type="relfk" layers="0"
+	 src-table="public.data_passes"
+	 dst-table="public.periods" reference-fk="period_id_fk"
 	 src-required="false" dst-required="true"/>
 
 <permission>

@@ -16,6 +16,7 @@ import viewButton from '../../common/viewButton.js';
 import { range, replaceUrlParams } from '../../../utils/utils.js';
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
+
 const siteParamName = RCT.dataReqParams.site;
 const visibleNeighbourButtonsRange = 2;
 const maxVisibleButtons = 10;
@@ -47,25 +48,41 @@ export default function siteController(model, data) {
     // TODO add tooltips
     const siteChangingController = (onclickF, label) => h('a.site-changing-controller', { onclick: onclickF }, label);
 
-    return h('.flex-row', [
-        'site:',
-        // Move to first site
-        currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(1), '<<') : ' ',
-        // Move to middle of sites range [first, current]
-        currentSite > 3 ? siteChangingController(() => model.fetchedData.changeSite(Math.floor(currentSite / 2)), '|') : ' ',
-        // Move one site back
-        currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(currentSite - 1), '<') : ' ',
+    return [
+        h('.flex-row', [
+            h('.menu-title', 'rows on site:'),
+            h('input', { id: 'rows-on-site-input', type: 'number', placeholder: 50, value: model.router.params['rows-on-site'] }, ''),
+            h('button.btn', { onclick: () => onclickSetRowsOnSite(model) }, 'apply'),
+        ]), h('.flex-row', [
+            h('.menu-title', 'site:'),
+            // Move to first site
+            currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(1), '<<') : ' ',
+            // Move to middle of sites range [first, current]
+            currentSite > 3 ? siteChangingController(() => model.fetchedData.changeSite(Math.floor(currentSite / 2)), '|') : ' ',
+            // Move one site back
+            currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(currentSite - 1), '<') : ' ',
 
-        mapArrayToButtons(leftButtonsR),
-        leftThreeDotsPresent ? '...' : '',
-        mapArrayToButtons(middleButtonsR),
-        rightThreeDotsPresent ? '...' : '',
-        mapArrayToButtons(rightButtonsR),
+            mapArrayToButtons(leftButtonsR),
+            leftThreeDotsPresent ? '...' : '',
+            mapArrayToButtons(middleButtonsR),
+            rightThreeDotsPresent ? '...' : '',
+            mapArrayToButtons(rightButtonsR),
 
-        // Analogically as above
-        currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(currentSite + 1), '>') : ' ',
-        // eslint-disable-next-line max-len
-        currentSite < sitesNumber - 2 ? siteChangingController(() => model.fetchedData.changeSite(currentSite + Math.floor((sitesNumber - currentSite) / 2)), '|') : ' ',
-        currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(sitesNumber), '>>') : ' ',
-    ]);
+            // Analogically as above
+            currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(currentSite + 1), '>') : ' ',
+            // eslint-disable-next-line max-len
+            currentSite < sitesNumber - 2 ? siteChangingController(() => model.fetchedData.changeSite(currentSite + Math.floor((sitesNumber - currentSite) / 2)), '|') : ' ',
+            currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(sitesNumber), '>>') : ' ',
+        ]),
+    ];
+}
+
+function onclickSetRowsOnSite(model) {
+    const input = document.getElementById('rows-on-site-input');
+    const rowsOnSite = input.value === '' ? input.placeholder : input.value;
+    if (rowsOnSite < 1 || rowsOnSite > 200) {
+        alert('incorrect number of rows on site must be in range [1, 200]');
+        input.value = 50;
+    }
+    model.fetchedData.changeRowsOnSite(rowsOnSite);
 }

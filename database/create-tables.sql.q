@@ -74,12 +74,13 @@ CREATE TABLE public.data_passes (
 	id integer NOT NULL DEFAULT nextval('public.data_passes_id_seq'::regclass),
 	name character varying(50) NOT NULL,
 	description text,
-	pass_type integer NOT NULL,
+	pass_type integer,
 	jira text,
 	ml text,
 	number_of_events integer,
 	software_version text,
 	size real,
+	period_id integer NOT NULL,
 	CONSTRAINT data_passes_pkey PRIMARY KEY (id),
 	CONSTRAINT dp_name_unique UNIQUE (name)
 
@@ -407,10 +408,41 @@ CREATE TABLE public.simulation_passes_runs (
 ALTER TABLE public.simulation_passes_runs OWNER TO postgres;
 -- ddl-end --
 
+-- object: public.insert_period | type: PROCEDURE --
+-- DROP PROCEDURE IF EXISTS public.insert_period(varchar,integer,varchar) CASCADE;
+CREATE PROCEDURE public.insert_period (IN name varchar, IN year integer, IN _beam_type varchar)
+	LANGUAGE plpgsql
+	SECURITY INVOKER
+	AS $$
+DEClARE trg_id int;
+begin
+    select id into trg_id from beams_dictionary where beam_type = _beam_type;
+    if trg_id IS NULL THEN
+        raise notice 'trg_id is null: %', trg_id;
+        insert into beams_dictionary(id, beam_type) VALUES(DEFAULT, _beam_type);
+        select id into trg_id from beams_dictionary where beam_type = _beam_type;
+        raise notice 'trg_id now is not null: %', trg_id;
+
+    else 
+        raise notice 'id: %', trg_id;
+    end if ;
+end;
+$$;
+-- ddl-end --
+ALTER PROCEDURE public.insert_period(varchar,integer,varchar) OWNER TO postgres;
+-- ddl-end --
+
 -- object: pass_type_fk | type: CONSTRAINT --
 -- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS pass_type_fk CASCADE;
 ALTER TABLE public.data_passes ADD CONSTRAINT pass_type_fk FOREIGN KEY (pass_type)
 REFERENCES public.pass_types (id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: period_id_fk | type: CONSTRAINT --
+-- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS period_id_fk CASCADE;
+ALTER TABLE public.data_passes ADD CONSTRAINT period_id_fk FOREIGN KEY (period_id)
+REFERENCES public.periods (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 

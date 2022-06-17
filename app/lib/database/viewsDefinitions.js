@@ -41,7 +41,43 @@ const runs_per_period_view = (query) => `
                             FROM periods 
                             WHERE periods.name = '${query.index}'
                             )
+        ORDER BY r.run_number DESC
         )`;
+
+const runs_per_data_pass_view = (query) => `
+        WITH runs_per_data_pass_view AS (
+            SELECT
+                --r.id
+                dp.name, 
+                r.run_number, 
+                r.start, 
+                r.end AS "end", 
+                r.b_field, 
+                r.energy_per_beam, 
+                r.ir, 
+                r.filling_scheme, 
+                r.triggers_conf,
+                r.fill_number, 
+                r.run_type, 
+                r.mu, 
+                r.time_trg_start, 
+                r.time_trg_end
+            FROM data_passes AS dp
+                INNER JOIN data_passes_runs AS dpr
+                    ON dp.id=dpr.data_pass_id
+                INNER JOIN runs AS r
+                    ON r.id=dpr.run_id
+            WHERE exists(
+                            SELECT *
+                            FROM runs AS r
+                                INNER JOIN data_passes_runs AS dpr
+                                    ON r.id=dpr.run_id
+                                INNER JOIN data_passes AS dp
+                                    ON dp.id=dpr.data_pass_id
+                            WHERE dp.name = '${query.index}'
+                        )
+            ORDER BY r.run_number DESC
+            )`;
 
 const data_passes_view = (query) => `
     WITH data_passes_view AS (
@@ -107,7 +143,7 @@ const flags_view = (query) => `
             qcf.end AS flagEnd, 
             ftd.flag, 
             qcf.comment, 
-            dpr.production_id,
+            dpr.data_pass_id,
             ds.name
 
         FROM quality_control_flags AS qcf
@@ -124,4 +160,4 @@ const flags_view = (query) => `
         
     )`;
 
-module.exports = {period_view, runs_per_period_view, mc_view, data_passes_view, flags_view}
+module.exports = {period_view, runs_per_period_view, runs_per_data_pass_view, mc_view, data_passes_view, flags_view}

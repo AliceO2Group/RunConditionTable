@@ -18,6 +18,9 @@ const ServicesSynchronizer = require('./ServiceSynchronizer.js');
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
 
+/**
+ * BookkeepingService used to synchronize runs
+ */
 class BookkeepingService extends ServicesSynchronizer {
     constructor() {
         super();
@@ -33,8 +36,11 @@ class BookkeepingService extends ServicesSynchronizer {
             runType: 'run_type',
             detectors: 'detectors',
         };
-        this.defaultSyncTimout = 1000;
+        this.syncTimestamp = 1 * 60 * 1000; // Milis
+        this.oneRequestDelay = 100; // Milis
         this.tasks = [];
+
+        this.forceStop = false;
     }
 
     dataAdjuster(run) {
@@ -51,15 +57,62 @@ class BookkeepingService extends ServicesSynchronizer {
     }
 
     async syncer(dbClient, dataRow) {
+        if (this.loglev > 2) {
+            // eslint-disable-next-line no-console
+            console.log(dataRow);
+        }
         return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
     }
 
-    syncRuns() {
-        return this.syncData(
-            this.endpoints.ali,
-            this.dataAdjuster.bind(this),
-            this.syncer.bind(this), (res) => res.data,
-        );
+    metaDataHandler(requestJsonResult) {
+        const { page } = requestJsonResult['meta'];
+        this.metaStore['pageCount'] = page['pageCount'];
+        this.metaStore['totalCount'] = page['totalCount'];
+    }
+
+    syncTraversStop(state) {
+        if (this.forceStop || state['page'] > this.metaStore['pageCount']) {
+            return true;
+        }
+        return false;
+    }
+
+    nextState(state) {
+        state['page'] += 1;
+        return state;
+    }
+
+    endpointBuilder(endpoint, state) {
+        const e = `${endpoint}/?page[offset]=${state['page'] * state['limit']}&page[limit]=${state['limit']}`;
+        return e;
+    }
+
+    async sync() {
+        const pendingSyncs = [];
+        let state = {
+            page: 0,
+            limit: 100,
+        };
+        while (!this.syncTraversStop(state)) {
+            if (this.loglev) {
+                this.logger.info(state);
+                this.logger.info(this.metaStore);
+            }
+            const prom = this.syncData(
+                this.endpointBuilder(this.endpoints.ali, state),
+                this.dataAdjuster.bind(this),
+                this.syncer.bind(this),
+                (res) => res.data,
+                this.metaDataHandler.bind(this),
+            );
+            pendingSyncs.push(prom);
+            await prom;
+            state = this.nextState(state);
+            await Utils.delay(this.oneRequestDelay);
+        }
+        this.logger.info('bookkeeping sync trvers called ended');
+
+        return Promise.all(pendingSyncs);
     }
 
     debugDisplaySync() {
@@ -71,26 +124,26 @@ class BookkeepingService extends ServicesSynchronizer {
         );
     }
 
-    setSyncRunsTask() {
-        const task = setInterval(this.syncRuns.bind(this), this.taskPeriodMilis);
-        this.tasks.push(task);
-        return task;
+    async setSyncTask() {
+        this.forceStop = false;
+        await this.sync();
     }
 
     setDebugTask() {
-        const task = setInterval(this.debugDisplaySync.bind(this), this.taskPeriodMilis);
+        const task = setInterval(this.debugDisplaySync.bind(this), this.syncTimestamp);
         this.tasks.push(task);
         return task;
     }
 
-    clearTask() {
+    clearTasks() {
+        this.forceStop = true;
         for (const task of this.tasks) {
             clearInterval(task);
         }
     }
 
     async close() {
-        this.clearTask();
+        this.clearTasks();
         await this.disconnect();
     }
 }

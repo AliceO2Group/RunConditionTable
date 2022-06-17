@@ -88,6 +88,13 @@ class QueryBuilder {
                         FROM runs_per_period_view
                         ${filteringPart()}
                         ${dataSubsetQueryPart(params)};`;
+            
+            case pagesNames.runsPerDataPass:
+                return `${views.runs_per_data_pass_view(params)}
+                        SELECT *
+                        FROM runs_per_data_pass_view
+                        ${filteringPart()}
+                        ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.dataPasses:
                 return `${views.data_passes_view(params)}

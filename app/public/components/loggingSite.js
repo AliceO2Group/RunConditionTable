@@ -1,4 +1,3 @@
-/* eslint-disable function-call-argument-newline */
 /**
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
@@ -38,7 +37,7 @@ export default function loggingSite(model) {
 
     return h('div.loginDiv', h('div.loginDivInside', [
         title,
-        container(inputForm('dbname', 'dbname', 'rct-db-v2'),
+        container(inputForm('dbname', 'dbname', 'rct-db'),
             inputForm('username', 'username', 'username'),
             inputForm('password', 'password', 'password', true)),
         container(loginButton, registerButton),

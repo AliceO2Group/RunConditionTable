@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /**
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
@@ -15,6 +14,8 @@
 
  // const RunConditionTableApplication = require('../app/application.js');
  const DatabaseSuite = require('./database');
+ const PublicSuite = require('./public');
+ const LibSuite = require('./lib');
  const assert = require('assert');
 
  /*after(() => {
@@ -38,6 +39,8 @@
 */
     describe('Unit Suite', () => {
         describe('Database', DatabaseSuite);
+        describe('Public', PublicSuite);
+        describe('Lib', LibSuite);
     });
     
     describe('App initialization', () => {

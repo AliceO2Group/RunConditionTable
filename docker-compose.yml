@@ -1,10 +1,14 @@
 services:
   application:
+    stdin_open: true
+    tty: true 
     build:
       context: ./
       dockerfile: Dockerfile.application
     environment:
       - RUNNING_ENV=DOCKER
+      - CERN_SOCKS=${CERN_SOCKS:-true}
+      - ALIMONITOR_PASSPHRASE=${ALIMONITOR_PASSPHRASE}
     networks:
       - rct-network
     volumes:
@@ -19,6 +23,11 @@ services:
       dockerfile: Dockerfile.database
     environment:
       - RUNNING_ENV=DOCKER
+    volumes:
+      - type: bind
+        read_only: true
+        source: ./database
+        target: /docker-entrypoint-initdb.d
     networks:
       - rct-network
 networks:

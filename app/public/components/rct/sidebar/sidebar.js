@@ -33,5 +33,6 @@ const sidebarMenu = (model) => [
     fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes'),
     fetchedDataPages(model, pagesNames.mc, 'Monte Carlo'),
     fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period'),
+    fetchedDataPages(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
     fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging'),
 ];
