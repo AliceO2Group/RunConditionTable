@@ -64,7 +64,7 @@ class ServicesSynchronizer {
 
     setLogginLevel(logginLevel) {
         logginLevel = parseInt(logginLevel, 10);
-        if (!logginLevel || logginLevel < 0 && logginLevel > 3) {
+        if (logginLevel === undefined || logginLevel === null || logginLevel < 0 && logginLevel > 3) {
             throw new Error('Invalid debug level') ;
         }
         this.loglev = logginLevel;

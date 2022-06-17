@@ -40,8 +40,6 @@ class MonalisaService extends ServicesSynchronizer {
 
     // eslint-disable-next-line no-unused-vars
     async syncer(dbClient, dataRow) {
-        const p = this.extractPeriod(dataRow);
-
         const pgCommand = `call insert_prod(
             '${dataRow.name}', 
             '${dataRow.description}', 
@@ -50,11 +48,8 @@ class MonalisaService extends ServicesSynchronizer {
             ${null},
             ${dataRow.reconstructed_events},
             ${null},
-            ${null},
-        
-            '${p.name}',
-            '${p.year}',
-            '${p.beam_type}');`;
+            ${null}
+        );`;
         // eslint-disable-next-line no-console
         console.log(pgCommand);
         // eslint-disable-next-line no-console
