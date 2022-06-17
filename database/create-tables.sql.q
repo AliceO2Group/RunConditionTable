@@ -74,7 +74,7 @@ CREATE TABLE public.data_passes (
 	id integer NOT NULL DEFAULT nextval('public.data_passes_id_seq'::regclass),
 	name character varying(50) NOT NULL,
 	description text,
-	pass_type integer NOT NULL,
+	pass_type integer,
 	jira text,
 	ml text,
 	number_of_events integer,

@@ -23,21 +23,38 @@ class MonalisaService extends ServicesSynchronizer {
         super();
         this.logger = new Log(MonalisaService.name);
         this.endpoints = config.services.monalisa.url;
-        this.ketpFields = undefined;
+        this.ketpFields = {
+            reconstructed_events: 'number_of_events',
+            description: 'description',
+        };
         this.tasks = [];
     }
 
     dataAdjuster(row) {
-        row = Utils.filterObject(row, this.ketpFields);
+        // row = Utils.filterObject(row, this.ketpFields);
         row.id = 'DEFAULT';
         return row;
     }
 
     // eslint-disable-next-line no-unused-vars
     async syncer(dbClient, dataRow) {
-        // return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
-        console.log(dataRow.name);
-        this.extractPeriod(dataRow);
+        const p = this.extractPeriod(dataRow);
+
+        const pgCommand = `call insert_prod(
+            '${dataRow.name}', 
+            '${dataRow.description}', 
+            ${null},
+            ${null},
+            ${null},
+            ${dataRow.reconstructed_events},
+            ${null},
+            ${null},
+        
+            '${p.name}',
+            '${p.year}',
+            '${p.beam_type}');`;
+        console.log(pgCommand);
+        return await dbClient.query(pgCommand).catch(console.log);
     }
 
     extractPeriod(rowData) {
@@ -53,15 +70,16 @@ class MonalisaService extends ServicesSynchronizer {
         period.year = year;
         period.beam_type = rowData.interaction_type;
 
-        console.log(period);
+        return period;
     }
 
     rawDataResponsePreprocess(d) {
         const entries = Object.entries(d);
-        return entries.map(([prodName, vObj]) => {
+        const aaa = entries.map(([prodName, vObj]) => {
             vObj['name'] = prodName.trim();
             return vObj;
         }).filter((r) => r.name?.match(/^LHC\d\d[a-zA-Z]_.*$/));
+        return aaa;
     }
 
     syncRawMonalisaData() {
@@ -69,7 +87,7 @@ class MonalisaService extends ServicesSynchronizer {
             this.endpoints.rawData,
             this.dataAdjuster.bind(this),
             this.syncer.bind(this),
-            this.rawDataResponsePreprocess,
+            this.rawDataResponsePreprocess.bind(this),
         );
     }
 

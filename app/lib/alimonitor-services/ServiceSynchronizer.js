@@ -64,7 +64,7 @@ class ServicesSynchronizer {
 
     setLogginLevel(logginLevel) {
         logginLevel = parseInt(logginLevel, 10);
-        if (logginLevel < 0 && logginLevel > 3) {
+        if (!logginLevel || logginLevel < 0 && logginLevel > 3) {
             throw new Error('Invalid debug level') ;
         }
         this.loglev = logginLevel;
@@ -160,6 +160,7 @@ class ServicesSynchronizer {
 
     async setupConnection() {
         this.dbclient = new Client(config.database);
+
         return await this.dbclient.connect()
             .then(() => this.logger.info('database connection established'));
     }
