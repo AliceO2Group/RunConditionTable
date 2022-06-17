@@ -12,35 +12,18 @@
  * or submit itself to any jurisdiction.
  */
 
- // const RunConditionTableApplication = require('../app/application.js');
- const DatabaseSuite = require('./database');
- const PublicSuite = require('./public');
- const LibSuite = require('./lib');
- const assert = require('assert');
+const DatabaseSuite = require('./database');
+const PublicSuite = require('./public');
+const LibSuite = require('./lib');
+const assert = require('assert');
 
- /*after(() => {
-    process.removeAllListeners('SIGTERM');
-    process.removeAllListeners('SIGINT');
-  })
-*/
-
- describe('Run Condition Table', () => {
+describe('Run Condition Table', () => {
     const Application = require('../app/application.js');
-    // const application = new Application({});
-    
-    /*
-    before(async () => {
-        await application.run();
-    });
-
-    after(async () => {
-        await application.stop(true);
-    });
-*/
+  
     describe('Unit Suite', () => {
-        describe('Database', DatabaseSuite);
-        describe('Public', PublicSuite);
-        describe('Lib', LibSuite);
+      describe('Database', DatabaseSuite);
+      describe('Public', PublicSuite);
+      describe('Lib', LibSuite);
     });
     
     describe('App initialization', () => {
@@ -51,36 +34,3 @@
         });
     });
 });
-/*
-describe('Signal handling', () => {
-    // const handlerFunction = runConditionTableApplication.stop.bind(runConditionTableApplication));
-    const runConditionTableApplication = new RunConditionTableApplication({});
-    runConditionTableApplication.run();
-    [ 'SIGTERM', 'SIGINT' ].forEach(SIGNAL => {
-  
-      describe(`${ SIGNAL }`, () => {
-        let sandbox, closeStub, exitStub;
-  
-        beforeEach(() => {
-          sandbox   = sinon.sandbox.create({ useFakeTimers : true });
-          closeStub = sandbox.stub(runConditionTableApplication, 'close');
-          exitStub  = sandbox.stub(process, 'exit');
-        })
-  
-        afterEach(() => {
-          sandbox.restore();
-        })
-  
-        it(`should call 'app.close()' when receiving a ${ SIGNAL }`, done => {
-          process.once(SIGNAL, () => {
-            sinon.assert.calledOnce(closeStub);
-            done();
-          });
-          process.kill(process.pid, SIGNAL);
-        })
-      })
-  
-    })
-  
-  })
-*/

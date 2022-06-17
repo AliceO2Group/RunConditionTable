@@ -11,8 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
- const CSVExportSuite = require('./csvExport.test');
+const CSVExportSuite = require('./csvExport.test');
 
- module.exports = () => {
-     describe('CSV Export', CSVExportSuite);
- };
+module.exports = () => {
+    describe('CSV Export', CSVExportSuite);
+};

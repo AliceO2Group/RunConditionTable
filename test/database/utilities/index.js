@@ -11,10 +11,10 @@
  * or submit itself to any jurisdiction.
  */
 
- const QueryBuilderSuite = require('./QueryBuilder.test');
- const DatabaseServiceSuite = require('./DataBaseService.test');
+const QueryBuilderSuite = require('./QueryBuilder.test');
+const DatabaseServiceSuite = require('./DataBaseService.test');
 
- module.exports = () => {
-     describe('QueryBuilder', QueryBuilderSuite);
-     describe('DatabaseService', DatabaseServiceSuite);
- };
+module.exports = () => {
+    describe('QueryBuilder', QueryBuilderSuite);
+    describe('DatabaseService', DatabaseServiceSuite);
+};
