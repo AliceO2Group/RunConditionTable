@@ -11,12 +11,15 @@
  * or submit itself to any jurisdiction.
  */
 
-const UtilitiesSuite = require('./utils.test');
-const ResProviderSuite = require('./resProvider.test');
-const ConfigSuite = require('./config');
-
+const assert = require('assert');
+const { buildPublicConfig } = require('../../../app/lib/config/publicConfigProvider');
+ 
 module.exports = () => {
-    describe('Utilities', UtilitiesSuite);
-    describe('Res Provider', ResProviderSuite);
-    describe('Config', ConfigSuite);
+    describe('Public Config Provider', () => {        
+        describe('Filtering objects', () => {
+            it('should provide public config', () => {
+                assert.doesNotThrow(() => buildPublicConfig());
+            });
+        });
+    });
 };
