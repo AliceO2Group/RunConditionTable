@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,680" last-zoom="0.75" max-obj-count="33"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="8,582" last-zoom="0.75" max-obj-count="33"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -101,7 +101,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="description">
 		<type name="text" length="0"/>
 	</column>
-	<column name="pass_type" not-null="true">
+	<column name="pass_type">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="jira">
@@ -589,7 +589,7 @@ end;]]></definition>
 	 custom-color="#983c88"
 	 src-table="public.data_passes"
 	 dst-table="public.pass_types" reference-fk="pass_type_fk"
-	 src-required="false" dst-required="true"/>
+	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_data_passes_runs_data_passes" type="relfk" layers="0"
 	 custom-color="#df6ee6"

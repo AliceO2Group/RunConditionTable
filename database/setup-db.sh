@@ -16,6 +16,9 @@ RCT_USER="rct-user"
 RCT_PASSWORD="rct-passwd"
 RCT_DATABASE_HOST="localhost"
 CREATE_TABLES_SQL="$SCRIPTS_DIR/create-tables.sql.q"
+DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
+
+
 
 
 # disconnect everyone from database in order to recreate it //if dev locally it is helpful
@@ -31,6 +34,8 @@ psql -d $RCT_DATABASE -a -f $CREATE_TABLES_SQL
 # psql -c "GRANT ALL PRIVILEGES ON DATABASE \"$RCT_DATABASE\" TO \"$RCT_USER\""
 psql -d $RCT_DATABASE -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"$RCT_USER\""
 psql -d $RCT_DATABASE -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$RCT_USER\""
+
+
 
 
 if [ "$MOCK_DB" = "true" ] || [ "$1" == "--mock" ]; then

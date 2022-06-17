@@ -51,9 +51,9 @@ export default class Model extends Observable {
         if (status == 403) {
             localStorage.token = null;
             alert('Auth token expired!');
-            this.router.unobserve(this.router.submodel1.routerCallback);
+            this.router.unobserve(this.primary.routerCallback);
             this.router.go('/', true);
-            this.submodel1 = null;
+            this.primary = null;
             this.mode = 'default';
             document.location.reload(true);
         }

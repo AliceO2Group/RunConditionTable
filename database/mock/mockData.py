@@ -232,7 +232,6 @@ if not os.path.exists(cached_data_passes_df_path):
         randint(10, 100), 
         f'sof-v.{randint(5)}.{randint(5)}-{gen_rand_string(2)}',
         123456,
-        period_id
         ) for i, (period_id, n) in enumerate(data_passes_names)
     ])
     data_passes_df.rename(columns={
@@ -245,7 +244,6 @@ if not os.path.exists(cached_data_passes_df_path):
         6: 'number_of_events',
         7: 'software_version',
         8: 'size',
-        9: 'period_id'
     }, inplace=True)
 
     data_passes_df.to_csv(cached_data_passes_df_path)
