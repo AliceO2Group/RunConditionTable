@@ -4,7 +4,7 @@ const ResProvider = require('../lib/ResProvider.js');
 module.exports = {
     jwt: {
         secret: 'supersecret',
-        expiration: '5s',
+        expiration: '2m',
     },
     http: {
         port: 8081,

@@ -15,6 +15,7 @@
 
 const config = require('../config/configProvider.js');
 const ServicesSynchronizer = require('./ServiceSynchronizer.js');
+// eslint-disable-next-line no-unused-vars
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
 
@@ -31,6 +32,7 @@ class MonalisaService extends ServicesSynchronizer {
     }
 
     dataAdjuster(row) {
+        // eslint-disable-next-line capitalized-comments
         // row = Utils.filterObject(row, this.ketpFields);
         row.id = 'DEFAULT';
         return row;
@@ -53,7 +55,9 @@ class MonalisaService extends ServicesSynchronizer {
             '${p.name}',
             '${p.year}',
             '${p.beam_type}');`;
+        // eslint-disable-next-line no-console
         console.log(pgCommand);
+        // eslint-disable-next-line no-console
         return await dbClient.query(pgCommand).catch(console.log);
     }
 
