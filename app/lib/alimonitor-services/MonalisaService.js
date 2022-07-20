@@ -50,10 +50,7 @@ class MonalisaService extends ServicesSynchronizer {
             ${null},
             ${null}
         );`;
-        // eslint-disable-next-line no-console
-        console.log(pgCommand);
-        // eslint-disable-next-line no-console
-        return await dbClient.query(pgCommand).catch(console.log);
+        return await dbClient.query(pgCommand);
     }
 
     extractPeriod(rowData) {

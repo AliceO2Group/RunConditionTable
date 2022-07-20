@@ -5,7 +5,9 @@ usage() {
 Usage:
     Script dedicated to open ssh proxy for dockers to reach CERN network,
     CERN network is exposed to assoc 17.200.200.1:12345
-    $(basename $0) USER SERVER_NAME
+    syntax :: ---------------------------------------
+    |    $(basename $0) USER SERVER_NAME             |
+    -------------------------------------------------
     SERVER_NAME is part of SERVER_NAME.cern.ch
     USER is your cern username
 USAGE
