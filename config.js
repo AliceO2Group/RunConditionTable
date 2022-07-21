@@ -3,7 +3,7 @@ const fromToType = 'from-to-type';
 
 module.exports = {
     jwt: {
-        secret: 'supersecret',
+        secret: process.env.RCT_JWT_SECRET,
         expiration: '10m',
     },
     http: {
@@ -13,10 +13,10 @@ module.exports = {
         autoListen: false,
     },
     database: {
-        hostname: 'localhost',
-        dbname: 'rct-db',
-        dbuser: 'rct-user',
-        password: 'rct-passwd',
+        hostname: process.env.RCT_DB_HOST,
+        dbname: process.env.RCT_DB_NAME,
+        dbuser: process.env.RCT_DB_USERNAME,
+        password: process.env.RCT_DB_PASSWORD,
         port: 5432,
     },
     bookkeepingRuns: {
@@ -24,6 +24,12 @@ module.exports = {
     },
     dev: {
         proxy: 'socks://localhost:12345',
+    },
+    openId: {
+        secret: process.env.RCT_OPENID_SECRET,
+        id: process.env.RCT_OPENID_ID,
+        redirect_uri: process.env.RCT_OPENID_REDIRECT,
+        well_known: 'https://auth.cern.ch/auth/realms/cern/.well-known/openid-configuration',
     },
 
     public: { // Properties that will be provided to frontend in the public folder
