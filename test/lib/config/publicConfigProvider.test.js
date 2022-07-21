@@ -11,10 +11,15 @@
  * or submit itself to any jurisdiction.
  */
 
-const QueryBuilderSuite = require('./QueryBuilder.test');
-const DatabaseServiceSuite = require('./DataBaseService.test');
-
+const assert = require('assert');
+const { buildPublicConfig } = require('../../../app/lib/config/publicConfigProvider');
+ 
 module.exports = () => {
-    describe('QueryBuilder', QueryBuilderSuite);
-    describe('DatabaseService', DatabaseServiceSuite);
+    describe('Public Config Provider', () => {        
+        describe('Filtering objects', () => {
+            it('should provide public config', () => {
+                assert.doesNotThrow(() => buildPublicConfig());
+            });
+        });
+    });
 };

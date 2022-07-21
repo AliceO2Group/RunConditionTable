@@ -77,8 +77,7 @@ export default class FetchedDataManager {
 
         let totalRecordsNumber = null;
         if (!countAllRecord) {
-            // eslint-disable-next-line prefer-destructuring
-            totalRecordsNumber = this[page][index].payload.totalRecordsNumber;
+            ({ totalRecordsNumber } = this[page][index].payload);
         }
 
         this[page][index] = RemoteData.Loading();

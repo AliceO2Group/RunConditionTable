@@ -11,15 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
- const req = require('esm')(module)
- const csvExport = req('../../../app/public/utils/csvExport').default;
- const preparedData = req('../../../app/public/utils/csvExport').preparedData;
- const preparedFile = req('../../../app/public/utils/csvExport').preparedFile;
- // const mount = req('@aliceo2/web-ui/Frontend/js/src/index.js').mount;// from '/js/src/index.js';
- // const header = req('../../../app/public/components/common/header').default;
- const assert = require('assert');
+const req = require('esm')(module)
+const csvExport = req('../../../app/public/utils/csvExport').default;
+const preparedData = req('../../../app/public/utils/csvExport').preparedData;
+const preparedFile = req('../../../app/public/utils/csvExport').preparedFile;
+const assert = require('assert');
 
- module.exports = () => {
+module.exports = () => {
     describe('CSV Export', () => {
         const dataSample = {
             payload: {
@@ -84,36 +82,7 @@
                 var fetchedData = {'periods': []};
                 fetchedData['periods']['LHC17k'] = dataSample;
                 assert(() => preparedFile(modelSample).name === 'periods-LHC17k');
-            });
-
-            /*
-            it('should download the file', (done) => {
-                const wrapper = mount(component, { propsData: {
-                    href: `data:text/csv;charset=utf-8,energy%0D%0A2`,
-                    'download': 'periods-LHC17k'
-                  },});
-                const link = {
-                  click: jest.fn(),
-                };
-            
-                global.URL.createObjectURL = jest.fn(() => 'periods-LHC17k');
-                global.URL.revokeObjectURL = jest.fn();
-                global.Blob = function(content, options) {
-                  return { content, options };
-                };
-            
-                jest.spyOn(document, 'createElement').mockImplementation(() => link);
-                wrapper.find().trigger('click');
-            
-                wrapper.vm.$nextTick(() => {
-                  expect(link.download).toBe('periods-LHC17k');
-                  expect(link.href).toBe(`data:text/csv;charset=utf-8,energy%0D%0A2`);
-                  expect(link.click).toHaveBeenCalledTimes(1);
-                  done();
-                });
-              });
-              */
-            
+            });           
         });
     });
 };

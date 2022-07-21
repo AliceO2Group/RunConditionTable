@@ -11,8 +11,12 @@
  * or submit itself to any jurisdiction.
  */
 
- const UtilitiesSuite = require('./utils.test');
+const UtilitiesSuite = require('./utils.test');
+const ResProviderSuite = require('./resProvider.test');
+const ConfigSuite = require('./config');
 
- module.exports = () => {
-     describe('Utilities', UtilitiesSuite);
- };
+module.exports = () => {
+    describe('Utilities', UtilitiesSuite);
+    describe('Res Provider', ResProviderSuite);
+    describe('Config', ConfigSuite);
+};
