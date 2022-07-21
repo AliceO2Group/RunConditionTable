@@ -10,3 +10,4 @@ database**/cached/
 *__pycache__
 security
 scratch
+.env
