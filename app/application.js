@@ -37,7 +37,7 @@ class RunConditionTableApplication {
             tokenToUserData: {},
         };
 
-        if (config.openId.secret === "" || config.openid.id === "" || config.openid.redirect === "") {
+        if (!config.openId) {
             this.httpServer = new HttpServer(config.http, config.jwt);
         } else {
             this.httpServer = new HttpServer(config.http, config.jwt, config.openId);
