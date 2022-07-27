@@ -139,6 +139,7 @@ class RunConditionTableApplication {
         try {
             await this.databaseService.setAdminConnection();
             await this.bookkeepingService.setupConnection();
+            await this.monalisaService.setupConnection();
             // eslint-disable-next-line capitalized-comments
             // this.bookkeepingService.setSyncRunsTask();
             await this.httpServer.listen();

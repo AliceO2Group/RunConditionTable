@@ -64,7 +64,7 @@ class ServicesSynchronizer {
 
     setLogginLevel(logginLevel) {
         logginLevel = parseInt(logginLevel, 10);
-        if (!logginLevel || logginLevel < 0 && logginLevel > 3) {
+        if (!logginLevel || logginLevel < 0 || logginLevel > 3) {
             throw new Error('Invalid debug level') ;
         }
         this.loglev = logginLevel;
@@ -76,7 +76,7 @@ class ServicesSynchronizer {
      * and inserting to local database
      * @param {string} endpoint endpoint to fetch data
      * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database
-     * @param {CallableFunction} syncer logic for insert ing data to database
+     * @param {CallableFunction} syncer logic for inserting data to database
      * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
      * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
      * like total pages to see etc., on the whole might be used to any custom logic
@@ -86,7 +86,7 @@ class ServicesSynchronizer {
     async syncData(endpoint, dataAdjuster, syncer, responsePreprocess, metaDataHandler = null) {
         try {
             const { loglev } = this;
-            const result = await this.getRawData(endpoint);
+            const result = await this.getRawResponse(endpoint);
             if (metaDataHandler) {
                 metaDataHandler(result);
             }
@@ -123,7 +123,7 @@ class ServicesSynchronizer {
         }
     }
 
-    async getRawData(endpoint) {
+    async getRawResponse(endpoint) {
         return new Promise((resolve, reject) => {
             let rawData = '';
             const req = this.checkClientType(endpoint).request(endpoint, this.opts, (res) => {

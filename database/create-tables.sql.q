@@ -80,7 +80,6 @@ CREATE TABLE public.data_passes (
 	number_of_events integer,
 	software_version text,
 	size real,
-	period_id integer NOT NULL,
 	CONSTRAINT data_passes_pkey PRIMARY KEY (id),
 	CONSTRAINT dp_name_unique UNIQUE (name)
 
@@ -436,13 +435,6 @@ ALTER PROCEDURE public.insert_period(varchar,integer,varchar) OWNER TO postgres;
 -- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS pass_type_fk CASCADE;
 ALTER TABLE public.data_passes ADD CONSTRAINT pass_type_fk FOREIGN KEY (pass_type)
 REFERENCES public.pass_types (id) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
--- object: period_id_fk | type: CONSTRAINT --
--- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS period_id_fk CASCADE;
-ALTER TABLE public.data_passes ADD CONSTRAINT period_id_fk FOREIGN KEY (period_id)
-REFERENCES public.periods (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
