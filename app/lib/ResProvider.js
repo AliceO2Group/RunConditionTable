@@ -106,7 +106,7 @@ class ResProvider {
             port: 5432,
         };
 
-        if (database.host && database.dbname && database.dbuser && database.password && database.port) {
+        if (database.host && database.database && database.user && database.password && database.port) {
             logger.info('using database defined via env var');
             return database;
         } else {
@@ -122,6 +122,8 @@ class ResProvider {
                     password: 'rct-passwd',
                     port: 5432,
                 };
+            } else {
+                logger.err('unset database');
             }
         }
     }
