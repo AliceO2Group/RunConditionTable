@@ -71,6 +71,17 @@ class ResProvider {
     }
 
     static openid() {
+        const openid = {
+            secret: process.env.RCT_OPENID_SECRET,
+            id: process.env.RCT_OPENID_ID,
+            redirect_uri: process.env.RCT_OPENID_REDIRECT,
+            well_known: 'https://auth.cern.ch/auth/realms/cern/.well-known/openid-configuration',
+        };
+        if (openid.secret && openid.id && openid.redirect_uri && openid.well_known) {
+            logger.info('openid defines by env vars');
+            return openid;
+        }
+
         let openidConfPath = process.env.OPENID_PATH;
         if (!openidConfPath) {
             logger.info('not openid conf file path description via env var');
@@ -84,6 +95,35 @@ class ResProvider {
         }
 
         return undefined;
+    }
+
+    static database() {
+        const database = {
+            host: process.env.RCT_DB_HOST,
+            database: process.env.RCT_DB_NAME,
+            user: process.env.RCT_DB_USERNAME,
+            password: process.env.RCT_DB_PASSWORD,
+            port: 5432,
+        };
+
+        if (database.host && database.dbname && database.dbuser && database.password && database.port) {
+            logger.info('using database defined via env var');
+            return database;
+        } else {
+            const nulledFields = Object.entries(database).filter((e) => ! e[1]).map((e) => e[0]);
+            const mess = `unset fields: ' + ${nulledFields.join(', ')}`;
+            logger.warn(`database passes not set properly ${mess}`);
+            if (process.env.ENV_MODE == 'dev') {
+                logger.info('env mode: using default values');
+                return {
+                    host: 'database',
+                    database: 'rct-db',
+                    user: 'rct-user',
+                    password: 'rct-passwd',
+                    port: 5432,
+                };
+            }
+        }
     }
 
     static passphraseProvider() {

@@ -12,22 +12,11 @@ module.exports = {
         tls: false,
         autoListen: false,
     },
-    openId: {
-	secret: process.env.RCT_OPENID_SECRET,
-        id: process.env.RCT_OPENID_ID,
-        redirect_uri: process.env.RCT_OPENID_REDIRECT,
-        well_known: 'https://auth.cern.ch/auth/realms/cern/.well-known/openid-configuration',	    
-    },
+    openId: ResProvider.openid(),
     winston: {
         file: path.join(__dirname, '..', '..', 'reports/logs.txt'),
     },
-    database: {
-	hostname: process.env.RCT_DB_HOST,
-        dbname: process.env.RCT_DB_NAME,
-        dbuser: process.env.RCT_DB_USERNAME,
-        password: process.env.RCT_DB_PASSWORD,
-        port: 5432,
-    },
+    database: ResProvider.database(),
     services: {
         bookkeeping: {
             url: {
