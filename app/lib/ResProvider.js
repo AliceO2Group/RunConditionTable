@@ -123,7 +123,7 @@ class ResProvider {
                     port: 5432,
                 };
             } else {
-                logger.err('unset database');
+                logger.error('unset database');
             }
         }
     }
