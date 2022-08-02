@@ -11,10 +11,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const QueryBuilderSuite = require('./QueryBuilder.test');
-const DatabaseServiceSuite = require('./DataBaseService.test');
-
+const PublicConfigProviderSuite = require('./publicConfigProvider.test');
+const ConfigProviderSuite = require('./configProvider.test');
+ 
 module.exports = () => {
-    describe('QueryBuilder', QueryBuilderSuite);
-    describe('DatabaseService', DatabaseServiceSuite);
+    describe('Config Provider Suite', ConfigProviderSuite);
+    describe('Public Config Provider', PublicConfigProviderSuite);
 };

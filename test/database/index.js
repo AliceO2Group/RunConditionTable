@@ -11,8 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
- const UtilitiesSuite = require('./utilities');
+const UtilitiesSuite = require('./utilities');
 
- module.exports = () => {
-     describe('Utilities', UtilitiesSuite);
- };
+module.exports = () => {
+    describe('Utilities', UtilitiesSuite);
+};

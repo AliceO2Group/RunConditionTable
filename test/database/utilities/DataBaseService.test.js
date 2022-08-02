@@ -11,11 +11,11 @@
  * or submit itself to any jurisdiction.
  */
 
- const DataBaseService = require('../../../app/lib/database/DatabaseService');
- const assert = require('assert');
- const sinon = require('sinon');
+const DataBaseService = require('../../../app/lib/database/DatabaseService');
+const assert = require('assert');
+const sinon = require('sinon');
 
- module.exports = () => {
+module.exports = () => {
     describe('DatabaseSuite', () => {
         describe('Check Initialization of DatabaseService', () => {
             it('should successfully initialize the DatabaseService', () => {
