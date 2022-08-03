@@ -1,6 +1,7 @@
 version: '3.1'
 services:
   application:
+    env_file: env_file
     stdin_open: true
     tty: true 
     build:
@@ -19,6 +20,7 @@ services:
         target: /opt/RunConditionTable/security
     
   database:
+    env_file: env_file
     build: 
       context: ./
       dockerfile: Dockerfile.database
