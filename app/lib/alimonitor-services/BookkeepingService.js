@@ -13,10 +13,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const config = require('../config/configProvider.js');
 const ServicesSynchronizer = require('./ServiceSynchronizer.js');
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
+const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
 
 /**
  * BookkeepingService used to synchronize runs
@@ -26,14 +26,15 @@ class BookkeepingService extends ServicesSynchronizer {
         super();
         this.taskPeriodMilis = 4000;
         this.logger = new Log(BookkeepingService.name);
-        this.endpoints = config.services.bookkeeping.url;
         this.ketpFields = {
             runNumber: 'run_number',
+            lhcPeriod: 'period',
             timeO2Start: 'start',
             timeO2End: 'end',
             timeTrgStart: 'time_trg_start',
             timeTrgEnd: 'time_trg_end',
             runType: 'run_type',
+            lhcBeamEnergy: 'energy',
             detectors: 'detectors',
         };
         this.syncTimestamp = 1 * 60 * 1000; // Milis
@@ -61,7 +62,11 @@ class BookkeepingService extends ServicesSynchronizer {
             // eslint-disable-next-line no-console
             console.log(dataRow);
         }
-        return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
+
+        const pgCommand = `call insert_run(
+
+        )`;
+        return await dbClient.query(pgCommand);
     }
 
     metaDataHandler(requestJsonResult) {
@@ -82,8 +87,8 @@ class BookkeepingService extends ServicesSynchronizer {
         return state;
     }
 
-    endpointBuilder(endpoint, state) {
-        const e = `${endpoint}/?page[offset]=${state['page'] * state['limit']}&page[limit]=${state['limit']}`;
+    endpointBuilder(state) {
+        const e = EndpintFormatter.bookkeeping(state['page'], state['limit']);
         return e;
     }
 
@@ -99,7 +104,7 @@ class BookkeepingService extends ServicesSynchronizer {
                 this.logger.info(this.metaStore);
             }
             const prom = this.syncData(
-                this.endpointBuilder(this.endpoints.ali, state),
+                this.endpointBuilder(state),
                 this.dataAdjuster.bind(this),
                 this.syncer.bind(this),
                 (res) => res.data,

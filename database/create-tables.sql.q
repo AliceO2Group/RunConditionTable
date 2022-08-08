@@ -221,8 +221,8 @@ ALTER SEQUENCE public.periods_id_seq OWNER TO postgres;
 CREATE TABLE public.periods (
 	id integer NOT NULL DEFAULT nextval('public.periods_id_seq'::regclass),
 	name character varying(12) NOT NULL,
-	year integer NOT NULL,
-	beam_type_id integer NOT NULL,
+	year integer,
+	beam_type_id integer,
 	CONSTRAINT periods_pkey PRIMARY KEY (id),
 	CONSTRAINT p_name_unique UNIQUE (name)
 
@@ -316,7 +316,7 @@ CREATE TABLE public.runs (
 	start bigint NOT NULL,
 	"end" bigint NOT NULL,
 	b_field character varying(12),
-	energy_per_beam character varying(10) NOT NULL,
+	energy_per_beam float,
 	ir character varying(25),
 	filling_scheme integer,
 	triggers_conf character varying(25),

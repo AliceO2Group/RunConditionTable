@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,0" last-zoom="0.5" max-obj-count="33"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="159,259" last-zoom="0.75" max-obj-count="33"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -242,10 +242,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="name" not-null="true">
 		<type name="character varying" length="12"/>
 	</column>
-	<column name="year" not-null="true">
+	<column name="year">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="beam_type_id" not-null="true">
+	<column name="beam_type_id">
 		<type name="integer" length="0"/>
 	</column>
 	<constraint name="periods_pkey" type="pk-constr" table="public.periods">
@@ -306,7 +306,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1440" y="860"/>
+	<position x="1460" y="860"/>
 	<column name="id" not-null="true" sequence="public.runs_detectors_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -347,8 +347,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="b_field">
 		<type name="character varying" length="12"/>
 	</column>
-	<column name="energy_per_beam" not-null="true">
-		<type name="character varying" length="10"/>
+	<column name="energy_per_beam">
+		<type name="float" length="10"/>
 	</column>
 	<column name="ir">
 		<type name="character varying" length="25"/>
@@ -598,7 +598,7 @@ end;]]></definition>
 	 custom-color="#177163"
 	 src-table="public.periods"
 	 dst-table="public.beams_dictionary" reference-fk="beam_type_fk"
-	 src-required="false" dst-required="true"/>
+	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_quality_control_flags_runs_detectors" type="relfk" layers="0"
 	 custom-color="#aebe38"

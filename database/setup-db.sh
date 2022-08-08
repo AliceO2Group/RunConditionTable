@@ -20,7 +20,6 @@ DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
 
 
 
-
 # disconnect everyone from database in order to recreate it //if dev locally it is helpful
 psql -c "select pg_terminate_backend(pid) from pg_stat_activity where datname='$RCT_DATABASE';"
 
@@ -39,6 +38,8 @@ psql -d $RCT_DATABASE -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public
 
 
 if [ "$MOCK_DB" = "true" ] || [ "$1" == "--mock" ]; then
+  for i in {1..100}; do echo $i; done;
+  
   SCRIPT_PATH="$SCRIPTS_DIR/mock/mockData.py"
   MOCK_DATA="$SCRIPTS_DIR/mock/mock.tar"
   

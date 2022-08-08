@@ -13,17 +13,16 @@
  * or submit itself to any jurisdiction.
  */
 
-const config = require('../config/configProvider.js');
 const ServicesSynchronizer = require('./ServiceSynchronizer.js');
 // eslint-disable-next-line no-unused-vars
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
+const EnpointsFormatter = require('./ServicesEndpointsFormatter.js');
 
 class MonalisaService extends ServicesSynchronizer {
     constructor() {
         super();
         this.logger = new Log(MonalisaService.name);
-        this.endpoints = config.services.monalisa.url;
         this.ketpFields = {
             reconstructed_events: 'number_of_events',
             description: 'description',
@@ -80,7 +79,7 @@ class MonalisaService extends ServicesSynchronizer {
 
     syncRawMonalisaData() {
         return this.syncData(
-            this.endpoints.rawData,
+            EnpointsFormatter.dataPassesRaw(),
             this.dataAdjuster.bind(this),
             this.syncer.bind(this),
             this.rawDataResponsePreprocess.bind(this),
@@ -89,7 +88,7 @@ class MonalisaService extends ServicesSynchronizer {
 
     debugDisplaySync() {
         return this.syncData(
-            this.endpoints.rawData,
+            EnpointsFormatter.dataPassesRaw(),
             this.dataAdjuster.bind(this),
             async (_, r) => this.logger.debug(JSON.stringify(r)),
             this.rawDataResponsePreprocess,
