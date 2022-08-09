@@ -10,5 +10,4 @@ database**/cached/
 *__pycache__
 security
 scratch
-.vscode
 .env

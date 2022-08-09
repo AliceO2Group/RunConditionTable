@@ -23,6 +23,7 @@
     "test": "mkdir -pv ./reports; npm run static; npm run coverage; if [ \"RUNNING_ENV\" = \"DOCKER\" ]; then chmod -R o+w ./reports; fi #TODO platform independent",
     "test:mocha": "mocha",
     "reports:show": "open ./reports/**/*.html",
+    "clean": "rm -rf ./reports; rm -rf .nyc_output",
 
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:prod": "node app/main.js",
@@ -33,8 +34,10 @@
     "docker:test": "mkdir -p ./reports ./security; docker-compose -f docker-compose.yml -f docker-compose-test.yml up --build --abort-on-container-exit",
     "docker:prune-ex": "docker container rm $(docker ps -a --filter name=runconditiontable* -aq) #TODO",
     "docker:prune": "docker-compose rm --stop --force -v ",
-    "clean": "rm -rf ./reports; rm -rf .nyc_output",
-
+    
+    "db:up": "./database/local-dev/setup-db.sh --o-ex",
+    "db:check": "npm run docker:prune; npm run db:up; export MOCK_DB=${MOCK_DB:-false}; npm run docker:dev database",
+    "db:attach": "docker exec -it runconditiontable_database_1 psql -U postgres -d \"rct-db\"",
     "tmp": "node ./tmp/*.js"
   },
   "dependencies": {

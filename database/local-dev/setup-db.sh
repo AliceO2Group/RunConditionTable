@@ -4,8 +4,8 @@ SCRIPTS_DIR=$(dirname $0)
 MAIN_SCRIPT="$SCRIPTS_DIR/../setup-db.sh"
 CONVERT_SCRIPT="$SCRIPTS_DIR/../mock/convert.sh"
 
-CREATE_TABLES_SQL="$SCRIPTS_DIR/../create-tables.sql.q"
-DESIGN_PNG="$SCRIPTS_DIR/../design.png"
+CREATE_TABLES_SQL="$SCRIPTS_DIR/../exported/create-tables.sql"
+DESIGN_PNG="$SCRIPTS_DIR/../exported/design.png"
 DESIGN_FILE="$SCRIPTS_DIR/../design.dbm"
 
 

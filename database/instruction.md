@@ -1,3 +1,5 @@
+***_NOTE:_*** database dir must not contain ***sql*** fiels or ***sh*** other than setup-db.sh
+
 # preconditions
 
 1. postgres linux user
@@ -21,6 +23,6 @@ effect of flag '--mock' can be achived by using env variable MOCK_DB=true
 ./database/loca-dev/setup-db.sh --mock --python
 ```
 
- ***_NOTE:_*** './database/local-dev/setup-db.sh' is  wrapper for './database/setup-db.sh'
+ ***_NOTE:_*** ./database/local-dev/setup-db.sh' is  wrapper for './database/setup-db.sh
 
 

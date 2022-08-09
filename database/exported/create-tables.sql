@@ -407,30 +407,6 @@ CREATE TABLE public.simulation_passes_runs (
 ALTER TABLE public.simulation_passes_runs OWNER TO postgres;
 -- ddl-end --
 
--- object: public.insert_period | type: PROCEDURE --
--- DROP PROCEDURE IF EXISTS public.insert_period(varchar,integer,varchar) CASCADE;
-CREATE PROCEDURE public.insert_period (IN name varchar, IN year integer, IN _beam_type varchar)
-	LANGUAGE plpgsql
-	SECURITY INVOKER
-	AS $$
-DEClARE trg_id int;
-begin
-    select id into trg_id from beams_dictionary where beam_type = _beam_type;
-    if trg_id IS NULL THEN
-        raise notice 'trg_id is null: %', trg_id;
-        insert into beams_dictionary(id, beam_type) VALUES(DEFAULT, _beam_type);
-        select id into trg_id from beams_dictionary where beam_type = _beam_type;
-        raise notice 'trg_id now is not null: %', trg_id;
-
-    else 
-        raise notice 'id: %', trg_id;
-    end if ;
-end;
-$$;
--- ddl-end --
-ALTER PROCEDURE public.insert_period(varchar,integer,varchar) OWNER TO postgres;
--- ddl-end --
-
 -- object: pass_type_fk | type: CONSTRAINT --
 -- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS pass_type_fk CASCADE;
 ALTER TABLE public.data_passes ADD CONSTRAINT pass_type_fk FOREIGN KEY (pass_type)

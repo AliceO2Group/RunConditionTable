@@ -9,7 +9,7 @@ DEClARE trg_id int := null;
 BEGIN
     IF _beam_type IS NOT NULL THEN
         SELECT id INTO trg_id FROM beams_dictionary WHERE beam_type = _beam_type;
-        IF trg_id IS NULL THEN
+        IF trg_id IS NULL AND _beam_type IS NOT NULL THEN
             raise notice 'trg_id is null: %', trg_id;
             -- inserting beam_type if not exists;
             INSERT INTO beams_dictionary(id, beam_type) VALUES(DEFAULT, _beam_type);
@@ -47,7 +47,7 @@ BEGIN
     raise notice 'id: %', trg_id;
 
     INSERT INTO runs(id, period_id, run_number, "start", "end", b_field, energy_per_beam, ir, filling_scheme, triggers_conf, fill_number, run_type, mu, time_trg_start, time_trg_end) 
-        VALUES(DEFAULT, trg_id, _run_number, _time_start, _time_end, null, _energy_per_beam, null, null, null, null, _run_type, null, _time_trg_start, _time_trg_stop);
+              VALUES(DEFAULT, trg_id, _run_number, _time_start, _time_end, null, _energy_per_beam, null, null, null, null, _run_type, null, _time_trg_start, _time_trg_stop);
     SELECT id INTO trg_ID FROM runs WHERE run_number = _run_number;
 
     call insert_detectors_for_runs(trg_id, _detectors);
