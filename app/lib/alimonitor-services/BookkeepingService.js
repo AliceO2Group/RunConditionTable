@@ -40,7 +40,7 @@ class BookkeepingService extends ServicesSynchronizer {
             aliceDipoleCurrent: 'TODO', // TODO
         };
         this.syncTimestamp = 1 * 60 * 1000; // Milis
-        this.oneRequestDelay = 100; // Milis
+        this.oneRequestDelay = 10; // Milis
         this.tasks = [];
 
         this.forceStop = false;

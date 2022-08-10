@@ -68,17 +68,20 @@ class MonalisaService extends ServicesSynchronizer {
         // try {
         //     const enpoint = EnpointsFormatter.dataPassesDetailed(d.rawDes);
         //     console.log(enpoint);
-        //     const rawDet = this.getRawResponse(enpoint);
-        //     const detailed = await this.detailedDataResponsePreproces(rawDet);
-        //     console.log("detaisl", detailed);
-        //     const kf = {
-        //         run_no: 'run_number',
-        //         raw_partition: 'period',
-        //     };
-        //     const detO = detailed?.map((v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)));
-        //     detailsSql = detO ? detO.map((v) => `call insert_prod_details(${v.run_number}, ${v_period})`).join(';') + ';' : '';
+        //     const rawDet = await this.getRawResponse(enpoint);
+        //     console.log(rawDet);
+        //     const detailed = this.detailedDataResponsePreproces(rawDet);
+        //     if (detailed) {
+        //         console.log("detaisl", detailed);
+        //         const kf = {
+        //             run_no: 'run_number',
+        //             raw_partition: 'period',
+        //         };
+        //         const detO = detailed?.map((v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)));
+        //         detailsSql = detO ? detO.map((v) => `call insert_prod_details(${v.run_number}, ${v_period})`).join(';') + ';' : '';
+        //     }
         // } catch (e) {
-        //     // console.log(e);
+        //     console.log(e);
         // }
         pgCommand = pgCommand + detailsSql;
         return await dbClient.query(pgCommand);

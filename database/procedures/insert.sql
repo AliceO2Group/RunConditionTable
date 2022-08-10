@@ -64,7 +64,7 @@ BEGIN
         INSERT INTO runs(id, period_id, run_number, "start", "end", b_field, energy_per_beam, ir, filling_scheme, triggers_conf, fill_number, run_type, mu, time_trg_start, time_trg_end) 
                 VALUES(DEFAULT, trg_id, _run_number, _time_start, _time_end, null, _energy_per_beam, null, null, null, null, _run_type, null, _time_trg_start, _time_trg_stop);
     ELSE 
-        riase notice 'run % already present', _run_number;
+        raise notice 'run % already present', _run_number;
         IF _period IS NOT NULL THEN
             SELECT id INTO trg_id FROM periods WHERE name = _period;
             UPDATE runs SET period_id = trg_id WHERE run_number = _run_number;
