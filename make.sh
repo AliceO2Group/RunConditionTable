@@ -42,6 +42,10 @@ while [[ $# -gt 0 ]]; do
             PRUNE_AT_THE_END=true
             shift 1;
             ;;
+        -a|--attach)
+            ATTACH_TO_APP=true;
+            shift 1;
+            ;;
         *)
             OTHER_OPTS="$OTHER_OPTS $1"
             shift 1;
@@ -67,6 +71,9 @@ build() {
                 -f docker-compose-dev.yml \
                 -f docker-compose-dev-expose.yml \
                 up --build --detach $OTHER_OPTS $SERVICES
+            if [ "$ATTACH_TO_APP" = 'true' ]; then
+                docker attach rct_application
+            fi
         ;;
 
         prod)

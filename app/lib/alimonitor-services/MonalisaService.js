@@ -24,49 +24,64 @@ class MonalisaService extends ServicesSynchronizer {
         super();
         this.logger = new Log(MonalisaService.name);
         this.ketpFields = {
+            name: 'name',
             reconstructed_events: 'number_of_events',
             description: 'description',
+            output_size: 'size',
+            interaction_type: 'beam_type',
         };
         this.tasks = [];
     }
 
-    dataAdjuster(row) {
+    dataAdjuster(dp) {
         // eslint-disable-next-line capitalized-comments
-        // row = Utils.filterObject(row, this.ketpFields);
-        row.id = 'DEFAULT';
-        return row;
+        dp = Utils.filterObject(dp, this.ketpFields);
+        dp.id = 'DEFAULT';
+        dp.size = Number(dp.size);
+
+        const period = Utils.adjusetObjValuesToSql(this.extractPeriod(dp));
+        dp = Utils.adjusetObjValuesToSql(dp);
+        dp.period = period;
+
+        return dp;
     }
 
-    // eslint-disable-next-line no-unused-vars
     async syncer(dbClient, d) {
-        const pgCommand = `call insert_prod(
-            '${d.name}', 
-            '${d.description}', 
+        const { period } = d;
+        const period_insert = d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
+
+        const pgCommand = `${period_insert}; call insert_prod(
+            ${d.name}, 
+            ${d.description}, 
             ${null},
             ${null},
             ${null},
-            ${d.reconstructed_events},
+            ${d.number_of_events},
             ${null},
-            ${null}
+            ${d.size}
         );`;
 
         return await dbClient.query(pgCommand);
     }
 
     extractPeriod(rowData) {
-        const productionPrefix = rowData.name.slice(0, 6);
-        const period = {};
-        period.name = productionPrefix;
-        let year = parseInt(productionPrefix.slice(3, 5), 10);
-        if (year > 50) {
-            year += 1900;
-        } else {
-            year += 2000;
-        }
-        period.year = year;
-        period.beam_type = rowData.interaction_type;
+        try {
+            const productionPrefix = rowData.name.slice(0, 6);
+            const period = {};
+            period.name = productionPrefix;
+            let year = parseInt(productionPrefix.slice(3, 5), 10);
+            if (year > 50) {
+                year += 1900;
+            } else {
+                year += 2000;
+            }
+            period.year = year;
+            period.beam_type = rowData.beam_type;
 
-        return period;
+            return period;
+        } catch (e) {
+            return null;
+        }
     }
 
     rawDataResponsePreprocess(d) {

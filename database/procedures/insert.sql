@@ -1,6 +1,6 @@
 create or replace procedure insert_period (
     _name varchar, 
-    _yaer integer, 
+    _year integer, 
     _beam_type varchar)
 LANGUAGE plpgsql
 AS $$
@@ -19,8 +19,15 @@ BEGIN
             raise notice 'id: %', trg_id;
         END IF ;
     END IF;
-
-    INSERT INTO periods(id, name, year, beam_type_id) VALUES(DEFAULT, _name, _yaer, trg_id);
+    SELECT id INTO trg_id from periods WHERE name = _name;
+    IF trg_id IS NOT NULL THEN
+        raise notice 'period % already exists', _name;
+        IF _year IS NOT NULL THEN
+            UPDATE periods SET year = _year WHERE name = _name; 
+        END IF;
+    ELSE
+        INSERT INTO periods(id, name, year, beam_type_id) VALUES(DEFAULT, _name, _year, trg_id);
+    END IF;
 END;
 $$;
 
@@ -100,7 +107,7 @@ AS $$
 DEClARE trg_id int;
 BEGIN
     if NOT _pass_type IS NULL THEN
-        select id into trg_id from pass_types where pass_Type = _pass_type;
+        select id into trg_id from pass_types where pass_type = _pass_type;
         if trg_id IS NULL THEN
             raise notice 'trg_id is null: %', trg_id;
             -- inserting pass_type if not exists;
@@ -111,7 +118,7 @@ BEGIN
             raise notice 'id: %', trg_id;
         end if ;
     else
-        trg_id = null;
+        trg_id := null;
     end if;
     insert into data_passes(
         id, 

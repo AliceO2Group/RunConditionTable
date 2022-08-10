@@ -60,18 +60,32 @@ class BookkeepingService extends ServicesSynchronizer {
         } else {
             run.detectors = [];
         }
+        const { period } = run;
+        const res = Utils.adjusetObjValuesToSql(run);
+        res.rawperiod = period;
+        return res;
+    }
 
-        return Utils.adjusetObjValuesToSql(run);
+    extractPeriodYear(name) {
+        try {
+            let year = parseInt(name.slice(3, 5), 10);
+            if (year > 50) {
+                year += 1900;
+            } else {
+                year += 2000;
+            }
+            return year;
+        } catch (e) {
+            return 'NULL';
+        }
     }
 
     async syncer(dbClient, d) {
-        if (this.loglev > 2) {
-            // eslint-disable-next-line no-console
-            console.log(d);
-        }
-
+        const year = this.extractPeriodYear(d.rawperiod);
         const detectorsInSql = `ARRAY[${d.detectors.map((d) => `'${d}'`).join(',')}]::varchar[]`;
-        const pgCommand = `call insert_run (
+
+        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, null);` : '';
+        const pgCommand = `${period_insert} call insert_run (
             ${d.run_number},
             ${d.period}, 
             ${d.time_trg_start}, 
@@ -116,8 +130,8 @@ class BookkeepingService extends ServicesSynchronizer {
         };
         while (!this.syncTraversStop(state)) {
             if (this.loglev) {
-                this.logger.info(state);
-                this.logger.info(this.metaStore);
+                this.logger.info(JSON.stringify(state));
+                this.logger.info(JSON.stringify(this.metaStore));
             }
             const prom = this.syncData(
                 this.endpointBuilder(state),

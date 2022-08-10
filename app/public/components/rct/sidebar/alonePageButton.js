@@ -14,6 +14,7 @@
 
 import { h, iconLayers } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
+import { copyReloadButtons, hiddenButtonsControllerObj } from './multiButtonController.js';
 const { dataReqParams } = RCT;
 
 function defaultHref(page, index) {
@@ -39,6 +40,7 @@ export default function alonePageButton(model, title, page, index = null) {
         },
     }) : defaultHref(page, index);
 
+    const dropdownID = `dropdown-${dataHref}`;
     return [
         h('.menu-title', {
             class: currentPage === page ? 'currentMenuItem' : '',
@@ -49,6 +51,10 @@ export default function alonePageButton(model, title, page, index = null) {
             href: dataHref,
             onclick: (e) => model.router.handleLinkEvent(e),
             class: currentPage === page ? 'selected' : '',
-        }, [h('span', iconLayers(), ' ', title)]),
+        }, [
+            h('span', hiddenButtonsControllerObj(model, index, dropdownID, page),
+                iconLayers(), ' ', title, '   ',
+                copyReloadButtons(model, dataHref, page, index, dropdownID)),
+        ]),
     ];
 }

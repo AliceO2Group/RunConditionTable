@@ -11,7 +11,7 @@ const period_view = `
             ) AS beam,
             r.energy_per_beam::integer as energy
         FROM periods AS p
-        INNER JOIN runs as r
+        LEFT JOIN runs as r
             ON r.period_id = p.id
     )`;
 
@@ -19,7 +19,7 @@ const runs_per_period_view = (query) => `
     WITH runs_per_period_view AS (
         SELECT
             --r.id
-            p.name, 
+            --p.name, 
             r.run_number, 
             r.start, 
             r.end AS "end", 

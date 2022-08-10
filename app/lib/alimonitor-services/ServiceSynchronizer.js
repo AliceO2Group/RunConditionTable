@@ -107,9 +107,6 @@ class ServicesSynchronizer {
                     if (loglev > 1) {
                         this.logger.error(e.message);
                     }
-                    if (loglev >= 3) {
-                        this.logger.error(e.stack);
-                    }
                 }));
 
             await Promise.all(promises);
@@ -122,7 +119,7 @@ class ServicesSynchronizer {
                 }
             }
         } catch (error) {
-            this.logger.error(error);
+            this.logger.error(error.stack);
         }
     }
 

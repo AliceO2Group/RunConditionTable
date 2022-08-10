@@ -313,8 +313,8 @@ CREATE TABLE public.runs (
 	id integer NOT NULL DEFAULT nextval('public.runs_id_seq'::regclass),
 	period_id integer NOT NULL,
 	run_number bigint NOT NULL,
-	start bigint NOT NULL,
-	"end" bigint NOT NULL,
+	start bigint,
+	"end" bigint,
 	b_field character varying(12),
 	energy_per_beam float,
 	ir character varying(25),
@@ -323,8 +323,8 @@ CREATE TABLE public.runs (
 	fill_number integer,
 	run_type character varying(25),
 	mu character varying(25),
-	time_trg_start bigint NOT NULL,
-	time_trg_end bigint NOT NULL,
+	time_trg_start bigint,
+	time_trg_end bigint,
 	CONSTRAINT runs_pkey PRIMARY KEY (id),
 	CONSTRAINT run_number_unique UNIQUE (run_number)
 

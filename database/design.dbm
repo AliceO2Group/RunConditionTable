@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,180" last-zoom="0.75" max-obj-count="33"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,540" last-zoom="0.75" max-obj-count="33"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -91,7 +91,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="first_layer_data"/>
-	<position x="240" y="1160"/>
+	<position x="220" y="1160"/>
 	<column name="id" not-null="true" sequence="public.data_passes_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -338,10 +338,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="run_number" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="start" not-null="true">
+	<column name="start">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="end" not-null="true">
+	<column name="end">
 		<type name="bigint" length="0"/>
 	</column>
 	<column name="b_field">
@@ -368,10 +368,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="mu">
 		<type name="character varying" length="25"/>
 	</column>
-	<column name="time_trg_start" not-null="true">
+	<column name="time_trg_start">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="time_trg_end" not-null="true">
+	<column name="time_trg_end">
 		<type name="bigint" length="0"/>
 	</column>
 	<constraint name="runs_pkey" type="pk-constr" table="public.runs">

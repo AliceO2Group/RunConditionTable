@@ -37,7 +37,7 @@ class ServicesEnpointsFormatter {
     }
 
     static dataPassesRaw() {
-        return services.monalisa.url;
+        return services.monalisa.url.dataPassesRaw;
     }
 
     static dataPassesDetailed(description) {
