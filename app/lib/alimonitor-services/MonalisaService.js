@@ -40,17 +40,20 @@ class MonalisaService extends ServicesSynchronizer {
         dp.size = Number(dp.size);
 
         const period = Utils.adjusetObjValuesToSql(this.extractPeriod(dp));
+        const rawDes = dp.description;
         dp = Utils.adjusetObjValuesToSql(dp);
         dp.period = period;
+        dp.rawDes = rawDes;
 
         return dp;
     }
 
     async syncer(dbClient, d) {
         const { period } = d;
-        const period_insert = d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
+        const period_insert =
+            d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
 
-        const pgCommand = `${period_insert}; call insert_prod(
+        let pgCommand = `${period_insert}; call insert_prod(
             ${d.name}, 
             ${d.description}, 
             ${null},
@@ -61,6 +64,23 @@ class MonalisaService extends ServicesSynchronizer {
             ${d.size}
         );`;
 
+        let detailsSql = '';
+        // try {
+        //     const enpoint = EnpointsFormatter.dataPassesDetailed(d.rawDes);
+        //     console.log(enpoint);
+        //     const rawDet = this.getRawResponse(enpoint);
+        //     const detailed = await this.detailedDataResponsePreproces(rawDet);
+        //     console.log("detaisl", detailed);
+        //     const kf = {
+        //         run_no: 'run_number',
+        //         raw_partition: 'period',
+        //     };
+        //     const detO = detailed?.map((v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)));
+        //     detailsSql = detO ? detO.map((v) => `call insert_prod_details(${v.run_number}, ${v_period})`).join(';') + ';' : '';
+        // } catch (e) {
+        //     // console.log(e);
+        // }
+        pgCommand = pgCommand + detailsSql;
         return await dbClient.query(pgCommand);
     }
 
@@ -84,6 +104,15 @@ class MonalisaService extends ServicesSynchronizer {
         }
     }
 
+    detailedDataResponsePreproces(d) {
+        const entries = Object.entries(d);
+        const aaa = entries.map(([prodName, vObj]) => {
+            vObj['hid'] = prodName.trim();
+            return vObj;
+        });
+        return aaa;
+    }
+
     rawDataResponsePreprocess(d) {
         const entries = Object.entries(d);
         const aaa = entries.map(([prodName, vObj]) => {
@@ -91,6 +120,10 @@ class MonalisaService extends ServicesSynchronizer {
             return vObj;
         }).filter((r) => r.name?.match(/^LHC\d\d[a-zA-Z]_.*$/));
         return aaa;
+    }
+
+    detailedDataResponsePreproces(d) {
+
     }
 
     syncRawMonalisaData() {

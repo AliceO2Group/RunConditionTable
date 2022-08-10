@@ -23,7 +23,7 @@ const services = {
     monalisa: {
         url: {
             dataPassesRaw: 'https://alimonitor.cern.ch/production/raw.jsp?res_path=json',
-            dataPassesDetailed: 'https://alimonitor.cern.ch/production/raw_details.jsp?timesel=0&res_path=json',
+            dataPassesDetailed: 'https://alimonitor.cern.ch/raw/raw_details.jsp?timesel=0&res_path=json',
 
             mcRaw: 'https://alimonitor.cern.ch/MC/?res_path=json',
             mcDetailed: 'https://alimonitor.cern.ch/job_events.jsp?timesel=0&owner=aliprod&res_path=json',

@@ -126,12 +126,14 @@ class ServicesSynchronizer {
     async getRawResponse(endpoint) {
         return new Promise((resolve, reject) => {
             let rawData = '';
-            const req = this.checkClientType(endpoint).request(endpoint, this.opts, (res) => {
+            const req = this.checkClientType(endpoint).request(endpoint, this.opts, async (res) => {
                 const { statusCode } = res;
                 const contentType = res.headers['content-type'];
 
                 let error;
-                if (statusCode !== 200) {
+                if (statusCode == 302 || statusCode == 301) {
+                    error = new Error(`Redirect. Status Code: ${statusCode}; red. to ${res.headers.location}`);
+                } else if (statusCode !== 200) {
                     error = new Error(`Request Failed. Status Code: ${statusCode}`);
                 } else if (!/^application\/json/.test(contentType)) {
                     error = new Error(`Invalid content-type. Expected application/json but received ${contentType}`);

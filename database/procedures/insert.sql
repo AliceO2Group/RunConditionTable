@@ -45,6 +45,8 @@ create or replace procedure insert_run(
 LANGUAGE plpgsql
 AS $$
 DEClARE trg_id int;
+DEClARE run_id int;
+
 BEGIN
     if _period IS NULL THEN
         _period := 'TMP';
@@ -57,9 +59,18 @@ BEGIN
     END IF;
     raise notice 'id: %', trg_id;
 
-    INSERT INTO runs(id, period_id, run_number, "start", "end", b_field, energy_per_beam, ir, filling_scheme, triggers_conf, fill_number, run_type, mu, time_trg_start, time_trg_end) 
-              VALUES(DEFAULT, trg_id, _run_number, _time_start, _time_end, null, _energy_per_beam, null, null, null, null, _run_type, null, _time_trg_start, _time_trg_stop);
-    SELECT id INTO trg_ID FROM runs WHERE run_number = _run_number;
+    SELECT id INTO run_id from runs where run_number = _run_number;
+    IF run_id IS NULL THEN
+        INSERT INTO runs(id, period_id, run_number, "start", "end", b_field, energy_per_beam, ir, filling_scheme, triggers_conf, fill_number, run_type, mu, time_trg_start, time_trg_end) 
+                VALUES(DEFAULT, trg_id, _run_number, _time_start, _time_end, null, _energy_per_beam, null, null, null, null, _run_type, null, _time_trg_start, _time_trg_stop);
+    ELSE 
+        riase notice 'run % already present', _run_number;
+        IF _period IS NOT NULL THEN
+            SELECT id INTO trg_id FROM periods WHERE name = _period;
+            UPDATE runs SET period_id = trg_id WHERE run_number = _run_number;
+        END IF;
+    END IF;
+    SELECT id INTO trg_id FROM runs WHERE run_number = _run_number;
 
     call insert_detectors_for_runs(trg_id, _detectors);
 END;
@@ -141,6 +152,25 @@ BEGIN
             _size);
 end;
 $$;
+
+
+
+create or replace insert_prod_details(
+    _prod_name varchar,
+    _run_number integer,
+    _period varchar
+)
+LANGUAGE plpgsql
+AS $$
+DEClARE prod_id int;
+DECLARE run_id int;
+BEGIN
+    call insert_run(_run_number, _period, null, null, null, null, null, null, ARRAY[]::varchar[]);
+    SELECT id from runs INTO run_id WHERE run_number = _run_number;
+    SELECT id FROM data_passes INTO prod_id WHERE name = _name;
+    INSERT INTO data_passes_runs(id, run_id, data_pass_id) VALUES(DEFAULT, run_id, prod_id);
+END;
+$$
 
 -- call insert_prod ('LCH17f_pass1', 'dev asdf', 'tech', null, null, 12341, null, null);
 
