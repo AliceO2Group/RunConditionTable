@@ -59,7 +59,7 @@ class ServicesSynchronizer {
         }
 
         this.metaStore = {};
-        this.loglev = 0;
+        this.loglev = config.defaultLoglev;
     }
 
     setLogginLevel(logginLevel) {
@@ -106,6 +106,9 @@ class ServicesSynchronizer {
                     errors.push(e);
                     if (loglev > 1) {
                         this.logger.error(e.message);
+                    }
+                    if (loglev >= 3) {
+                        this.logger.error(e.stack);
                     }
                 }));
 

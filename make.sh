@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+# TODO raname build stage, maybe split to build and run stages
 usage() {
     cat << USAGE >&2
 Usage:

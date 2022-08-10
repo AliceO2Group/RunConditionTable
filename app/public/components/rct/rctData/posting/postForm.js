@@ -1,4 +1,3 @@
-/* eslint-disable no-unreachable */
 /**
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
@@ -13,14 +12,17 @@
  * or submit itself to any jurisdiction.
  */
 
+/* eslint-disable no-unreachable */
+
 import postingDataConfig from './postingDataConfig.js';
 import { h, fetchClient } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 
 // TODO move it to model
 export function postForm(model, data) {
-    alert('TODO');
-    return;
+    // eslint-disable-next-line capitalized-comments
+    // alert('TODO');
+    return 'TODO';
     const { params } = model.router;
     const pageMetadata = postingDataConfig[params.page];
     return h('tr', data.fields.map((f) => {

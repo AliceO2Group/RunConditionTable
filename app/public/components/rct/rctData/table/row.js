@@ -16,17 +16,21 @@ import { h } from '/js/src/index.js';
 import { reduceSerialIf } from '../../../../utils/utils.js';
 
 export default function row(
-    model, visibleFields, data, item, cellsButtons,
+    model, visibleFields, data, item, cellsSpecials,
 ) {
     return h(reduceSerialIf(
         'tr', ['.bg-grey', '.d-none'], ['.bg-warning', ''], [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     ), visibleFields.map((f) => {
         const n = f.name;
         if (item[n]) {
-            if (cellsButtons[n]) {
-                return h('td', cellsButtons[n](model, item, n));
+            if (cellsSpecials[n]) {
+                return h('td', cellsSpecials[n](model, item));
             } else {
-                return h('td', item[n]);
+                let representaion = item[n];
+                if (`${representaion}`.length > 50) {
+                    representaion = 'too long...';
+                }
+                return h('td', representaion);
             }
         } else {
             return h('td', '_');

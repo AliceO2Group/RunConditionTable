@@ -33,6 +33,7 @@ for p in "$STORED_PROCEDURES_DIR/"* ; do
   echo "use $p"
   psql -d $RCT_DATABASE -a -f $p
 done;
+psql -d $RCT_DATABASE -c "call insert_period('TMP', null, null);";
 
 # psql -c "ALTER DATABASE \"$RCT_DATABASE\" OWNER TO \"$RCT_USER\""
 # psql -c "GRANT ALL PRIVILEGES ON DATABASE \"$RCT_DATABASE\" TO \"$RCT_USER\""

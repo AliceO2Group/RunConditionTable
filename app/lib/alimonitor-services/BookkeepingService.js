@@ -27,6 +27,7 @@ class BookkeepingService extends ServicesSynchronizer {
         this.taskPeriodMilis = 4000;
         this.logger = new Log(BookkeepingService.name);
         this.ketpFields = {
+            id: 'ali-bk-id',
             runNumber: 'run_number',
             lhcPeriod: 'period',
             timeO2Start: 'start',
@@ -47,7 +48,6 @@ class BookkeepingService extends ServicesSynchronizer {
 
     dataAdjuster(run) {
         run = Utils.filterObject(run, this.ketpFields);
-        run.energy_per_beam = 0;
         run.id = 'DEFAULT';
         if (run.detectors) {
             if (typeof run.detectors === 'string') {
@@ -61,7 +61,7 @@ class BookkeepingService extends ServicesSynchronizer {
             run.detectors = [];
         }
 
-        return run;
+        return Utils.adjusetObjValuesToSql(run);
     }
 
     async syncer(dbClient, d) {
@@ -72,13 +72,13 @@ class BookkeepingService extends ServicesSynchronizer {
 
         const detectorsInSql = `ARRAY[${d.detectors.map((d) => `'${d}'`).join(',')}]::varchar[]`;
         const pgCommand = `call insert_run (
-            ${d.runNumber},
+            ${d.run_number},
             ${d.period}, 
-            ${d.timeTrgStart}, 
-            ${d.timeTrgStop}, 
-            ${d.timeO2Start}, 
-            ${d.timeO2End}, 
-            ${d.runType}, 
+            ${d.time_trg_start}, 
+            ${d.time_trg_end}, 
+            ${d.start}, 
+            ${d.end}, 
+            ${d.run_type}, 
             ${d.energy}, 
             ${detectorsInSql}
         );`;
@@ -105,8 +105,7 @@ class BookkeepingService extends ServicesSynchronizer {
     }
 
     endpointBuilder(state) {
-        const e = EndpintFormatter.bookkeeping(state['page'], state['limit']);
-        return e;
+        return EndpintFormatter.bookkeeping(state['page'], state['limit']);
     }
 
     async sync() {

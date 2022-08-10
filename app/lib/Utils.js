@@ -13,6 +13,7 @@
  * or submit itself to any jurisdiction.
  */
 
+const keywords = ['DEFAULT', 'NULL'];
 class Utils {
     static filterObject(obj, keptFields, suppressUndefined = false) {
         if (!keptFields) {
@@ -27,14 +28,26 @@ class Utils {
         return res;
     }
 
-    static parseValuesToSql(values) {
-        return values.map((v) => {
-            if (isNaN(v) && v !== 'DEFAULT') {
-                return `'${v}'`;
-            } else {
-                return v;
+    static adjusetObjValuesToSql(obj) {
+        const res = {};
+        for (const k in obj) {
+            if (k) {
+                res[k] = Utils.parseValueToSql(obj[k]);
             }
-        });
+        }
+        return res;
+    }
+
+    static parseValueToSql(v) {
+        if (typeof v == 'string' && !keywords.includes(v.toUpperCase())) {
+            return `'${v}'`;
+        } else {
+            return v;
+        }
+    }
+
+    static parseValuesToSql(values) {
+        return values.map((v) => Utils.parseValueToSql(v));
     }
 
     static preserveSQLKeywords(words) {

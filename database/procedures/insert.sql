@@ -39,6 +39,10 @@ LANGUAGE plpgsql
 AS $$
 DEClARE trg_id int;
 BEGIN
+    if _period IS NULL THEN
+        _period := 'TMP';
+    END IF;
+
     SELECT id INTO trg_ID FROM periods WHERE name = _period;
     IF trg_id IS NULL THEN
         call insert_period(_period, null, null);

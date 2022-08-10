@@ -76,7 +76,7 @@ class RunConditionTableApplication {
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
         } catch (error) {
-            this.con.error(error);
+            this.con.error(error.message);
         }
     }
 

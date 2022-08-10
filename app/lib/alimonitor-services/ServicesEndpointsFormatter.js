@@ -33,7 +33,7 @@ const services = {
 
 class ServicesEnpointsFormatter {
     static bookkeeping(page, limit) {
-        return `${services.bookkeeping.ali}/?page[offset]=${page * limit}&page[limit]=${limit}`;
+        return `${services.bookkeeping.url.ali}/?page[offset]=${page * limit}&page[limit]=${limit}`;
     }
 
     static dataPassesRaw() {

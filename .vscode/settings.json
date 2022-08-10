@@ -8,7 +8,13 @@
         }
     },
     "files.exclude": {
-        ".*": true,
+        ".eslintrc": true,
+        ".nycrc": true,
+        ".gitignore": true,
+        ".github": true,
+        ".env-default": true,
+        "codecov.yml": true,
+
         "reports": true,
         "LICENSE": true,
         "node_modules": true,
