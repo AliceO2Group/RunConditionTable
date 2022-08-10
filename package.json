@@ -28,17 +28,16 @@
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:prod": "node app/main.js",
 
-    "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose-expose.yml up --build",
-    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml -f docker-compose-dev-expose.yml up --build",
-    "docker:prod:mock": "docker-compose -f docker-compose.yml -f docker-compose-dev.yml -f docker-compose-expose.yml -f docker-compose-dev-expose.yml up --build",
-    "docker:test": "mkdir -p ./reports; docker-compose -f docker-compose.yml -f docker-compose-test.yml up --build --abort-on-container-exit",
-    "docker:prune": "docker-compose rm --stop --force -v ",
+    "prod": "./make.sh -s build --target prod",
+    "dev": "./make.sh -s prune,db,build,follow,prune --target dev",
+    "docker:test": "./make.sh -s prune,build,prune --target test",
+    "prune": "./make.sh -s prune",
 
-    "build": "./scripts/docker-build.sh",
+    "make": "./scripts/make.sh",
     
     "db:up": "./database/local-dev/setup-db.sh --o-ex",
-    "db:check": "npm run docker:prune; npm run db:up; export MOCK_DB=${MOCK_DB:-false}; npm run docker:dev database",
-    "db:attach": "docker exec -it runconditiontable_database_1 psql -U postgres -d \"rct-db\"",
+    "db:check": "./make.sh -s prune,db,build,follow,prune -t dev -S database",
+    "db:attach": "docker exec -it rct_database psql -U postgres -d \"rct-db\"",
     
     "tmp": "node ./tmp/*.js"
 

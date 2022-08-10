@@ -9,7 +9,7 @@ USAGE
 }
 
 PREVIOD_USER_LOC=$(pwd)
-PROJECT_DIR="$(dirname $(realpath $0))/../"
+PROJECT_DIR="$(dirname $(realpath $0))"
 DOCKER_DIR="$PROJECT_DIR/docker";
 cd $DOCKER_DIR
 
@@ -36,6 +36,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -f|--follow)
             FOLLOW=true
+            shift 1;
+            ;;
+        -p|--prune)
+            PRUNE_AT_THE_END=true
             shift 1;
             ;;
         *)
@@ -95,7 +99,7 @@ build() {
 for stage in $STAGES; do
     case $stage in
         prune)
-            $COMM_PD rm $SERVICES --stop --force -v 
+            $COMM_PD rm --stop --force -v $SERVICES
             ;;
 
         db)
@@ -116,5 +120,8 @@ for stage in $STAGES; do
     esac
 done
 
+if [ "$PRUNE_AT_THE_END" = 'true' ]; then
+    $COMM_PD rm --stop --force -v
+fi
 
 cd $PREVIOD_USER_LOC
