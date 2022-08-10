@@ -84,7 +84,7 @@ class RunConditionTableApplication {
         Utils.switchCase(args[0], {
             stop: () => this.stop(),
             run: () => this.run(),
-        }, this.incorrectCommand())(args);
+        }, this.incorrectCommand())();
     }
 
     servCLI(serv, args) {
@@ -93,7 +93,7 @@ class RunConditionTableApplication {
             stop: () => serv.clearTasks(),
             start: () => serv.setSyncTask(),
             loglev: () => serv.setLogginLevel(args[1]),
-        }, this.incorrectCommand())(args);
+        }, this.incorrectCommand())();
     }
 
     incorrectCommand() {

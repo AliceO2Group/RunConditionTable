@@ -36,6 +36,7 @@ class BookkeepingService extends ServicesSynchronizer {
             runType: 'run_type',
             lhcBeamEnergy: 'energy',
             detectors: 'detectors',
+            aliceDipoleCurrent: 'TODO', // TODO
         };
         this.syncTimestamp = 1 * 60 * 1000; // Milis
         this.oneRequestDelay = 100; // Milis
@@ -46,26 +47,42 @@ class BookkeepingService extends ServicesSynchronizer {
 
     dataAdjuster(run) {
         run = Utils.filterObject(run, this.ketpFields);
-        run.period_id = 1; // TODO
         run.energy_per_beam = 0;
         run.id = 'DEFAULT';
-        if (typeof run.detectors === 'string') {
-            run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
+        if (run.detectors) {
+            if (typeof run.detectors === 'string') {
+                if (run.detectors.includes(',')) { // TODO may ther delimiters
+                    run.detectors = run.detectors.split(/,/).map((d) => d.trim());
+                } else {
+                    run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
+                }
+            }
+        } else {
+            run.detectors = [];
         }
 
-        delete run.detectors; // TODO
         return run;
     }
 
-    async syncer(dbClient, dataRow) {
+    async syncer(dbClient, d) {
         if (this.loglev > 2) {
             // eslint-disable-next-line no-console
-            console.log(dataRow);
+            console.log(d);
         }
 
-        const pgCommand = `call insert_run(
+        const detectorsInSql = `ARRAY[${d.detectors.map((d) => `'${d}'`).join(',')}]::varchar[]`;
+        const pgCommand = `call insert_run (
+            ${d.runNumber},
+            ${d.period}, 
+            ${d.timeTrgStart}, 
+            ${d.timeTrgStop}, 
+            ${d.timeO2Start}, 
+            ${d.timeO2End}, 
+            ${d.runType}, 
+            ${d.energy}, 
+            ${detectorsInSql}
+        );`;
 
-        )`;
         return await dbClient.query(pgCommand);
     }
 

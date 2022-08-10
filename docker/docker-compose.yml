@@ -1,14 +1,14 @@
 version: '3.1'
 services:
   application:
+    container_name: rct_application
     stdin_open: true
     tty: true 
     build:
       context: ./
-      dockerfile: Dockerfile.application
+      dockerfile: docker/Dockerfile.application
     environment:
       - RUNNING_ENV=DOCKER
-      - CERN_SOCKS=${CERN_SOCKS:-true}
       - ALIMONITOR_PASSPHRASE=${ALIMONITOR_PASSPHRASE}
     networks:
       - rct-network
@@ -19,9 +19,10 @@ services:
         target: /opt/RunConditionTable/security
     
   database:
+    container_name: rct_database
     build: 
       context: ./
-      dockerfile: Dockerfile.database
+      dockerfile: docker/Dockerfile.database
     environment:
       - RUNNING_ENV=DOCKER
     volumes:

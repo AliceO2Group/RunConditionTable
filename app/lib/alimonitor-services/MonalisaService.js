@@ -38,17 +38,18 @@ class MonalisaService extends ServicesSynchronizer {
     }
 
     // eslint-disable-next-line no-unused-vars
-    async syncer(dbClient, dataRow) {
+    async syncer(dbClient, d) {
         const pgCommand = `call insert_prod(
-            '${dataRow.name}', 
-            '${dataRow.description}', 
+            '${d.name}', 
+            '${d.description}', 
             ${null},
             ${null},
             ${null},
-            ${dataRow.reconstructed_events},
+            ${d.reconstructed_events},
             ${null},
             ${null}
         );`;
+
         return await dbClient.query(pgCommand);
     }
 
