@@ -16,7 +16,7 @@
 7. npm run docker:prune - removes containers build by above command, assoc. volumes and networks
 
 ## using grid certificates
-In '\<root\>/security/' need to locate grid certifcates. There are to ways.:<br>
+In '\<root\>/security/' need to locate grid certifcates. There are two ways.:<br>
 1. cert.pem and privkey.pem from grid certificate
 2. myCertificate.p12 from grid within setting ALIMONITOR_PASSPHRASE env var which hold passphrase to that certificate
 
@@ -31,7 +31,7 @@ or using script which opens defualt proxy (the same as above one)
 ./scripts/dev-sshopen.sh <USER> <SERVER_NAME>
 ```
 
-2. If you want to use prxoy other than default (because  e.g. the application is <b>NOT</b> running on docker) you need to specify the socket you are going to use on your own. First open the socket via ssh:
+2. If you want to use proxy other than default (because  e.g. the application is <b>NOT</b> running on docker) you need to specify the socket you are going to use on your own. First open the socket via ssh:
 ```bash
 ssh -D localhost:12345 <user>@<host>
 ```
@@ -50,3 +50,7 @@ for using, managing mock data changes:
 
 1. python > 3.7
 2. jupyter notebook with nbconverter used to transform database/mock/mockData.ipynb to python scritpt, also required for git hook if changing this notebook
+
+## Documentation links
+
+1. Environment variables: [Configuration](./docs/CONFIGURATION.md)
