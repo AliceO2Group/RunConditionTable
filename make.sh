@@ -82,6 +82,7 @@ build() {
         prod)
             $COMM_PD \
                 -f docker-compose.yml \
+                -f docker-compose-prod.yml \
                 -f docker-compose-expose.yml \
                 up --build --detach $OTHER_OPTS $SERVICES
         ;;

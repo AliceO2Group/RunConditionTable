@@ -28,7 +28,7 @@
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:prod": "node app/main.js",
 
-    "prod": "./make.sh -s build --target prod",
+    "prod": "./make.sh",
     "dev": "./make.sh -s prune,db,build,prune --target dev --attach",
     "docker:test": "./make.sh -s prune,build,prune --target test",
     "prune": "./make.sh -s prune",
