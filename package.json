@@ -29,7 +29,8 @@
     "start:prod": "node app/main.js",
 
     "prod": "./make.sh",
-    "dev": "./make.sh -s prune,db,build,prune --target dev --attach",
+    "dev": "./make.sh -s prune,db,build,stop --target dev --attach",
+    "dev:up": "./make.sh -s build[up] --target dev --attach",
     "docker:test": "./make.sh -s prune,build,prune --target test",
     "prune": "./make.sh -s prune",
     "app:attach": "docker attach rct_application", 

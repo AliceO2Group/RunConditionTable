@@ -67,13 +67,14 @@ follow() {
 
 build() {
     mkdir -p $PROJECT_DIR/security
+    ORDER=$1
     case $TARGET in 
         dev)
             $COMM_PD \
                 -f docker-compose.yml \
                 -f docker-compose-dev.yml \
                 -f docker-compose-dev-expose.yml \
-                up --build --detach $OTHER_OPTS $SERVICES
+                $ORDER $OTHER_OPTS $SERVICES
             if [ "$ATTACH_TO_APP" = 'true' ]; then
                 docker attach rct_application
             fi
@@ -84,7 +85,7 @@ build() {
                 -f docker-compose.yml \
                 -f docker-compose-prod.yml \
                 -f docker-compose-expose.yml \
-                up --build --detach $OTHER_OPTS $SERVICES
+                $ORDER $OTHER_OPTS $SERVICES
         ;;
 
         test)
@@ -108,21 +109,37 @@ build() {
 
 
 for stage in $STAGES; do
+    echo " *** do $stage"
     case $stage in
         prune)
             $COMM_PD rm --stop --force -v $SERVICES
             ;;
-
         db)
             $PROJECT_DIR/database/local-dev/setup-db.sh --o-ex
             ;;
-
-        build)
-            build
+        build*)
+            BUILD_STAGES=$(echo ${stage#build} | sed -E "s/(\[|\:|\])/ /g")
+            BUILD_STAGES=$(echo $BUILD_STAGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g")
+            if [ -z "$BUILD_STAGES" ]; then
+                echo 'default build path'
+                BUILD_STAGES="build up"
+            fi
+            echo $BUILD_STAGES
+            for bs in $BUILD_STAGES; do
+            echo "*** *** do build : $bs"
+                if [ "$bs" == 'up' ]; then
+                    bs="up --detach";
+                fi
+                build "$bs"
+            done
             ;;
         follow)
             follow
             ;;
+        stop)
+            $COMM_PD stop $OTHER_OPTS
+            ;;
+
         *)
             echo "incorrect stage: $stage"
             usage
