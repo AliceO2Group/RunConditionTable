@@ -15,7 +15,7 @@
 import { h } from '/js/src/index.js';
 import tableHeader from './table/header.js';
 import row from './table/row.js';
-import pagesCellsButtons from './pagesCellsButtons.js';
+import pagesCellsSpecials from './pagesCellsSpecials.js';
 import siteController from './siteController.js';
 
 import postingDataConfig from './posting/postingDataConfig.js';
@@ -33,7 +33,7 @@ export default function tableView(model) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
 
-    const cellsButtons = pagesCellsButtons[dataPointer.page];
+    const cellsSpecials = pagesCellsSpecials[dataPointer.page];
 
     const { fields } = data;
     const visibleFields = fields.filter((f) => f.marked);
@@ -47,17 +47,18 @@ export default function tableView(model) {
         h('table.table', { id: `data-table-${data.url}` }, [
             tableHeader(visibleFields, data, () => model.fetchedData.changeRecordsVisibility(data)),
             tableBody(
-                model, visibleFields, data, cellsButtons, dataPointer.page,
+                model, visibleFields, data, cellsSpecials, dataPointer.page,
             ),
         ]),
     ]);
 }
 
 function tableBody(
-    model, visibleFields, data, cellsButtons, page,
+    model, visibleFields, data, cellsSpecials, page,
 ) {
-    return h('tbody', { id: `table-body-${data.url}` }, [postingDataConfig[page] ? postForm(model, data) : '']
-        .concat(data.rows.map((item) => row(
-            model, visibleFields, data, item, cellsButtons,
-        ))));
+    return h('tbody', { id: `table-body-${data.url}` },
+        [postingDataConfig[page] ? postForm(model, data) : '']
+            .concat(data.rows.map((item) => row(
+                model, visibleFields, data, item, cellsSpecials,
+            ))));
 }

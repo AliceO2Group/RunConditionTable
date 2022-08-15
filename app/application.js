@@ -70,13 +70,13 @@ class RunConditionTableApplication {
             const cmdAndArgs = line.trim().split(/ +/);
             Utils.switchCase(cmdAndArgs[0], {
                 '': () => {},
-                bk: (args) => this.bookkeepingCli(args),
-                ml: (args) => this.monalisaCli(args),
+                bk: (args) => this.servCLI(this.bookkeepingService, args),
+                ml: (args) => this.servCLI(this.monalisaService, args),
                 app: (args) => this.applicationCli(args),
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
         } catch (error) {
-            this.con.error(error);
+            this.con.error(error.message);
         }
     }
 
@@ -84,25 +84,16 @@ class RunConditionTableApplication {
         Utils.switchCase(args[0], {
             stop: () => this.stop(),
             run: () => this.run(),
-        }, this.incorrectCommand())(args);
+        }, this.incorrectCommand())();
     }
 
-    bookkeepingCli(args) {
+    servCLI(serv, args) {
         Utils.switchCase(args[0], {
-            state: () => this.con.log(args[1] ? this.bookkeepingService?.[args[1]] : this.bookkeepingService),
-            stop: () => this.bookkeepingService.clearTasks(),
-            start: () => this.bookkeepingService.setSyncTask(),
-            loglev: () => this.bookkeepingService.setLogginLevel(args[1]),
-        }, this.incorrectCommand())(args);
-    }
-
-    monalisaCli(args) {
-        Utils.switchCase(args[0], {
-            state: () => this.con.log(args[1] ? this.monalisaService?.[args[1]] : this.monalisaService),
-            stop: () => this.monalisaService.clearTasks(),
-            start: () => this.monalisaService.setSyncTask(),
-            loglev: () => this.monalisaService.setLogginLevel(args[1]),
-        }, this.incorrectCommand())(args);
+            state: () => this.con.log(args[1] ? serv?.[args[1]] : serv),
+            stop: () => serv.clearTasks(),
+            start: () => serv.setSyncTask(),
+            loglev: () => serv.setLogginLevel(args[1]),
+        }, this.incorrectCommand())();
     }
 
     incorrectCommand() {
@@ -184,6 +175,10 @@ class RunConditionTableApplication {
 
     getEnvMode() {
         return process.env.ENV_MODE;
+    }
+
+    getRunningEnv() {
+        return process.env.RUNNING_ENV;
     }
 
     getAddress() {

@@ -42,9 +42,9 @@ const { pagesNames } = RCT;
  * to page runs with fetched data from table runs related to chosen period.
  */
 
-const pagesCellsButtons = {};
+const pagesCellsSpecials = {};
 
-pagesCellsButtons[pagesNames.periods] = {
+pagesCellsSpecials[pagesNames.periods] = {
     name: (model, item) => [
         h('', item.name),
         viewButton(
@@ -71,9 +71,16 @@ pagesCellsButtons[pagesNames.periods] = {
             `/?page=${pagesNames.mc}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
         ),
     ],
+
+    energy: (model, item) => {
+        const energies = item.energy.split(/,/).map((v) => Number(v.trim()));
+        const avg = energies.reduce((acc, c, _, __) => acc + c, 0) / (energies.length || 1);
+        return `avg: ${avg}`;
+        // TODO charts
+    },
 };
 
-pagesCellsButtons[pagesNames.dataPasses] = {
+pagesCellsSpecials[pagesNames.dataPasses] = {
     name: (model, item) => [
         h('', item.name),
         viewButton(
@@ -85,27 +92,27 @@ pagesCellsButtons[pagesNames.dataPasses] = {
         ),
     ],
 };
-pagesCellsButtons[pagesNames.mc] = {};
-pagesCellsButtons[pagesNames.runsPerPeriod] = {
+pagesCellsSpecials[pagesNames.mc] = {};
+pagesCellsSpecials[pagesNames.runsPerPeriod] = {
     run_number: (model, item) => viewButton(
         model,
         item.run_number,
-        (e) => model.handleClick(model, e),
+        (e) => model.handleClick(e),
         '',
         `/?page=${pagesNames.flags}&index=${item.run_number}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
     ),
 };
 
-pagesCellsButtons[pagesNames.flags] = {};
-pagesCellsButtons[pagesNames.runsPerDataPass] = {};
+pagesCellsSpecials[pagesNames.flags] = {};
+pagesCellsSpecials[pagesNames.runsPerDataPass] = {};
 
 // Checking correctness of configuration
-for (const p in pagesCellsButtons) {
-    if (pagesCellsButtons[p]) {
+for (const p in pagesCellsSpecials) {
+    if (pagesCellsSpecials[p]) {
         if (! pagesNames[p]) {
             throw Error('incorrect configuration');
         }
     }
 }
 
-export default pagesCellsButtons;
+export default pagesCellsSpecials;

@@ -38,6 +38,8 @@ module.exports = {
     },
 
     public: require('./public.js'),
+
+    defaultLoglev: 1,
 };
 
 // TODO config validation

@@ -221,8 +221,8 @@ ALTER SEQUENCE public.periods_id_seq OWNER TO postgres;
 CREATE TABLE public.periods (
 	id integer NOT NULL DEFAULT nextval('public.periods_id_seq'::regclass),
 	name character varying(12) NOT NULL,
-	year integer NOT NULL,
-	beam_type_id integer NOT NULL,
+	year integer,
+	beam_type_id integer,
 	CONSTRAINT periods_pkey PRIMARY KEY (id),
 	CONSTRAINT p_name_unique UNIQUE (name)
 
@@ -313,18 +313,18 @@ CREATE TABLE public.runs (
 	id integer NOT NULL DEFAULT nextval('public.runs_id_seq'::regclass),
 	period_id integer NOT NULL,
 	run_number bigint NOT NULL,
-	start bigint NOT NULL,
-	"end" bigint NOT NULL,
+	start bigint,
+	"end" bigint,
 	b_field character varying(12),
-	energy_per_beam character varying(10) NOT NULL,
+	energy_per_beam float,
 	ir character varying(25),
 	filling_scheme integer,
 	triggers_conf character varying(25),
 	fill_number integer,
 	run_type character varying(25),
 	mu character varying(25),
-	time_trg_start bigint NOT NULL,
-	time_trg_end bigint NOT NULL,
+	time_trg_start bigint,
+	time_trg_end bigint,
 	CONSTRAINT runs_pkey PRIMARY KEY (id),
 	CONSTRAINT run_number_unique UNIQUE (run_number)
 
@@ -405,30 +405,6 @@ CREATE TABLE public.simulation_passes_runs (
 );
 -- ddl-end --
 ALTER TABLE public.simulation_passes_runs OWNER TO postgres;
--- ddl-end --
-
--- object: public.insert_period | type: PROCEDURE --
--- DROP PROCEDURE IF EXISTS public.insert_period(varchar,integer,varchar) CASCADE;
-CREATE PROCEDURE public.insert_period (IN name varchar, IN year integer, IN _beam_type varchar)
-	LANGUAGE plpgsql
-	SECURITY INVOKER
-	AS $$
-DEClARE trg_id int;
-begin
-    select id into trg_id from beams_dictionary where beam_type = _beam_type;
-    if trg_id IS NULL THEN
-        raise notice 'trg_id is null: %', trg_id;
-        insert into beams_dictionary(id, beam_type) VALUES(DEFAULT, _beam_type);
-        select id into trg_id from beams_dictionary where beam_type = _beam_type;
-        raise notice 'trg_id now is not null: %', trg_id;
-
-    else 
-        raise notice 'id: %', trg_id;
-    end if ;
-end;
-$$;
--- ddl-end --
-ALTER PROCEDURE public.insert_period(varchar,integer,varchar) OWNER TO postgres;
 -- ddl-end --
 
 -- object: pass_type_fk | type: CONSTRAINT --

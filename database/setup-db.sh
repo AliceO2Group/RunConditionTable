@@ -15,13 +15,13 @@ RCT_DATABASE="rct-db"
 RCT_USER="rct-user"
 RCT_PASSWORD="rct-passwd"
 RCT_DATABASE_HOST="localhost"
-CREATE_TABLES_SQL="$SCRIPTS_DIR/create-tables.sql.q"
+CREATE_TABLES_SQL="$SCRIPTS_DIR/exported/create-tables.sql"
+STORED_PROCEDURES_DIR="$SCRIPTS_DIR/procedures"
 DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
 
 
 
-
-# disconnect everyone from database in order to recreate it //if dev locally it is helpful
+# disconnect everyone from database in order to recreate it //if dev locally it might be helpful
 psql -c "select pg_terminate_backend(pid) from pg_stat_activity where datname='$RCT_DATABASE';"
 
 psql -c "DROP DATABASE IF EXISTS \"$RCT_DATABASE\""
@@ -29,6 +29,11 @@ psql -c "DROP USER IF EXISTS \"$RCT_USER\""
 psql -c "CREATE USER \"$RCT_USER\" WITH ENCRYPTED PASSWORD '$RCT_PASSWORD';"
 psql -c "CREATE DATABASE \"$RCT_DATABASE\""
 psql -d $RCT_DATABASE -a -f $CREATE_TABLES_SQL
+for p in "$STORED_PROCEDURES_DIR/"* ; do
+  echo "use $p"
+  psql -d $RCT_DATABASE -a -f $p
+done;
+psql -d $RCT_DATABASE -c "call insert_period('TMP', null, null);";
 
 # psql -c "ALTER DATABASE \"$RCT_DATABASE\" OWNER TO \"$RCT_USER\""
 # psql -c "GRANT ALL PRIVILEGES ON DATABASE \"$RCT_DATABASE\" TO \"$RCT_USER\""
@@ -36,9 +41,24 @@ psql -d $RCT_DATABASE -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO
 psql -d $RCT_DATABASE -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$RCT_USER\""
 
 
+mock_use_info() {
+  car << info >&2
+Info: 
+  ***********************************************
+  ***********************************************
+  *********                         *************
+  *********       MOCK DATA         *************
+  *********                         *************
+  *********                         *************
+  ***********************************************
+  ***********************************************
+info
+}
 
 
 if [ "$MOCK_DB" = "true" ] || [ "$1" == "--mock" ]; then
+  mock_use_info
+
   SCRIPT_PATH="$SCRIPTS_DIR/mock/mockData.py"
   MOCK_DATA="$SCRIPTS_DIR/mock/mock.tar"
   

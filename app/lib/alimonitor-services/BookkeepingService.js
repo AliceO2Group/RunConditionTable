@@ -13,10 +13,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const config = require('../config/configProvider.js');
 const ServicesSynchronizer = require('./ServiceSynchronizer.js');
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
+const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
 
 /**
  * BookkeepingService used to synchronize runs
@@ -26,18 +26,21 @@ class BookkeepingService extends ServicesSynchronizer {
         super();
         this.taskPeriodMilis = 4000;
         this.logger = new Log(BookkeepingService.name);
-        this.endpoints = config.services.bookkeeping.url;
         this.ketpFields = {
+            id: 'ali-bk-id',
             runNumber: 'run_number',
+            lhcPeriod: 'period',
             timeO2Start: 'start',
             timeO2End: 'end',
             timeTrgStart: 'time_trg_start',
             timeTrgEnd: 'time_trg_end',
             runType: 'run_type',
+            lhcBeamEnergy: 'energy',
             detectors: 'detectors',
+            aliceDipoleCurrent: 'TODO', // TODO
         };
         this.syncTimestamp = 1 * 60 * 1000; // Milis
-        this.oneRequestDelay = 100; // Milis
+        this.oneRequestDelay = 10; // Milis
         this.tasks = [];
 
         this.forceStop = false;
@@ -45,23 +48,56 @@ class BookkeepingService extends ServicesSynchronizer {
 
     dataAdjuster(run) {
         run = Utils.filterObject(run, this.ketpFields);
-        run.period_id = 1; // TODO
-        run.energy_per_beam = 0;
         run.id = 'DEFAULT';
-        if (typeof run.detectors === 'string') {
-            run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
+        if (run.detectors) {
+            if (typeof run.detectors === 'string') {
+                if (run.detectors.includes(',')) { // TODO may ther delimiters
+                    run.detectors = run.detectors.split(/,/).map((d) => d.trim());
+                } else {
+                    run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
+                }
+            }
+        } else {
+            run.detectors = [];
         }
-
-        delete run.detectors; // TODO
-        return run;
+        const { period } = run;
+        const res = Utils.adjusetObjValuesToSql(run);
+        res.rawperiod = period;
+        return res;
     }
 
-    async syncer(dbClient, dataRow) {
-        if (this.loglev > 2) {
-            // eslint-disable-next-line no-console
-            console.log(dataRow);
+    extractPeriodYear(name) {
+        try {
+            let year = parseInt(name.slice(3, 5), 10);
+            if (year > 50) {
+                year += 1900;
+            } else {
+                year += 2000;
+            }
+            return year;
+        } catch (e) {
+            return 'NULL';
         }
-        return await dbClient.query(Utils.simpleBuildInsertQuery('runs', dataRow));
+    }
+
+    async syncer(dbClient, d) {
+        const year = this.extractPeriodYear(d.rawperiod);
+        const detectorsInSql = `ARRAY[${d.detectors.map((d) => `'${d}'`).join(',')}]::varchar[]`;
+
+        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, null);` : '';
+        const pgCommand = `${period_insert} call insert_run (
+            ${d.run_number},
+            ${d.period}, 
+            ${d.time_trg_start}, 
+            ${d.time_trg_end}, 
+            ${d.start}, 
+            ${d.end}, 
+            ${d.run_type}, 
+            ${d.energy}, 
+            ${detectorsInSql}
+        );`;
+
+        return await dbClient.query(pgCommand);
     }
 
     metaDataHandler(requestJsonResult) {
@@ -82,9 +118,8 @@ class BookkeepingService extends ServicesSynchronizer {
         return state;
     }
 
-    endpointBuilder(endpoint, state) {
-        const e = `${endpoint}/?page[offset]=${state['page'] * state['limit']}&page[limit]=${state['limit']}`;
-        return e;
+    endpointBuilder(state) {
+        return EndpintFormatter.bookkeeping(state['page'], state['limit']);
     }
 
     async sync() {
@@ -95,11 +130,11 @@ class BookkeepingService extends ServicesSynchronizer {
         };
         while (!this.syncTraversStop(state)) {
             if (this.loglev) {
-                this.logger.info(state);
-                this.logger.info(this.metaStore);
+                this.logger.info(JSON.stringify(state));
+                this.logger.info(JSON.stringify(this.metaStore));
             }
             const prom = this.syncData(
-                this.endpointBuilder(this.endpoints.ali, state),
+                this.endpointBuilder(state),
                 this.dataAdjuster.bind(this),
                 this.syncer.bind(this),
                 (res) => res.data,

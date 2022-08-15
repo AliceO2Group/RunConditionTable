@@ -1,0 +1,42 @@
+FROM node:16.9.1-alpine3.12 as base
+
+    WORKDIR /opt/RunConditionTable
+
+    RUN apk add --no-cache \
+        bash=5.0.17-r0
+
+
+FROM base as devdependencies
+
+    COPY ./package*.json ./
+    RUN npm --silent ci
+
+
+FROM devdependencies as development
+    COPY ./.git ./.git
+    COPY ./.gitignore ./
+
+    CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "start:dev" ]
+
+
+FROM devdependencies as test
+
+    COPY ./.eslintrc ./
+    COPY ./.nycrc ./
+    COPY ./codecov.yml ./
+    COPY ./test ./test
+    COPY ./app ./app
+    COPY ./scripts ./scripts
+
+    CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "test" ]
+
+
+FROM base as production
+
+    COPY ./app ./app
+    COPY ./scripts ./scripts
+    COPY ./package*.json ./
+    RUN npm install
+
+    CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "start:prod" ]
+

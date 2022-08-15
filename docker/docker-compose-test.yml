@@ -3,6 +3,8 @@ services:
   application:
     build: 
       target: test
+    environment:
+      - ENV_MODE=test
     volumes:
       - type: bind
         read_only: false
@@ -16,5 +18,7 @@ services:
       target: test
     environment:
       - MOCK_DB=true
+      - ENV_MODE=test
+
     
     restart: "no"

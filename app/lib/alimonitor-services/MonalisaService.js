@@ -13,60 +13,107 @@
  * or submit itself to any jurisdiction.
  */
 
-const config = require('../config/configProvider.js');
 const ServicesSynchronizer = require('./ServiceSynchronizer.js');
-// eslint-disable-next-line no-unused-vars
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
+const EnpointsFormatter = require('./ServicesEndpointsFormatter.js');
 
 class MonalisaService extends ServicesSynchronizer {
     constructor() {
         super();
         this.logger = new Log(MonalisaService.name);
-        this.endpoints = config.services.monalisa.url;
         this.ketpFields = {
+            name: 'name',
             reconstructed_events: 'number_of_events',
             description: 'description',
+            output_size: 'size',
+            interaction_type: 'beam_type',
         };
         this.tasks = [];
     }
 
-    dataAdjuster(row) {
+    dataAdjuster(dp) {
         // eslint-disable-next-line capitalized-comments
-        // row = Utils.filterObject(row, this.ketpFields);
-        row.id = 'DEFAULT';
-        return row;
+        dp = Utils.filterObject(dp, this.ketpFields);
+        dp.id = 'DEFAULT';
+        dp.size = Number(dp.size);
+
+        const period = Utils.adjusetObjValuesToSql(this.extractPeriod(dp));
+        const rawDes = dp.description;
+        dp = Utils.adjusetObjValuesToSql(dp);
+        dp.period = period;
+        dp.rawDes = rawDes;
+
+        return dp;
     }
 
-    // eslint-disable-next-line no-unused-vars
-    async syncer(dbClient, dataRow) {
-        const pgCommand = `call insert_prod(
-            '${dataRow.name}', 
-            '${dataRow.description}', 
+    async syncer(dbClient, d) {
+        const { period } = d;
+        const period_insert =
+            d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
+
+        let pgCommand = `${period_insert}; call insert_prod(
+            ${d.name}, 
+            ${d.description}, 
             ${null},
             ${null},
             ${null},
-            ${dataRow.reconstructed_events},
+            ${d.number_of_events},
             ${null},
-            ${null}
+            ${d.size}
         );`;
+        /* eslint-disable */
+
+        let detailsSql = '';
+        // try {
+        //     const enpoint = EnpointsFormatter.dataPassesDetailed(d.rawDes);
+        //     console.log(enpoint);
+        //     const rawDet = await this.getRawResponse(enpoint);
+        //     console.log(rawDet);
+        //     const detailed = this.detailedDataResponsePreproces(rawDet);
+        //     if (detailed) {
+        //         console.log("detaisl", detailed);
+        //         const kf = {
+        //             run_no: 'run_number',
+        //             raw_partition: 'period',
+        //         };
+        //         const detO = detailed?.map((v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)));
+        //         detailsSql = detO ? detO.map((v) => `call insert_prod_details(${v.run_number}, ${v_period})`).join(';') + ';' : '';
+        //     }
+        // } catch (e) {
+        //     console.log(e);
+        // }
+        pgCommand = pgCommand + detailsSql;
         return await dbClient.query(pgCommand);
     }
 
     extractPeriod(rowData) {
-        const productionPrefix = rowData.name.slice(0, 6);
-        const period = {};
-        period.name = productionPrefix;
-        let year = parseInt(productionPrefix.slice(3, 5), 10);
-        if (year > 50) {
-            year += 1900;
-        } else {
-            year += 2000;
-        }
-        period.year = year;
-        period.beam_type = rowData.interaction_type;
+        try {
+            const productionPrefix = rowData.name.slice(0, 6);
+            const period = {};
+            period.name = productionPrefix;
+            let year = parseInt(productionPrefix.slice(3, 5), 10);
+            if (year > 50) {
+                year += 1900;
+            } else {
+                year += 2000;
+            }
+            period.year = year;
+            period.beam_type = rowData.beam_type;
 
-        return period;
+            return period;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    detailedDataResponsePreproces(d) {
+        const entries = Object.entries(d);
+        const aaa = entries.map(([prodName, vObj]) => {
+            vObj['hid'] = prodName.trim();
+            return vObj;
+        });
+        return aaa;
     }
 
     rawDataResponsePreprocess(d) {
@@ -78,9 +125,13 @@ class MonalisaService extends ServicesSynchronizer {
         return aaa;
     }
 
+    detailedDataResponsePreproces(d) {
+
+    }
+
     syncRawMonalisaData() {
         return this.syncData(
-            this.endpoints.rawData,
+            EnpointsFormatter.dataPassesRaw(),
             this.dataAdjuster.bind(this),
             this.syncer.bind(this),
             this.rawDataResponsePreprocess.bind(this),
@@ -89,7 +140,7 @@ class MonalisaService extends ServicesSynchronizer {
 
     debugDisplaySync() {
         return this.syncData(
-            this.endpoints.rawData,
+            EnpointsFormatter.dataPassesRaw(),
             this.dataAdjuster.bind(this),
             async (_, r) => this.logger.debug(JSON.stringify(r)),
             this.rawDataResponsePreprocess,
