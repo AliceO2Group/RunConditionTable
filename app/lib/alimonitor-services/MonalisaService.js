@@ -14,7 +14,6 @@
  */
 
 const ServicesSynchronizer = require('./ServiceSynchronizer.js');
-// eslint-disable-next-line no-unused-vars
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
 const EnpointsFormatter = require('./ServicesEndpointsFormatter.js');
@@ -63,6 +62,7 @@ class MonalisaService extends ServicesSynchronizer {
             ${null},
             ${d.size}
         );`;
+        /* eslint-disable */
 
         let detailsSql = '';
         // try {
