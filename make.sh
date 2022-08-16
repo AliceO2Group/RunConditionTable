@@ -16,7 +16,7 @@ cd $DOCKER_DIR
 COMM_PD="docker-compose --project-directory $PROJECT_DIR "
 
 # defualt behaviour => dettached production built
-STAGES='prune db build'
+STAGES='prune build'
 TARGET='prod'
 
 while [[ $# -gt 0 ]]; do
