@@ -98,33 +98,33 @@ class ServicesSynchronizer {
             const errors = [];
             const dataSize = rows.length;
             /* eslint-disable */
-            // const promises = rows.map((r) => syncer(this.dbclient, r)
-            //     .then(() => {
-            //         correct++;
-            //     })
-            //     .catch((e) => {
-            //         incorrect++;
-            //         errors.push(e);
-            //         if (loglev > 1) {
-            //             this.logger.error(e.message);
-            //         }
-            //     }));
+            const promises = rows.map((r) => syncer(this.dbclient, r)
+                .then(() => {
+                    correct++;
+                })
+                .catch((e) => {
+                    incorrect++;
+                    errors.push(e);
+                    if (loglev > 1) {
+                        this.logger.error(e.message);
+                    }
+                }));
 
-            for (const r of rows) {
-                await syncer(this.dbclient, r)
-                    .then(() => {
-                        correct++;
-                    })
-                    .catch((e) => {
-                        incorrect++;
-                        errors.push(e);
-                        if (loglev > 1) {
-                            this.logger.error(e.message);
-                        }
-                    });
-            }
+            // for (const r of rows) {
+            //     await syncer(this.dbclient, r)
+            //         .then(() => {
+            //             correct++;
+            //         })
+            //         .catch((e) => {
+            //             incorrect++;
+            //             errors.push(e);
+            //             if (loglev > 1) {
+            //                 this.logger.error(e.message);
+            //             }
+            //         });
+            // }
 
-            // await Promise.all(promises);
+            await Promise.all(promises);
             if (this.loglev > 0) {
                 if (correct > 0) {
                     this.logger.info(`sync successful for  ${correct}/${dataSize}`);
