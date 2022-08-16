@@ -49,6 +49,10 @@ while [[ $# -gt 0 ]]; do
             ATTACH_TO_APP=true;
             shift 1;
             ;;
+        -F|--dump-file)
+            DUMP_FILE=$2
+            shift 2;
+            ;;
         *)
             OTHER_OPTS="$OTHER_OPTS $1"
             shift 1;
@@ -117,9 +121,29 @@ for stage in $STAGES; do
         db)
             $PROJECT_DIR/database/local-dev/setup-db.sh --o-ex
             ;;
+        dump) #TODO
+            mkdir -p "$PROJECT_DIR/database/dumps"
+            ip=$(docker inspect rct_database -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}');
+            if [ -z "$DUMP_FILE" ]; then
+                DUMP_FILE="dump"
+            fi            
+            export PGPASSWORD='rct-passwd';
+            pg_dump --data-only --format=tar -h $ip -d "rct-db" -U "rct-user" --file="$PROJECT_DIR/database/dumps/$DUMP_FILE";
+            ;;
+        restore) #TODO
+            ip=$(docker inspect rct_database -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}');
+            if [ -z "$DUMP_FILE" ]; then
+                DUMP_FILE="dump"
+            fi
+            RCT_DATABASE='rct-db';
+            RCT_USER='postgres';
+            export PGPASSWORD='postgres';
+            psql -h $ip -U $RCT_USER -d $RCT_DATABASE -f "$PROJECT_DIR/database/utils/delete-data.sql";
+            pg_restore --data-only -h $ip -U $RCT_USER -d $RCT_DATABASE "$PROJECT_DIR/database/dumps/$DUMP_FILE";
+            ;;
         build*)
             BUILD_STAGES=$(echo ${stage#build} | sed -E "s/(\[|\:|\])/ /g")
-            BUILD_STAGES=$(echo $BUILD_STAGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g")
+            BUILD_STAGES=$(echo $BUILD_STAGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g");
             if [ -z "$BUILD_STAGES" ]; then
                 echo 'default build path'
                 BUILD_STAGES="build up"

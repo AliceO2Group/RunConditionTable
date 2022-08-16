@@ -72,6 +72,10 @@ class RunConditionTableApplication {
                 '': () => {},
                 bk: (args) => this.servCLI(this.bookkeepingService, args),
                 ml: (args) => this.servCLI(this.monalisaService, args),
+                sync: async () => {
+                    await this.bookkeepingService.setSyncTask();
+                    await this.monalisaService.setSyncTask();
+                },
                 app: (args) => this.applicationCli(args),
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
@@ -90,7 +94,7 @@ class RunConditionTableApplication {
     servCLI(serv, args) {
         Utils.switchCase(args[0], {
             state: () => this.con.log(args[1] ? serv?.[args[1]] : serv),
-            stop: () => serv.clearTasks(),
+            stop: () => serv.clearSyncTask(),
             start: () => serv.setSyncTask(),
             loglev: () => serv.setLogginLevel(args[1]),
         }, this.incorrectCommand())();

@@ -4,17 +4,17 @@ SCRIPTS_DIR=$(dirname $0)
 MAIN_SCRIPT_NAME=$(basename $0)
 
 #if localy run < sudo -H -u postgres bash -c "./setup-db.sh --dev" > in <root>/database/ directory
-if [ ! $(whoami) = "postgres" ]; then
+if [ ! $(whoami) = 'postgres' ]; then
   echo "script must be run as postgres or using < sudo -H -u postgres bash -c \"$MAIN_SCRIPT_NAME [--mock [--python]]\" " >&2
   echo "see $SCRIPTS_DIR/local-dev/local-setup.sh"
   exit 1;
 fi
 
-
-RCT_DATABASE="rct-db"
-RCT_USER="rct-user"
-RCT_PASSWORD="rct-passwd"
-RCT_DATABASE_HOST="localhost"
+# TODO env vars usage
+RCT_DATABASE=${RCT_DB_NAME:-'rct-db'}
+RCT_USER=${RCT_DB_USERNAME:-'rct-user'}
+RCT_PASSWORD=${RCT_DB_PASSWORD:-'rct-passwd'}
+RCT_DATABASE_HOST='localhost'
 CREATE_TABLES_SQL="$SCRIPTS_DIR/exported/create-tables.sql"
 STORED_PROCEDURES_DIR="$SCRIPTS_DIR/procedures"
 DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
@@ -29,7 +29,7 @@ psql -c "DROP USER IF EXISTS \"$RCT_USER\""
 psql -c "CREATE USER \"$RCT_USER\" WITH ENCRYPTED PASSWORD '$RCT_PASSWORD';"
 psql -c "CREATE DATABASE \"$RCT_DATABASE\""
 psql -d $RCT_DATABASE -a -f $CREATE_TABLES_SQL
-for p in "$STORED_PROCEDURES_DIR/"* ; do
+for p in "$STORED_PROCEDURES_DIR/"*.sql ; do
   echo "use $p"
   psql -d $RCT_DATABASE -a -f $p
 done;
@@ -84,6 +84,4 @@ if [ "$MOCK_DB" = "true" ] || [ "$1" == "--mock" ]; then
     chmod -R o+w $CACHED_PATH
     chmod o+w $MOCK_DATA
   fi
-  # psql -d $RCT_DATABASE -c "select * from periods;"
-
 fi

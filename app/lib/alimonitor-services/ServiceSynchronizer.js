@@ -97,19 +97,34 @@ class ServicesSynchronizer {
             let incorrect = 0;
             const errors = [];
             const dataSize = rows.length;
-            const promises = rows.map((r) => syncer(this.dbclient, r)
-                .then(() => {
-                    correct++;
-                })
-                .catch((e) => {
-                    incorrect++;
-                    errors.push(e);
-                    if (loglev > 1) {
-                        this.logger.error(e.message);
-                    }
-                }));
+            /* eslint-disable */
+            // const promises = rows.map((r) => syncer(this.dbclient, r)
+            //     .then(() => {
+            //         correct++;
+            //     })
+            //     .catch((e) => {
+            //         incorrect++;
+            //         errors.push(e);
+            //         if (loglev > 1) {
+            //             this.logger.error(e.message);
+            //         }
+            //     }));
 
-            await Promise.all(promises);
+            for (const r of rows) {
+                await syncer(this.dbclient, r)
+                    .then(() => {
+                        correct++;
+                    })
+                    .catch((e) => {
+                        incorrect++;
+                        errors.push(e);
+                        if (loglev > 1) {
+                            this.logger.error(e.message);
+                        }
+                    });
+            }
+
+            // await Promise.all(promises);
             if (this.loglev > 0) {
                 if (correct > 0) {
                     this.logger.info(`sync successful for  ${correct}/${dataSize}`);
@@ -120,6 +135,10 @@ class ServicesSynchronizer {
             }
         } catch (error) {
             this.logger.error(error.stack);
+            if ((error.name + error.message).includes('ECONNREFUSED')) {
+                this.forceStop = true;
+                this.logger.warn('terminated due to fatal error');
+            }
         }
     }
 
@@ -148,8 +167,13 @@ class ServicesSynchronizer {
                     rawData += chunk;
                 });
                 res.on('end', () => {
-                    const data = JSON.parse(rawData);
-                    resolve(data);
+                    try {
+                        const data = JSON.parse(rawData);
+                        resolve(data);
+                    } catch (e) {
+                        this.logger.error(e.stack);
+                        reject(e);
+                    }
                 });
             });
             req.on('error', (e) => {
@@ -183,6 +207,15 @@ class ServicesSynchronizer {
             default:
                 this.logger.error(unspecifiedProtocolMessage);
                 throw new Error(unspecifiedProtocolMessage);
+        }
+    }
+
+    clearSyncTask() {
+        this.forceStop = true;
+        if (this.tasks) {
+            for (const task of this.tasks) {
+                clearInterval(task);
+            }
         }
     }
 }

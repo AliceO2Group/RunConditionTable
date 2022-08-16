@@ -84,7 +84,7 @@ const data_passes_view = (query) => `
             dp.software_version,
             dp.size
         FROM data_passes AS dp
-        INNER JOIN pass_types AS pt
+        LEFT JOIN pass_types AS pt
             ON pt.id = dp.pass_type
         WHERE exists (
                         SELECT *

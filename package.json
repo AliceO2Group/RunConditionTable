@@ -38,7 +38,7 @@
     
     "db:check": "./make.sh -s prune,db,build,follow,prune -t dev -S database",
     "db:attach": "docker exec -it rct_database psql -U postgres -d \"rct-db\"",
-    
+    "db:dump": "",
     "tmp": "node ./tmp/*.js"
 
 
