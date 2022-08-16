@@ -33,7 +33,6 @@ class MonalisaService extends ServicesSynchronizer {
     }
 
     dataAdjuster(dp) {
-        // eslint-disable-next-line capitalized-comments
         dp = Utils.filterObject(dp, this.ketpFields);
         dp.id = 'DEFAULT';
         dp.size = Number(dp.size);
@@ -65,24 +64,31 @@ class MonalisaService extends ServicesSynchronizer {
         /* eslint-disable */
 
         let detailsSql = '';
-        // try {
-        //     const enpoint = EnpointsFormatter.dataPassesDetailed(d.rawDes);
-        //     console.log(enpoint);
-        //     const rawDet = await this.getRawResponse(enpoint);
-        //     console.log(rawDet);
-        //     const detailed = this.detailedDataResponsePreproces(rawDet);
-        //     if (detailed) {
-        //         console.log("detaisl", detailed);
-        //         const kf = {
-        //             run_no: 'run_number',
-        //             raw_partition: 'period',
-        //         };
-        //         const detO = detailed?.map((v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)));
-        //         detailsSql = detO ? detO.map((v) => `call insert_prod_details(${v.run_number}, ${v_period})`).join(';') + ';' : '';
-        //     }
-        // } catch (e) {
-        //     console.log(e);
-        // }
+        try {
+            const enpoint = EnpointsFormatter.dataPassesDetailed(d.rawDes);
+            const rawDet = await this.getRawResponse(enpoint);
+            if (Object.keys(rawDet).length > 0) {
+                console.log(enpoint)
+                console.log(Object.keys(rawDet).length)
+            
+            const detailed = this.detailedDataResponsePreproces(rawDet);
+            console.log(detailed)
+            if (detailed) {
+                const kf = {
+                    run_no: 'run_number',
+                    raw_partition: 'period',
+                };
+                const detO = detailed?.map((v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)));
+                detailsSql = detO ? detO.map(
+                    (v) => `call insert_prod_details(${d.name}, ${v.run_number}, ${v.period})`).join(';') + ';' : '';
+            }
+        }
+        } catch (e) {
+            console.log(e);
+        }
+        if (detailsSql.length > 0) {
+            console.log(detailsSql)
+        }
         pgCommand = pgCommand + detailsSql;
         return await dbClient.query(pgCommand);
     }
@@ -109,8 +115,8 @@ class MonalisaService extends ServicesSynchronizer {
 
     detailedDataResponsePreproces(d) {
         const entries = Object.entries(d);
-        const aaa = entries.map(([prodName, vObj]) => {
-            vObj['hid'] = prodName.trim();
+        const aaa = entries.map(([hid, vObj]) => {
+            vObj['hid'] = hid.trim();
             return vObj;
         });
         return aaa;
@@ -123,10 +129,6 @@ class MonalisaService extends ServicesSynchronizer {
             return vObj;
         }).filter((r) => r.name?.match(/^LHC\d\d[a-zA-Z]_.*$/));
         return aaa;
-    }
-
-    detailedDataResponsePreproces(d) {
-
     }
 
     syncRawMonalisaData() {
@@ -148,20 +150,11 @@ class MonalisaService extends ServicesSynchronizer {
     }
 
     async setSyncTask() {
+        this.forceStop = false;
         await this.syncRawMonalisaData();
     }
 
-    setDebugTask() {
-        const task = setInterval(this.debugDisplaySync.bind(this), 1000);
-        this.tasks.push(task);
-        return task;
-    }
-
-    clearSyncTask() {
-        for (const task of this.tasks) {
-            clearInterval(task);
-        }
-    }
+   
 
     async close() {
         this.clearSyncTask();

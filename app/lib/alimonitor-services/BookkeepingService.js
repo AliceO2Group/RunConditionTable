@@ -51,7 +51,7 @@ class BookkeepingService extends ServicesSynchronizer {
         run.id = 'DEFAULT';
         if (run.detectors) {
             if (typeof run.detectors === 'string') {
-                if (run.detectors.includes(',')) { // TODO may ther delimiters
+                if (run.detectors.includes(',')) { // TODO may other delimiters
                     run.detectors = run.detectors.split(/,/).map((d) => d.trim());
                 } else {
                     run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
@@ -162,19 +162,6 @@ class BookkeepingService extends ServicesSynchronizer {
     async setSyncTask() {
         this.forceStop = false;
         await this.sync();
-    }
-
-    setDebugTask() {
-        const task = setInterval(this.debugDisplaySync.bind(this), this.syncTimestamp);
-        this.tasks.push(task);
-        return task;
-    }
-
-    clearTasks() {
-        this.forceStop = true;
-        for (const task of this.tasks) {
-            clearInterval(task);
-        }
     }
 
     async close() {
