@@ -2,12 +2,12 @@ version: '3.1'
 services:
   application:
     build:
-      target: prod
+      target: production
     env_file: env_file
 
   database:
     build:
-      target: prod
+      target: production
     env_file: env_file
 
 
