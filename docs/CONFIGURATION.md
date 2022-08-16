@@ -12,6 +12,7 @@ The following configuration items can be set using environment variables, note t
 | Variable name | Description | Default value |
 |---------------|-------------|---------------|
 | JWT_SECRET | Secret passphrase to sign and verify tokens. | |
+| JWT_EXPIRATION | Token expiration time as time literal. | |
 
 ## Database
 | Variable name | Description | Default value |
