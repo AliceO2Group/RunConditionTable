@@ -17,6 +17,7 @@
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:show": "npm run eslint; firefox ./reports/static/static-analysis.html",
     "static": "npm run eslint",
+
     "coverage:test": "mocha --exit test/*",
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run coverage:test && npm run coverage:report ",
@@ -33,15 +34,14 @@
     "dev:up": "./make.sh -s build[up] --target dev --attach",
     "docker:test": "./make.sh -s prune,build,prune --target test",
     "prune": "./make.sh -s prune",
-    "app:attach": "docker attach rct_application", 
-    "make": "./scripts/make.sh",
+
+    "app:attach": "docker attach rct_application",
     
     "db:check": "./make.sh -s prune,db,build,follow,prune -t dev -S database",
     "db:attach": "docker exec -it rct_database psql -U postgres -d \"rct-db\"",
     "db:dump": "",
-    "tmp": "node ./tmp/*.js"
 
-
+    "tmp": "nodemon ./tmp/tmp.js"
   },
   "dependencies": {
     "@aliceo2/web-ui": "^1.24.0",

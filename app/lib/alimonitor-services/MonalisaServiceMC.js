@@ -16,34 +16,55 @@
 const ServicesSynchronizer = require('./ServiceSynchronizer.js');
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
-const EnpointsFormatter = require('./ServicesEndpointsFormatter.js');
+const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 
-class MonalisaService extends ServicesSynchronizer {
+class MonalisaServiceMC extends ServicesSynchronizer {
     constructor() {
         super();
-        this.logger = new Log(MonalisaService.name);
+        this.logger = new Log(MonalisaServiceMC.name);
         this.ketpFields = {
             name: 'name',
-            reconstructed_events: 'number_of_events',
-            description: 'description',
+            runList: 'runs',
+            generator: 'description',
+            PWG: 'pwg',
+            requested_events: 'number_of_events',
+            collision_system: 'beam_type',
             output_size: 'size',
-            interaction_type: 'beam_type',
+            anchor_production: 'periods',
+            anchor_pass: 'passes',
         };
         this.tasks = [];
     }
 
-    dataAdjuster(dp) {
-        dp = Utils.filterObject(dp, this.ketpFields);
-        dp.id = 'DEFAULT';
-        dp.size = Number(dp.size);
+    /* eslint-disable */
+    async mc() {
+        try {
+            let raw = require('../../tmp/mc.js');
+            let preprocRaw = this.rawDataResponsePreprocess(raw);
+            let adjRaw = preprocRaw.map(v => Utils.filterObject(v, this.ketpFields));
+            console.log(adjRaw[0]);
+            
+            const mcDEP = EndpointsFormatter.mcDetTag(adjRaw[1].name);
+            console.log(mcDEP);
+            let det0 = await this.getRawResponse(mcDEP);
+            console.log(this.detailedDataResponsePreproces(det0));
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
-        const period = Utils.adjusetObjValuesToSql(this.extractPeriod(dp));
-        const rawDes = dp.description;
-        dp = Utils.adjusetObjValuesToSql(dp);
-        dp.period = period;
-        dp.rawDes = rawDes;
+    dataAdjuster(sp) {
+        sp = Utils.filterObject(sp, this.ketpFields);
+        sp.id = 'DEFAULT';
+        sp.size = Number(sp.size);
 
-        return dp;
+        const period = Utils.adjusetObjValuesToSql(this.extractPeriod(sp));
+        const rawDes = sp.description;
+        sp = Utils.adjusetObjValuesToSql(sp);
+        sp.period = period;
+        sp.rawDes = rawDes;
+
+        return sp;
     }
 
     async syncer(dbClient, d) {
@@ -76,12 +97,11 @@ class MonalisaService extends ServicesSynchronizer {
                 const detailed = this.detailedDataResponsePreproces(rawDet);
                 if (detailed) {
                     const kf = {
-                        run_no: 'run_number',
-                        raw_partition: 'period',
+                        run_no: 'run_no',
                     };
                     const detO = detailed?.map((v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)));
                     detailsSql = detO ? `${detO.map(
-                        (v) => `call insert_prod_details(${d.name}, ${v.run_number}, ${v.period})`,
+                        (v) => `call insert_mc_details(${d.name}, ${v.run_number}, ${v.period})`,
                     ).join(';')};` : '';
                 }
             }
@@ -111,6 +131,7 @@ class MonalisaService extends ServicesSynchronizer {
         }
     }
 
+ 
     detailedDataResponsePreproces(d) {
         const entries = Object.entries(d);
         const aaa = entries.map(([hid, vObj]) => {
@@ -119,19 +140,19 @@ class MonalisaService extends ServicesSynchronizer {
         });
         return aaa;
     }
-
+ 
     rawDataResponsePreprocess(d) {
         const entries = Object.entries(d);
         const aaa = entries.map(([prodName, vObj]) => {
             vObj['name'] = prodName.trim();
             return vObj;
-        }).filter((r) => r.name?.match(/^LHC\d\d[a-zA-Z]_.*$/));
+        }).filter((r) => r.name?.match(/^LHC\d\d.*$/));
         return aaa;
     }
 
     syncRawMonalisaData() {
         return this.syncData(
-            EnpointsFormatter.dataPassesRaw(),
+            EndpointsFormatter.mcRaw(),
             this.dataAdjuster.bind(this),
             this.syncer.bind(this),
             this.rawDataResponsePreprocess.bind(this),
@@ -143,10 +164,13 @@ class MonalisaService extends ServicesSynchronizer {
         await this.syncRawMonalisaData();
     }
 
+
+
     async close() {
         this.clearSyncTask();
         await this.disconnect();
     }
 }
-
-module.exports = MonalisaService;
+ 
+ module.exports = MonalisaServiceMC;
+ 

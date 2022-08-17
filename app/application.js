@@ -24,6 +24,7 @@ const Utils = require('./lib/Utils.js');
 
 const { Console } = require('node:console');
 const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
+const MonalisaServiceMC = require('./lib/alimonitor-services/MonalisaServiceMC.js');
 
 const EP = config.public.endpoints;
 Log.configure(config);
@@ -46,6 +47,7 @@ class RunConditionTableApplication {
         this.databaseService = new DatabaseService(this.loggedUsers);
         this.bookkeepingService = new BookkeepingService();
         this.monalisaService = new MonalisaService();
+        this.monalisaServiceMC = new MonalisaServiceMC();
 
         this.defineStaticRoutes();
         this.defineEndpoints();
@@ -76,6 +78,7 @@ class RunConditionTableApplication {
                     await this.bookkeepingService.setSyncTask();
                     await this.monalisaService.setSyncTask();
                 },
+                mc: () => this.monalisaServiceMC.mc(),
                 app: (args) => this.applicationCli(args),
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
