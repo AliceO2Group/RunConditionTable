@@ -44,9 +44,10 @@ class ServicesSynchronizer {
             ),
             passphrase: ResProvider.passphraseProvider(),
             headers: {
-                Accept:	'application/json',
+                Accept:	'application/json;charset=utf-8',
                 'Accept-Language':	'en-US,en;q=0.5',
                 Connection:	'keep-alive',
+                // 'Accept-Encoding': 'gzip',
                 'User-Agent': 'Mozilla/5.0',
             },
         };
@@ -151,7 +152,6 @@ class ServicesSynchronizer {
             const req = this.checkClientType(endpoint).request(endpoint, this.opts, async (res) => {
                 const { statusCode } = res;
                 const contentType = res.headers['content-type'];
-            
 
                 let error;
                 let redirect = false;
@@ -162,8 +162,7 @@ class ServicesSynchronizer {
                         this.logger.warn(mess);
                         const nextHope = new URL(endpoint.origin + res.headers.location);
                         nextHope.searchParams.set('res_path', 'json');
-                        console.log('from ', endpoint.href);
-                        console.log('to ', nextHope.href);
+                        this.logger.warn('from {} to {}', endpoint.href, nextHope.href);
                         const r = await this.getRawResponse(nextHope)
                         resolve(r)
                     } else {
@@ -175,7 +174,7 @@ class ServicesSynchronizer {
                     error = new Error(`Invalid content-type. Expected application/json but received ${contentType}`);
                 }
                 if (error) {
-                    this.logger.error(error);
+                    this.logger.error(error.message);
                     res.resume();
                     return;
                 }
@@ -190,7 +189,7 @@ class ServicesSynchronizer {
                             resolve(data);
                         }
                     } catch (e) {
-                        this.logger.error(e.stack);
+                        this.logger.error(e.message);
                         reject(e);
                     }
                 });

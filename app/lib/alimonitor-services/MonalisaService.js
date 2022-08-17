@@ -61,7 +61,7 @@ class MonalisaService extends ServicesSynchronizer {
             ${d.size}
         );`;
 
-        const detailsSql = this.genSqlForDetailed(d);
+        const detailsSql = await this.genSqlForDetailed(d);
         pgCommand = pgCommand + detailsSql;
         return await dbClient.query(pgCommand);
     }
@@ -85,7 +85,7 @@ class MonalisaService extends ServicesSynchronizer {
                 }
             }
         } catch (e) {
-            this.logger.error(e.stack);
+            this.logger.error(e.message);
         }
         return detailsSql;
     }
