@@ -333,16 +333,16 @@ CREATE TABLE public.runs (
 ALTER TABLE public.runs OWNER TO postgres;
 -- ddl-end --
 
--- object: public.sim_and_data_passess | type: TABLE --
--- DROP TABLE IF EXISTS public.sim_and_data_passess CASCADE;
-CREATE TABLE public.sim_and_data_passess (
+-- object: public.sim_and_data_passes | type: TABLE --
+-- DROP TABLE IF EXISTS public.sim_and_data_passes CASCADE;
+CREATE TABLE public.sim_and_data_passes (
 	data_pass_id integer NOT NULL,
 	sim_pass_id integer NOT NULL,
 	CONSTRAINT sim_and_data_passess_pkey PRIMARY KEY (data_pass_id,sim_pass_id)
 
 );
 -- ddl-end --
-ALTER TABLE public.sim_and_data_passess OWNER TO postgres;
+ALTER TABLE public.sim_and_data_passes OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.simulation_passes_id_seq | type: SEQUENCE --
@@ -370,6 +370,7 @@ CREATE TABLE public.simulation_passes (
 	ml text,
 	pwg text,
 	number_of_events integer,
+	size real,
 	CONSTRAINT simulation_passes_pkey PRIMARY KEY (id),
 	CONSTRAINT sp_name_unique UNIQUE (name)
 
@@ -478,15 +479,15 @@ ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: sim_passes_fk | type: CONSTRAINT --
--- ALTER TABLE public.sim_and_data_passess DROP CONSTRAINT IF EXISTS sim_passes_fk CASCADE;
-ALTER TABLE public.sim_and_data_passess ADD CONSTRAINT sim_passes_fk FOREIGN KEY (sim_pass_id)
+-- ALTER TABLE public.sim_and_data_passes DROP CONSTRAINT IF EXISTS sim_passes_fk CASCADE;
+ALTER TABLE public.sim_and_data_passes ADD CONSTRAINT sim_passes_fk FOREIGN KEY (sim_pass_id)
 REFERENCES public.simulation_passes (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: data_passes_fk | type: CONSTRAINT --
--- ALTER TABLE public.sim_and_data_passess DROP CONSTRAINT IF EXISTS data_passes_fk CASCADE;
-ALTER TABLE public.sim_and_data_passess ADD CONSTRAINT data_passes_fk FOREIGN KEY (data_pass_id)
+-- ALTER TABLE public.sim_and_data_passes DROP CONSTRAINT IF EXISTS data_passes_fk CASCADE;
+ALTER TABLE public.sim_and_data_passes ADD CONSTRAINT data_passes_fk FOREIGN KEY (data_pass_id)
 REFERENCES public.data_passes (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
@@ -637,15 +638,15 @@ GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_86ca689ee8" | type: PERMISSION --
+-- object: "grant_rawdDxt_bb57d45f33" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
-   ON TABLE public.sim_and_data_passess
+   ON TABLE public.sim_and_data_passes
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_73eb41175e" | type: PERMISSION --
+-- object: "grant_rawdDxt_c6cd170e92" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
-   ON TABLE public.sim_and_data_passess
+   ON TABLE public.sim_and_data_passes
    TO "rct-user";
 -- ddl-end --
 

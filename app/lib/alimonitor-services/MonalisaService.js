@@ -16,7 +16,7 @@
 const ServicesSynchronizer = require('./ServiceSynchronizer.js');
 const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
-const EnpointsFormatter = require('./ServicesEndpointsFormatter.js');
+const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 
 class MonalisaService extends ServicesSynchronizer {
     constructor() {
@@ -34,7 +34,6 @@ class MonalisaService extends ServicesSynchronizer {
 
     dataAdjuster(dp) {
         dp = Utils.filterObject(dp, this.ketpFields);
-        dp.id = 'DEFAULT';
         dp.size = Number(dp.size);
 
         const period = Utils.adjusetObjValuesToSql(this.extractPeriod(dp));
@@ -70,8 +69,8 @@ class MonalisaService extends ServicesSynchronizer {
     async genSqlForDetailed(d) {
         let detailsSql = '';
         try {
-            const enpoint = EnpointsFormatter.dataPassesDetailed(d.rawDes);
-            const rawDet = await this.getRawResponse(enpoint);
+            const endpoint = EndpointsFormatter.dataPassesDetailed(d.rawDes);
+            const rawDet = await this.getRawResponse(endpoint);
             if (Object.keys(rawDet).length > 0) {
                 const detailed = this.detailedDataResponsePreproces(rawDet);
                 if (detailed) {
@@ -131,7 +130,7 @@ class MonalisaService extends ServicesSynchronizer {
 
     syncRawMonalisaData() {
         return this.syncData(
-            EnpointsFormatter.dataPassesRaw(),
+            EndpointsFormatter.dataPassesRaw(),
             this.dataAdjuster.bind(this),
             this.syncer.bind(this),
             this.rawDataResponsePreprocess.bind(this),

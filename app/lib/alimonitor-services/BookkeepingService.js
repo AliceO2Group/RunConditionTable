@@ -48,7 +48,6 @@ class BookkeepingService extends ServicesSynchronizer {
 
     dataAdjuster(run) {
         run = Utils.filterObject(run, this.ketpFields);
-        run.id = 'DEFAULT';
         if (run.detectors) {
             if (typeof run.detectors === 'string') {
                 if (run.detectors.includes(',')) { // TODO may other delimiters

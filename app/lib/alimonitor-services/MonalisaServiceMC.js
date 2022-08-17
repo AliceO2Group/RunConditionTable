@@ -26,12 +26,13 @@ class MonalisaServiceMC extends ServicesSynchronizer {
             name: 'name',
             runList: 'runs',
             generator: 'description',
+            jiraID: 'jira',
             PWG: 'pwg',
             requested_events: 'number_of_events',
             collision_system: 'beam_type',
             output_size: 'size',
-            anchor_production: 'periods',
-            anchor_pass: 'passes',
+            anchor_production: 'anchor_productions',
+            anchor_pass: 'anchor_passes',
         };
         this.tasks = [];
     }
@@ -55,14 +56,22 @@ class MonalisaServiceMC extends ServicesSynchronizer {
 
     dataAdjuster(sp) {
         sp = Utils.filterObject(sp, this.ketpFields);
-        sp.id = 'DEFAULT';
         sp.size = Number(sp.size);
 
+        const anchor_passes = Utils
+                    .replaceAll(sp.anchor_passes, /,|\'|;\"/, ' ')
+                    .split(/ +/)
+                    .map((v) => v.trim());
+        const anchor_productions = Utils
+                    .replaceAll(sp.anchor_productions, /,|\'|;\"/, ' ')
+                    .split(/ +/)
+                    .map((v) => v.trim());
+
         const period = Utils.adjusetObjValuesToSql(this.extractPeriod(sp));
-        const rawDes = sp.description;
         sp = Utils.adjusetObjValuesToSql(sp);
         sp.period = period;
-        sp.rawDes = rawDes;
+        sp.anchor_passes = anchor_passes;
+        sp.anchor_productions = anchor_productions;
 
         return sp;
     }
@@ -72,18 +81,24 @@ class MonalisaServiceMC extends ServicesSynchronizer {
         const period_insert =
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
 
-        let pgCommand = `${period_insert}; call insert_prod(
+        const anchord_prod_sql = `ARRAY[${d.anchor_productions.map((d) => `'${d}'`).join(',')}]::varchar[]`;
+        const anchord_passes_sql = `ARRAY[${d.anchor_passes.map((d) => `'${d}'`).join(',')}]::varchar[]`;
+
+
+        let pgCommand = `${period_insert}; call insert_mc(
             ${d.name}, 
-            ${d.description}, 
-            ${null},
-            ${null},
+            ${d.description},
+            ${d.pwg},
+            ${anchord_prod_sql},
+            ${anchord_passes_sql},
+            ${d.jira},
             ${null},
             ${d.number_of_events},
-            ${null},
             ${d.size}
         );`;
 
-        const detailsSql = this.genSqlForDetailed(d);
+        console.log(pgCommand);
+        const detailsSql = '';//this.genSqlForDetailed(d);
         pgCommand = pgCommand + detailsSql;
         return await dbClient.query(pgCommand);
     }
@@ -91,8 +106,8 @@ class MonalisaServiceMC extends ServicesSynchronizer {
     async genSqlForDetailed(d) {
         let detailsSql = '';
         try {
-            const enpoint = EnpointsFormatter.dataPassesDetailed(d.rawDes);
-            const rawDet = await this.getRawResponse(enpoint);
+            const endpoint = EndpointsFormatter.dataPassesDetailed(d.rawDes);
+            const rawDet = await this.getRawResponse(endpoint);
             if (Object.keys(rawDet).length > 0) {
                 const detailed = this.detailedDataResponsePreproces(rawDet);
                 if (detailed) {

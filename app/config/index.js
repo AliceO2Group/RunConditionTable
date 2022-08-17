@@ -39,7 +39,7 @@ module.exports = {
 
     public: require('./public.js'),
 
-    defaultLoglev: 1,
+    defaultLoglev: 3,
 };
 
 // TODO config validation

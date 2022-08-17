@@ -77,8 +77,10 @@ class RunConditionTableApplication {
                 sync: async () => {
                     await this.bookkeepingService.setSyncTask();
                     await this.monalisaService.setSyncTask();
+                    await this.monalisaServiceMC.setSyncTask();
                 },
-                mc: () => this.monalisaServiceMC.mc(),
+                'mc-d': () => this.monalisaServiceMC.mc(),
+                mc: () => this.monalisaServiceMC.setSyncTask(),
                 app: (args) => this.applicationCli(args),
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
@@ -138,6 +140,7 @@ class RunConditionTableApplication {
             await this.databaseService.setAdminConnection();
             await this.bookkeepingService.setupConnection();
             await this.monalisaService.setupConnection();
+            await this.monalisaServiceMC.setupConnection();
             // eslint-disable-next-line capitalized-comments
             // this.bookkeepingService.setSyncRunsTask();
             await this.httpServer.listen();
@@ -173,11 +176,11 @@ class RunConditionTableApplication {
     }
 
     isInDevMode() {
-        return process.env.ENV_MODE === 'dev';
+        return process.env.ENV_MODE === 'development';
     }
 
     isInProdMode() {
-        return process.env.ENV_MODE === 'prod';
+        return process.env.ENV_MODE === 'production';
     }
 
     getEnvMode() {
