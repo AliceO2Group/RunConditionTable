@@ -99,6 +99,7 @@ class MonalisaServiceMC extends ServicesSynchronizer {
 
         // console.log(pgCommand);
         const detailsSql = await this.genSqlForDetailed(d);
+        console.log(detailsSql)
         pgCommand = pgCommand + detailsSql;
         return await dbClient.query(pgCommand);
     }

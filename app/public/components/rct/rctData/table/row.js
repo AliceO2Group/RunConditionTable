@@ -27,9 +27,9 @@ export default function row(
                 return h('td', cellsSpecials[n](model, item));
             } else {
                 let representaion = item[n];
-                if (`${representaion}`.length > 50) {
-                    representaion = 'too long...';
-                }
+                // if (`${representaion}`.length > 50) {
+                //     representaion = 'too long...';
+                // }
                 return h('td', representaion);
             }
         } else {
