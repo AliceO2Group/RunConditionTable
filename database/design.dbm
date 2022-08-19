@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,540" last-zoom="0.75" max-obj-count="33"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="135,0" last-zoom="0.75" max-obj-count="33"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -382,7 +382,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="sim_and_data_passess" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+<table name="sim_and_data_passes" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
@@ -393,7 +393,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="sim_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<constraint name="sim_and_data_passess_pkey" type="pk-constr" table="public.sim_and_data_passess">
+	<constraint name="sim_and_data_passess_pkey" type="pk-constr" table="public.sim_and_data_passes">
 		<columns names="data_pass_id,sim_pass_id" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -403,7 +403,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </sequence>
 
-<table name="simulation_passes" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
+<table name="simulation_passes" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="first_layer_data"/>
@@ -428,6 +428,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="number_of_events">
 		<type name="integer" length="0"/>
+	</column>
+	<column name="size">
+		<type name="real" length="0"/>
 	</column>
 	<constraint name="simulation_passes_pkey" type="pk-constr" table="public.simulation_passes">
 		<columns names="id" ref-type="src-columns"/>
@@ -525,13 +528,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="sim_passes_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.simulation_passes" table="public.sim_and_data_passess">
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.simulation_passes" table="public.sim_and_data_passes">
 	<columns names="sim_pass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="data_passes_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.data_passes" table="public.sim_and_data_passess">
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.data_passes" table="public.sim_and_data_passes">
 	<columns names="data_pass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -610,13 +613,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_sim_and_data_passess_simulation_passes" type="relfk" layers="0"
 	 custom-color="#07cdf1"
-	 src-table="public.sim_and_data_passess"
+	 src-table="public.sim_and_data_passes"
 	 dst-table="public.simulation_passes" reference-fk="sim_passes_fk"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_sim_and_data_passess_data_passes" type="relfk" layers="0"
 	 custom-color="#2eface"
-	 src-table="public.sim_and_data_passess"
+	 src-table="public.sim_and_data_passes"
 	 dst-table="public.data_passes" reference-fk="data_passes_fk"
 	 src-required="false" dst-required="true">
 	<label ref-type="dst-label">
@@ -746,12 +749,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>
 <permission>
-	<object name="public.sim_and_data_passess" type="table"/>
+	<object name="public.sim_and_data_passes" type="table"/>
 	<roles names="postgres"/>
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>
 <permission>
-	<object name="public.sim_and_data_passess" type="table"/>
+	<object name="public.sim_and_data_passes" type="table"/>
 	<roles names="&quot;rct-user&quot;"/>
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>

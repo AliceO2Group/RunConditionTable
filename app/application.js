@@ -24,6 +24,7 @@ const Utils = require('./lib/Utils.js');
 
 const { Console } = require('node:console');
 const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
+const MonalisaServiceMC = require('./lib/alimonitor-services/MonalisaServiceMC.js');
 
 const EP = config.public.endpoints;
 Log.configure(config);
@@ -46,6 +47,7 @@ class RunConditionTableApplication {
         this.databaseService = new DatabaseService(this.loggedUsers);
         this.bookkeepingService = new BookkeepingService();
         this.monalisaService = new MonalisaService();
+        this.monalisaServiceMC = new MonalisaServiceMC();
 
         this.defineStaticRoutes();
         this.defineEndpoints();
@@ -75,7 +77,10 @@ class RunConditionTableApplication {
                 sync: async () => {
                     await this.bookkeepingService.setSyncTask();
                     await this.monalisaService.setSyncTask();
+                    await this.monalisaServiceMC.setSyncTask();
                 },
+                'mc-d': () => this.monalisaServiceMC.mc(),
+                mc: () => this.monalisaServiceMC.setSyncTask(),
                 app: (args) => this.applicationCli(args),
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
@@ -135,6 +140,7 @@ class RunConditionTableApplication {
             await this.databaseService.setAdminConnection();
             await this.bookkeepingService.setupConnection();
             await this.monalisaService.setupConnection();
+            await this.monalisaServiceMC.setupConnection();
             // eslint-disable-next-line capitalized-comments
             // this.bookkeepingService.setSyncRunsTask();
             await this.httpServer.listen();
@@ -170,11 +176,11 @@ class RunConditionTableApplication {
     }
 
     isInDevMode() {
-        return process.env.ENV_MODE === 'dev';
+        return process.env.ENV_MODE === 'development';
     }
 
     isInProdMode() {
-        return process.env.ENV_MODE === 'prod';
+        return process.env.ENV_MODE === 'production';
     }
 
     getEnvMode() {

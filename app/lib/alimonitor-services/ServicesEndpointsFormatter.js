@@ -26,22 +26,31 @@ const services = {
             dataPassesDetailed: 'https://alimonitor.cern.ch/raw/raw_details.jsp?timesel=0&res_path=json',
 
             mcRaw: 'https://alimonitor.cern.ch/MC/?res_path=json',
-            mcDetailed: 'https://alimonitor.cern.ch/job_events.jsp?timesel=0&owner=aliprod&res_path=json',
+            mcDetailed: 'https://alimonitor.cern.ch/job_events.jsp?timesel=0&res_path=json',
+            mcDetTag: 'https://alimonitor.cern.ch/MC/prodDetails.jsp?res_path=json',
         },
     },
 };
 
 class ServicesEnpointsFormatter {
     static bookkeeping(page, limit) {
-        return `${services.bookkeeping.url.ali}/?page[offset]=${page * limit}&page[limit]=${limit}`;
+        return new URL(`${services.bookkeeping.url.ali}/?page[offset]=${page * limit}&page[limit]=${limit}`);
     }
 
     static dataPassesRaw() {
-        return services.monalisa.url.dataPassesRaw;
+        return new URL(services.monalisa.url.dataPassesRaw);
     }
 
     static dataPassesDetailed(description) {
-        return `${services.monalisa.url.dataPassesDetailed}&filter_jobtype=${encodeURI(description)}`;
+        return new URL(`${services.monalisa.url.dataPassesDetailed}&filter_jobtype=${encodeURI(description)}`);
+    }
+
+    static mcRaw() {
+        return new URL(services.monalisa.url.mcRaw);
+    }
+
+    static mcDetTag(tag) {
+        return new URL(`${services.monalisa.url.mcDetTag}&tag=${tag}`);
     }
 }
 

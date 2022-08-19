@@ -26,10 +26,8 @@ export default function row(
             if (cellsSpecials[n]) {
                 return h('td', cellsSpecials[n](model, item));
             } else {
+                // eslint-disable-next-line prefer-const
                 let representaion = item[n];
-                if (`${representaion}`.length > 50) {
-                    representaion = 'too long...';
-                }
                 return h('td', representaion);
             }
         } else {

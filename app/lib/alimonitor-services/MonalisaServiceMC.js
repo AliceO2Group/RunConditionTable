@@ -18,31 +18,62 @@ const Utils = require('../Utils.js');
 const { Log } = require('@aliceo2/web-ui');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 
-class MonalisaService extends ServicesSynchronizer {
+class MonalisaServiceMC extends ServicesSynchronizer {
     constructor() {
         super();
-        this.logger = new Log(MonalisaService.name);
+        this.logger = new Log(MonalisaServiceMC.name);
         this.ketpFields = {
             name: 'name',
-            reconstructed_events: 'number_of_events',
-            description: 'description',
+            runList: 'runs',
+            generator: 'description',
+            jiraID: 'jira',
+            PWG: 'pwg',
+            requested_events: 'number_of_events',
+            collision_system: 'beam_type',
             output_size: 'size',
-            interaction_type: 'beam_type',
+            anchor_production: 'anchor_productions',
+            anchor_pass: 'anchor_passes',
         };
         this.tasks = [];
     }
 
-    dataAdjuster(dp) {
-        dp = Utils.filterObject(dp, this.ketpFields);
-        dp.size = Number(dp.size);
+    /* eslint-disable */
+    async mc() {
+        try {
+            let raw = require('../../tmp/mc.js');
+            let preprocRaw = this.rawDataResponsePreprocess(raw);
+            let adjRaw = preprocRaw.map(v => Utils.filterObject(v, this.ketpFields));
+            console.log(adjRaw[0]);
+            
+            const mcDEP = EndpointsFormatter.mcDetTag(adjRaw[1].name);
+            console.log(mcDEP);
+            let det0 = await this.getRawResponse(mcDEP);
+            console.log(this.detailedDataResponsePreproces(det0));
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
-        const period = Utils.adjusetObjValuesToSql(this.extractPeriod(dp));
-        const rawDes = dp.description;
-        dp = Utils.adjusetObjValuesToSql(dp);
-        dp.period = period;
-        dp.rawDes = rawDes;
+    dataAdjuster(sp) {
+        sp = Utils.filterObject(sp, this.ketpFields);
+        sp.size = Number(sp.size);
 
-        return dp;
+        const anchor_passes = Utils
+                    .replaceAll(sp.anchor_passes, /,|\'|;\"/, ' ')
+                    .split(/ +/)
+                    .map((v) => v.trim());
+        const anchor_productions = Utils
+                    .replaceAll(sp.anchor_productions, /,|\'|;\"/, ' ')
+                    .split(/ +/)
+                    .map((v) => v.trim());
+
+        const period = Utils.adjusetObjValuesToSql(this.extractPeriod(sp));
+        sp = Utils.adjusetObjValuesToSql(sp);
+        sp.period = period;
+        sp.anchor_passes = anchor_passes;
+        sp.anchor_productions = anchor_productions;
+
+        return sp;
     }
 
     async syncer(dbClient, d) {
@@ -50,18 +81,25 @@ class MonalisaService extends ServicesSynchronizer {
         const period_insert =
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
 
-        let pgCommand = `${period_insert}; call insert_prod(
+        const anchord_prod_sql = `ARRAY[${d.anchor_productions.map((d) => `'${d}'`).join(',')}]::varchar[]`;
+        const anchord_passes_sql = `ARRAY[${d.anchor_passes.map((d) => `'${d}'`).join(',')}]::varchar[]`;
+
+
+        let pgCommand = `${period_insert}; call insert_mc(
             ${d.name}, 
-            ${d.description}, 
-            ${null},
-            ${null},
+            ${d.description},
+            ${d.pwg},
+            ${anchord_prod_sql},
+            ${anchord_passes_sql},
+            ${d.jira},
             ${null},
             ${d.number_of_events},
-            ${null},
             ${d.size}
         );`;
 
+        // console.log(pgCommand);
         const detailsSql = await this.genSqlForDetailed(d);
+        console.log(detailsSql)
         pgCommand = pgCommand + detailsSql;
         return await dbClient.query(pgCommand);
     }
@@ -75,17 +113,16 @@ class MonalisaService extends ServicesSynchronizer {
                 const detailed = this.detailedDataResponsePreproces(rawDet);
                 if (detailed) {
                     const kf = {
-                        run_no: 'run_number',
-                        raw_partition: 'period',
+                        run_no: 'run_no',
                     };
                     const detO = detailed?.map((v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)));
                     detailsSql = detO ? `${detO.map(
-                        (v) => `call insert_prod_details(${d.name}, ${v.run_number}, ${v.period})`,
+                        (v) => `call insert_mc_details(${d.name}, ${v.run_number}, ${v.period})`,
                     ).join(';')};` : '';
                 }
             }
         } catch (e) {
-            this.logger.error(e.message);
+            this.logger.error(e.stack);
         }
         return detailsSql;
     }
@@ -110,6 +147,7 @@ class MonalisaService extends ServicesSynchronizer {
         }
     }
 
+ 
     detailedDataResponsePreproces(d) {
         const entries = Object.entries(d);
         const aaa = entries.map(([hid, vObj]) => {
@@ -118,19 +156,19 @@ class MonalisaService extends ServicesSynchronizer {
         });
         return aaa;
     }
-
+ 
     rawDataResponsePreprocess(d) {
         const entries = Object.entries(d);
         const aaa = entries.map(([prodName, vObj]) => {
             vObj['name'] = prodName.trim();
             return vObj;
-        }).filter((r) => r.name?.match(/^LHC\d\d[a-zA-Z]_.*$/));
+        }).filter((r) => r.name?.match(/^LHC\d\d.*$/));
         return aaa;
     }
 
     syncRawMonalisaData() {
         return this.syncData(
-            EndpointsFormatter.dataPassesRaw(),
+            EndpointsFormatter.mcRaw(),
             this.dataAdjuster.bind(this),
             this.syncer.bind(this),
             this.rawDataResponsePreprocess.bind(this),
@@ -142,10 +180,13 @@ class MonalisaService extends ServicesSynchronizer {
         await this.syncRawMonalisaData();
     }
 
+
+
     async close() {
         this.clearSyncTask();
         await this.disconnect();
     }
 }
-
-module.exports = MonalisaService;
+ 
+ module.exports = MonalisaServiceMC;
+ 

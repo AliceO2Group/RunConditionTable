@@ -75,8 +75,8 @@ pagesCellsSpecials[pagesNames.periods] = {
     energy: (model, item) => {
         const energies = item.energy.split(/,/).map((v) => Number(v.trim()));
         const avg = energies.reduce((acc, c, _, __) => acc + c, 0) / (energies.length || 1);
-        return `avg: ${avg}`;
-        // TODO charts
+        return `${Number(avg).toFixed(2)}`;
+        // TODO maybe charts
     },
 };
 

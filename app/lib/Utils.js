@@ -39,8 +39,15 @@ class Utils {
     }
 
     static parseValueToSql(v) {
+        if (!v) {
+            return null;
+        }
         if (typeof v == 'string' && !keywords.includes(v.toUpperCase())) {
-            return `'${v}'`;
+            if (v.length == 0) {
+                return null;
+            } else {
+                return `'${v}'`;
+            }
         } else {
             return v;
         }
@@ -74,6 +81,11 @@ class Utils {
 
     static delay(time) {
         return new Promise((resolve) => setTimeout(resolve, time));
+    }
+
+    static replaceAll(s, pattern, replace) {
+        const p = s.split(pattern);
+        return p.join(replace);
     }
 }
 

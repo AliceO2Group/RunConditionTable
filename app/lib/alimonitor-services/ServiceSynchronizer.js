@@ -23,6 +23,7 @@ const ResProvider = require('../ResProvider.js');
 
 class ServicesSynchronizer {
     constructor() {
+        this.allowRedirects = true; // TODO
         this.logger = new Log(ServicesSynchronizer.name);
         this.opts = {
             rejectUnauthorized: false,
@@ -43,9 +44,10 @@ class ServicesSynchronizer {
             ),
             passphrase: ResProvider.passphraseProvider(),
             headers: {
-                Accept:	'application/json',
+                Accept:	'application/json;charset=utf-8',
                 'Accept-Language':	'en-US,en;q=0.5',
                 Connection:	'keep-alive',
+                // 'Accept-Encoding': 'gzip',
                 'User-Agent': 'Mozilla/5.0',
             },
         };
@@ -98,33 +100,35 @@ class ServicesSynchronizer {
             const errors = [];
             const dataSize = rows.length;
             /* eslint-disable */
-            const promises = rows.map((r) => syncer(this.dbclient, r)
-                .then(() => {
-                    correct++;
-                })
-                .catch((e) => {
-                    incorrect++;
-                    errors.push(e);
-                    if (loglev > 1) {
-                        this.logger.error(e.message);
-                    }
-                }));
+            // const promises = rows.map((r) => syncer(this.dbclient, r)
+            //     .then(() => {
+            //         correct++;
+            //     })
+            //     .catch((e) => {
+            //         incorrect++;
+            //         errors.push(e);
+            //         if (loglev > 1) {
+            //             this.logger.error(e.message);
+            //         }
+            //     }));
 
-            // for (const r of rows) {
-            //     await syncer(this.dbclient, r)
-            //         .then(() => {
-            //             correct++;
-            //         })
-            //         .catch((e) => {
-            //             incorrect++;
-            //             errors.push(e);
-            //             if (loglev > 1) {
-            //                 this.logger.error(e.message);
-            //             }
-            //         });
-            // }
+            for (const r of rows) {
+                await syncer(this.dbclient, r)
+                    .then(() => {
+                        correct++;
+                    })
+                    .catch((e) => {
+                        incorrect++;
+                        errors.push(e);
+                        if (loglev > 2) {
+                            this.logger.error(e.stack)
+                        } else if (loglev > 1) {
+                            this.logger.error(e.message);
+                        }
+                    });
+            }
 
-            await Promise.all(promises);
+            // await Promise.all(promises);
             if (this.loglev > 0) {
                 if (correct > 0) {
                     this.logger.info(`sync successful for  ${correct}/${dataSize}`);
@@ -150,15 +154,27 @@ class ServicesSynchronizer {
                 const contentType = res.headers['content-type'];
 
                 let error;
+                let redirect = false;
                 if (statusCode == 302 || statusCode == 301) {
-                    error = new Error(`Redirect. Status Code: ${statusCode}; red. to ${res.headers.location}`);
+                    const mess = `Redirect. Status Code: ${statusCode}; red. to ${res.headers.location}`;
+                    if (this.allowRedirects) {
+                        redirect = true;
+                        this.logger.warn(mess);
+                        const nextHope = new URL(endpoint.origin + res.headers.location);
+                        nextHope.searchParams.set('res_path', 'json');
+                        this.logger.warn('from {} to {}', endpoint.href, nextHope.href);
+                        const r = await this.getRawResponse(nextHope)
+                        resolve(r)
+                    } else {
+                        throw new Error(mess);
+                    }
                 } else if (statusCode !== 200) {
                     error = new Error(`Request Failed. Status Code: ${statusCode}`);
                 } else if (!/^application\/json/.test(contentType)) {
                     error = new Error(`Invalid content-type. Expected application/json but received ${contentType}`);
                 }
                 if (error) {
-                    this.logger.error(error);
+                    this.logger.error(error.message);
                     res.resume();
                     return;
                 }
@@ -168,10 +184,12 @@ class ServicesSynchronizer {
                 });
                 res.on('end', () => {
                     try {
-                        const data = JSON.parse(rawData);
-                        resolve(data);
+                        if (!redirect) {
+                            const data = JSON.parse(rawData);
+                            resolve(data);
+                        }
                     } catch (e) {
-                        this.logger.error(e.stack);
+                        this.logger.error(e.message);
                         reject(e);
                     }
                 });
@@ -199,7 +217,7 @@ class ServicesSynchronizer {
     checkClientType(endpoint) {
         const unspecifiedProtocolMessage = 'unspecified protocol in url';
 
-        switch (this.opts.protocol || `${endpoint.split(':')[0]}:`) {
+        switch (endpoint.protocol) {
             case 'http:':
                 return http;
             case 'https:':
