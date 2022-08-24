@@ -93,6 +93,14 @@ pagesCellsSpecials[pagesNames.dataPasses] = {
     ],
 };
 pagesCellsSpecials[pagesNames.mc] = {};
+
+const dateForametter = (sec) => {
+    const d = new Date(Number(sec));
+    const expected = -120;
+    d.setMinutes(d.getMinutes() - (expected - d.getTimezoneOffset()));
+    return d.toLocaleString();
+};
+
 pagesCellsSpecials[pagesNames.runsPerPeriod] = {
     run_number: (model, item) => viewButton(
         model,
@@ -101,6 +109,10 @@ pagesCellsSpecials[pagesNames.runsPerPeriod] = {
         '',
         `/?page=${pagesNames.flags}&index=${item.run_number}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
     ),
+    start: (mode, item) => dateForametter(item.start),
+    end: (mode, item) => dateForametter(item.end),
+    time_trg_start: (mode, item) => dateForametter(item.time_trg_start),
+    time_trg_end: (mode, item) => dateForametter(item.time_trg_end),
 };
 
 pagesCellsSpecials[pagesNames.flags] = {};
