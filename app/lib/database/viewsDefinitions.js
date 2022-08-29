@@ -86,19 +86,7 @@ const data_passes_view = (query) => `
         FROM data_passes AS dp
         LEFT JOIN pass_types AS pt
             ON pt.id = dp.pass_type
-        WHERE exists (
-                        SELECT *
-                        FROM runs AS r
-                        INNER JOIN
-                        data_passes_runs AS dpr
-                            ON r.id = dpr.run_id
-                        INNER JOIN data_passes AS dp
-                            ON dp.id = dpr.data_pass_id
-                        WHERE r.period_id = (
-                                            SELECT id 
-                                            FROM periods AS p 
-                                            WHERE p.name = '${query.index}')
-                                            )
+        WHERE dp.name LIKE '${query.index}%'
         )`;
 
 const mc_view = (query) => `

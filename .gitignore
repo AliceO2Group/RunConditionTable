@@ -13,3 +13,4 @@ scratch
 .env
 env_file
 database/dumps
+notes
