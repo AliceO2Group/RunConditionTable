@@ -96,7 +96,7 @@ pagesCellsSpecials[pagesNames.mc] = {};
 
 const dateFormatter = (sec) => {
     const cestOffset = 2 * 60 * 60 * 1000;
-    const localOffset = (new Date()).getTimezoneOffset() * 60 * 1000;
+    const localOffset = new Date().getTimezoneOffset() * 60 * 1000;
     const d = new Date(Number(sec) + cestOffset + localOffset);
     return d.toLocaleString();
 };
