@@ -20,18 +20,18 @@ export default function tableHeader(visibleFields, data, model) {
             .concat([rowsOptions(data, () => model.fetchedData.changeRecordsVisibility(data))])));
 }
 
-const orderToSymbol = (order) => switchCase(order, {
+const orderToSymbol = (fName, sorting) => fName == sorting.field ? switchCase(sorting.order, {
     1: '/\\',
     '-1': '\\/',
     null: '-',
-}, 'TODO some runtime error');
+}, 'TODO some runtime error') : '-';
 
 const sortingChangeAction = (fName, data, model) => {
     data.sorting.field = fName;
     const { order } = data.sorting;
     data.sorting.order = switchCase(order, {
         1: -1,
-        '-1': null,
+        '-1': 1,
         null: 1,
     }, null);
     data.sort();
@@ -41,7 +41,7 @@ const sortingChangeAction = (fName, data, model) => {
 const columnsHeadersArray = (visibleFields, data, model) => visibleFields.map((f) => h('th', { scope: 'col' },
     h('.headerFieldName', [
         f.name,
-        h('button', { onclick: () => sortingChangeAction(f.name, data, model) }, orderToSymbol(data.sorting.order)),
+        h('button', { onclick: () => sortingChangeAction(f.name, data, model) }, orderToSymbol(f.name, data.sorting)),
     ])));
 
 const rowsOptions = (data, checkBoxFunction) =>
