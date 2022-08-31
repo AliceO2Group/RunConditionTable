@@ -12,17 +12,44 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
+import { h, switchCase } from '/js/src/index.js';
 
-export default function tableHeader(visibleFields, data, checkBoxFunction) {
-    return h('thead', h('tr', visibleFields.map((f) => h('th', { scope: 'col' }, f.name)).concat([
-        h('th', { scope: 'col' }, h('.form-check.mv2', [
-            h('input.form-check-input', {
-                type: 'checkbox',
-                onclick: checkBoxFunction,
-                checked: data.hideMarkedRecords,
-            }, ''),
-            h('label.form-check-label', { for: 'hide-marked' }, 'Hide marked'),
-        ])),
-    ])));
+export default function tableHeader(visibleFields, data, model) {
+    return h('thead',
+        h('tr', columnsHeadersArray(visibleFields, data, model)
+            .concat([rowsOptions(data, () => model.fetchedData.changeRecordsVisibility(data))])));
 }
+
+const orderToSymbol = (order) => switchCase(order, {
+    1: '/\\',
+    '-1': '\\/',
+    null: '-',
+}, 'TODO some runtime error');
+
+const sortingChangeAction = (fName, data, model) => {
+    data.sorting.field = fName;
+    const { order } = data.sorting;
+    data.sorting.order = switchCase(order, {
+        1: -1,
+        '-1': null,
+        null: 1,
+    }, null);
+    data.sort();
+    model.notify();
+};
+
+const columnsHeadersArray = (visibleFields, data, model) => visibleFields.map((f) => h('th', { scope: 'col' },
+    h('.headerFieldName', [
+        f.name,
+        h('button', { onclick: () => sortingChangeAction(f.name, data, model) }, orderToSymbol(data.sorting.order)),
+    ])));
+
+const rowsOptions = (data, checkBoxFunction) =>
+    h('th', { scope: 'col' }, h('.form-check.mv2', [
+        h('input.form-check-input', {
+            type: 'checkbox',
+            onclick: checkBoxFunction,
+            checked: data.hideMarkedRecords,
+        }, ''),
+        h('label.form-check-label', { for: 'hide-marked' }, 'Hide marked'),
+    ]));
