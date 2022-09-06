@@ -13,6 +13,8 @@
  * or submit itself to any jurisdiction.
  */
 
+const fs = require('fs');
+const path = require('path');
 const { Client } = require('pg');
 const http = require('http');
 const https = require('https');
@@ -23,8 +25,10 @@ const ResProvider = require('../ResProvider.js');
 
 class ServicesSynchronizer {
     constructor() {
+        this.rawCache = true;
         this.allowRedirects = true; // TODO
         this.logger = new Log(ServicesSynchronizer.name);
+
         this.opts = {
             rejectUnauthorized: false,
             pfx: ResProvider.securityFilesProvider(
@@ -147,6 +151,7 @@ class ServicesSynchronizer {
     }
 
     async getRawResponse(endpoint) {
+        const className = this.constructor.name;
         return new Promise((resolve, reject) => {
             let rawData = '';
             const req = this.checkClientType(endpoint).request(endpoint, this.opts, async (res) => {
@@ -186,6 +191,13 @@ class ServicesSynchronizer {
                     try {
                         if (!redirect) {
                             const data = JSON.parse(rawData);
+                            if (this.rawCache) {
+                                const cacheDir = path.join(__dirname, '..', '..', '..', 'database', 'cache', className);
+                                if (!fs.existsSync(cacheDir)) {
+                                    fs.mkdirSync(cacheDir, { recursive: true });
+                                }
+                                fs.writeFileSync(path.join(cacheDir, endpoint.searchParams.toString()), JSON.stringify(data, null, 2));
+                            }
                             resolve(data);
                         }
                     } catch (e) {
