@@ -187,10 +187,6 @@ class RunConditionTableApplication {
         return process.env.ENV_MODE;
     }
 
-    getRunningEnv() {
-        return process.env.RUNNING_ENV;
-    }
-
     getAddress() {
         return this.httpServer.address();
     }

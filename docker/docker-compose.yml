@@ -9,7 +9,6 @@ services:
       dockerfile: docker/Dockerfile.application
     environment:
       - RUNNING_ENV=DOCKER
-      - ALIMONITOR_PASSPHRASE=${ALIMONITOR_PASSPHRASE}
     networks:
       - rct-network
     volumes:

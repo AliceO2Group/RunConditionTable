@@ -3,8 +3,8 @@ services:
   application:
     build: 
       target: test
-    environment:
-      - ENV_MODE=test
+    env_file:
+      - ./docker/env_fiel-test
     volumes:
       - type: bind
         read_only: false
@@ -16,9 +16,8 @@ services:
   database:
     build: 
       target: test
-    environment:
-      - MOCK_DB=true
-      - ENV_MODE=test
+    env_file:
+      - ./docker/env_fiel-test
 
     
     restart: "no"

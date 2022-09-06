@@ -10,13 +10,15 @@ DESIGN_FILE="$SCRIPTS_DIR/../design.dbm"
 
 
 if ! command -v "pgmodeler-cli" &> /dev/null; then
-  echo "Could not find pgmodeler-cli, continue with existing sql file y|[n] ?"
-  read permission
-  if [[ "$permission" =~ ^yes|y|Y|Yes$ ]]; then
-    echo "continuing"
-  else 
-    exit 1;
-  fi
+  echo "Could not find pgmodeler-cli, continuing with existing sql file"
+  sleep 1
+  # echo "Could not find pgmodeler-cli, continue with existing sql file y|[n] ?"
+  # read permission
+  # if [[ "$permission" =~ ^yes|y|Y|Yes$ ]]; then
+  #   echo "continuing"
+  # else 
+  #   exit 1;
+  # fi
 else 
   echo 'exporting fresh sql file from design'
   pgmodeler-cli --input $DESIGN_FILE --export-to-file --output $CREATE_TABLES_SQL
@@ -28,13 +30,15 @@ if [ "$1" = "--o-ex" ]; then
 fi
 
 if ! $CONVERT_SCRIPT; then
-    echo "converting mock.ipynb to python script was not successful, continue ? [y/[n]]"
-    read permission
-    if [ "$permission" != "y" ]; then
-        exit 1;
-    fi
+    echo "converting mock.ipynb to python script was not successful"
+    sleep 1
+    # echo "converting mock.ipynb to python script was not successful, continue ? [y/[n]]"
+    # read permission
+    # if [ "$permission" != "y" ]; then
+    #     exit 1;
+    # fi
 fi
 
 sudo -H -u postgres LOCAL_USER=$(whoami) \
-bash -c "$MAIN_SCRIPT $*"
+  bash -c "$MAIN_SCRIPT $*"
 
