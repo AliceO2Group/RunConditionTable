@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, switchCase } from '/js/src/index.js';
+import { h, switchCase, iconCaretTop, iconCaretBottom, iconMinus } from '/js/src/index.js';
 
 export default function tableHeader(visibleFields, data, model) {
     return h('thead',
@@ -21,10 +21,10 @@ export default function tableHeader(visibleFields, data, model) {
 }
 
 const orderToSymbol = (fName, sorting) => fName == sorting.field ? switchCase(sorting.order, {
-    1: '/\\',
-    '-1': '\\/',
-    null: '-',
-}, 'TODO some runtime error') : '-';
+    1: iconCaretTop(),
+    '-1': iconCaretBottom(),
+    null: iconMinus(),
+}, 'TODO some runtime error') : iconMinus();
 
 const sortingChangeAction = (fName, data, model) => {
     data.sorting.field = fName;
@@ -41,7 +41,9 @@ const sortingChangeAction = (fName, data, model) => {
 const columnsHeadersArray = (visibleFields, data, model) => visibleFields.map((f) => h('th', { scope: 'col' },
     h('.headerFieldName', [
         f.name,
-        h('button', { onclick: () => sortingChangeAction(f.name, data, model) }, orderToSymbol(f.name, data.sorting)),
+        h('.p2',
+            { onclick: () => sortingChangeAction(f.name, data, model) },
+            orderToSymbol(f.name, data.sorting)),
     ])));
 
 const rowsOptions = (data, checkBoxFunction) =>

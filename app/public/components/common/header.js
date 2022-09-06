@@ -32,32 +32,35 @@ export default function header(model) {
 }
 
 const headerSpecific = (model) => {
-    switch (model.getCurrentDataPointer().page) {
+    const { page, index } = model.getCurrentDataPointer();
+    switch (page) {
         case 'periods': return title('Periods');
-        case 'runsPerPeriod': return title(`Runs per period: ${model.router.params.index}`);
-        case 'runsPerDataPass': return title(`Runs per data pass: ${model.router.params.index}`);
-        case 'dataPasses': return title(`Data passes per period: ${model.router.params.index}`);
-        case 'mc': return title(`Monte Carlo: period ${model.router.params.index}`);
-        case 'flags': return title(`Flags: run number ${model.router.params.index}`);
+        case 'runsPerPeriod': return title(`Runs per period: ${index}`);
+        case 'runsPerDataPass': return title(`Runs per data pass: ${index}`);
+        case 'dataPasses': return title(`Data passes per period: ${index}`);
+        case 'mc': return title(`Monte Carlo: period ${index}`);
+        case 'flags': return title(`Flags: run number ${index}`);
         default: return null;
     }
 };
 
 const title = (text) => h('b.f4', text);
 
-const functionalities = (model) => h('.button-group.text-right', h('button.btn', {
-    onclick: () => {
-        model.fetchedData.reqForData(true);
-        model.notify();
-    },
-}, iconReload()), h('button.btn', {
-    onclick: () => {
-        downloadCSV(model);
-    },
-}, iconDataTransferDownload()), h('button.btn', {
-    className: model.searchFieldsVisible ? 'active' : '',
-    onclick: () => {
-        model.changeSearchFieldsVisibility();
-        model.notify();
-    },
-}, iconMagnifyingGlass()));
+const functionalities = (model) => h('.button-group.text-right',
+    h('button.btn', {
+        onclick: () => {
+            model.fetchedData.reqForData(true);
+            model.notify();
+        },
+    }, iconReload()),
+
+    h('button.btn', {
+        onclick: () => {
+            downloadCSV(model);
+        },
+    }, iconDataTransferDownload()),
+
+    h('button.btn', {
+        className: model.searchFieldsVisible ? 'active' : '',
+        onclick: () => model.changeSearchFieldsVisibility(),
+    }, iconMagnifyingGlass()));

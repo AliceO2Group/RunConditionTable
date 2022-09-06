@@ -42,10 +42,28 @@ export default function filter(model) {
                 h('button.btn', {
                     onclick: onclickSubmit(model, inputsIds),
                 }, 'Submit'),
-                ' ',
+                '  ',
                 h('button.btn', {
                     onclick: onclickClear(model, inputsIds),
-                }, 'Clear filters'))),
+                }, 'Clear filters'),
+                '     ',
+                h('button.btn', {
+                    onclick: () => {
+                        // eslint-disable-next-line no-return-assign
+                        data.fields.forEach((f) => f.marked = true);
+                        model.notify();
+                    },
+                }, 'Show all columns'),
+                '  ',
+                h('button.btn', {
+                    onclick: () => data.fields.forEach((f) => {
+                        model.fetchedData.changeItemStatus(
+                            f,
+                            data.rows.some((r) => r[f.name]),
+                        );
+                        model.notify();
+                    }),
+                }, 'Hide empty columns'))),
     ]);
 }
 

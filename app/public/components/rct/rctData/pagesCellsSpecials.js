@@ -46,7 +46,8 @@ const pagesCellsSpecials = {};
 
 pagesCellsSpecials[pagesNames.periods] = {
     name: (model, item) => [
-        h('', item.name),
+        item.name,
+        '  ',
         viewButton(
             model,
             'runs',
