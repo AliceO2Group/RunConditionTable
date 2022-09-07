@@ -13,7 +13,6 @@
  */
 
 import viewButton from '../../common/viewButton.js';
-import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 const { dataReqParams } = RCT;
 const { pagesNames } = RCT;
@@ -84,7 +83,8 @@ pagesCellsSpecials[pagesNames.periods] = {
 
 pagesCellsSpecials[pagesNames.dataPasses] = {
     name: (model, item) => [
-        h('', item.name),
+        item.name,
+        '  ',
         viewButton(
             model,
             'runs',

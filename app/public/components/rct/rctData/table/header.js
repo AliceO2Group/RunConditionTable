@@ -13,6 +13,7 @@
  */
 
 import { h, switchCase, iconCaretTop, iconCaretBottom, iconMinus } from '/js/src/index.js';
+import { headersSpecials } from '../headersSpecials.js';
 
 export default function tableHeader(visibleFields, data, model) {
     return h('thead',
@@ -41,13 +42,14 @@ const sortingChangeAction = (fName, data, model) => {
     model.notify();
 };
 
-const columnsHeadersArray = (visibleFields, data, model) => visibleFields.map((f) => h('th', { scope: 'col' },
-    h('.headerFieldName', [
-        f.name,
-        h('.p2',
-            { onclick: () => sortingChangeAction(f.name, data, model) },
-            orderToSymbol(f.name, data.sorting)),
-    ])));
+const columnsHeadersArray = (visibleFields, data, model) =>
+    visibleFields.map((f) => h('th', { scope: 'col' },
+        h('.headerFieldName', [
+            headersSpecials[model.getCurrentDataPointer().page][f.name],
+            h('.p2',
+                { onclick: () => sortingChangeAction(f.name, data, model) },
+                orderToSymbol(f.name, data.sorting)),
+        ])));
 
 const rowsOptions = (model, data) =>
     h('th', { scope: 'col' },

@@ -14,6 +14,8 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
+import { headersSpecials } from '../headersSpecials.js';
+
 const { dataReqParams } = RCT;
 
 export default function filter(model) {
@@ -79,7 +81,7 @@ const createClickableLabel = (model, field) =>
             style: 'width:120px',
             onclick: () => model.fetchedData.changeItemStatus(field),
             className: field.marked ? 'active' : '',
-        }, field.name,
+        }, headersSpecials[model.getCurrentDataPointer().page][field.name],
         h('span.tooltiptext', field.marked ? 'hide' : 'display')));
 
 const createInputField = (inputId, currentValue) =>
