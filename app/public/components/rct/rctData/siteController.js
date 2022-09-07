@@ -14,7 +14,7 @@
 
 import viewButton from '../../common/viewButton.js';
 import { range, replaceUrlParams } from '../../../utils/utils.js';
-import { h } from '/js/src/index.js';
+import { h, iconMediaSkipBackward, iconCaretLeft, iconChevronBottom, iconCaretRight, iconMediaSkipForward } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 
 const siteParamName = RCT.dataReqParams.site;
@@ -56,11 +56,11 @@ export default function siteController(model, data) {
         ]), h('.flex-row', [
             h('.menu-title', 'site:'),
             // Move to first site
-            currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(1), '<<') : ' ',
+            currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(1), iconMediaSkipBackward()) : ' ',
             // Move to middle of sites range [first, current]
-            currentSite > 3 ? siteChangingController(() => model.fetchedData.changeSite(Math.floor(currentSite / 2)), '|') : ' ',
+            currentSite > 3 ? siteChangingController(() => model.fetchedData.changeSite(Math.floor(currentSite / 2)), iconChevronBottom()) : ' ',
             // Move one site back
-            currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(currentSite - 1), '<') : ' ',
+            currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(currentSite - 1), iconCaretLeft()) : ' ',
 
             mapArrayToButtons(leftButtonsR),
             leftThreeDotsPresent ? '...' : '',
@@ -69,10 +69,10 @@ export default function siteController(model, data) {
             mapArrayToButtons(rightButtonsR),
 
             // Analogically as above
-            currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(currentSite + 1), '>') : ' ',
+            currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(currentSite + 1), iconCaretRight()) : ' ',
             // eslint-disable-next-line max-len
-            currentSite < sitesNumber - 2 ? siteChangingController(() => model.fetchedData.changeSite(currentSite + Math.floor((sitesNumber - currentSite) / 2)), '|') : ' ',
-            currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(sitesNumber), '>>') : ' ',
+            currentSite < sitesNumber - 2 ? siteChangingController(() => model.fetchedData.changeSite(currentSite + Math.floor((sitesNumber - currentSite) / 2)), iconChevronBottom()) : ' ',
+            currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(sitesNumber), iconMediaSkipForward()) : ' ',
         ]),
     ];
 }

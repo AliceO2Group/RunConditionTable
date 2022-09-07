@@ -40,13 +40,13 @@ class MonalisaServiceMC extends ServicesSynchronizer {
     /* eslint-disable */
     async mc() {
         try {
-            let raw = require('../../tmp/mc.js');
+            let raw = require('../../../database/cache/MC.json');
             let preprocRaw = this.rawDataResponsePreprocess(raw);
             let adjRaw = preprocRaw.map(v => Utils.filterObject(v, this.ketpFields));
             console.log(adjRaw[0]);
             
             const mcDEP = EndpointsFormatter.mcDetTag(adjRaw[1].name);
-            console.log(mcDEP);
+            console.log(mcDEP.toString());
             let det0 = await this.getRawResponse(mcDEP);
             console.log(this.detailedDataResponsePreproces(det0));
         } catch (e) {

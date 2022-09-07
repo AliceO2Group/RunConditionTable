@@ -37,9 +37,9 @@ class ServicesSynchronizer {
     constructor() {
         this.logger = new Log(ServicesSynchronizer.name);
 
-        this.rawCache = true;
+        this.rawCacheUse = true;
         this.batchedRequestes = false;
-        this.useCacheJson = true;
+        this.useCacheJsonInsteadIfPresent = true;
 
         this.allowRedirects = true; // TODO
 
@@ -167,7 +167,7 @@ class ServicesSynchronizer {
     async getRawResponse(endpoint) {
         const synchronizerName = this.constructor.name;
         const cachedRawJson = path.join(synchronizerName, endpoint.searchParams.toString());
-        if (this.useCacheJson && fs.existsSync(cachedRawJson)) {
+        if (this.useCacheJsonInsteadIfPresent && fs.existsSync(cachedRawJson)) {
             this.logger.info(`using cached json :: ${cachedRawJson}`);
             return require(cachedRawJson);
         }
@@ -210,7 +210,7 @@ class ServicesSynchronizer {
                     try {
                         if (!redirect) {
                             const data = JSON.parse(rawData);
-                            if (this.rawCache) {
+                            if (this.rawCacheUse) {
                                 cacher(data, endpoint, synchronizerName);
                             }
                             resolve(data);
