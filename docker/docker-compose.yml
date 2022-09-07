@@ -9,7 +9,6 @@ services:
       dockerfile: docker/Dockerfile.application
     environment:
       - RUNNING_ENV=DOCKER
-      - ALIMONITOR_PASSPHRASE=${ALIMONITOR_PASSPHRASE}
     networks:
       - rct-network
     volumes:
@@ -17,6 +16,10 @@ services:
         read_only: true
         source: ./security
         target: /opt/RunConditionTable/security
+      - type: bind
+        read_only: false
+        source: ./database/cache
+        target: /opt/RunConditionTable/database/cache
     
   database:
     container_name: rct_database
@@ -30,6 +33,10 @@ services:
         read_only: true
         source: ./database
         target: /docker-entrypoint-initdb.d
+      - type: bind
+        read_only: false
+        source: ./database/cache
+        target: /postgres/run/database/cache
     networks:
       - rct-network
 networks:

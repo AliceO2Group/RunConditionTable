@@ -29,7 +29,7 @@ export default class PrimaryModel extends Observable {
 
         this.fetchedData = new FetchedDataManager(this.router, this);
 
-        this.searchFieldsVisible = false;
+        this.searchFieldsVisible = true;
 
         this.loader = new Loader();
 
@@ -38,6 +38,7 @@ export default class PrimaryModel extends Observable {
 
     changeSearchFieldsVisibility() {
         this.searchFieldsVisible = !this.searchFieldsVisible;
+        this.notify();
     }
 
     handleLocationChange() {

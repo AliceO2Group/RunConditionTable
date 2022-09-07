@@ -80,7 +80,7 @@ class RunConditionTableApplication {
                     await this.monalisaServiceMC.setSyncTask();
                 },
                 'mc-d': () => this.monalisaServiceMC.mc(),
-                mc: () => this.monalisaServiceMC.setSyncTask(),
+                mc: (args) => this.servCLI(this.monalisaServiceMC, args),
                 app: (args) => this.applicationCli(args),
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
@@ -185,10 +185,6 @@ class RunConditionTableApplication {
 
     getEnvMode() {
         return process.env.ENV_MODE;
-    }
-
-    getRunningEnv() {
-        return process.env.RUNNING_ENV;
     }
 
     getAddress() {

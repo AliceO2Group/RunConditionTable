@@ -12,17 +12,46 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
+import { h, switchCase, iconCaretTop, iconCaretBottom, iconMinus } from '/js/src/index.js';
 
-export default function tableHeader(visibleFields, data, checkBoxFunction) {
-    return h('thead', h('tr', visibleFields.map((f) => h('th', { scope: 'col' }, f.name)).concat([
-        h('th', { scope: 'col' }, h('.form-check.mv2', [
-            h('input.form-check-input', {
-                type: 'checkbox',
-                onclick: checkBoxFunction,
-                checked: data.hideMarkedRecords,
-            }, ''),
-            h('label.form-check-label', { for: 'hide-marked' }, 'Hide marked'),
-        ])),
-    ])));
+export default function tableHeader(visibleFields, data, model) {
+    return h('thead',
+        h('tr', columnsHeadersArray(visibleFields, data, model)
+            .concat([rowsOptions(data, () => model.fetchedData.changeRecordsVisibility(data))])));
 }
+
+const orderToSymbol = (fName, sorting) => fName == sorting.field ? switchCase(sorting.order, {
+    1: iconCaretTop(),
+    '-1': iconCaretBottom(),
+    null: iconMinus(),
+}, 'TODO some runtime error') : iconMinus();
+
+const sortingChangeAction = (fName, data, model) => {
+    data.sorting.field = fName;
+    const { order } = data.sorting;
+    data.sorting.order = switchCase(order, {
+        1: -1,
+        '-1': 1,
+        null: 1,
+    }, null);
+    data.sort();
+    model.notify();
+};
+
+const columnsHeadersArray = (visibleFields, data, model) => visibleFields.map((f) => h('th', { scope: 'col' },
+    h('.headerFieldName', [
+        f.name,
+        h('.p2',
+            { onclick: () => sortingChangeAction(f.name, data, model) },
+            orderToSymbol(f.name, data.sorting)),
+    ])));
+
+const rowsOptions = (data, checkBoxFunction) =>
+    h('th', { scope: 'col' }, h('.form-check.mv2', [
+        h('input.form-check-input', {
+            type: 'checkbox',
+            onclick: checkBoxFunction,
+            checked: data.hideMarkedRecords,
+        }, ''),
+        h('label.form-check-label', { for: 'hide-marked' }, 'Hide marked'),
+    ]));

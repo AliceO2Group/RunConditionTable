@@ -3,9 +3,8 @@ services:
   application:
     build: 
       target: development
-    environment:
-      - ENV_MODE=dev
-      - CERN_SOCKS=${CERN_SOCKS:-true}
+    env_file:
+      - ./docker/env_file-dev
 
     volumes:
       - type: bind
@@ -31,8 +30,7 @@ services:
   database:
     build: 
       target: development
-    environment:
-      - MOCK_DB=${MOCK_DB:-false}
-      - ENV_MODE=dev
+    env_file:
+      - ./docker/env_file-dev
 
     restart: "no"

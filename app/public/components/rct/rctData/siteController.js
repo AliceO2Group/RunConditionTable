@@ -79,10 +79,11 @@ export default function siteController(model, data) {
 
 function onclickSetRowsOnSite(model) {
     const input = document.getElementById('rows-on-site-input');
-    const rowsOnSite = input.value === '' ? input.placeholder : input.value;
+    let rowsOnSite = input.value === '' ? input.placeholder : input.value;
     if (rowsOnSite < 1 || rowsOnSite > 200) {
         alert('incorrect number of rows on site must be in range [1, 200]');
         input.value = 50;
+        rowsOnSite = 50;
     }
     model.fetchedData.changeRowsOnSite(rowsOnSite);
 }

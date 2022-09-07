@@ -4,7 +4,3 @@ services:
     ports:
       - target: 8081
         published: 8081
-  database:
-    ports:
-      - target: 5432
-        published: 5433

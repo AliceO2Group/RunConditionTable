@@ -107,7 +107,7 @@ class MonalisaServiceMC extends ServicesSynchronizer {
     async genSqlForDetailed(d) {
         let detailsSql = '';
         try {
-            const endpoint = EndpointsFormatter.dataPassesDetailed(d.rawDes);
+            const endpoint = EndpointsFormatter.mcDetTag(d.name);
             const rawDet = await this.getRawResponse(endpoint);
             if (Object.keys(rawDet).length > 0) {
                 const detailed = this.detailedDataResponsePreproces(rawDet);
@@ -179,8 +179,6 @@ class MonalisaServiceMC extends ServicesSynchronizer {
         this.forceStop = false;
         await this.syncRawMonalisaData();
     }
-
-
 
     async close() {
         this.clearSyncTask();

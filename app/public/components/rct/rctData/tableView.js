@@ -45,7 +45,7 @@ export default function tableView(model) {
         siteController(model, data),
 
         h('table.table', { id: `data-table-${data.url}` }, [
-            tableHeader(visibleFields, data, () => model.fetchedData.changeRecordsVisibility(data)),
+            tableHeader(visibleFields, data, model),
             tableBody(
                 model, visibleFields, data, cellsSpecials, dataPointer.page,
             ),

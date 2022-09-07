@@ -12,5 +12,5 @@ security
 scratch
 .env
 env_file
-database/dumps
+database/cache
 notes

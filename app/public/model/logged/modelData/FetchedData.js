@@ -30,6 +30,11 @@ export default class FetchedData {
     constructor(url, content, totalRecordsNumber = null) {
         this.url = url;
 
+        this.sorting = {
+            field: null,
+            order: null, // 1 or -1
+        };
+
         this.fields = null;
         this.rows = null;
 
@@ -59,8 +64,9 @@ export default class FetchedData {
     }
 
     parseFetchedFields(content) {
+        const { length } = content.data.fields;
         this.fields = content.data.fields.map((item) => {
-            item.marked = true;
+            item.marked = length < 5 || content.data.rows.some((r) => r[item.name]); // TODO
             return item;
         });
     }
@@ -75,6 +81,14 @@ export default class FetchedData {
     setInfoAboutTotalRecordsNumber(content) {
         if (! this.totalRecordsNumber) {
             this.totalRecordsNumber = content.data[DRF.totalRowsCount];
+        }
+    }
+
+    sort() {
+        if (this.sorting.field && this.sorting.order) {
+            const f = this.sorting.field;
+            const o = this.sorting.order;
+            this.rows.sort((a, b) => a[f] > b[f] ? Number(o) : -1 * o);
         }
     }
 }
