@@ -17,6 +17,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 const { dataReqParams } = RCT;
 const { pagesNames } = RCT;
+import { getReadableFileSizeString } from '../../../utils/utils.js';
 
 /**
  * Configuration what buttons at which cells and which pages are supposed
@@ -92,6 +93,7 @@ pagesCellsSpecials[pagesNames.dataPasses] = {
             `/?page=${pagesNames.runsPerDataPass}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
         ),
     ],
+    size: (model, item) => getReadableFileSizeString(Number(item.size)),
 };
 pagesCellsSpecials[pagesNames.mc] = {};
 
@@ -117,7 +119,7 @@ pagesCellsSpecials[pagesNames.runsPerPeriod] = {
 };
 
 pagesCellsSpecials[pagesNames.flags] = {};
-pagesCellsSpecials[pagesNames.runsPerDataPass] = {};
+pagesCellsSpecials[pagesNames.runsPerDataPass] = pagesCellsSpecials[pagesNames.runsPerPeriod];
 
 // Checking correctness of configuration
 for (const p in pagesCellsSpecials) {

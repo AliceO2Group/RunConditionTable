@@ -226,7 +226,7 @@ for stage in $STAGES; do
                 ;;
 
                 list)
-                    ls -alh "$DUMPS_DIR";
+                    ls -lth "$DUMPS_DIR";
                 ;;
 
                 restore)
