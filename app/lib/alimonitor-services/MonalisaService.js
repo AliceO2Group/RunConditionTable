@@ -21,6 +21,10 @@ const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 class MonalisaService extends ServicesSynchronizer {
     constructor() {
         super();
+        this.batchedRequestes = true;
+        this.batchSize = 5;
+        this.omitWhenCached = false;
+
         this.logger = new Log(MonalisaService.name);
         this.ketpFields = {
             name: 'name',
@@ -50,7 +54,7 @@ class MonalisaService extends ServicesSynchronizer {
         const period_insert =
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
 
-        let pgCommand = `${period_insert}; call insert_prod(
+        const pgCommand = `${period_insert}; call insert_prod(
             ${d.name}, 
             ${d.description}, 
             ${null},
@@ -61,9 +65,25 @@ class MonalisaService extends ServicesSynchronizer {
             ${d.size}
         );`;
 
-        const detailsSql = await this.genSqlForDetailed(d);
-        pgCommand = pgCommand + detailsSql;
-        return await dbClient.query(pgCommand);
+        return await Promise.all([dbClient.query(pgCommand), this.detailsSyncer(d)]);
+    }
+
+    async detailsSyncer(d) {
+        const kf = {
+            run_no: 'run_number',
+            raw_partition: 'period',
+        };
+        return await this.syncData(
+            EndpointsFormatter.dataPassesDetailed(d.rawDes),
+            (v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)),
+            async (dbClient, v) => {
+                const detailsSql = v ?
+                    `call insert_prod_details(${d.name}, ${v.run_number}, ${v.period});`
+                    : '';
+                return await dbClient.query(detailsSql);
+            },
+            (raw) => this.detailedDataResponsePreproces(raw),
+        );
     }
 
     async genSqlForDetailed(d) {

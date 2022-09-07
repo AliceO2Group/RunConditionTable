@@ -22,11 +22,14 @@ const { SocksProxyAgent } = require('socks-proxy-agent');
 const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
 const ResProvider = require('../ResProvider.js');
+const Utils = require('../Utils.js');
 
-const cacheJsonDir = (synchronizerName) => path.join(__dirname, '..', '..', '..', 'database', 'cache', 'rawJson', synchronizerName);
+const getCacheJsonDir = (synchronizerName) => path.join(__dirname, '..', '..', '..', 'database', 'cache', 'rawJson', synchronizerName);
+const getCachedFilePath = (synchronizerName, endpoint) => path.join(getCacheJsonDir(synchronizerName), endpoint.searchParams.toString());
+const getCachedFileName = (endpoint) => endpoint.searchParams.toString();
 
 const cacher = (data, endpoint, synchronizerName) => {
-    const cacheDir = cacheJsonDir(synchronizerName);
+    const cacheDir = getCacheJsonDir(synchronizerName);
     if (!fs.existsSync(cacheDir)) {
         fs.mkdirSync(cacheDir, { recursive: true });
     }
@@ -38,8 +41,11 @@ class ServicesSynchronizer {
         this.logger = new Log(ServicesSynchronizer.name);
 
         this.rawCacheUse = true;
-        this.batchedRequestes = false;
         this.useCacheJsonInsteadIfPresent = true;
+        this.omitWhenCached = false;
+
+        this.batchedRequestes = true;
+        this.batchSize = 5;
 
         this.allowRedirects = true; // TODO
 
@@ -103,6 +109,12 @@ class ServicesSynchronizer {
      * all parameters should be defined in derived classes
      */
     async syncData(endpoint, dataAdjuster, syncer, responsePreprocess, metaDataHandler = null) {
+        const synchronizerName = this.constructor.name;
+        const cachedRawJson = getCachedFilePath(synchronizerName, endpoint);
+        if (this.omitWhenCached && fs.existsSync(cachedRawJson)) {
+            this.logger.info(`omitting cached json :: ${cachedRawJson}`);
+            return;
+        }
         try {
             const { loglev } = this;
             const result = await this.getRawResponse(endpoint);
@@ -117,18 +129,23 @@ class ServicesSynchronizer {
             const errors = [];
             const dataSize = rows.length;
             if (this.batchedRequestes) {
-                const promises = rows.map((r) => syncer(this.dbclient, r)
-                    .then(() => {
-                        correct++;
-                    })
-                    .catch((e) => {
-                        incorrect++;
-                        errors.push(e);
-                        if (loglev > 1) {
-                            this.logger.error(e.message);
-                        }
-                    }));
-                await Promise.all(promises);
+                const rowsChunks = Utils.arrayToChunks(rows, this.batchSize);
+                for (const chunk of rowsChunks) {
+                    const promises = chunk.map((r) => syncer(this.dbclient, r)
+                        .then(() => {
+                            correct++;
+                        })
+                        .catch((e) => {
+                            incorrect++;
+                            errors.push(e);
+                            if (loglev > 2) {
+                                this.logger.error(e.stack);
+                            } else if (loglev > 1) {
+                                this.logger.error(e.message);
+                            }
+                        }));
+                    await Promise.all(promises);
+                }
             } else {
                 for (const r of rows) {
                     await syncer(this.dbclient, r)
@@ -166,10 +183,10 @@ class ServicesSynchronizer {
 
     async getRawResponse(endpoint) {
         const synchronizerName = this.constructor.name;
-        const cachedRawJson = path.join(synchronizerName, endpoint.searchParams.toString());
+        const cachedRawJson = getCachedFilePath(synchronizerName, endpoint);
         if (this.useCacheJsonInsteadIfPresent && fs.existsSync(cachedRawJson)) {
-            this.logger.info(`using cached json :: ${cachedRawJson}`);
-            return require(cachedRawJson);
+            this.logger.info(`using cached json :: ${getCachedFileName(endpoint)}`);
+            return JSON.parse(fs.readFileSync(cachedRawJson));
         }
         return new Promise((resolve, reject) => {
             let rawData = '';
@@ -186,7 +203,7 @@ class ServicesSynchronizer {
                         this.logger.warn(mess);
                         const nextHope = new URL(endpoint.origin + res.headers.location);
                         nextHope.searchParams.set('res_path', 'json');
-                        this.logger.warn('from {} to {}', endpoint.href, nextHope.href);
+                        this.logger.warn(`from ${endpoint.href} to ${nextHope.href}`);
                         const r = await this.getRawResponse(nextHope);
                         resolve(r);
                     } else {

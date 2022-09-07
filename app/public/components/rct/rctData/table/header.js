@@ -17,7 +17,7 @@ import { h, switchCase, iconCaretTop, iconCaretBottom, iconMinus } from '/js/src
 export default function tableHeader(visibleFields, data, model) {
     return h('thead',
         h('tr', columnsHeadersArray(visibleFields, data, model)
-            .concat([rowsOptions(data, () => model.fetchedData.changeRecordsVisibility(data))])));
+            .concat([rowsOptions(model, data)])));
 }
 
 const orderToSymbol = (fName, sorting) => fName == sorting.field ? switchCase(sorting.order, {
@@ -27,12 +27,15 @@ const orderToSymbol = (fName, sorting) => fName == sorting.field ? switchCase(so
 }, 'TODO some runtime error') : iconMinus();
 
 const sortingChangeAction = (fName, data, model) => {
+    if (data.sorting.field != fName) {
+        data.sorting.order = null;
+    }
     data.sorting.field = fName;
     const { order } = data.sorting;
     data.sorting.order = switchCase(order, {
         1: -1,
         '-1': 1,
-        null: 1,
+        null: -1,
     }, null);
     data.sort();
     model.notify();
@@ -46,12 +49,15 @@ const columnsHeadersArray = (visibleFields, data, model) => visibleFields.map((f
             orderToSymbol(f.name, data.sorting)),
     ])));
 
-const rowsOptions = (data, checkBoxFunction) =>
-    h('th', { scope: 'col' }, h('.form-check.mv2', [
-        h('input.form-check-input', {
+const rowsOptions = (model, data) =>
+    h('th', { scope: 'col' },
+        h('input.form-check-input.p1.mh4.justify-center.relative', {
+            style: 'margin-left=0',
             type: 'checkbox',
-            onclick: checkBoxFunction,
-            checked: data.hideMarkedRecords,
-        }, ''),
-        h('label.form-check-label', { for: 'hide-marked' }, 'Hide marked'),
-    ]));
+            onclick: (e) => {
+                // eslint-disable-next-line no-return-assign
+                data.rows.forEach((r) => r.marked = e.target.checked);
+                model.notify();
+            },
+            checked: data.rows.every((r) => r.marked),
+        }, ''));

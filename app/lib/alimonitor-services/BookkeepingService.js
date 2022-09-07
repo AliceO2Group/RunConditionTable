@@ -25,6 +25,9 @@ class BookkeepingService extends ServicesSynchronizer {
     constructor() {
         super();
         this.batchedRequestes = true;
+        this.batchSize = 100;
+        this.omitWhenCached = true;
+        this.omitWhenCached = false;
 
         this.taskPeriodMilis = 4000;
         this.logger = new Log(BookkeepingService.name);

@@ -22,6 +22,10 @@ class MonalisaServiceMC extends ServicesSynchronizer {
     constructor() {
         super();
         this.logger = new Log(MonalisaServiceMC.name);
+
+        this.batchedRequestes = true;
+        this.batchSize = 5;
+
         this.ketpFields = {
             name: 'name',
             runList: 'runs',
@@ -53,19 +57,20 @@ class MonalisaServiceMC extends ServicesSynchronizer {
             console.log(e)
         }
     }
+    /* eslint-enable */
 
     dataAdjuster(sp) {
         sp = Utils.filterObject(sp, this.ketpFields);
         sp.size = Number(sp.size);
 
         const anchor_passes = Utils
-                    .replaceAll(sp.anchor_passes, /,|\'|;\"/, ' ')
-                    .split(/ +/)
-                    .map((v) => v.trim());
+            .replaceAll(sp.anchor_passes, /,|'|;"/, ' ')
+            .split(/ +/)
+            .map((v) => v.trim());
         const anchor_productions = Utils
-                    .replaceAll(sp.anchor_productions, /,|\'|;\"/, ' ')
-                    .split(/ +/)
-                    .map((v) => v.trim());
+            .replaceAll(sp.anchor_productions, /,|'|;"/, ' ')
+            .split(/ +/)
+            .map((v) => v.trim());
 
         const period = Utils.adjusetObjValuesToSql(this.extractPeriod(sp));
         sp = Utils.adjusetObjValuesToSql(sp);
@@ -84,7 +89,6 @@ class MonalisaServiceMC extends ServicesSynchronizer {
         const anchord_prod_sql = `ARRAY[${d.anchor_productions.map((d) => `'${d}'`).join(',')}]::varchar[]`;
         const anchord_passes_sql = `ARRAY[${d.anchor_passes.map((d) => `'${d}'`).join(',')}]::varchar[]`;
 
-
         let pgCommand = `${period_insert}; call insert_mc(
             ${d.name}, 
             ${d.description},
@@ -97,9 +101,7 @@ class MonalisaServiceMC extends ServicesSynchronizer {
             ${d.size}
         );`;
 
-        // console.log(pgCommand);
         const detailsSql = await this.genSqlForDetailed(d);
-        console.log(detailsSql)
         pgCommand = pgCommand + detailsSql;
         return await dbClient.query(pgCommand);
     }
@@ -147,7 +149,6 @@ class MonalisaServiceMC extends ServicesSynchronizer {
         }
     }
 
- 
     detailedDataResponsePreproces(d) {
         const entries = Object.entries(d);
         const aaa = entries.map(([hid, vObj]) => {
@@ -156,7 +157,7 @@ class MonalisaServiceMC extends ServicesSynchronizer {
         });
         return aaa;
     }
- 
+
     rawDataResponsePreprocess(d) {
         const entries = Object.entries(d);
         const aaa = entries.map(([prodName, vObj]) => {
@@ -185,6 +186,5 @@ class MonalisaServiceMC extends ServicesSynchronizer {
         await this.disconnect();
     }
 }
- 
- module.exports = MonalisaServiceMC;
- 
+
+module.exports = MonalisaServiceMC;

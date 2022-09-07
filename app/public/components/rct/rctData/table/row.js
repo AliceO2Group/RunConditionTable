@@ -19,19 +19,17 @@ export default function row(
     model, visibleFields, data, item, cellsSpecials,
 ) {
     return h(reduceSerialIf(
-        'tr', ['.bg-grey', '.d-none'], ['.bg-warning', ''], [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
+        'tr', ['.bg-grey', '.d-none'], ['.bg-grey.selected', ''], [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     ), visibleFields.map((f) => {
         const n = f.name;
         if (item[n]) {
             if (cellsSpecials[n]) {
                 return h('td', cellsSpecials[n](model, item));
             } else {
-                // eslint-disable-next-line prefer-const
-                let representaion = item[n];
-                return h('td', representaion);
+                return h('td', item[n]);
             }
         } else {
-            return h('td', '_');
+            return h('td', '.');
         }
     }).concat([
         h('td', h('input.form-check-input.p1.mh4.justify-center.relative', {
