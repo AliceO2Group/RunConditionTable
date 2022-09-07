@@ -30,9 +30,9 @@
     "start:prod": "node app/main.js",
 
     "prod": "./make.sh",
-    "dev:": "./make.sh -s prune,db,build,stop --target dev --attach",
+    "dev": "./make.sh -s build[up],dump:clean,attach --target dev ",
     "dev:up": "./make.sh -s build[up] --target dev --attach",
-    "dev:clean": "./make.sh -s build[up],dump:clean,attach --target dev ",
+    "dev:prune": "./make.sh -s prune,db,build,stop --target dev --attach",
     "docker:test": "./make.sh -s prune,build,prune --target test",
     
     "prune": "./make.sh -s prune",
