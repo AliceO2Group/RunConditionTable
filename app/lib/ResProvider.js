@@ -20,16 +20,52 @@ const path = require('path');
 // eslint-disable-next-line prefer-const
 let logger;
 
+class LogsStacker {
+    constructor() {
+        this.messages = {};
+    }
+
+    put(type, mess) {
+        if (!this.messages[type]) {
+            this.messages[type] = [];
+        }
+        this.messages[type].push(mess);
+    }
+
+    substitute(type, mess) {
+        this.messages[type] = [mess];
+    }
+
+    log(type, func) {
+        this.messages[type].forEach((m) => func(type, m));
+    }
+
+    typeLog(type) {
+        if (this.messages[type]) {
+            for (const m of this.messages[type]) {
+                logger[type](m);
+            }
+        }
+    }
+
+    any(type) {
+        return this.messages[type] ? this.messages[type].length > 0 : false;
+    }
+}
+
 class ResProvider {
+    // TODO generalize this methods ::( single content provider method) and (key:val provider method)
     static securityFilesProvider(fileNames, description, envVarName = '_') {
+        const logsStacker = new LogsStacker();
         const file_path = process.env[envVarName];
         let securityContent;
         try {
             securityContent = fs.readFileSync(file_path);
-            logger.info(`${description}: loaded from file`);
+            logsStacker.substitute('info', `${description}: loaded from file`);
         } catch (err) {
-            logger.warn(`cannot load file at ${envVarName} ${err}`);
+            logsStacker.put('warn', `cannot load file at ${envVarName} ${err}`);
         }
+
         if (!securityContent) {
             for (const fileName of fileNames) {
                 try {
@@ -37,14 +73,24 @@ class ResProvider {
                         __dirname, '..', '..', 'security', fileName,
                     );
                     securityContent = fs.readFileSync(filePath);
-                    logger.info(`${description}: loaded from file ${filePath}`);
+                    logsStacker.substitute('info', `${description}: loaded from file ${filePath}`);
                     break;
-                // eslint-disable-next-line no-empty
-                } catch (ignore) { }
+                } catch (e) {
+                    logsStacker.put('warn', e.message);
+                }
             }
-            if (!securityContent) {
-                logger.warn(`${description}: cannot load file from provided files: [${fileNames.join(',')}]`);
-            }
+        }
+        if (!securityContent) {
+            logsStacker.put(
+                'error',
+                `${description}: cannot load file from provided files: [${fileNames.join(',')}] nor from env var ${envVarName}`,
+            );
+        }
+
+        logsStacker.typeLog('info');
+        if (logsStacker.any('error')) {
+            logsStacker.typeLog('warn');
+            logsStacker.typeLog('error');
         }
         return securityContent;
     }
@@ -78,7 +124,7 @@ class ResProvider {
             well_known: 'https://auth.cern.ch/auth/realms/cern/.well-known/openid-configuration',
         };
         if (openid.secret && openid.id && openid.redirect_uri && openid.well_known) {
-            logger.info('openid defines by env vars');
+            logger.info('openid defined by env vars');
             return openid;
         }
 

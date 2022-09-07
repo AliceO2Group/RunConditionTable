@@ -24,6 +24,8 @@ const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
 class BookkeepingService extends ServicesSynchronizer {
     constructor() {
         super();
+        this.batchedRequestes = true;
+
         this.taskPeriodMilis = 4000;
         this.logger = new Log(BookkeepingService.name);
         this.ketpFields = {
@@ -164,7 +166,7 @@ class BookkeepingService extends ServicesSynchronizer {
     }
 
     async close() {
-        this.clearTasks();
+        this.clearSyncTask();
         await this.disconnect();
     }
 }

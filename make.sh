@@ -2,13 +2,37 @@
 
 APP_CONTATINER_NAME=rct_application
 DB_CONTATINER_NAME=rct_database
+# TODO describe rest of path, RCT_USER etc. via env vars pulled during deployment
 
 usage() {
+    if [ -n "$1" ]; then
+        BORDER_PATTERN="' *'"
+        ERROR="$1";
+        ERROR_REASON_MESS=" error reason: $ERROR";
+        LENGTH=$(expr length "$ERROR_REASON_MESS" / 2 + 2);
+        HORIZONTAL_BORDER=$(seq -s' *' $LENGTH| tr -d '[:digit:]');
+        # echo $HORIZONTAL_BORDER # TODO 'xdTODO' : examine why uncommenting cause some rabish text in usage printout
+        ERROR_MESSAGE_PRINT="
+*$HORIZONTAL_BORDER
+*$ERROR_REASON_MESS *
+*$HORIZONTAL_BORDER
+"
+    fi
+
     cat << USAGE >&2
-Usage:
-        ./make.sh -s|--stages <STAGES> [<OTHER_OPTS>]
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+This script is intedented to provide functionalities handy during 
+    development, testing and production for building, deployment and managing acquired data.
+The script can be run from any location.
+The script performs defined tasks sequentailly.
+Some task might or has to be provided with some dedicated flags.
+Tasks are called stages.
+
+Usage:  
+        ./make.sh [-s|--stages <STAGES>] [<OTHER_OPTS>]
+            'raw usage of script is for production purpose and is described at the end'
         where STAGES is comma separeted list of sequentialy preformed stages.
-        STGAES are:
+        STAGE can be a:
             1. prune - delete both contatiners, all virtual volumens
                 e.g.: ./make.sh -s prune
 
@@ -32,22 +56,24 @@ Usage:
                 Using build stage requires usage of -|--target flag wich specifies one of prod,dev,test.
                 e.g.: ./make.sh -s build -t dev
                       ./make.sh -s build[up] -t dev
-            8. follow - like docker-compose follow
-            9. stop - stop contatiners
+            8. attach - like docker attach to rct_application
+
+            9. follow - like docker-compose follow
+
+            10. stop - stop contatiners
 
         For stages build, follow, stop, prune additional flag can be specified; -S|--service <SERVICE>,
         which specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
-    
-    * * * * * * * * * * * * * * * * * * * * * * * * 
-    error reason: $1
-    * * * * * * * * * * * * * * * * * * * * * * * * 
 
+        Default behaviour of make.sh (./make.sh) is build prod it is equivalent to
+            ./make.sh -s prune,build -t prod
+    
+$ERROR_MESSAGE_PRINT
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 USAGE
-    exit 1;
+exit 1;
     
 }
-
-
 
 
 PREVIOD_USER_LOC=$(pwd);
@@ -168,11 +194,13 @@ for stage in $STAGES; do
         
         dump*)
             DUMP_CMD=$(echo ${stage#dump:});
-            mkdir -p "$PROJECT_DIR/database/dumps";
+            DUMPS_DIR="$PROJECT_DIR/database/cache/dumps"
+            mkdir -p "$DUMPS_DIR";
             ip=$(docker inspect $DB_CONTATINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}');
             RCT_DATABASE='rct-db';
             RCT_USER='postgres';
-            DUMP_PATH="$PROJECT_DIR/database/dumps/$DUMP_FILE";
+            DUMP_PATH="$DUMPS_DIR/$DUMP_FILE";
+            CONTATINER_DUMP_PATH="/postgres/run/database/cache/dumps/$DUMP_FILE"
 
             case $DUMP_CMD in
                 make)
@@ -193,13 +221,12 @@ for stage in $STAGES; do
                     if [ -z $DO_NOT_PERFORME_WHILE_FILE_EXISTS ]; then
                         docker exec $DB_CONTATINER_NAME \
                             pg_dump --data-only --format=tar -d $RCT_DATABASE -U $RCT_USER \
-                                --file="$DUMP_FILE";
-                        docker cp "$DB_CONTATINER_NAME:/postgres/run/$DUMP_FILE" $DUMP_PATH;
+                                --file="$CONTATINER_DUMP_PATH";
                     fi
                 ;;
 
                 list)
-                    ls -alh "$PROJECT_DIR/database/dumps/";
+                    ls -alh "$DUMPS_DIR";
                 ;;
 
                 restore)
@@ -209,10 +236,9 @@ for stage in $STAGES; do
                     docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTATINER_NAME:/postgres/run/"
                     docker exec $DB_CONTATINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "delete-data.sql";
                     
-                    docker cp $DUMP_PATH "$DB_CONTATINER_NAME:/postgres/run/"
                     docker exec $DB_CONTATINER_NAME \
                         pg_restore --data-only -U $RCT_USER \
-                            -d $RCT_DATABASE $DUMP_FILE;
+                            -d $RCT_DATABASE $CONTATINER_DUMP_PATH;
                 ;;
 
                 remove)
@@ -220,6 +246,11 @@ for stage in $STAGES; do
                         usage "dump file unspecified, use flag -F|--dump-file <FILE>";
                     fi 
                     rm $DUMP_PATH;
+                ;;
+
+                clean) # TODO move it to db:* stage
+                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTATINER_NAME:/postgres/run/"
+                    docker exec $DB_CONTATINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "delete-data.sql";
                 ;;
 
                 *)
@@ -243,6 +274,10 @@ for stage in $STAGES; do
                 fi
                 build "$bs";
             done
+        ;;
+
+        attach)
+            docker attach $APP_CONTATINER_NAME;
         ;;
 
         follow)
