@@ -13,8 +13,6 @@
  * or submit itself to any jurisdiction.
  */
 
-const fs = require('fs');
-const path = require('path');
 const { Client } = require('pg');
 const http = require('http');
 const https = require('https');
@@ -23,22 +21,12 @@ const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
 const ResProvider = require('../ResProvider.js');
 const Utils = require('../Utils.js');
-
-const getCacheJsonDir = (synchronizerName) => path.join(__dirname, '..', '..', '..', 'database', 'cache', 'rawJson', synchronizerName);
-const getCachedFilePath = (synchronizerName, endpoint) => path.join(getCacheJsonDir(synchronizerName), endpoint.searchParams.toString());
-const getCachedFileName = (endpoint) => endpoint.searchParams.toString();
-
-const cacher = (data, endpoint, synchronizerName) => {
-    const cacheDir = getCacheJsonDir(synchronizerName);
-    if (!fs.existsSync(cacheDir)) {
-        fs.mkdirSync(cacheDir, { recursive: true });
-    }
-    fs.writeFileSync(path.join(cacheDir, endpoint.searchParams.toString()), JSON.stringify(data, null, 2));
-};
+const Cacher = require('./Cacher.js');
 
 class ServicesSynchronizer {
     constructor() {
-        this.logger = new Log(ServicesSynchronizer.name);
+        this.name = this.constructor.name;
+        this.logger = new Log(this.name);
 
         this.rawCacheUse = true;
         this.useCacheJsonInsteadIfPresent = true;
@@ -99,20 +87,17 @@ class ServicesSynchronizer {
      * Combine logic of fetching data from service
      * like bookkeeping and processing
      * and inserting to local database
-     * @param {string} endpoint endpoint to fetch data
+     * @param {URL|string} endpoint endpoint to fetch data
      * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database
      * @param {CallableFunction} syncer logic for inserting data to database
      * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
      * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
      * like total pages to see etc., on the whole might be used to any custom logic
-     * @returns {Promise} batched promieses for each syncer invokation
-     * all parameters should be defined in derived classes
+     * @returns {*} void
      */
     async syncData(endpoint, dataAdjuster, syncer, responsePreprocess, metaDataHandler = null) {
-        const synchronizerName = this.constructor.name;
-        const cachedRawJson = getCachedFilePath(synchronizerName, endpoint);
-        if (this.omitWhenCached && fs.existsSync(cachedRawJson)) {
-            this.logger.info(`omitting cached json :: ${cachedRawJson}`);
+        if (this.omitWhenCached && Cacher.isCached(this.name, endpoint)) {
+            this.logger.info(`omitting cached json at :: ${Cacher.cacheFilePath(this.name, endpoint)}`);
             return;
         }
         try {
@@ -138,11 +123,6 @@ class ServicesSynchronizer {
                         .catch((e) => {
                             incorrect++;
                             errors.push(e);
-                            if (loglev > 2) {
-                                this.logger.error(e.stack);
-                            } else if (loglev > 1) {
-                                this.logger.error(e.message);
-                            }
                         }));
                     await Promise.all(promises);
                 }
@@ -155,11 +135,6 @@ class ServicesSynchronizer {
                         .catch((e) => {
                             incorrect++;
                             errors.push(e);
-                            if (loglev > 2) {
-                                this.logger.error(e.stack);
-                            } else if (loglev > 1) {
-                                this.logger.error(e.message);
-                            }
                         });
                 }
             }
@@ -169,25 +144,29 @@ class ServicesSynchronizer {
                     this.logger.info(`sync successful for  ${correct}/${dataSize}`);
                 }
                 if (incorrect > 0) {
-                    this.logger.error(`sync unseccessful for ${incorrect}/${dataSize}`);
+                    this.logger.info(`sync unseccessful for ${incorrect}/${dataSize}`);
+                    if (loglev > 2) {
+                        errors.forEach((e) => this.logger.error(e.stack));
+                    } else if (loglev > 1) {
+                        errors.forEach((e) => this.logger.error(e.message));
+                    }
                 }
             }
-        } catch (error) {
-            this.logger.error(error.stack);
-            if ((error.name + error.message).includes('ECONNREFUSED')) {
+        } catch (fatalError) {
+            this.logger.error(fatalError.stack);
+            if ((fatalError.name + fatalError.message).includes('ECONNREFUSED')) {
                 this.forceStop = true;
-                this.logger.warn('terminated due to fatal error');
+                this.logger.warn('terminated due to fatal error (ECONNREFUSED)');
             }
         }
     }
 
     async getRawResponse(endpoint) {
-        const synchronizerName = this.constructor.name;
-        const cachedRawJson = getCachedFilePath(synchronizerName, endpoint);
-        if (this.useCacheJsonInsteadIfPresent && fs.existsSync(cachedRawJson)) {
-            this.logger.info(`using cached json :: ${getCachedFileName(endpoint)}`);
-            return JSON.parse(fs.readFileSync(cachedRawJson));
+        if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint)) {
+            this.logger.info(`using cached json :: ${Cacher.cachedFileName(this.name, endpoint)}`);
+            return Cacher.getJsonSync(this.name, endpoint);
         }
+
         return new Promise((resolve, reject) => {
             let rawData = '';
             const req = this.checkClientType(endpoint).request(endpoint, this.opts, async (res) => {
@@ -204,8 +183,7 @@ class ServicesSynchronizer {
                         const nextHope = new URL(endpoint.origin + res.headers.location);
                         nextHope.searchParams.set('res_path', 'json');
                         this.logger.warn(`from ${endpoint.href} to ${nextHope.href}`);
-                        const r = await this.getRawResponse(nextHope);
-                        resolve(r);
+                        resolve(await this.getRawResponse(nextHope));
                     } else {
                         throw new Error(mess);
                     }
@@ -228,7 +206,7 @@ class ServicesSynchronizer {
                         if (!redirect) {
                             const data = JSON.parse(rawData);
                             if (this.rawCacheUse) {
-                                cacher(data, endpoint, synchronizerName);
+                                Cacher.cache(this.name, endpoint, data);
                             }
                             resolve(data);
                         }
@@ -272,13 +250,9 @@ class ServicesSynchronizer {
         }
     }
 
-    clearSyncTask() {
-        this.forceStop = true;
-        if (this.tasks) {
-            for (const task of this.tasks) {
-                clearInterval(task);
-            }
-        }
+    async close() {
+        this.forecStop = true;
+        await this.disconnect();
     }
 }
 

@@ -20,23 +20,24 @@ Tasks:
 2. dev - build and run two containers, one for database and one for application, changes in local repo force to restart application on docker, see nodeom, also script: npm run start:dev.
 Does not deploy new database, only clear it. If some changes with database were made or dockers images have been changed use rather npm run dev:prune.
 3. dev:up - up stopped (previoulsy) built contatiners (no data from db are ereased)
-4. dev:prune - as npm run prune and then npm run dev
-5. app:attach - attach to application contatiner console
-6. db:check - export database definition file from pgmodelere design after chagnes, delete database contatiner and rebuild (only it). Application contatiner will be deleted as well.
-7. db:attach - run psql as postgres (connected to RCT database) on database contatiner
-8. db:clean - clean database in running database docker
+4. dev:up-re - 
+5. dev:prune - as npm run prune and then npm run dev
+6. app:attach - attach to application contatiner console
+7. db:check - export database definition file from pgmodelere design after chagnes, delete database contatiner and rebuild (only it). Application contatiner will be deleted as well.
+8. db:attach - run psql as postgres (connected to RCT database) on database contatiner
+9. db:clean - clean database in running database docker
 
     <br>(Database dump managing, dumps are stored in <ProjetcDir>/database/cache/dumps)
-9. dump:make <FILE_NAME> - make dump (only data) and store it with specified name
-10. dump:list - list available dumps
-11. dump:restore <FILE_NAME> - clean db and restore (only data) from specified dump file
-12. dump:remove <FILE_NAME> - remove dump file from cache
+10. dump:make <FILE_NAME> - make dump (only data) and store it with specified name
+11. dump:list - list available dumps
+12. dump:restore <FILE_NAME> - clean db and restore (only data) from specified dump file
+13. dump:remove <FILE_NAME> - remove dump file from cache
 
     <br>(Other tasks)
-5. npm run start:dev - start application with nodemon
-6. npm run eslint - static analysis, results in '\<root\>/reports/static/static-analyzis.html'
-7. npm run reports:show - open reports
-8. npm run docker:test - run static analysis and codecov on docker containers, results are available in '\<root\>/reports/'
+14. npm run start:dev - start application with nodemon
+15. npm run eslint - static analysis, results in '\<root\>/reports/static/static-analyzis.html'
+16. npm run reports:show - open reports
+17. npm run docker:test - run static analysis and codecov on docker containers, results are available in '\<root\>/reports/'
 
 
 ## using grid certificates

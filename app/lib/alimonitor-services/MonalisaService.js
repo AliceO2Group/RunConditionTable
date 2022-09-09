@@ -13,19 +13,17 @@
  * or submit itself to any jurisdiction.
  */
 
-const ServicesSynchronizer = require('./ServiceSynchronizer.js');
+const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../Utils.js');
-const { Log } = require('@aliceo2/web-ui');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 
-class MonalisaService extends ServicesSynchronizer {
+class MonalisaService extends AbstractServiceSynchronizer {
     constructor() {
         super();
         this.batchedRequestes = true;
         this.batchSize = 5;
         this.omitWhenCached = false;
 
-        this.logger = new Log(MonalisaService.name);
         this.ketpFields = {
             name: 'name',
             reconstructed_events: 'number_of_events',
@@ -160,11 +158,6 @@ class MonalisaService extends ServicesSynchronizer {
     async setSyncTask() {
         this.forceStop = false;
         await this.syncRawMonalisaData();
-    }
-
-    async close() {
-        this.clearSyncTask();
-        await this.disconnect();
     }
 }
 

@@ -13,15 +13,14 @@
  * or submit itself to any jurisdiction.
  */
 
-const ServicesSynchronizer = require('./ServiceSynchronizer.js');
+const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../Utils.js');
-const { Log } = require('@aliceo2/web-ui');
 const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
 
 /**
  * BookkeepingService used to synchronize runs
  */
-class BookkeepingService extends ServicesSynchronizer {
+class BookkeepingService extends AbstractServiceSynchronizer {
     constructor() {
         super();
         this.batchedRequestes = true;
@@ -30,7 +29,6 @@ class BookkeepingService extends ServicesSynchronizer {
         this.omitWhenCached = false;
 
         this.taskPeriodMilis = 4000;
-        this.logger = new Log(BookkeepingService.name);
         this.ketpFields = {
             id: 'ali-bk-id',
             runNumber: 'run_number',
@@ -70,22 +68,8 @@ class BookkeepingService extends ServicesSynchronizer {
         return res;
     }
 
-    extractPeriodYear(name) {
-        try {
-            let year = parseInt(name.slice(3, 5), 10);
-            if (year > 50) {
-                year += 1900;
-            } else {
-                year += 2000;
-            }
-            return year;
-        } catch (e) {
-            return 'NULL';
-        }
-    }
-
     async syncer(dbClient, d) {
-        const year = this.extractPeriodYear(d.rawperiod);
+        const year = Utils.extractPeriodYear(d.rawperiod);
         const detectorsInSql = `ARRAY[${d.detectors.map((d) => `'${d}'`).join(',')}]::varchar[]`;
 
         const period_insert = d.period ? `call insert_period(${d.period}, ${year}, null);` : '';
@@ -154,23 +138,9 @@ class BookkeepingService extends ServicesSynchronizer {
         return Promise.all(pendingSyncs);
     }
 
-    debugDisplaySync() {
-        return this.syncData(
-            this.endpoints.rct,
-            this.dataAdjuster.bind(this),
-            async (_, r) => this.logger.debug(JSON.stringify(r)),
-            (res) => res.data,
-        );
-    }
-
     async setSyncTask() {
         this.forceStop = false;
         await this.sync();
-    }
-
-    async close() {
-        this.clearSyncTask();
-        await this.disconnect();
     }
 }
 

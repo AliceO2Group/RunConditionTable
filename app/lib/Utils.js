@@ -95,6 +95,20 @@ class Utils {
         }
         return chunks;
     }
+
+    static extractPeriodYear(name) {
+        try {
+            let year = parseInt(name.slice(3, 5), 10);
+            if (year > 50) {
+                year += 1900;
+            } else {
+                year += 2000;
+            }
+            return year;
+        } catch (e) {
+            return 'NULL';
+        }
+    }
 }
 
 module.exports = Utils;

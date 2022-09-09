@@ -31,8 +31,8 @@
 
     "prod": "./make.sh",
     "dev": "./make.sh -s build[up],dump:clean,attach --target dev ",
-    "dev:re-up": "./make.sh -s build[up],dump:restore,attach --target dev -F ",
     "dev:up": "./make.sh -s build[up] --target dev --attach",
+    "dev:up-re": "./make.sh -s build[up],dump:restore,attach --target dev -F ",
     "dev:prune": "./make.sh -s prune,db,build,stop --target dev --attach",
     "docker:test": "./make.sh -s prune,build,prune --target test",
     

@@ -13,15 +13,13 @@
  * or submit itself to any jurisdiction.
  */
 
-const ServicesSynchronizer = require('./ServiceSynchronizer.js');
+const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../Utils.js');
-const { Log } = require('@aliceo2/web-ui');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 
-class MonalisaServiceMC extends ServicesSynchronizer {
+class MonalisaServiceMC extends AbstractServiceSynchronizer {
     constructor() {
         super();
-        this.logger = new Log(MonalisaServiceMC.name);
 
         this.batchedRequestes = true;
         this.batchSize = 5;
@@ -40,24 +38,6 @@ class MonalisaServiceMC extends ServicesSynchronizer {
         };
         this.tasks = [];
     }
-
-    /* eslint-disable */
-    async mc() {
-        try {
-            let raw = require('../../../database/cache/MC.json');
-            let preprocRaw = this.rawDataResponsePreprocess(raw);
-            let adjRaw = preprocRaw.map(v => Utils.filterObject(v, this.ketpFields));
-            console.log(adjRaw[0]);
-            
-            const mcDEP = EndpointsFormatter.mcDetTag(adjRaw[1].name);
-            console.log(mcDEP.toString());
-            let det0 = await this.getRawResponse(mcDEP);
-            console.log(this.detailedDataResponsePreproces(det0));
-        } catch (e) {
-            console.log(e)
-        }
-    }
-    /* eslint-enable */
 
     dataAdjuster(sp) {
         sp = Utils.filterObject(sp, this.ketpFields);
@@ -89,7 +69,7 @@ class MonalisaServiceMC extends ServicesSynchronizer {
         const anchord_prod_sql = `ARRAY[${d.anchor_productions.map((d) => `'${d}'`).join(',')}]::varchar[]`;
         const anchord_passes_sql = `ARRAY[${d.anchor_passes.map((d) => `'${d}'`).join(',')}]::varchar[]`;
 
-        let pgCommand = `${period_insert}; call insert_mc(
+        const pgCommand = `${period_insert}; call insert_mc(
             ${d.name}, 
             ${d.description},
             ${d.pwg},
@@ -101,33 +81,54 @@ class MonalisaServiceMC extends ServicesSynchronizer {
             ${d.size}
         );`;
 
-        const detailsSql = await this.genSqlForDetailed(d);
-        pgCommand = pgCommand + detailsSql;
-        return await dbClient.query(pgCommand);
+        return await Promise.all([dbClient.query(pgCommand)], this.detailsSyncer(d));
     }
 
-    async genSqlForDetailed(d) {
-        let detailsSql = '';
-        try {
-            const endpoint = EndpointsFormatter.mcDetTag(d.name);
-            const rawDet = await this.getRawResponse(endpoint);
-            if (Object.keys(rawDet).length > 0) {
-                const detailed = this.detailedDataResponsePreproces(rawDet);
-                if (detailed) {
-                    const kf = {
-                        run_no: 'run_no',
-                    };
-                    const detO = detailed?.map((v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)));
-                    detailsSql = detO ? `${detO.map(
-                        (v) => `call insert_mc_details(${d.name}, ${v.run_number}, ${v.period})`,
-                    ).join(';')};` : '';
-                }
-            }
-        } catch (e) {
-            this.logger.error(e.stack);
-        }
-        return detailsSql;
+    async detailsSyncer(d) {
+        const kf = {
+            run_no: 'run_number',
+        };
+        return await this.syncData(
+            EndpointsFormatter.mcDetTag(d.name),
+
+            (v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)),
+
+            async (dbClient, v) => {
+                // console.log(v);
+                // console.log(d);
+                const detailsSql = v ?
+                    `call insert_mc_details(${d.name}, ${v.run_number}, ${v.period});`
+                    : '';
+                console.log(detailsSql);
+                return await dbClient.query(detailsSql);
+            },
+
+            (raw) => this.detailedDataResponsePreproces(raw),
+        );
     }
+
+    // async genSqlForDetailed(d) {
+    //     let detailsSql = '';
+    //     try {
+    //         const endpoint = EndpointsFormatter.mcDetTag(d.name);
+    //         const rawDet = await this.getRawResponse(endpoint);
+    //         if (Object.keys(rawDet).length > 0) {
+    //             const detailed = this.detailedDataResponsePreproces(rawDet);
+    //             if (detailed) {
+    //                 const kf = {
+    //                     run_no: 'run_no',
+    //                 };
+    //                 const detO = detailed?.map((v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, kf)));
+    //                 detailsSql = detO ? `${detO.map(
+    //                     (v) => `call insert_mc_details(${d.name}, ${v.run_number}, ${v.period})`,
+    //                 ).join(';')};` : '';
+    //             }
+    //         }
+    //     } catch (e) {
+    //         this.logger.error(e.stack);
+    //     }
+    //     return detailsSql;
+    // }
 
     extractPeriod(rowData) {
         try {
@@ -179,11 +180,6 @@ class MonalisaServiceMC extends ServicesSynchronizer {
     async setSyncTask() {
         this.forceStop = false;
         await this.syncRawMonalisaData();
-    }
-
-    async close() {
-        this.clearSyncTask();
-        await this.disconnect();
     }
 }
 
