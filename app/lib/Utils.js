@@ -109,6 +109,12 @@ class Utils {
             return 'NULL';
         }
     }
+
+    static applyOptsToObj(obj, options) {
+        Object.entries(options).forEach(([k, v]) => {
+            obj[k] = v;
+        });
+    }
 }
 
 module.exports = Utils;

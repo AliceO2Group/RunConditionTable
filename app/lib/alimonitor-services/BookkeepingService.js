@@ -28,7 +28,6 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         this.omitWhenCached = true;
         this.omitWhenCached = false;
 
-        this.taskPeriodMilis = 4000;
         this.ketpFields = {
             id: 'ali-bk-id',
             runNumber: 'run_number',
@@ -42,11 +41,30 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             detectors: 'detectors',
             aliceDipoleCurrent: 'TODO', // TODO
         };
-        this.syncTimestamp = 1 * 60 * 1000; // Milis
-        this.oneRequestDelay = 10; // Milis
-        this.tasks = [];
+    }
 
-        this.forceStop = false;
+    async sync() {
+        const pendingSyncs = [];
+        let state = {
+            page: 0,
+            limit: 100,
+        };
+        while (!this.syncTraversStop(state)) {
+            const prom = this.syncPerEndpoint(
+                EndpintFormatter.bookkeeping(state['page'], state['limit']),
+                (res) => res.data,
+                this.dataAdjuster.bind(this),
+                this.dbAction.bind(this),
+                this.metaDataHandler.bind(this),
+            );
+            pendingSyncs.push(prom);
+            await prom;
+            this.logger.info(`progress of ${state['page']} to ${this.metaStore['pageCount']}`);
+            state = this.nextState(state);
+        }
+
+        await Promise.all(pendingSyncs);
+        this.logger.info('bookkeeping sync trvers called ended');
     }
 
     dataAdjuster(run) {
@@ -68,7 +86,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         return res;
     }
 
-    async syncer(dbClient, d) {
+    async dbAction(dbClient, d) {
         const year = Utils.extractPeriodYear(d.rawperiod);
         const detectorsInSql = `ARRAY[${d.detectors.map((d) => `'${d}'`).join(',')}]::varchar[]`;
 
@@ -104,43 +122,6 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     nextState(state) {
         state['page'] += 1;
         return state;
-    }
-
-    endpointBuilder(state) {
-        return EndpintFormatter.bookkeeping(state['page'], state['limit']);
-    }
-
-    async sync() {
-        const pendingSyncs = [];
-        let state = {
-            page: 0,
-            limit: 100,
-        };
-        while (!this.syncTraversStop(state)) {
-            if (this.loglev) {
-                this.logger.info(JSON.stringify(state));
-                this.logger.info(JSON.stringify(this.metaStore));
-            }
-            const prom = this.syncData(
-                this.endpointBuilder(state),
-                this.dataAdjuster.bind(this),
-                this.syncer.bind(this),
-                (res) => res.data,
-                this.metaDataHandler.bind(this),
-            );
-            pendingSyncs.push(prom);
-            await prom;
-            state = this.nextState(state);
-            await Utils.delay(this.oneRequestDelay);
-        }
-        this.logger.info('bookkeeping sync trvers called ended');
-
-        return Promise.all(pendingSyncs);
-    }
-
-    async setSyncTask() {
-        this.forceStop = false;
-        await this.sync();
     }
 }
 

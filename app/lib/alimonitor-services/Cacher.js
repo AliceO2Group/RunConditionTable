@@ -28,19 +28,19 @@ class Cacher {
     }
 
     static isCached(synchronizerName, endpoint) {
-        return fs.existsSync(Cacher.cacheFilePath(synchronizerName, endpoint));
+        return fs.existsSync(Cacher.cachedFilePath(synchronizerName, endpoint));
     }
 
     static getJsonSync(synchronizerName, endpoint) {
-        return JSON.parse(fs.readFileSync(Cacher.cacheFilePath(synchronizerName, endpoint)));
+        return JSON.parse(fs.readFileSync(Cacher.cachedFilePath(synchronizerName, endpoint)));
     }
 
     static async getJson(synchronizerName, endpoint) {
-        return await fs.readFile(Cacher.cacheFilePath(synchronizerName, endpoint))
+        return await fs.readFile(Cacher.cachedFilePath(synchronizerName, endpoint))
             .then((r) => JSON.parse(r));
     }
 
-    static cacheFilePath(synchronizerName, endpoint) {
+    static cachedFilePath(synchronizerName, endpoint) {
         return path.join(
             Cacher.serivceCacheDir(synchronizerName),
             Cacher.cachedFileName(endpoint),
@@ -48,7 +48,7 @@ class Cacher {
     }
 
     static cachedFileName(endpoint) {
-        return new URL(endpoint).searchParams.toString();
+        return endpoint.searchParams.toString();
     }
 
     static serivceCacheDir(synchronizerName) {

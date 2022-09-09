@@ -23,19 +23,23 @@ const ResProvider = require('../ResProvider.js');
 const Utils = require('../Utils.js');
 const Cacher = require('./Cacher.js');
 
+const defaultServiceSynchronizerOptions = {
+    forceStop: false,
+
+    rawCacheUse: true,
+    useCacheJsonInsteadIfPresent: true,
+    omitWhenCached: false,
+
+    batchedRequestes: true,
+    batchSize: 5,
+
+    allowRedirects: true, // TODO
+};
+
 class ServicesSynchronizer {
     constructor() {
         this.name = this.constructor.name;
         this.logger = new Log(this.name);
-
-        this.rawCacheUse = true;
-        this.useCacheJsonInsteadIfPresent = true;
-        this.omitWhenCached = false;
-
-        this.batchedRequestes = true;
-        this.batchSize = 5;
-
-        this.allowRedirects = true; // TODO
 
         this.opts = {
             rejectUnauthorized: false,
@@ -72,7 +76,8 @@ class ServicesSynchronizer {
         }
 
         this.metaStore = {};
-        this.loglev = config.defaultLoglev;
+        this.loglev = config.defaultLoglev; // TODO
+        Utils.applyOptsToObj(this, defaultServiceSynchronizerOptions);
     }
 
     setLogginLevel(logginLevel) {
@@ -87,17 +92,17 @@ class ServicesSynchronizer {
      * Combine logic of fetching data from service
      * like bookkeeping and processing
      * and inserting to local database
-     * @param {URL|string} endpoint endpoint to fetch data
-     * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database
-     * @param {CallableFunction} syncer logic for inserting data to database
+     * @param {URL} endpoint endpoint to fetch data
      * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
+     * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database (also adjusting data to sql foramt)
+     * @param {CallableFunction} dbAction logic for inserting data to database
      * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
      * like total pages to see etc., on the whole might be used to any custom logic
      * @returns {*} void
      */
-    async syncData(endpoint, dataAdjuster, syncer, responsePreprocess, metaDataHandler = null) {
+    async syncPerEndpoint(endpoint, responsePreprocess, dataAdjuster, dbAction, metaDataHandler = null) {
         if (this.omitWhenCached && Cacher.isCached(this.name, endpoint)) {
-            this.logger.info(`omitting cached json at :: ${Cacher.cacheFilePath(this.name, endpoint)}`);
+            this.logger.info(`omitting cached json at :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return;
         }
         try {
@@ -116,7 +121,7 @@ class ServicesSynchronizer {
             if (this.batchedRequestes) {
                 const rowsChunks = Utils.arrayToChunks(rows, this.batchSize);
                 for (const chunk of rowsChunks) {
-                    const promises = chunk.map((r) => syncer(this.dbclient, r)
+                    const promises = chunk.map((r) => dbAction(this.dbclient, r)
                         .then(() => {
                             correct++;
                         })
@@ -128,7 +133,7 @@ class ServicesSynchronizer {
                 }
             } else {
                 for (const r of rows) {
-                    await syncer(this.dbclient, r)
+                    await dbAction(this.dbclient, r)
                         .then(() => {
                             correct++;
                         })
@@ -163,7 +168,7 @@ class ServicesSynchronizer {
 
     async getRawResponse(endpoint) {
         if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint)) {
-            this.logger.info(`using cached json :: ${Cacher.cachedFileName(this.name, endpoint)}`);
+            this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return Cacher.getJsonSync(this.name, endpoint);
         }
 
@@ -248,6 +253,11 @@ class ServicesSynchronizer {
                 this.logger.error(unspecifiedProtocolMessage);
                 throw new Error(unspecifiedProtocolMessage);
         }
+    }
+
+    async setSyncTask() {
+        this.forceStop = false;
+        await this.sync();
     }
 
     async close() {
