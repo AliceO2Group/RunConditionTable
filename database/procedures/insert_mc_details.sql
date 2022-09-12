@@ -15,6 +15,6 @@ BEGIN
     if run_id IS NULL OR prod_id IS NULL THEN
         RAISE EXCEPTION 'nulls %', now();
     END IF;
-    INSERT INTO simulation_passes(id, run_id, simulation_pass_id, qc) VALUES(DEFAULT, run_id, prod_id, null);
+    INSERT INTO simulation_passes_runs(id, run_id, simulation_pass_id, qc) VALUES(DEFAULT, run_id, prod_id, null);
 END;
 $$

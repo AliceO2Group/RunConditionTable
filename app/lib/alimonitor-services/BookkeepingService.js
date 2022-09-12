@@ -13,21 +13,21 @@
  * or submit itself to any jurisdiction.
  */
 
-const ServicesSynchronizer = require('./ServiceSynchronizer.js');
+const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../Utils.js');
-const { Log } = require('@aliceo2/web-ui');
 const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
 
 /**
  * BookkeepingService used to synchronize runs
  */
-class BookkeepingService extends ServicesSynchronizer {
+class BookkeepingService extends AbstractServiceSynchronizer {
     constructor() {
         super();
         this.batchedRequestes = true;
+        this.batchSize = 100;
+        this.omitWhenCached = true;
+        this.omitWhenCached = false;
 
-        this.taskPeriodMilis = 4000;
-        this.logger = new Log(BookkeepingService.name);
         this.ketpFields = {
             id: 'ali-bk-id',
             runNumber: 'run_number',
@@ -41,11 +41,30 @@ class BookkeepingService extends ServicesSynchronizer {
             detectors: 'detectors',
             aliceDipoleCurrent: 'TODO', // TODO
         };
-        this.syncTimestamp = 1 * 60 * 1000; // Milis
-        this.oneRequestDelay = 10; // Milis
-        this.tasks = [];
+    }
 
-        this.forceStop = false;
+    async sync() {
+        const pendingSyncs = [];
+        let state = {
+            page: 0,
+            limit: 100,
+        };
+        while (!this.syncTraversStop(state)) {
+            const prom = this.syncPerEndpoint(
+                EndpintFormatter.bookkeeping(state['page'], state['limit']),
+                (res) => res.data,
+                this.dataAdjuster.bind(this),
+                this.dbAction.bind(this),
+                this.metaDataHandler.bind(this),
+            );
+            pendingSyncs.push(prom);
+            await prom;
+            this.logger.info(`progress of ${state['page']} to ${this.metaStore['pageCount']}`);
+            state = this.nextState(state);
+        }
+
+        await Promise.all(pendingSyncs);
+        this.logger.info('bookkeeping sync trvers called ended');
     }
 
     dataAdjuster(run) {
@@ -67,22 +86,8 @@ class BookkeepingService extends ServicesSynchronizer {
         return res;
     }
 
-    extractPeriodYear(name) {
-        try {
-            let year = parseInt(name.slice(3, 5), 10);
-            if (year > 50) {
-                year += 1900;
-            } else {
-                year += 2000;
-            }
-            return year;
-        } catch (e) {
-            return 'NULL';
-        }
-    }
-
-    async syncer(dbClient, d) {
-        const year = this.extractPeriodYear(d.rawperiod);
+    async dbAction(dbClient, d) {
+        const year = Utils.extractPeriodYear(d.rawperiod);
         const detectorsInSql = `ARRAY[${d.detectors.map((d) => `'${d}'`).join(',')}]::varchar[]`;
 
         const period_insert = d.period ? `call insert_period(${d.period}, ${year}, null);` : '';
@@ -117,57 +122,6 @@ class BookkeepingService extends ServicesSynchronizer {
     nextState(state) {
         state['page'] += 1;
         return state;
-    }
-
-    endpointBuilder(state) {
-        return EndpintFormatter.bookkeeping(state['page'], state['limit']);
-    }
-
-    async sync() {
-        const pendingSyncs = [];
-        let state = {
-            page: 0,
-            limit: 100,
-        };
-        while (!this.syncTraversStop(state)) {
-            if (this.loglev) {
-                this.logger.info(JSON.stringify(state));
-                this.logger.info(JSON.stringify(this.metaStore));
-            }
-            const prom = this.syncData(
-                this.endpointBuilder(state),
-                this.dataAdjuster.bind(this),
-                this.syncer.bind(this),
-                (res) => res.data,
-                this.metaDataHandler.bind(this),
-            );
-            pendingSyncs.push(prom);
-            await prom;
-            state = this.nextState(state);
-            await Utils.delay(this.oneRequestDelay);
-        }
-        this.logger.info('bookkeeping sync trvers called ended');
-
-        return Promise.all(pendingSyncs);
-    }
-
-    debugDisplaySync() {
-        return this.syncData(
-            this.endpoints.rct,
-            this.dataAdjuster.bind(this),
-            async (_, r) => this.logger.debug(JSON.stringify(r)),
-            (res) => res.data,
-        );
-    }
-
-    async setSyncTask() {
-        this.forceStop = false;
-        await this.sync();
-    }
-
-    async close() {
-        this.clearSyncTask();
-        await this.disconnect();
     }
 }
 

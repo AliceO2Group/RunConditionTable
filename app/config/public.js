@@ -90,6 +90,23 @@ module.exports = { // Properties that will be provided to frontend in the public
                 size: fromToType,
             },
 
+            runsPerDataPass: {
+                name: matchExcludeType,
+                run_number: fromToType,
+                start: fromToType,
+                end: fromToType,
+                b_field: matchExcludeType,
+                energy_per_beam: fromToType,
+                ir: fromToType,
+                filling_scheme: fromToType,
+                triggers_conf: matchExcludeType,
+                fill_number: fromToType,
+                run_type: matchExcludeType,
+                mu: matchExcludeType,
+                time_trg_start: fromToType,
+                time_trg_end: fromToType,
+            },
+
             flags: {
                 start: fromToType,
                 end: fromToType,

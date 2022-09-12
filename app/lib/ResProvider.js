@@ -16,47 +16,15 @@
 const fs = require('fs');
 const { Log } = require('@aliceo2/web-ui');
 const path = require('path');
+const LogsStacker = require('./LogsStacker.js');
 
 // eslint-disable-next-line prefer-const
 let logger;
 
-class LogsStacker {
-    constructor() {
-        this.messages = {};
-    }
-
-    put(type, mess) {
-        if (!this.messages[type]) {
-            this.messages[type] = [];
-        }
-        this.messages[type].push(mess);
-    }
-
-    substitute(type, mess) {
-        this.messages[type] = [mess];
-    }
-
-    log(type, func) {
-        this.messages[type].forEach((m) => func(type, m));
-    }
-
-    typeLog(type) {
-        if (this.messages[type]) {
-            for (const m of this.messages[type]) {
-                logger[type](m);
-            }
-        }
-    }
-
-    any(type) {
-        return this.messages[type] ? this.messages[type].length > 0 : false;
-    }
-}
-
 class ResProvider {
     // TODO generalize this methods ::( single content provider method) and (key:val provider method)
     static securityFilesProvider(fileNames, description, envVarName = '_') {
-        const logsStacker = new LogsStacker();
+        const logsStacker = new LogsStacker(ResProvider.name);
         const file_path = process.env[envVarName];
         let securityContent;
         try {

@@ -87,6 +87,34 @@ class Utils {
         const p = s.split(pattern);
         return p.join(replace);
     }
+
+    static arrayToChunks(arr, chunkSize) {
+        const chunks = [];
+        for (let i = 0; i < arr.length; i += chunkSize) {
+            chunks.push(arr.slice(i, i + chunkSize));
+        }
+        return chunks;
+    }
+
+    static extractPeriodYear(name) {
+        try {
+            let year = parseInt(name.slice(3, 5), 10);
+            if (year > 50) {
+                year += 1900;
+            } else {
+                year += 2000;
+            }
+            return year;
+        } catch (e) {
+            return 'NULL';
+        }
+    }
+
+    static applyOptsToObj(obj, options) {
+        Object.entries(options).forEach(([k, v]) => {
+            obj[k] = v;
+        });
+    }
 }
 
 module.exports = Utils;

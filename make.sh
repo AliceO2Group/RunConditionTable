@@ -136,7 +136,7 @@ export MOCK_DB;
 
 follow() {
     cd $DOCKER_DIR
-    $COMM_PD logs --follow $OTHER_OPTS
+    $COMM_PD logs --follow $OTHER_OPTS $SERVICES
     cd -
 }
 
@@ -226,7 +226,7 @@ for stage in $STAGES; do
                 ;;
 
                 list)
-                    ls -alh "$DUMPS_DIR";
+                    ls -lth "$DUMPS_DIR";
                 ;;
 
                 restore)
