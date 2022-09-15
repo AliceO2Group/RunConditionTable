@@ -73,6 +73,18 @@ class QueryBuilder {
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
 
+        const orderingPart = (params) => { 
+            if (!params['sorting']) {
+                return '';
+            }
+
+            const sorting = params['sorting'].replace('[', '').replace(']', '').split(',').map((s) => s.trim());
+            const field = sorting[0];
+            const order = sorting[1];
+            console.log(`ORDER BY ${field} ${order == -1 ? 'DESC' : 'ASC'}`);
+            return `ORDER BY ${field} ${order == -1 ? 'DESC' : 'ASC'}`;
+        }
+
         switch (params.page) {
             case pagesNames.periods:
                 return `${views.period_view}
@@ -80,6 +92,7 @@ class QueryBuilder {
                         FROM period_view
                         ${filteringPart()}
                         GROUP BY name, year, beam
+                        ${orderingPart(params)}
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.runsPerPeriod:
@@ -87,6 +100,7 @@ class QueryBuilder {
                         SELECT *
                         FROM runs_per_period_view
                         ${filteringPart()}
+                        ${orderingPart(params)}
                         ${dataSubsetQueryPart(params)};`;
             
             case pagesNames.runsPerDataPass:
@@ -94,6 +108,7 @@ class QueryBuilder {
                         SELECT *
                         FROM runs_per_data_pass_view
                         ${filteringPart()}
+                        ${orderingPart(params)}
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.dataPasses:
@@ -101,6 +116,7 @@ class QueryBuilder {
                         SELECT *
                         FROM data_passes_view
                         ${filteringPart()}
+                        ${orderingPart(params)}
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.mc:
@@ -108,6 +124,7 @@ class QueryBuilder {
                         SELECT * 
                         FROM mc_view
                         ${filteringPart()}
+                        ${orderingPart(params)}
                         ${dataSubsetQueryPart(params)};`;
 
             case pagesNames.flags:
@@ -115,6 +132,7 @@ class QueryBuilder {
                         SELECT * 
                         FROM flags_view
                         ${filteringPart()}
+                        ${orderingPart(params)}
                         ${dataSubsetQueryPart(params)};`;
 
             default:

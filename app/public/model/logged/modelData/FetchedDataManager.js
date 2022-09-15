@@ -55,7 +55,7 @@ export default class FetchedDataManager {
         if (!data || force) {
             await this.req(true, url);
         } else if (url2Str(data.payload.url) !== url2Str(url)) {
-            if (this.onlyMayDiffBySite(url, data.payload.url)) {
+            if (this.onlyMayDiffBySiteAndSorting(url, data.payload.url)) {
                 await this.req(false, url);
             } else {
                 await this.req(true, url);
@@ -63,11 +63,13 @@ export default class FetchedDataManager {
         }
     }
 
-    onlyMayDiffBySite(url1, url2) {
+    onlyMayDiffBySiteAndSorting(url1, url2) {
         const p1 = Object.fromEntries(new URLSearchParams(url1.search));
         const p2 = Object.fromEntries(new URLSearchParams(url2.search));
         p1['site'] = undefined;
+        p1['sorting'] = undefined;
         p2['site'] = undefined;
+        p2['sorting'] = undefined;
 
         return JSON.stringify(p1) == JSON.stringify(p2);
     }
@@ -104,6 +106,14 @@ export default class FetchedDataManager {
     changeSite(site) {
         const url = this.router.getUrl();
         const newUrl = replaceUrlParams(url, [[dataReqParams.site, site]]);
+        this.router.go(newUrl);
+    }
+
+    changeSorting(sorting) {
+        const url = this.router.getUrl();
+        const { field, order } = sorting;
+        console.log(sorting);
+        const newUrl = replaceUrlParams(url, [['sorting', `[${field},${order}]`]]);
         this.router.go(newUrl);
     }
 

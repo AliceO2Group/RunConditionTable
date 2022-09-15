@@ -87,6 +87,10 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         const period_insert =
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
 
+        if (d.anchor_productions.length == 0 || d.anchor_passes.length == 0) {
+            return;
+        }
+
         const anchord_prod_sql = `ARRAY[${d.anchor_productions.map((d) => `'${d}'`).join(',')}]::varchar[]`;
         const anchord_passes_sql = `ARRAY[${d.anchor_passes.map((d) => `'${d}'`).join(',')}]::varchar[]`;
 
