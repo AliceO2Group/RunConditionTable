@@ -142,6 +142,8 @@ follow() {
 
 build() {
     mkdir -p $PROJECT_DIR/security;
+    CACHE_DIR="$PROJECT_DIR/database/cache";
+    mkdir -p $CACHE_DIR;
     ORDER=$1;
     case $TARGET in 
         dev)
