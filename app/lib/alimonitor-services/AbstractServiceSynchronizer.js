@@ -100,7 +100,13 @@ class ServicesSynchronizer {
      * like total pages to see etc., on the whole might be used to any custom logic
      * @returns {*} void
      */
-    async syncPerEndpoint(endpoint, responsePreprocess, dataAdjuster, dbAction, metaDataHandler = null) {
+    async syncPerEndpoint(
+        endpoint,
+        responsePreprocess,
+        dataAdjuster,
+        dbAction,
+        metaDataHandler = null,
+    ) {
         if (this.omitWhenCached && Cacher.isCached(this.name, endpoint)) {
             this.logger.info(`omitting cached json at :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return;

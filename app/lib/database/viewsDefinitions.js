@@ -28,8 +28,7 @@ const runs_per_period_view = (query) => `
             r.ir, 
             r.filling_scheme, 
             r.triggers_conf,
-            r.fill_number, 
-            r.run_type, 
+            r.fill_number,
             r.mu, 
             r.time_trg_start, 
             r.time_trg_end
@@ -47,7 +46,7 @@ const runs_per_period_view = (query) => `
 const runs_per_data_pass_view = (query) => `
         WITH runs_per_data_pass_view AS (
             SELECT
-                --r.id
+                -- r.id
                 -- dp.name, 
                 r.run_number, 
                 r.start, 
@@ -58,7 +57,6 @@ const runs_per_data_pass_view = (query) => `
                 r.filling_scheme, 
                 r.triggers_conf,
                 r.fill_number, 
-                r.run_type, 
                 r.mu, 
                 r.time_trg_start, 
                 r.time_trg_end
@@ -100,19 +98,7 @@ const mc_view = (query) => `
             sp.pwg,
             sp.number_of_events
         FROM simulation_passes AS sp 
-        WHERE exists (
-                        SELECT * 
-                        FROM runs AS r 
-                        INNER JOIN simulation_passes_runs AS spr 
-                            ON r.id = spr.run_id 
-                        INNER JOIN simulation_passes AS sp 
-                            ON sp.id = spr.simulation_pass_id 
-                        WHERE r.period_id = (
-                                            SELECT id 
-                                            FROM periods as p 
-                                            WHERE p.name = '${query.index}'
-                                            )
-                        ) 
+        WHERE sp.name LIKE '${query.index}%'
         )`;
 
 const flags_view = (query) => `

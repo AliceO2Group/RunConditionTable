@@ -46,29 +46,24 @@ class MonalisaService extends AbstractServiceSynchronizer {
         );
     }
 
-    responsePreprocess(d) {
-        const entries = Object.entries(d);
-        const aaa = entries.map(([prodName, vObj]) => {
+    responsePreprocess(res) {
+        const entries = Object.entries(res);
+        const preprocesed = entries.map(([prodName, vObj]) => {
             vObj['name'] = prodName.trim();
             return vObj;
         }).filter((r) => r.name?.match(/^LHC\d\d[a-zA-Z]_.*$/));
-        return aaa;
+        return preprocesed;
     }
 
     dataAdjuster(dp) {
         dp = Utils.filterObject(dp, this.ketpFields);
         dp.size = Number(dp.size);
-
-        const period = Utils.adjusetObjValuesToSql(this.extractPeriod(dp));
-        const rawDes = dp.description;
-        dp = Utils.adjusetObjValuesToSql(dp);
-        dp.period = period;
-        dp.rawDes = rawDes;
-
+        dp.period = this.extractPeriod(dp);
         return dp;
     }
 
     async dbAction(dbClient, d) {
+        d = Utils.adjusetObjValuesToSql(d);
         const { period } = d;
         const period_insert =
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';

@@ -73,9 +73,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             .split(/ +/)
             .map((v) => v.trim());
 
-        const period = Utils.adjusetObjValuesToSql(this.extractPeriod(sp));
-        sp = Utils.adjusetObjValuesToSql(sp);
-        sp.period = period;
+        sp.period = this.extractPeriod(sp);
         sp.anchor_passes = anchor_passes;
         sp.anchor_productions = anchor_productions;
 
@@ -84,12 +82,14 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
 
     async dbAction(dbClient, d) {
         const { period } = d;
-        const period_insert =
-            d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
-
-        if (d.anchor_productions.length == 0 || d.anchor_passes.length == 0) {
+        const { anchor_productions, anchor_passes } = d;
+        if (anchor_productions.length == 0 || anchor_passes.length == 0) {
+            // MC not anchored to any production so drop out
             return;
         }
+        d = Utils.adjusetObjValuesToSql(d);
+        const period_insert =
+            d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
 
         const anchord_prod_sql = `ARRAY[${d.anchor_productions.map((d) => `'${d}'`).join(',')}]::varchar[]`;
         const anchord_passes_sql = `ARRAY[${d.anchor_passes.map((d) => `'${d}'`).join(',')}]::varchar[]`;

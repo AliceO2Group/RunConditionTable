@@ -17,7 +17,7 @@ const services = {
     bookkeeping: {
         url: {
             rct: 'http://rct-bookkeeping.cern.ch:4000/api/runs',
-            ali: 'https://ali-bookkeeping.cern.ch/api/runs',
+            ali: 'https://ali-bookkeeping.cern.ch/api/runs?filter[definitions]=PHYSICS',
         },
     },
     monalisa: {
@@ -34,7 +34,7 @@ const services = {
 
 class ServicesEnpointsFormatter {
     static bookkeeping(page, limit) {
-        return new URL(`${services.bookkeeping.url.ali}/?page[offset]=${page * limit}&page[limit]=${limit}`);
+        return new URL(`${services.bookkeeping.url.ali}&page[offset]=${page * limit}&page[limit]=${limit}`);
     }
 
     static dataPassesRaw() {

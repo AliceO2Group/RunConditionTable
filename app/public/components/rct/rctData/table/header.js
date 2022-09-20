@@ -39,7 +39,6 @@ const sortingChangeAction = (fName, data, model) => {
         null: -1,
     }, null);
     model.fetchedData.changeSorting(data.sorting);
-    // model.notify();
 };
 
 const columnsHeadersArray = (visibleFields, data, model) =>

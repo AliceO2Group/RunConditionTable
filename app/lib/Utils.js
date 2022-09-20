@@ -32,7 +32,11 @@ class Utils {
         const res = {};
         for (const k in obj) {
             if (k) {
-                res[k] = Utils.parseValueToSql(obj[k]);
+                if (typeof res[k] == 'object') {
+                    res[k] = Utils.adjusetObjValuesToSql(obj[k]);
+                } else {
+                    res[k] = Utils.parseValueToSql(obj[k]);
+                }
             }
         }
         return res;
