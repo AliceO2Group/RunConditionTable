@@ -11,7 +11,7 @@ const period_view = `
             ) AS beam,
             r.energy_per_beam::integer as energy
         FROM periods AS p
-        INNER JOIN runs as r
+        LEFT JOIN runs as r
             ON r.period_id = p.id
     )`;
 

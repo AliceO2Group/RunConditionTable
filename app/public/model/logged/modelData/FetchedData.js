@@ -35,15 +35,6 @@ export default class FetchedData {
             order: null, // 1 or -1
         };
 
-        this.fields = null;
-        this.rows = null;
-
-        this.totalRecordsNumber = null;
-        this.hideMarkedRecords = false;
-
-        this.rowsOnsite = null;
-        this.site = null;
-
         this.parseFetchedFields(content);
         this.parseFetchedRows(content);
         if (!totalRecordsNumber) {
@@ -62,9 +53,14 @@ export default class FetchedData {
         this.rowsOnsite = params['rows-on-site'] ? params['rows-on-site'] : defaultRowsOnSite;
         this.site = params[DRP.site] ? params[DRP.site] : defaultSite;
         if (params['sorting']) {
-            const sorting = params['sorting'].replace('[', '').replace(']', '').split(',').map((s) => s.trim());
-            const [field, order] = sorting;
-            this.sorting = { field: field, order: order };
+            const { sorting } = params;
+            if (sorting.startsWith('-')) {
+                const field = sorting.slice(1);
+                this.sorting = { field: field, order: -1 };
+            } else {
+                const field = sorting;
+                this.sorting = { field: field, order: 1 };
+            }
         }
     }
 

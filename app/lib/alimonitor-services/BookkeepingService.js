@@ -41,7 +41,8 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             aliceL3Current: 'b_field_val',
             aliceL3Polarity: 'b_field_polarity',
             fillNumber: 'fill_number',
-            pdpBeamType: 'beam_type',
+            // eslint-disable-next-line capitalized-comments
+            // pdpBeamType: 'beam_type',
         };
 
         this.RUN_TYPE_PHYSICS = 'PHYSICS';
@@ -58,6 +59,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                 EndpintFormatter.bookkeeping(state['page'], state['limit']),
                 (res) => res.data,
                 this.dataAdjuster.bind(this),
+                () => true,
                 this.dbAction.bind(this),
                 this.metaDataHandler.bind(this),
             );
@@ -105,9 +107,9 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const year = Utils.extractPeriodYear(period);
         d = Utils.adjusetObjValuesToSql(d);
 
-        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
+        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${null});` : '';
 
-        const detectorsInSql = `ARRAY[${d.detectors.map((d) => `'${d}'`).join(',')}]::varchar[]`;
+        const detectorsInSql = `${d.detectors}::varchar[]`;
         const pgCommand = `${period_insert} call insert_run (
             ${d.run_number},
             ${d.period}, 
@@ -121,7 +123,6 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             ${d.energy}, 
             ${detectorsInSql}
         );`;
-
         return await dbClient.query(pgCommand);
     }
 

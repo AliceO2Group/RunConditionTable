@@ -54,7 +54,7 @@ pagesCellsSpecials[pagesNames.periods] = {
             (e) => model.handleClick(e),
             '',
             // eslint-disable-next-line max-len
-            `/?page=${pagesNames.runsPerPeriod}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=[run_number,-1]`,
+            `/?page=${pagesNames.runsPerPeriod}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-run_number`,
         ),
 
         viewButton(
@@ -92,7 +92,7 @@ pagesCellsSpecials[pagesNames.dataPasses] = {
             (e) =>model.handleClick(e),
             '',
             // eslint-disable-next-line max-len
-            `/?page=${pagesNames.runsPerDataPass}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=[run_number,-1]`,
+            `/?page=${pagesNames.runsPerDataPass}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-run_number`,
         ),
     ],
     size: (model, item) => getReadableFileSizeString(Number(item.size)),

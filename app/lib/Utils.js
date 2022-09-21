@@ -31,12 +31,18 @@ class Utils {
     static adjusetObjValuesToSql(obj) {
         const res = {};
         for (const k in obj) {
-            if (k) {
-                if (typeof res[k] == 'object') {
-                    res[k] = Utils.adjusetObjValuesToSql(obj[k]);
+            if (obj[k]) {
+                if (typeof obj[k] == 'object') {
+                    if (Array.isArray(obj[k])) {
+                        res[k] = `ARRAY[${obj[k].map((d) => Utils.parseValueToSql(d)).join(',')}]`;
+                    } else {
+                        res[k] = Utils.adjusetObjValuesToSql(obj[k]);
+                    }
                 } else {
                     res[k] = Utils.parseValueToSql(obj[k]);
                 }
+            } else {
+                res[k] = null;
             }
         }
         return res;

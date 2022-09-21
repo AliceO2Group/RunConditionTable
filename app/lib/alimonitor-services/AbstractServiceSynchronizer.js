@@ -95,6 +95,7 @@ class ServicesSynchronizer {
      * @param {URL} endpoint endpoint to fetch data
      * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
      * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database (also adjusting data to sql foramt)
+     * @param {CallableFunction} filterer filter rows
      * @param {CallableFunction} dbAction logic for inserting data to database
      * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
      * like total pages to see etc., on the whole might be used to any custom logic
@@ -104,6 +105,7 @@ class ServicesSynchronizer {
         endpoint,
         responsePreprocess,
         dataAdjuster,
+        filterer,
         dbAction,
         metaDataHandler = null,
     ) {
@@ -118,7 +120,8 @@ class ServicesSynchronizer {
                 metaDataHandler(result);
             }
             const rows = responsePreprocess(result)
-                .map((r) => dataAdjuster(r));
+                .map((r) => dataAdjuster(r))
+                .filter((r) => filterer(r));
 
             let correct = 0;
             let incorrect = 0;

@@ -47,6 +47,11 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             EndpointsFormatter.mcRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
+            (r) => {
+                const { anchor_productions, anchor_passes } = r;
+                return r.period.year >= 2021 && anchor_productions.length != 0 && anchor_passes.length != 0;
+                // MC not anchored to any production so drop out
+            },
             this.dbAction.bind(this),
         );
     }
@@ -91,8 +96,8 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         const period_insert =
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
 
-        const anchord_prod_sql = `ARRAY[${d.anchor_productions.map((d) => `'${d}'`).join(',')}]::varchar[]`;
-        const anchord_passes_sql = `ARRAY[${d.anchor_passes.map((d) => `'${d}'`).join(',')}]::varchar[]`;
+        const anchord_prod_sql = `${d.anchor_productions}::varchar[]`;
+        const anchord_passes_sql = `${d.anchor_passes}::varchar[]`;
 
         const pgCommand = `${period_insert}; call insert_mc(
             ${d.name}, 

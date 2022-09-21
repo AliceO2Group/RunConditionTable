@@ -20,6 +20,8 @@ module.exports = {
 
     public: require('./public.js'),
 
+    dataFromYearIncluding: 2021,
+
     defaultLoglev: 5,
 };
 

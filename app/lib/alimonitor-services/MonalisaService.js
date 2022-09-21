@@ -17,6 +17,7 @@ const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../Utils.js');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 const MonalisaServiceDetails = require('./MonalisaServiceDetails.js');
+const config = require('../config/configProvider.js');
 
 class MonalisaService extends AbstractServiceSynchronizer {
     constructor() {
@@ -42,6 +43,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
             EndpointsFormatter.dataPassesRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
+            (r) => r.period.year >= config.dataFromYearIncluding,
             this.dbAction.bind(this),
         );
     }
@@ -67,7 +69,6 @@ class MonalisaService extends AbstractServiceSynchronizer {
         const { period } = d;
         const period_insert =
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
-
         const pgCommand = `${period_insert}; call insert_prod(
             ${d.name}, 
             ${d.description}, 
@@ -78,7 +79,6 @@ class MonalisaService extends AbstractServiceSynchronizer {
             ${null},
             ${d.size}
         );`;
-
         return await Promise.all([dbClient.query(pgCommand), this.detailsSyncer.sync(d)]);
     }
 

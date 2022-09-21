@@ -77,67 +77,58 @@ class QueryBuilder {
             if (!params['sorting']) {
                 return '';
             }
+            const { sorting } = params;
+            if (sorting.startsWith('-')) {
+                const field = sorting.slice(1)
+                return `ORDER BY ${field} DESC`;
+            } else {
+                const field = sorting
+                return `ORDER BY ${field} ASC`;
+            }
 
-            const sorting = params['sorting'].replace('[', '').replace(']', '').split(',').map((s) => s.trim());
-            const field = sorting[0];
-            const order = sorting[1];
-            console.log(`ORDER BY ${field} ${order == -1 ? 'DESC' : 'ASC'}`);
-            return `ORDER BY ${field} ${order == -1 ? 'DESC' : 'ASC'}`;
+
         }
 
-        switch (params.page) {
-            case pagesNames.periods:
-                return `${views.period_view}
-                        SELECT name, year, beam, string_agg(energy::varchar, ',') as energy
-                        FROM period_view
-                        ${filteringPart()}
-                        GROUP BY name, year, beam
-                        ${orderingPart(params)}
-                        ${dataSubsetQueryPart(params)};`;
+        const cases = {};
+        cases[pagesNames.periods] = 
+        `${views.period_view}
+        SELECT name, year, beam, string_agg(energy::varchar, ',') as energy
+        FROM period_view
+        GROUP BY name, year, beam 
+        `;
+        cases[pagesNames.runsPerPeriod] = 
+        `${views.runs_per_period_view(params)}
+        SELECT *
+        FROM runs_per_period_view 
+        `;
+        cases[pagesNames.runsPerDataPass] =
+        `${views.runs_per_data_pass_view(params)}
+        SELECT *
+        FROM runs_per_data_pass_view 
+        `;
+        cases[pagesNames.dataPasses] = 
+        `${views.data_passes_view(params)}
+        SELECT * 
+        FROM data_passes_view
+        `;
+        cases[pagesNames.mc] = 
+        `${views.mc_view(params)}
+        SELECT * 
+        FROM mc_view 
+        `;
+        cases[pagesNames.flags] = 
+        `${views.flags_view(params)}
+        SELECT * 
+        FROM flags_view 
+        `;
 
-            case pagesNames.runsPerPeriod:
-                return `${views.runs_per_period_view(params)}
-                        SELECT *
-                        FROM runs_per_period_view
-                        ${filteringPart()}
-                        ${orderingPart(params)}
-                        ${dataSubsetQueryPart(params)};`;
-            
-            case pagesNames.runsPerDataPass:
-                return `${views.runs_per_data_pass_view(params)}
-                        SELECT *
-                        FROM runs_per_data_pass_view
-                        ${filteringPart()}
-                        ${orderingPart(params)}
-                        ${dataSubsetQueryPart(params)};`;
+        const queryRest = () => 
+        `${filteringPart()}
+        ${orderingPart(params)}
+        ${dataSubsetQueryPart(params)}`;
 
-            case pagesNames.dataPasses:
-                return `${views.data_passes_view(params)}
-                        SELECT *
-                        FROM data_passes_view
-                        ${filteringPart()}
-                        ${orderingPart(params)}
-                        ${dataSubsetQueryPart(params)};`;
-
-            case pagesNames.mc:
-                return `${views.mc_view(params)}
-                        SELECT * 
-                        FROM mc_view
-                        ${filteringPart()}
-                        ${orderingPart(params)}
-                        ${dataSubsetQueryPart(params)};`;
-
-            case pagesNames.flags:
-                return `${views.flags_view(params)}
-                        SELECT * 
-                        FROM flags_view
-                        ${filteringPart()}
-                        ${orderingPart(params)}
-                        ${dataSubsetQueryPart(params)};`;
-
-            default:
-                return 'SELECT NOW()';
-        }
+        return `${Utils.switchCase(params.page, cases, null)} ${queryRest()};`;
+        
     }
 
 }
