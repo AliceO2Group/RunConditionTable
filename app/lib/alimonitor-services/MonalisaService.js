@@ -65,7 +65,9 @@ class MonalisaService extends AbstractServiceSynchronizer {
     }
 
     async dbAction(dbClient, d) {
+        const { description } = d;
         d = Utils.adjusetObjValuesToSql(d);
+        d.rawDes = description;
         const { period } = d;
         const period_insert =
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';

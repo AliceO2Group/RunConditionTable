@@ -123,7 +123,6 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             ${d.energy}, 
             ${detectorsInSql}
         );`;
-        console.log(d.fill_number);
         return await dbClient.query(pgCommand);
     }
 

@@ -35,6 +35,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
             EndpointsFormatter.dataPassesDetailed(d.rawDes),
             (raw) => this.responsePreprocess(raw),
             (v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, this.ketpFields)),
+            () => true,
             async (dbClient, v) => {
                 const detailsSql = v ?
                     `call insert_prod_details(${d.name}, ${v.run_number}, ${v.period});`
