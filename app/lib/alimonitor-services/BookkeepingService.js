@@ -98,7 +98,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             run.b_field = null;
         }
 
-        run.fill_number = Number(run.fillNumber);
+        run.fill_number = Number(run.fill_number);
         return run;
     }
 
@@ -123,6 +123,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             ${d.energy}, 
             ${detectorsInSql}
         );`;
+        console.log(d.fill_number);
         return await dbClient.query(pgCommand);
     }
 
