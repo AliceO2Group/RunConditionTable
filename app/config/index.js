@@ -9,7 +9,7 @@ module.exports = {
     http: {
         port: process.env.RCT_HTTP_PORT,
         hostname: process.env.RCT_HOSTNAME,
-        tls: process.env.RCT_TLS_ENABLED,
+        tls: process.env.RCT_TLS_ENABLED == 'true' ? true : false,
         autoListen: false,
     },
     openId: ResProvider.openid(),
