@@ -17,6 +17,7 @@ const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../Utils.js');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 const MonalisaServiceMCDetails = require('./MonalisaServiceMCDetails.js');
+const config = require('../config/configProvider.js');
 
 class MonalisaServiceMC extends AbstractServiceSynchronizer {
     constructor() {
@@ -49,7 +50,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             this.dataAdjuster.bind(this),
             (r) => {
                 const { anchor_productions, anchor_passes } = r;
-                return r.period.year >= 2021 && anchor_productions.length != 0 && anchor_passes.length != 0;
+                return r.period.year >= config.dataFromYearIncluding && anchor_productions.length != 0 && anchor_passes.length != 0;
                 // MC not anchored to any production so drop out
             },
             this.dbAction.bind(this),
