@@ -29,17 +29,15 @@ const orderToSymbol = (fName, sorting) => fName == sorting.field ? switchCase(so
 
 const sortingChangeAction = (fName, data, model) => {
     if (data.sorting.field != fName) {
+        data.sorting.field = fName;
         data.sorting.order = null;
     }
-    data.sorting.field = fName;
-    const { order } = data.sorting;
-    data.sorting.order = switchCase(order, {
+    data.sorting.order = switchCase(data.sorting.order, {
         1: -1,
         '-1': 1,
         null: -1,
     }, null);
-    data.sort();
-    model.notify();
+    model.fetchedData.changeSorting(data.sorting);
 };
 
 const columnsHeadersArray = (visibleFields, data, model) =>

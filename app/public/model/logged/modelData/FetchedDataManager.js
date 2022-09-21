@@ -15,7 +15,7 @@
 import { RemoteData, Loader } from '/js/src/index.js';
 
 import FetchedData from './FetchedData.js';
-import { replaceUrlParams, url2Str } from '../../../utils/utils.js';
+import { replaceUrlParams } from '../../../utils/utils.js';
 import { RCT } from '../../../config.js';
 const { dataReqParams } = RCT;
 const { pagesNames } = RCT;
@@ -54,8 +54,8 @@ export default class FetchedDataManager {
         const data = this[page][index];
         if (!data || force) {
             await this.req(true, url);
-        } else if (url2Str(data.payload.url) !== url2Str(url)) {
-            if (this.onlyMayDiffBySite(url, data.payload.url)) {
+        } else if (data.payload.url.href !== url.href) {
+            if (this.diffOnlyBySiteAndSorting(url, data.payload.url)) {
                 await this.req(false, url);
             } else {
                 await this.req(true, url);
@@ -63,11 +63,13 @@ export default class FetchedDataManager {
         }
     }
 
-    onlyMayDiffBySite(url1, url2) {
+    diffOnlyBySiteAndSorting(url1, url2) {
         const p1 = Object.fromEntries(new URLSearchParams(url1.search));
         const p2 = Object.fromEntries(new URLSearchParams(url2.search));
         p1['site'] = undefined;
+        p1['sorting'] = undefined;
         p2['site'] = undefined;
+        p2['sorting'] = undefined;
 
         return JSON.stringify(p1) == JSON.stringify(p2);
     }
@@ -80,6 +82,7 @@ export default class FetchedDataManager {
             ({ totalRecordsNumber } = this[page][index].payload);
         }
 
+        const previous = this[page][index];
         this[page][index] = RemoteData.Loading();
         this[page][index].payload = { url: url }; // TODO maybe it should be considered in WebUI
         this.model.notify();
@@ -88,10 +91,21 @@ export default class FetchedDataManager {
         const { result, status, ok } = await this.model.loader.get(reqEndpoint);
         this.model.parent._tokenExpirationHandler(status);
 
-        if (!ok) {
-            this[page][index] = RemoteData.failure({ status: status, url: url });
+        if (ok) {
+            const s = RemoteData.Success(new FetchedData(url, result, totalRecordsNumber));
+            this[page][index] = s;
+            previous?.match({
+                NotAsked: () => {},
+                Loading: () => {},
+                Failure: () => {},
+                Success: () => {
+                    s.payload.fields = previous.payload.fields;
+                },
+            });
         } else {
-            this[page][index] = RemoteData.Success(new FetchedData(url, result, totalRecordsNumber));
+            this[page][index] = previous;
+            alert(`${status} ${url} going back to previous location`);
+            this.router.go(previous.payload.url);
         }
         this.model.notify();
     }
@@ -104,6 +118,13 @@ export default class FetchedDataManager {
     changeSite(site) {
         const url = this.router.getUrl();
         const newUrl = replaceUrlParams(url, [[dataReqParams.site, site]]);
+        this.router.go(newUrl);
+    }
+
+    changeSorting(sorting) {
+        const url = this.router.getUrl();
+        const { field, order } = sorting;
+        const newUrl = replaceUrlParams(url, [['sorting', `${order == -1 ? '-' : ''}${field}`]]);
         this.router.go(newUrl);
     }
 

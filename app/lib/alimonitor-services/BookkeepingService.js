@@ -25,7 +25,6 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         super();
         this.batchedRequestes = true;
         this.batchSize = 100;
-        this.omitWhenCached = true;
         this.omitWhenCached = false;
 
         this.ketpFields = {
@@ -36,11 +35,17 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             timeO2End: 'end',
             timeTrgStart: 'time_trg_start',
             timeTrgEnd: 'time_trg_end',
-            runType: 'run_type',
+            definition: 'run_type',
             lhcBeamEnergy: 'energy',
             detectors: 'detectors',
-            aliceDipoleCurrent: 'TODO', // TODO
+            aliceL3Current: 'b_field_val',
+            aliceL3Polarity: 'b_field_polarity',
+            fillNumber: 'fill_number',
+            // eslint-disable-next-line capitalized-comments
+            // pdpBeamType: 'beam_type',
         };
+
+        this.RUN_TYPE_PHYSICS = 'PHYSICS';
     }
 
     async sync() {
@@ -54,6 +59,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                 EndpintFormatter.bookkeeping(state['page'], state['limit']),
                 (res) => res.data,
                 this.dataAdjuster.bind(this),
+                () => true,
                 this.dbAction.bind(this),
                 this.metaDataHandler.bind(this),
             );
@@ -80,17 +86,30 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         } else {
             run.detectors = [];
         }
-        const { period } = run;
-        const res = Utils.adjusetObjValuesToSql(run);
-        res.rawperiod = period;
-        return res;
+        if (run.b_field_val && run.b_field_polarity) {
+            if (run.b_field_polarity == 'NEGATIVE') {
+                run.b_field = - Number(run.b_field_val);
+            } else if (run.b_field_polarity == 'POSITIVE') {
+                run.b_field = run.b_field_val;
+            } else {
+                throw 'incorrect polarity type';
+            }
+        } else {
+            run.b_field = null;
+        }
+
+        run.fill_number = Number(run.fill_number);
+        return run;
     }
 
     async dbAction(dbClient, d) {
-        const year = Utils.extractPeriodYear(d.rawperiod);
-        const detectorsInSql = `ARRAY[${d.detectors.map((d) => `'${d}'`).join(',')}]::varchar[]`;
+        const { period } = d;
+        const year = Utils.extractPeriodYear(period);
+        d = Utils.adjusetObjValuesToSql(d);
 
-        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, null);` : '';
+        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${null});` : '';
+
+        const detectorsInSql = `${d.detectors}::varchar[]`;
         const pgCommand = `${period_insert} call insert_run (
             ${d.run_number},
             ${d.period}, 
@@ -98,11 +117,12 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             ${d.time_trg_end}, 
             ${d.start}, 
             ${d.end}, 
-            ${d.run_type}, 
+            ${d.run_type},
+            ${d.fill_number},
+            ${d.b_field},
             ${d.energy}, 
             ${detectorsInSql}
         );`;
-
         return await dbClient.query(pgCommand);
     }
 

@@ -17,6 +17,7 @@ const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../Utils.js');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 const MonalisaServiceMCDetails = require('./MonalisaServiceMCDetails.js');
+const config = require('../config/configProvider.js');
 
 class MonalisaServiceMC extends AbstractServiceSynchronizer {
     constructor() {
@@ -47,6 +48,11 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             EndpointsFormatter.mcRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
+            (r) => {
+                const { anchor_productions, anchor_passes } = r;
+                return r.period.year >= config.dataFromYearIncluding && anchor_productions.length != 0 && anchor_passes.length != 0;
+                // MC not anchored to any production so drop out
+            },
             this.dbAction.bind(this),
         );
     }
@@ -73,9 +79,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             .split(/ +/)
             .map((v) => v.trim());
 
-        const period = Utils.adjusetObjValuesToSql(this.extractPeriod(sp));
-        sp = Utils.adjusetObjValuesToSql(sp);
-        sp.period = period;
+        sp.period = this.extractPeriod(sp);
         sp.anchor_passes = anchor_passes;
         sp.anchor_productions = anchor_productions;
 
@@ -83,12 +87,18 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
     }
 
     async dbAction(dbClient, d) {
+        const { anchor_productions, anchor_passes } = d;
+        if (anchor_productions.length == 0 || anchor_passes.length == 0) {
+            // MC not anchored to any production so drop out
+            return;
+        }
+        d = Utils.adjusetObjValuesToSql(d);
         const { period } = d;
         const period_insert =
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
 
-        const anchord_prod_sql = `ARRAY[${d.anchor_productions.map((d) => `'${d}'`).join(',')}]::varchar[]`;
-        const anchord_passes_sql = `ARRAY[${d.anchor_passes.map((d) => `'${d}'`).join(',')}]::varchar[]`;
+        const anchord_prod_sql = `${d.anchor_productions}::varchar[]`;
+        const anchord_passes_sql = `${d.anchor_passes}::varchar[]`;
 
         const pgCommand = `${period_insert}; call insert_mc(
             ${d.name}, 
@@ -101,7 +111,6 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             ${d.number_of_events},
             ${d.size}
         );`;
-
         return await Promise.all([dbClient.query(pgCommand), this.detailsSyncer.sync(d)]);
     }
 

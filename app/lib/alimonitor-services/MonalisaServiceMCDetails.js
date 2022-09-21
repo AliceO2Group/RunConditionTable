@@ -33,8 +33,10 @@ class MonalisaServiceMCDetails extends AbstractServiceSynchronizer {
         return await this.syncPerEndpoint(
             EndpointsFormatter.mcDetTag(Utils.replaceAll(d.name, "'", '')),
             (raw) => this.responsePreprocess(raw),
-            (v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, this.keptFields)),
+            (v) => Utils.filterObject(v, this.keptFields),
+            () => true,
             async (dbClient, v) => {
+                v = Utils.adjusetObjValuesToSql(v);
                 const detailsSql = v ?
                     `call insert_mc_details(${d.name}, ${v.run_number}, ${v.period ? v.period : null});`
                     : '';

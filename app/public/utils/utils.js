@@ -34,10 +34,6 @@ export function range(from, to) {
     return Array.from({ length: to - from }, (v, k) => k + from);
 }
 
-export function url2Str(url) {
-    return url.pathname + url.search;
-}
-
 export function getPathElems(pathname) {
     if (!(pathname[0] === '/' && pathname.slice(-1) === '/')) {
         throw 'incorrect path';

@@ -315,7 +315,7 @@ CREATE TABLE public.runs (
 	run_number bigint NOT NULL,
 	start bigint,
 	"end" bigint,
-	b_field character varying(12),
+	b_field float,
 	energy_per_beam float,
 	ir character varying(25),
 	filling_scheme integer,
