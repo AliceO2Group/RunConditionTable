@@ -67,7 +67,11 @@ export default class FetchedData {
     parseFetchedFields(content) {
         const { length } = content.data.fields;
         this.fields = content.data.fields.map((item) => {
-            item.marked = length < 5 || content.data.rows.some((r) => r[item.name]); // TODO
+            item.marked =
+                length < 5
+                || content.data.rows.length == 0
+                || content.data.rows.some((r) => r[item.name]); // TODO
+
             return item;
         });
     }

@@ -7,9 +7,9 @@ module.exports = {
         expiration: process.env.RCT_JWT_EXPIRATION,
     },
     http: {
-        port: 8081,
-        hostname: 'localhost',
-        tls: false,
+        port: process.env.RCT_HTTP_PORT,
+        hostname: process.env.RCT_HOSTNAME,
+        tls: process.env.RCT_TLS_ENABLED,
         autoListen: false,
     },
     openId: ResProvider.openid(),
@@ -22,7 +22,7 @@ module.exports = {
 
     dataFromYearIncluding: 2021,
 
-    defaultLoglev: 5,
+    defaultLoglev: 1,
 };
 
 // TODO config validation

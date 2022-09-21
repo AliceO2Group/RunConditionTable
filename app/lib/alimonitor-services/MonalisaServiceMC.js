@@ -86,13 +86,13 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
     }
 
     async dbAction(dbClient, d) {
-        const { period } = d;
         const { anchor_productions, anchor_passes } = d;
         if (anchor_productions.length == 0 || anchor_passes.length == 0) {
             // MC not anchored to any production so drop out
             return;
         }
         d = Utils.adjusetObjValuesToSql(d);
+        const { period } = d;
         const period_insert =
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
 
@@ -110,7 +110,6 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             ${d.number_of_events},
             ${d.size}
         );`;
-
         return await Promise.all([dbClient.query(pgCommand), this.detailsSyncer.sync(d)]);
     }
 
