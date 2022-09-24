@@ -1,9 +1,7 @@
 
 services:
 
-  application:
+  o2-rct_application:
     ports:
-      - target: 8081
-        published: 80
-      - target: 8081
-        published: 443
+      - target: ${RCT_HTTP_PORT:-8081}
+        published: ${RCT_HTTP_PORT:-8081}

@@ -80,7 +80,6 @@ class DatabaseService {
     }
 
     buildQuery(params) {
-        console.log(this.queryBuilder.build(params))
         return this.queryBuilder.build(params);
     }
 

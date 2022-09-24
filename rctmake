@@ -2,8 +2,8 @@
 PROJECT_DIR="$(dirname $(realpath $0))";
 SCRIPT_NAME="$(basename $0)"
 
-APP_CONTATINER_NAME=rct_application
-DB_CONTATINER_NAME=rct_database
+APP_CONTATINER_NAME="o2-rct_application"
+DB_CONTATINER_NAME="o2-rct_database"
 # TODO describe rest of path, RCT_USER etc. via env vars pulled during deployment
 
 usage() {
@@ -151,7 +151,7 @@ build() {
             $COMM_PD \
                 -f docker-compose.yml \
                 -f docker-compose-dev.yml \
-                -f docker-compose-dev-expose.yml \
+                -f docker-compose-expose.yml \
                 $ORDER $OTHER_OPTS $SERVICES;
             if [ "$ATTACH_TO_APP" = 'true' ]; then
                 docker attach $APP_CONTATINER_NAME;

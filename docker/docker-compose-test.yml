@@ -1,6 +1,6 @@
 
 services:
-  application:
+  o2-rct_application:
     build: 
       target: test
     env_file:
@@ -13,7 +13,7 @@ services:
         
     restart: "no"
 
-  database:
+  o2-rct_database:
     build: 
       target: test
     env_file:

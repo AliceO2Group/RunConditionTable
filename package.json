@@ -39,8 +39,8 @@
     "prune": "./rctmake prune",
     "app:attach": "docker attach rct_application",
     
-    "db:check": "./rctmake prune,db,build,follow,prune -t dev -S database",
-    "db:attach": "docker exec -it rct_database psql -U postgres -d \"rct-db\"",
+    "db:check": "./rctmake prune,db,build,follow,prune -t dev -S o2-rct_database",
+    "db:attach": "docker exec -it o2-rct_database psql -U postgres -d \"rct-db\"",
 
     "db:clean": "./rctmake dump:clean",
     "dump:make": "./rctmake dump:make -F ",

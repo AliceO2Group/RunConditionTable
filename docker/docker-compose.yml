@@ -1,7 +1,7 @@
 version: '3.1'
 services:
-  application:
-    container_name: rct_application
+  o2-rct_application:
+    container_name: o2-rct_application
     stdin_open: true
     tty: true 
     build:
@@ -10,7 +10,7 @@ services:
     environment:
       - RUNNING_ENV=DOCKER
     networks:
-      - rct-network
+      - o2-rct_network
     volumes:
       - type: bind
         read_only: true
@@ -21,8 +21,8 @@ services:
         source: ./database/cache
         target: /opt/RunConditionTable/database/cache
     
-  database:
-    container_name: rct_database
+  o2-rct_database:
+    container_name: o2-rct_database
     build: 
       context: ./
       dockerfile: docker/Dockerfile.database
@@ -38,9 +38,9 @@ services:
         source: ./database/cache
         target: /postgres/run/database/cache
     networks:
-      - rct-network
+      - o2-rct_network
 networks:
-  rct-network:
+  o2-rct_network:
     driver: bridge
     ipam:
       driver: default
