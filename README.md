@@ -1,6 +1,6 @@
 # RunConditionTable
 
-See script make.sh usede for managing project; help via ./make.sh --help or in source code 
+See script rctmake usede for managing project; help via ./rctmake --help or in source code 
 
 ## tests
 

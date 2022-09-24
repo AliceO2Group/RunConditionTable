@@ -80,6 +80,7 @@ class DatabaseService {
     }
 
     buildQuery(params) {
+        console.log(this.queryBuilder.build(params))
         return this.queryBuilder.build(params);
     }
 
@@ -104,6 +105,7 @@ class DatabaseService {
                 })
                 .catch((e) => {
                     this.logger.error(e);
+                    this.logger.error(e.stack)
                     res.json({ data: e.code });
                 });
         } else {

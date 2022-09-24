@@ -89,15 +89,36 @@ pagesCellsSpecials[pagesNames.dataPasses] = {
         viewButton(
             model,
             'runs',
-            (e) =>model.handleClick(e),
+            (e) => model.handleClick(e),
             '',
             // eslint-disable-next-line max-len
             `/?page=${pagesNames.runsPerDataPass}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-run_number`,
         ),
+        viewButton(
+            model,
+            'anchorage',
+            (e) => model.handleClick(e),
+            '',
+            // eslint-disable-next-line max-len
+            `/?page=${pagesNames.anchoragePerDatapass}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`,
+        ),
     ],
     size: (model, item) => getReadableFileSizeString(Number(item.size)),
 };
-pagesCellsSpecials[pagesNames.mc] = {};
+pagesCellsSpecials[pagesNames.mc] = {
+    name: (model, item) => [
+        item.name,
+        '  ',
+        viewButton(
+            model,
+            'anchored',
+            (e) => model.handleClick(e),
+            '',
+            // eslint-disable-next-line max-len
+            `/?page=${pagesNames.anchoredPerMC}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`,
+        ),
+    ],
+};
 
 const dateFormatter = (sec) => {
     const cestOffset = 2 * 60 * 60 * 1000;

@@ -25,7 +25,9 @@ const Utils = require('./lib/Utils.js');
 const { Console } = require('node:console');
 const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
 const MonalisaServiceMC = require('./lib/alimonitor-services/MonalisaServiceMC.js');
+const util = require('util');
 
+const exec = util.promisify(require('child_process').exec);
 const EP = config.public.endpoints;
 Log.configure(config);
 
@@ -74,12 +76,12 @@ class RunConditionTableApplication {
                 '': () => {},
                 bk: (args) => this.servCLI(this.bookkeepingService, args),
                 ml: (args) => this.servCLI(this.monalisaService, args),
-                sync: async () => {
+                sync: async (args) => {
                     await this.bookkeepingService.setSyncTask();
+                    await exec('ls');
                     await this.monalisaService.setSyncTask();
                     await this.monalisaServiceMC.setSyncTask();
                 },
-                'mc-d': () => this.monalisaServiceMC.mc(),
                 mc: (args) => this.servCLI(this.monalisaServiceMC, args),
                 app: (args) => this.applicationCli(args),
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
