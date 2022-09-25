@@ -43,6 +43,7 @@ class DatabaseService {
             await client.connect()
                 .catch((e) => {
                     this.logger.error(e);
+                    this.responseWithStatus(res, 500, e.code);
                 });
         } else {
             this.logger.info('Restoring session with client');
@@ -59,7 +60,7 @@ class DatabaseService {
                 };
                 this.logger.info('Logged client: ');
             }).catch((e) => {
-                this.responseWithStatus(res, 401, e.code);
+                this.responseWithStatus(res, 500, e.code);
             });
     }
 

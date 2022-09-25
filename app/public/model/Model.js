@@ -14,6 +14,7 @@
 
 import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
 import PrimaryModel from './logged/PrimaryModel.js';
+import ServiceUnavailableModel from './ServiceUnavailableModel.js';
 
 export default class Model extends Observable {
     constructor() {
@@ -23,15 +24,19 @@ export default class Model extends Observable {
         this.loader = new Loader();
 
         this.mode = null;
+        this.submodels = {};
+
         this.logginEndpoint = '/api/login/';
         this.login('physicist');
     }
 
     async login(username) {
-        const { status, ok } = await this.postLoginPasses(username);
+        const { status, result, ok } = await this.postLoginPasses(username);
         this._tokenExpirationHandler(status);
         if (ok) {
             this.setPrimary();
+        } else if (/5\d\d/.test(status)) {
+            this.setServiceUnavailable(result);
         }
     }
 
@@ -39,11 +44,32 @@ export default class Model extends Observable {
         return this.loader.post(this.logginEndpoint, { username: username });
     }
 
+    setServiceUnavailable(result) {
+        const messageShowTimeout = 200;
+        const modeName = 'serviceUnavailable';
+        if (!this.submodels[modeName]) {
+            this.submodels[modeName] = new ServiceUnavailableModel(this);
+            this.submodels[modeName].bubbleTo(this);
+        }
+        this.mode = modeName;
+        this.notify();
+        const model = this;
+        setTimeout(() => {
+            model.submodels[modeName].unsetResult(result);
+            model.notify();
+            setTimeout(() => {
+                model.submodels[modeName].setResult(result);
+                model.notify();
+            }, messageShowTimeout);
+        }, messageShowTimeout);
+    }
+
     setPrimary() {
+        const modeName = 'primary';
         localStorage.token = sessionService.session.token;
-        this.primary = new PrimaryModel(this);
-        this.primary.bubbleTo(this);
-        this.mode = 'primary';
+        this.submodels[modeName] = new PrimaryModel(this);
+        this.submodels[modeName].bubbleTo(this);
+        this.mode = modeName;
         this.notify();
     }
 

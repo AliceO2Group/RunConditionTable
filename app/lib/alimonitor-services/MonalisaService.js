@@ -35,7 +35,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
         };
 
         this.detailsSyncer = new MonalisaServiceDetails();
-        this.detailsSyncer.setupConnection();
+        // this.detailsSyncer.setupConnection();
     }
 
     sync() {

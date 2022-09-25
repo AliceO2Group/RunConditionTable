@@ -25,9 +25,7 @@ const Utils = require('./lib/Utils.js');
 const { Console } = require('node:console');
 const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
 const MonalisaServiceMC = require('./lib/alimonitor-services/MonalisaServiceMC.js');
-const util = require('util');
 
-const exec = util.promisify(require('child_process').exec);
 const EP = config.public.endpoints;
 Log.configure(config);
 
@@ -76,13 +74,15 @@ class RunConditionTableApplication {
                 '': () => {},
                 bk: (args) => this.servCLI(this.bookkeepingService, args),
                 ml: (args) => this.servCLI(this.monalisaService, args),
-                sync: async (args) => {
+                mc: (args) => this.servCLI(this.monalisaServiceMC, args),
+                sync: async () => {
                     await this.bookkeepingService.setSyncTask();
-                    await exec('ls');
                     await this.monalisaService.setSyncTask();
                     await this.monalisaServiceMC.setSyncTask();
                 },
-                mc: (args) => this.servCLI(this.monalisaServiceMC, args),
+                connect: () => {
+                    // this.databaseService.
+                },
                 app: (args) => this.applicationCli(args),
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
@@ -139,17 +139,17 @@ class RunConditionTableApplication {
         this.logger.info('Starting RCT app...');
 
         try {
-            await this.databaseService.setAdminConnection();
-            await this.bookkeepingService.setupConnection();
-            await this.monalisaService.setupConnection();
-            await this.monalisaServiceMC.setupConnection();
+            // await this.databaseService.setAdminConnection();
+            // await this.bookkeepingService.setupConnection();
+            // await this.monalisaService.setupConnection();
+            // await this.monalisaServiceMC.setupConnection();
             // eslint-disable-next-line capitalized-comments
             // this.bookkeepingService.setSyncRunsTask();
             await this.httpServer.listen();
         } catch (error) {
             this.logger.error(`Error while starting RCT app: ${error}`);
-            await this.stop();
-            return Promise.reject(error);
+            // await this.stop();
+            // return Promise.reject(error);
         }
 
         this.logger.info('RCT app started');

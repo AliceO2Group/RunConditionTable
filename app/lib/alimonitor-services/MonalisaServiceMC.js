@@ -40,7 +40,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         };
 
         this.detailsSyncer = new MonalisaServiceMCDetails();
-        this.detailsSyncer.setupConnection();
+        // this.detailsSyncer.setupConnection();
     }
 
     sync() {
