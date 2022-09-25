@@ -11,22 +11,14 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+import spinner from './common/spinner.js';
 import { h } from '/js/src/index.js';
-import container from './common/container.js';
 
-export default function serviceUnavailablePanel(model) {
-    const retryBtn = h('button.btn.br-primary.m4.p4', { onclick: () => model.retry() }, 'retry');
-    const title = h('h1.primary.justify-center', 'Run Condition Table');
-    const subtitle = h('h3.danger.justify-center', 'Service unavailable');
+export default function waitingPanel() {
+    const title = h('h1.primary', 'Run Condition Table');
 
     return h('div.loginDiv', h('div.loginDiv.bg-gray-lighter.br3.p4', [
         title,
-        subtitle,
-        h('.p1'),
-        container(h('div.loginDivInsid.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close',
-            { id: 'serviceUnavailableMessageFieldID' },
-            '')),
-        container(retryBtn),
-
+        spinner(),
     ]));
 }

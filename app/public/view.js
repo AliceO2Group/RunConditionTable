@@ -15,6 +15,7 @@
 import userPanel from './components/rct/userPanel.js';
 import loggingPanel from './components/loggingPanel.js';
 import serviceUnavailablePanel from './components/serviceUnavailablePanel.js';
+import waitingPanel from './components/waitingPanel.js';
 import { switchCase } from '/js/src/index.js';
 
 export default function view(model) {
@@ -23,5 +24,5 @@ export default function view(model) {
         primary: () => userPanel(model.submodels[model.mode]),
         admin: () => loggingPanel(model), // TODO consider
         inspector: () => loggingPanel(model),
-    }, () => 'hmm...')/*Switch returns function*/();
+    }, () => waitingPanel())/*Switch returns function*/();
 }

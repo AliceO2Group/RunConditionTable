@@ -34,8 +34,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
             interaction_type: 'beam_type',
         };
 
-        this.detailsSyncer = new MonalisaServiceDetails();
-        // this.detailsSyncer.setupConnection();
+        this.monalisaServiceDetails = new MonalisaServiceDetails();
     }
 
     sync() {
@@ -81,7 +80,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
             ${null},
             ${d.size}
         );`;
-        return await Promise.all([dbClient.query(pgCommand), this.detailsSyncer.sync(d)]);
+        return await Promise.all([dbClient.query(pgCommand), this.monalisaServiceDetails.sync(d)]);
     }
 
     extractPeriod(rowData) {

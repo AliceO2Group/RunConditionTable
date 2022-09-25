@@ -44,17 +44,17 @@ class RunConditionTableApplication {
             this.httpServer = new HttpServer(config.http, config.jwt, config.openId);
         }
         this.logger = new Log(RunConditionTableApplication.name);
-        this.databaseService = new DatabaseService(this.loggedUsers);
-        this.bookkeepingService = new BookkeepingService();
-        this.monalisaService = new MonalisaService();
-        this.monalisaServiceMC = new MonalisaServiceMC();
 
+        this.buildServices();
         this.defineStaticRoutes();
         this.defineEndpoints();
         this.buildAuthControl();
 
         buildPublicConfig(config);
+        this.buildCli();
+    }
 
+    buildCli() {
         this.rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout,
@@ -69,19 +69,19 @@ class RunConditionTableApplication {
 
     cli(line) {
         try {
-            const cmdAndArgs = line.trim().split(/ +/);
+            const cmdAndArgs = line.trim().split(/ +/).map((s) => s.trim());
             Utils.switchCase(cmdAndArgs[0], {
                 '': () => {},
-                bk: (args) => this.servCLI(this.bookkeepingService, args),
-                ml: (args) => this.servCLI(this.monalisaService, args),
-                mc: (args) => this.servCLI(this.monalisaServiceMC, args),
+                bk: (args) => this.servCLI(this.alimonitorServices.bookkeepingService, args),
+                ml: (args) => this.servCLI(this.alimonitorServices.monalisaService, args),
+                mc: (args) => this.servCLI(this.alimonitorServices.monalisaServiceMC, args),
                 sync: async () => {
                     await this.bookkeepingService.setSyncTask();
                     await this.monalisaService.setSyncTask();
                     await this.monalisaServiceMC.setSyncTask();
                 },
-                connect: () => {
-                    // this.databaseService.
+                connServ: async () => {
+                    await this.connectServices();
                 },
                 app: (args) => this.applicationCli(args),
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
@@ -135,42 +135,67 @@ class RunConditionTableApplication {
         this.authControlManager.bindToTokenControl(EP.authControl);
     }
 
+    buildServices() {
+        this.databaseService = new DatabaseService(this.loggedUsers);
+
+        const monalisaService = new MonalisaService();
+        const monalisaServiceMC = new MonalisaServiceMC();
+        this.alimonitorServices = {
+            bookkeepingService: new BookkeepingService(),
+            monalisaService: monalisaService,
+            monalisaServiceDetails: monalisaService.monalisaServiceDetails,
+            monalisaServiceMC: monalisaServiceMC,
+            monalisaServiceMCDetails: monalisaServiceMC.monalisaServiceMCDetails,
+        };
+    }
+
     async run() {
         this.logger.info('Starting RCT app...');
-
         try {
-            // await this.databaseService.setAdminConnection();
-            // await this.bookkeepingService.setupConnection();
-            // await this.monalisaService.setupConnection();
-            // await this.monalisaServiceMC.setupConnection();
-            // eslint-disable-next-line capitalized-comments
-            // this.bookkeepingService.setSyncRunsTask();
             await this.httpServer.listen();
         } catch (error) {
             this.logger.error(`Error while starting RCT app: ${error}`);
-            // await this.stop();
-            // return Promise.reject(error);
+            await this.stop();
         }
+
+        await this.connectServices();
 
         this.logger.info('RCT app started');
     }
 
+    async connectServices() {
+        const errors = [];
+        await this.databaseService.setAdminConnection()
+            .catch((e) => errors.push(e));
+        await Promise.all(
+            Object.values(this.alimonitorServices)
+                .map((serv) => serv.setupConnection()),
+        ).catch((e) => errors.push(e));
+        this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
+    }
+
     async stop() {
         this.logger.info('Stopping RCT app...');
-
-        const errHandler = (e) => this.logger.error(`Error while stopping RCT app: ${e}`);
         try {
-            await this.databaseService.disconnect()
-                .catch(errHandler);
-            await this.bookkeepingService.close()
-                .catch(errHandler);
             await this.httpServer.close();
-        } catch (err) {
-            this.logger.error(errHandler(err));
-            return Promise.reject(err);
+        } catch (error) {
+            this.logger.error(`Error while stopping RCT app: ${error}`);
+            await this.stop();
         }
+        await this.disconnectServices();
 
         this.logger.info('RCT app stopped');
+    }
+
+    async disconnectServices() {
+        const errors = [];
+        await this.databaseService.disconnect()
+            .catch((e) => errors.push(e));
+        await Promise.all(
+            Object.values(this.alimonitorServices)
+                .map((serv) => serv.close()),
+        ).catch((e) => errors.push(e));
+        this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
     }
 
     isInTestMode() {

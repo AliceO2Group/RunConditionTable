@@ -240,6 +240,7 @@ class ServicesSynchronizer {
 
     async setupConnection() {
         this.dbclient = new Client(config.database);
+        this.dbclient.on('error', (e) => this.logger.error(e));
 
         return await this.dbclient.connect()
             .then(() => this.logger.info('database connection established'));

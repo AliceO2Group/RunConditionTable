@@ -31,6 +31,8 @@ export default class Model extends Observable {
     }
 
     async login(username) {
+        this.mode = null;
+        this.notify();
         const { status, result, ok } = await this.postLoginPasses(username);
         this._tokenExpirationHandler(status);
         if (ok) {
