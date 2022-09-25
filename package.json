@@ -59,6 +59,12 @@
   "files": [
     "app/",
     "docs/"
+  ],   
+  "bundledDependencies": [
+    "@aliceo2/web-ui",
+    "esm",
+    "less",
+    "pg"
   ],
   "devDependencies": {
     "chai": "^4.3.6",
