@@ -23,11 +23,11 @@ usage() {
 
     cat << USAGE >&2
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-This script is intedented to provide functionalities handy during 
+This script is intended to provide handy functionalities during 
     development, testing and production for building, deployment and managing acquired data.
 The script can be run from any location.
-The script performs defined tasks sequentailly.
-Some task might or has to be provided with some dedicated flags.
+The script performs defined tasks sequentially.
+Some tasks might or have to be run with dedicated flags.
 Tasks are called stages.
 
 Usage:  
@@ -64,7 +64,7 @@ Usage:
 
             10. stop - stop contatiners
 
-        For stages build, follow, stop, prune additional flag can be specified; -S|--service <SERVICE>,
+        For build, follow, stop, prune stages an additional flag can be specified; -S|--service <SERVICE>,
         which specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
 
         Default behaviour of $SCRIPT_NAME (./$SCRIPT_NAME) is build prod it is equivalent to
@@ -217,7 +217,7 @@ for stage in $STAGES; do
                             echo "continuing"
                         else 
                             DO_NOT_PERFORME_WHILE_FILE_EXISTS=true;
-                            echo 'makig dump stopped';
+                            echo 'making dump stopped';
                         fi
                     fi
 
