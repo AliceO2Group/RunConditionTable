@@ -13,13 +13,16 @@
  */
 
 import userPanel from './components/rct/userPanel.js';
-import loggingSite from './components/loggingSite.js';
+import loggingPanel from './components/loggingPanel.js';
+import serviceUnavailablePanel from './components/serviceUnavailablePanel.js';
+import waitingPanel from './components/waitingPanel.js';
 import { switchCase } from '/js/src/index.js';
 
 export default function view(model) {
     return switchCase(model.mode, {
-        primary: () => userPanel(model.primary),
-        admin: () => loggingSite(model), // To consider
-        inspector: () => loggingSite(model),
-    }, () => 'hmm...')()/*!!!*/;
+        serviceUnavailable: () => serviceUnavailablePanel(model.submodels[model.mode]),
+        primary: () => userPanel(model.submodels[model.mode]),
+        admin: () => loggingPanel(model), // TODO consider
+        inspector: () => loggingPanel(model),
+    }, () => waitingPanel())/*Switch returns function*/();
 }

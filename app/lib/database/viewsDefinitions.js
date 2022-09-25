@@ -101,6 +101,46 @@ const mc_view = (query) => `
         WHERE sp.name LIKE '${query.index}%'
         )`;
 
+const anchored_per_mc_view = (query) => `
+    WITH anchored_per_mc_view AS (
+        SELECT 
+            --dp.id
+            dp.name,
+            dp.description,
+            pt.pass_type,
+            dp.jira,
+            dp.ml,
+            dp.number_of_events,
+            dp.software_version,
+            dp.size
+        FROM data_passes AS dp
+        LEFT JOIN pass_types AS pt
+            ON pt.id = dp.pass_type
+        INNER JOIN sim_and_data_passes as sadp
+            ON sadp.data_pass_id = dp.id
+        INNER JOIN simulation_passes as sp
+            ON sp.id = sadp.sim_pass_id
+        WHERE sp.name = '${query.index}'
+    )`;
+
+const anchorage_per_data_pass_view = (query) => `
+    WITH anchorage_per_data_pass_view AS (
+        SELECT
+            --sp.id
+            sp.name,
+            sp.description,
+            sp.jira,
+            sp.ml,
+            sp.pwg,
+            sp.number_of_events
+        FROM simulation_passes AS sp
+        INNER JOIN sim_and_data_passes as sadp
+            ON sp.id = sadp.sim_pass_id
+        INNER JOIN data_passes as dp
+            ON dp.id = sadp.data_pass_id
+        WHERE dp.name = '${query.index}'
+    )`;
+
 const flags_view = (query) => `
     WITH flags_view AS (
         SELECT
@@ -126,4 +166,4 @@ const flags_view = (query) => `
         
     )`;
 
-module.exports = {period_view, runs_per_period_view, runs_per_data_pass_view, mc_view, data_passes_view, flags_view}
+module.exports = {period_view, runs_per_period_view, runs_per_data_pass_view, mc_view, anchored_per_mc_view,  data_passes_view, anchorage_per_data_pass_view, flags_view}

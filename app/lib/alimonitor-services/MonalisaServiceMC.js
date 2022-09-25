@@ -39,8 +39,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             anchor_pass: 'anchor_passes',
         };
 
-        this.detailsSyncer = new MonalisaServiceMCDetails();
-        this.detailsSyncer.setupConnection();
+        this.monalisaServiceMCDetails = new MonalisaServiceMCDetails();
     }
 
     sync() {
@@ -111,7 +110,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             ${d.number_of_events},
             ${d.size}
         );`;
-        return await Promise.all([dbClient.query(pgCommand), this.detailsSyncer.sync(d)]);
+        return await Promise.all([dbClient.query(pgCommand), this.monalisaServiceMCDetails.sync(d)]);
     }
 
     extractPeriod(rowData) {

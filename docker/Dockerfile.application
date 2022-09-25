@@ -16,7 +16,7 @@ FROM devdependencies as development
     COPY ./.git ./.git
     COPY ./.gitignore ./
 
-    CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "start:dev" ]
+    CMD [ "./scripts/check-host-and-exec.sh", "o2-rct_database", "5432", "10", "--", "npm", "run", "start:dev" ]
 
 
 FROM devdependencies as test
@@ -28,7 +28,7 @@ FROM devdependencies as test
     COPY ./app ./app
     COPY ./scripts ./scripts
 
-    CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "test" ]
+    CMD [ "./scripts/check-host-and-exec.sh", "o2-rct_database", "5432", "10", "--", "npm", "run", "test" ]
 
 
 FROM base as production
@@ -38,5 +38,5 @@ FROM base as production
     COPY ./package*.json ./
     RUN npm install
 
-    CMD [ "./scripts/check-host-and-exec.sh", "database", "5432", "10", "--", "npm", "run", "start:prod" ]
+    CMD [ "./scripts/check-host-and-exec.sh", "o2-rct_database", "5432", "10", "--", "npm", "run", "start:prod" ]
 

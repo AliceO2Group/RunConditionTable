@@ -1,11 +1,11 @@
 version: '3.1'
 services:
-  application:
+  o2-rct_application:
     build:
       target: production
     env_file: env_file
 
-  database:
+  o2-rct_database:
     build:
       target: production
     env_file: env_file

@@ -30,7 +30,7 @@ async function handleLogin(model) {
     await model.login(username, password, dbname);
 }
 
-export default function loggingSite(model) {
+export default function loggingPanel(model) {
     const loginButton = viewButton(model, 'login', () => handleLogin(model));
     const registerButton = viewButton(model, 'register', handleRegistration);
     const title = h('h1.primary', 'TEST APP');

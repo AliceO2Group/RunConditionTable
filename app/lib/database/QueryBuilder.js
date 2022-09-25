@@ -111,10 +111,20 @@ class QueryBuilder {
         SELECT * 
         FROM data_passes_view
         `;
+        cases[pagesNames.anchoragePerDatapass] = 
+        `${views.anchorage_per_data_pass_view(params)}
+        SELECT *
+        FROM anchorage_per_data_pass_view
+        `;
         cases[pagesNames.mc] = 
         `${views.mc_view(params)}
         SELECT * 
         FROM mc_view 
+        `;
+        cases[pagesNames.anchoredPerMC] = 
+        `${views.anchored_per_mc_view(params)}
+        SELECT *
+        FROM anchored_per_mc_view
         `;
         cases[pagesNames.flags] = 
         `${views.flags_view(params)}

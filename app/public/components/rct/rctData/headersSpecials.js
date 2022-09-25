@@ -56,6 +56,25 @@ export const headersSpecials = {
         size: 'Size',
     },
 
+    anchoredPerMC: {
+        name: 'Name',
+        description: 'Description',
+        pass_type: 'Type',
+        jira: 'Jira',
+        ml: 'ML',
+        number_of_events: 'Events number',
+        software_version: 'Soft. version',
+        size: 'Size',
+    },
+    anchoragePerDatapass: {
+        name: 'Name',
+        description: 'Description',
+        jira: 'Jira',
+        ml: 'ML',
+        pwg: 'PWG',
+        number_of_events: 'Events number',
+    },
+
     runsPerDataPass: {
         name: 'Name',
         run_number: 'Run number',

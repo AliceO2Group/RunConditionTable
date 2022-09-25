@@ -1,7 +1,9 @@
 #!/bin/bash
+PROJECT_DIR="$(dirname $(realpath $0))";
+SCRIPT_NAME="$(basename $0)"
 
-APP_CONTATINER_NAME=rct_application
-DB_CONTATINER_NAME=rct_database
+APP_CONTATINER_NAME="o2-rct_application"
+DB_CONTATINER_NAME="o2-rct_database"
 # TODO describe rest of path, RCT_USER etc. via env vars pulled during deployment
 
 usage() {
@@ -29,33 +31,33 @@ Some task might or has to be provided with some dedicated flags.
 Tasks are called stages.
 
 Usage:  
-        ./make.sh [-s|--stages <STAGES>] [<OTHER_OPTS>]
+        ./$SCRIPT_NAME <STAGES> [<OTHER_OPTS>]
             'raw usage of script is for production purpose and is described at the end'
         where STAGES is comma separeted list of sequentialy preformed stages.
         STAGE can be a:
             1. prune - delete both contatiners, all virtual volumens
-                e.g.: ./make.sh -s prune
+                e.g.: ./$SCRIPT_NAME prune
 
             2. db - export db sql definition from pgmodeler design
-                e.g.: ./make.sh -s db
+                e.g.: ./$SCRIPT_NAME db
 
             3. dump:make - make dump of current database (in docker contatiner) data, 
                       need option -F|--dump-file <FILE> to specify dump file name
-                e.g.: ./make.sh -s dump -F dump_1
+                e.g.: ./$SCRIPT_NAME dump -F dump_1
             
             4. dump:list - make list cached dumps
             
             5. dump:remove - remove dump from cache specified by flag -F|--dumo-file <FILE>
 
             6. dump:resotre - restore data from dump (see stage dump (3.)). Use flag -F|--dump-file <FILE>
-                e.g.: ./make.sh -s restore -F dump_1
+                e.g.: ./$SCRIPT_NAME restore -F dump_1
 
             7. build|build[BUILD_STATGES] - build application (deploys contatiners). By defualt 
                     build stage behaves as docker-compose ... up --build.
                     BUILD_STATGES are colon separated docker-compose tasks like build,up
                 Using build stage requires usage of -|--target flag wich specifies one of prod,dev,test.
-                e.g.: ./make.sh -s build -t dev
-                      ./make.sh -s build[up] -t dev
+                e.g.: ./$SCRIPT_NAME build -t dev
+                      ./$SCRIPT_NAME build[up] -t dev
             8. attach - like docker attach to rct_application
 
             9. follow - like docker-compose follow
@@ -65,8 +67,8 @@ Usage:
         For stages build, follow, stop, prune additional flag can be specified; -S|--service <SERVICE>,
         which specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
 
-        Default behaviour of make.sh (./make.sh) is build prod it is equivalent to
-            ./make.sh -s prune,build -t prod
+        Default behaviour of $SCRIPT_NAME (./$SCRIPT_NAME) is build prod it is equivalent to
+            ./$SCRIPT_NAME prune,build -t prod
     
 $ERROR_MESSAGE_PRINT
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -77,59 +79,58 @@ exit 1;
 
 
 PREVIOD_USER_LOC=$(pwd);
-PROJECT_DIR="$(dirname $(realpath $0))";
 DOCKER_DIR="$PROJECT_DIR/docker";
 cd $DOCKER_DIR;
 
 COMM_PD="docker-compose --project-directory $PROJECT_DIR ";
 
 # defualt behaviour => dettached production built
-STAGES='prune build'
-TARGET='prod'
-
-while [[ $# -gt 0 ]]; do
-    case $1 in 
-        -h|--help)
-            usage;
-        ;;
-        -s|--stages)
-            STAGES=$(echo $2 | tr ',' ' ');
-            shift 2;
+if [[  $# -eq 0 ]]; then
+    STAGES='prune build'
+    TARGET='prod'
+else
+    STAGES=$(echo $1 | tr ',' ' ');
+    shift 1;
+    while [[ $# -gt 0 ]]; do
+        case $1 in 
+            -h|--help)
+                usage;
             ;;
-        -t|--target)
-            TARGET=$2;
-            shift 2;
-            ;;
-        -S|--service)
-            SERVICES="$SERVICES $(echo $2 | tr ',' ' ')";
-            shift 2;
-            ;;
-        -m|--mock)
-            MOCK_DB=true;
-            shift 1;
-            ;;
-        -f|--follow)
-            FOLLOW=true;
-            shift 1;
-            ;;
-        -p|--prune)
-            PRUNE_AT_THE_END=true;
-            shift 1;
-            ;;
-        -a|--attach)
-            ATTACH_TO_APP=true;
-            shift 1;
-            ;;
-        -F|--dump-file)
-            DUMP_FILE=$2;
-            shift 2;
-            ;;
-        *)
-            OTHER_OPTS="$OTHER_OPTS $1";
-            shift 1;
-            ;;
-    esac
-done
+            -t|--target)
+                TARGET=$2;
+                shift 2;
+                ;;
+            -S|--service)
+                SERVICES="$SERVICES $(echo $2 | tr ',' ' ')";
+                shift 2;
+                ;;
+            -m|--mock)
+                MOCK_DB=true;
+                shift 1;
+                ;;
+            -f|--follow)
+                FOLLOW=true;
+                shift 1;
+                ;;
+            -p|--prune)
+                PRUNE_AT_THE_END=true;
+                shift 1;
+                ;;
+            -a|--attach)
+                ATTACH_TO_APP=true;
+                shift 1;
+                ;;
+            -F|--dump-file)
+                DUMP_FILE=$2;
+                shift 2;
+                ;;
+            *)
+                OTHER_OPTS="$OTHER_OPTS $1";
+                shift 1;
+                ;;
+        esac
+    done
+fi
 
 MOCK_DB=${MOCK_DB:-false};
 export MOCK_DB;
@@ -150,7 +151,7 @@ build() {
             $COMM_PD \
                 -f docker-compose.yml \
                 -f docker-compose-dev.yml \
-                -f docker-compose-dev-expose.yml \
+                -f docker-compose-expose.yml \
                 $ORDER $OTHER_OPTS $SERVICES;
             if [ "$ATTACH_TO_APP" = 'true' ]; then
                 docker attach $APP_CONTATINER_NAME;
@@ -202,8 +203,7 @@ for stage in $STAGES; do
             RCT_DATABASE='rct-db';
             RCT_USER='postgres';
             DUMP_PATH="$DUMPS_DIR/$DUMP_FILE";
-            CONTATINER_DUMP_PATH="/postgres/run/database/cache/dumps/$DUMP_FILE"
-
+            CONTATINER_DUMP_PATH="/postgres/run/database/cache/dumps/$DUMP_FILE" 
             case $DUMP_CMD in
                 make)
                     if [ -z "$DUMP_FILE" ]; then
@@ -222,6 +222,7 @@ for stage in $STAGES; do
 
                     if [ -z $DO_NOT_PERFORME_WHILE_FILE_EXISTS ]; then
                         docker exec $DB_CONTATINER_NAME \
+                            mkdir -p $(dirname $CONTATINER_DUMP_PATH); \
                             pg_dump --data-only --format=tar -d $RCT_DATABASE -U $RCT_USER \
                                 --file="$CONTATINER_DUMP_PATH";
                     fi

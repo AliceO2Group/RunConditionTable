@@ -35,14 +35,19 @@ class DatabaseService {
     async login(req, res) {
         const { body } = req;
         let client = this.loggedUsers.tokenToUserData[req.query.token];
-
+        let error;
         if (!client) {
             this.logger.info('Logging new client: ');
             client = new Client(config.database);
+            client.on('error', (e) => {
+                this.logger.error(e)
+            });
+
 
             await client.connect()
                 .catch((e) => {
                     this.logger.error(e);
+                    error = e;
                 });
         } else {
             this.logger.info('Restoring session with client');
@@ -59,8 +64,11 @@ class DatabaseService {
                 };
                 this.logger.info('Logged client: ');
             }).catch((e) => {
-                this.responseWithStatus(res, 401, e.code);
+                error = e;
             });
+        if (error) {
+            this.responseWithStatus(res, 500, error.code);
+        }
     }
 
     async logout(req, res) {
@@ -104,6 +112,7 @@ class DatabaseService {
                 })
                 .catch((e) => {
                     this.logger.error(e);
+                    this.logger.error(e.stack)
                     res.json({ data: e.code });
                 });
         } else {
@@ -162,6 +171,7 @@ class DatabaseService {
 
     async setAdminConnection() {
         this.adminClient = new Client(config.database);
+        this.adminClient.on('error', (e) => this.logger.error(e));
 
         await this.adminClient.connect()
             .catch((e) => {
