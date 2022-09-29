@@ -171,7 +171,9 @@ class RunConditionTableApplication {
             Object.values(this.alimonitorServices)
                 .map((serv) => serv.setupConnection()),
         ).catch((e) => errors.push(e));
-        this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
+        if (errors.length > 0) {
+            this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
+        }
     }
 
     async stop() {
@@ -195,7 +197,9 @@ class RunConditionTableApplication {
             Object.values(this.alimonitorServices)
                 .map((serv) => serv.close()),
         ).catch((e) => errors.push(e));
-        this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
+        if (errors.length > 0) {
+            this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
+        }
     }
 
     isInTestMode() {

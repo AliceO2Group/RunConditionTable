@@ -29,7 +29,6 @@ class DatabaseService {
     constructor(loggedUsers) {
         this.loggedUsers = loggedUsers;
         this.logger = new Log(DatabaseService.name);
-        this.queryBuilder = new QueryBuilder();
     }
 
     async login(req, res) {
@@ -88,7 +87,7 @@ class DatabaseService {
     }
 
     buildQuery(params) {
-        return this.queryBuilder.build(params);
+        return QueryBuilder.build(params);
     }
 
     async exec(req, res, dbResponseHandler, query = null) {
