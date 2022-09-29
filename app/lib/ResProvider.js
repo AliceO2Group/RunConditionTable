@@ -114,7 +114,7 @@ class ResProvider {
             return openid;
         } else {
             const notSet = Object.entries(openid).filter(([_, v]) => !v).map(([k, _]) => k);
-            this.logger.warn(`Openid no set no spec. of ${notSet.join(', ')}`);
+            logger.warn(`Openid no set no spec. of ${notSet.join(', ')}`);
         }
         return undefined;
     }

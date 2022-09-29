@@ -40,9 +40,10 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             detectors: 'detectors',
             aliceL3Current: 'b_field_val',
             aliceL3Polarity: 'b_field_polarity',
+            aliceDipoleCurrent: 'tmp1',
+            aliceDipolePolarity: 'tmp2',
             fillNumber: 'fill_number',
-            // eslint-disable-next-line capitalized-comments
-            // pdpBeamType: 'beam_type',
+            pdpBeamType: 'beam_type',
         };
 
         this.RUN_TYPE_PHYSICS = 'PHYSICS';
@@ -107,7 +108,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const year = Utils.extractPeriodYear(period);
         d = Utils.adjusetObjValuesToSql(d);
 
-        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${null});` : '';
+        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
 
         const detectorsInSql = `${d.detectors}::varchar[]`;
         const pgCommand = `${period_insert} call insert_run (
