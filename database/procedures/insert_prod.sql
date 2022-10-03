@@ -1,6 +1,7 @@
 
 create or replace procedure insert_prod(
-    _name varchar, 
+    _name varchar,
+    _period varchar,
     _description text, 
     _pass_type varchar,
     _jira text,
@@ -11,29 +12,40 @@ create or replace procedure insert_prod(
 LANGUAGE plpgsql
 AS $$
 
-DEClARE trg_id int;
-DEClARE dp_id int;
+DECLARE trg_pass_type_id int;
+DECLARE dp_id int;
+DECLARE trg_period_id int:= null;
+
 BEGIN
-    if NOT _pass_type IS NULL THEN
-        select id into trg_id from pass_types where pass_type = _pass_type;
-        if trg_id IS NULL THEN
-            raise notice 'trg_id is null: %', trg_id;
-            -- inserting pass_type if not exists;
-            insert into pass_types(id, pass_type) VALUES(DEFAULT, _pass_type);
-            select id into trg_id from pass_types where pass_type = _pass_type;
-            raise notice 'trg_id now is not null: %', trg_id;
-        else 
-            raise notice 'id: %', trg_id;
-        end if ;
-    else
-        trg_id := null;
+
+    -- period handling
+    IF _period IS NULL THEN
+        _period := 'TMP';
     END IF;
 
-    SELECT id INTO dp_id from data_passes where name = _name;
+    SELECT id INTO trg_period_id FROM periods WHERE name = _period;
+    IF trg_period_id IS NULL THEN
+        CALL insert_period(_period, null, null);
+        SELECT id INTO trg_period_id FROM periods WHERE name = _period;
+    END IF;
+
+    -- pass_type handling
+    if NOT _pass_type IS NULL THEN
+        SELECT id INTO trg_pass_type_id FROM pass_types WHERE pass_type = _pass_type;
+        if trg_pass_type_id IS NULL THEN
+            INSERT INTO pass_types(id, pass_type) VALUES(DEFAULT, _pass_type);
+            SELECT id INTO trg_pass_type_id FROM pass_types WHERE pass_type = _pass_type;
+            raise notice 'pass_type inserted (id: %)', trg_pass_type_id;
+        END IF ;
+    END IF;
+
+    -- dp inserting
+    SELECT id INTO dp_id FROM data_passes WHERE name = _name;
     IF dp_id IS NULL THEN
-        insert into data_passes(
+        INSERT INTO data_passes(
             id, 
-            name, 
+            name,
+            period_id
             description, 
             pass_type, 
             jira, 
@@ -42,14 +54,15 @@ BEGIN
             software_version, 
             size) values (
                 DEFAULT, 
-                _name, 
+                _name,
+                trg_period_id,
                 _description, 
-                trg_id, 
+                trg_pass_type_id, 
                 _jira, 
                 _ml, 
                 _number_of_events, 
                 _softwar_version, 
                 _size);
     END IF;
-end;
+END;
 $$;

@@ -371,6 +371,7 @@ CREATE TABLE public.simulation_passes (
 	pwg text,
 	number_of_events integer,
 	size real,
+	period_id integer NOT NULL,
 	CONSTRAINT simulation_passes_pkey PRIMARY KEY (id),
 	CONSTRAINT sp_name_unique UNIQUE (name)
 
@@ -490,6 +491,13 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE public.sim_and_data_passes ADD CONSTRAINT data_passes_fk FOREIGN KEY (data_pass_id)
 REFERENCES public.data_passes (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: period_fk | type: CONSTRAINT --
+-- ALTER TABLE public.simulation_passes DROP CONSTRAINT IF EXISTS period_fk CASCADE;
+ALTER TABLE public.simulation_passes ADD CONSTRAINT period_fk FOREIGN KEY (period_id)
+REFERENCES public.periods (id) MATCH SIMPLE
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: sim_pass_id | type: CONSTRAINT --

@@ -23,7 +23,7 @@ BEGIN
     IF sp_id IS NULL THEN
         -- sim pass insert
         insert into simulation_passes(
-            id, 
+            id,
             name, 
             description, 
             jira, 
@@ -41,9 +41,9 @@ BEGIN
                 _size);
         -- anchor insert
         if _anchor_pass is not null and _anchor_prod is not null then
+            SELECT id into sp_id FROM simulation_passes WHERE name = _name;
             foreach an_prod in array _anchor_prod loop
                 foreach an_pass in array _anchor_pass loop
-                    SELECT id into sp_id FROM simulation_passes WHERE name = _name;
                     SELECT array_agg(id::int) into dp_ids from data_passes where name LIKE (an_prod || '_' || an_pass || '%');
                     raise notice 'for % and % found %', an_prod, an_pass, dp_ids;
                     if dp_ids is not null then

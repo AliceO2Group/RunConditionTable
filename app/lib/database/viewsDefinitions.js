@@ -84,7 +84,7 @@ const data_passes_view = (query) => `
         FROM data_passes AS dp
         LEFT JOIN pass_types AS pt
             ON pt.id = dp.pass_type
-        WHERE dp.name LIKE '${query.index}%'
+        WHERE dp.period_id = (SELECT id from periods WHERE name ='${query.index}')
         )`;
 
 const mc_view = (query) => `
