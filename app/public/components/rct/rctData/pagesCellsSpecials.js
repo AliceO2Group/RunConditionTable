@@ -135,8 +135,8 @@ pagesCellsSpecials[pagesNames.runsPerPeriod] = {
         '',
         `/?page=${pagesNames.flags}&index=${item.run_number}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
     ),
-    start: (mode, item) => dateFormatter(item.start),
-    end: (mode, item) => dateFormatter(item.end),
+    time_start: (mode, item) => dateFormatter(item.time_start),
+    time_end: (mode, item) => dateFormatter(item.time_end),
     time_trg_start: (mode, item) => dateFormatter(item.time_trg_start),
     time_trg_end: (mode, item) => dateFormatter(item.time_trg_end),
 };

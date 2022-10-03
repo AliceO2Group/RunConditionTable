@@ -49,7 +49,7 @@ Usage:
             
             5. dump:remove - remove dump from cache specified by flag -F|--dumo-file <FILE>
 
-            6. dump:resotre - restore data from dump (see stage dump (3.)). Use flag -F|--dump-file <FILE>
+            6. dump:restore - restore data from dump (see stage dump (3.)). Use flag -F|--dump-file <FILE>
                 e.g.: ./$SCRIPT_NAME restore -F dump_1
 
             7. build|build[BUILD_STATGES] - build application (deploys contatiners). By defualt 

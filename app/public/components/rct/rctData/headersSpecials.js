@@ -12,6 +12,44 @@
  * or submit itself to any jurisdiction.
  */
 
+const runsViews = {
+    name: 'Name',
+    run_number: 'Run number',
+    time_start: 'Start time',
+    time_end: 'End time',
+    time_trg_start: 'Trg. start',
+    time_trg_end: 'Trg. end',
+    energy_per_beam: 'Energy per beam',
+    ir: 'IR',
+    filling_scheme: 'Filling scheme',
+    triggers_conf: 'Triggers conf.',
+    fill_number: 'Fill number',
+    run_type: 'Run type',
+    mu: 'MU',
+    l3_current: 'L3 curr.',
+    dipole_current: 'dipole_current',
+};
+
+const dpViews = {
+    name: 'Name',
+    description: 'Description',
+    pass_type: 'Type',
+    jira: 'Jira',
+    ml: 'ML',
+    number_of_events: 'Events number',
+    software_version: 'Soft. version',
+    size: 'Size',
+};
+
+const mcViews = {
+    name: 'Name',
+    description: 'Description',
+    jira: 'Jira',
+    ml: 'ML',
+    pwg: 'PWG',
+    number_of_events: 'Events number',
+};
+
 export const headersSpecials = {
     periods: {
         name: 'Name',
@@ -19,78 +57,12 @@ export const headersSpecials = {
         beam: 'Beam type',
         energy: 'Energy',
     },
-    runsPerPeriod: {
-        name: 'Name',
-        run_number: 'Run number',
-        start: 'Start time',
-        end: 'End time',
-        b_field: 'B field',
-        energy_per_beam: 'Energy per beam',
-        ir: 'IR',
-        filling_scheme: 'Filling scheme',
-        triggers_conf: 'Triggers conf.',
-        fill_number: 'Fill number',
-        run_type: 'Run type',
-        mu: 'MU',
-        time_trg_start: 'Trg. start',
-        time_trg_end: 'Trg. end',
-    },
-
-    mc: {
-        name: 'Name',
-        description: 'Description',
-        jira: 'Jira',
-        ml: 'ML',
-        pwg: 'PWG',
-        number_of_events: 'Events number',
-    },
-
-    dataPasses: {
-        name: 'Name',
-        description: 'Description',
-        pass_type: 'Type',
-        jira: 'Jira',
-        ml: 'ML',
-        number_of_events: 'Events number',
-        software_version: 'Soft. version',
-        size: 'Size',
-    },
-
-    anchoredPerMC: {
-        name: 'Name',
-        description: 'Description',
-        pass_type: 'Type',
-        jira: 'Jira',
-        ml: 'ML',
-        number_of_events: 'Events number',
-        software_version: 'Soft. version',
-        size: 'Size',
-    },
-    anchoragePerDatapass: {
-        name: 'Name',
-        description: 'Description',
-        jira: 'Jira',
-        ml: 'ML',
-        pwg: 'PWG',
-        number_of_events: 'Events number',
-    },
-
-    runsPerDataPass: {
-        name: 'Name',
-        run_number: 'Run number',
-        start: 'Start time',
-        end: 'End time',
-        b_field: 'B field',
-        energy_per_beam: 'Energy per beam',
-        ir: 'IR',
-        filling_scheme: 'Filling scheme',
-        triggers_conf: 'Triggers conf.',
-        fill_number: 'Fill number',
-        run_type: 'Run type',
-        mu: 'MU',
-        time_trg_start: 'Trg. start',
-        time_trg_end: 'Trg. end',
-    },
+    runsPerPeriod: runsViews,
+    mc: mcViews,
+    dataPasses: dpViews,
+    anchoredPerMC: dpViews,
+    anchoragePerDatapass: mcViews,
+    runsPerDataPass: runsViews,
 
     flags: {
         start: 'Start time',

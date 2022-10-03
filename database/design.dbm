@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,693" last-zoom="0.75" max-obj-count="33"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,853" last-zoom="0.75" max-obj-count="33"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -25,7 +25,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <schema name="public" layers="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<tag name="first_layer_data">
+<tag name="primary_data_layer">
 	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
 	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
 	<style id="table-name" colors="#000000"/>
@@ -43,7 +43,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<style id="table-toggler-body" colors="#000000,#000000,#000000"/>
 	<style id="table-toggler-btns" colors="#000000,#000000,#000000"/>
 </tag>
-<tag name="helper_layer_data">
+<tag name="dictionaries_layer">
 	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
 	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
 	<style id="table-name" colors="#000000"/>
@@ -69,7 +69,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="beams_dictionary" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="helper_layer_data"/>
+	<tag name="dictionaries_layer"/>
 	<position x="260" y="1420"/>
 	<column name="id" not-null="true" sequence="public.beams_dictionary_id_seq">
 		<type name="integer" length="0"/>
@@ -90,8 +90,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="data_passes" layers="0" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="first_layer_data"/>
-	<position x="100" y="540"/>
+	<tag name="primary_data_layer"/>
+	<position x="140" y="540"/>
 	<column name="id" not-null="true" sequence="public.data_passes_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -139,7 +139,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="760" y="520"/>
+	<position x="760" y="500"/>
 	<column name="run_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -162,7 +162,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="detectors_subsystems" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="helper_layer_data"/>
+	<tag name="dictionaries_layer"/>
 	<position x="1520" y="1100"/>
 	<column name="id" not-null="true" sequence="public.detectors_subsystems_id_seq">
 		<type name="integer" length="0"/>
@@ -186,7 +186,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="flags_types_dictionary" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="helper_layer_data"/>
+	<tag name="dictionaries_layer"/>
 	<position x="320" y="1740"/>
 	<column name="id" not-null="true" sequence="public.flags_types_dictionary_id_seq">
 		<type name="integer" length="0"/>
@@ -210,7 +210,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="pass_types" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="helper_layer_data"/>
+	<tag name="dictionaries_layer"/>
 	<position x="200" y="220"/>
 	<column name="id" not-null="true" sequence="public.pass_types_id_seq">
 		<type name="integer" length="0"/>
@@ -234,8 +234,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="periods" layers="0" collapse-mode="2" pagination="true" attribs-page="0" ext-attribs-page="0" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="first_layer_data"/>
-	<position x="280" y="1100"/>
+	<tag name="primary_data_layer"/>
+	<position x="300" y="1080"/>
 	<column name="id" not-null="true" sequence="public.periods_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -264,8 +264,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="quality_control_flags" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="first_layer_data"/>
-	<position x="940" y="1680"/>
+	<tag name="primary_data_layer"/>
+	<position x="900" y="1740"/>
 	<column name="id" not-null="true" sequence="public.quality_control_flags_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -306,7 +306,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1540" y="1480"/>
+	<position x="1640" y="1480"/>
 	<column name="id" not-null="true" sequence="public.runs_detectors_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -327,8 +327,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="runs" layers="0" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="first_layer_data"/>
-	<position x="940" y="980"/>
+	<tag name="primary_data_layer"/>
+	<position x="940" y="1020"/>
 	<column name="id" not-null="true" sequence="public.runs_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -412,7 +412,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="simulation_passes" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="first_layer_data"/>
+	<tag name="primary_data_layer"/>
 	<position x="1360" y="220"/>
 	<column name="id" not-null="true" sequence="public.simulation_passes_id_seq">
 		<type name="integer" length="0"/>
@@ -474,7 +474,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1180" y="660"/>
+	<position x="1160" y="680"/>
 	<column name="period_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -517,20 +517,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="run_detector_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.runs_detectors" table="public.quality_control_flags">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.runs_detectors" table="public.quality_control_flags">
 	<columns names="run_detector_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="flag_type_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.flags_types_dictionary" table="public.quality_control_flags">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.flags_types_dictionary" table="public.quality_control_flags">
 	<columns names="flag_type_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="pass_run_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.data_passes_runs" table="public.quality_control_flags">
-	<columns names="pass_run_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -622,12 +616,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 custom-color="#1a7b79"
 	 src-table="public.quality_control_flags"
 	 dst-table="public.flags_types_dictionary" reference-fk="flag_type_fk"
-	 src-required="false" dst-required="true"/>
-
-<relationship name="rel_quality_control_flags_data_passes_runs" type="relfk" layers="0"
-	 custom-color="#e5d6ab"
-	 src-table="public.quality_control_flags"
-	 dst-table="public.data_passes_runs" reference-fk="pass_run_fk"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_runs_periods" type="relfk" layers="0"
