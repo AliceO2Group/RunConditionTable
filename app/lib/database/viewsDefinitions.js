@@ -47,20 +47,21 @@ const runs_per_period_view = (query) => `
 const runs_per_data_pass_view = (query) => `
         WITH runs_per_data_pass_view AS (
             SELECT
-                -- r.id
-                -- dp.name, 
+                --r.id
+                --p.name, 
                 r.run_number, 
-                r.start, 
-                r.end AS "end", 
-                r.b_field, 
+                r.time_start, 
+                r.time_end, 
+                r.time_trg_start, 
+                r.time_trg_end,
                 r.energy_per_beam, 
                 r.ir, 
                 r.filling_scheme, 
                 r.triggers_conf,
-                r.fill_number, 
+                r.fill_number,
                 r.mu, 
-                r.time_trg_start, 
-                r.time_trg_end
+                r.l3_current,
+                r.dipole_current
             FROM data_passes AS dp
                 INNER JOIN data_passes_runs AS dpr
                     ON dp.id=dpr.data_pass_id

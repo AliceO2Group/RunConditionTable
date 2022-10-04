@@ -27,7 +27,7 @@ const runsViews = {
     run_type: 'Run type',
     mu: 'MU',
     l3_current: 'L3 curr.',
-    dipole_current: 'dipole_current',
+    dipole_current: 'Dipole curr.',
 };
 
 const dpViews = {

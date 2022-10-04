@@ -3,7 +3,7 @@ create or replace procedure insert_mc(
     _name varchar, 
     _description text, 
     _pwg text,
-    _anchor_prod varchar[],
+    _anchor_period varchar[],
     _anchor_pass varchar[],
     _jira text,
     _ml text,
@@ -12,7 +12,8 @@ create or replace procedure insert_mc(
 LANGUAGE plpgsql
 AS $$
 
-DEClARE an_prod varchar;
+DECLARE trg_period_id int:= null;
+DEClARE an_period varchar;
 DEClARE an_pass varchar;
 DEClARE sp_id int;
 DEClARE dp_ids int[];
@@ -40,22 +41,37 @@ BEGIN
                 _number_of_events, 
                 _size);
         -- anchor insert
-        if _anchor_pass is not null and _anchor_prod is not null then
-            SELECT id into sp_id FROM simulation_passes WHERE name = _name;
-            foreach an_prod in array _anchor_prod loop
-                foreach an_pass in array _anchor_pass loop
-                    SELECT array_agg(id::int) into dp_ids from data_passes where name LIKE (an_prod || '_' || an_pass || '%');
-                    raise notice 'for % and % found %', an_prod, an_pass, dp_ids;
-                    if dp_ids is not null then
-                        foreach dp_id in array dp_ids loop
-                            insert into sim_and_data_passes(data_pass_id, sim_pass_id) values(dp_id, sp_id);
-                        end loop;
-                    end if;
+        SELECT id INTO sp_id FROM simulation_passes WHERE name = _name;
+        IF _anchor_pass IS NOT null AND _anchor_period US NOT null THEN
+            foreach an_period IN array _anchor_period LOOP
+                foreach an_pass IN array _anchor_pass LOOP
+                    
+                    SELECT period_id INTO trg_period_id
+                        FROM periods WHERE name = an_period;
+                    IF trg_period_id IS NOT null THEN
+                        -- insert periods anchorage
+                        INSERT INTO anchored_periods(period_id, sim_pass_id) 
+                            VALUES(trg_period_id, sp_id);
+                        
+                        -- insert data_passes anchorage
+                        SELECT array_agg(id::int) INTO dp_ids 
+                            FROM data_passes 
+                            WHERE name LIKE (an_period || '_' || an_pass || '%');
+                        raise notice 'for % and % found %', an_period, an_pass, dp_ids;
+                        IF dp_ids IS NOT null THEN
+                            foreach dp_id IN array dp_ids LOOP
+                                INSERT INTO sim_and_data_passes(data_pass_id, sim_pass_id) 
+                                    VALUES(dp_id, sp_id);
+                            END LOOP;
+                        END IF;
+
+                    END IF;
+
                 END LOOP;
             END LOOP;
-        else 
+        ELSE 
             raise notice 'not anchored';
-        end if;
+        END IF;
     END IF;
 end;
 $$;

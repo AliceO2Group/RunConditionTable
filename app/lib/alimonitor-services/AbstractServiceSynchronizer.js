@@ -158,7 +158,7 @@ class ServicesSynchronizer {
                     this.logger.info(`sync successful for  ${correct}/${dataSize}`);
                 }
                 if (incorrect > 0) {
-                    this.logger.info(`sync unseccessful for ${incorrect}/${dataSize}`);
+                    this.logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
                     if (loglev > 2) {
                         errors.forEach((e) => this.logger.error(e.stack));
                     } else if (loglev > 1) {

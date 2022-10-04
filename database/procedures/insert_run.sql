@@ -38,7 +38,7 @@ BEGIN
         raise notice 'run % present already', _run_number;
         IF _period IS NOT NULL THEN
             SELECT id INTO trg_period_id FROM periods WHERE name = _period;
-            UPDATE runs SET trg_period_id = trg_period_id WHERE run_number = _run_number;
+            UPDATE runs SET period_id = trg_period_id WHERE run_number = _run_number;
         END IF;
     END IF;
     SELECT id INTO trg_period_id FROM runs WHERE run_number = _run_number;

@@ -32,7 +32,7 @@ import { getReadableFileSizeString } from '../../../utils/utils.js';
  *          return viewButton(model, item.period, (e) =>
  *                  handleClick(model, e), '',
  *                  TODO : this pattern is deprecated
- *              `/Rct-Data/?page=runsPerPeriod&index=${item.period}&period=${item.period}&rowsOnSite=50&site=1`);
+ *              `/?page=runsPerPeriod&index=${item.period}&period=${item.period}&rowsOnSite=50&site=1`);
  *      },
  *  },
  *  // ...,

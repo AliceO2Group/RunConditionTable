@@ -76,9 +76,9 @@ class RunConditionTableApplication {
                 ml: (args) => this.servCLI(this.alimonitorServices.monalisaService, args),
                 mc: (args) => this.servCLI(this.alimonitorServices.monalisaServiceMC, args),
                 sync: async () => {
-                    await this.bookkeepingService.setSyncTask();
-                    await this.monalisaService.setSyncTask();
-                    await this.monalisaServiceMC.setSyncTask();
+                    await this.alimonitorServices.bookkeepingService.setSyncTask();
+                    await this.alimonitorServices.monalisaService.setSyncTask();
+                    await this.alimonitorServices.monalisaServiceMC.setSyncTask();
                 },
                 connServ: async () => {
                     await this.connectServices();

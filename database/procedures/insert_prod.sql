@@ -45,7 +45,7 @@ BEGIN
         INSERT INTO data_passes(
             id, 
             name,
-            period_id
+            period_id,
             description, 
             pass_type, 
             jira, 

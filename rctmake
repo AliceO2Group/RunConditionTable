@@ -244,6 +244,11 @@ for stage in $STAGES; do
                             -d $RCT_DATABASE $CONTATINER_DUMP_PATH;
                 ;;
 
+                truncate)
+                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTATINER_NAME:/postgres/run/"
+                    docker exec $DB_CONTATINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "delete-data.sql";
+                ;;
+
                 remove)
                     if [ -z "$DUMP_FILE" ]; then
                         usage "dump file unspecified, use flag -F|--dump-file <FILE>";
