@@ -107,10 +107,10 @@ ALTER SEQUENCE public.data_passes_runs_id_seq OWNER TO postgres;
 -- object: public.data_passes_runs | type: TABLE --
 -- DROP TABLE IF EXISTS public.data_passes_runs CASCADE;
 CREATE TABLE public.data_passes_runs (
-	run_id integer NOT NULL,
+	run_number integer NOT NULL,
 	data_pass_id integer NOT NULL,
-	CONSTRAINT dpr_pair_unique UNIQUE (run_id,data_pass_id),
-	CONSTRAINT dpr_pk PRIMARY KEY (run_id,data_pass_id)
+	CONSTRAINT dpr_pair_unique UNIQUE (run_number,data_pass_id),
+	CONSTRAINT dpr_pk PRIMARY KEY (run_number,data_pass_id)
 
 );
 -- ddl-end --
@@ -297,10 +297,10 @@ ALTER SEQUENCE public.runs_detectors_id_seq OWNER TO postgres;
 -- DROP TABLE IF EXISTS public.runs_detectors CASCADE;
 CREATE TABLE public.runs_detectors (
 	id integer NOT NULL DEFAULT nextval('public.runs_detectors_id_seq'::regclass),
-	detector_id integer NOT NULL,
-	run_id integer NOT NULL,
+	detector_id integer,
+	run_number integer,
 	CONSTRAINT runs_detectors_pkey PRIMARY KEY (id),
-	CONSTRAINT rd_pair_unique UNIQUE (detector_id,run_id)
+	CONSTRAINT rd_pair_unique UNIQUE (detector_id,run_number)
 
 );
 -- ddl-end --
@@ -310,9 +310,8 @@ ALTER TABLE public.runs_detectors OWNER TO postgres;
 -- object: public.runs | type: TABLE --
 -- DROP TABLE IF EXISTS public.runs CASCADE;
 CREATE TABLE public.runs (
-	id integer NOT NULL DEFAULT nextval('public.runs_id_seq'::regclass),
-	period_id integer NOT NULL,
 	run_number bigint NOT NULL,
+	period_id integer NOT NULL,
 	time_start bigint,
 	time_end bigint,
 	energy_per_beam float,
@@ -326,17 +325,16 @@ CREATE TABLE public.runs (
 	time_trg_end bigint,
 	l3_current float,
 	dipole_current float,
-	CONSTRAINT runs_pkey PRIMARY KEY (id),
-	CONSTRAINT run_number_unique UNIQUE (run_number)
+	CONSTRAINT runs_pk PRIMARY KEY (run_number)
 
 );
 -- ddl-end --
 ALTER TABLE public.runs OWNER TO postgres;
 -- ddl-end --
 
--- object: public.sim_and_data_passes | type: TABLE --
--- DROP TABLE IF EXISTS public.sim_and_data_passes CASCADE;
-CREATE TABLE public.sim_and_data_passes (
+-- object: public.anchored_passes | type: TABLE --
+-- DROP TABLE IF EXISTS public.anchored_passes CASCADE;
+CREATE TABLE public.anchored_passes (
 	data_pass_id integer NOT NULL,
 	sim_pass_id integer NOT NULL,
 	CONSTRAINT sim_and_data_passess_pkey PRIMARY KEY (data_pass_id,sim_pass_id),
@@ -344,7 +342,7 @@ CREATE TABLE public.sim_and_data_passes (
 
 );
 -- ddl-end --
-ALTER TABLE public.sim_and_data_passes OWNER TO postgres;
+ALTER TABLE public.anchored_passes OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.simulation_passes_id_seq | type: SEQUENCE --
@@ -400,9 +398,10 @@ ALTER SEQUENCE public.simulation_passes_runs_id_seq OWNER TO postgres;
 -- DROP TABLE IF EXISTS public.simulation_passes_runs CASCADE;
 CREATE TABLE public.simulation_passes_runs (
 	simulation_pass_id integer NOT NULL,
-	run_id integer NOT NULL,
+	run_number integer NOT NULL,
 	qc text,
-	CONSTRAINT spr_pk PRIMARY KEY (simulation_pass_id,run_id)
+	CONSTRAINT spr_pk PRIMARY KEY (simulation_pass_id,run_number),
+	CONSTRAINT sim_pass_runs_pair_uq UNIQUE (simulation_pass_id,run_number)
 
 );
 -- ddl-end --
@@ -414,7 +413,8 @@ ALTER TABLE public.simulation_passes_runs OWNER TO postgres;
 CREATE TABLE public.anchored_periods (
 	period_id integer NOT NULL,
 	sim_pass_id integer NOT NULL,
-	CONSTRAINT prim_key PRIMARY KEY (period_id,sim_pass_id)
+	CONSTRAINT prim_key PRIMARY KEY (period_id,sim_pass_id),
+	CONSTRAINT an_period_pair_uq UNIQUE (period_id,sim_pass_id)
 
 );
 -- ddl-end --
@@ -444,8 +444,8 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- object: run_fk | type: CONSTRAINT --
 -- ALTER TABLE public.data_passes_runs DROP CONSTRAINT IF EXISTS run_fk CASCADE;
-ALTER TABLE public.data_passes_runs ADD CONSTRAINT run_fk FOREIGN KEY (run_id)
-REFERENCES public.runs (id) MATCH SIMPLE
+ALTER TABLE public.data_passes_runs ADD CONSTRAINT run_fk FOREIGN KEY (run_number)
+REFERENCES public.runs (run_number) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
@@ -472,8 +472,8 @@ ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- object: run_fk | type: CONSTRAINT --
 -- ALTER TABLE public.runs_detectors DROP CONSTRAINT IF EXISTS run_fk CASCADE;
-ALTER TABLE public.runs_detectors ADD CONSTRAINT run_fk FOREIGN KEY (run_id)
-REFERENCES public.runs (id) MATCH SIMPLE
+ALTER TABLE public.runs_detectors ADD CONSTRAINT run_fk FOREIGN KEY (run_number)
+REFERENCES public.runs (run_number) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
@@ -492,15 +492,15 @@ ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: sim_passes_fk | type: CONSTRAINT --
--- ALTER TABLE public.sim_and_data_passes DROP CONSTRAINT IF EXISTS sim_passes_fk CASCADE;
-ALTER TABLE public.sim_and_data_passes ADD CONSTRAINT sim_passes_fk FOREIGN KEY (sim_pass_id)
+-- ALTER TABLE public.anchored_passes DROP CONSTRAINT IF EXISTS sim_passes_fk CASCADE;
+ALTER TABLE public.anchored_passes ADD CONSTRAINT sim_passes_fk FOREIGN KEY (sim_pass_id)
 REFERENCES public.simulation_passes (id) MATCH SIMPLE
 ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: data_passes_fk | type: CONSTRAINT --
--- ALTER TABLE public.sim_and_data_passes DROP CONSTRAINT IF EXISTS data_passes_fk CASCADE;
-ALTER TABLE public.sim_and_data_passes ADD CONSTRAINT data_passes_fk FOREIGN KEY (data_pass_id)
+-- ALTER TABLE public.anchored_passes DROP CONSTRAINT IF EXISTS data_passes_fk CASCADE;
+ALTER TABLE public.anchored_passes ADD CONSTRAINT data_passes_fk FOREIGN KEY (data_pass_id)
 REFERENCES public.data_passes (id) MATCH SIMPLE
 ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
@@ -509,14 +509,14 @@ ON DELETE CASCADE ON UPDATE CASCADE;
 -- ALTER TABLE public.simulation_passes_runs DROP CONSTRAINT IF EXISTS sim_pass_id CASCADE;
 ALTER TABLE public.simulation_passes_runs ADD CONSTRAINT sim_pass_id FOREIGN KEY (simulation_pass_id)
 REFERENCES public.simulation_passes (id) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: run_fk | type: CONSTRAINT --
 -- ALTER TABLE public.simulation_passes_runs DROP CONSTRAINT IF EXISTS run_fk CASCADE;
-ALTER TABLE public.simulation_passes_runs ADD CONSTRAINT run_fk FOREIGN KEY (run_id)
-REFERENCES public.runs (id) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE public.simulation_passes_runs ADD CONSTRAINT run_fk FOREIGN KEY (run_number)
+REFERENCES public.runs (run_number) MATCH SIMPLE
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: sim_pass_fk | type: CONSTRAINT --
@@ -665,15 +665,15 @@ GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_bb57d45f33" | type: PERMISSION --
+-- object: "grant_rawdDxt_6e5a48c2e5" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
-   ON TABLE public.sim_and_data_passes
+   ON TABLE public.anchored_passes
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_c6cd170e92" | type: PERMISSION --
+-- object: "grant_rawdDxt_dee7eae01e" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
-   ON TABLE public.sim_and_data_passes
+   ON TABLE public.anchored_passes
    TO "rct-user";
 -- ddl-end --
 

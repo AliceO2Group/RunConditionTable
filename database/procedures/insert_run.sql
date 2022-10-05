@@ -15,7 +15,6 @@ CREATE OR REPLACE PROCEDURE insert_run(
 LANGUAGE plpgsql
 AS $$
 DEClARE trg_period_id int;
-DEClARE run_id int;
 
 BEGIN
     -- period handling
@@ -30,10 +29,9 @@ BEGIN
     END IF;
 
     -- run handling
-    SELECT id INTO run_id FROM runs WHERE run_number = _run_number;
-    IF run_id IS NULL THEN
-        INSERT INTO runs( id,       run_number,     period_id,  time_start,  time_end,  l3_current,  dipole_current,  energy_per_beam,   ir, filling_scheme, triggers_conf,  fill_number,  run_type,   mu,  time_trg_start,  time_trg_end) 
-                  VALUES( DEFAULT, _run_number, trg_period_id, _time_start, _time_end, _l3_current, _dipole_current, _energy_per_beam, null,           null,          null, _fill_number, _run_type, null, _time_trg_start, _time_trg_end);
+    IF NOT EXISTS (SELECT * FROM runs WHERE run_number = _run_number) THEN
+        INSERT INTO runs( run_number,     period_id,  time_start,  time_end,  l3_current,  dipole_current,  energy_per_beam,   ir, filling_scheme, triggers_conf,  fill_number,  run_type,   mu,  time_trg_start,  time_trg_end) 
+                  VALUES(_run_number, trg_period_id, _time_start, _time_end, _l3_current, _dipole_current, _energy_per_beam, null,           null,          null, _fill_number, _run_type, null, _time_trg_start, _time_trg_end);
     ELSE 
         raise notice 'run % present already', _run_number;
         IF _period IS NOT NULL THEN
@@ -41,9 +39,13 @@ BEGIN
             UPDATE runs SET period_id = trg_period_id WHERE run_number = _run_number;
         END IF;
     END IF;
-    SELECT id INTO trg_period_id FROM runs WHERE run_number = _run_number;
 
     -- detectors handling
-    CALL insert_detectors_for_runs(trg_period_id, _detectors);
+    IF _detectors IS NOT NULL THEN
+        CALL insert_detectors_for_runs(_run_number, _detectors);
+    END IF;
 END;
 $$;
+
+-- call insert_run (11111, 'LHC00a', null, null, null, null, null, null, null, null, null, null);
+-- call insert_run (11111, 'LHC00a', null, null, null, null, null, null, null, ARRAY['a']::varchar[], null, null);

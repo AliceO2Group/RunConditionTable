@@ -30,7 +30,12 @@ BEGIN
             raise notice 'updating period (id: %) from % to %', trg_period_id, current_year, _year;
             UPDATE periods SET year = _year WHERE name = _name; 
         END IF;
-        -- TODO? beam type;
+        -- beam type;
+        IF _beam_type IS NOT NULL THEN
+            SELECT beam_type_id INTO current_beam_type_id from periods WHERE id = trg_period_id;
+            raise notice 'updating period (id: %) from % to %', trg_period_id, current_beam_type_id, trg_beam_type_id;
+            UPDATE periods SET beam_type_id = trg_beam_type_id WHERE name = _beam_type; 
+        END IF;
     ELSE
         INSERT INTO periods(id, name, year, beam_type_id) 
             VALUES(DEFAULT, _name, _year, trg_beam_type_id);

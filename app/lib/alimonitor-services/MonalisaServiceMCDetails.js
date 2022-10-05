@@ -38,7 +38,7 @@ class MonalisaServiceMCDetails extends AbstractServiceSynchronizer {
             async (dbClient, v) => {
                 v = Utils.adjusetObjValuesToSql(v);
                 const detailsSql = v ?
-                    `call insert_mc_details(${d.name}, ${v.run_number}, ${v.period ? v.period : null});`
+                    `call insert_mc_details(${d.name}, ${v.run_number});`
                     : '';
                 return await dbClient.query(detailsSql);
             },

@@ -148,6 +148,7 @@ build() {
     ORDER=$1;
     case $TARGET in 
         dev)
+            # TODO add daemons for database files (like nodemon)
             $COMM_PD \
                 -f docker-compose.yml \
                 -f docker-compose-dev.yml \

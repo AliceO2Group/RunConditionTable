@@ -1,3 +1,4 @@
+/* eslint-disable multiline-comment-style */
 /**
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
@@ -131,9 +132,10 @@ pagesCellsSpecials[pagesNames.runsPerPeriod] = {
     run_number: (model, item) => viewButton(
         model,
         item.run_number,
-        (e) => model.handleClick(e),
-        '',
-        `/?page=${pagesNames.flags}&index=${item.run_number}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+        () => alert('TODO'),
+        // (e) => model.handleClick(e),
+        // '',
+        // `/?page=${pagesNames.flags}&index=${item.run_number}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
     ),
     time_start: (mode, item) => dateFormatter(item.time_start),
     time_end: (mode, item) => dateFormatter(item.time_end),
@@ -143,6 +145,8 @@ pagesCellsSpecials[pagesNames.runsPerPeriod] = {
 
 pagesCellsSpecials[pagesNames.flags] = {};
 pagesCellsSpecials[pagesNames.runsPerDataPass] = pagesCellsSpecials[pagesNames.runsPerPeriod];
+pagesCellsSpecials[pagesNames.anchoredPerMC] = pagesCellsSpecials[pagesNames.dataPasses];
+pagesCellsSpecials[pagesNames.anchoragePerDatapass] = pagesCellsSpecials[pagesNames.mc];
 
 // Checking correctness of configuration
 for (const p in pagesCellsSpecials) {

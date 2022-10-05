@@ -12,17 +12,12 @@ create or replace procedure insert_prod(
 LANGUAGE plpgsql
 AS $$
 
-DECLARE trg_pass_type_id int;
-DECLARE dp_id int;
+DECLARE trg_pass_type_id int:= null;
+DECLARE dp_id int:= null;
 DECLARE trg_period_id int:= null;
 
 BEGIN
-
     -- period handling
-    IF _period IS NULL THEN
-        _period := 'TMP';
-    END IF;
-
     SELECT id INTO trg_period_id FROM periods WHERE name = _period;
     IF trg_period_id IS NULL THEN
         CALL insert_period(_period, null, null);
@@ -35,34 +30,14 @@ BEGIN
         if trg_pass_type_id IS NULL THEN
             INSERT INTO pass_types(id, pass_type) VALUES(DEFAULT, _pass_type);
             SELECT id INTO trg_pass_type_id FROM pass_types WHERE pass_type = _pass_type;
-            raise notice 'pass_type inserted (id: %)', trg_pass_type_id;
         END IF ;
     END IF;
 
     -- dp inserting
     SELECT id INTO dp_id FROM data_passes WHERE name = _name;
     IF dp_id IS NULL THEN
-        INSERT INTO data_passes(
-            id, 
-            name,
-            period_id,
-            description, 
-            pass_type, 
-            jira, 
-            ml, 
-            number_of_events, 
-            software_version, 
-            size) values (
-                DEFAULT, 
-                _name,
-                trg_period_id,
-                _description, 
-                trg_pass_type_id, 
-                _jira, 
-                _ml, 
-                _number_of_events, 
-                _softwar_version, 
-                _size);
+        INSERT INTO data_passes( id,      name,     period_id,  description,        pass_type,  jira,  ml,  number_of_events, software_version,  size) 
+                    VALUES     (DEFAULT, _name, trg_period_id, _description, trg_pass_type_id, _jira, _ml, _number_of_events, _softwar_version, _size);
     END IF;
 END;
 $$;
