@@ -31,18 +31,19 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             id: 'ali-bk-id',
             runNumber: 'run_number',
             lhcPeriod: 'period',
-            timeO2Start: 'start',
-            timeO2End: 'end',
+            timeO2Start: 'time_start',
+            timeO2End: 'time_end',
             timeTrgStart: 'time_trg_start',
             timeTrgEnd: 'time_trg_end',
             definition: 'run_type',
             lhcBeamEnergy: 'energy',
             detectors: 'detectors',
-            aliceL3Current: 'b_field_val',
-            aliceL3Polarity: 'b_field_polarity',
+            aliceL3Current: 'l3_current_val',
+            aliceL3Polarity: 'l3_current_polarity',
+            aliceDipoleCurrent: 'dipole_current_val',
+            aliceDipolePolarity: 'dipole_current_polarity',
             fillNumber: 'fill_number',
-            // eslint-disable-next-line capitalized-comments
-            // pdpBeamType: 'beam_type',
+            pdpBeamType: 'beam_type',
         };
 
         this.RUN_TYPE_PHYSICS = 'PHYSICS';
@@ -86,20 +87,25 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         } else {
             run.detectors = [];
         }
-        if (run.b_field_val && run.b_field_polarity) {
-            if (run.b_field_polarity == 'NEGATIVE') {
-                run.b_field = - Number(run.b_field_val);
-            } else if (run.b_field_polarity == 'POSITIVE') {
-                run.b_field = run.b_field_val;
+        this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3_current');
+        this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipole_current');
+
+        run.fill_number = Number(run.fill_number);
+        return run;
+    }
+
+    coilsCurrentsFieldsParsing(run, valFN, polFN, tFN) {
+        if (run[valFN] && run[polFN]) {
+            if (run[polFN] == 'NEGATIVE') {
+                run[tFN] = - Number(run[valFN]);
+            } else if (run[polFN] == 'POSITIVE') {
+                run[tFN] = run[valFN];
             } else {
                 throw 'incorrect polarity type';
             }
         } else {
-            run.b_field = null;
+            run[tFN] = null;
         }
-
-        run.fill_number = Number(run.fill_number);
-        return run;
     }
 
     async dbAction(dbClient, d) {
@@ -107,7 +113,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const year = Utils.extractPeriodYear(period);
         d = Utils.adjusetObjValuesToSql(d);
 
-        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${null});` : '';
+        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
 
         const detectorsInSql = `${d.detectors}::varchar[]`;
         const pgCommand = `${period_insert} call insert_run (
@@ -115,13 +121,14 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             ${d.period}, 
             ${d.time_trg_start}, 
             ${d.time_trg_end}, 
-            ${d.start}, 
-            ${d.end}, 
+            ${d.time_start}, 
+            ${d.time_end}, 
             ${d.run_type},
             ${d.fill_number},
-            ${d.b_field},
             ${d.energy}, 
-            ${detectorsInSql}
+            ${detectorsInSql},
+            ${d.l3_current},
+            ${d.dipole_current}
         );`;
         return await dbClient.query(pgCommand);
     }

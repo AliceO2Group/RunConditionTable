@@ -15,18 +15,14 @@ import { h } from '/js/src/index.js';
 import container from './common/container.js';
 
 export default function serviceUnavailablePanel(model) {
-    const retryBtn = h('button.btn.br-primary.m4.p4', { onclick: () => model.retry() }, 'Retry');
+    const retryBtn = h('button.btn.br-primary.m4.p4', { onclick: () => model.login() }, 'Retry login');
     const title = h('h1.primary.justify-center', 'Run Condition Table');
-    const subtitle = h('h3.danger.justify-center', 'Service temporarily unavailable');
+    const subtitle = h('h3.danger.justify-center', 'Session Error');
 
     return h('div.loginDiv', h('div.loginDiv.bg-gray-lighter.br3.p4', [
         title,
         subtitle,
         h('.p1'),
-        container(h('div.loginDivInsid.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close',
-            { id: 'serviceUnavailableMessageFieldID' },
-            '')),
         container(retryBtn),
-
     ]));
 }

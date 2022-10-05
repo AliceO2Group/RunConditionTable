@@ -24,7 +24,7 @@ export default function header(model) {
                 onclick: () => model.logout(),
             }, iconPerson()),
             ' ',
-            h('span.f4.gray', 'Run Condition Table'),
+            h('span.f4.gray', { onclick: () => model.router.go('/', true) }, 'Run Condition Table'),
         ]),
         h('.w-50', headerSpecific(model)),
         h('.w-10', functionalities(model)),

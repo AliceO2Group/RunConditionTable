@@ -76,9 +76,9 @@ class RunConditionTableApplication {
                 ml: (args) => this.servCLI(this.alimonitorServices.monalisaService, args),
                 mc: (args) => this.servCLI(this.alimonitorServices.monalisaServiceMC, args),
                 sync: async () => {
-                    await this.bookkeepingService.setSyncTask();
-                    await this.monalisaService.setSyncTask();
-                    await this.monalisaServiceMC.setSyncTask();
+                    await this.alimonitorServices.bookkeepingService.setSyncTask();
+                    await this.alimonitorServices.monalisaService.setSyncTask();
+                    await this.alimonitorServices.monalisaServiceMC.setSyncTask();
                 },
                 connServ: async () => {
                     await this.connectServices();
@@ -171,7 +171,9 @@ class RunConditionTableApplication {
             Object.values(this.alimonitorServices)
                 .map((serv) => serv.setupConnection()),
         ).catch((e) => errors.push(e));
-        this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
+        if (errors.length > 0) {
+            this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
+        }
     }
 
     async stop() {
@@ -195,7 +197,9 @@ class RunConditionTableApplication {
             Object.values(this.alimonitorServices)
                 .map((serv) => serv.close()),
         ).catch((e) => errors.push(e));
-        this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
+        if (errors.length > 0) {
+            this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
+        }
     }
 
     isInTestMode() {

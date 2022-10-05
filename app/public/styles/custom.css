@@ -71,3 +71,8 @@
 .abs {
     position: absolute !important;
 }
+
+.big-tap {
+    width: 500px;
+    height: 100px;
+}

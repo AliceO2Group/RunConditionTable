@@ -29,7 +29,6 @@ class DatabaseService {
     constructor(loggedUsers) {
         this.loggedUsers = loggedUsers;
         this.logger = new Log(DatabaseService.name);
-        this.queryBuilder = new QueryBuilder();
     }
 
     async login(req, res) {
@@ -50,22 +49,26 @@ class DatabaseService {
                     error = e;
                 });
         } else {
+
             this.logger.info('Restoring session with client');
         }
-
-        client.query('SELECT NOW();')
-            .then(async (dbRes) => {
-                await res.json({ data: dbRes.rows });
-                this.loggedUsers.tokenToUserData[req.query.token] = {
-                    pgClient: client,
-                    loginDate: new Date(),
-                    name: body.username,
-                    lastReqTime: new Date(),
-                };
-                this.logger.info('Logged client: ');
-            }).catch((e) => {
+        try {
+            client.query('SELECT NOW();')
+                .then(async (dbRes) => {
+                    await res.json({ data: dbRes.rows });
+                    this.loggedUsers.tokenToUserData[req.query.token] = {
+                        pgClient: client,
+                        loginDate: new Date(),
+                        name: body.username,
+                        lastReqTime: new Date(),
+                    };
+                    this.logger.info('Logged client: ');
+                }).catch((e) => {
+                    error = e;
+                });
+        } catch (e) {
                 error = e;
-            });
+        }
         if (error) {
             this.responseWithStatus(res, 500, error.code);
         }
@@ -88,18 +91,18 @@ class DatabaseService {
     }
 
     buildQuery(params) {
-        return this.queryBuilder.build(params);
+        return QueryBuilder.build(params);
     }
-
     async exec(req, res, dbResponseHandler, query = null) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token];
         if (!userData) {
-            const mess = 'ARR... probably user send request for data before server processed its login';
+            const mess = 'SESSION_ERROR';
             this.logger.error(mess, req.query);
             this.responseWithStatus(res, 500, mess);
             return;
         }
         const client = userData.pgClient;
+
 
         if (client) {
             if (query === null) {

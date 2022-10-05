@@ -23,11 +23,7 @@ const Utils = require("../Utils.js");
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
 class QueryBuilder {
-    constructor() {
-        this.logger = new Log(QueryBuilder.name);
-    }
-
-    build(params) {
+    static build(params) {
         const matchParams = [];
         const excludeParams = [];
         const fromParams = [];

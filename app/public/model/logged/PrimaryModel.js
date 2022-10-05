@@ -109,8 +109,19 @@ export default class PrimaryModel extends Observable {
         return this.fetchedData[page][defaultIndex(index)];
     }
 
+    removeCurrentData() {
+        const { page, index } = this.getCurrentDataPointer();
+        this.fetchedData[page][index] = null;
+        history.back();
+    }
+
     handleClick(e) {
         this.router.handleLinkEvent(e);
+        this.notify();
+    }
+
+    handleSessionError() {
+        this.parent.mode = 'sessionError';
         this.notify();
     }
 }

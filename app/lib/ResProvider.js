@@ -22,7 +22,25 @@ const LogsStacker = require('./LogsStacker.js');
 let logger;
 
 class ResProvider {
-    // TODO generalize this methods ::( single content provider method) and (key:val provider method)
+    static envToObj(def, failurePredicate, failureFunc) {
+        if (!failurePredicate) {
+            failurePredicate = (envObj) => Object.entries(def).any(([k, _]) => !envObj[k]);
+        }
+        if (!failureFunc) {
+            failureFunc = (envObj) => {
+                const notSet = Object.entries(def).filter(([k, _]) => !envObj[k]);
+                logger.error(`Not set env vars: ${JSON.stringify(notSet)}`);
+            };
+        }
+        const envObj = {};
+        Object.entries(def).forEach(([k, v]) => {
+            envObj[k] = process.env[v];
+        });
+        if (failurePredicate(envObj)) {
+            failureFunc(envObj);
+        }
+    }
+
     static securityFilesProvider(fileNames, description, envVarName = '_') {
         const logsStacker = new LogsStacker(ResProvider.name);
         const file_path = process.env[envVarName];
@@ -74,7 +92,7 @@ class ResProvider {
                 return null;
             }
             const socks = cern_socks_env_var.trim();
-            if (socks.match(/socks:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+/)) {
+            if (/socks:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+/.test(socks)) {
                 return socks;
             } else {
                 logger.error(`incorrect format of socks address: ${socks}`);
@@ -89,35 +107,25 @@ class ResProvider {
             secret: process.env.RCT_OPENID_SECRET,
             id: process.env.RCT_OPENID_ID,
             redirect_uri: process.env.RCT_OPENID_REDIRECT,
-            well_known: 'https://auth.cern.ch/auth/realms/cern/.well-known/openid-configuration',
+            well_known: process.env.RCT_OPENID_WELL_KNOWN,
         };
         if (openid.secret && openid.id && openid.redirect_uri && openid.well_known) {
             logger.info('openid defined by env vars');
             return openid;
-        }
-
-        let openidConfPath = process.env.OPENID_PATH;
-        if (!openidConfPath) {
-            logger.info('not openid conf file path description via env var');
-            openidConfPath = path.join(__dirname, '..', '..', 'security', 'openid.js');
-        }
-        if (fs.existsSync(openidConfPath)) {
-            logger.info('reading openid configuration from file from security directory');
-            return require(openidConfPath);
         } else {
-            logger.warn('openid configuration file not set');
+            const notSet = Object.entries(openid).filter(([_, v]) => !v).map(([k, _]) => k);
+            logger.warn(`Openid no set no spec. of ${notSet.join(', ')}`);
         }
-
         return undefined;
     }
 
     static database() {
         const database = {
             host: process.env.RCT_DB_HOST,
+            port: process.env.RCT_DB_PORT,
             database: process.env.RCT_DB_NAME,
             user: process.env.RCT_DB_USERNAME,
             password: process.env.RCT_DB_PASSWORD,
-            port: 5432,
         };
 
         if (database.host && database.database && database.user && database.password && database.port) {
@@ -126,19 +134,7 @@ class ResProvider {
         } else {
             const nulledFields = Object.entries(database).filter((e) => ! e[1]).map((e) => e[0]);
             const mess = `unset fields: ' + ${nulledFields.join(', ')}`;
-            logger.warn(`database passes not set properly ${mess}`);
-            if (process.env.ENV_MODE == 'dev') {
-                logger.info('env mode: using default values');
-                return {
-                    host: 'database',
-                    database: 'rct-db',
-                    user: 'rct-user',
-                    password: 'rct-passwd',
-                    port: 5432,
-                };
-            } else {
-                logger.error('unset database');
-            }
+            logger.error(`database passes not set properly ${mess}`);
         }
     }
 
