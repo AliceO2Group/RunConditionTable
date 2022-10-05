@@ -1,6 +1,10 @@
 # Configuration
 The following configuration items can be set using environment variables, note that Docker users can make use of the `env_file` file to store the configuration.
 
+| Variable name | Description | Default value |
+|---------------|-------------|---------------|
+| RCT_HTTP_PORT | Port on which application works | |
+
 ## OpenID
 | Variable name | Description | Default value |
 |---------------|-------------|---------------|
