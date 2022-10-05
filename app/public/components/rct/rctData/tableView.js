@@ -21,6 +21,7 @@ import siteController from './siteController.js';
 import postingDataConfig from './posting/postingDataConfig.js';
 import { postForm } from './posting/postForm.js';
 import filter from './table/filter.js';
+import container from '../../common/container.js';
 
 /**
  * Creates vnode containing table of fetched data (main content)
@@ -33,6 +34,15 @@ export default function tableView(model) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
 
+    if (data.rows?.length == 0) {
+        const removeAndGoBackBtn = h('button.btn.br-primary.m4.p4.big-tap',
+            { onclick: () => model.removeCurrentData() }, 'Go Back & Remove This Page');
+        const noDataMessage = h('h3.warning.justify-center', 'No related data');
+        return h('div.loginDiv', h('div.loginDiv.bg-gray-lighter.br3.p4', [
+            noDataMessage,
+            container(removeAndGoBackBtn),
+        ]));
+    }
     const cellsSpecials = pagesCellsSpecials[dataPointer.page];
 
     const { fields } = data;

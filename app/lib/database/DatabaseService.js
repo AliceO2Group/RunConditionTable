@@ -52,19 +52,23 @@ class DatabaseService {
             this.logger.info('Restoring session with client');
         }
 
-        client.query('SELECT NOW();')
-            .then(async (dbRes) => {
-                await res.json({ data: dbRes.rows });
-                this.loggedUsers.tokenToUserData[req.query.token] = {
-                    pgClient: client,
-                    loginDate: new Date(),
-                    name: body.username,
-                    lastReqTime: new Date(),
-                };
-                this.logger.info('Logged client: ');
-            }).catch((e) => {
+        try {
+            client.query('SELECT NOW();')
+                .then(async (dbRes) => {
+                    await res.json({ data: dbRes.rows });
+                    this.loggedUsers.tokenToUserData[req.query.token] = {
+                        pgClient: client,
+                        loginDate: new Date(),
+                        name: body.username,
+                        lastReqTime: new Date(),
+                    };
+                    this.logger.info('Logged client: ');
+                }).catch((e) => {
+                    error = e;
+                });
+        } catch (e) {
                 error = e;
-            });
+        }
         if (error) {
             this.responseWithStatus(res, 500, error.code);
         }
