@@ -15,12 +15,14 @@
 import userPanel from './components/rct/userPanel.js';
 import loggingPanel from './components/loggingPanel.js';
 import serviceUnavailablePanel from './components/serviceUnavailablePanel.js';
+import sessionErrorPanel from './components/sessionErrorPanel.js';
 import waitingPanel from './components/waitingPanel.js';
 import { switchCase } from '/js/src/index.js';
 
 export default function view(model) {
     return switchCase(model.mode, {
         serviceUnavailable: () => serviceUnavailablePanel(model.submodels[model.mode]),
+        sessionError: () => sessionErrorPanel(model),
         primary: () => userPanel(model.submodels[model.mode]),
         admin: () => loggingPanel(model), // TODO consider
         inspector: () => loggingPanel(model),

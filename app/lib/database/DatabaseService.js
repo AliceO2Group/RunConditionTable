@@ -49,9 +49,9 @@ class DatabaseService {
                     error = e;
                 });
         } else {
+
             this.logger.info('Restoring session with client');
         }
-
         try {
             client.query('SELECT NOW();')
                 .then(async (dbRes) => {
@@ -93,16 +93,16 @@ class DatabaseService {
     buildQuery(params) {
         return QueryBuilder.build(params);
     }
-
     async exec(req, res, dbResponseHandler, query = null) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token];
         if (!userData) {
-            const mess = 'ARR... probably user send request for data before server processed its login';
+            const mess = 'SESSION_ERROR';
             this.logger.error(mess, req.query);
             this.responseWithStatus(res, 500, mess);
             return;
         }
         const client = userData.pgClient;
+
 
         if (client) {
             if (query === null) {

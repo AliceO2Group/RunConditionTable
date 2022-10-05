@@ -119,4 +119,9 @@ export default class PrimaryModel extends Observable {
         this.router.handleLinkEvent(e);
         this.notify();
     }
+
+    handleSessionError() {
+        this.parent.mode = 'sessionError';
+        this.notify();
+    }
 }
