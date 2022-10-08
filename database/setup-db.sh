@@ -14,7 +14,7 @@ fi
 RCT_DATABASE=${RCT_DB_NAME:-'rct-db'}
 RCT_USER=${RCT_DB_USERNAME:-'rct-user'}
 RCT_PASSWORD=${RCT_DB_PASSWORD:-'rct-passwd'}
-RCT_DATABASE_HOST='localhost'
+RCT_DATABASE_HOST=${RCT_DB_HOST:-'localhost'}
 CREATE_TABLES_SQL="$SCRIPTS_DIR/exported/create-tables.sql"
 STORED_PROCEDURES_DIR="$SCRIPTS_DIR/procedures"
 DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
@@ -23,7 +23,6 @@ DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
 
 # disconnect everyone from database in order to recreate it //if dev locally it might be helpful
 psql -c "select pg_terminate_backend(pid) from pg_stat_activity where datname='$RCT_DATABASE';"
-
 psql -c "DROP DATABASE IF EXISTS \"$RCT_DATABASE\""
 psql -c "DROP USER IF EXISTS \"$RCT_USER\""
 psql -c "CREATE USER \"$RCT_USER\" WITH ENCRYPTED PASSWORD '$RCT_PASSWORD';"
