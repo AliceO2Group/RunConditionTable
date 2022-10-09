@@ -30,11 +30,15 @@ while [[ $# -gt 0 ]]; do
         --help)
             usage;
         ;;
+        --other-sql-modify-daemon)
+          OTHER_SQL_MODIFY_DAEMON='true';
+          shift 1;
+        ;;
         --export)
             EXPORT='true';
             shift 1;
             ;;
-        --only--export)
+        --only-export)
             EXPORT='true';
             ONLY_EXPORT='true';
             shift 1;
@@ -118,6 +122,7 @@ if [ "$DROP" = 'true' ]; then
   psql -c "DROP USER IF EXISTS \"$RCT_DB_USERNAME\""
 fi
 
+
 psql -c "CREATE USER \"$RCT_DB_USERNAME\" WITH ENCRYPTED PASSWORD '$RCT_DB_PASSWORD';"
 psql -c "CREATE DATABASE \"$RCT_DB_NAME\""
 psql -d $RCT_DB_NAME -a -f $CREATE_TABLES_SQL
@@ -132,6 +137,14 @@ psql -d $RCT_DB_NAME -c "call insert_period('TMP', null, null);";
 psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
 psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
 
+if [ "$OTHER_SQL_MODIFY_DAEMON" = 'true' ]; then
+  inotifywait --monitor --recursive --event modify $OTHER_SQL_FILES |
+    while read file_path file_event file_name; do 
+      echo ${file_path}${file_name} event: ${file_event}; 
+      psql -d $RCT_DB_NAME -a -f "${file_path}${file_name}";
+      echo ${file_path}${file_name} event: ${file_event}; 
+    done &
+fi
 
  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
  # TODO section
