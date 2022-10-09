@@ -29,6 +29,10 @@ services:
         read_only: false
         source: ./database
         target: /docker-entrypoint-initdb.d
+      - type: bind
+        read_only: false
+        source: ./database/cache
+        target: /postgres/run/database/cache
     networks:
       - o2-rct_network
 networks:

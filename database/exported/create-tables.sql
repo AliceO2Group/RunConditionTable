@@ -11,7 +11,6 @@ CREATE ROLE "rct-user" WITH
 	ENCRYPTED PASSWORD '********';
 -- ddl-end --
 
-
 -- Database creation must be performed outside a multi lined SQL file. 
 -- These commands were put in this file only as a convenience.
 -- 

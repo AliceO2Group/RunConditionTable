@@ -30,6 +30,10 @@ while [[ $# -gt 0 ]]; do
         --help)
             usage;
         ;;
+        --main-sql-modify-daemon)
+          MAIN_SQL_MODIFY_DAEMON='true';
+          shift 1;
+        ;;
         --other-sql-modify-daemon)
           OTHER_SQL_MODIFY_DAEMON='true';
           shift 1;
@@ -115,28 +119,60 @@ fi
 
 
 # disconnect everyone from database in order to recreate it //if dev locally it might be helpful
-psql -c "select pg_terminate_backend(pid) from pg_stat_activity where datname='$RCT_DB_NAME';"
-
-if [ "$DROP" = 'true' ]; then
+terminate() {
+  psql -c "select pg_terminate_backend(pid) from pg_stat_activity where datname='$RCT_DB_NAME';"
+}
+drop() {
   psql -c "DROP DATABASE IF EXISTS \"$RCT_DB_NAME\""
   psql -c "DROP USER IF EXISTS \"$RCT_DB_USERNAME\""
+}
+
+create_main() {
+  psql -c "CREATE USER \"$RCT_DB_USERNAME\" WITH ENCRYPTED PASSWORD '$RCT_DB_PASSWORD';"
+  psql -c "CREATE DATABASE \"$RCT_DB_NAME\""
+  psql -d $RCT_DB_NAME -a -f $CREATE_TABLES_SQL
+}
+
+create_other() {
+  for p in $(find "$OTHER_SQL_FILES" -name "*.sql") ; do
+    echo "use of $p"
+    psql -d $RCT_DB_NAME -a -f $p
+  done;
+}
+
+grant() {
+  # psql -c "ALTER DATABASE \"$RCT_DB_NAME\" OWNER TO \"$RCT_DB_USERNAME\""
+  # psql -c "GRANT ALL PRIVILEGES ON DATABASE \"$RCT_DB_NAME\" TO \"$RCT_DB_USERNAME\""
+  psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
+  psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
+}
+
+
+terminate
+if [ "$DROP" = 'true' ]; then
+  drop
 fi
-
-
-psql -c "CREATE USER \"$RCT_DB_USERNAME\" WITH ENCRYPTED PASSWORD '$RCT_DB_PASSWORD';"
-psql -c "CREATE DATABASE \"$RCT_DB_NAME\""
-psql -d $RCT_DB_NAME -a -f $CREATE_TABLES_SQL
-for p in $(find "$OTHER_SQL_FILES" -name "*.sql") ; do
-  echo "use of $p"
-  psql -d $RCT_DB_NAME -a -f $p
-done;
+create_main
+create_other
+grant
 psql -d $RCT_DB_NAME -c "call insert_period('TMP', null, null);";
 
-# psql -c "ALTER DATABASE \"$RCT_DB_NAME\" OWNER TO \"$RCT_DB_USERNAME\""
-# psql -c "GRANT ALL PRIVILEGES ON DATABASE \"$RCT_DB_NAME\" TO \"$RCT_DB_USERNAME\""
-psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
-psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
 
+if [ "$MAIN_SQL_MODIFY_DAEMON" = 'true' ]; then
+  inotifywait --monitor --recursive --event modify "$SCRIPTS_DIR/exported/" |
+    while read file_path file_event file_name; do 
+      echo ${file_path}${file_name} event: ${file_event}; 
+      SWP_DUMP="/postgres/run/database/cache/dumps/.dump.swp"
+      pg_dump --data-only --format=tar -d $RCT_DB_NAME --file="$SWP_DUMP";
+      psql -c "DROP SCHEME public CASCADE;";
+      psql -c "CREATE SCHEME public;";
+      create_main
+      create_other
+      grant
+      pg_restore --data-only -d $RCT_DB_NAME "$SWP_DUMP";
+      echo ${file_path}${file_name} event: ${file_event}; 
+    done &
+fi
 if [ "$OTHER_SQL_MODIFY_DAEMON" = 'true' ]; then
   inotifywait --monitor --recursive --event modify $OTHER_SQL_FILES |
     while read file_path file_event file_name; do 
