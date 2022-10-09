@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,0" last-zoom="0.75" max-obj-count="33"
+<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,195" last-zoom="0.75" max-obj-count="33"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -25,7 +25,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <schema name="public" layers="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<tag name="first_layer_data">
+<tag name="primary_data_layer">
 	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
 	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
 	<style id="table-name" colors="#000000"/>
@@ -43,7 +43,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<style id="table-toggler-body" colors="#000000,#000000,#000000"/>
 	<style id="table-toggler-btns" colors="#000000,#000000,#000000"/>
 </tag>
-<tag name="helper_layer_data">
+<tag name="dictionaries_layer">
 	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
 	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
 	<style id="table-name" colors="#000000"/>
@@ -69,8 +69,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="beams_dictionary" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="helper_layer_data"/>
-	<position x="380" y="480"/>
+	<tag name="dictionaries_layer"/>
+	<position x="280" y="1400"/>
 	<column name="id" not-null="true" sequence="public.beams_dictionary_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -87,22 +87,25 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </sequence>
 
-<table name="data_passes" layers="0" collapse-mode="2" max-obj-count="10" z-value="0">
+<table name="data_passes" layers="0" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="first_layer_data"/>
-	<position x="220" y="1160"/>
+	<tag name="primary_data_layer"/>
+	<position x="140" y="500"/>
 	<column name="id" not-null="true" sequence="public.data_passes_id_seq">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="character varying" length="50"/>
 	</column>
-	<column name="description">
-		<type name="text" length="0"/>
+	<column name="period_id" not-null="true">
+		<type name="integer" length="0"/>
 	</column>
 	<column name="pass_type">
 		<type name="integer" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
 	</column>
 	<column name="jira">
 		<type name="text" length="0"/>
@@ -136,21 +139,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="900" y="1000"/>
-	<column name="id" not-null="true" sequence="public.data_passes_runs_id_seq">
-		<type name="integer" length="0"/>
-	</column>
-	<column name="run_id" not-null="true">
+	<position x="720" y="480"/>
+	<column name="run_number" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="data_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<constraint name="data_passes_runs_pkey" type="pk-constr" table="public.data_passes_runs">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
 	<constraint name="dpr_pair_unique" type="uq-constr" table="public.data_passes_runs">
-		<columns names="run_id,data_pass_id" ref-type="src-columns"/>
+		<columns names="run_number,data_pass_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="dpr_pk" type="pk-constr" table="public.data_passes_runs">
+		<columns names="run_number,data_pass_id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -162,8 +162,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="detectors_subsystems" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="helper_layer_data"/>
-	<position x="1660" y="1180"/>
+	<tag name="dictionaries_layer"/>
+	<position x="1500" y="1060"/>
 	<column name="id" not-null="true" sequence="public.detectors_subsystems_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -186,8 +186,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="flags_types_dictionary" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="helper_layer_data"/>
-	<position x="900" y="1340"/>
+	<tag name="dictionaries_layer"/>
+	<position x="320" y="1700"/>
 	<column name="id" not-null="true" sequence="public.flags_types_dictionary_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -210,8 +210,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="pass_types" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="helper_layer_data"/>
-	<position x="740" y="1600"/>
+	<tag name="dictionaries_layer"/>
+	<position x="140" y="180"/>
 	<column name="id" not-null="true" sequence="public.pass_types_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -234,8 +234,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="periods" layers="0" collapse-mode="2" pagination="true" attribs-page="0" ext-attribs-page="0" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="first_layer_data"/>
-	<position x="360" y="720"/>
+	<tag name="primary_data_layer"/>
+	<position x="300" y="1040"/>
 	<column name="id" not-null="true" sequence="public.periods_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -264,8 +264,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="quality_control_flags" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="first_layer_data"/>
-	<position x="1420" y="1420"/>
+	<tag name="primary_data_layer"/>
+	<position x="900" y="1660"/>
 	<column name="id" not-null="true" sequence="public.quality_control_flags_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -275,10 +275,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="run_detector_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="start" not-null="true">
+	<column name="time_start" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="end" not-null="true">
+	<column name="time_end" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="flag_type_id" not-null="true">
@@ -306,46 +306,40 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1460" y="860"/>
+	<position x="1560" y="1440"/>
 	<column name="id" not-null="true" sequence="public.runs_detectors_id_seq">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="detector_id" not-null="true">
+	<column name="detector_id">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="run_id" not-null="true">
+	<column name="run_number">
 		<type name="integer" length="0"/>
 	</column>
 	<constraint name="runs_detectors_pkey" type="pk-constr" table="public.runs_detectors">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 	<constraint name="rd_pair_unique" type="uq-constr" table="public.runs_detectors">
-		<columns names="detector_id,run_id" ref-type="src-columns"/>
+		<columns names="detector_id,run_number" ref-type="src-columns"/>
 	</constraint>
 </table>
 
 <table name="runs" layers="0" collapse-mode="2" max-obj-count="18" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="first_layer_data"/>
-	<position x="900" y="300"/>
-	<column name="id" not-null="true" sequence="public.runs_id_seq">
-		<type name="integer" length="0"/>
+	<tag name="primary_data_layer"/>
+	<position x="940" y="980"/>
+	<column name="run_number" not-null="true">
+		<type name="bigint" length="0"/>
 	</column>
 	<column name="period_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="run_number" not-null="true">
+	<column name="time_start">
 		<type name="bigint" length="0"/>
 	</column>
-	<column name="start">
+	<column name="time_end">
 		<type name="bigint" length="0"/>
-	</column>
-	<column name="end">
-		<type name="bigint" length="0"/>
-	</column>
-	<column name="b_field">
-		<type name="float" length="12"/>
 	</column>
 	<column name="energy_per_beam">
 		<type name="float" length="10"/>
@@ -374,26 +368,32 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="time_trg_end">
 		<type name="bigint" length="0"/>
 	</column>
-	<constraint name="runs_pkey" type="pk-constr" table="public.runs">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-	<constraint name="run_number_unique" type="uq-constr" table="public.runs">
+	<column name="l3_current">
+		<type name="float" length="0"/>
+	</column>
+	<column name="dipole_current">
+		<type name="float" length="0"/>
+	</column>
+	<constraint name="runs_pk" type="pk-constr" table="public.runs">
 		<columns names="run_number" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="sim_and_data_passes" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+<table name="anchored_passes" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="280" y="120"/>
+	<position x="740" y="160"/>
 	<column name="data_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="sim_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<constraint name="sim_and_data_passess_pkey" type="pk-constr" table="public.sim_and_data_passes">
+	<constraint name="sim_and_data_passess_pkey" type="pk-constr" table="public.anchored_passes">
+		<columns names="data_pass_id,sim_pass_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="sim_and_dp_pk" type="uq-constr" table="public.anchored_passes">
 		<columns names="data_pass_id,sim_pass_id" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -406,8 +406,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="simulation_passes" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<tag name="first_layer_data"/>
-	<position x="1560" y="120"/>
+	<tag name="primary_data_layer"/>
+	<position x="1360" y="180"/>
 	<column name="id" not-null="true" sequence="public.simulation_passes_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -449,27 +449,52 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1540" y="540"/>
-	<column name="id" not-null="true" sequence="public.simulation_passes_runs_id_seq">
-		<type name="integer" length="0"/>
-	</column>
+	<position x="1620" y="700"/>
 	<column name="simulation_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="run_id" not-null="true">
+	<column name="run_number" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="qc">
 		<type name="text" length="0"/>
 	</column>
-	<constraint name="simulation_passes_runs_pkey" type="pk-constr" table="public.simulation_passes_runs">
-		<columns names="id" ref-type="src-columns"/>
+	<constraint name="spr_pk" type="pk-constr" table="public.simulation_passes_runs">
+		<columns names="simulation_pass_id,run_number" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="sim_pass_runs_pair_uq" type="uq-constr" table="public.simulation_passes_runs">
+		<columns names="simulation_pass_id,run_number" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="anchored_periods" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<tag name="consistency_data_layer"/>
+	<position x="1180" y="620"/>
+	<column name="period_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="sim_pass_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="prim_key" type="pk-constr" table="public.anchored_periods">
+		<columns names="period_id,sim_pass_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="an_period_pair_uq" type="uq-constr" table="public.anchored_periods">
+		<columns names="period_id,sim_pass_id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
 <constraint name="pass_type_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.pass_types" table="public.data_passes">
 	<columns names="pass_type" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="period_id_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.periods" table="public.data_passes">
+	<columns names="period_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -481,8 +506,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <constraint name="run_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.runs" table="public.data_passes_runs">
-	<columns names="run_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
+	<columns names="run_number" ref-type="src-columns"/>
+	<columns names="run_number" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="beam_type_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
@@ -492,27 +517,21 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="run_detector_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.runs_detectors" table="public.quality_control_flags">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.runs_detectors" table="public.quality_control_flags">
 	<columns names="run_detector_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="flag_type_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.flags_types_dictionary" table="public.quality_control_flags">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.flags_types_dictionary" table="public.quality_control_flags">
 	<columns names="flag_type_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="pass_run_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.data_passes_runs" table="public.quality_control_flags">
-	<columns names="pass_run_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="run_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.runs" table="public.runs_detectors">
-	<columns names="run_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
+	<columns names="run_number" ref-type="src-columns"/>
+	<columns names="run_number" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="detector_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
@@ -528,26 +547,38 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="sim_passes_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.simulation_passes" table="public.sim_and_data_passes">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.simulation_passes" table="public.anchored_passes">
 	<columns names="sim_pass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="data_passes_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.data_passes" table="public.sim_and_data_passes">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.data_passes" table="public.anchored_passes">
 	<columns names="data_pass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="sim_pass_id" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.simulation_passes" table="public.simulation_passes_runs">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.simulation_passes" table="public.simulation_passes_runs">
 	<columns names="simulation_pass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="run_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.runs" table="public.simulation_passes_runs">
-	<columns names="run_id" ref-type="src-columns"/>
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.runs" table="public.simulation_passes_runs">
+	<columns names="run_number" ref-type="src-columns"/>
+	<columns names="run_number" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="sim_pass_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.simulation_passes" table="public.anchored_periods">
+	<columns names="sim_pass_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="period_id_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.periods" table="public.anchored_periods">
+	<columns names="period_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -587,12 +618,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.flags_types_dictionary" reference-fk="flag_type_fk"
 	 src-required="false" dst-required="true"/>
 
-<relationship name="rel_quality_control_flags_data_passes_runs" type="relfk" layers="0"
-	 custom-color="#e5d6ab"
-	 src-table="public.quality_control_flags"
-	 dst-table="public.data_passes_runs" reference-fk="pass_run_fk"
-	 src-required="false" dst-required="true"/>
-
 <relationship name="rel_runs_periods" type="relfk" layers="0"
 	 custom-color="#2721b8"
 	 src-table="public.runs"
@@ -613,13 +638,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_sim_and_data_passess_simulation_passes" type="relfk" layers="0"
 	 custom-color="#07cdf1"
-	 src-table="public.sim_and_data_passes"
+	 src-table="public.anchored_passes"
 	 dst-table="public.simulation_passes" reference-fk="sim_passes_fk"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_sim_and_data_passess_data_passes" type="relfk" layers="0"
 	 custom-color="#2eface"
-	 src-table="public.sim_and_data_passes"
+	 src-table="public.anchored_passes"
 	 dst-table="public.data_passes" reference-fk="data_passes_fk"
 	 src-required="false" dst-required="true">
 	<label ref-type="dst-label">
@@ -639,6 +664,21 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.runs" reference-fk="run_fk"
 	 src-required="false" dst-required="true"/>
 
+<relationship name="rel_anchored_periods_simulation_passes" type="relfk" layers="0"
+	 src-table="public.anchored_periods"
+	 dst-table="public.simulation_passes" reference-fk="sim_pass_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_anchored_periods_periods" type="relfk" layers="0"
+	 src-table="public.anchored_periods"
+	 dst-table="public.periods" reference-fk="period_id_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_data_passes_periods" type="relfk" layers="0"
+	 src-table="public.data_passes"
+	 dst-table="public.periods" reference-fk="period_id_fk"
+	 src-required="false" dst-required="true"/>
+
 <permission>
 	<object name="public" type="schema"/>
 	<roles names="postgres"/>
@@ -749,12 +789,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>
 <permission>
-	<object name="public.sim_and_data_passes" type="table"/>
+	<object name="public.anchored_passes" type="table"/>
 	<roles names="postgres"/>
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>
 <permission>
-	<object name="public.sim_and_data_passes" type="table"/>
+	<object name="public.anchored_passes" type="table"/>
 	<roles names="&quot;rct-user&quot;"/>
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>
