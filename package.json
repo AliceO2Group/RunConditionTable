@@ -1,6 +1,6 @@
 {
   "name": "@aliceo2/run-condition-table",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "main.js",
   "author": "ALICEO2",
   "keywords": [
@@ -17,7 +17,6 @@
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:show": "npm run eslint; firefox ./reports/static/static-analysis.html",
     "static": "npm run eslint",
-
     "coverage:test": "mocha --exit test/*",
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run coverage:test && npm run coverage:report ",
@@ -25,30 +24,24 @@
     "test:mocha": "mocha",
     "reports:show": "open ./reports/**/*.html",
     "reports:clean": "rm -rf ./reports; rm -rf .nyc_output",
-
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:dev:local": "bash -c 'set -o allexport && ls && source ./docker/env_file-dev && set +o allexport && npm run start:dev'",
     "start:prod": "node app/main.js",
-
     "prod": "./rctmake",
     "dev": "./rctmake build[up],dump:clean,attach --target dev ",
     "dev:up": "./rctmake build[up] --target dev --attach",
     "dev:up-re": "./rctmake build[up],dump:restore,attach --target dev -F ",
     "dev:prune": "./rctmake prune,db,build,stop --target dev --attach",
     "docker:test": "./rctmake prune,build,prune --target test",
-    
     "prune": "./rctmake prune",
     "app:attach": "docker attach rct_application",
-    
     "db:check": "./rctmake prune,db,build,follow -t dev -S o2-rct_database ",
     "db:attach": "docker exec -it o2-rct_database psql -U postgres -d \"rct-db\"",
-
     "db:clean": "./rctmake dump:clean",
     "dump:make": "./rctmake dump:make -F ",
     "dump:list": "./rctmake dump:list",
     "dump:restore": "./rctmake dump:restore -F ",
     "dump:remove": "./rctmake dump:remove -F ",
-
     "tmp": "nodemon ./tmp/tmp.js"
   },
   "dependencies": {
@@ -60,7 +53,7 @@
   "files": [
     "app/",
     "docs/"
-  ],   
+  ],
   "bundledDependencies": [
     "@aliceo2/web-ui",
     "esm",
