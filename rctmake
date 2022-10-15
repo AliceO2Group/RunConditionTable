@@ -193,7 +193,7 @@ for stage in $STAGES; do
         ;;
 
         db)
-            $PROJECT_DIR/database/local-dev/setup-db.sh --o-ex;
+            $PROJECT_DIR/database/setup-db.sh --only-export;
         ;;
         
         dump*)

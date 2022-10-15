@@ -15,6 +15,10 @@
 
 const keywords = ['DEFAULT', 'NULL'];
 class Utils {
+    static reversePrimitiveObject(obj) {
+        return Object.fromEntries(Object.entries(obj).map((e) => e.reverse()));
+    }
+
     static filterObject(obj, keptFields, suppressUndefined = false) {
         if (!keptFields) {
             return obj;
