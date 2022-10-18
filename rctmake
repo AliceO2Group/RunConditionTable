@@ -81,8 +81,8 @@ exit 1;
 PREVIOD_USER_LOC=$(pwd);
 DOCKER_DIR="$PROJECT_DIR/docker";
 cd $DOCKER_DIR;
-
-COMM_PD="docker-compose --project-directory $PROJECT_DIR ";
+MAIN_DOCKER_COMPOSE_YML="$DOCKER_DIR/docker-compose.yml"
+DOCKER_COMP_CMD="docker compose -f $MAIN_DOCKER_COMPOSE_YML --project-directory $PROJECT_DIR ";
 
 # defualt behaviour => dettached production built
 if [[  $# -eq 0 ]]; then
@@ -137,7 +137,7 @@ export MOCK_DB;
 
 follow() {
     cd $DOCKER_DIR
-    $COMM_PD logs --follow $OTHER_OPTS $SERVICES
+    $DOCKER_COMP_CMD logs --follow $OTHER_OPTS $SERVICES
     cd -
 }
 
@@ -149,8 +149,7 @@ build() {
     case $TARGET in 
         dev)
             # TODO add daemons for database files (like nodemon)
-            $COMM_PD \
-                -f docker-compose.yml \
+            $DOCKER_COMP_CMD \
                 -f docker-compose-dev.yml \
                 -f docker-compose-expose.yml \
                 $ORDER $OTHER_OPTS $SERVICES;
@@ -160,8 +159,7 @@ build() {
         ;;
 
         prod)
-            $COMM_PD \
-                -f docker-compose.yml \
+            $DOCKER_COMP_CMD \
                 -f docker-compose-prod.yml \
                 -f docker-compose-expose.yml \
                 $ORDER $OTHER_OPTS $SERVICES;
@@ -169,8 +167,7 @@ build() {
 
         test)
             mkdir -p $PROJECT_DIR/reports;
-            $COMM_PD \
-                -f docker-compose.yml \
+            $DOCKER_COMP_CMD \
                 -f docker-compose-test.yml \
                 up --build --abort-on-container-exit $OTHER_OPTS;
         ;;
@@ -189,7 +186,7 @@ for stage in $STAGES; do
     echo " *** do $stage";
     case $stage in
         prune)
-            $COMM_PD rm --stop --force -v $SERVICES;
+            $DOCKER_COMP_CMD rm --stop --force -v $SERVICES;
         ;;
 
         db)
@@ -200,7 +197,6 @@ for stage in $STAGES; do
             DUMP_CMD=$(echo ${stage#dump:});
             DUMPS_DIR="$PROJECT_DIR/database/cache/dumps"
             mkdir -p "$DUMPS_DIR";
-            ip=$(docker inspect $DB_CONTATINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}');
             RCT_DATABASE='rct-db';
             RCT_USER='postgres';
             DUMP_PATH="$DUMPS_DIR/$DUMP_FILE";
@@ -295,7 +291,7 @@ for stage in $STAGES; do
         ;;
 
         stop)
-            $COMM_PD stop $OTHER_OPTS;
+            $DOCKER_COMP_CMD stop $OTHER_OPTS;
         ;;
 
         *)
@@ -305,7 +301,7 @@ for stage in $STAGES; do
 done
 
 if [ "$PRUNE_AT_THE_END" = 'true' ]; then
-    $COMM_PD rm --stop --force -v;
+    $DOCKER_COMP_CMD rm --stop --force -v;
 fi
 
 cd $PREVIOD_USER_LOC;

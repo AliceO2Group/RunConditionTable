@@ -5,22 +5,7 @@ ORG_ARGS="$*"
 SCRIPTS_DIR=$(dirname $0)
 MAIN_SCRIPT_NAME=$(basename $0)
 
-<<<<<<< Updated upstream
-#if localy run < sudo -H -u postgres bash -c "./setup-db.sh --dev" > in <root>/database/ directory
-if [ ! $(whoami) = 'postgres' ]; then
-  echo "script must be run as postgres or using < sudo -H -u postgres bash -c \"$MAIN_SCRIPT_NAME [--mock [--python]]\" " >&2
-  echo "see $SCRIPTS_DIR/local-dev/local-setup.sh"
-  exit 1;
-fi
-
-# TODO env vars usage
-RCT_DATABASE=${RCT_DB_NAME:-'rct-db'}
-RCT_USER=${RCT_DB_USERNAME:-'rct-user'}
-RCT_PASSWORD=${RCT_DB_PASSWORD:-'rct-passwd'}
-RCT_DATABASE_HOST=${RCT_DB_HOST:-'localhost'}
-=======
 CONVERT_SCRIPT="$SCRIPTS_DIR/mock/convert.sh"
->>>>>>> Stashed changes
 CREATE_TABLES_SQL="$SCRIPTS_DIR/exported/create-tables.sql"
 DESIGN_PNG="$SCRIPTS_DIR/exported/design.png"
 DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
@@ -126,6 +111,8 @@ fi
 
 if [ ! $(whoami) = 'postgres' ]; then
   echo "script must be run as postgres or using: 'sudo -H -u postgres bash -c \"$MAIN_SCRIPT_NAME [ARGS]\"'" >&2;
+  echo "trying to execute script using sudo..., press any key to continue or crt+C to terminate"
+  read
   sudo -H -u postgres LOCAL_USER=$(whoami) \
     bash -c "$0 $ORG_ARGS --rerun"
   exit 0;

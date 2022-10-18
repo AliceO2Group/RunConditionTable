@@ -1,5 +1,5 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler version: 0.9.4-beta
+-- pgModeler version: 0.9.4
 -- PostgreSQL version: 13.0
 -- Project Site: pgmodeler.io
 -- Model Author: ---
@@ -10,6 +10,7 @@ CREATE ROLE "rct-user" WITH
 	LOGIN
 	ENCRYPTED PASSWORD '********';
 -- ddl-end --
+
 
 -- Database creation must be performed outside a multi lined SQL file. 
 -- These commands were put in this file only as a convenience.
@@ -46,7 +47,6 @@ CREATE TABLE public.beams_dictionary (
 	id integer NOT NULL DEFAULT nextval('public.beams_dictionary_id_seq'::regclass),
 	beam_type character varying(10) NOT NULL,
 	CONSTRAINT beams_dictionary_pkey PRIMARY KEY (id)
-
 );
 -- ddl-end --
 ALTER TABLE public.beams_dictionary OWNER TO postgres;
@@ -82,7 +82,6 @@ CREATE TABLE public.data_passes (
 	size real,
 	CONSTRAINT data_passes_pkey PRIMARY KEY (id),
 	CONSTRAINT dp_name_unique UNIQUE (name)
-
 );
 -- ddl-end --
 ALTER TABLE public.data_passes OWNER TO postgres;
@@ -110,7 +109,6 @@ CREATE TABLE public.data_passes_runs (
 	data_pass_id integer NOT NULL,
 	CONSTRAINT dpr_pair_unique UNIQUE (run_number,data_pass_id),
 	CONSTRAINT dpr_pk PRIMARY KEY (run_number,data_pass_id)
-
 );
 -- ddl-end --
 ALTER TABLE public.data_passes_runs OWNER TO postgres;
@@ -138,7 +136,6 @@ CREATE TABLE public.detectors_subsystems (
 	name character varying(10) NOT NULL,
 	CONSTRAINT detectors_subsystems_pkey PRIMARY KEY (id),
 	CONSTRAINT ds_name_unique UNIQUE (name)
-
 );
 -- ddl-end --
 ALTER TABLE public.detectors_subsystems OWNER TO postgres;
@@ -166,7 +163,6 @@ CREATE TABLE public.flags_types_dictionary (
 	flag text NOT NULL,
 	CONSTRAINT flags_types_dictionary_pkey PRIMARY KEY (id),
 	CONSTRAINT ftp_name_unique UNIQUE (flag)
-
 );
 -- ddl-end --
 ALTER TABLE public.flags_types_dictionary OWNER TO postgres;
@@ -194,7 +190,6 @@ CREATE TABLE public.pass_types (
 	pass_type character varying(10) NOT NULL,
 	CONSTRAINT pass_types_pkey PRIMARY KEY (id),
 	CONSTRAINT pt_name_unique UNIQUE (pass_type)
-
 );
 -- ddl-end --
 ALTER TABLE public.pass_types OWNER TO postgres;
@@ -224,7 +219,6 @@ CREATE TABLE public.periods (
 	beam_type_id integer,
 	CONSTRAINT periods_pkey PRIMARY KEY (id),
 	CONSTRAINT p_name_unique UNIQUE (name)
-
 );
 -- ddl-end --
 ALTER TABLE public.periods OWNER TO postgres;
@@ -256,7 +250,6 @@ CREATE TABLE public.quality_control_flags (
 	flag_type_id integer NOT NULL,
 	comment text,
 	CONSTRAINT quality_control_flags_pkey PRIMARY KEY (id)
-
 );
 -- ddl-end --
 ALTER TABLE public.quality_control_flags OWNER TO postgres;
@@ -300,7 +293,6 @@ CREATE TABLE public.runs_detectors (
 	run_number integer,
 	CONSTRAINT runs_detectors_pkey PRIMARY KEY (id),
 	CONSTRAINT rd_pair_unique UNIQUE (detector_id,run_number)
-
 );
 -- ddl-end --
 ALTER TABLE public.runs_detectors OWNER TO postgres;
@@ -325,7 +317,6 @@ CREATE TABLE public.runs (
 	l3_current float,
 	dipole_current float,
 	CONSTRAINT runs_pk PRIMARY KEY (run_number)
-
 );
 -- ddl-end --
 ALTER TABLE public.runs OWNER TO postgres;
@@ -338,7 +329,6 @@ CREATE TABLE public.anchored_passes (
 	sim_pass_id integer NOT NULL,
 	CONSTRAINT sim_and_data_passess_pkey PRIMARY KEY (data_pass_id,sim_pass_id),
 	CONSTRAINT sim_and_dp_pk UNIQUE (data_pass_id,sim_pass_id)
-
 );
 -- ddl-end --
 ALTER TABLE public.anchored_passes OWNER TO postgres;
@@ -372,7 +362,6 @@ CREATE TABLE public.simulation_passes (
 	size real,
 	CONSTRAINT simulation_passes_pkey PRIMARY KEY (id),
 	CONSTRAINT sp_name_unique UNIQUE (name)
-
 );
 -- ddl-end --
 ALTER TABLE public.simulation_passes OWNER TO postgres;
@@ -401,7 +390,6 @@ CREATE TABLE public.simulation_passes_runs (
 	qc text,
 	CONSTRAINT spr_pk PRIMARY KEY (simulation_pass_id,run_number),
 	CONSTRAINT sim_pass_runs_pair_uq UNIQUE (simulation_pass_id,run_number)
-
 );
 -- ddl-end --
 ALTER TABLE public.simulation_passes_runs OWNER TO postgres;
@@ -414,7 +402,6 @@ CREATE TABLE public.anchored_periods (
 	sim_pass_id integer NOT NULL,
 	CONSTRAINT prim_key PRIMARY KEY (period_id,sim_pass_id),
 	CONSTRAINT an_period_pair_uq UNIQUE (period_id,sim_pass_id)
-
 );
 -- ddl-end --
 ALTER TABLE public.anchored_periods OWNER TO postgres;
@@ -544,157 +531,157 @@ GRANT CREATE,USAGE
    TO PUBLIC;
 -- ddl-end --
 
--- object: "grant_rawdDxt_d4c68ab9f5" | type: PERMISSION --
+-- object: "grant_rawdDxt_3f212f81cd" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.beams_dictionary
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_136b61cd9a" | type: PERMISSION --
+-- object: "grant_rawdDxt_15379e790e" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.beams_dictionary
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_72136a2a9f" | type: PERMISSION --
+-- object: "grant_rawdDxt_720c8fc738" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.data_passes
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_46523bc1de" | type: PERMISSION --
+-- object: "grant_rawdDxt_7a50f62aaf" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.data_passes
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_3a123c9652" | type: PERMISSION --
+-- object: "grant_rawdDxt_2d2128ad22" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.data_passes_runs
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_8cfe5d9aa2" | type: PERMISSION --
+-- object: "grant_rawdDxt_9c6f41d1f3" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.data_passes_runs
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_7e134d152c" | type: PERMISSION --
+-- object: "grant_rawdDxt_2d36ba7897" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.detectors_subsystems
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_308efae596" | type: PERMISSION --
+-- object: "grant_rawdDxt_e5591295ad" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.detectors_subsystems
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_d9fa224fc7" | type: PERMISSION --
+-- object: "grant_rawdDxt_83541d8bbc" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.flags_types_dictionary
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_07992b3208" | type: PERMISSION --
+-- object: "grant_rawdDxt_64d10fc454" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.flags_types_dictionary
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_1254c642dd" | type: PERMISSION --
+-- object: "grant_rawdDxt_4169274856" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.pass_types
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_bd6fe74e59" | type: PERMISSION --
+-- object: "grant_rawdDxt_a7eb0766e8" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.pass_types
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_042cc64133" | type: PERMISSION --
+-- object: "grant_rawdDxt_7e978c2efc" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.periods
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_939d06a679" | type: PERMISSION --
+-- object: "grant_rawdDxt_df337b7e08" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.periods
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_590b49597e" | type: PERMISSION --
+-- object: "grant_rawdDxt_534a4ca6a9" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.quality_control_flags
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_d06b77b7dd" | type: PERMISSION --
+-- object: "grant_rawdDxt_0f021317a9" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.quality_control_flags
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_a9c75f3a93" | type: PERMISSION --
+-- object: "grant_rawdDxt_829ba4c213" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.runs
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_162e0ae8b5" | type: PERMISSION --
+-- object: "grant_rawdDxt_5d4024ae7a" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.runs
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_8d008e0763" | type: PERMISSION --
+-- object: "grant_rawdDxt_1b41ed437f" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.runs_detectors
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_ef50381726" | type: PERMISSION --
+-- object: "grant_rawdDxt_aeb5111d76" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.runs_detectors
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_6e5a48c2e5" | type: PERMISSION --
+-- object: "grant_rawdDxt_1ee1aadf31" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.anchored_passes
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_dee7eae01e" | type: PERMISSION --
+-- object: "grant_rawdDxt_7fce551008" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.anchored_passes
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_ab655b22a5" | type: PERMISSION --
+-- object: "grant_rawdDxt_d1278511d2" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.simulation_passes
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_c6e39fdf73" | type: PERMISSION --
+-- object: "grant_rawdDxt_a99ac0ba05" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.simulation_passes
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_9cedd5beaa" | type: PERMISSION --
+-- object: "grant_rawdDxt_0f4f9a7705" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.simulation_passes_runs
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_d3d2f3791a" | type: PERMISSION --
+-- object: "grant_rawdDxt_ece5f3f730" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.simulation_passes_runs
    TO "rct-user";
