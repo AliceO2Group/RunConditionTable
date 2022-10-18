@@ -115,7 +115,6 @@ class RunConditionTableApplication {
         const { httpServer } = this;
 
         httpServer.addStaticPath(path.join(__dirname, 'public'));
-        httpServer.addStaticPath(path.join(__dirname, 'public'), '/login');
         httpServer.addStaticPath(path.join(__dirname, '..', 'node_modules', 'less/dist'), '/scripts');
     }
 
