@@ -23,11 +23,11 @@ usage() {
 
     cat << USAGE >&2
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-This script is intedented to provide functionalities handy during 
+This script is intended to provide handy functionalities during 
     development, testing and production for building, deployment and managing acquired data.
 The script can be run from any location.
-The script performs defined tasks sequentailly.
-Some task might or has to be provided with some dedicated flags.
+The script performs defined tasks sequentially.
+Some tasks might or have to be run with dedicated flags.
 Tasks are called stages.
 
 Usage:  
@@ -49,7 +49,7 @@ Usage:
             
             5. dump:remove - remove dump from cache specified by flag -F|--dumo-file <FILE>
 
-            6. dump:resotre - restore data from dump (see stage dump (3.)). Use flag -F|--dump-file <FILE>
+            6. dump:restore - restore data from dump (see stage dump (3.)). Use flag -F|--dump-file <FILE>
                 e.g.: ./$SCRIPT_NAME restore -F dump_1
 
             7. build|build[BUILD_STATGES] - build application (deploys contatiners). By defualt 
@@ -64,7 +64,7 @@ Usage:
 
             10. stop - stop contatiners
 
-        For stages build, follow, stop, prune additional flag can be specified; -S|--service <SERVICE>,
+        For build, follow, stop, prune stages an additional flag can be specified; -S|--service <SERVICE>,
         which specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
 
         Default behaviour of $SCRIPT_NAME (./$SCRIPT_NAME) is build prod it is equivalent to
@@ -81,8 +81,8 @@ exit 1;
 PREVIOD_USER_LOC=$(pwd);
 DOCKER_DIR="$PROJECT_DIR/docker";
 cd $DOCKER_DIR;
-
-COMM_PD="docker-compose --project-directory $PROJECT_DIR ";
+MAIN_DOCKER_COMPOSE_YML="$DOCKER_DIR/docker-compose.yml"
+DOCKER_COMP_CMD="docker compose -f $MAIN_DOCKER_COMPOSE_YML --project-directory $PROJECT_DIR ";
 
 # defualt behaviour => dettached production built
 if [[  $# -eq 0 ]]; then
@@ -137,7 +137,7 @@ export MOCK_DB;
 
 follow() {
     cd $DOCKER_DIR
-    $COMM_PD logs --follow $OTHER_OPTS $SERVICES
+    $DOCKER_COMP_CMD logs --follow $OTHER_OPTS $SERVICES
     cd -
 }
 
@@ -148,8 +148,8 @@ build() {
     ORDER=$1;
     case $TARGET in 
         dev)
-            $COMM_PD \
-                -f docker-compose.yml \
+            # TODO add daemons for database files (like nodemon)
+            $DOCKER_COMP_CMD \
                 -f docker-compose-dev.yml \
                 -f docker-compose-expose.yml \
                 $ORDER $OTHER_OPTS $SERVICES;
@@ -159,8 +159,7 @@ build() {
         ;;
 
         prod)
-            $COMM_PD \
-                -f docker-compose.yml \
+            $DOCKER_COMP_CMD \
                 -f docker-compose-prod.yml \
                 -f docker-compose-expose.yml \
                 $ORDER $OTHER_OPTS $SERVICES;
@@ -168,8 +167,7 @@ build() {
 
         test)
             mkdir -p $PROJECT_DIR/reports;
-            $COMM_PD \
-                -f docker-compose.yml \
+            $DOCKER_COMP_CMD \
                 -f docker-compose-test.yml \
                 up --build --abort-on-container-exit $OTHER_OPTS;
         ;;
@@ -188,7 +186,7 @@ for stage in $STAGES; do
     echo " *** do $stage";
     case $stage in
         prune)
-            $COMM_PD rm --stop --force -v $SERVICES;
+            $DOCKER_COMP_CMD rm --stop --force -v $SERVICES;
         ;;
 
         db)
@@ -199,7 +197,6 @@ for stage in $STAGES; do
             DUMP_CMD=$(echo ${stage#dump:});
             DUMPS_DIR="$PROJECT_DIR/database/cache/dumps"
             mkdir -p "$DUMPS_DIR";
-            ip=$(docker inspect $DB_CONTATINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}');
             RCT_DATABASE='rct-db';
             RCT_USER='postgres';
             DUMP_PATH="$DUMPS_DIR/$DUMP_FILE";
@@ -216,13 +213,14 @@ for stage in $STAGES; do
                             echo "continuing"
                         else 
                             DO_NOT_PERFORME_WHILE_FILE_EXISTS=true;
-                            echo 'makig dump stopped';
+                            echo 'making dump stopped';
                         fi
                     fi
 
                     if [ -z $DO_NOT_PERFORME_WHILE_FILE_EXISTS ]; then
                         docker exec $DB_CONTATINER_NAME \
-                            mkdir -p $(dirname $CONTATINER_DUMP_PATH); \
+                            mkdir -p $(dirname $CONTATINER_DUMP_PATH);
+                        docker exec $DB_CONTATINER_NAME \
                             pg_dump --data-only --format=tar -d $RCT_DATABASE -U $RCT_USER \
                                 --file="$CONTATINER_DUMP_PATH";
                     fi
@@ -242,6 +240,11 @@ for stage in $STAGES; do
                     docker exec $DB_CONTATINER_NAME \
                         pg_restore --data-only -U $RCT_USER \
                             -d $RCT_DATABASE $CONTATINER_DUMP_PATH;
+                ;;
+
+                truncate)
+                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTATINER_NAME:/postgres/run/"
+                    docker exec $DB_CONTATINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "delete-data.sql";
                 ;;
 
                 remove)
@@ -288,7 +291,7 @@ for stage in $STAGES; do
         ;;
 
         stop)
-            $COMM_PD stop $OTHER_OPTS;
+            $DOCKER_COMP_CMD stop $OTHER_OPTS;
         ;;
 
         *)
@@ -298,7 +301,7 @@ for stage in $STAGES; do
 done
 
 if [ "$PRUNE_AT_THE_END" = 'true' ]; then
-    $COMM_PD rm --stop --force -v;
+    $DOCKER_COMP_CMD rm --stop --force -v;
 fi
 
 cd $PREVIOD_USER_LOC;

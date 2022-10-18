@@ -72,6 +72,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
             d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
         const pgCommand = `${period_insert}; call insert_prod(
             ${d.name}, 
+            ${d.period.name},
             ${d.description}, 
             ${null},
             ${null},

@@ -18,20 +18,20 @@ const period_view = `
 const runs_per_period_view = (query) => `
     WITH runs_per_period_view AS (
         SELECT
-            --r.id
             --p.name, 
             r.run_number, 
-            r.start, 
-            r.end AS "end", 
-            r.b_field, 
+            r.time_start, 
+            r.time_end, 
+            r.time_trg_start, 
+            r.time_trg_end,
             r.energy_per_beam, 
             r.ir, 
             r.filling_scheme, 
             r.triggers_conf,
             r.fill_number,
             r.mu, 
-            r.time_trg_start, 
-            r.time_trg_end
+            r.l3_current,
+            r.dipole_current
         FROM runs AS r
             INNER JOIN periods AS p
             ON p.id = r.period_id
@@ -46,25 +46,25 @@ const runs_per_period_view = (query) => `
 const runs_per_data_pass_view = (query) => `
         WITH runs_per_data_pass_view AS (
             SELECT
-                -- r.id
-                -- dp.name, 
+                --p.name, 
                 r.run_number, 
-                r.start, 
-                r.end AS "end", 
-                r.b_field, 
+                r.time_start, 
+                r.time_end, 
+                r.time_trg_start, 
+                r.time_trg_end,
                 r.energy_per_beam, 
                 r.ir, 
                 r.filling_scheme, 
                 r.triggers_conf,
-                r.fill_number, 
+                r.fill_number,
                 r.mu, 
-                r.time_trg_start, 
-                r.time_trg_end
+                r.l3_current,
+                r.dipole_current
             FROM data_passes AS dp
                 INNER JOIN data_passes_runs AS dpr
                     ON dp.id=dpr.data_pass_id
                 INNER JOIN runs AS r
-                    ON r.id=dpr.run_id
+                    ON r.run_number=dpr.run_number
             WHERE dp.name = '${query.index}'
             ORDER BY r.run_number DESC
             )`;
@@ -84,7 +84,7 @@ const data_passes_view = (query) => `
         FROM data_passes AS dp
         LEFT JOIN pass_types AS pt
             ON pt.id = dp.pass_type
-        WHERE dp.name LIKE '${query.index}%'
+        WHERE dp.period_id = (SELECT id from periods WHERE name ='${query.index}')
         )`;
 
 const mc_view = (query) => `
@@ -98,7 +98,16 @@ const mc_view = (query) => `
             sp.pwg,
             sp.number_of_events
         FROM simulation_passes AS sp 
-        WHERE sp.name LIKE '${query.index}%'
+        WHERE EXISTS (
+                SELECT * 
+                FROM anchored_periods as ap 
+                INNER JOIN periods as p 
+                    ON p.id = ap.period_id
+                INNER JOIN simulation_passes as sp1
+                    ON sp1.id = ap.sim_pass_id
+                WHERE p.name = '${query.index}' AND
+                    sp1.id = sp.id
+                )
         )`;
 
 const anchored_per_mc_view = (query) => `
@@ -116,10 +125,10 @@ const anchored_per_mc_view = (query) => `
         FROM data_passes AS dp
         LEFT JOIN pass_types AS pt
             ON pt.id = dp.pass_type
-        INNER JOIN sim_and_data_passes as sadp
-            ON sadp.data_pass_id = dp.id
+        INNER JOIN anchored_passes as aps
+            ON aps.data_pass_id = dp.id
         INNER JOIN simulation_passes as sp
-            ON sp.id = sadp.sim_pass_id
+            ON sp.id = aps.sim_pass_id
         WHERE sp.name = '${query.index}'
     )`;
 
@@ -134,10 +143,10 @@ const anchorage_per_data_pass_view = (query) => `
             sp.pwg,
             sp.number_of_events
         FROM simulation_passes AS sp
-        INNER JOIN sim_and_data_passes as sadp
-            ON sp.id = sadp.sim_pass_id
+        INNER JOIN anchored_passes as aps
+            ON sp.id = aps.sim_pass_id
         INNER JOIN data_passes as dp
-            ON dp.id = sadp.data_pass_id
+            ON dp.id = aps.data_pass_id
         WHERE dp.name = '${query.index}'
     )`;
 

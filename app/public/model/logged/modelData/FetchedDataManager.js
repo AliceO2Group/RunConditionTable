@@ -104,8 +104,11 @@ export default class FetchedDataManager {
             });
         } else {
             this[page][index] = previous;
-            alert(`${status} ${url} going back to previous location`);
-            this.router.go(previous.payload.url);
+            alert(`${status} ${result?.message}`);
+            if (result?.message.includes('SESSION_ERROR')) {
+                this.model.handleSessionError();
+            }
+            this.router.go(previous?.payload?.url ? previous.payload.url : '/');
         }
         this.model.notify();
     }

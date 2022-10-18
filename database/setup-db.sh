@@ -111,6 +111,8 @@ fi
 
 if [ ! $(whoami) = 'postgres' ]; then
   echo "script must be run as postgres or using: 'sudo -H -u postgres bash -c \"$MAIN_SCRIPT_NAME [ARGS]\"'" >&2;
+  echo "trying to execute script using sudo..., press any key to continue or crt+C to terminate"
+  read
   sudo -H -u postgres LOCAL_USER=$(whoami) \
     bash -c "$0 $ORG_ARGS --rerun"
   exit 0;

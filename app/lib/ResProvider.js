@@ -104,7 +104,7 @@ class ResProvider {
                 return null;
             }
             const socks = cern_socks_env_var.trim();
-            if (socks.match(/socks:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+/)) {
+            if (/socks:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+/.test(socks)) {
                 return socks;
             } else {
                 logger.error(`incorrect format of socks address: ${socks}`);
