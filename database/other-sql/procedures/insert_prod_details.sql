@@ -7,14 +7,12 @@ create or replace procedure insert_prod_details(
 LANGUAGE plpgsql
 AS $$
 DEClARE prod_id int;
-DECLARE run_id int;
 BEGIN
     call insert_run(_run_number, _period, null, null, null, null, null, null, null, null, ARRAY[]::varchar[]);
-    SELECT id from runs INTO run_id WHERE run_number = _run_number;
     SELECT id FROM data_passes INTO prod_id WHERE name = _prod_name;
-    if run_id IS NULL OR prod_id IS NULL THEN
+    if NOT EXISTS (SELECT * FROM runs WHERE run_number = _run_number) OR prod_id IS NULL THEN
         RAISE EXCEPTION 'nulls %', now();
     END IF;
-    INSERT INTO data_passes_runs(id, run_id, data_pass_id) VALUES(DEFAULT, run_id, prod_id);
+    INSERT INTO data_passes_runs(id, run_number, data_pass_id) VALUES(DEFAULT, _run_number, prod_id);
 END;
 $$

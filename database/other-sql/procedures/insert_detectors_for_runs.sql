@@ -1,7 +1,7 @@
 
 
 create or replace procedure insert_detectors_for_runs(
-    _run_id int,
+    _run_number bigint,
     _detectors varchar[]
 )
 LANGUAGE plpgsql
@@ -17,10 +17,10 @@ BEGIN
             SELECT id INTO trg_id FROM detectors_subsystems WHERE name = d;
         END IF;
 
-        SELECT id INTO trg_id FROM runs_detectors WHERE detector_id = trg_id AND run_id = _run_id;
+        SELECT id INTO trg_id FROM runs_detectors WHERE detector_id = trg_id AND run_number = _run_number;
         IF trg_id IS NULL THEN
             SELECT id INTO trg_id FROM detectors_subsystems WHERE name = d;
-            INSERT INTO runs_detectors(id, detector_id, run_id) VALUES(DEFAULT, trg_id, _run_id);
+            INSERT INTO runs_detectors(id, detector_id, run_number) VALUES(DEFAULT, trg_id, _run_number);
         END IF;
     end loop;
 END;
