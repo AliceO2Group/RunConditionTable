@@ -51,7 +51,7 @@
     "tmp": "nodemon ./tmp/tmp.js"
   },
   "dependencies": {
-    "@aliceo2/web-ui": "^1.24.0",
+    "@aliceo2/web-ui": "1.24.1",
     "esm": "^3.2.25",
     "less": "^4.1.3",
     "pg": "^8.7.3"
