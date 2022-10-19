@@ -25,6 +25,7 @@ const Utils = require('./lib/Utils.js');
 const { Console } = require('node:console');
 const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
 const MonalisaServiceMC = require('./lib/alimonitor-services/MonalisaServiceMC.js');
+const QueryBuilder = require('./lib/database/QueryBuilder.js');
 
 const EP = config.public.endpoints;
 Log.configure(config);
@@ -84,6 +85,9 @@ class RunConditionTableApplication {
                     await this.connectServices();
                 },
                 app: (args) => this.applicationCli(args),
+                tmp: async () => {
+                    console.log(await QueryBuilder.prepareRunsDetectorsOneHotQuery(this.databaseService.adminClient))                    ;
+                }
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
         } catch (error) {

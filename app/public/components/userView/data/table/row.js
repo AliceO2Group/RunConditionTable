@@ -25,6 +25,8 @@ export default function row(
         if (item[n]) {
             if (cellsSpecials[n]) {
                 return h('td', cellsSpecials[n](model, item));
+            } else if (/.*_detector/.test(f.name)) {
+                return h('td', h('div.bg-success.br-100', '.'));
             } else {
                 return h('td', item[n]);
             }

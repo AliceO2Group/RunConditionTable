@@ -90,9 +90,6 @@ class DatabaseService {
         }
     }
 
-    buildQuery(params) {
-        return QueryBuilder.build(params);
-    }
     async exec(req, res, dbResponseHandler, query = null) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token];
         if (!userData) {
@@ -106,7 +103,8 @@ class DatabaseService {
 
         if (client) {
             if (query === null) {
-                query = this.buildQuery({ ...req.query, ...req.params });
+                console.log(await QueryBuilder.build({ ...req.query, ...req.params }, this.adminClient))
+                query = await QueryBuilder.build({ ...req.query, ...req.params }, this.adminClient);
             }
 
             client.query(query)
