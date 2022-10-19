@@ -129,6 +129,17 @@ class Utils {
             obj[k] = v;
         });
     }
+
+    static nullIfThrows(func, args, errorHandler) {
+        try {
+            return func(...args);
+        } catch (e) {
+            if (errorHandler) {
+                errorHandler(e, args);
+            }
+            return null;
+        }
+    }
 }
 
 module.exports = Utils;

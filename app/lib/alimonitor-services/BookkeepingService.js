@@ -75,23 +75,28 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     }
 
     dataAdjuster(run) {
-        run = Utils.filterObject(run, this.ketpFields);
-        if (run.detectors) {
-            if (typeof run.detectors === 'string') {
-                if (run.detectors.includes(',')) { // TODO may other delimiters
-                    run.detectors = run.detectors.split(/,/).map((d) => d.trim());
-                } else {
-                    run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
+        try {
+            run = Utils.filterObject(run, this.ketpFields);
+            if (run.detectors) {
+                if (typeof run.detectors === 'string') {
+                    if (run.detectors.includes(',')) { // TODO may other delimiters
+                        run.detectors = run.detectors.split(/,/).map((d) => d.trim());
+                    } else {
+                        run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
+                    }
                 }
+            } else {
+                run.detectors = [];
             }
-        } else {
-            run.detectors = [];
-        }
-        this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3_current');
-        this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipole_current');
+            this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3_current');
+            this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipole_current');
 
-        run.fill_number = Number(run.fill_number);
-        return run;
+            run.fill_number = Number(run.fill_number);
+            return run;
+        } catch (e) {
+            this.logger.error(e);
+            return null;
+        }
     }
 
     coilsCurrentsFieldsParsing(run, valFN, polFN, tFN) {
@@ -101,7 +106,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             } else if (run[polFN] == 'POSITIVE') {
                 run[tFN] = run[valFN];
             } else {
-                throw 'incorrect polarity type';
+                throw `incorrect polarity type: '${run[polFN]}' for run: ${run.run_number}`;
             }
         } else {
             run[tFN] = null;

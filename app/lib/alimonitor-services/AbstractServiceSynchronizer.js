@@ -94,7 +94,7 @@ class ServicesSynchronizer {
      * and inserting to local database
      * @param {URL} endpoint endpoint to fetch data
      * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
-     * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database (also adjusting data to sql foramt)
+     * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database (also adjusting data to sql foramt) - should returns null if error occured
      * @param {CallableFunction} filterer filter rows
      * @param {CallableFunction} dbAction logic for inserting data to database
      * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
@@ -121,7 +121,7 @@ class ServicesSynchronizer {
             }
             const rows = responsePreprocess(result)
                 .map((r) => dataAdjuster(r))
-                .filter((r) => filterer(r));
+                .filter((r) => r && filterer(r));
 
             let correct = 0;
             let incorrect = 0;
