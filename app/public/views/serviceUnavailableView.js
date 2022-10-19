@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 import { h } from '/js/src/index.js';
-import container from './common/container.js';
+import container from '../components/common/container.js';
 
 export default function serviceUnavailablePanel(model) {
     const retryBtn = h('button.btn.br-primary.m4.p4', { onclick: () => model.retry() }, 'Retry');

@@ -12,11 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
-import userPanel from './components/rct/userPanel.js';
-import loggingPanel from './components/loggingPanel.js';
-import serviceUnavailablePanel from './components/serviceUnavailablePanel.js';
-import sessionErrorPanel from './components/sessionErrorPanel.js';
-import waitingPanel from './components/waitingPanel.js';
+import userPanel from './views/userView.js';
+import loggingPanel from './views/loggingView.js';
+import serviceUnavailablePanel from './views/serviceUnavailableView.js';
+import sessionErrorPanel from './views/sessionErrorView.js';
+import waitingPanel from './views/waitingView.js';
 import { switchCase } from '/js/src/index.js';
 
 export default function view(model) {
@@ -24,7 +24,6 @@ export default function view(model) {
         serviceUnavailable: () => serviceUnavailablePanel(model.submodels[model.mode]),
         sessionError: () => sessionErrorPanel(model),
         primary: () => userPanel(model.submodels[model.mode]),
-        admin: () => loggingPanel(model), // TODO consider
-        inspector: () => loggingPanel(model),
+        admin: () => loggingPanel(model),
     }, () => waitingPanel())/*Switch returns function*/();
 }

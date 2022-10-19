@@ -13,9 +13,9 @@
  */
 
 import { Observable, Loader } from '/js/src/index.js';
-import FetchedDataManager from './modelData/FetchedDataManager.js';
-import { RCT } from '../../config.js';
-import { defaultIndex } from '../../../../utils/defaults.js';
+import FetchedDataManager from './data/FetchedDataManager.js';
+import { RCT } from '../config.js';
+import { defaultIndex } from '../utils/defaults.js';
 const { dataReqParams } = RCT;
 
 export default class PrimaryModel extends Observable {

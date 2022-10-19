@@ -88,9 +88,8 @@ class QueryBuilder {
         const cases = {};
         cases[pagesNames.periods] = 
         `${views.period_view}
-        SELECT name, year, beam, string_agg(energy::varchar, ',') as energy
+        SELECT name, year, beam, energy
         FROM period_view
-        GROUP BY name, year, beam 
         `;
         cases[pagesNames.runsPerPeriod] = 
         `${views.runs_per_period_view(params)}

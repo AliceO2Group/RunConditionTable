@@ -13,9 +13,9 @@
  */
 
 import { h } from '/js/src/index.js';
-import inputForm from './common/inputForm.js';
-import viewButton from './common/viewButton.js';
-import container from './common/container.js';
+import inputForm from '../components/common/inputForm.js';
+import viewButton from '../components/common/viewButton.js';
+import container from '../components/common/container.js';
 
 function handleRegistration() {
     alert('Registration has not been implemented yet :(');

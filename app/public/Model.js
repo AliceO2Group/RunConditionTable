@@ -13,8 +13,8 @@
  */
 
 import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
-import PrimaryModel from './logged/PrimaryModel.js';
-import ServiceUnavailableModel from './ServiceUnavailableModel.js';
+import PrimaryModel from './model/PrimaryModel.js';
+import ServiceUnavailableModel from './model/ServiceUnavailableModel.js';
 
 export default class Model extends Observable {
     constructor() {
