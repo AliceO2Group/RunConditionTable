@@ -12,7 +12,7 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-
+import { h } from '/js/src/index.js';
 import viewButton from '../../common/viewButton.js';
 import { RCT } from '../../../config.js';
 const { dataReqParams } = RCT;
@@ -129,14 +129,7 @@ const dateFormatter = (sec) => {
 };
 
 pagesCellsSpecials[pagesNames.runsPerPeriod] = {
-    run_number: (model, item) => viewButton(
-        model,
-        item.run_number,
-        () => alert('TODO'),
-        // (e) => model.handleClick(e),
-        // '',
-        // `/?page=${pagesNames.flags}&index=${item.run_number}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
-    ),
+    run_number: (model, item) => h('.thick', item.run_number),
     time_start: (mode, item) => dateFormatter(item.time_start),
     time_end: (mode, item) => dateFormatter(item.time_end),
     time_trg_start: (mode, item) => dateFormatter(item.time_trg_start),

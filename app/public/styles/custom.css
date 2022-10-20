@@ -18,6 +18,13 @@
     cursor: pointer;
 }
 
+.thick {
+    font-weight: bold;
+}
+
+.table tbody tr:nth-child(odd).row-selected-color-alpha {background-color: rgba(145, 207, 84, 0.286) ;}
+.table tbody tr:nth-child(even).row-selected-color-alpha {background-color: rgba(104, 162, 46, 0.286) ;}
+
 .currentMenuItem {
     text-decoration: underline;
 }

@@ -40,15 +40,13 @@ const sortingChangeAction = (fName, data, model) => {
     model.fetchedData.changeSorting(data.sorting);
 };
 
-
-
 const columnsHeadersArray = (visibleFields, data, model) =>
     visibleFields.map((f) => h('th', { scope: 'col' },
         h('.headerFieldName', [
             getHeaderSpecial(model, f),
             h('.p2',
-                { onclick: () => headerSpecPresent(model, f) ? sortingChangeAction(f.name, data, model) : null},
-                orderToSymbol(f.name, data.sorting)),
+                { onclick: () => headerSpecPresent(model, f) ? sortingChangeAction(f.name, data, model) : null },
+                headerSpecPresent(model, f) ? orderToSymbol(f.name, data.sorting) : '.'),
         ])));
 
 const rowsOptions = (model, data) =>

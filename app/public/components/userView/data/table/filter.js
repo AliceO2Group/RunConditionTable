@@ -96,12 +96,12 @@ const createInputField = (inputId, currentValue) => {
                 id: inputId,
             }),
             h('span.tooltiptext', `${type}`)));
-    }
+};
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
         .map((inputId) => [
             inputId,
-            [...document.getElementById(inputId)?.value || ''].map((c) => c == '%' ? '%25' : c).join(''),
+            encodeURI(document.getElementById(inputId)?.value || ''),
         ])
         .filter(([_, v]) => v?.length > 0)
         .map(([id, v]) => `${id}=${v}`)
@@ -136,7 +136,6 @@ const filedName2MatchFromType = (fieldName, pageFilteringTypes, filteringTypes) 
         return `${fieldName}-from`;
     } else {
         return 'undefined';
-        // throw 'probably incorrect configuration of filtering types';
     }
 };
 
@@ -147,6 +146,5 @@ const filedName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes
         return `${fieldName}-to`;
     } else {
         return 'undefined';
-        // throw 'probably incorrect configuration of filtering types';
     }
 };

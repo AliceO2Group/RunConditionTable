@@ -28,13 +28,8 @@ class QueryBuilder {
         const prepare_func_name = 'prepare_runs_one_hot_query';
         let command = `select ${prepare_func_name}();`;
         try {
-            // console.log(command)
             command = (await client.query(command)).rows[0][prepare_func_name];
-            // console.log(command);
             return command;
-            // command = await client.query(command);
-            // console.log(command);
-            // return command;
         } catch (e) {
             console.log(e);
         }
@@ -46,8 +41,11 @@ class QueryBuilder {
         const fromParams = [];
         const toParams = [];
 
-        for (const [key, value] of Object.entries(params)) {
+        for (let [key, value] of Object.entries(params)) {
             const queryParam = key.substring(0, key.lastIndexOf('-'));
+            if (Array.isArray(value)) {
+                value = value[0];
+            }
             if (key.includes('match')) {
                 matchParams.push({ queryParam, value });
             }
@@ -119,6 +117,8 @@ class QueryBuilder {
         `${views.runs_per_data_pass_view(params)}
         SELECT *
         FROM runs_per_data_pass_view as main_view
+        INNER JOIN (${await QueryBuilder.prepareRunsDetectorsOneHotQuery(client)}) as onehot
+            on onehot.run_number = main_view.run_number
         `;
         cases[pagesNames.dataPasses] = 
         `${views.data_passes_view(params)}
