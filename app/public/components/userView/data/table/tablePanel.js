@@ -53,13 +53,13 @@ export default function tablePanel(model) {
     return h('div.p3', [
         filteringPanel,
         siteController(model, data),
-        h('div', h('div.x-scrollable', 
-        h('table.table', { id: `data-table-${data.url}` }, [
-            tableHeader(visibleFields, data, model),
-            tableBody(
-                model, visibleFields, data, cellsSpecials, dataPointer.page,
-            ),
-        ]))),
+        h('div', h('div.x-scrollable',
+            h('table.table', { id: `data-table-${data.url}` }, [
+                tableHeader(visibleFields, data, model),
+                tableBody(
+                    model, visibleFields, data, cellsSpecials, dataPointer.page,
+                ),
+            ]))),
     ]);
 }
 
