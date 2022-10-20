@@ -9,10 +9,11 @@ const period_view = `
                 FROM beams_dictionary
                 AS bd where bd.id = p.beam_type_id
             ) AS beam,
-            r.energy_per_beam::integer as energy
+            string_agg(r.energy_per_beam::varchar, ',') as energy
         FROM periods AS p
         LEFT JOIN runs as r
             ON r.period_id = p.id
+        GROUP BY p.name, p.year, beam
     )`;
 
 const runs_per_period_view = (query) => `

@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
-import { headersSpecials } from '../headersSpecials.js';
+import { getHeaderSpecial } from '../headersSpecials.js';
 
 const { dataReqParams } = RCT;
 
@@ -81,25 +81,27 @@ const createClickableLabel = (model, field) =>
             style: 'width:120px',
             onclick: () => model.fetchedData.changeItemStatus(field),
             className: field.marked ? 'active' : '',
-        }, headersSpecials[model.getCurrentDataPointer().page][field.name],
+        }, getHeaderSpecial(model, field),
         h('span.tooltiptext', field.marked ? 'hide' : 'display')));
 
-const createInputField = (inputId, currentValue) =>
-    h('th.my-tooltip.noBorderBottom.table-cell-like',
+const createInputField = (inputId, currentValue) => {
+    const type = inputId.substring(inputId.indexOf('-') + 1);
+    return h('th.my-tooltip.noBorderBottom.table-cell-like',
         h('div.rel',
             h('input.form-control', {
                 style: 'width:120px',
                 type: 'text',
                 value: currentValue ? currentValue : '',
+                disabled: type == null,
                 id: inputId,
             }),
-            h('span.tooltiptext', `${inputId.substring(inputId.indexOf('-') + 1)}`)));
-
+            h('span.tooltiptext', `${type}`)));
+};
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
         .map((inputId) => [
             inputId,
-            [...document.getElementById(inputId)?.value || ''].map((c) => c == '%' ? '%25' : c).join(''),
+            encodeURI(document.getElementById(inputId)?.value || ''),
         ])
         .filter(([_, v]) => v?.length > 0)
         .map(([id, v]) => `${id}=${v}`)
@@ -133,7 +135,7 @@ const filedName2MatchFromType = (fieldName, pageFilteringTypes, filteringTypes) 
     } else if (pageFilteringTypes[fieldName] === filteringTypes.fromToType) {
         return `${fieldName}-from`;
     } else {
-        throw 'probably incorrect configuration of filtering types';
+        return 'undefined';
     }
 };
 
@@ -143,6 +145,6 @@ const filedName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes
     } else if (pagesFilteringParams[fieldName] === filteringTypes.fromToType) {
         return `${fieldName}-to`;
     } else {
-        throw 'probably incorrect configuration of filtering types';
+        return 'undefined';
     }
 };

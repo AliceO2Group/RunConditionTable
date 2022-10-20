@@ -30,13 +30,13 @@ services:
       - RUNNING_ENV=DOCKER
     volumes:
       - type: bind
-        read_only: true
+        read_only: false
         source: ./database
         target: /docker-entrypoint-initdb.d
       - type: bind
         read_only: false
-        source: ./database/cache
-        target: /postgres/run/database/cache
+        source: ./database/
+        target: /postgres/run/database/
     networks:
       - o2-rct_network
 networks:

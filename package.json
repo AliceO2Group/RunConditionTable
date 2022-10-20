@@ -24,28 +24,34 @@
     "test:mocha": "mocha",
     "reports:show": "open ./reports/**/*.html",
     "reports:clean": "rm -rf ./reports; rm -rf .nyc_output",
+
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:dev:local": "bash -c 'set -o allexport && ls && source ./docker/env_file-dev && set +o allexport && npm run start:dev'",
     "start:prod": "node app/main.js",
     "prod": "./rctmake",
-    "dev": "./rctmake build[up],dump:clean,attach --target dev ",
+
+    "dev": "./rctmake build[up],db:clean,attach,stop --target dev ",
     "dev:up": "./rctmake build[up] --target dev --attach",
     "dev:up-re": "./rctmake build[up],dump:restore,attach --target dev -F ",
-    "dev:prune": "./rctmake prune,db,build,stop --target dev --attach",
+    "dev:prune": "./rctmake prune,db:export,build,stop --target dev --attach",
     "docker:test": "./rctmake prune,build,prune --target test",
     "prune": "./rctmake prune",
+
     "app:attach": "docker attach rct_application",
     "db:check": "./rctmake prune,db,build,follow -t dev -S o2-rct_database ",
     "db:attach": "docker exec -it o2-rct_database psql -U postgres -d \"rct-db\"",
-    "db:clean": "./rctmake dump:clean",
+    "db:pattach": "docker exec -it o2-rct_database /bin/bash",
+    "db:clean": "./rctmake db:clean",
+
     "dump:make": "./rctmake dump:make -F ",
     "dump:list": "./rctmake dump:list",
     "dump:restore": "./rctmake dump:restore -F ",
     "dump:remove": "./rctmake dump:remove -F ",
+    
     "tmp": "nodemon ./tmp/tmp.js"
   },
   "dependencies": {
-    "@aliceo2/web-ui": "^1.24.0",
+    "@aliceo2/web-ui": "1.24.1",
     "esm": "^3.2.25",
     "less": "^4.1.3",
     "pg": "^8.7.3"

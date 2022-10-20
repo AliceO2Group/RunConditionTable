@@ -13,7 +13,11 @@
  */
 
 export const preparedData = (data) => {
-    const rows = data.payload.rows.filter((item) => item.marked);
+    let rows = data.payload.rows.filter((item) => item.marked);
+    if (rows?.length == 0) {
+        // eslint-disable-next-line prefer-destructuring
+        rows = data.payload.rows;
+    }
     const fields = data.payload.fields.filter((item) => item.marked).map((field) => field.name);
 
     let csv = rows.map((row) => fields.map((field) => JSON.stringify(row[field], replacer)).join(','));

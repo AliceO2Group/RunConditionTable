@@ -11,14 +11,18 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-import spinner from './common/spinner.js';
 import { h } from '/js/src/index.js';
+import container from '../components/common/container.js';
 
-export default function waitingPanel() {
-    const title = h('h1.primary', 'Run Condition Table');
+export default function serviceUnavailablePanel(model) {
+    const retryBtn = h('button.btn.br-primary.m4.p4', { onclick: () => model.login() }, 'Retry login');
+    const title = h('h1.primary.justify-center', 'Run Condition Table');
+    const subtitle = h('h3.danger.justify-center', 'Session Error');
 
     return h('div.loginDiv', h('div.loginDiv.bg-gray-lighter.br3.p4', [
         title,
-        spinner(),
+        subtitle,
+        h('.p1'),
+        container(retryBtn),
     ]));
 }

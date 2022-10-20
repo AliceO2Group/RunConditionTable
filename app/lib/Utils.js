@@ -15,6 +15,10 @@
 
 const keywords = ['DEFAULT', 'NULL'];
 class Utils {
+    static reversePrimitiveObject(obj) {
+        return Object.fromEntries(Object.entries(obj).map((e) => e.reverse()));
+    }
+
     static filterObject(obj, keptFields, suppressUndefined = false) {
         if (!keptFields) {
             return obj;
@@ -124,6 +128,21 @@ class Utils {
         Object.entries(options).forEach(([k, v]) => {
             obj[k] = v;
         });
+    }
+
+    static nullIfThrows(func, args, errorHandler) {
+        try {
+            return func(...args);
+        } catch (e) {
+            if (errorHandler) {
+                errorHandler(e, args);
+            }
+            return null;
+        }
+    }
+
+    static distinct(arr) {
+        return arr.filter((value, index, self) => self.indexOf(value) === index);
     }
 }
 

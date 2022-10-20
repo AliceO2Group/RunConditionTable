@@ -13,15 +13,15 @@
  */
 
 import { h } from '/js/src/index.js';
-import tableHeader from './table/header.js';
-import row from './table/row.js';
-import pagesCellsSpecials from './pagesCellsSpecials.js';
-import siteController from './siteController.js';
+import tableHeader from './header.js';
+import row from './row.js';
+import pagesCellsSpecials from '../pagesCellsSpecials.js';
+import siteController from '../siteController.js';
 
-import postingDataConfig from './posting/postingDataConfig.js';
-import { postForm } from './posting/postForm.js';
-import filter from './table/filter.js';
-import container from '../../common/container.js';
+import postingDataConfig from '../posting/postingDataConfig.js';
+import { postForm } from '../posting/postForm.js';
+import filter from './filter.js';
+import container from '../../../common/container.js';
 
 /**
  * Creates vnode containing table of fetched data (main content)
@@ -30,7 +30,7 @@ import container from '../../common/container.js';
  * @returns {*}
  */
 
-export default function tableView(model) {
+export default function tablePanel(model) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
 
@@ -53,13 +53,13 @@ export default function tableView(model) {
     return h('div.p3', [
         filteringPanel,
         siteController(model, data),
-
-        h('table.table', { id: `data-table-${data.url}` }, [
-            tableHeader(visibleFields, data, model),
-            tableBody(
-                model, visibleFields, data, cellsSpecials, dataPointer.page,
-            ),
-        ]),
+        h('div', h('div.x-scrollable',
+            h('table.table', { id: `data-table-${data.url}` }, [
+                tableHeader(visibleFields, data, model),
+                tableBody(
+                    model, visibleFields, data, cellsSpecials, dataPointer.page,
+                ),
+            ]))),
     ]);
 }
 

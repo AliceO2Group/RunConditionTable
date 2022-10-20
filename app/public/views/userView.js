@@ -13,9 +13,9 @@
  */
 
 import { h } from '/js/src/index.js';
-import header from '../common/header.js';
-import rctDataView from './rctData/rctDataView.js';
-import sidebar from './sidebar/sidebar.js';
+import header from '../components/common/header.js';
+import dataPanel from '../components/userView/data/dataPanel.js';
+import sidebar from '../components/userView/sidebar/sidebar.js';
 
 export default function userPanel(model) {
     return h('.flex-column.absolute-fill', [
@@ -29,7 +29,7 @@ export default function userPanel(model) {
                     h(
                         '.scroll-y.absolute-fill.bg-white',
                         { id: 'main-content' },
-                        [rctDataView(model)],
+                        [dataPanel(model)],
                     ),
                 ],
             ),

@@ -13,17 +13,17 @@
  */
 
 import { h } from '/js/src/index.js';
-import tableView from './tableView.js';
+import tablePanel from './table/tablePanel.js';
 import spinner from '../../common/spinner.js';
 import viewButton from '../../common/viewButton.js';
 
 /**
- * Create vnode tableView if data are fetched otherwise shows spinner
+ * Create vnode tablePanel if data are fetched otherwise shows spinner
  * @param model
  * @returns {*}
  */
 
-export default function rctDataView(model) {
+export default function dataPanel(model) {
     const { page, index } = model.getCurrentDataPointer();
     const data = model.fetchedData[page][index];
 
@@ -33,7 +33,7 @@ export default function rctDataView(model) {
         data ? data.match({
             NotAsked: () => h('', 'not asked'),
             Loading: () => spinnerAndReloadView(model),
-            Success: () => tableView(model),
+            Success: () => tablePanel(model),
             Failure: (status) => failureStatusAndReload(model, status),
         }) : h('', 'data null :: Arrr...'),
     ]);

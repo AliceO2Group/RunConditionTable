@@ -50,7 +50,7 @@ const mcViews = {
     number_of_events: 'Events number',
 };
 
-export const headersSpecials = {
+const headersSpecials = {
     periods: {
         name: 'Name',
         year: 'Year',
@@ -73,3 +73,17 @@ export const headersSpecials = {
         name: 'Name',
     },
 };
+
+export const getHeaderSpecial = (model, f) => {
+    if (/.*_detector/.test(f.name)) {
+        return f.name.split('_')[0]
+    }
+    const n = headersSpecials[model.getCurrentDataPointer().page][f.name];
+    if (n) {
+        return n;
+    } else {
+        return f.name;
+    }
+}
+
+export const headerSpecPresent = (model, f) => Boolean(headersSpecials[model.getCurrentDataPointer().page][f.name]);

@@ -13,8 +13,6 @@ FROM base as devdependencies
 
 
 FROM devdependencies as development
-    COPY ./.git ./.git
-    COPY ./.gitignore ./
 
     CMD [ "./scripts/check-host-and-exec.sh", "o2-rct_database", "5432", "10", "--", "npm", "run", "start:dev" ]
 

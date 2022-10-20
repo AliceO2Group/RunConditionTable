@@ -23,14 +23,29 @@ const Utils = require("../Utils.js");
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
 class QueryBuilder {
-    static build(params) {
+
+    static async prepareRunsDetectorsOneHotQuery(client) {
+        const prepare_func_name = 'prepare_runs_one_hot_query';
+        let command = `select ${prepare_func_name}();`;
+        try {
+            command = (await client.query(command)).rows[0][prepare_func_name];
+            return command;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    static async build(params, client) {
         const matchParams = [];
         const excludeParams = [];
         const fromParams = [];
         const toParams = [];
 
-        for (const [key, value] of Object.entries(params)) {
+        for (let [key, value] of Object.entries(params)) {
             const queryParam = key.substring(0, key.lastIndexOf('-'));
+            if (Array.isArray(value)) {
+                value = value[0];
+            }
             if (key.includes('match')) {
                 matchParams.push({ queryParam, value });
             }
@@ -50,16 +65,16 @@ class QueryBuilder {
 
         const filteringPart = () => {
             const matchPhrase = matchParams.map((filter) =>
-                `"${filter.queryParam}" LIKE '${filter.value}'`).join(' AND ');
+                `main_view."${filter.queryParam}" LIKE '${filter.value}'`).join(' AND ');
 
             const excludePhrase = excludeParams.map(({ queryParam, value }) =>
-                `"${queryParam}" NOT LIKE '${value}'`).join(' AND ');
+                `main_view."${queryParam}" NOT LIKE '${value}'`).join(' AND ');
 
             const fromPhrase = fromParams.map(({ queryParam, value }) =>
-                `"${queryParam}" >= ${value}`).join(' AND ');
+                `main_view."${queryParam}" >= ${value}`).join(' AND ');
 
             const toPhrase = toParams.map(({ queryParam, value }) =>
-                `"${queryParam}" <= ${value}`).join(' AND ');
+                `main_view."${queryParam}" <= ${value}`).join(' AND ');
 
             const filtersPhrase = [matchPhrase, excludePhrase, fromPhrase, toPhrase].filter((value) => value?.length > 0).join(' AND ');
 
@@ -76,10 +91,10 @@ class QueryBuilder {
             const { sorting } = params;
             if (sorting.startsWith('-')) {
                 const field = sorting.slice(1)
-                return `ORDER BY ${field} DESC`;
+                return `ORDER BY main_view.${field} DESC`;
             } else {
                 const field = sorting
-                return `ORDER BY ${field} ASC`;
+                return `ORDER BY main_view.${field} ASC`;
             }
 
 
@@ -88,44 +103,47 @@ class QueryBuilder {
         const cases = {};
         cases[pagesNames.periods] = 
         `${views.period_view}
-        SELECT name, year, beam, string_agg(energy::varchar, ',') as energy
-        FROM period_view
-        GROUP BY name, year, beam 
+        SELECT *
+        FROM period_view as main_view
         `;
         cases[pagesNames.runsPerPeriod] = 
         `${views.runs_per_period_view(params)}
-        SELECT *
-        FROM runs_per_period_view 
+        SELECT * 
+        FROM runs_per_period_view as main_view
+        INNER JOIN (${await QueryBuilder.prepareRunsDetectorsOneHotQuery(client)}) as onehot
+            on onehot.run_number = main_view.run_number
         `;
         cases[pagesNames.runsPerDataPass] =
         `${views.runs_per_data_pass_view(params)}
         SELECT *
-        FROM runs_per_data_pass_view 
+        FROM runs_per_data_pass_view as main_view
+        INNER JOIN (${await QueryBuilder.prepareRunsDetectorsOneHotQuery(client)}) as onehot
+            on onehot.run_number = main_view.run_number
         `;
         cases[pagesNames.dataPasses] = 
         `${views.data_passes_view(params)}
         SELECT * 
-        FROM data_passes_view
+        FROM data_passes_view as main_view
         `;
         cases[pagesNames.anchoragePerDatapass] = 
         `${views.anchorage_per_data_pass_view(params)}
         SELECT *
-        FROM anchorage_per_data_pass_view
+        FROM anchorage_per_data_pass_view as main_view
         `;
         cases[pagesNames.mc] = 
         `${views.mc_view(params)}
-        SELECT * 
-        FROM mc_view 
+        SELECT *  
+        FROM mc_view  as main_view
         `;
         cases[pagesNames.anchoredPerMC] = 
         `${views.anchored_per_mc_view(params)}
         SELECT *
-        FROM anchored_per_mc_view
+        FROM anchored_per_mc_view as main_view
         `;
         cases[pagesNames.flags] = 
         `${views.flags_view(params)}
         SELECT * 
-        FROM flags_view 
+        FROM flags_view as main_view
         `;
 
         const queryRest = () => 

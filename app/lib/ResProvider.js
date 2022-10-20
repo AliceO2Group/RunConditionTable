@@ -17,30 +17,42 @@ const fs = require('fs');
 const { Log } = require('@aliceo2/web-ui');
 const path = require('path');
 const LogsStacker = require('./LogsStacker.js');
+const Utils = require('./Utils.js');
 
 // eslint-disable-next-line prefer-const
 let logger;
 
 class ResProvider {
-    static envToObj(def, failurePredicate, failureFunc) {
-        if (!failurePredicate) {
-            failurePredicate = (envObj) => Object.entries(def).any(([k, _]) => !envObj[k]);
+    static viaEnvVars(objDefinition, failurePredicate, onFailureAction) {
+        const reversedObjDefintion = Utils.reversePrimitiveObject(objDefinition);
+        const res = {};
+        for (const [envVName, key] of Object.entries(objDefinition)) {
+            res[key] = process.env[envVName];
         }
-        if (!failureFunc) {
-            failureFunc = (envObj) => {
-                const notSet = Object.entries(def).filter(([k, _]) => !envObj[k]);
-                logger.error(`Not set env vars: ${JSON.stringify(notSet)}`);
-            };
+        if (!failurePredicate && !ResProvider.areDesiredValuesPresent(res, objDefinition)
+            || failurePredicate && failurePredicate(res, objDefinition)) {
+            const nulledFields = Object.entries(res).filter((e) => ! e[1]).map((e) => `${e[0]}{<-${reversedObjDefintion[e[0]]}}`);
+            const mess = `unset fields: ' + ${nulledFields.join(', ')}`;
+            logger.error(mess);
+            return (onFailureAction ?
+                (res, objDefinition) => onFailureAction(res, objDefinition) :
+                () => {
+                    throw mess;
+                })(res, objDefinition);
         }
-        const envObj = {};
-        Object.entries(def).forEach(([k, v]) => {
-            envObj[k] = process.env[v];
-        });
-        if (failurePredicate(envObj)) {
-            failureFunc(envObj);
-        }
+        return res;
     }
 
+    static areDesiredValuesPresent(obj, objDefinition) {
+        for (const key of Object.values(objDefinition)) {
+            if (!obj[key]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // TODO generalize this methods ::( single content provider method)
     static securityFilesProvider(fileNames, description, envVarName = '_') {
         const logsStacker = new LogsStacker(ResProvider.name);
         const file_path = process.env[envVarName];
@@ -98,49 +110,34 @@ class ResProvider {
                 logger.error(`incorrect format of socks address: ${socks}`);
             }
         }
-
-        return undefined;
     }
 
     static openid() {
-        const openid = {
-            secret: process.env.RCT_OPENID_SECRET,
-            id: process.env.RCT_OPENID_ID,
-            redirect_uri: process.env.RCT_OPENID_REDIRECT,
-            well_known: process.env.RCT_OPENID_WELL_KNOWN,
+        const openidEnvVarsDef = {
+            RCT_OPENID_SECRET: 'secret',
+            RCT_OPENID_ID: 'id',
+            RCT_OPENID_REDIRECT: 'redirect_uri',
+            RCT_OPENID_WELL_KNOWN: 'well_known',
         };
-        if (openid.secret && openid.id && openid.redirect_uri && openid.well_known) {
-            logger.info('openid defined by env vars');
-            return openid;
-        } else {
-            const notSet = Object.entries(openid).filter(([_, v]) => !v).map(([k, _]) => k);
-            logger.warn(`Openid no set no spec. of ${notSet.join(', ')}`);
-        }
-        return undefined;
+        return ResProvider.viaEnvVars(openidEnvVarsDef, null, () => null);
     }
 
     static database() {
-        const database = {
-            host: process.env.RCT_DB_HOST,
-            port: process.env.RCT_DB_PORT,
-            database: process.env.RCT_DB_NAME,
-            user: process.env.RCT_DB_USERNAME,
-            password: process.env.RCT_DB_PASSWORD,
+        const databaseEnvVarsDef = {
+            RCT_DB_HOST: 'host',
+            RCT_DB_NAME: 'database',
+            RCT_DB_USERNAME: 'user',
+            RCT_DB_PASSWORD: 'password',
+            RCT_DB_PORT: 'port',
         };
-
-        if (database.host && database.database && database.user && database.password && database.port) {
-            logger.info('using database defined via env var');
-            return database;
-        } else {
-            const nulledFields = Object.entries(database).filter((e) => ! e[1]).map((e) => e[0]);
-            const mess = `unset fields: ' + ${nulledFields.join(', ')}`;
-            logger.error(`database passes not set properly ${mess}`);
-        }
+        return ResProvider.viaEnvVars(databaseEnvVarsDef);
     }
 
     static passphraseProvider() {
         if (process.env.ALIMONITOR_PASSPHRASE) {
             logger.info('using passphrase');
+        } else {
+            logger.info('no passphrase');
         }
         return process.env.ALIMONITOR_PASSPHRASE;
     }
