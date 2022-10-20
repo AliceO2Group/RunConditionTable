@@ -16,7 +16,7 @@ const { Log } = require('@aliceo2/web-ui');
 const { Client } = require('pg');
 const QueryBuilder = require('./QueryBuilder.js');
 const config = require('./../config/configProvider.js');
-
+const Utils = require('../Utils.js')
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataRespondFields;
 
@@ -103,7 +103,6 @@ class DatabaseService {
 
         if (client) {
             if (query === null) {
-                console.log(await QueryBuilder.build({ ...req.query, ...req.params }, this.adminClient))
                 query = await QueryBuilder.build({ ...req.query, ...req.params }, this.adminClient);
             }
 
@@ -123,8 +122,7 @@ class DatabaseService {
 
     async execDataReq(req, res, query = null) {
         const dbResponseHandler = (req, res, dbRes) => {
-            const { fields } = dbRes;
-            let { rows } = dbRes;
+            let { fields, rows } = dbRes;
             const data = {};
 
             if (req.query[DRP.countRecords] === 'true') {
@@ -135,7 +133,7 @@ class DatabaseService {
             }
 
             data[DRF.rows] = rows;
-            data[DRF.fields] = fields;
+            data[DRF.fields] = Utils.distinct(fields.map(f => f.name)).map(n => { return { name: n } });
 
             res.json({ data: data });
         };
@@ -177,7 +175,6 @@ class DatabaseService {
         await this.adminClient.connect()
             .catch((e) => {
                 this.logger.error("error when trying to establish admin connection", e);
-                // process.emit('SIGINT');
             });
     }
 }

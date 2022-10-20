@@ -140,6 +140,10 @@ class Utils {
             return null;
         }
     }
+
+    static distinct(arr) {
+        return arr.filter((value, index, self) => self.indexOf(value) === index);
+    }
 }
 
 module.exports = Utils;
