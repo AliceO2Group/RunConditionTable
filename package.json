@@ -1,6 +1,7 @@
 {
   "name": "@aliceo2/run-condition-table",
   "version": "0.1.1",
+  "description": "Run Condition Table",
   "main": "main.js",
   "author": "ALICEO2",
   "keywords": [
@@ -10,7 +11,11 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AliceO2Group/RunConditionTable"
+    "url": "git+https://github.com/AliceO2Group/RunConditionTable.git"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
   },
   "scripts": {
     "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html",
@@ -24,57 +29,46 @@
     "test:mocha": "mocha",
     "reports:show": "open ./reports/**/*.html",
     "reports:clean": "rm -rf ./reports; rm -rf .nyc_output",
-
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:dev:local": "bash -c 'set -o allexport && ls && source ./docker/env_file-dev && set +o allexport && npm run start:dev'",
     "start:prod": "node app/main.js",
     "prod": "./rctmake",
-
     "dev": "./rctmake build[up],db:clean,attach,stop --target dev ",
     "dev:up": "./rctmake build[up] --target dev --attach",
     "dev:up-re": "./rctmake build[up],dump:restore,attach --target dev -F ",
     "dev:prune": "./rctmake prune,db:export,build,stop --target dev --attach",
     "docker:test": "./rctmake prune,build,prune --target test",
     "prune": "./rctmake prune",
-
     "app:attach": "docker attach rct_application",
     "db:check": "./rctmake prune,db,build,follow -t dev -S o2-rct_database ",
     "db:attach": "docker exec -it o2-rct_database psql -U postgres -d \"rct-db\"",
     "db:pattach": "docker exec -it o2-rct_database /bin/bash",
     "db:clean": "./rctmake db:clean",
-
     "dump:make": "./rctmake dump:make -F ",
     "dump:list": "./rctmake dump:list",
     "dump:restore": "./rctmake dump:restore -F ",
     "dump:remove": "./rctmake dump:remove -F ",
-    
     "tmp": "nodemon ./tmp/tmp.js"
   },
+  "bugs": {
+    "url": "https://github.com/AliceO2Group/RunConditionTable/issues"
+  },
+  "homepage": "https://github.com/AliceO2Group/RunConditionTable#readme",
   "dependencies": {
-    "@aliceo2/web-ui": "1.24.1",
+    "@aliceo2/web-ui": "^2.0.0",
     "esm": "^3.2.25",
     "less": "^4.1.3",
-    "pg": "^8.7.3"
+    "pg": "^8.8.0"
   },
-  "files": [
-    "app/",
-    "docs/"
-  ],
-  "bundledDependencies": [
-    "@aliceo2/web-ui",
-    "esm",
-    "less",
-    "pg"
-  ],
   "devDependencies": {
     "chai": "^4.3.6",
-    "eslint": "^8.10.0",
+    "eslint": "^8.26.0",
     "eslint-output": "^3.0.1",
-    "mocha": "^10.0.0",
-    "nodemon": "^2.0.15",
+    "mocha": "^10.1.0",
+    "nodemon": "^2.0.20",
     "nyc": "^15.1.0",
     "request": "^2.88.2",
-    "sinon": "^12.0.1",
-    "socks-proxy-agent": "^6.2.0"
+    "sinon": "^14.0.1",
+    "socks-proxy-agent": "^7.0.0"
   }
 }
