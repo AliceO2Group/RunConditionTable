@@ -76,7 +76,7 @@ const headersSpecials = {
 
 export const getHeaderSpecial = (model, f) => {
     if (/.*_detector/.test(f.name)) {
-        return f.name.split('_')[0]
+        return f.name.split('_')[0];
     }
     const n = headersSpecials[model.getCurrentDataPointer().page][f.name];
     if (n) {
@@ -84,6 +84,6 @@ export const getHeaderSpecial = (model, f) => {
     } else {
         return f.name;
     }
-}
+};
 
 export const headerSpecPresent = (model, f) => Boolean(headersSpecials[model.getCurrentDataPointer().page][f.name]);

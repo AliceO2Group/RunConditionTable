@@ -86,8 +86,8 @@ class RunConditionTableApplication {
                 },
                 app: (args) => this.applicationCli(args),
                 tmp: async () => {
-                    console.log(await QueryBuilder.prepareRunsDetectorsOneHotQuery(this.databaseService.adminClient))                    ;
-                }
+                    console.log(await QueryBuilder.prepareRunsDetectorsOneHotQuery(this.databaseService.adminClient)) ;
+                },
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
         } catch (error) {
