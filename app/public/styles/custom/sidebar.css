@@ -10,11 +10,11 @@
 }
 
 .page-title:hover {
-    background-color: grey;
+    font-weight: 900;
 }
 
 .page-title.selected {
-    font-weight: 800;
+    font-weight: 900;
 }
 
 .title-text {
