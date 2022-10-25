@@ -21,7 +21,7 @@ function defaultHref(page, index) {
     return `/?page=${page}${index ? `&${index}` : ''}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
 }
 
-export default function alonePageButton(model, title, page, index = null) {
+export default function alonePageButton(model, page, title, index = null) {
     const currentPointer = model.getCurrentDataPointer();
     const currentPage = currentPointer.page;
 
@@ -41,7 +41,11 @@ export default function alonePageButton(model, title, page, index = null) {
     }) : defaultHref(page, index);
 
     const titleWithChevron = currentPage === page
-        ? h('div.current-page', h('div.chevron-right-30.vertical-center'), h('div.title-text.vertical-center', title))
+        ? h('div', 
+            h('div.current-page.vertical-center', 
+                h('div.chevron-right-30.vertical-center'),
+                h('div.title-text.vertical-center', title)
+            ))
         : h('div', h('div.chevron-down-30.vertical-center'), h('div.title-text.vertical-center', title));
 
     const dropdownID = `dropdown-${dataHref}`;

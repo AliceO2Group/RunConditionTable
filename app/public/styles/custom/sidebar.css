@@ -23,3 +23,11 @@
     color: black !important;
     padding-left: 40px;
 }
+
+.current-page {
+    background-color: var(--color-gray-dark) !important;
+    border-radius: 25px;
+    padding: 2px;
+    height: 25px;
+    width: 50px;
+}
