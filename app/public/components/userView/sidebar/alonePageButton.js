@@ -42,13 +42,11 @@ export default function alonePageButton(model, page, title, index = null) {
 
     const titleWithChevron = currentPage === page
         ? h('div',
-        h('div.vertical-center', 
-            h('div.current-page',
-                h('div.title-text-relative.hidden', title)
-            )),
+            h('div.vertical-center',
+                h('div.current-page',
+                    h('div.title-text-relative.hidden', title))),
             h('div.chevron-right-30.vertical-center'),
-            h('div.title-text.vertical-center', title),
-        )
+            h('div.title-text.vertical-center', title))
         : h('div',
             h('div.chevron-down-30.vertical-center'),
             h('div.title-text.vertical-center', title));
@@ -61,13 +59,11 @@ export default function alonePageButton(model, page, title, index = null) {
             href: dataHref,
             onclick: (e) => model.router.handleLinkEvent(e),
         }, [
-                h('div',
-                    hiddenButtonsControllerObj(model, index, dropdownID, page),
-                    titleWithChevron,
-                    '    ',
-                    copyReloadButtons(model, dataHref, page, index, dropdownID)
-                ),
-            ]
-        ),
+            h('div',
+                hiddenButtonsControllerObj(model, index, dropdownID, page),
+                titleWithChevron,
+                '    ',
+                copyReloadButtons(model, dataHref, page, index, dropdownID)),
+        ]),
     ];
 }
