@@ -1,13 +1,13 @@
-.chevron-down-30 {
-    background-image: url('./images/30/Chevron\ Down.svg');
-    width: 30px;
-    height: 30px;
+.chevron-down-20 {
+    background-image: url('./images/20/Chevron\ Down.svg');
+    width: 20px;
+    height: 20px;
     display: inline-block;
 }
 
-.chevron-right-30 { /* 20 */
-    background-image: url('./images/30/Chevron\ Right.svg');
-    width: 30px;
-    height: 30px;
+.chevron-right-20 {
+    background-image: url('./images/20/Chevron\ Right.svg');
+    width: 20px;
+    height: 20px;
     display: inline-block;
 }
