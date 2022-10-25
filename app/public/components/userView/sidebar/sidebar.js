@@ -26,7 +26,7 @@ const { pagesNames } = RCT;
  */
 
 export default function sidebar(model) {
-    return h('nav.sidebar.sidebar-content.scroll-y.flex-column', [sidebarMenu(model)]);
+    return h('nav.sidebar.sidebar-content.scroll-y.flex-column.p3', [sidebarMenu(model)]);
 }
 const sidebarMenu = (model) => [
     alonePageButton(model, pagesNames.periods, 'Periods'),

@@ -5,7 +5,7 @@
     display: inline-block;
 }
 
-.chevron-right-30 {
+.chevron-right-30 { /* 20 */
     background-image: url('./images/30/Chevron\ Right.svg');
     width: 30px;
     height: 30px;

@@ -42,11 +42,15 @@ export default function alonePageButton(model, page, title, index = null) {
 
     const titleWithChevron = currentPage === page
         ? h('div', 
-            h('div.current-page.vertical-center', 
-                h('div.chevron-right-30.vertical-center'),
-                h('div.title-text.vertical-center', title)
+            h('div.vertical-center',
+                h('div.current-page',
+                    h('div.chevron-right-30.vertical-center'),
+                    h('div.title-text.vertical-center', title)
+                )
             ))
-        : h('div', h('div.chevron-down-30.vertical-center'), h('div.title-text.vertical-center', title));
+        : h('div',
+            h('div.chevron-down-30.vertical-center'),
+            h('div.title-text.vertical-center', title));
 
     const dropdownID = `dropdown-${dataHref}`;
     return [

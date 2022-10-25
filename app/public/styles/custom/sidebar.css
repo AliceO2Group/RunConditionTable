@@ -1,6 +1,4 @@
 .page-title {
-    padding-left: 1em;
-    padding-right: 1em;
     cursor: pointer;
     text-decoration: none !important;
     color: var(--color-gray-darker);
@@ -27,7 +25,7 @@
 .current-page {
     background-color: var(--color-gray-dark) !important;
     border-radius: 25px;
-    padding: 2px;
-    height: 25px;
-    width: 50px;
+    position: relative;
+    min-width: 100px;
+    min-height: 25px;
 }
