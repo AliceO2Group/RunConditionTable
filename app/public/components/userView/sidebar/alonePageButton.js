@@ -41,13 +41,14 @@ export default function alonePageButton(model, page, title, index = null) {
     }) : defaultHref(page, index);
 
     const titleWithChevron = currentPage === page
-        ? h('div', 
-            h('div.vertical-center',
-                h('div.current-page',
-                    h('div.chevron-right-30.vertical-center'),
-                    h('div.title-text.vertical-center', title)
-                )
-            ))
+        ? h('div',
+        h('div.vertical-center', 
+            h('div.current-page',
+                h('div.title-text-relative.hidden', title)
+            )),
+            h('div.chevron-right-30.vertical-center'),
+            h('div.title-text.vertical-center', title),
+        )
         : h('div',
             h('div.chevron-down-30.vertical-center'),
             h('div.title-text.vertical-center', title));
