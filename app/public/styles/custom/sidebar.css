@@ -6,6 +6,9 @@
     color: var(--color-gray-darker);
     line-height: normal;
     display: block;
+    position: relative;
+    height: 35px;
+    width: 100%;
 }
 
 .page-title:hover {
@@ -17,7 +20,14 @@
 }
 
 .title-text {
-    display: inline-block;
     color: black !important;
-    margin-top: 0!important;
+    padding-left: 40px;
+}
+
+.vertical-center {
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
