@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconLayers } from '/js/src/index.js';
+import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { copyReloadButtons, hiddenButtonsControllerObj } from './multiButtonController.js';
 const { dataReqParams } = RCT;
@@ -40,21 +40,25 @@ export default function alonePageButton(model, title, page, index = null) {
         },
     }) : defaultHref(page, index);
 
+    const titleWithChevron = currentPage === page
+        ? h('div.current-page', h('div.chevron-right-30'), h('div.title-text', title))
+        : h('div', h('div.chevron-down-30'), h('div.title-text', title));
+
     const dropdownID = `dropdown-${dataHref}`;
     return [
-        h('.menu-title', {
-            class: currentPage === page ? 'currentMenuItem' : '',
-        }, title),
-        h('a.menu-item', {
+        h('a.page-title', {
             title: title,
-            style: 'display:flex',
+            class: currentPage === page ? 'selected' : '',
             href: dataHref,
             onclick: (e) => model.router.handleLinkEvent(e),
-            class: currentPage === page ? 'selected' : '',
         }, [
-            h('span', hiddenButtonsControllerObj(model, index, dropdownID, page),
-                iconLayers(), ' ', title, '   ',
-                copyReloadButtons(model, dataHref, page, index, dropdownID)),
-        ]),
+                h('div',
+                    hiddenButtonsControllerObj(model, index, dropdownID, page),
+                    titleWithChevron,
+                    '    ',
+                    copyReloadButtons(model, dataHref, page, index, dropdownID)
+                ),
+            ]
+        ),
     ];
 }

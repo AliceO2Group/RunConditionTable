@@ -1,0 +1,15 @@
+.chevron-down-30 {
+    background-image: url('./images/30/Chevron\ Down.svg');
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    padding-top: 2em;
+}
+
+.chevron-right-30 {
+    background-image: url('./images/30/Chevron\ Right.svg');
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin-top: 0.4em;
+}

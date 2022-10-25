@@ -26,7 +26,12 @@ export default function fetchedDataPages(model, pageName, label) {
         }
     }
     return h('.flex-wrap', [
-        h('.pageTitle', { class: model.router.params.page === pageName ? 'currentMenuItem' : '' }, label),
-        h('.flex-wrap.item-center.justify-center', [h('.flex-column', buttons)]),
+        h('.page-title',
+            { class: model.router.params.page === pageName ? 'selected' : '' },
+            h('div', 
+                h('div.chevron-down-30'),
+                label)),
+            h('.flex-wrap.item-center.justify-center', [h('.flex-column', buttons)],
+        )
     ]);
 }

@@ -25,15 +25,6 @@
 .table tbody tr:nth-child(odd).row-selected-color-alpha {background-color: rgba(145, 207, 84, 0.286) ;}
 .table tbody tr:nth-child(even).row-selected-color-alpha {background-color: rgba(104, 162, 46, 0.286) ;}
 
-.currentMenuItem {
-    text-decoration: underline;
-}
-
-.currentPage {
-    background-color: var(--color-primary) !important;
-    color: var(--color-white) !important;
-}
-
 .noBorderBottom {
     border-bottom: 0px !important;
 }
@@ -82,4 +73,17 @@
 .big-tap {
     width: 500px;
     height: 100px;
+}
+
+.headerFieldName {
+    display: flex;
+    flex-direction: column;
+}
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
 }

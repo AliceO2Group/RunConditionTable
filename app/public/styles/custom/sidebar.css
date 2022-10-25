@@ -1,0 +1,23 @@
+.page-title {
+    padding-left: 1em;
+    padding-right: 1em;
+    cursor: pointer;
+    text-decoration: none !important;
+    color: var(--color-gray-darker);
+    line-height: normal;
+    display: block;
+}
+
+.page-title:hover {
+    background-color: grey;
+}
+
+.page-title.selected {
+    font-weight: 800;
+}
+
+.title-text {
+    display: inline-block;
+    color: black !important;
+    margin-top: 0!important;
+}
