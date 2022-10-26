@@ -36,8 +36,7 @@ const periodsHamburger = (title) => h('div',
     h('div.inline',
         h('div.hamburger-20.hidden'),
         h('div.title-text.hidden',
-            title.length > 10 ? `${title.slice(0, 10)}...` : title)
-    ),
+            title.length > 10 ? `${title.slice(0, 10)}...` : title)),
     h('div.ellipsis-20.vertical-center.mh2'));
 
 export const mainButton = (
