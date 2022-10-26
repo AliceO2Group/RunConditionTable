@@ -37,7 +37,7 @@ const sort = (fName, data, model, order) => {
         '-1': -1,
     }, null);
     model.fetchedData.changeSorting(data.sorting);
-}
+};
 
 const columnsHeadersArray = (visibleFields, data, model) =>
     visibleFields.map((f) => h('th', { scope: 'col' },
