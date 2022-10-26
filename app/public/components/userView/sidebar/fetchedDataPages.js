@@ -21,14 +21,14 @@ export default function fetchedDataPages(model, pageName, label) {
 
     const labelWithChevron = model.router.params.page === pageName
         ? h('div',
-            h('div.vertical-center',
-                h('div.current-page',
-                    h('div.title-text-relative.hidden', label))),
-            h('div.chevron-right-20.vertical-center'),
-            h('div.title-text.vertical-center', label))
+            h('.vertical-center',
+                h('.current-page',
+                    h('.title-text-relative.hidden', label))),
+            h('.chevron-right-20.vertical-center'),
+            h('.title-text.vertical-center', label))
         : h('div',
-            h('div.chevron-down-20.vertical-center'),
-            h('div.title-text.vertical-center', label));
+            h('.chevron-down-20.vertical-center'),
+            h('.title-text.vertical-center', label));
 
     if (pageName) {
         for (const index in dataSubsetForPage) {
