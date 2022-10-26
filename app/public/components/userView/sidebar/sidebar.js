@@ -26,10 +26,10 @@ const { pagesNames } = RCT;
  */
 
 export default function sidebar(model) {
-    return h('nav.sidebar.sidebar-content.scroll-y.flex-column', [sidebarMenu(model)]);
+    return h('nav.sidebar.sidebar-content.scroll-y.flex-column.p3', [sidebarMenu(model)]);
 }
 const sidebarMenu = (model) => [
-    alonePageButton(model, 'Periods', pagesNames.periods),
+    alonePageButton(model, pagesNames.periods, 'Periods'),
     fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes'),
     fetchedDataPages(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),
     fetchedDataPages(model, pagesNames.mc, 'Monte Carlo'),

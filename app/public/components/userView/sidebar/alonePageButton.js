@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconLayers } from '/js/src/index.js';
+import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { copyReloadButtons, hiddenButtonsControllerObj } from './multiButtonController.js';
 const { dataReqParams } = RCT;
@@ -21,7 +21,7 @@ function defaultHref(page, index) {
     return `/?page=${page}${index ? `&${index}` : ''}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
 }
 
-export default function alonePageButton(model, title, page, index = null) {
+export default function alonePageButton(model, page, title, index = null) {
     const currentPointer = model.getCurrentDataPointer();
     const currentPage = currentPointer.page;
 
@@ -40,20 +40,29 @@ export default function alonePageButton(model, title, page, index = null) {
         },
     }) : defaultHref(page, index);
 
+    const titleWithChevron = currentPage === page
+        ? h('div',
+            h('div.vertical-center',
+                h('div.current-page',
+                    h('div.title-text-relative.hidden', title))),
+            h('div.chevron-right-20.vertical-center'),
+            h('div.title-text.vertical-center', title))
+        : h('div',
+            h('div.chevron-down-20.vertical-center'),
+            h('div.title-text.vertical-center', title));
+
     const dropdownID = `dropdown-${dataHref}`;
     return [
-        h('.menu-title', {
-            class: currentPage === page ? 'currentMenuItem' : '',
-        }, title),
-        h('a.menu-item', {
+        h('a.page-title', {
             title: title,
-            style: 'display:flex',
+            class: currentPage === page ? 'selected' : '',
             href: dataHref,
             onclick: (e) => model.router.handleLinkEvent(e),
-            class: currentPage === page ? 'selected' : '',
         }, [
-            h('span', hiddenButtonsControllerObj(model, index, dropdownID, page),
-                iconLayers(), ' ', title, '   ',
+            h('div',
+                hiddenButtonsControllerObj(model, index, dropdownID, page),
+                titleWithChevron,
+                '    ',
                 copyReloadButtons(model, dataHref, page, index, dropdownID)),
         ]),
     ];

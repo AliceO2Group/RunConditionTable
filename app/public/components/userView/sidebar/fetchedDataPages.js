@@ -18,6 +18,18 @@ import { multiButtonController } from './multiButtonController.js';
 export default function fetchedDataPages(model, pageName, label) {
     const dataSubsetForPage = model.fetchedData[pageName];
     const buttons = [];
+
+    const labelWithChevron = model.router.params.page === pageName
+        ? h('div',
+            h('div.vertical-center',
+                h('div.current-page',
+                    h('div.title-text-relative.hidden', label))),
+            h('div.chevron-right-20.vertical-center'),
+            h('div.title-text.vertical-center', label))
+        : h('div',
+            h('div.chevron-down-20.vertical-center'),
+            h('div.title-text.vertical-center', label));
+
     if (pageName) {
         for (const index in dataSubsetForPage) {
             if (dataSubsetForPage[index]) {
@@ -26,7 +38,9 @@ export default function fetchedDataPages(model, pageName, label) {
         }
     }
     return h('.flex-wrap', [
-        h('.pageTitle', { class: model.router.params.page === pageName ? 'currentMenuItem' : '' }, label),
+        h('.page-title',
+            { class: model.router.params.page === pageName ? 'selected' : '' },
+            labelWithChevron),
         h('.flex-wrap.item-center.justify-center', [h('.flex-column', buttons)]),
     ]);
 }
