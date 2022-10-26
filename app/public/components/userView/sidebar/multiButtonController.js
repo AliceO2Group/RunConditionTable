@@ -32,8 +32,13 @@ export function multiButtonController(model, pageName, index) {
 const periodsHamburger = (title) => h('div',
     h('div.hamburger-20.vertical-center'),
     h('div.title-text.vertical-center',
-        title.length > 10 ? `${title.slice(0, 10)}...` : title,
-        h('.ellipsis-20')));
+        title.length > 10 ? `${title.slice(0, 10)}...` : title),
+    h('div.inline',
+        h('div.hamburger-20.hidden'),
+        h('div.title-text.hidden',
+            title.length > 10 ? `${title.slice(0, 10)}...` : title)
+    ),
+    h('div.ellipsis-20.vertical-center.mh2'));
 
 export const mainButton = (
     model, url, pageName, index, dropdownID,

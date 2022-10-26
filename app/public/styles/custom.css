@@ -98,3 +98,7 @@
     background-color: var(--color-white);
     z-index: 1;
 }
+
+.inline {
+    display: inline-block !important;
+}
