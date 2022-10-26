@@ -94,7 +94,8 @@ class ServicesSynchronizer {
      * and inserting to local database
      * @param {URL} endpoint endpoint to fetch data
      * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
-     * @param {CallableFunction} dataAdjuster logic for processing data before inserting to database (also adjusting data to sql foramt) - should returns null if error occured
+     * @param {CallableFunction} dataAdjuster logic for processing data
+     * before inserting to database (also adjusting data to sql foramt) - should returns null if error occured
      * @param {CallableFunction} filterer filter rows
      * @param {CallableFunction} dbAction logic for inserting data to database
      * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
@@ -127,43 +128,46 @@ class ServicesSynchronizer {
             let incorrect = 0;
             const errors = [];
             const dataSize = rows.length;
+
+            const correctDataSyncHandler = () => {
+                correct ++;
+            };
+            const errorsHandler = (e, data) => {
+                incorrect ++;
+                e.data = data;
+                errors.push(e);
+            };
+
             if (this.batchedRequestes) {
                 const rowsChunks = Utils.arrayToChunks(rows, this.batchSize);
                 for (const chunk of rowsChunks) {
                     const promises = chunk.map((r) => dbAction(this.dbclient, r)
-                        .then(() => {
-                            correct++;
-                        })
-                        .catch((e) => {
-                            incorrect++;
-                            errors.push(e);
-                        }));
+                        .then(correctDataSyncHandler)
+                        .catch((e) => errorsHandler(e, { row: r })));
+
                     await Promise.all(promises);
                 }
             } else {
                 for (const r of rows) {
                     await dbAction(this.dbclient, r)
-                        .then(() => {
-                            correct++;
-                        })
-                        .catch((e) => {
-                            incorrect++;
-                            errors.push(e);
-                        });
+                        .then(correctDataSyncHandler)
+                        .catch((e) => errorsHandler(e, { row: r }));
                 }
             }
 
             if (this.loglev > 0) {
-                if (correct > 0) {
-                    this.logger.info(`sync successful for  ${correct}/${dataSize}`);
-                }
                 if (incorrect > 0) {
-                    this.logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
-                    if (loglev > 2) {
+                    if (loglev > 3) {
+                        errors.forEach((e) => this.logger.error(JSON.stringify(e, null, 2)));
+                    } else if (loglev > 2) {
                         errors.forEach((e) => this.logger.error(e.stack));
                     } else if (loglev > 1) {
                         errors.forEach((e) => this.logger.error(e.message));
                     }
+                    this.logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
+                }
+                if (correct > 0) {
+                    this.logger.info(`sync successful for  ${correct}/${dataSize}`);
                 }
             }
         } catch (fatalError) {

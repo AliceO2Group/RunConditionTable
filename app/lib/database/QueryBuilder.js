@@ -25,6 +25,7 @@ const Utils = require("../Utils.js");
 class QueryBuilder {
 
     static async prepareRunsDetectorsOneHotQuery(client) {
+        // TODO throw out
         const prepare_func_name = 'prepare_runs_one_hot_query';
         let command = `select ${prepare_func_name}();`;
         try {

@@ -69,18 +69,20 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         sp = Utils.filterObject(sp, this.ketpFields);
         sp.size = Number(sp.size);
 
-        const anchor_passes = Utils
-            .replaceAll(sp.anchor_passes, /,|'|;"/, ' ')
+        const adustAnchoredOnesToList = (rawString) => Utils
+            .replaceAll(rawString, /,|'|;"/, ' ')
             .split(/ +/)
-            .map((v) => v.trim());
-        const anchor_productions = Utils
-            .replaceAll(sp.anchor_productions, /,|'|;"/, ' ')
-            .split(/ +/)
-            .map((v) => v.trim());
+            .map((v) => v.trim())
+            .filter((v) => v);
+
+        /*
+         * TODO Bug? anchored_periods/passes seems to be formated incorrectly,
+         * there are extra commas at the begining of some samples
+         */
 
         sp.period = this.extractPeriod(sp);
-        sp.anchor_passes = anchor_passes;
-        sp.anchor_productions = anchor_productions;
+        sp.anchor_passes = adustAnchoredOnesToList(sp.anchor_passes);
+        sp.anchor_productions = adustAnchoredOnesToList(sp.anchor_productions);
 
         return sp;
     }
