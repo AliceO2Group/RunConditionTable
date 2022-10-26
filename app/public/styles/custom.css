@@ -75,9 +75,8 @@
     height: 100px;
 }
 
-.headerFieldName {
-    display: flex;
-    flex-direction: column;
+.header-field-name {
+    position: relative;
 }
 
 .vertical-center {
@@ -90,4 +89,16 @@
 
 .hidden {
     visibility: hidden !important;
+}
+
+.sticky {
+    position: sticky !important;
+    top: 0px;
+    padding-top: 10px;
+    background-color: var(--color-white);
+    z-index: 1;
+}
+
+.block {
+    display: block !important;
 }

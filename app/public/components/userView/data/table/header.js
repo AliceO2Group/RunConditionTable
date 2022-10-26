@@ -42,11 +42,15 @@ const sortingChangeAction = (fName, data, model) => {
 
 const columnsHeadersArray = (visibleFields, data, model) =>
     visibleFields.map((f) => h('th', { scope: 'col' },
-        h('.headerFieldName', [
-            getHeaderSpecial(model, f),
-            h('.p2',
+        h('.header-field-name', [
+            h('.vertical-center', getHeaderSpecial(model, f)),
+            h('.p1.vertical-center',
                 { onclick: () => headerSpecPresent(model, f) ? sortingChangeAction(f.name, data, model) : null },
                 headerSpecPresent(model, f) ? orderToSymbol(f.name, data.sorting) : '.'),
+                h('.block',
+                    h('div.sort-up-20'),
+                    h('div.sort-down-20')
+                )
         ])));
 
 const rowsOptions = (model, data) =>
