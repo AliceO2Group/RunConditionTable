@@ -53,7 +53,6 @@ export default function siteController(model, data) {
             h('.menu-title', 'rows on site:'),
             h('input', { id: 'rows-on-site-input', type: 'number', placeholder: 50, value: model.router.params['rows-on-site'] }, ''),
             h('button.btn', { onclick: () => onclickSetRowsOnSite(model) }, 'apply'),
-        ]), h('.flex-row', [
             h('.menu-title', 'site:'),
             // Move to first site
             currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(1), iconMediaSkipBackward()) : ' ',

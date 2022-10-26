@@ -86,16 +86,17 @@ const createClickableLabel = (model, field) =>
 
 const createInputField = (inputId, currentValue) => {
     const type = inputId.substring(inputId.indexOf('-') + 1);
-    return h('th.my-tooltip.noBorderBottom.table-cell-like',
-        h('div.rel',
-            h('input.form-control', {
+    return type !== 'undefined' ?
+    h('th.noBorderBottom.table-cell-like',
+            h('input.form-control.rel', {
                 style: 'width:120px',
                 type: 'text',
                 value: currentValue ? currentValue : '',
                 disabled: type == null,
                 id: inputId,
-            }),
-            h('span.tooltiptext', `${type}`)));
+                placeholder: `${type}`,
+            }
+            )) : '';
 };
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
