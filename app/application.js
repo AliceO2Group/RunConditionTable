@@ -77,17 +77,26 @@ class RunConditionTableApplication {
                 ml: (args) => this.servCLI(this.alimonitorServices.monalisaService, args),
                 mc: (args) => this.servCLI(this.alimonitorServices.monalisaServiceMC, args),
                 sync: async () => {
-                    await this.alimonitorServices.bookkeepingService.setSyncTask();
-                    await this.alimonitorServices.monalisaService.setSyncTask();
-                    await this.alimonitorServices.monalisaServiceMC.setSyncTask();
+                    try {
+                        await this.alimonitorServices.bookkeepingService.setSyncTask();
+                    } catch (e) {
+                        this.con.log(e);
+                    }
+                    try {
+                        await this.alimonitorServices.monalisaService.setSyncTask();
+                    } catch (e) {
+                        this.con.log(e);
+                    }
+                    try {
+                        await this.alimonitorServices.monalisaServiceMC.setSyncTask();
+                    } catch (e) {
+                        this.con.log(e);
+                    }
                 },
                 connServ: async () => {
                     await this.connectServices();
                 },
                 app: (args) => this.applicationCli(args),
-                tmp: async () => {
-                    console.log(await QueryBuilder.prepareRunsDetectorsOneHotQuery(this.databaseService.adminClient)) ;
-                },
             }, this.incorrectCommand())(cmdAndArgs.slice(1));
             this.rl.prompt();
         } catch (error) {

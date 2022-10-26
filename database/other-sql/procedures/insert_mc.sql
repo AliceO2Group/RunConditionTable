@@ -1,10 +1,10 @@
 
-create or replace procedure insert_mc(
+create or replace procedure INSERT_mc(
     _name varchar, 
     _description text, 
     _pwg text,
-    _anchor_prod varchar[],
-    _anchor_pass varchar[],
+    _anchored_periods varchar[],
+    _anchor_passes varchar[],
     _jira text,
     _ml text,
     _number_of_events  integer,
@@ -12,17 +12,19 @@ create or replace procedure insert_mc(
 LANGUAGE plpgsql
 AS $$
 
-DEClARE an_prod varchar;
+DEClARE an_period varchar;
 DEClARE an_pass varchar;
 DEClARE sp_id int;
 DEClARE dp_ids int[];
 DEClARE dp_id int;
+DECLARE p_id int;
+DECLARE any_related_pass_found boolean;
 BEGIN
 
     SELECT id INTO sp_id from simulation_passes where name = _name;
     IF sp_id IS NULL THEN
-        -- sim pass insert
-        insert into simulation_passes(
+        -- sim pass INSERT
+        INSERT INTO simulation_passes(
             id, 
             name, 
             description, 
@@ -39,25 +41,31 @@ BEGIN
                 _pwg,
                 _number_of_events, 
                 _size);
-        -- anchor insert
-        if _anchor_pass is not null and _anchor_prod is not null then
-            foreach an_prod in array _anchor_prod loop
-                foreach an_pass in array _anchor_pass loop
-                    SELECT id into sp_id FROM simulation_passes WHERE name = _name;
-                    SELECT array_agg(id::int) into dp_ids from data_passes where name LIKE (an_prod || '_' || an_pass || '%');
-                    raise notice 'for % and % found %', an_prod, an_pass, dp_ids;
-                    if dp_ids is not null then
+        -- anchor INSERT
+        IF _anchor_passes IS NOT NULL AND _anchored_periods IS NOT NULL THEN
+            any_related_pass_found = FALSE;
+            foreach an_period in array _anchored_periods loop
+                foreach an_pass in array _anchor_passes loop
+                    SELECT id INTO sp_id FROM simulation_passes WHERE name = _name;
+                    SELECT array_agg(id::int) INTO dp_ids from data_passes where name LIKE (an_period || '_' || an_pass || '%');
+                    raise notice 'for % AND % found %', an_period, an_pass, dp_ids;
+                    IF dp_ids IS NOT NULL THEN
+                        any_related_pass_found = TRUE;
                         foreach dp_id in array dp_ids loop
-                            insert into sim_and_data_passes(data_pass_id, sim_pass_id) values(dp_id, sp_id);
-                        end loop;
-                    end if;
+                            INSERT INTO anchored_passes(data_pass_id, sim_pass_id) values(dp_id, sp_id);
+                        END loop;
+                    END IF;
                 END LOOP;
+                IF any_related_pass_found THEN
+                    SELECT id INTO p_id FROM periods WHERE name = an_period;
+                    INSERT INTO anchored_periods(period_id, sim_pass_id) VALUES(p_id, sp_id);
+                END IF;
             END LOOP;
-        else 
-            raise notice 'not anchored';
-        end if;
+        ELSE 
+            raise notice 'NOT anchored';
+        END IF;
     END IF;
-end;
+END;
 $$;
 
--- call insert_mc('lhc17jj', 'des', 'pwg', array['LHC22m']::varchar[], array['apass1']::varchar[], null, null, 10, 10);
+-- call INSERT_mc('lhc17jj', 'des', 'pwg', array['LHC22m']::varchar[], array['apass1']::varchar[], NULL, NULL, 10, 10);
