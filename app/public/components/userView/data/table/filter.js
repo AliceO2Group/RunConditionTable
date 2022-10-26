@@ -87,7 +87,7 @@ const createClickableLabel = (model, field) =>
 const createInputField = (inputId, currentValue) => {
     const type = inputId.substring(inputId.indexOf('-') + 1);
     return type !== 'undefined' ?
-    h('th.noBorderBottom.table-cell-like',
+        h('th.noBorderBottom.table-cell-like',
             h('input.form-control.rel', {
                 style: 'width:120px',
                 type: 'text',
@@ -95,8 +95,7 @@ const createInputField = (inputId, currentValue) => {
                 disabled: type == null,
                 id: inputId,
                 placeholder: `${type}`,
-            }
-            )) : '';
+            })) : '';
 };
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
