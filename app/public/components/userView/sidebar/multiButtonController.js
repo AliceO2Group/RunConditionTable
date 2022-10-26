@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconPin, iconEllipses, iconShareBoxed, iconReload, iconTrash } from '/js/src/index.js';
+import { h, iconShareBoxed, iconReload, iconTrash } from '/js/src/index.js';
 
 export function multiButtonController(model, pageName, index) {
     const page = model.fetchedData[pageName];
@@ -29,18 +29,24 @@ export function multiButtonController(model, pageName, index) {
     ]);
 }
 
+const periodsHamburger = (title) => h('div',
+    h('div.hamburger-20.vertical-center'),
+    h('div.title-text.vertical-center',
+        title.length > 10 ? `${title.slice(0, 10)}...` : title,
+        h('.ellipsis-20'),
+    ));
+
 export const mainButton = (
     model, url, pageName, index, dropdownID,
-) => h('a.menu-item', {
-    style: 'display:flex',
+) => h('a.page-title', {
     href: url.pathname + url.search,
     onclick: (e) => model.router.handleLinkEvent(e),
     class: model.router.getUrl().href === url.href ? 'selected' : '',
 }, deleteCopyReloadButtonsController(model, index, dropdownID, pageName));
 
 export const deleteCopyReloadButtonsController = (model, index, dropdownID, pageName) => [
-    h('span', iconPin(), ' ', index.length > 10 ? `${index.slice(0, 10)}...` : index),
-    h('span.ph2', hiddenButtonsControllerObj(model, index, dropdownID, pageName), iconEllipses()),
+    h('.relative',
+    hiddenButtonsControllerObj(model, index, dropdownID, pageName), periodsHamburger(index)),
 ];
 
 export const hiddenButtonsControllerObj = (model, index, dropdownID, pageName) => {

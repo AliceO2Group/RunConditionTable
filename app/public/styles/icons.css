@@ -33,3 +33,17 @@
     background-color: var(--color-primary) !important;
     border-radius: 10px;
 }
+
+.ellipsis-20 {
+    background-image: url('./images/20/Ellipsis.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.hamburger-20 {
+    background-image: url('./images/20/Hamburger.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
