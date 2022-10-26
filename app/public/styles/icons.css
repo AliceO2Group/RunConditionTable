@@ -11,3 +11,25 @@
     height: 20px;
     display: inline-block;
 }
+
+.sort-down-20 {
+    background-image: url('./images/20/Sort\ Down.svg');
+    width: 20px;
+    height: 20px;
+}
+
+.sort-down-20.selected {
+    background-color: var(--color-primary) !important;
+    border-radius: 10px;
+}
+
+.sort-up-20 {
+    background-image: url('./images/20/Sort\ Up.svg');
+    width: 20px;
+    height: 20px;
+}
+
+.sort-up-20.selected {
+    background-color: var(--color-primary) !important;
+    border-radius: 10px;
+}

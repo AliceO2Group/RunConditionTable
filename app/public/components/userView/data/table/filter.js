@@ -33,7 +33,7 @@ export default function filter(model) {
 
     const { params } = model.router;
 
-    return h('div', [
+    return h('div.sticky', [
         h('div.x-scrollable',
             h('table',
                 h('tbody',

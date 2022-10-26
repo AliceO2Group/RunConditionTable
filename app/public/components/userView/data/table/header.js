@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, switchCase, iconCaretTop, iconCaretBottom, iconMinus } from '/js/src/index.js';
+import { h, switchCase } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent } from '../headersSpecials.js';
 
 export default function tableHeader(visibleFields, data, model) {
@@ -21,32 +21,32 @@ export default function tableHeader(visibleFields, data, model) {
             .concat([rowsOptions(model, data)])));
 }
 
-const orderToSymbol = (fName, sorting) => fName == sorting.field ? switchCase(sorting.order, {
-    1: iconCaretTop(),
-    '-1': iconCaretBottom(),
-    null: iconMinus(),
-}, 'TODO some runtime error') : iconMinus();
-
-const sortingChangeAction = (fName, data, model) => {
+const sort = (fName, data, model, order) => {
     if (data.sorting.field != fName) {
         data.sorting.field = fName;
         data.sorting.order = null;
     }
-    data.sorting.order = switchCase(data.sorting.order, {
-        1: -1,
-        '-1': 1,
-        null: -1,
+    data.sorting.order = data.sorting.order = switchCase(order, {
+        1: 1,
+        '-1': -1,
     }, null);
     model.fetchedData.changeSorting(data.sorting);
 };
 
 const columnsHeadersArray = (visibleFields, data, model) =>
     visibleFields.map((f) => h('th', { scope: 'col' },
-        h('.headerFieldName', [
-            getHeaderSpecial(model, f),
-            h('.p2',
-                { onclick: () => headerSpecPresent(model, f) ? sortingChangeAction(f.name, data, model) : null },
-                headerSpecPresent(model, f) ? orderToSymbol(f.name, data.sorting) : '.'),
+        h('.header-field-name', [
+            headerSpecPresent(model, f) ? [
+                h('div.sort-up-20', {
+                    onclick: () => sort(f.name, data, model, -1),
+                    class: data.sorting.order === -1 && data.sorting.field === f.name ? 'selected' : '',
+                }),
+                h('div.sort-down-20', {
+                    onclick: () => sort(f.name, data, model, 1),
+                    class: data.sorting.order === 1 && data.sorting.field === f.name ? 'selected' : '',
+                }),
+            ] : '',
+            h('.vertical-center.mh4', getHeaderSpecial(model, f)),
         ])));
 
 const rowsOptions = (model, data) =>
