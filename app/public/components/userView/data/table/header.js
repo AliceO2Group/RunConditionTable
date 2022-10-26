@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, switchCase, iconCaretTop, iconCaretBottom, iconMinus } from '/js/src/index.js';
+import { h, switchCase } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent } from '../headersSpecials.js';
 
 export default function tableHeader(visibleFields, data, model) {
@@ -20,12 +20,6 @@ export default function tableHeader(visibleFields, data, model) {
         h('tr', columnsHeadersArray(visibleFields, data, model)
             .concat([rowsOptions(model, data)])));
 }
-
-const orderToSymbol = (fName, sorting) => fName == sorting.field ? switchCase(sorting.order, {
-    1: iconCaretTop(),
-    '-1': iconCaretBottom(),
-    null: iconMinus(),
-}, 'TODO some runtime error') : iconMinus();
 
 const sort = (fName, data, model, order) => {
     if (data.sorting.field != fName) {
