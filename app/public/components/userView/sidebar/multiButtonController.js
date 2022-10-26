@@ -33,8 +33,7 @@ const periodsHamburger = (title) => h('div',
     h('div.hamburger-20.vertical-center'),
     h('div.title-text.vertical-center',
         title.length > 10 ? `${title.slice(0, 10)}...` : title,
-        h('.ellipsis-20'),
-    ));
+        h('.ellipsis-20')));
 
 export const mainButton = (
     model, url, pageName, index, dropdownID,
@@ -46,7 +45,7 @@ export const mainButton = (
 
 export const deleteCopyReloadButtonsController = (model, index, dropdownID, pageName) => [
     h('.relative',
-    hiddenButtonsControllerObj(model, index, dropdownID, pageName), periodsHamburger(index)),
+        hiddenButtonsControllerObj(model, index, dropdownID, pageName), periodsHamburger(index)),
 ];
 
 export const hiddenButtonsControllerObj = (model, index, dropdownID, pageName) => {
