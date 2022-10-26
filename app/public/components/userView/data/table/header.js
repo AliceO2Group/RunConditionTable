@@ -42,14 +42,16 @@ const sort = (fName, data, model, order) => {
 const columnsHeadersArray = (visibleFields, data, model) =>
     visibleFields.map((f) => h('th', { scope: 'col' },
         h('.header-field-name', [
-            h('div.sort-up-20', {
-                onclick: () => headerSpecPresent(model, f) ? sort(f.name, data, model, -1) : null,
-                class: data.sorting.order === -1 && data.sorting.field === f.name ? 'selected' : '',
-            }),
-            h('div.sort-down-20', {
-                onclick: () => headerSpecPresent(model, f) ? sort(f.name, data, model, 1) : null,
-                class: data.sorting.order === 1 && data.sorting.field === f.name ? 'selected' : '',
-            }),
+            headerSpecPresent(model, f) ? [
+                h('div.sort-up-20', {
+                    onclick: () => sort(f.name, data, model, -1),
+                    class: data.sorting.order === -1 && data.sorting.field === f.name ? 'selected' : '',
+                }),
+                h('div.sort-down-20', {
+                    onclick: () => sort(f.name, data, model, 1),
+                    class: data.sorting.order === 1 && data.sorting.field === f.name ? 'selected' : '',
+                }),
+            ] : '',
             h('.vertical-center.mh4', getHeaderSpecial(model, f)),
         ])));
 
