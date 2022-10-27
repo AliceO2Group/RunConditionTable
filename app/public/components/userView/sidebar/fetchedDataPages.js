@@ -65,6 +65,8 @@ export default function fetchedDataPages(model, pageName, label) {
                 onclick: () => handleToggle(),
             },
             labelWithChevron),
-        toggle ? h('.flex-wrap.item-center.justify-center.flex', { id: `${pageName}ToggleHide` }, [h('.flex-column', buttons)]) : h('.flex-wrap.item-center.justify-center.none', { id: `${pageName}ToggleHide` }, [h('.flex-column', buttons)]),
+        h(`.flex-wrap.item-center.justify-center.${toggle ? 'flex' : 'none'}`,
+            { id: `${pageName}ToggleHide` },
+            [h('.flex-column', buttons)]),
     ]);
 }
