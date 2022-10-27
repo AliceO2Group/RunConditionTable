@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import { multiButtonController } from './multiButtonController.js';
 
 export default function fetchedDataPages(model, pageName, label, toggle) {
-    // let toggle = model.router.params.page === pageName;
+    // Let toggle = model.router.params.page === pageName;
     const dataSubsetForPage = model.fetchedData[pageName];
     const buttons = [];
 
