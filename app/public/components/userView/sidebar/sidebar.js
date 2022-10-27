@@ -30,11 +30,11 @@ export default function sidebar(model) {
 }
 const sidebarMenu = (model) => [
     alonePageButton(model, pagesNames.periods, 'Periods'),
-    fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes'),
-    fetchedDataPages(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),
-    fetchedDataPages(model, pagesNames.mc, 'Monte Carlo'),
-    fetchedDataPages(model, pagesNames.anchoredPerMC, 'Anchored per MC'),
-    fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period'),
-    fetchedDataPages(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
-    fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging'),
+    fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes', model.router.params.page === pagesNames.dataPasses),
+    fetchedDataPages(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass', model.router.params.page === pagesNames.anchoragePerDatapass),
+    fetchedDataPages(model, pagesNames.mc, 'Monte Carlo', model.router.params.page === pagesNames.mc),
+    fetchedDataPages(model, pagesNames.anchoredPerMC, 'Anchored per MC', model.router.params.page === pagesNames.anchoredPerMC),
+    fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period', model.router.params.page === pagesNames.runsPerPeriod),
+    fetchedDataPages(model, pagesNames.runsPerDataPass, 'Runs per Data pass', model.router.params.page === pagesNames.runsPerDataPass),
+    fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging', model.router.params.page === pagesNames.flags),
 ];

@@ -15,8 +15,8 @@
 import { h } from '/js/src/index.js';
 import { multiButtonController } from './multiButtonController.js';
 
-export default function fetchedDataPages(model, pageName, label) {
-    let toggle = model.router.params.page === pageName;
+export default function fetchedDataPages(model, pageName, label, toggle) {
+    // let toggle = model.router.params.page === pageName;
     const dataSubsetForPage = model.fetchedData[pageName];
     const buttons = [];
 
@@ -42,10 +42,12 @@ export default function fetchedDataPages(model, pageName, label) {
     function handleToggle() {
         toggle = !toggle;
         const x = document.getElementById(`${pageName}ToggleHide`);
-        if (x.style.display === 'none') {
-            x.style.display = 'flex';
+        if (x.classList.contains('none')) {
+            x.classList.add('flex');
+            x.classList.remove('none');
         } else {
-            x.style.display = 'none';
+            x.classList.add('none');
+            x.classList.remove('flex');
         }
         const chevr = document.getElementById(`${pageName}ToggleChevron`);
         if (chevr.classList.contains('chevron-right-20')) {
@@ -63,6 +65,6 @@ export default function fetchedDataPages(model, pageName, label) {
                 onclick: () => handleToggle(),
             },
             labelWithChevron),
-        h('.flex-wrap.item-center.justify-center', { id: `${pageName}ToggleHide` }, [h('.flex-column', buttons)]),
+        toggle ? h('.flex-wrap.item-center.justify-center.flex', { id: `${pageName}ToggleHide` }, [h('.flex-column', buttons)]) : h('.flex-wrap.item-center.justify-center.none', { id: `${pageName}ToggleHide` }, [h('.flex-column', buttons)]),
     ]);
 }
