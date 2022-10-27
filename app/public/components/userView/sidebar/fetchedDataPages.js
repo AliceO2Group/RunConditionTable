@@ -25,10 +25,10 @@ export default function fetchedDataPages(model, pageName, label) {
             h('.vertical-center',
                 h('.current-page',
                     h('.title-text-relative.hidden', label))),
-            h('.chevron-right-20.vertical-center', {id: `${pageName}ToggleChevron`}),
+            h('.chevron-right-20.vertical-center', { id: `${pageName}ToggleChevron` }),
             h('.title-text.vertical-center', label))
         : h('div',
-            h('.chevron-down-20.vertical-center', {id: `${pageName}ToggleChevron`}),
+            h('.chevron-down-20.vertical-center', { id: `${pageName}ToggleChevron` }),
             h('.title-text.vertical-center', label));
 
     if (pageName) {
@@ -41,28 +41,28 @@ export default function fetchedDataPages(model, pageName, label) {
 
     function handleToggle() {
         toggle = !toggle;
-        var x = document.getElementById(`${pageName}ToggleHide`);
-        if (x.style.display === "none") {
-          x.style.display = "flex";
+        const x = document.getElementById(`${pageName}ToggleHide`);
+        if (x.style.display === 'none') {
+            x.style.display = 'flex';
         } else {
-          x.style.display = "none";
+            x.style.display = 'none';
         }
-        var chevr = document.getElementById(`${pageName}ToggleChevron`);
+        const chevr = document.getElementById(`${pageName}ToggleChevron`);
         if (chevr.classList.contains('chevron-right-20')) {
             chevr.classList.remove('chevron-right-20');
             chevr.classList.add('chevron-down-20');
-          } else {
+        } else {
             chevr.classList.remove('chevron-down-20');
             chevr.classList.add('chevron-right-20');
-          }
+        }
     }
 
     return h('.flex-wrap', [
         h('.page-title',
-            { class: model.router.params.page === pageName ? 'selected' : '' ,
-            onclick: () => handleToggle(),
-        },
+            { class: model.router.params.page === pageName ? 'selected' : '',
+                onclick: () => handleToggle(),
+            },
             labelWithChevron),
-            h('.flex-wrap.item-center.justify-center', {id: `${pageName}ToggleHide`}, [h('.flex-column', buttons)]),
+        h('.flex-wrap.item-center.justify-center', { id: `${pageName}ToggleHide` }, [h('.flex-column', buttons)]),
     ]);
 }
