@@ -34,7 +34,7 @@ export default function row(
     model, visibleFields, data, item, cellsSpecials,
 ) {
     const rowDivDef = reduceSerialIf(
-        'tr', ['.bg-grey', '.d-none'], ['.row-selected-color-alpha.bg-grey.selected', ''],
+        'tr.track', ['.bg-grey', '.d-none'], ['.row-selected-color-alpha.bg-grey.selected', ''],
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 

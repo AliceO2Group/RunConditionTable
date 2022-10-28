@@ -57,7 +57,6 @@ export default class PrimaryModel extends Observable {
                 throw 'TODO';
             default:
                 break;
-                //T this.router.go('/');
         }
     }
 
