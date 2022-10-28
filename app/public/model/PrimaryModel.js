@@ -46,7 +46,7 @@ export default class PrimaryModel extends Observable {
         switch (url.pathname) {
             case '/':
                 if (! this.router.params['page']) {
-                    this.router.go(`/?page=periods&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-year`);
+                    this.router.go(`/?page=periods&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`);
                 } else {
                     this.fetchedData.reqForData()
                         .then(() => {})
