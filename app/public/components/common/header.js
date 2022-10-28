@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconHome, iconPerson, iconDataTransferDownload, iconMagnifyingGlass, iconReload } from '/js/src/index.js';
+import { h, iconHome, iconPerson, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 import downloadCSV from '../../utils/csvExport.js';
 
 export default function header(model) {
@@ -26,8 +26,8 @@ export default function header(model) {
             ' ',
             h('span.f4.gray', { onclick: () => model.router.go('/', true) }, 'Run Condition Table'),
         ]),
-        h('.w-50', headerSpecific(model)),
-        h('.w-10', functionalities(model)),
+        h('.w-25', headerSpecific(model)),
+        h('.w-25', functionalities(model)),
     ]);
 }
 
@@ -60,7 +60,7 @@ const functionalities = (model) => h('.button-group.text-right',
         },
     }, iconDataTransferDownload()),
 
-    h('button.btn', {
+    h('button.btn.filter-button', {
         className: model.searchFieldsVisible ? 'active' : '',
         onclick: () => model.changeSearchFieldsVisibility(),
-    }, iconMagnifyingGlass()));
+    }, h('.filter-20.icon')));
