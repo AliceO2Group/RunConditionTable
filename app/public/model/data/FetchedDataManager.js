@@ -118,9 +118,9 @@ export default class FetchedDataManager {
         return apiPrefix + url.pathname.substring(1) + url.search + (countAllRecord ? '&count-records=true' : '');
     }
 
-    changeSite(site) {
+    changePage(pageNumber) {
         const url = this.router.getUrl();
-        const newUrl = replaceUrlParams(url, [[dataReqParams.site, site]]);
+        const newUrl = replaceUrlParams(url, [[dataReqParams.site, pageNumber]]);
         this.router.go(newUrl);
     }
 

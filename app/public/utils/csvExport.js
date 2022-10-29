@@ -14,7 +14,7 @@
 
 export const preparedData = (data) => {
     let rows = data.payload.rows.filter((item) => item.marked);
-    if (rows?.length == 0) {
+    if (rows?.length === 0) {
         ({ rows } = data.payload);
     }
     const fields = data.payload.fields.filter((item) => item.marked).map((field) => field.name);
