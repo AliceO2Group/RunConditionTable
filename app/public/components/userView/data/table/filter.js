@@ -15,6 +15,7 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 import { getHeaderSpecial } from '../headersSpecials.js';
+import { switchCase } from '../../../../../lib/Utils.js';
 
 const { dataReqParams } = RCT;
 
@@ -33,14 +34,14 @@ export default function filter(model) {
 
     const { params } = model.router;
 
-    return h('div.filter-panel', [
-        h('div.x-scrollable',
+    return h('.filter-panel', [
+        h('.x-scrollable',
             h('table',
                 h('tbody',
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds),
                     inputsRow(params, lowerInputIds))),
-            h('div.abs',
+            h('.abs',
                 h('button.btn', {
                     onclick: onclickSubmit(model, inputsIds),
                 }, 'Submit'),
@@ -110,8 +111,8 @@ const onclickSubmit = (model, inputsIds) => () => {
 
     const { params } = model.router;
     const newSearch =
-    `?page=${params.page}&index=${params.index}` +
-    `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&${filteringParamsPhrase}`;
+        `?page=${params.page}&index=${params.index}` +
+        `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&${filteringParamsPhrase}`;
 
     const url = model.router.getUrl();
     const newUrl = new URL(url.origin + url.pathname + newSearch);
@@ -127,6 +128,7 @@ const onclickClear = (model, inputsIds) => () => {
 
 const getUpperInputIds = (fields, pageFilteringTypes, filteringTypes) =>
     fields.map((f) => filedName2MatchFromType(f.name, pageFilteringTypes, filteringTypes));
+
 const getLowerInputIds = (fields, pagesFilteringTypes, filteringTypes) => fields.map((f) =>
     filedName2ExcludeToType(f.name, pagesFilteringTypes, filteringTypes));
 
