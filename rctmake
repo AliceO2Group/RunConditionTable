@@ -302,6 +302,10 @@ for stage in $STAGES; do
             $DOCKER_COMP_CMD stop $OTHER_OPTS;
         ;;
 
+        ip)
+            
+        ;;
+
         *)
             usage "incorrect stage: $stage";
         ;;
