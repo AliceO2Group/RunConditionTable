@@ -41,13 +41,13 @@ export default function filter(model) {
                     inputsRow(params, upperInputIds),
                     inputsRow(params, lowerInputIds))),
             h('.abs',
-                h('button.btn', {
+                h('button.btn.btn-primary', {
                     onclick: onclickSubmit(model, inputsIds),
                 }, 'Submit'),
                 '  ',
                 h('button.btn', {
                     onclick: onclickClear(model, inputsIds),
-                }, 'Clear filters'),
+                }, h('.clear-filters-20'), 'Clear filters'),
                 '     ',
                 h('button.btn', {
                     onclick: () => {
@@ -66,7 +66,7 @@ export default function filter(model) {
                         );
                         model.notify();
                     }),
-                }, h('.eye'), 'Hide empty columns'))),
+                }, h('.hide-empty-20'), 'Hide empty columns'))),
     ]);
 }
 
@@ -77,12 +77,13 @@ const inputsRow = (params, inputsIds) => h('tr',
     inputsIds.map((id) => createInputField(id, params[id])));
 
 const createClickableLabel = (model, field) =>
-    h('th.tooltip.noBorderBottom.table-cell-like',
-        h('button.btn', {
+    h('th.my-tooltip.noBorderBottom.table-cell-like',
+    h('button.btn', {
             style: 'width:120px',
             onclick: () => model.fetchedData.changeItemStatus(field),
             className: field.marked ? 'active' : '',
-        }, getHeaderSpecial(model, field),
+        }, h(`${field.marked ? '.eye-20.abs.t-10' : '.hide-20.abs.t-10'}`),
+        getHeaderSpecial(model, field),
         h('span.tooltiptext', field.marked ? 'hide' : 'display')));
 
 const createInputField = (inputId, currentValue) => {

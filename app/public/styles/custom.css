@@ -74,6 +74,25 @@
     transform: translateY(-50%);
 }
 
+.horizontal-center {
+    margin: 0;
+    position: absolute;
+    left: 80%;
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.abs-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
 .hidden {
     visibility: hidden !important;
 }
@@ -100,4 +119,29 @@
 
 .highlight-blue {
     background-color: #D7EDFC !important;
+}
+
+.t-10 {
+    top: -0.1em;
+    right: 3.5em;
+}
+
+.my-table tbody {
+    /* background-color: aqua; */
+}
+
+.scale-2-5 {
+    scale: 2.5;
+}
+
+.top-100 {
+    padding-top: 100px;
+}
+
+.header-specific {
+    padding-left: 15em;
+    padding-top: 0.5em;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
 }

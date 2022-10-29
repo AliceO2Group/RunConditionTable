@@ -21,7 +21,6 @@ import pager from '../pager.js';
 import postingDataConfig from '../posting/postingDataConfig.js';
 import { postForm } from '../posting/postForm.js';
 import filter from './filter.js';
-import container from '../../../common/container.js';
 
 /**
  * Creates vnode containing table of fetched data (main content)
@@ -35,13 +34,14 @@ export default function tablePanel(model) {
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
 
     if (data.rows?.length == 0) {
-        const removeAndGoBackBtn = h('button.btn.br-primary.m4.p4.big-tap',
+        const removeAndGoBackBtn = h('button.btn.btn-primary',
             { onclick: () => model.removeCurrentData() }, 'Go Back & Remove This Page');
-        const noDataMessage = h('h3.warning.justify-center', 'No related data');
-        return h('div.loginDiv', h('div.loginDiv.bg-gray-lighter.br3.p4', [
+        const noDataMessage = h('h3', 'No data found');
+        return h('.loginDiv.top-100', [
+            h('.nothing-found-90'),
             noDataMessage,
-            container(removeAndGoBackBtn),
-        ]));
+            removeAndGoBackBtn,
+        ]);
     }
     const cellsSpecials = pagesCellsSpecials[dataPointer.page];
 
@@ -50,7 +50,7 @@ export default function tablePanel(model) {
 
     const filteringPanel = model.searchFieldsVisible ? filter(model) : ' ';
 
-    return h('div.p3', [
+    return h('div', [
         filteringPanel,
         pager(model, data, 1),
         h('div', h('div.x-scrollable',

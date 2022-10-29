@@ -64,16 +64,37 @@
     top: 0.2em;
 }
 
-.eye {
+.eye-20 {
     background-image: url('./images/20/Eye.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
-.hide {
+.hide-20 {
     background-image: url('./images/20/Hide.svg');
     width: 20px;
     height: 20px;
+    display: inline-block;
+}
+
+.clear-filters-20 {
+    background-image: url('./images/20/Clear\ Filters.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.hide-empty-20 {
+    background-image: url('./images/20/Hide\ Empty.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.nothing-found-90 {
+    background-image: url('./images/90/Nothing\ Found.svg');
+    width: 90px;
+    height: 90px;
     display: inline-block;
 }

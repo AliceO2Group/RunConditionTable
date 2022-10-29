@@ -15,13 +15,12 @@
 import { h } from '/js/src/index.js';
 
 export default function spinner() {
-    return h('.topSpace',
-        h('.center',
-            h('.atom-spinner.f1',
+    return h('.abs-center',
+            h('.atom-spinner.f1.scale-2-5',
                 h('.spinner-inner',
                     h('.spinner-line'),
                     h('.spinner-line'),
                     h('.spinner-line'),
-                    h('.spinner-circle', '●')))),
-        h('h5', 'Loading...'));
+                    h('.spinner-circle', '●')),
+    ));    
 }
