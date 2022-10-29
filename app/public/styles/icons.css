@@ -63,3 +63,17 @@
     position: relative;
     top: 0.2em;
 }
+
+.eye {
+    background-image: url('./images/20/Eye.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.hide {
+    background-image: url('./images/20/Hide.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}

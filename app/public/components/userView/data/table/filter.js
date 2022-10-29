@@ -66,7 +66,7 @@ export default function filter(model) {
                         );
                         model.notify();
                     }),
-                }, 'Hide empty columns'))),
+                }, h('.eye'), 'Hide empty columns'))),
     ]);
 }
 
