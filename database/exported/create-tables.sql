@@ -301,7 +301,7 @@ ALTER TABLE public.runs_detectors OWNER TO postgres;
 -- object: public.runs | type: TABLE --
 -- DROP TABLE IF EXISTS public.runs CASCADE;
 CREATE TABLE public.runs (
-	run_number bigint NOT NULL,
+	run_number integer NOT NULL,
 	period_id integer NOT NULL,
 	time_start bigint,
 	time_end bigint,

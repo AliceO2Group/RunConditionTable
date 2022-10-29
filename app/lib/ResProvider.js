@@ -22,6 +22,8 @@ const Utils = require('./Utils.js');
 // eslint-disable-next-line prefer-const
 let logger;
 
+const defaultSecuredDirPath = path.join(__dirname, '..', '..', 'security');
+
 class ResProvider {
     /**
      * Function to get collection of desired env vars into js object fulfiling some requiremnts
@@ -76,7 +78,7 @@ class ResProvider {
             for (const fileName of fileNames) {
                 try {
                     const filePath = path.join(
-                        __dirname, '..', '..', 'security', fileName,
+                        defaultSecuredDirPath, fileName,
                     );
                     secContent = fs.readFileSync(filePath);
                     logsStacker.substitute('info', `${description}: loaded from file ${filePath}`);
@@ -140,10 +142,6 @@ class ResProvider {
             RCT_JWT_EXPIRATION: 'expiration',
         };
         return ResProvider.viaEnvVars(jwtEnvVarsDef);
-    }
-
-    static external_secured_config() {
-        return {};
     }
 
     static openid() {

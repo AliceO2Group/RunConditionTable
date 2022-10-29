@@ -1,3 +1,23 @@
+/**
+ * @license
+ * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
+ * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
+ * All rights not expressly granted are reserved.
+ *
+ * This software is distributed under the terms of the GNU General Public
+ * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
+const config = require('../config/configProvider.js');
+console.log(config)
+const run_detectors_field_in_sql_query = config.baseData.database.detectors
+    .map(d => `(SELECT get_run_det_id(r.run_number, '${d.toUpperCase()}')) as ${d.toUpperCase()}_detector`)
+    .join(',\n')
+
+
 const period_view = `
     WITH period_view AS (
         SELECT DISTINCT
@@ -32,7 +52,8 @@ const runs_per_period_view = (query) => `
             r.fill_number,
             r.mu, 
             r.l3_current,
-            r.dipole_current
+            r.dipole_current,
+            ${run_detectors_field_in_sql_query}
         FROM runs AS r
             INNER JOIN periods AS p
             ON p.id = r.period_id
@@ -60,7 +81,8 @@ const runs_per_data_pass_view = (query) => `
                 r.fill_number,
                 r.mu, 
                 r.l3_current,
-                r.dipole_current
+                r.dipole_current,
+                ${run_detectors_field_in_sql_query}
             FROM data_passes AS dp
                 INNER JOIN data_passes_runs AS dpr
                     ON dp.id=dpr.data_pass_id
@@ -176,4 +198,13 @@ const flags_view = (query) => `
         
     )`;
 
-module.exports = {period_view, runs_per_period_view, runs_per_data_pass_view, mc_view, anchored_per_mc_view,  data_passes_view, anchorage_per_data_pass_view, flags_view}
+module.exports = {
+    period_view, 
+    runs_per_period_view, 
+    runs_per_data_pass_view, 
+    mc_view, 
+    anchored_per_mc_view,  
+    data_passes_view, 
+    anchorage_per_data_pass_view, 
+    flags_view
+}

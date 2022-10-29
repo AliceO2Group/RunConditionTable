@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4-beta" use-changelog="false" last-position="0,195" last-zoom="0.75" max-obj-count="33"
+<dbmodel pgmodeler-ver="0.9.4" use-changelog="false" last-position="0,565" last-zoom="0.75" max-obj-count="33"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -70,7 +70,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="280" y="1400"/>
+	<position x="320" y="1320"/>
 	<column name="id" not-null="true" sequence="public.beams_dictionary_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -91,7 +91,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="140" y="500"/>
+	<position x="220" y="500"/>
 	<column name="id" not-null="true" sequence="public.data_passes_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -139,7 +139,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="720" y="480"/>
+	<position x="860" y="440"/>
 	<column name="run_number" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -163,7 +163,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="1500" y="1060"/>
+	<position x="1440" y="1060"/>
 	<column name="id" not-null="true" sequence="public.detectors_subsystems_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -187,7 +187,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="320" y="1700"/>
+	<position x="300" y="1580"/>
 	<column name="id" not-null="true" sequence="public.flags_types_dictionary_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -211,7 +211,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="140" y="180"/>
+	<position x="260" y="200"/>
 	<column name="id" not-null="true" sequence="public.pass_types_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -265,7 +265,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="900" y="1660"/>
+	<position x="900" y="1480"/>
 	<column name="id" not-null="true" sequence="public.quality_control_flags_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -306,7 +306,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1560" y="1440"/>
+	<position x="1420" y="1400"/>
 	<column name="id" not-null="true" sequence="public.runs_detectors_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -328,9 +328,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="940" y="980"/>
+	<position x="880" y="960"/>
 	<column name="run_number" not-null="true">
-		<type name="bigint" length="0"/>
+		<type name="integer" length="0"/>
 	</column>
 	<column name="period_id" not-null="true">
 		<type name="integer" length="0"/>
@@ -383,7 +383,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="740" y="160"/>
+	<position x="740" y="180"/>
 	<column name="data_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -449,7 +449,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1620" y="700"/>
+	<position x="1520" y="700"/>
 	<column name="simulation_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -471,7 +471,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1180" y="620"/>
+	<position x="1140" y="600"/>
 	<column name="period_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>

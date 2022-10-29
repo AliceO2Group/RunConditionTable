@@ -103,7 +103,7 @@ class DatabaseService {
 
         if (client) {
             if (query === null) {
-                query = await QueryBuilder.build({ ...req.query, ...req.params }, this.adminClient);
+                query = await QueryBuilder.build({ ...req.query, ...req.params });
             }
 
             client.query(query)

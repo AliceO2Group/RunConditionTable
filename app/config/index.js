@@ -9,10 +9,8 @@ module.exports = {
     // App config
     winston: ResProvider.winston(),
     database: ResProvider.database(),
+    baseData: require('./baseData.js'),
     public: require('./public.js'),
-
-    // External secured config
-    external_secured_config: ResProvider.external_secured_config(),
 
     // Other config
     dataFromYearIncluding: 2015,

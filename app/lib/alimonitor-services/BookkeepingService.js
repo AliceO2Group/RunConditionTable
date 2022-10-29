@@ -80,9 +80,9 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             if (run.detectors) {
                 if (typeof run.detectors === 'string') {
                     if (run.detectors.includes(',')) { // TODO may other delimiters
-                        run.detectors = run.detectors.split(/,/).map((d) => d.trim());
+                        run.detectors = run.detectors.split(/,/).map((d) => d.trim().toUpperCase());
                     } else {
-                        run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
+                        run.detectors = run.detectors.split(/ +/).map((d) => d.trim().toUpperCase());
                     }
                 }
             } else {

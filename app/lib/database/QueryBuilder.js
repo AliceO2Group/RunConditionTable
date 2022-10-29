@@ -23,20 +23,7 @@ const Utils = require("../Utils.js");
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
 class QueryBuilder {
-
-    static async prepareRunsDetectorsOneHotQuery(client) {
-        // TODO throw out
-        const prepare_func_name = 'prepare_runs_one_hot_query';
-        let command = `select ${prepare_func_name}();`;
-        try {
-            command = (await client.query(command)).rows[0][prepare_func_name];
-            return command;
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    static async build(params, client) {
+    static async build(params) {
         const matchParams = [];
         const excludeParams = [];
         const fromParams = [];
@@ -66,16 +53,16 @@ class QueryBuilder {
 
         const filteringPart = () => {
             const matchPhrase = matchParams.map((filter) =>
-                `main_view."${filter.queryParam}" LIKE '${filter.value}'`).join(' AND ');
+                `"${filter.queryParam}" LIKE '${filter.value}'`).join(' AND ');
 
             const excludePhrase = excludeParams.map(({ queryParam, value }) =>
-                `main_view."${queryParam}" NOT LIKE '${value}'`).join(' AND ');
+                `"${queryParam}" NOT LIKE '${value}'`).join(' AND ');
 
             const fromPhrase = fromParams.map(({ queryParam, value }) =>
-                `main_view."${queryParam}" >= ${value}`).join(' AND ');
+                `"${queryParam}" >= ${value}`).join(' AND ');
 
             const toPhrase = toParams.map(({ queryParam, value }) =>
-                `main_view."${queryParam}" <= ${value}`).join(' AND ');
+                `"${queryParam}" <= ${value}`).join(' AND ');
 
             const filtersPhrase = [matchPhrase, excludePhrase, fromPhrase, toPhrase].filter((value) => value?.length > 0).join(' AND ');
 
@@ -92,10 +79,10 @@ class QueryBuilder {
             const { sorting } = params;
             if (sorting.startsWith('-')) {
                 const field = sorting.slice(1)
-                return `ORDER BY main_view.${field} DESC`;
+                return `ORDER BY ${field} DESC`;
             } else {
                 const field = sorting
-                return `ORDER BY main_view.${field} ASC`;
+                return `ORDER BY ${field} ASC`;
             }
 
 
@@ -110,41 +97,37 @@ class QueryBuilder {
         cases[pagesNames.runsPerPeriod] = 
         `${views.runs_per_period_view(params)}
         SELECT * 
-        FROM runs_per_period_view as main_view
-        INNER JOIN (${await QueryBuilder.prepareRunsDetectorsOneHotQuery(client)}) as onehot
-            on onehot.run_number = main_view.run_number
+        FROM runs_per_period_view
         `;
         cases[pagesNames.runsPerDataPass] =
         `${views.runs_per_data_pass_view(params)}
         SELECT *
-        FROM runs_per_data_pass_view as main_view
-        INNER JOIN (${await QueryBuilder.prepareRunsDetectorsOneHotQuery(client)}) as onehot
-            on onehot.run_number = main_view.run_number
+        FROM runs_per_data_pass_view
         `;
         cases[pagesNames.dataPasses] = 
         `${views.data_passes_view(params)}
         SELECT * 
-        FROM data_passes_view as main_view
+        FROM data_passes_view
         `;
         cases[pagesNames.anchoragePerDatapass] = 
         `${views.anchorage_per_data_pass_view(params)}
         SELECT *
-        FROM anchorage_per_data_pass_view as main_view
+        FROM anchorage_per_data_pass_view
         `;
         cases[pagesNames.mc] = 
         `${views.mc_view(params)}
         SELECT *  
-        FROM mc_view  as main_view
+        FROM mc_view
         `;
         cases[pagesNames.anchoredPerMC] = 
         `${views.anchored_per_mc_view(params)}
         SELECT *
-        FROM anchored_per_mc_view as main_view
+        FROM anchored_per_mc_view
         `;
         cases[pagesNames.flags] = 
         `${views.flags_view(params)}
         SELECT * 
-        FROM flags_view as main_view
+        FROM flags_view
         `;
 
         const queryRest = () => 
