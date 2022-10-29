@@ -30,7 +30,7 @@ export default function pager(model, data, scid) {
         );
     });
 
-    const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnsite);
+    const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
     const currentSiteIdx = currentSite - 1;
 
@@ -45,16 +45,26 @@ export default function pager(model, data, scid) {
     const leftThreeDotsPresent = !(leftButtonsR[leftButtonsR.length - 1] === middleButtonsR[0] - 1 || leftButtonsR.length === 0);
     const rightThreeDotsPresent = !(rightButtonsR[0] === middleButtonsR[middleButtonsR.length - 1] + 1 || rightButtonsR.length === 0);
 
+    const firstRowIdx = (currentSite-1) * data.rowsOnSite + 1;
+    const lastRowIdx = currentSite * data.rowsOnSite > data.totalRecordsNumber
+        ? data.totalRecordsNumber
+        : currentSite * data.rowsOnSite;
+
     // TODO add tooltips
     const siteChangingController = (onclickF, label) => h('a.site-changing-controller', { onclick: onclickF }, label);
 
     return [
         h('.flex-row', [
-            h('.menu-title', 'rows on site:'),
-            h('input', { id: `rows-on-site-input-${scid}`, type: 'number', placeholder: 50, value: model.router.params['rows-on-site'] }, ''),
-            //
+            h('input', {
+                id: `rows-on-site-input-${scid}`,
+                type: 'number',
+                placeholder: 50,
+                value: model.router.params['rows-on-site']
+            }, ''),
             h('button.btn', { onclick: () => onclickSetRowsOnSite(model, scid) }, 'apply'),
-            h('.menu-title', 'site:'),
+
+            h('.menu-title', `${firstRowIdx}-${lastRowIdx} out of ${data.totalRecordsNumber} items`),
+
             // Move to first site
             currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(1), iconMediaSkipBackward()) : ' ',
             // Move to middle of sites range [first, current]
