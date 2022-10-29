@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import tableHeader from './header.js';
 import row from './row.js';
 import pagesCellsSpecials from '../pagesCellsSpecials.js';
-import siteController from '../siteController.js';
+import pager from '../pager.js';
 
 import postingDataConfig from '../posting/postingDataConfig.js';
 import { postForm } from '../posting/postForm.js';
@@ -52,7 +52,7 @@ export default function tablePanel(model) {
 
     return h('div.p3', [
         filteringPanel,
-        siteController(model, data),
+        pager(model, data, 1),
         h('div', h('div.x-scrollable',
             h('table.table', { id: `data-table-${data.url}` }, [
                 tableHeader(visibleFields, data, model),
@@ -60,6 +60,7 @@ export default function tablePanel(model) {
                     model, visibleFields, data, cellsSpecials, dataPointer.page,
                 ),
             ]))),
+        pager(model, data, 2),
     ]);
 }
 

@@ -21,7 +21,7 @@ const siteParamName = RCT.dataReqParams.site;
 const visibleNeighbourButtonsRange = 2;
 const maxVisibleButtons = 10;
 
-export default function siteController(model, data) {
+export default function pager(model, data, scid) {
     const mapArrayToButtons = (arr) => arr.map((i) => {
         const site = i + 1;
         const url = replaceUrlParams(data.url, [[siteParamName, site]]);
@@ -51,8 +51,9 @@ export default function siteController(model, data) {
     return [
         h('.flex-row', [
             h('.menu-title', 'rows on site:'),
-            h('input', { id: 'rows-on-site-input', type: 'number', placeholder: 50, value: model.router.params['rows-on-site'] }, ''),
-            h('button.btn', { onclick: () => onclickSetRowsOnSite(model) }, 'apply'),
+            h('input', { id: `rows-on-site-input-${scid}`, type: 'number', placeholder: 50, value: model.router.params['rows-on-site'] }, ''),
+            //
+            h('button.btn', { onclick: () => onclickSetRowsOnSite(model, scid) }, 'apply'),
             h('.menu-title', 'site:'),
             // Move to first site
             currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(1), iconMediaSkipBackward()) : ' ',
@@ -76,11 +77,11 @@ export default function siteController(model, data) {
     ];
 }
 
-function onclickSetRowsOnSite(model) {
-    const input = document.getElementById('rows-on-site-input');
+function onclickSetRowsOnSite(model, scid) {
+    const input = document.getElementById(`rows-on-site-input-${scid}`);
     let rowsOnSite = input.value === '' ? input.placeholder : input.value;
     if (rowsOnSite < 1 || rowsOnSite > 200) {
-        alert('incorrect number of rows on site must be in range [1, 200]');
+        alert('incorrect number of rows on page: must be in range of [1, 200]');
         input.value = 50;
         rowsOnSite = 50;
     }
