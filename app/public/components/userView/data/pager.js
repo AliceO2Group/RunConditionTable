@@ -45,7 +45,7 @@ export default function pager(model, data, scid) {
     const leftThreeDotsPresent = !(leftButtonsR[leftButtonsR.length - 1] === middleButtonsR[0] - 1 || leftButtonsR.length === 0);
     const rightThreeDotsPresent = !(rightButtonsR[0] === middleButtonsR[middleButtonsR.length - 1] + 1 || rightButtonsR.length === 0);
 
-    const firstRowIdx = (currentSite-1) * data.rowsOnSite + 1;
+    const firstRowIdx = (currentSite - 1) * data.rowsOnSite + 1;
     const lastRowIdx = currentSite * data.rowsOnSite > data.totalRecordsNumber
         ? data.totalRecordsNumber
         : currentSite * data.rowsOnSite;
@@ -59,7 +59,7 @@ export default function pager(model, data, scid) {
                 id: `rows-on-site-input-${scid}`,
                 type: 'number',
                 placeholder: 50,
-                value: model.router.params['rows-on-site']
+                value: model.router.params['rows-on-site'],
             }, ''),
             h('button.btn', { onclick: () => onclickSetRowsOnSite(model, scid) }, 'apply'),
 
