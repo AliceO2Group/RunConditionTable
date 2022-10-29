@@ -96,7 +96,7 @@ export default function pager(model, data, scid) {
             currentSite > 1 ? siteChangingController(() => model.fetchedData.changePage(currentSite - 1), iconCaretLeft()) : ' ',
 
             mapArrayToButtons(leftButtonsR),
-            leftThreeDotsPresent ? '...' : '',
+            leftThreeDotsPresent ? h('.ellipsis') : '',
             mapArrayToButtons(middleButtonsR),
             rightThreeDotsPresent ? '...' : '',
             mapArrayToButtons(rightButtonsR),

@@ -15,7 +15,6 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 import { getHeaderSpecial } from '../headersSpecials.js';
-import { switchCase } from '../../../../../lib/Utils.js';
 
 const { dataReqParams } = RCT;
 
