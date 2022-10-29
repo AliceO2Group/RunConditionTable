@@ -15,8 +15,7 @@
 export const preparedData = (data) => {
     let rows = data.payload.rows.filter((item) => item.marked);
     if (rows?.length == 0) {
-        // eslint-disable-next-line prefer-destructuring
-        rows = data.payload.rows;
+        ({ rows } = data.payload);
     }
     const fields = data.payload.fields.filter((item) => item.marked).map((field) => field.name);
 

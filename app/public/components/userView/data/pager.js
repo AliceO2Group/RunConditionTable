@@ -42,13 +42,26 @@ export default function pager(model, data, scid) {
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
     const currentSiteIdx = currentSite - 1;
 
-    // eslint-disable-next-line max-len
-    const middleButtonsR = range(Math.max(0, currentSiteIdx - visibleNeighbourButtonsRange), Math.min(sitesNumber, currentSiteIdx + visibleNeighbourButtonsRange + 1));
+    const middleButtonsR = range(
+        Math.max(0, currentSiteIdx - visibleNeighbourButtonsRange),
+        Math.min(sitesNumber, currentSiteIdx + visibleNeighbourButtonsRange + 1),
+    );
 
-    const leftButtonsR = range(0, Math.min(middleButtonsR[0], Math.floor((maxVisibleButtons - (2 * visibleNeighbourButtonsRange + 1)) / 2)));
+    const leftButtonsR = range(
+        0,
+        Math.min(
+            middleButtonsR[0],
+            Math.floor((maxVisibleButtons - (2 * visibleNeighbourButtonsRange + 1)) / 2),
+        ),
+    );
 
-    // eslint-disable-next-line max-len
-    const rightButtonsR = range(Math.max(middleButtonsR[middleButtonsR.length - 1] + 1, sitesNumber - Math.floor((maxVisibleButtons - (2 * visibleNeighbourButtonsRange + 1)) / 2)), sitesNumber);
+    const rightButtonsR = range(
+        Math.max(
+            middleButtonsR[middleButtonsR.length - 1] + 1,
+            sitesNumber - Math.floor((maxVisibleButtons - (2 * visibleNeighbourButtonsRange + 1)) / 2),
+        ),
+        sitesNumber,
+    );
 
     const leftThreeDotsPresent = !(leftButtonsR[leftButtonsR.length - 1] === middleButtonsR[0] - 1 || leftButtonsR.length === 0);
     const rightThreeDotsPresent = !(rightButtonsR[0] === middleButtonsR[middleButtonsR.length - 1] + 1 || rightButtonsR.length === 0);
@@ -89,10 +102,25 @@ export default function pager(model, data, scid) {
             mapArrayToButtons(rightButtonsR),
 
             // Analogically as above
-            currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(currentSite + 1), iconCaretRight()) : ' ',
-            // eslint-disable-next-line max-len
-            currentSite < sitesNumber - 2 ? siteChangingController(() => model.fetchedData.changeSite(currentSite + Math.floor((sitesNumber - currentSite) / 2)), iconChevronBottom()) : ' ',
-            currentSite < sitesNumber ? siteChangingController(() => model.fetchedData.changeSite(sitesNumber), iconMediaSkipForward()) : ' ',
+            currentSite < sitesNumber
+                ? siteChangingController(
+                    () => model.fetchedData.changeSite(currentSite + 1),
+                    iconCaretRight(),
+                )
+                : ' ',
+
+            currentSite < sitesNumber - 2
+                ? siteChangingController(
+                    () => model.fetchedData.changeSite(currentSite + Math.floor((sitesNumber - currentSite) / 2)),
+                    iconChevronBottom(),
+                )
+                : ' ',
+            currentSite < sitesNumber
+                ? siteChangingController(
+                    () => model.fetchedData.changeSite(sitesNumber),
+                    iconMediaSkipForward(),
+                )
+                : ' ',
         ]),
     ];
 }
