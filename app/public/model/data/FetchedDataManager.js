@@ -138,12 +138,9 @@ export default class FetchedDataManager {
     }
 
     changeItemStatus(item) {
-        if (arguments[1] != undefined) {
-            // eslint-disable-next-line prefer-destructuring
-            item.marked = arguments[1];
-        } else {
-            item.marked = !item.marked;
-        }
+        item.marked = arguments[1] !== undefined
+            ? arguments[1]
+            : !item.marked;
         this.model.notify();
     }
 
