@@ -118,9 +118,9 @@ export default class FetchedDataManager {
         return apiPrefix + url.pathname.substring(1) + url.search + (countAllRecord ? '&count-records=true' : '');
     }
 
-    changeSite(site) {
+    changePage(pageNumber) {
         const url = this.router.getUrl();
-        const newUrl = replaceUrlParams(url, [[dataReqParams.site, site]]);
+        const newUrl = replaceUrlParams(url, [[dataReqParams.site, pageNumber]]);
         this.router.go(newUrl);
     }
 
@@ -138,12 +138,9 @@ export default class FetchedDataManager {
     }
 
     changeItemStatus(item) {
-        if (arguments[1] != undefined) {
-            // eslint-disable-next-line prefer-destructuring
-            item.marked = arguments[1];
-        } else {
-            item.marked = !item.marked;
-        }
+        item.marked = arguments[1] !== undefined
+            ? arguments[1]
+            : !item.marked;
         this.model.notify();
     }
 

@@ -82,15 +82,14 @@ class Utils {
     }
 
     static simpleBuildInsertQuery(targetTable, valuesObj) {
-        const entries = Object.entries(valuesObj);
-        const keys = entries.map(([k, _]) => k);
-        const values = entries.map(([_, v]) => v);
-        return `INSERT INTO ${targetTable} (${Utils.preserveSQLKeywords(keys).join(', ')})
-                VALUES(${Utils.parseValuesToSql(values).join(', ')})`;
+        return `INSERT INTO ${targetTable}(${Utils.preserveSQLKeywords(Object.keys(valuesObj)).join(', ')})
+                VALUES(${Utils.parseValuesToSql(Object.values(valuesObj)).join(', ')})`;
     }
 
     static switchCase(caseName, cases, defaultCaseValue) {
-        return Object.prototype.hasOwnProperty.call(cases, caseName) ? cases[caseName] : defaultCaseValue;
+        return Object.prototype.hasOwnProperty.call(cases, caseName)
+            ? cases[caseName]
+            : defaultCaseValue;
     }
 
     static delay(time) {

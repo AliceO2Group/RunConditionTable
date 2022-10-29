@@ -12,18 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-.site-changing-controller {
-    padding: 5px;
-    margin: 3px;
-    cursor: pointer;
-}
-
 .thick {
     font-weight: bold;
 }
-
-.table tbody tr:nth-child(odd).row-selected-color-alpha {background-color: rgba(145, 207, 84, 0.286) ;}
-.table tbody tr:nth-child(even).row-selected-color-alpha {background-color: rgba(104, 162, 46, 0.286) ;}
 
 .noBorderBottom {
     border-bottom: 0px !important;
@@ -75,10 +66,6 @@
     height: 100px;
 }
 
-.header-field-name {
-    position: relative;
-}
-
 .vertical-center {
     margin: 0;
     position: absolute;
@@ -91,10 +78,26 @@
     visibility: hidden !important;
 }
 
-.sticky {
+.filter-panel {
     position: sticky !important;
     top: 0px;
     padding-top: 10px;
     background-color: var(--color-white);
     z-index: 1;
+}
+
+.inline {
+    display: inline-block !important;
+}
+
+.none {
+    display: none !important;
+}
+
+.flex {
+    display: flex !important;
+}
+
+.highlight-blue {
+    background-color: #D7EDFC !important;
 }

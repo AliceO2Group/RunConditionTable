@@ -27,16 +27,17 @@ export default function dataPanel(model) {
     const { page, index } = model.getCurrentDataPointer();
     const data = model.fetchedData[page][index];
 
-    return h('.homePage', [
-        h('div.tableDiv', []),
+    return h('.homePage',
+        [
+            h('.tableDiv', []),
 
-        data ? data.match({
-            NotAsked: () => h('', 'not asked'),
-            Loading: () => spinnerAndReloadView(model),
-            Success: () => tablePanel(model),
-            Failure: (status) => failureStatusAndReload(model, status),
-        }) : h('', 'data null :: Arrr...'),
-    ]);
+            data ? data.match({
+                NotAsked: () => h('', 'not asked'),
+                Loading: () => spinnerAndReloadView(model),
+                Success: () => tablePanel(model),
+                Failure: (status) => failureStatusAndReload(model, status),
+            }) : h('', 'data null :: Arrr...'),
+        ]);
 }
 
 function spinnerAndReloadView(model) {

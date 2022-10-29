@@ -1,4 +1,3 @@
-/* eslint-disable multiline-comment-style */
 /**
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.

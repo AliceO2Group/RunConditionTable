@@ -33,14 +33,14 @@ export default function filter(model) {
 
     const { params } = model.router;
 
-    return h('div.sticky', [
-        h('div.x-scrollable',
+    return h('.filter-panel', [
+        h('.x-scrollable',
             h('table',
                 h('tbody',
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds),
                     inputsRow(params, lowerInputIds))),
-            h('div.abs',
+            h('.abs',
                 h('button.btn', {
                     onclick: onclickSubmit(model, inputsIds),
                 }, 'Submit'),
@@ -51,8 +51,9 @@ export default function filter(model) {
                 '     ',
                 h('button.btn', {
                     onclick: () => {
-                        // eslint-disable-next-line no-return-assign
-                        data.fields.forEach((f) => f.marked = true);
+                        for (const field of data.fields) {
+                            field.marked = true;
+                        }
                         model.notify();
                     },
                 }, 'Show all columns'),
@@ -86,16 +87,16 @@ const createClickableLabel = (model, field) =>
 
 const createInputField = (inputId, currentValue) => {
     const type = inputId.substring(inputId.indexOf('-') + 1);
-    return h('th.my-tooltip.noBorderBottom.table-cell-like',
-        h('div.rel',
-            h('input.form-control', {
+    return type !== 'undefined' ?
+        h('th.noBorderBottom.table-cell-like',
+            h('input.form-control.rel', {
                 style: 'width:120px',
                 type: 'text',
                 value: currentValue ? currentValue : '',
                 disabled: type == null,
                 id: inputId,
-            }),
-            h('span.tooltiptext', `${type}`)));
+                placeholder: `${type}`,
+            })) : '';
 };
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
@@ -109,8 +110,8 @@ const onclickSubmit = (model, inputsIds) => () => {
 
     const { params } = model.router;
     const newSearch =
-    `?page=${params.page}&index=${params.index}` +
-    `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&${filteringParamsPhrase}`;
+        `?page=${params.page}&index=${params.index}` +
+        `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&${filteringParamsPhrase}`;
 
     const url = model.router.getUrl();
     const newUrl = new URL(url.origin + url.pathname + newSearch);
@@ -126,6 +127,7 @@ const onclickClear = (model, inputsIds) => () => {
 
 const getUpperInputIds = (fields, pageFilteringTypes, filteringTypes) =>
     fields.map((f) => filedName2MatchFromType(f.name, pageFilteringTypes, filteringTypes));
+
 const getLowerInputIds = (fields, pagesFilteringTypes, filteringTypes) => fields.map((f) =>
     filedName2ExcludeToType(f.name, pagesFilteringTypes, filteringTypes));
 

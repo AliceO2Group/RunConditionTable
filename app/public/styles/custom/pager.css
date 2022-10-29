@@ -1,0 +1,12 @@
+input.pager {
+    border-radius: 10px;
+    border-style: solid;
+    border-color: beige;
+    width: 70px;
+}
+
+.site-changing-controller {
+    padding: 5px;
+    margin: 3px;
+    cursor: pointer;
+}
