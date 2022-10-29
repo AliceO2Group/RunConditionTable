@@ -18,7 +18,7 @@ import downloadCSV from '../../utils/csvExport.js';
 export default function header(model) {
     return h('.flex-row.p2', [
         h('.w-50', [
-            h('button.btn', iconHome()),
+            h('button.btn.btn-primary', iconHome()),
             ' ',
             h('button.btn', {
                 onclick: () => model.logout(),

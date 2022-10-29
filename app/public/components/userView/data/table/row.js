@@ -53,13 +53,20 @@ export default function row(
         }
     });
 
-    return h(rowDivDef, dataCells.concat([
-        h('td', h('input.form-check-input.p1.mh4.justify-center.relative', {
-            style: 'margin-left=0',
-            type: 'checkbox',
-            checked: item.marked,
-            onclick: () => model.fetchedData.changeItemStatus(item),
-        })),
+    const checkbox = h('td.relative', h('input.vertical-center', {
+        type: 'checkbox',
+        value: item.marked,
+        checked: item.marked,
+        onclick: () => {
+            model.fetchedData.changeItemStatus(item);
+            model.notify();
+        },
+    }));
 
-    ]));
+    return h(rowDivDef, [checkbox].concat(dataCells), //.concat([
+        /*
+         *  Checkbox
+         * ])
+         */
+    );
 }

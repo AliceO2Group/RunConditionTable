@@ -17,7 +17,9 @@ import { getHeaderSpecial, headerSpecPresent } from '../headersSpecials.js';
 
 export default function tableHeader(visibleFields, data, model) {
     return h('thead',
-        h('tr', columnsHeadersArray(visibleFields, data, model)
+        h('tr', [rowsOptions(model, data)].concat(
+            columnsHeadersArray(visibleFields, data, model),
+        )
             .concat([rowsOptions(model, data)])));
 }
 
@@ -35,7 +37,7 @@ const sort = (fName, data, model, order) => {
 
 const columnsHeadersArray = (visibleFields, data, model) =>
     visibleFields.map((f) => h('th', { scope: 'col' },
-        h('.header-field-name', [
+        h('.relative', [
             headerSpecPresent(model, f) ? [
                 h('div.sort-up-20', {
                     onclick: () => sort(f.name, data, model, -1),
@@ -51,13 +53,13 @@ const columnsHeadersArray = (visibleFields, data, model) =>
 
 const rowsOptions = (model, data) =>
     h('th', { scope: 'col' },
-        h('input.form-check-input.p1.mh4.justify-center.relative', {
-            style: 'margin-left=0',
-            type: 'checkbox',
-            onclick: (e) => {
+        h('.relative',
+            h('input.vertical-center', {
+                type: 'checkbox',
+                onclick: (e) => {
                 // eslint-disable-next-line no-return-assign
-                data.rows.forEach((r) => r.marked = e.target.checked);
-                model.notify();
-            },
-            checked: data.rows.every((r) => r.marked),
-        }, ''));
+                    data.rows.forEach((r) => r.marked = e.target.checked);
+                    model.notify();
+                },
+                checked: data.rows.every((r) => r.marked),
+            }, '')));
