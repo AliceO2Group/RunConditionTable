@@ -11,22 +11,25 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-
+// RCT
 const { HttpServer, Log } = require('@aliceo2/web-ui');
 const config = require('./lib/config/configProvider.js');
 const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
-const AuthControlManager = require('./lib/other/AuthControlManager.js');
-const DatabaseService = require('./lib/database/DatabaseService.js');
+
+// IO
 const path = require('path');
-const BookkeepingService = require('./lib/alimonitor-services/BookkeepingService.js');
 const readline = require('readline');
 const Utils = require('./lib/Utils.js');
-
 const { Console } = require('node:console');
+
+// Services
+const DatabaseService = require('./lib/database/DatabaseService.js');
+const BookkeepingService = require('./lib/alimonitor-services/BookkeepingService.js');
 const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
 const MonalisaServiceMC = require('./lib/alimonitor-services/MonalisaServiceMC.js');
-const QueryBuilder = require('./lib/database/QueryBuilder.js');
+const AuthControlManager = require('./lib/other/AuthControlManager.js');
 
+// Extract important
 const EP = config.public.endpoints;
 Log.configure(config);
 
@@ -35,17 +38,12 @@ Log.configure(config);
  */
 class RunConditionTableApplication {
     constructor() {
+        this.logger = new Log(RunConditionTableApplication.name);
         this.loggedUsers = {
             tokenToUserData: {},
         };
 
-        if (!config.openId) {
-            this.httpServer = new HttpServer(config.http, config.jwt);
-        } else {
-            this.httpServer = new HttpServer(config.http, config.jwt, config.openId);
-        }
-        this.logger = new Log(RunConditionTableApplication.name);
-
+        this.buildServer();
         this.buildServices();
         this.defineStaticRoutes();
         this.defineEndpoints();
@@ -55,6 +53,14 @@ class RunConditionTableApplication {
         this.buildCli();
     }
 
+    buildServer() {
+        if (!config.openId) {
+            this.httpServer = new HttpServer(config.http, config.jwt);
+        } else {
+            this.httpServer = new HttpServer(config.http, config.jwt, config.openId);
+        }
+    }
+
     buildCli() {
         this.rl = readline.createInterface({
             input: process.stdin,
@@ -62,36 +68,51 @@ class RunConditionTableApplication {
             terminal: true,
             prompt: '==> ',
         });
-
-        this.con = new Console({ stdout: process.stdout, stderr: process.stderr });
-
         this.rl.on('line', (line) => this.cli(line));
+        this.con = new Console({ stdout: process.stdout, stderr: process.stderr });
     }
 
     cli(line) {
         try {
             const cmdAndArgs = line.trim().split(/ +/).map((s) => s.trim());
+            const dbAdminExec = (args) => {
+                this.databaseService.adminClient
+                    .query(args.join(' '))
+                    .then(this.con.log)
+                    .catch((e) => {
+                        this.con.log(e);
+                    });
+            };
+            const shExec = (args) => {
+                Utils.exec(args)
+                    .then(this.con.log)
+                    .catch((e) => {
+                        this.con.log(e);
+                    });
+            };
             Utils.switchCase(cmdAndArgs[0], {
                 '': () => {},
+                now: () => {
+                    dbAdminExec(['select now();']);
+                },
+                psql: dbAdminExec,
+                sh: shExec,
+                tmp: () => {
+                    const DETECTORS_STORED_DEF_PATH = '/postgres/run/stored-data/';
+                    this.databaseService.adminClient
+                        .query(`COPY (select * from detectors_subsystems) TO '${DETECTORS_STORED_DEF_PATH}/detectors.csv';`)
+                        .then(this.con.log)
+                        .catch((e) => {
+                            this.con.log(e);
+                        });
+                },
                 bk: (args) => this.servCLI(this.alimonitorServices.bookkeepingService, args),
                 ml: (args) => this.servCLI(this.alimonitorServices.monalisaService, args),
                 mc: (args) => this.servCLI(this.alimonitorServices.monalisaServiceMC, args),
                 sync: async () => {
-                    try {
-                        await this.alimonitorServices.bookkeepingService.setSyncTask();
-                    } catch (e) {
-                        this.con.log(e);
-                    }
-                    try {
-                        await this.alimonitorServices.monalisaService.setSyncTask();
-                    } catch (e) {
-                        this.con.log(e);
-                    }
-                    try {
-                        await this.alimonitorServices.monalisaServiceMC.setSyncTask();
-                    } catch (e) {
-                        this.con.log(e);
-                    }
+                    await this.alimonitorServices.bookkeepingService.setSyncTask();
+                    await this.alimonitorServices.monalisaService.setSyncTask();
+                    await this.alimonitorServices.monalisaServiceMC.setSyncTask();
                 },
                 connServ: async () => {
                     await this.connectServices();
@@ -181,7 +202,7 @@ class RunConditionTableApplication {
             .catch((e) => errors.push(e));
         await Promise.all(
             Object.values(this.alimonitorServices)
-                .map((serv) => serv.setupConnection()),
+                .map((serv) => serv.dbConnect()),
         ).catch((e) => errors.push(e));
         if (errors.length > 0) {
             this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);

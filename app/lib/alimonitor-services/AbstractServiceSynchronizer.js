@@ -14,8 +14,6 @@
  */
 
 const { Client } = require('pg');
-const http = require('http');
-const https = require('https');
 const { SocksProxyAgent } = require('socks-proxy-agent');
 const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
@@ -41,24 +39,23 @@ class ServicesSynchronizer {
         this.name = this.constructor.name;
         this.logger = new Log(this.name);
 
-        this.opts = {
+        this.opts = this.createHttpOpts();
+
+        this.metaStore = {};
+        this.loglev = config.defaultLoglev; // TODO
+        Utils.applyOptsToObj(this, defaultServiceSynchronizerOptions);
+    }
+
+    createHttpOpts() {
+        let opts = this.getHttpOptsBasic();
+        opts = this.setSLLForHttpOpts(opts);
+        opts = this.setHttpSocket(opts);
+        return opts;
+    }
+
+    getHttpOptsBasic() {
+        return {
             rejectUnauthorized: false,
-            pfx: ResProvider.securityFilesProvider(
-                ['myCertificate.p12'],
-                'pfx - pkcs12 cert',
-                'RCT_CERT_PATH',
-            ),
-            cert: ResProvider.securityFilesProvider(
-                ['cert.pem'],
-                'cert.pem',
-                'RCT_CERT_PEM_PATH',
-            ),
-            key: ResProvider.securityFilesProvider(
-                ['privkey.pem', 'key.pem'],
-                'privkey.pem',
-                'RCT_PRIVKEY_PEM_PATH',
-            ),
-            passphrase: ResProvider.passphraseProvider(),
             headers: {
                 Accept:	'application/json;charset=utf-8',
                 'Accept-Language':	'en-US,en;q=0.5',
@@ -66,18 +63,41 @@ class ServicesSynchronizer {
                 'User-Agent': 'Mozilla/5.0',
             },
         };
+    }
 
+    setSLLForHttpOpts(opts) {
+        const pfx = ResProvider.securityFilesContentProvider(
+            ['myCertificate.p12'],
+            'pfx - pkcs12 cert',
+            'RCT_CERT_PATH',
+            true,
+        );
+
+        const { logsStacker } = pfx;
+        logsStacker.typeLog('info');
+        if (!pfx.content) {
+            if (logsStacker.any('error')) {
+                logsStacker.typeLog('warn');
+                logsStacker.typeLog('error');
+            }
+        }
+        const passphrase = ResProvider.passphraseProvider();
+
+        opts.pfx = pfx.content;
+        opts.passphrase = passphrase;
+
+        return opts;
+    }
+
+    setHttpSocket(opts) {
         const proxy = ResProvider.socksProvider();
         if (proxy?.length > 0) {
             this.logger.info(`using proxy/socks '${proxy}' to CERN network`);
-            this.opts.agent = new SocksProxyAgent(proxy);
+            opts.agent = new SocksProxyAgent(proxy);
         } else {
             this.logger.info('service do not use proxy/socks to reach CERN network');
         }
-
-        this.metaStore = {};
-        this.loglev = config.defaultLoglev; // TODO
-        Utils.applyOptsToObj(this, defaultServiceSynchronizerOptions);
+        return opts;
     }
 
     setLogginLevel(logginLevel) {
@@ -184,65 +204,15 @@ class ServicesSynchronizer {
             this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return Cacher.getJsonSync(this.name, endpoint);
         }
-
-        return new Promise((resolve, reject) => {
-            let rawData = '';
-            const req = this.checkClientType(endpoint).request(endpoint, this.opts, async (res) => {
-                const { statusCode } = res;
-                const contentType = res.headers['content-type'];
-
-                let error;
-                let redirect = false;
-                if (statusCode == 302 || statusCode == 301) {
-                    const mess = `Redirect. Status Code: ${statusCode}; red. to ${res.headers.location}`;
-                    if (this.allowRedirects) {
-                        redirect = true;
-                        this.logger.warn(mess);
-                        const nextHope = new URL(endpoint.origin + res.headers.location);
-                        nextHope.searchParams.set('res_path', 'json');
-                        this.logger.warn(`from ${endpoint.href} to ${nextHope.href}`);
-                        resolve(await this.getRawResponse(nextHope));
-                    } else {
-                        throw new Error(mess);
-                    }
-                } else if (statusCode !== 200) {
-                    error = new Error(`Request Failed. Status Code: ${statusCode}`);
-                } else if (!/^application\/json/.test(contentType)) {
-                    error = new Error(`Invalid content-type. Expected application/json but received ${contentType}`);
-                }
-                if (error) {
-                    this.logger.error(error.message);
-                    res.resume();
-                    return;
-                }
-
-                res.on('data', (chunk) => {
-                    rawData += chunk;
-                });
-                res.on('end', () => {
-                    try {
-                        if (!redirect) {
-                            const data = JSON.parse(rawData);
-                            if (this.rawCacheUse) {
-                                Cacher.cache(this.name, endpoint, data);
-                            }
-                            resolve(data);
-                        }
-                    } catch (e) {
-                        this.logger.error(e.message);
-                        reject(e);
-                    }
-                });
-            });
-            req.on('error', (e) => {
-                this.logger.error(`ERROR httpGet: ${e}`);
-                reject(e);
-            });
-            req.end();
-        });
+        const onSucces = (endpoint, data) => {
+            if (this.rawCacheUse) {
+                Cacher.cache(this.name, endpoint, data);
+            }
+        };
+        return await Utils.makeHttpRequest(endpoint, this.opts, this.logger, onSucces);
     }
 
-    async setupConnection() {
+    async dbConnect() {
         this.dbclient = new Client(config.database);
         this.dbclient.on('error', (e) => this.logger.error(e));
 
@@ -250,33 +220,28 @@ class ServicesSynchronizer {
             .then(() => this.logger.info('database connection established'));
     }
 
-    async disconnect() {
+    async dbDisconnect() {
         return await this.dbclient.end()
             .then(() => this.logger.info('database connection ended'));
     }
 
-    checkClientType(endpoint) {
-        const unspecifiedProtocolMessage = 'unspecified protocol in url';
-
-        switch (endpoint.protocol) {
-            case 'http:':
-                return http;
-            case 'https:':
-                return https;
-            default:
-                this.logger.error(unspecifiedProtocolMessage);
-                throw new Error(unspecifiedProtocolMessage);
-        }
-    }
-
     async setSyncTask() {
         this.forceStop = false;
-        await this.sync();
+        await this.sync()
+            .catch((e) => {
+                this.logger.error(e.stack);
+            });
     }
 
     async close() {
         this.forecStop = true;
-        await this.disconnect();
+        await this.dbDisconnect();
+    }
+
+    async restart() {
+        this.opts = this.createHttpOpts();
+        await this.close();
+        await this.dbConnect();
     }
 }
 

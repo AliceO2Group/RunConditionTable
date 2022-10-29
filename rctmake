@@ -62,9 +62,10 @@ Usage:
             12. dump:export -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
             13. dump:import -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
-        ! For build, follow, stop, prune stages an additional flag can be specified; -S|--service <SERVICE>,
-        which specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
+        ! For build, follow, stop, prune stages an additional flag can be specified: -S|--service <SERVICE>,
+            witch specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
 
+        @Deprecated - production will NOT be handeled with dockers
         Default behaviour of $SCRIPT_NAME (./$SCRIPT_NAME) is build prod it is equivalent to
             ./$SCRIPT_NAME prune,build --target prod
     

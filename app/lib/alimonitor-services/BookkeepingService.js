@@ -71,7 +71,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         }
 
         await Promise.all(pendingSyncs);
-        this.logger.info('bookkeeping sync trvers called ended');
+        this.logger.info('bookkeeping sync travers ended');
     }
 
     dataAdjuster(run) {
