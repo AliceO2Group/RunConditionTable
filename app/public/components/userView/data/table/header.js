@@ -19,8 +19,7 @@ export default function tableHeader(visibleFields, data, model) {
     return h('thead',
         h('tr', [rowsOptions(model, data)].concat(
             columnsHeadersArray(visibleFields, data, model),
-        )
-            .concat([rowsOptions(model, data)])));
+        )));
 }
 
 const sort = (fName, data, model, order) => {
@@ -57,8 +56,9 @@ const rowsOptions = (model, data) =>
             h('input.vertical-center', {
                 type: 'checkbox',
                 onclick: (e) => {
-                // eslint-disable-next-line no-return-assign
-                    data.rows.forEach((r) => r.marked = e.target.checked);
+                    for (const row of data.rows) {
+                        row.marked = e.target.checked;
+                    }
                     model.notify();
                 },
                 checked: data.rows.every((r) => r.marked),

@@ -33,7 +33,7 @@ export default function filter(model) {
 
     const { params } = model.router;
 
-    return h('div.sticky', [
+    return h('div.filter-panel', [
         h('div.x-scrollable',
             h('table',
                 h('tbody',
@@ -51,8 +51,9 @@ export default function filter(model) {
                 '     ',
                 h('button.btn', {
                     onclick: () => {
-                        // eslint-disable-next-line no-return-assign
-                        data.fields.forEach((f) => f.marked = true);
+                        for (const field of data.fields) {
+                            field.marked = true;
+                        }
                         model.notify();
                     },
                 }, 'Show all columns'),

@@ -55,7 +55,6 @@ export default function row(
 
     const checkbox = h('td.relative', h('input.vertical-center', {
         type: 'checkbox',
-        value: item.marked,
         checked: item.marked,
         onclick: () => {
             model.fetchedData.changeItemStatus(item);
@@ -63,10 +62,5 @@ export default function row(
         },
     }));
 
-    return h(rowDivDef, [checkbox].concat(dataCells), //.concat([
-        /*
-         *  Checkbox
-         * ])
-         */
-    );
+    return h(rowDivDef, [checkbox].concat(dataCells));
 }

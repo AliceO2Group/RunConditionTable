@@ -87,7 +87,7 @@
     visibility: hidden !important;
 }
 
-.sticky {
+.filter-panel {
     position: sticky !important;
     top: 0px;
     padding-top: 10px;
