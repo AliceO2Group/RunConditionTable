@@ -15,14 +15,21 @@
 import { h } from '/js/src/index.js';
 
 export default function viewButton(
-    model, label, onclickAction, id = '', href = undefined, adClasses = '', margin = '.m1', forceButton = false,
+    model,
+    label,
+    onclickAction,
+    id = '',
+    href = undefined,
+    classes = '',
+    margin = '.m1',
+    forceButton = false,
 ) {
-    let buttonType = `.btn${adClasses}${margin}`;
+    let buttonType = `.btn${classes}${margin}`;
 
     if (model.router && href !== undefined) {
         const url = model.router.getUrl();
         if (href === url.pathname + url.search || href['href'] && href.href === url.href) {
-            buttonType += ' currentPage';
+            buttonType += ' highlight-blue';
         }
     }
 

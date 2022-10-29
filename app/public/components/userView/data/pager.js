@@ -25,8 +25,16 @@ export default function pager(model, data, scid) {
     const mapArrayToButtons = (arr) => arr.map((i) => {
         const site = i + 1;
         const url = replaceUrlParams(data.url, [[siteParamName, site]]);
+
         return viewButton(
-            model, site, () => model.fetchedData.changeSite(site), '', url.pathname + url.search, '', '.m1', true,
+            model,
+            site,
+            () => model.fetchedData.changeSite(site),
+            '',
+            url.pathname + url.search,
+            `${currentSite.toString() === site.toString() ? '.selected' : ''}`,
+            '.m1',
+            true,
         );
     });
 
@@ -50,20 +58,22 @@ export default function pager(model, data, scid) {
         ? data.totalRecordsNumber
         : currentSite * data.rowsOnSite;
 
-    // TODO add tooltips
     const siteChangingController = (onclickF, label) => h('a.site-changing-controller', { onclick: onclickF }, label);
 
     return [
         h('.flex-row', [
-            h('input', {
+            h('.menu-title.w-33', `${firstRowIdx}-${lastRowIdx} out of ${data.totalRecordsNumber} items`),
+
+            h('input.pager.p2', {
                 id: `rows-on-site-input-${scid}`,
                 type: 'number',
                 placeholder: 50,
                 value: model.router.params['rows-on-site'],
             }, ''),
+            h('.menu-title', 'per page'),
             h('button.btn', { onclick: () => onclickSetRowsOnSite(model, scid) }, 'apply'),
 
-            h('.menu-title', `${firstRowIdx}-${lastRowIdx} out of ${data.totalRecordsNumber} items`),
+            h('.menu-title.w-25'),
 
             // Move to first site
             currentSite > 1 ? siteChangingController(() => model.fetchedData.changeSite(1), iconMediaSkipBackward()) : ' ',
