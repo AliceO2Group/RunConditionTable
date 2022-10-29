@@ -33,3 +33,33 @@
     background-color: var(--color-primary) !important;
     border-radius: 10px;
 }
+
+.ellipsis-20 {
+    background-image: url('./images/20/Ellipsis.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.hamburger-20 {
+    background-image: url('./images/20/Hamburger.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.filter-20 {
+    background-image: url('./images/20/Filter.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.filter-button {
+    width: 48px;
+    height: 32px;
+    padding: 0 !important;
+    display: inline-block;
+    position: relative;
+    top: 0.2em;
+}

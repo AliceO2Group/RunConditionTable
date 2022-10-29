@@ -16,19 +16,20 @@ import { h } from '/js/src/index.js';
 import { multiButtonController } from './multiButtonController.js';
 
 export default function fetchedDataPages(model, pageName, label) {
+    let toggle = model.router.params.page === pageName;
     const dataSubsetForPage = model.fetchedData[pageName];
     const buttons = [];
 
     const labelWithChevron = model.router.params.page === pageName
         ? h('div',
-            h('div.vertical-center',
-                h('div.current-page',
-                    h('div.title-text-relative.hidden', label))),
-            h('div.chevron-right-20.vertical-center'),
-            h('div.title-text.vertical-center', label))
+            h('.vertical-center',
+                h('.current-page',
+                    h('.title-text-relative.hidden', label))),
+            h('.chevron-right-20.vertical-center', { id: `${pageName}ToggleChevron` }),
+            h('.title-text.vertical-center', label))
         : h('div',
-            h('div.chevron-down-20.vertical-center'),
-            h('div.title-text.vertical-center', label));
+            h('.chevron-down-20.vertical-center', { id: `${pageName}ToggleChevron` }),
+            h('.title-text.vertical-center', label));
 
     if (pageName) {
         for (const index in dataSubsetForPage) {
@@ -37,10 +38,35 @@ export default function fetchedDataPages(model, pageName, label) {
             }
         }
     }
+
+    function handleToggle() {
+        toggle = !toggle;
+        const x = document.getElementById(`${pageName}ToggleHide`);
+        if (x.classList.contains('none')) {
+            x.classList.add('flex');
+            x.classList.remove('none');
+        } else {
+            x.classList.add('none');
+            x.classList.remove('flex');
+        }
+        const chevr = document.getElementById(`${pageName}ToggleChevron`);
+        if (chevr.classList.contains('chevron-right-20')) {
+            chevr.classList.remove('chevron-right-20');
+            chevr.classList.add('chevron-down-20');
+        } else {
+            chevr.classList.remove('chevron-down-20');
+            chevr.classList.add('chevron-right-20');
+        }
+    }
+
     return h('.flex-wrap', [
         h('.page-title',
-            { class: model.router.params.page === pageName ? 'selected' : '' },
+            { class: model.router.params.page === pageName ? 'selected' : '',
+                onclick: () => handleToggle(),
+            },
             labelWithChevron),
-        h('.flex-wrap.item-center.justify-center', [h('.flex-column', buttons)]),
+        h(`.flex-wrap.item-center.justify-center.${toggle ? 'flex' : 'none'}`,
+            { id: `${pageName}ToggleHide` },
+            [h('.flex-column', buttons)]),
     ]);
 }
