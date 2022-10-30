@@ -140,10 +140,6 @@
     right: 3.5em;
 }
 
-.my-table tbody {
-    /* background-color: aqua; */
-}
-
 .scale-2-5 {
     scale: 1.875;
 }
@@ -162,4 +158,15 @@
 
 .m-21 {
     margin: 21px !important;
+}
+
+.clickable-label {
+    display: block !important;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.clickable-label.active {
+    background-color: #b3c5d7;
+    border-radius: 10px;
 }

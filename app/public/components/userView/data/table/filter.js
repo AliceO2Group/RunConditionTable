@@ -78,11 +78,12 @@ const inputsRow = (params, inputsIds) => h('tr',
 
 const createClickableLabel = (model, field) =>
     h('th.tooltip.noBorderBottom.table-cell-like',
-        h('button.btn', {
+        h('.clickable-label', {
             style: 'width:120px',
             onclick: () => model.fetchedData.changeItemStatus(field),
             className: field.marked ? 'active' : '',
-        }, h(`${field.marked ? '.eye-20.abs.t-10' : '.hide-20.abs.t-10'}`),
+        },
+        h(`${field.marked ? '.eye-20' : '.hide-20'}`),
         getHeaderSpecial(model, field),
         h('span.tooltiptext', field.marked ? 'hide' : 'display')));
 

@@ -68,14 +68,12 @@
     background-image: url('./images/20/Eye.svg');
     width: 20px;
     height: 20px;
-    display: inline-block;
 }
 
 .hide-20 {
     background-image: url('./images/20/Hide.svg');
     width: 20px;
     height: 20px;
-    display: inline-block;
 }
 
 .clear-filters-20 {
