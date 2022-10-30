@@ -36,8 +36,6 @@ export default function tablePanel(model) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
 
-    console.log(dataPointer.page);
-
     if (data.rows?.length == 0) {
         const removeAndGoBackBtn = h('button.btn.btn-primary.m3', {
             onclick: () => model.removeCurrentData(),

@@ -16,11 +16,21 @@ import { h } from '/js/src/index.js';
 import viewButton from '../../../common/viewButton.js';
 import spinner from '../../../common/spinner.js';
 
-export default function spinnerAndReloadView(model) {
+const pos = { x: 0, y: 0 };
+
+const saveCursorPosition = (x, y) => {
+    pos.x = (x / window.innerWidth).toFixed(2);
+    pos.y = (y / window.innerHeight).toFixed(2);
+    document.documentElement.style.setProperty('--x', pos.x);
+    document.documentElement.style.setProperty('--y', pos.y);
+};
+
+export default function spinnerAndReloadView(model, page, index) {
+    const loadingFinished = () => model.fetchedData[page][index].kind !== 'Loading';
     let totalSeconds = 0;
     let counterId = undefined;
 
-    function initCounter() {
+    const initCounter = () => {
         if (counterId !== undefined) {
             clearInterval(counterId);
             counterId = undefined;
@@ -29,38 +39,31 @@ export default function spinnerAndReloadView(model) {
         if (counterId === undefined) {
             counterId = setInterval(setTime, 1000);
         }
-    }
+    };
 
-    function setTime() {
-        const minutesLabel = document.getElementById('minutes');
-        const secondsLabel = document.getElementById('seconds');
+    const setTime = () => {
+        let minutesLabel = null;
+        let secondsLabel = null;
+        do {
+            minutesLabel = document.getElementById('minutes');
+            secondsLabel = document.getElementById('seconds');
+            if (loadingFinished()) {
+                return;
+            }
+        } while (!(secondsLabel && minutesLabel));
         ++totalSeconds;
         secondsLabel.innerHTML = pad(totalSeconds % 60);
         minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
-    }
+    };
 
-    function pad(val) {
+    const pad = (val) => {
         const valString = `${val}`;
         if (valString.length < 2) {
             return `0${valString}`;
         } else {
             return valString;
         }
-    }
-
-    const pos = { x: 0, y: 0 };
-
-    const saveCursorPosition = function (x, y) {
-        pos.x = (x / window.innerWidth).toFixed(2);
-        pos.y = (y / window.innerHeight).toFixed(2);
-        document.documentElement.style.setProperty('--x', pos.x);
-        document.documentElement.style.setProperty('--y', pos.y);
     };
-
-    document.addEventListener('mousemove', (e) => {
-        saveCursorPosition(e.clientX, e.clientY);
-    });
-    setTimeout(() => initCounter(), 10);
 
     const reloadBtn = viewButton(
         model,
@@ -79,6 +82,11 @@ export default function spinnerAndReloadView(model) {
         h('span.clear-both', { id: 'seconds' }, '00'),
         h('.tooltiptext2.tracker.p2.br3',
             'If you are seeing this for way too long, then probably something is messed up'));
+
+    document.addEventListener('mousemove', (e) => {
+        saveCursorPosition(e.clientX, e.clientY);
+    });
+    setTimeout(() => initCounter(), 0);
 
     return h('.loginDiv.top-100', [
         h('.my-tooltip-bg',

@@ -30,8 +30,8 @@ export default function dataPanel(model) {
 
     return data ? data.match({
         NotAsked: () => h('', 'not asked'),
-        Loading: () => spinnerAndReloadView(model),
-        Success: () => spinnerAndReloadView(model), //TablePanel(model),
+        Loading: () => spinnerAndReloadView(model, page, index),
+        Success: () => spinnerAndReloadView(model, page, index), //TablePanel(model),
         Failure: (status) => failureStatusAndReload(model, status),
     }) : unknownError();
 }
