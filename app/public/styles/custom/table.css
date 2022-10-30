@@ -1,13 +1,17 @@
 .track:hover {
-    background-color: #D7EDFC !important;
+    background-color: #b3c5d7 !important;
+}
+
+.track.row-selected-color-alpha:hover {
+    background-color: #778da9!important;
 }
 
 .table tbody tr:nth-child(odd).row-selected-color-alpha {
-    background-color: rgba(145, 207, 84, 0.286);
+    background-color: #8d99ae;
 }
 
 .table tbody tr:nth-child(even).row-selected-color-alpha {
-    background-color: rgba(104, 162, 46, 0.286);
+    background-color: #8d99ae;
 }
 
 input[type="checkbox"] {
@@ -24,9 +28,9 @@ input[type="checkbox"] {
   }
 
   input[type="checkbox"].ticked {
-    background-color: var(--color-primary);
+    background-color: #1D3557;
     border-radius: 0.15em;
-    border: 0.15em solid var(--color-primary) !important;
+    border: 0.15em solid #1D3557 !important;
   }
 
   input[type="checkbox"]::before {
