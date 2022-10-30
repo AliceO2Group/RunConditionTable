@@ -12,6 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
+:root {
+    /* Color palette */
+    --active-color: #b3c5d7;
+    --highlight-blue: #D7EDFC;
+    --blue: #1e90ff;
+    --white: #ffffff;
+}
+
 .thick {
     font-weight: bold;
 }
@@ -34,7 +42,7 @@
 }
 
 .table-cell-like.active {
-    background-color: #b3c5d7 !important;
+    background-color: var(--active-color) !important;
 }
 
 .tooltip:hover .tooltiptext {
@@ -138,7 +146,7 @@
 }
 
 .highlight-blue {
-    background-color: #D7EDFC !important;
+    background-color: var(--highlight-blue) !important;
 }
 
 .t-10 {
@@ -173,7 +181,7 @@
 }
 
 .clickable-label.active {
-    background-color: #b3c5d7;
+    background-color: var(--active-color);
     border-radius: 10px;
 }
 
@@ -189,4 +197,10 @@
 .br-bottom-10 {
     border-bottom-left-radius: 10px !important;
     border-bottom-right-radius: 10px !important;
+}
+
+.btn-secondary {
+    border: var(--active-color) solid 1px !important;
+    background-color: var(--color-white) !important;
+    color: var(--active-color) !important;
 }
