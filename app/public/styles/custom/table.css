@@ -1,17 +1,24 @@
+:root {
+    /* Color palette */
+    --active-color: #b3c5d7;
+    --focus-color: #778da9;
+    --row-selected-color: #8d99ae;
+    --highlight-blue: #D7EDFC;
+    --dark-blue: #1D3557;
+    --blue: #1e90ff;
+    --white: #ffffff;
+}
+
 .track:hover {
-    background-color: #b3c5d7 !important;
+    background-color: var(--active-color) !important;
 }
 
 .track.row-selected-color-alpha:hover {
-    background-color: #778da9!important;
+    background-color: var(--focus-color) !important;
 }
 
-.table tbody tr:nth-child(odd).row-selected-color-alpha {
-    background-color: #8d99ae;
-}
-
-.table tbody tr:nth-child(even).row-selected-color-alpha {
-    background-color: #8d99ae;
+.table tbody tr.row-selected-color-alpha {
+    background-color: var(--row-selected-color);
 }
 
 input[type="checkbox"] {
@@ -28,9 +35,9 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"].ticked {
-    background-color: #1D3557;
+    background-color: var(--dark-blue);
     border-radius: 0.15em;
-    border: 0.15em solid #1D3557 !important;
+    border: 0.15em solid var(--dark-blue) !important;
 }
 
 input[type="checkbox"]::before {
@@ -65,7 +72,7 @@ input {
 }
 
 input:focus {
-    border: #778da9 !important;
+    border: var(--focus-color) !important;
 }
 
 .placeholder {
