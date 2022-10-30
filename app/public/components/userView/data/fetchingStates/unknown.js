@@ -13,13 +13,24 @@
  */
 
 import { h } from '/js/src/index.js';
+import viewButton from '../../../common/viewButton.js';
 
-export default function spinner() {
-    return h('.m-21',
-        h('.atom-spinner.f1.scale-2-5',
-            h('.spinner-inner',
-                h('.spinner-line'),
-                h('.spinner-line'),
-                h('.spinner-line'),
-                h('.spinner-circle', '●'))));
+export default function unknownError() {
+    const reloadBtn = viewButton(
+        model,
+        'Reload',
+        () => model.fetchedData.reqForData(true),
+        '',
+        undefined,
+        '.btn-primary.m3',
+    );
+    const loadingMessage = h('h3', 'Unknown error');
+    const explanation = h('h5', 'Request could not be handled properly');
+
+    return h('.loginDiv.top-100', [
+        h('.unexpected-90'),
+        loadingMessage,
+        explanation,
+        reloadBtn,
+    ]);
 }

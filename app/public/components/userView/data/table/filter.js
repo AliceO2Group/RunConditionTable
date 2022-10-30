@@ -78,7 +78,7 @@ const inputsRow = (params, inputsIds) => h('tr',
 
 const createClickableLabel = (model, field) =>
     h('th.my-tooltip.noBorderBottom.table-cell-like',
-    h('button.btn', {
+        h('button.btn', {
             style: 'width:120px',
             onclick: () => model.fetchedData.changeItemStatus(field),
             className: field.marked ? 'active' : '',

@@ -22,6 +22,9 @@ import postingDataConfig from '../posting/postingDataConfig.js';
 import { postForm } from '../posting/postForm.js';
 import filter from './filter.js';
 
+import { RCT } from '../../../../config.js';
+const { pagesNames } = RCT;
+
 /**
  * Creates vnode containing table of fetched data (main content)
  * and additional features like page controller or columns visibility controller
@@ -33,13 +36,26 @@ export default function tablePanel(model) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
 
+    console.log(dataPointer.page);
+
     if (data.rows?.length == 0) {
-        const removeAndGoBackBtn = h('button.btn.btn-primary',
-            { onclick: () => model.removeCurrentData() }, 'Go Back & Remove This Page');
+        const removeAndGoBackBtn = h('button.btn.btn-primary.m3', {
+            onclick: () => model.removeCurrentData(),
+        }, `${
+            dataPointer.page === pagesNames.periods
+                ? 'Reload'
+                : 'Go back'
+        }`);
         const noDataMessage = h('h3', 'No data found');
+        const noDataExplanation = h('h5', `${
+            dataPointer.page === pagesNames.periods
+                ? 'Make sure the database works fine'
+                : 'There is no data to be displayed here'
+        }`);
         return h('.loginDiv.top-100', [
             h('.nothing-found-90'),
             noDataMessage,
+            noDataExplanation,
             removeAndGoBackBtn,
         ]);
     }

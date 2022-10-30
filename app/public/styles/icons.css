@@ -98,3 +98,24 @@
     height: 90px;
     display: inline-block;
 }
+
+.no-network-90 {
+    background-image: url('./images/90/No\ Network.svg');
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+}
+
+.factory-breakdown-90 {
+    background-image: url('./images/90/Factory\ Breakdown.svg');
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+}
+
+.unexpected-90 {
+    background-image: url('./images/90/Unexpected.svg');
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+}

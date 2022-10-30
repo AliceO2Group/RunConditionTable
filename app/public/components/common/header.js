@@ -18,21 +18,20 @@ import downloadCSV from '../../utils/csvExport.js';
 export default function header(model) {
     return h('',
         h('.header-specific', headerSpecific(model)),
-            h('.flex-row.p2', [
-                h('.w-50', [
-                    h('button.btn.btn-primary', iconHome()),
-                    ' ',
-                    h('button.btn', {
-                        onclick: () => model.logout(),
-                    }, iconPerson()),
-                    ' ',
-                    h('span.f4.gray',{
-                        onclick: () => model.router.go('/', true)
-                    }, 'Run Condition Table'),
-                ]),
-                h('.w-50', functionalities(model)),
+        h('.flex-row.p2', [
+            h('.w-50', [
+                h('button.btn.btn-primary', iconHome()),
+                ' ',
+                h('button.btn', {
+                    onclick: () => model.logout(),
+                }, iconPerson()),
+                ' ',
+                h('span.f4.gray', {
+                    onclick: () => model.router.go('/', true),
+                }, 'Run Condition Table'),
             ]),
-    );
+            h('.w-50', functionalities(model)),
+        ]));
 }
 
 const headerSpecific = (model) => {

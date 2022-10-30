@@ -13,13 +13,24 @@
  */
 
 import { h } from '/js/src/index.js';
+import viewButton from '../../../common/viewButton.js';
 
-export default function spinner() {
-    return h('.m-21',
-        h('.atom-spinner.f1.scale-2-5',
-            h('.spinner-inner',
-                h('.spinner-line'),
-                h('.spinner-line'),
-                h('.spinner-line'),
-                h('.spinner-circle', '●'))));
+export default function failureStatusAndReload(model, status) {
+    const reloadBtn = viewButton(
+        model,
+        'Reload',
+        () => model.fetchedData.reqForData(true),
+        '',
+        undefined,
+        '.btn-primary.m3',
+    );
+    const loadingMessage = h('h3', 'Failed to load data');
+    const explanation = h('h5', `The services are unavailable (status: ${status ? status : 'unknown'})`);
+
+    return h('.loginDiv.top-100', [
+        h('.no-network-90'),
+        loadingMessage,
+        explanation,
+        reloadBtn,
+    ]);
 }

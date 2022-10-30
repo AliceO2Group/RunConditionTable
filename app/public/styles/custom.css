@@ -36,6 +36,16 @@
     bottom: -100%;
 }
 
+.tooltip .tooltiptext2 {
+    visibility: hidden;
+    right: auto;
+}
+
+.tooltip:hover .tooltiptext2 {
+    visibility: visible;
+    right: auto;
+}
+
 .my-tooltip:hover .tooltiptext {
     visibility: visible;
 }
@@ -109,6 +119,10 @@
     display: inline-block !important;
 }
 
+.clear-both {
+    clear: both !important;
+}
+
 .none {
     display: none !important;
 }
@@ -131,7 +145,7 @@
 }
 
 .scale-2-5 {
-    scale: 2.5;
+    scale: 1.875;
 }
 
 .top-100 {
@@ -144,4 +158,8 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.m-21 {
+    margin: 21px !important;
 }
