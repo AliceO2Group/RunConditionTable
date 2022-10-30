@@ -26,7 +26,7 @@ const saveCursorPosition = (x, y) => {
 };
 
 export default function spinnerAndReloadView(model, page, index) {
-    const loadingFinished = () => model.fetchedData[page][index].kind !== 'Loading';
+    const loadingFinished = () => model.fetchedData[page][index]?.kind !== 'Loading';
     let totalSeconds = 0;
     let counterId = undefined;
 
