@@ -77,7 +77,7 @@ const inputsRow = (params, inputsIds) => h('tr',
     inputsIds.map((id) => createInputField(id, params[id])));
 
 const createClickableLabel = (model, field) =>
-    h('th.my-tooltip.noBorderBottom.table-cell-like',
+    h('th.tooltip.noBorderBottom.table-cell-like',
         h('button.btn', {
             style: 'width:120px',
             onclick: () => model.fetchedData.changeItemStatus(field),
