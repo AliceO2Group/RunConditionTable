@@ -84,4 +84,5 @@ input:focus ~ .placeholder, input:valid ~ .placeholder {
     font-size: small;
     background-color: var(--color-white);
     padding:0 3px;
+    border-radius: 5px;
 }

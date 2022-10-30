@@ -29,6 +29,12 @@
 
 .table-cell-like {
     display: table-cell !important;
+    margin: 0 !important;
+    padding: 0 5px !important;
+}
+
+.table-cell-like.active {
+    background-color: #b3c5d7 !important;
 }
 
 .tooltip:hover .tooltiptext {
@@ -169,4 +175,18 @@
 .clickable-label.active {
     background-color: #b3c5d7;
     border-radius: 10px;
+}
+
+.no-spacing {
+    border-spacing: 10px 0;
+}
+
+.br-top-10 {
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+}
+
+.br-bottom-10 {
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
 }
