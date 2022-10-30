@@ -25,15 +25,15 @@ input[type="checkbox"] {
     border: 0.15em solid var(--color-gray) !important;
     display: grid;
     place-content: center;
-  }
+}
 
-  input[type="checkbox"].ticked {
+input[type="checkbox"].ticked {
     background-color: #1D3557;
     border-radius: 0.15em;
     border: 0.15em solid #1D3557 !important;
-  }
+}
 
-  input[type="checkbox"]::before {
+input[type="checkbox"]::before {
     content: "";
     width: 0.65em;
     height: 0.65em;
@@ -44,9 +44,45 @@ input[type="checkbox"] {
     transform-origin: bottom left;
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
     background-color: var(--color-white);
-  }
+}
   
-  input[type="checkbox"]:checked::before {
+input[type="checkbox"]:checked::before {
     transform: scale(1);
     background-color: var(--color-white);
-  }
+}
+
+.text-field {
+    position: relative;
+    margin: 7px 0px;
+}
+
+input {
+    display: inline-block;
+    border: thin solid #fafafa;
+    border-bottom: solid medium #999;
+    color: #444;
+    background-color: #fafafa;
+    padding: 10px 10px 10px 10px;
+}
+
+input:focus {
+    border: #778da9 !important;
+}
+
+.placeholder {
+    color: #999;
+    position: absolute;
+    pointer-events: none;
+    left: 10px;
+    top: 5px;
+    transition: 0.2s;
+    font-weight: 500;
+}
+
+input:focus ~ .placeholder, input:valid ~ .placeholder {
+    top: -10px;
+    left: 15px;
+    font-size: small;
+    background-color:var(--color-white);
+    padding:0 3px 0 3px;
+}
