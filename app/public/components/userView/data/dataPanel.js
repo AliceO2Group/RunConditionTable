@@ -33,5 +33,5 @@ export default function dataPanel(model) {
         Loading: () => spinnerAndReloadView(model, page, index),
         Success: () => tablePanel(model),
         Failure: (status) => failureStatusAndReload(model, status),
-    }) : unknownError();
+    }) : unknownError(model);
 }

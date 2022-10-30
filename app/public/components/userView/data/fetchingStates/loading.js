@@ -53,7 +53,7 @@ export default function spinnerAndReloadView(model, page, index) {
         } while (!(secondsLabel && minutesLabel));
         ++totalSeconds;
         secondsLabel.innerHTML = pad(totalSeconds % 60);
-        minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+        minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60, 10));
     };
 
     const pad = (val) => {

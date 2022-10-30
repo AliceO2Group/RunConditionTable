@@ -15,7 +15,7 @@
 import { h } from '/js/src/index.js';
 import viewButton from '../../../common/viewButton.js';
 
-export default function unknownError() {
+export default function unknownError(model) {
     const reloadBtn = viewButton(
         model,
         'Reload',
