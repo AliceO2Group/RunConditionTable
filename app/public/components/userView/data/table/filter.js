@@ -90,16 +90,16 @@ const createInputField = (inputId, currentValue) => {
     const type = inputId.substring(inputId.indexOf('-') + 1);
     return type !== 'undefined' ?
         h('th.noBorderBottom.table-cell-like',
-        h('.text-field',
-            h('input.form-control.rel', {
-                style: 'width:120px',
-                type: 'text',
-                value: currentValue ? currentValue : '',
-                disabled: type == null,
-                id: inputId,
-                required: true,
+            h('.text-field',
+                h('input.form-control.rel', {
+                    style: 'width:120px',
+                    type: 'text',
+                    value: currentValue ? currentValue : '',
+                    disabled: type == null,
+                    id: inputId,
+                    required: true,
                 // TODO: pattern
-            }), h('span.placeholder', type))) : '';
+                }), h('span.placeholder', type))) : '';
 };
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
