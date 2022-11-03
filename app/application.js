@@ -92,6 +92,9 @@ class RunConditionTableApplication {
             };
             Utils.switchCase(cmdAndArgs[0], {
                 '': () => {},
+                pool: () => {
+                    this.con.log(this.databaseService.pool);
+                },
                 now: () => {
                     dbAdminExec(['select now();']);
                 },

@@ -12,9 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 const config = require('../config/configProvider.js');
-console.log(config)
 const run_detectors_field_in_sql_query = config.baseData.database.detectors
-    .map(d => `(SELECT get_run_det_id(r.run_number, '${d.toUpperCase()}')) as ${d.toUpperCase()}_detector`)
+    .map(d => `(SELECT get_run_det_data(r.run_number, '${d.toUpperCase()}')) as ${d.toUpperCase()}_detector`)
     .join(',\n')
 
 

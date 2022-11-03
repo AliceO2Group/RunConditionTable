@@ -13,7 +13,7 @@
  */
 
 const { Log } = require('@aliceo2/web-ui');
-const { Client } = require('pg');
+const { Client, Pool } = require('pg');
 const QueryBuilder = require('./QueryBuilder.js');
 const config = require('./../config/configProvider.js');
 const Utils = require('../Utils.js')
@@ -29,95 +29,88 @@ class DatabaseService {
     constructor(loggedUsers) {
         this.loggedUsers = loggedUsers;
         this.logger = new Log(DatabaseService.name);
+        this.buildPool();
+    }
+
+    buildPool() {
+        config.database.idleTimeoutMillis = 2000;
+        config.database.max = 20
+
+        this.pool = new Pool(config.database)
+        this.pool.on('remove', (client) => {
+            this.logger.info(`removing client, clients in pool: ${this.pool._clients.length}`);
+        })
+        this.pool.on('acquire', (client) => {
+            this.logger.info(`acquiring client, clients in pool: ${this.pool._clients.length}`);
+        })
+        this.pool.on('error', (e) => {
+            this.logger.error(`database pg pool fatal error: ${e.stack}`);
+        })
     }
 
     async login(req, res) {
         const { body } = req;
-        let client = this.loggedUsers.tokenToUserData[req.query.token];
-        let error;
-        if (!client) {
+        let userData = this.loggedUsers.tokenToUserData[req.query.token];
+        if (!userData) {
             this.logger.info('Logging new client: ');
-            client = new Client(config.database);
-            client.on('error', (e) => {
-                this.logger.error(e)
-            });
-
-
-            await client.connect()
-                .catch((e) => {
-                    this.logger.error(e);
-                    error = e;
-                });
+            userData = {
+                loginDate: new Date(),
+                name: body.username,
+                lastReqTime: new Date(),
+                token: req.query.token,
+            };
+            this.loggedUsers.tokenToUserData[req.query.token] = userData;
+            this.responseWithStatus(res, 200, "logged");
         } else {
-
-            this.logger.info('Restoring session with client');
-        }
-        try {
-            client.query('SELECT NOW();')
-                .then(async (dbRes) => {
-                    await res.json({ data: dbRes.rows });
-                    this.loggedUsers.tokenToUserData[req.query.token] = {
-                        pgClient: client,
-                        loginDate: new Date(),
-                        name: body.username,
-                        lastReqTime: new Date(),
-                    };
-                    this.logger.info('Logged client: ');
-                }).catch((e) => {
-                    error = e;
-                });
-        } catch (e) {
-                error = e;
-        }
-        if (error) {
-            this.responseWithStatus(res, 500, error.code);
+            this.logger.info(`Restoring session with client: ${userData}`);
+            this.responseWithStatus(res, 200, "session restored");
         }
     }
 
     async logout(req, res) {
         const { token } = req.query;
-        const clientData = this.loggedUsers.tokenToUserData[token];
-        if (clientData) {
+        const userData = this.loggedUsers.tokenToUserData[token];
+        if (userData) {
             this.loggedUsers.tokenToUserData[token] = undefined;
-            clientData.pgClient.end((e) => {
-                this.logger.error(e);
-            });
         }
-        if (clientData) {
+        if (userData) {
             this.responseWithStatus(res, 200, 'successfully logout');
         } else {
-            this.responseWithStatus(res, 409, 'no such user');
+            this.responseWithStatus(res, 409, 'not logged');
         }
     }
 
     async exec(req, res, dbResponseHandler, query = null) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token];
         if (!userData) {
-            const mess = 'SESSION_ERROR';
+            const mess = 'SESSION_ERROR:: no user with such token';
             this.logger.error(mess, req.query);
-            this.responseWithStatus(res, 500, mess);
+            this.responseWithStatus(res, 400, mess);
             return;
         }
-        const client = userData.pgClient;
 
-
-        if (client) {
-            if (query === null) {
-                query = await QueryBuilder.build({ ...req.query, ...req.params });
-            }
-
-            client.query(query)
-                .then((dbRes) => {
-                    dbResponseHandler(req, res, dbRes);
-                })
-                .catch((e) => {
-                    this.logger.error(e);
-                    this.logger.error(e.stack)
-                    res.json({ data: e.code });
-                });
-        } else {
-            this.responseWithStatus(res, 401, 'no user with such token');
+        if (query === null) {
+            query = await QueryBuilder.build({ ...req.query, ...req.params });
         }
+
+        this.pool.connect((connectErr, client, release) => {
+        if (connectErr) {
+            this.logger.error('Error acquiring client:: ' + connectErr.stack)
+            this.responseWithStatus(res, 500, connectErr.message);
+            return;
+        }
+
+        client.query(query)
+            .then((dbRes) => {
+                dbResponseHandler(req, res, dbRes);
+            })
+            .catch((e) => {
+                this.logger.error(e.message + ' :: ' + e.stack)
+                this.responseWithStatus(res, 500, e.code);
+            });
+        release();
+        })
+
     }
 
     async execDataReq(req, res, query = null) {
@@ -141,6 +134,8 @@ class DatabaseService {
         await this.exec(req, res, dbResponseHandler, query);
     }
 
+    // dbResponseAdjuster(req, query, data) //TODO
+
     async execDataInsert(req, res, query = null) {
         if (query) {
             const dbResponseHandler = (req, res, _) => {
@@ -155,7 +150,6 @@ class DatabaseService {
     }
 
     responseWithStatus(res, status, message) {
-        this.logger.error(message);
         res.status(status).json({ message: message });
     }
 
