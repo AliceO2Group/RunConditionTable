@@ -14,11 +14,70 @@
 import spinner from '../components/common/spinner.js';
 import { h } from '/js/src/index.js';
 
-export default function waitingPanel() {
-    const title = h('h1.primary', 'Run Condition Table');
+const pos = { x: 0, y: 0 };
 
-    return h('div.loginDiv', h('div.loginDiv.bg-gray-lighter.br3.p4', [
-        title,
-        spinner(),
-    ]));
+const saveCursorPosition = (x, y) => {
+    pos.x = (x / window.innerWidth).toFixed(2);
+    pos.y = (y / window.innerHeight).toFixed(2);
+    document.documentElement.style.setProperty('--x', pos.x);
+    document.documentElement.style.setProperty('--y', pos.y);
+};
+
+export default function waitingPanel() {
+    let totalSeconds = 0;
+    let counterId = undefined;
+
+    const initCounter = () => {
+        if (counterId !== undefined) {
+            clearInterval(counterId);
+            counterId = undefined;
+            totalSeconds = 0;
+        }
+        if (counterId === undefined) {
+            counterId = setInterval(setTime, 1000);
+        }
+    };
+
+    const setTime = () => {
+        let minutesLabel = null;
+        let secondsLabel = null;
+        do {
+            minutesLabel = document.getElementById('minutes');
+            secondsLabel = document.getElementById('seconds');
+        } while (!(secondsLabel && minutesLabel));
+        ++totalSeconds;
+        secondsLabel.innerHTML = pad(totalSeconds % 60);
+        minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60, 10));
+    };
+
+    const pad = (val) => {
+        const valString = `${val}`;
+        if (valString.length < 2) {
+            return `0${valString}`;
+        } else {
+            return valString;
+        }
+    };
+
+    const reloadBtn = h('button.btn.btn-primary.m3', { onclick: () => document.location.reload(true) }, 'Retry');
+    const loadingMessage = h('h3', 'Loading...');
+    const counter = h('h5.inline',
+        h('span.clear-both', { id: 'minutes' }, '00'),
+        h('span.clear-both', ':'),
+        h('span.clear-both', { id: 'seconds' }, '00'),
+        h('.tooltiptext2.tracker.p2.br3',
+            'If you are seeing this for way too long, then probably something is messed up'));
+
+    document.addEventListener('mousemove', (e) => {
+        saveCursorPosition(e.clientX, e.clientY);
+    });
+    setTimeout(() => initCounter(), 0);
+
+    return h('.loginDiv.top-100', [
+        h('.my-tooltip-bg',
+            spinner(),
+            loadingMessage,
+            counter),
+        reloadBtn,
+    ]);
 }

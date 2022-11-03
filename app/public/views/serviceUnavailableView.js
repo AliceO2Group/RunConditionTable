@@ -12,21 +12,19 @@
  * or submit itself to any jurisdiction.
  */
 import { h } from '/js/src/index.js';
-import container from '../components/common/container.js';
 
 export default function serviceUnavailablePanel(model) {
-    const retryBtn = h('button.btn.br-primary.m4.p4', { onclick: () => model.retry() }, 'Retry');
-    const title = h('h1.primary.justify-center', 'Run Condition Table');
-    const subtitle = h('h3.danger.justify-center', 'Service temporarily unavailable');
+    const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => model.retry() }, 'Retry');
+    const title = h('h1.primary', 'Run Condition Table');
+    const subtitle = h('h3', 'Service temporarily unavailable');
 
-    return h('div.loginDiv', h('div.loginDiv.bg-gray-lighter.br3.p4', [
+    return h('.loginDiv.top-100', [
         title,
+        h('.no-network-90'),
         subtitle,
-        h('.p1'),
-        container(h('div.loginDivInsid.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close',
+        h('.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close',
             { id: 'serviceUnavailableMessageFieldID' },
-            '')),
-        container(retryBtn),
-
-    ]));
+            ''),
+        retryBtn,
+    ]);
 }
