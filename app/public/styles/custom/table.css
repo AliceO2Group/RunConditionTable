@@ -100,10 +100,11 @@ input:focus {
 }
 
 input:focus ~ .placeholder, input:valid ~ .placeholder {
-    top: -10px;
-    left: 15px;
+    top: -13px;
+    left: 10px;
     font-size: small;
-    background-color: var(--color-white);
+    background-color: var(--active-color);
+    color: var(--color-white);
     padding:0 3px;
     border-radius: 5px;
 }

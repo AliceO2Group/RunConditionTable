@@ -150,7 +150,10 @@ const onclickSubmit = (model, inputsIds) => () => {
 
 const onclickClear = (model, inputsIds) => () => {
     inputsIds.forEach((inputId) => {
-        document.getElementById(inputId).value = '';
+        const element = document.getElementById(inputId);
+        if (element) {
+            element.value = '';
+        }
     });
     onclickSubmit(model, inputsIds)();
 };

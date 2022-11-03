@@ -67,13 +67,13 @@ export default function tablePanel(model) {
     return h('div', [
         filteringPanel,
         pager(model, data, 1),
-        h('div', h('div.x-scrollable',
+        h('.x-scrollable',
             h('table.table', { id: `data-table-${data.url}` }, [
                 tableHeader(visibleFields, data, model),
                 tableBody(
                     model, visibleFields, data, cellsSpecials, dataPointer.page,
                 ),
-            ]))),
+            ])),
         pager(model, data, 2),
     ]);
 }
