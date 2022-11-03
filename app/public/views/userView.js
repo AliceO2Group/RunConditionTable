@@ -25,11 +25,9 @@ export default function userPanel(model) {
 
             h('section.outline-gray.flex-grow.relative', [
                 h('.scroll-y.absolute-fill.bg-white',
-                        { id: 'main-content' },
-                        [dataPanel(model)],
-                    ),
-                ],
-            ),
+                    { id: 'main-content' },
+                    [dataPanel(model)]),
+            ]),
         ]),
     ]);
 }

@@ -23,7 +23,8 @@ const saveCursorPosition = (x, y) => {
     document.documentElement.style.setProperty('--y', pos.y);
 };
 
-export default function waitingPanel() {
+export default function waitingPanel(model) {
+    const cancel = () => ['serviceUnavailable', 'sessionError', 'primary', 'admin'].includes(model.mode);
     let totalSeconds = 0;
     let counterId = undefined;
 
@@ -44,6 +45,9 @@ export default function waitingPanel() {
         do {
             minutesLabel = document.getElementById('minutes');
             secondsLabel = document.getElementById('seconds');
+            if (cancel()) {
+                return;
+            }
         } while (!(secondsLabel && minutesLabel));
         ++totalSeconds;
         secondsLabel.innerHTML = pad(totalSeconds % 60);
