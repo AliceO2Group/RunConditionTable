@@ -31,9 +31,8 @@
     "reports:clean": "rm -rf ./reports; rm -rf .nyc_output",
     
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
-    "start:dev:local": "bash -c 'set -o allexport && ls && source ./docker/env_file-dev && set +o allexport && npm run start:dev'",
-    "start:prod": "node app/main.js",
-    "prod": "./rctmake",
+    "start:dev:local": "(export RCT_DB_HOST=${RCT_DB_HOST:-localhost}; bash -c 'set -o allexport && ls && source ./docker/env_file-dev && set +o allexport && npm run start:dev')",
+    "deploy:db:local": "./database/setup-db.sh --env ./docker/env_file-dev",
     
     "dev": "./rctmake build[up],db:clean,attach,stop --target dev ",
     "dev:up": "./rctmake build[up] --target dev --attach",

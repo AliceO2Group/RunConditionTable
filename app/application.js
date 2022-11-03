@@ -210,16 +210,21 @@ class RunConditionTableApplication {
     }
 
     async stop() {
-        this.logger.info('Stopping RCT app...');
-        try {
-            await this.httpServer.close();
-        } catch (error) {
-            this.logger.error(`Error while stopping RCT app: ${error}`);
-            await this.stop();
-        }
-        await this.disconnectServices();
+        if (! this.isStopping) {
+            this.isStopping = true;
+            this.logger.info('Stopping RCT app...');
+            try {
+                await this.httpServer.close();
+            } catch (error) {
+                this.logger.error(`Error while stopping RCT app: ${error}`);
+            }
+            await this.disconnectServices();
+            this.rl.close();
 
-        this.logger.info('RCT app stopped');
+            this.logger.info('RCT app stopped');
+        } else {
+            this.logger.info('Stopping already...');
+        }
     }
 
     async disconnectServices() {
@@ -231,7 +236,7 @@ class RunConditionTableApplication {
                 .map((serv) => serv.close()),
         ).catch((e) => errors.push(e));
         if (errors.length > 0) {
-            this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
+            this.logger.error(`Error while stopping services: ${errors.map((e) => e.message).join(', ')}`);
         }
     }
 
