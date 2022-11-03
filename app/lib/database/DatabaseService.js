@@ -174,7 +174,7 @@ class DatabaseService {
 
         await this.adminClient.connect()
             .catch((e) => {
-                this.logger.error("error when trying to establish admin connection", e);
+                this.logger.error(`error when trying to establish admin connection with ${config.database.host}`, e);
             });
     }
 }

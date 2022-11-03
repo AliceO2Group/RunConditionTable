@@ -10,17 +10,30 @@ CREATE_TABLES_SQL="$SCRIPTS_DIR/exported/create-tables.sql"
 DESIGN_PNG="$SCRIPTS_DIR/exported/design.png"
 DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
 
-RCT_DB_NAME=${RCT_DB_NAME:-'rct-db'}
-RCT_DB_USERNAME=${RCT_DB_USERNAME:-'rct-user'}
-RCT_DB_PASSWORD=${RCT_DB_PASSWORD:-'rct-passwd'}
-RCT_DB_HOST=${RCT_DB_HOST:-'localhost'}
-RCT_DB_PORT=${RCT_DB_PORT:-5432}
 
 OTHER_SQL_FILES="$SCRIPTS_DIR/other-sql/"
 
 usage () {
   cat << USAGE >&2
-TODO  
+
+This script is intended to deploy database for development as well as for production. 
+It requires 5 parameters provided via argument, env file, env vars (descending priority).
+It must be run as postgres or using 'sudo -H -u postgres bash -c "$MAIN_SCRIPT_NAME [ARGS]"'
+Usage:
+
+    ./$MAIN_SCRIPT_NAME [--env <ENV_FILE>] [--host <RCT_DB_HOST>] [--port <RCT_DB_PORT>] [--db <RCT_DB_NAME>] [--username <RCT_DB_USERNAME>] [--password <RCT_DB_PASSWORD>] [<OTHER_OPTS>]
+
+    Possibile env vars (also in env file) have to be named exactly the same as upper placeholders. 
+    Parameters specified via script arguments override those specified via env vars.
+
+    <OTHER_OPTS> can be ||| TODO add descriptions |||:
+      1. --main-sql-modify-daemon - 
+      2. --other-sql-modify-daemon - 
+      3. --export - 
+      4. --only-export - 
+      5. --convert - 
+      6. --drop - 
+
 USAGE
 exit 1;
 }
@@ -29,6 +42,10 @@ while [[ $# -gt 0 ]]; do
     case $1 in 
         --help)
             usage;
+        ;;
+        --env)
+          ENV_FILE="$2"
+          shift 2;
         ;;
         --main-sql-modify-daemon)
           MAIN_SQL_MODIFY_DAEMON='true';
@@ -60,23 +77,23 @@ while [[ $# -gt 0 ]]; do
           shift 1;
         ;;
         -h|--host)
-            RCT_DB_HOST="$2";
+            __RCT_DB_HOST="$2";
             shift 2;
             ;;
         -p|--port)
-            RCT_DB_PORT="$2";
+            __RCT_DB_PORT="$2";
             shift 2;
             ;;
         -d|--db)
-            RCT_DB_NAME="$2"
+            __RCT_DB_NAME="$2"
             shift 2;
             ;;
         -u|--username)
-            RCT_DB_USERNAME="$2";
+            __RCT_DB_USERNAME="$2";
             shift 2;
             ;;
         -P|--password)
-            RCT_DB_PASSWORD="$2";
+            __RCT_DB_PASSWORD="$2";
             shift 2;
             ;;
 
@@ -85,6 +102,8 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+
 
 if [ ! "$RERUN" = 'true' ]; then
   if [ "$EXPORT" = 'true' ]; then
@@ -108,6 +127,19 @@ if [ ! "$RERUN" = 'true' ]; then
       sleep 1
   fi
 fi
+
+if [ -n "$ENV_FILE" ]; then
+  source "$ENV_FILE"
+fi
+
+
+#### Parameteres concretization  
+RCT_DB_NAME=${__RCT_DB_NAME:-${RCT_DB_NAME:?"RCT_DB_NAME not set"}}
+RCT_DB_USERNAME=${__RCT_DB_USERNAME:-${RCT_DB_USERNAME:?"RCT_DB_USERNAME not set"}}
+RCT_DB_PASSWORD=${__RCT_DB_PASSWORD:-${RCT_DB_PASSWORD:?"RCT_DB_PASSWORD not set"}}
+RCT_DB_HOST=${__RCT_DB_HOST:-${RCT_DB_HOST:?"RCT_DB_HOST not set"}}
+RCT_DB_PORT=${__RCT_DB_PORT:-${RCT_DB_PORT:?"RCT_DB_PORT not set"}}
+
 
 if [ ! $(whoami) = 'postgres' ]; then
   echo "script must be run as postgres or using: 'sudo -H -u postgres bash -c \"$MAIN_SCRIPT_NAME [ARGS]\"'" >&2;
