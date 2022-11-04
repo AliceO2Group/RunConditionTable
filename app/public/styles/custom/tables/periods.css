@@ -1,0 +1,22 @@
+.x-scrollable-periods {
+    width: 400px;
+    overflow-x: scroll;
+    position: relative !important;
+}
+
+.x-scrollable-periods table td:first-child, .x-scrollable-periods table th:first-child {
+    position: sticky !important;
+    left: 0;
+    z-index: 1;
+}
+
+.periods-table {
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 0;
+}
+
+.periods-table thead {
+    background-color: var(--color-gray-light);
+    color: var(--color-black);
+}
