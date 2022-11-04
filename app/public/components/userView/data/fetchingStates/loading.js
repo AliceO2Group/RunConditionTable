@@ -25,8 +25,8 @@ const saveCursorPosition = (x, y) => {
     document.documentElement.style.setProperty('--y', pos.y);
 };
 
-export default function spinnerAndReloadView(model, page, index) {
-    const loadingFinished = () => model.fetchedData[page][index]?.kind !== 'Loading';
+export default function spinnerAndReloadView(model) {
+    const loadingFinished = () => model.fetchedData[model.getCurrentDataPointer().page][model.getCurrentDataPointer().index]?.kind !== 'Loading';
     let totalSeconds = 0;
     let counterId = undefined;
 
@@ -47,7 +47,9 @@ export default function spinnerAndReloadView(model, page, index) {
         do {
             minutesLabel = document.getElementById('minutes');
             secondsLabel = document.getElementById('seconds');
+            console.log(model.fetchedData[model.getCurrentDataPointer().page][model.getCurrentDataPointer().index]);
             if (loadingFinished()) {
+                clearInterval(counterId);
                 return;
             }
         } while (!(secondsLabel && minutesLabel));
