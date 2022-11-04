@@ -47,7 +47,6 @@ export default function spinnerAndReloadView(model) {
         do {
             minutesLabel = document.getElementById('minutes');
             secondsLabel = document.getElementById('seconds');
-            console.log(model.fetchedData[model.getCurrentDataPointer().page][model.getCurrentDataPointer().index]);
             if (loadingFinished()) {
                 clearInterval(counterId);
                 return;
