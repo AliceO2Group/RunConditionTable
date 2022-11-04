@@ -14,18 +14,18 @@
 
 import { h, switchCase } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent } from '../../headersSpecials.js';
- // A import { RCT } from '../../../../../config.js';
- 
- // A const pageName = RCT.pagesNames.periods;
- 
- export default function periodsHeader(visibleFields, data, model) {
+// A import { RCT } from '../../../../../config.js';
+
+// A const pageName = RCT.pagesNames.periods;
+
+export default function periodsHeader(visibleFields, data, model) {
     return h('thead',
-    h('tr', [rowsOptions(model, data)].concat(
-        columnsHeadersArray(visibleFields, data, model),
-    )));
- }
- 
- const sort = (fName, data, model, order) => {
+        h('tr', [rowsOptions(model, data)].concat(
+            columnsHeadersArray(visibleFields, data, model),
+        )));
+}
+
+const sort = (fName, data, model, order) => {
     if (data.sorting.field != fName) {
         data.sorting.field = fName;
         data.sorting.order = null;
