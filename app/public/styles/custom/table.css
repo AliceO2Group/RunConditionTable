@@ -31,7 +31,7 @@
     background-color: var(--focus-color) !important;
 }
 
-.table tbody tr.row-selected-color-alpha {
+table tbody tr.row-selected-color-alpha {
     background-color: var(--row-selected-color);
 }
 
@@ -83,10 +83,6 @@ input {
     border-bottom: solid medium #999;
     color: #444;
     background-color: #fafafa;
-}
-
-input:focus {
-    border: var(--focus-color) !important;
 }
 
 .placeholder {

@@ -17,7 +17,7 @@ import { reduceSerialIf } from '../../../../utils/utils.js';
 
 // eslint-disable-next-line no-unused-vars
 const detectorIcon = (model, item, n) =>
-    h('div.tooltip',
+    h('.tooltip',
         h('svg', { width: '50px', height: '50px' },
             h('circle',
                 {

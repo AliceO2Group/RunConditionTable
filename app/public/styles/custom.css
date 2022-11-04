@@ -24,10 +24,14 @@
     font-weight: bold;
 }
 
+.skinny {
+    font-size: x-small;
+}
+
 .noBorderBottom {
     border-bottom: 0px !important;
 }
-
+    
 .x-scrollable {
     overflow-x: auto !important;
     overflow-y: hidden !important;
