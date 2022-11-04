@@ -13,7 +13,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import tableHeader from '../header.js';
+import periodsHeader from './periodsHeader.js';
 import row from '../row.js';
 // A import { RCT } from '../../../../../config.js';
 
@@ -29,7 +29,7 @@ function tableBody(model, visibleFields, data, cellsSpecials) {
 export default function periodsTable(model, visibleFields, data, cellsSpecials) {
     return h('.x-scrollable-periods',
         h('table.periods-table', { id: `data-table-${data.url}` }, [
-            tableHeader(visibleFields, data, model),
+            periodsHeader(visibleFields, data, model),
             tableBody(model, visibleFields, data, cellsSpecials),
         ]));
 }

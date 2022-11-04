@@ -6,6 +6,8 @@
 
 .x-scrollable-periods table td:first-child, .x-scrollable-periods table th:first-child {
     position: sticky !important;
+    width: 50px;
+    /* background-color: aqua; */
     left: 0;
     z-index: 1;
 }

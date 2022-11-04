@@ -53,7 +53,7 @@ export default function row(
         }
     });
 
-    const checkbox = h('td.relative', h(`input.vertical-center${item.marked ? '.ticked' : ''}`, {
+    const checkbox = h('td.rel', h(`input.abs-center${item.marked ? '.ticked' : ''}`, {
         type: 'checkbox',
         checked: item.marked,
         onclick: () => {
