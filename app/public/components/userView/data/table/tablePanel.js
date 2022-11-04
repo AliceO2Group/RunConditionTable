@@ -66,7 +66,7 @@ export default function tablePanel(model) {
 
     return h('div', [
         filteringPanel,
-        pager(model, data, 1),
+        data.rows.length > 15 ? pager(model, data, 1) : '',
         h('.x-scrollable',
             h('table.table', { id: `data-table-${data.url}` }, [
                 tableHeader(visibleFields, data, model),
