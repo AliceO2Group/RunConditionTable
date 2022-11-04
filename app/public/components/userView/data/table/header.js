@@ -12,8 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, switchCase } from '/js/src/index.js';
+import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent } from '../headersSpecials.js';
+import { sort } from '../../../../utils/sort.js';
 
 export default function tableHeader(visibleFields, data, model) {
     return h('thead',
@@ -21,18 +22,6 @@ export default function tableHeader(visibleFields, data, model) {
             columnsHeadersArray(visibleFields, data, model),
         )));
 }
-
-const sort = (fName, data, model, order) => {
-    if (data.sorting.field != fName) {
-        data.sorting.field = fName;
-        data.sorting.order = null;
-    }
-    data.sorting.order = data.sorting.order = switchCase(order, {
-        1: 1,
-        '-1': -1,
-    }, null);
-    model.fetchedData.changeSorting(data.sorting);
-};
 
 const columnsHeadersArray = (visibleFields, data, model) =>
     visibleFields.map((f) => h('th', { scope: 'col' },
