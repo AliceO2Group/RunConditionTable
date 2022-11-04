@@ -17,7 +17,7 @@ import { reduceSerialIf } from '../../../../utils/utils.js';
 
 // eslint-disable-next-line no-unused-vars
 const detectorIcon = (model, item, n) =>
-    h('div.tooltip',
+    h('.tooltip',
         h('svg', { width: '50px', height: '50px' },
             h('circle',
                 {
@@ -53,7 +53,7 @@ export default function row(
         }
     });
 
-    const checkbox = h('td.relative', h('input.vertical-center', {
+    const checkbox = h('td.relative', h(`input.vertical-center${item.marked ? '.ticked' : ''}`, {
         type: 'checkbox',
         checked: item.marked,
         onclick: () => {

@@ -12,14 +12,26 @@
  * or submit itself to any jurisdiction.
  */
 
+:root {
+    /* Color palette */
+    --active-color: #b3c5d7;
+    --highlight-blue: #D7EDFC;
+    --blue: #1e90ff;
+    --white: #ffffff;
+}
+
 .thick {
     font-weight: bold;
+}
+
+.skinny {
+    font-size: x-small;
 }
 
 .noBorderBottom {
     border-bottom: 0px !important;
 }
-
+    
 .x-scrollable {
     overflow-x: auto !important;
     overflow-y: hidden !important;
@@ -29,11 +41,27 @@
 
 .table-cell-like {
     display: table-cell !important;
+    margin: 0 !important;
+    padding: 0 5px !important;
+}
+
+.table-cell-like.active {
+    background-color: var(--active-color) !important;
 }
 
 .tooltip:hover .tooltiptext {
     right: 0% !important;
     bottom: -100%;
+}
+
+.tooltip .tooltiptext2 {
+    visibility: hidden;
+    right: auto;
+}
+
+.tooltip:hover .tooltiptext2 {
+    visibility: visible;
+    right: auto;
 }
 
 .my-tooltip:hover .tooltiptext {
@@ -74,6 +102,25 @@
     transform: translateY(-50%);
 }
 
+.horizontal-center {
+    margin: 0;
+    position: absolute;
+    left: 80%;
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.abs-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
 .hidden {
     visibility: hidden !important;
 }
@@ -90,6 +137,10 @@
     display: inline-block !important;
 }
 
+.clear-both {
+    clear: both !important;
+}
+
 .none {
     display: none !important;
 }
@@ -99,5 +150,61 @@
 }
 
 .highlight-blue {
-    background-color: #D7EDFC !important;
+    background-color: var(--highlight-blue) !important;
+}
+
+.t-10 {
+    top: -0.1em;
+    right: 3.5em;
+}
+
+.scale-2-5 {
+    scale: 1.875;
+}
+
+.top-100 {
+    padding-top: 100px;
+}
+
+.header-specific {
+    padding-left: 15em;
+    padding-top: 0.5em;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.m-21 {
+    margin: 21px !important;
+}
+
+.clickable-label {
+    display: block !important;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.clickable-label.active {
+    background-color: var(--active-color);
+    border-radius: 10px;
+}
+
+.no-spacing {
+    border-spacing: 10px 0;
+}
+
+.br-top-10 {
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+}
+
+.br-bottom-10 {
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+}
+
+.btn-secondary {
+    border: var(--active-color) solid 1px !important;
+    background-color: var(--color-white) !important;
+    color: var(--active-color) !important;
 }

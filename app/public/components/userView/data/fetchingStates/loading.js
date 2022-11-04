@@ -11,8 +11,10 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-import spinner from '../components/common/spinner.js';
+
 import { h } from '/js/src/index.js';
+import viewButton from '../../../common/viewButton.js';
+import spinner from '../../../common/spinner.js';
 
 const pos = { x: 0, y: 0 };
 
@@ -23,8 +25,8 @@ const saveCursorPosition = (x, y) => {
     document.documentElement.style.setProperty('--y', pos.y);
 };
 
-export default function waitingPanel(model) {
-    const cancel = () => ['serviceUnavailable', 'sessionError', 'primary', 'admin'].includes(model.mode);
+export default function spinnerAndReloadView(model) {
+    const loadingFinished = () => model.fetchedData[model.getCurrentDataPointer().page][model.getCurrentDataPointer().index]?.kind !== 'Loading';
     let totalSeconds = 0;
     let counterId = undefined;
 
@@ -45,7 +47,8 @@ export default function waitingPanel(model) {
         do {
             minutesLabel = document.getElementById('minutes');
             secondsLabel = document.getElementById('seconds');
-            if (cancel()) {
+            if (loadingFinished()) {
+                clearInterval(counterId);
                 return;
             }
         } while (!(secondsLabel && minutesLabel));
@@ -63,7 +66,16 @@ export default function waitingPanel(model) {
         }
     };
 
-    const reloadBtn = h('button.btn.btn-primary.m3', { onclick: () => document.location.reload(true) }, 'Retry');
+    const reloadBtn = viewButton(
+        model,
+        'Retry',
+        () => {
+            document.location.reload(true);
+        },
+        '',
+        undefined,
+        '.btn-primary.m3',
+    );
     const loadingMessage = h('h3', 'Loading...');
     const counter = h('h5.inline',
         h('span.clear-both', { id: 'minutes' }, '00'),
