@@ -40,13 +40,13 @@
 
 /* Names */
 .periods-table td:nth-child(2), .periods-table th:nth-child(2) {
-    min-width: 100px;
+    min-width: 380px;
     text-align: left;
 }
 
 /* Years */
 .periods-table td:nth-child(3), .periods-table th:nth-child(3) {
-    width: 80px;
+    min-width: 80px;
     text-align: right;
 }
 
@@ -60,5 +60,8 @@
 .periods-table td:nth-child(5), .periods-table th:nth-child(5) {
     min-width: 60px;
     text-align: right;
+}
+
+.periods-table td:last-child, .periods-table th:last-child {
     padding-right: 2em;
 }

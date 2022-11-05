@@ -34,7 +34,7 @@ export default function row(
     model, visibleFields, data, item, cellsSpecials,
 ) {
     const rowDivDef = reduceSerialIf(
-        'tr.track', ['.bg-grey', '.d-none'], ['.row-selected-color-alpha.bg-grey.selected', ''],
+        'tr.track', ['', '.d-none'], ['.row-selected-color-alpha', ''],
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 
@@ -53,14 +53,15 @@ export default function row(
         }
     });
 
-    const checkbox = h('td.rel.track', h(`input.abs-center${item.marked ? '.ticked' : ''}`, {
-        type: 'checkbox',
-        checked: item.marked,
-        onclick: () => {
-            model.fetchedData.changeItemStatus(item);
-            model.notify();
-        },
-    }));
+    const checkbox = h('td.relative.track',
+        h(`input.abs-center${item.marked ? '.ticked' : ''}`, {
+            type: 'checkbox',
+            checked: item.marked,
+            onclick: () => {
+                model.fetchedData.changeItemStatus(item);
+                model.notify();
+            },
+        }));
 
     return h(rowDivDef, [checkbox].concat(dataCells));
 }

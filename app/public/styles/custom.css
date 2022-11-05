@@ -68,10 +68,6 @@
     visibility: visible;
 }
 
-.rel {
-    position: relative;
-}
-
 .my-tooltip .tooltiptext {
     visibility: hidden;
     width: 118px;

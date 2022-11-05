@@ -108,7 +108,7 @@ const createInputField = (inputId, currentValue, fields) => {
             ['to', 'exclude'].includes(inputId.substring(inputId.indexOf('-') + 1)) ? '.br-bottom-10' : ''}`,
         { className: `${isFieldMarked(inputId, fields) ? 'active' : ''}` },
         h('.text-field',
-            h('input.form-control.rel', {
+            h('input.form-control.relative', {
                 style: 'width:120px',
                 type: 'text',
                 value: currentValue ? currentValue : '',
