@@ -14,10 +14,12 @@
 
 const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
-const views = require("./viewsDefinitions.js") 
+const views = require("./views") 
 const { pagesNames } = config.public;
 const DRP = config.public.dataReqParams;
 const Utils = require("../Utils.js");
+
+console.log(views)
 
 /**
  * Class responsible for parsing url params, payloads of client request to sql queries
@@ -90,9 +92,9 @@ class QueryBuilder {
 
         const cases = {};
         cases[pagesNames.periods] = 
-        `${views.period_view}
+        `${views.periods_view}
         SELECT *
-        FROM period_view as main_view
+        FROM periods_view as main_view
         `;
         cases[pagesNames.runsPerPeriod] = 
         `${views.runs_per_period_view(params)}
