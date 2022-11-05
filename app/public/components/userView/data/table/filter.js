@@ -40,7 +40,7 @@ export default function filter(model) {
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds, fields),
                     inputsRow(params, lowerInputIds, fields))),
-            h('.abs',
+            h('.absolute',
                 h('button.btn.btn-primary', {
                     onclick: onclickSubmit(model, inputsIds),
                 }, 'Submit'),
