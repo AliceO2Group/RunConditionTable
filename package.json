@@ -34,13 +34,12 @@
     "start:dev:local": "(export RCT_DB_HOST=${RCT_DB_HOST:-localhost}; bash -c 'set -o allexport && ls && source ./docker/env_file-dev && set +o allexport && npm run start:dev')",
     "deploy:db:local": "./database/setup-db.sh --env ./docker/env_file-dev",
     
-    "dev": "./rctmake build[up],db:clean,attach,stop --target dev ",
+    "dev": "./rctmake prune,db:export,build,stop --target dev --attach",
     "dev:up": "./rctmake build[up] --target dev --attach",
     "dev:up-re": "./rctmake build[up],dump:restore,attach --target dev -F ",
-    "dev:prune": "./rctmake prune,db:export,build,stop --target dev --attach",
     "docker:test": "./rctmake prune,build,prune --target test",
     "prune": "./rctmake prune",
-    "app:attach": "docker attach rct_application",
+    "app:attach": "docker attach o2-rct_application",
     
     "db:check": "./rctmake prune,db,build,follow -t dev -S o2-rct_database ",
     "db:attach": "docker exec -it o2-rct_database psql -U postgres -d \"rct-db\"",
