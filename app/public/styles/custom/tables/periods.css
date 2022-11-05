@@ -12,21 +12,27 @@
  * or submit itself to any jurisdiction.
  */
 
-.x-scrollable-periods {
-    width: 400px;
-    overflow-x: scroll;
-    position: relative !important;
+ .periods-table {
+    border-collapse: collapse;
+    width: 100%;
 }
 
-.x-scrollable-periods table td:first-child, .x-scrollable-periods table th:first-child {
+.periods-table td:first-child, .periods-table th:first-child {
     position: sticky !important;
     width: 50px;
-    background-color: var(--color-white);
     left: 0;
+    background-color: var(--color-white);
     z-index: 1 !important;
 }
 
-.periods-table {
-    border-collapse: collapse;
-    width: 100%;
+.periods-table tr:hover td:first-child {
+    background-color: var(--active-color) !important;
+}
+
+.periods-table tr.row-selected-color-alpha td:first-child{
+    background-color: var(--row-selected-color);
+}
+
+.periods-table tr.row-selected-color-alpha:hover td:first-child{
+    background-color: var(--focus-color) !important;
 }

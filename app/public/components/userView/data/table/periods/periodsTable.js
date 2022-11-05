@@ -27,7 +27,7 @@ function tableBody(model, visibleFields, data, cellsSpecials) {
 }
 
 export default function periodsTable(model, visibleFields, data, cellsSpecials) {
-    return h('.x-scrollable-periods',
+    return h('.x-scrollable-table',
         h('table.periods-table', { id: `data-table-${data.url}` }, [
             periodsHeader(visibleFields, data, model),
             tableBody(model, visibleFields, data, cellsSpecials),

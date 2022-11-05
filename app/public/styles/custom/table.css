@@ -23,6 +23,12 @@
     --white: #ffffff;
 }
 
+.x-scrollable-table {
+    width: 400px;
+    overflow-x: scroll;
+    position: relative !important;
+}
+
 .track:hover {
     background-color: var(--active-color) !important;
 }
