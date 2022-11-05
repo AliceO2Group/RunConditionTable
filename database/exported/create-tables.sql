@@ -249,6 +249,10 @@ CREATE TABLE public.quality_control_flags (
 	time_end integer NOT NULL,
 	flag_type_id integer NOT NULL,
 	comment text,
+	added_by varchar NOT NULL,
+	addition_time bigint NOT NULL,
+	last_modification_by varchar,
+	last_modification_time bigint,
 	CONSTRAINT quality_control_flags_pkey PRIMARY KEY (id)
 );
 -- ddl-end --
@@ -407,6 +411,19 @@ CREATE TABLE public.anchored_periods (
 ALTER TABLE public.anchored_periods OWNER TO postgres;
 -- ddl-end --
 
+-- object: public.verifications | type: TABLE --
+-- DROP TABLE IF EXISTS public.verifications CASCADE;
+CREATE TABLE public.verifications (
+	id integer NOT NULL,
+	run_detector_id integer NOT NULL,
+	verification_time bigint NOT NULL,
+	verified_by varchar NOT NULL,
+	CONSTRAINT verifications_pk PRIMARY KEY (id)
+);
+-- ddl-end --
+ALTER TABLE public.verifications OWNER TO postgres;
+-- ddl-end --
+
 -- object: pass_type_fk | type: CONSTRAINT --
 -- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS pass_type_fk CASCADE;
 ALTER TABLE public.data_passes ADD CONSTRAINT pass_type_fk FOREIGN KEY (pass_type)
@@ -517,6 +534,13 @@ ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE public.anchored_periods ADD CONSTRAINT period_id_fk FOREIGN KEY (period_id)
 REFERENCES public.periods (id) MATCH SIMPLE
 ON DELETE CASCADE ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: run_det_verification_fk | type: CONSTRAINT --
+-- ALTER TABLE public.verifications DROP CONSTRAINT IF EXISTS run_det_verification_fk CASCADE;
+ALTER TABLE public.verifications ADD CONSTRAINT run_det_verification_fk FOREIGN KEY (run_detector_id)
+REFERENCES public.runs_detectors (id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: "grant_CU_eb94f049ac" | type: PERMISSION --

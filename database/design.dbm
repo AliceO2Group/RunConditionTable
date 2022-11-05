@@ -70,7 +70,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="320" y="1320"/>
+	<position x="300" y="1300"/>
 	<column name="id" not-null="true" sequence="public.beams_dictionary_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -91,7 +91,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="220" y="500"/>
+	<position x="240" y="520"/>
 	<column name="id" not-null="true" sequence="public.data_passes_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -139,7 +139,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="860" y="440"/>
+	<position x="840" y="460"/>
 	<column name="run_number" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -163,7 +163,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="1440" y="1060"/>
+	<position x="1420" y="1040"/>
 	<column name="id" not-null="true" sequence="public.detectors_subsystems_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -187,7 +187,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="300" y="1580"/>
+	<position x="280" y="1560"/>
 	<column name="id" not-null="true" sequence="public.flags_types_dictionary_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -211,7 +211,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="260" y="200"/>
+	<position x="240" y="180"/>
 	<column name="id" not-null="true" sequence="public.pass_types_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -235,7 +235,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="300" y="1040"/>
+	<position x="280" y="1020"/>
 	<column name="id" not-null="true" sequence="public.periods_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -261,11 +261,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </sequence>
 
-<table name="quality_control_flags" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
+<table name="quality_control_flags" layers="0" collapse-mode="2" max-obj-count="13" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="900" y="1480"/>
+	<position x="840" y="1380"/>
 	<column name="id" not-null="true" sequence="public.quality_control_flags_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -287,6 +287,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="comment">
 		<type name="text" length="0"/>
 	</column>
+	<column name="added_by" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="addition_time" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="last_modification_by">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="last_modification_time">
+		<type name="bigint" length="0"/>
+	</column>
 	<constraint name="quality_control_flags_pkey" type="pk-constr" table="public.quality_control_flags">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
@@ -306,7 +318,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1420" y="1400"/>
+	<position x="1400" y="1380"/>
 	<column name="id" not-null="true" sequence="public.runs_detectors_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -328,7 +340,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="880" y="960"/>
+	<position x="840" y="920"/>
 	<column name="run_number" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -383,7 +395,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="740" y="180"/>
+	<position x="720" y="160"/>
 	<column name="data_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -407,7 +419,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="1360" y="180"/>
+	<position x="1340" y="160"/>
 	<column name="id" not-null="true" sequence="public.simulation_passes_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -449,7 +461,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1520" y="700"/>
+	<position x="1500" y="680"/>
 	<column name="simulation_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -471,7 +483,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1140" y="600"/>
+	<position x="1120" y="580"/>
 	<column name="period_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -483,6 +495,28 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 	<constraint name="an_period_pair_uq" type="uq-constr" table="public.anchored_periods">
 		<columns names="period_id,sim_pass_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="verifications" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<tag name="primary_data_layer"/>
+	<position x="1320" y="1660"/>
+	<column name="id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="run_detector_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="verification_time" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="verified_by" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="verifications_pk" type="pk-constr" table="public.verifications">
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -582,6 +616,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
+<constraint name="run_det_verification_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.runs_detectors" table="public.verifications">
+	<columns names="run_detector_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
 <relationship name="rel_data_passes_pass_types" type="relfk" layers="0"
 	 custom-color="#983c88"
 	 src-table="public.data_passes"
@@ -677,6 +717,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_data_passes_periods" type="relfk" layers="0"
 	 src-table="public.data_passes"
 	 dst-table="public.periods" reference-fk="period_id_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_verifications_runs_detectors" type="relfk" layers="0"
+	 src-table="public.verifications"
+	 dst-table="public.runs_detectors" reference-fk="run_det_verification_fk"
 	 src-required="false" dst-required="true"/>
 
 <permission>
