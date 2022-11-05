@@ -24,7 +24,7 @@
 }
 
 .x-scrollable-table {
-    width: 400px;
+    width: 100%; /*400px;*/
     overflow-x: scroll;
     position: relative !important;
 }

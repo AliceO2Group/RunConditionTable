@@ -50,8 +50,8 @@
 }
 
 .tooltip:hover .tooltiptext {
-    right: 0% !important;
-    bottom: -100%;
+    right: 5% !important;
+    bottom: -50% !important;
 }
 
 .tooltip .tooltiptext2 {

@@ -17,6 +17,7 @@
     width: 100%;
 }
 
+/* Checkboxes */
 .periods-table td:first-child, .periods-table th:first-child {
     position: sticky !important;
     width: 50px;
@@ -35,4 +36,29 @@
 
 .periods-table tr.row-selected-color-alpha:hover td:first-child{
     background-color: var(--focus-color) !important;
+}
+
+/* Names */
+.periods-table td:nth-child(2), .periods-table th:nth-child(2) {
+    min-width: 100px;
+    text-align: left;
+}
+
+/* Years */
+.periods-table td:nth-child(3), .periods-table th:nth-child(3) {
+    width: 80px;
+    text-align: right;
+}
+
+/* Beam types */
+.periods-table td:nth-child(4), .periods-table th:nth-child(4) {
+    min-width: 60px;
+    text-align: right;
+}
+
+/* Energy */
+.periods-table td:nth-child(5), .periods-table th:nth-child(5) {
+    min-width: 60px;
+    text-align: right;
+    padding-right: 2em;
 }
