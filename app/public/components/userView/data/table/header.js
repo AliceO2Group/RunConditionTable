@@ -42,7 +42,7 @@ const columnsHeadersArray = (visibleFields, data, model) =>
 const rowsOptions = (model, data) =>
     h('th', { scope: 'col' },
         h('.relative',
-            h(`input.vertical-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
+            h(`input.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
                 type: 'checkbox',
                 onclick: (e) => {
                     for (const row of data.rows) {

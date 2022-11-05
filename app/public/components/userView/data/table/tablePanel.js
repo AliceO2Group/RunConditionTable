@@ -23,7 +23,6 @@ import { postForm } from '../posting/postForm.js';
 import filter from './filter.js';
 
 import { RCT } from '../../../../config.js';
-import periodsTable from './periods/periodsTable.js';
 const { pagesNames } = RCT;
 
 /**
@@ -68,13 +67,14 @@ export default function tablePanel(model) {
     return h('div', [
         filteringPanel,
         data.rows.length > 15 ? pager(model, data, 1) : '',
-        dataPointer.page === pagesNames.periods
-            ? periodsTable(model, visibleFields, data, cellsSpecials)
-            : h('.x-scrollable',
-                h('table.data-table', { id: `data-table-${data.url}` }, [
-                    tableHeader(visibleFields, data, model),
-                    tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
-                ])),
+        h('.x-scrollable-table',
+            h('table.data-table', {
+                id: `data-table-${data.url}`,
+                className: `${dataPointer.page === pagesNames.periods ? 'periods-table' : ''}`
+            }, [
+                tableHeader(visibleFields, data, model),
+                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
+            ])),
         pager(model, data, 2),
     ]);
 }
