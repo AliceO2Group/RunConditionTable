@@ -23,16 +23,11 @@ export default function userPanel(model) {
         h('.flex-grow.flex-row.outline-gray', [
             sidebar(model),
 
-            h(
-                'section.outline-gray.flex-grow.relative',
-                [
-                    h(
-                        '.scroll-y.absolute-fill.bg-white',
-                        { id: 'main-content' },
-                        [dataPanel(model)],
-                    ),
-                ],
-            ),
+            h('section.outline-gray.flex-grow.relative', [
+                h('.scroll-y.absolute-fill.bg-white',
+                    { id: 'main-content' },
+                    [dataPanel(model)]),
+            ]),
         ]),
     ]);
 }

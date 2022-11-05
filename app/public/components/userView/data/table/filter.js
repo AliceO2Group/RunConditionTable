@@ -35,19 +35,19 @@ export default function filter(model) {
 
     return h('.filter-panel', [
         h('.x-scrollable',
-            h('table',
+            h('table.no-spacing',
                 h('tbody',
                     labelsRow(model, fields),
-                    inputsRow(params, upperInputIds),
-                    inputsRow(params, lowerInputIds))),
+                    inputsRow(params, upperInputIds, fields),
+                    inputsRow(params, lowerInputIds, fields))),
             h('.abs',
-                h('button.btn', {
+                h('button.btn.btn-primary', {
                     onclick: onclickSubmit(model, inputsIds),
                 }, 'Submit'),
                 '  ',
-                h('button.btn', {
+                h('button.btn.btn-secondary', {
                     onclick: onclickClear(model, inputsIds),
-                }, 'Clear filters'),
+                }, h('.clear-filters-20'), 'Clear filters'),
                 '     ',
                 h('button.btn', {
                     onclick: () => {
@@ -66,38 +66,68 @@ export default function filter(model) {
                         );
                         model.notify();
                     }),
-                }, 'Hide empty columns'))),
+                }, h('.hide-empty-20'), 'Hide empty columns'))),
     ]);
 }
 
-const labelsRow = (model, fields) => h('tr',
+const labelsRow = (model, fields) => h('tr.br-top-10',
     fields.map((field) => createClickableLabel(model, field)));
 
-const inputsRow = (params, inputsIds) => h('tr',
-    inputsIds.map((id) => createInputField(id, params[id])));
+const inputsRow = (params, inputsIds, fields) => h('tr.br-bottom-10',
+    inputsIds.map((id) => createInputField(id, params[id], fields)));
 
 const createClickableLabel = (model, field) =>
-    h('th.tooltip.noBorderBottom.table-cell-like',
-        h('button.btn', {
+    h(`th.tooltip.noBorderBottom.table-cell-like.${field.name}-class.br-top-10`,
+        { className: field.marked ? 'active' : '' },
+        h('.clickable-label', {
             style: 'width:120px',
-            onclick: () => model.fetchedData.changeItemStatus(field),
+            onclick: () => {
+                model.fetchedData.changeItemStatus(field);
+                if (field.marked) {
+                    for (const element of document.getElementsByClassName(`${field.name}-class`)) {
+                        element.classList.add('active');
+                    }
+                } else {
+                    for (const element of document.getElementsByClassName(`${field.name}-class`)) {
+                        if (element.classList.contains('active')) {
+                            element.classList.remove('active');
+                        }
+                    }
+                }
+            },
             className: field.marked ? 'active' : '',
-        }, getHeaderSpecial(model, field),
+        },
+        h(`${field.marked ? '.eye-20' : '.hide-20'}`),
+        getHeaderSpecial(model, field),
         h('span.tooltiptext', field.marked ? 'hide' : 'display')));
 
-const createInputField = (inputId, currentValue) => {
+const createInputField = (inputId, currentValue, fields) => {
     const type = inputId.substring(inputId.indexOf('-') + 1);
     return type !== 'undefined' ?
-        h('th.noBorderBottom.table-cell-like',
+        h(`th.noBorderBottom.table-cell-like.${inputId.substring(0, inputId.indexOf('-'))}-class${
+            ['to', 'exclude'].includes(inputId.substring(inputId.indexOf('-') + 1)) ? '.br-bottom-10' : ''}`,
+        { className: `${isFieldMarked(inputId, fields) ? 'active' : ''}` },
+        h('.text-field',
             h('input.form-control.rel', {
                 style: 'width:120px',
                 type: 'text',
                 value: currentValue ? currentValue : '',
                 disabled: type == null,
                 id: inputId,
-                placeholder: `${type}`,
-            })) : '';
+                required: true,
+                // TODO: pattern
+            }), h('span.placeholder', type))) : '';
 };
+
+const isFieldMarked = (inputId, fields) => {
+    for (const field of fields) {
+        if (field.name === `${inputId.substring(0, inputId.indexOf('-'))}`) {
+            return field.marked;
+        }
+    }
+    return false;
+};
+
 const onclickSubmit = (model, inputsIds) => () => {
     const filteringParamsPhrase = inputsIds
         .map((inputId) => [
@@ -120,18 +150,21 @@ const onclickSubmit = (model, inputsIds) => () => {
 
 const onclickClear = (model, inputsIds) => () => {
     inputsIds.forEach((inputId) => {
-        document.getElementById(inputId).value = '';
+        const element = document.getElementById(inputId);
+        if (element) {
+            element.value = '';
+        }
     });
     onclickSubmit(model, inputsIds)();
 };
 
 const getUpperInputIds = (fields, pageFilteringTypes, filteringTypes) =>
-    fields.map((f) => filedName2MatchFromType(f.name, pageFilteringTypes, filteringTypes));
+    fields.map((f) => fieldName2MatchFromType(f.name, pageFilteringTypes, filteringTypes));
 
 const getLowerInputIds = (fields, pagesFilteringTypes, filteringTypes) => fields.map((f) =>
-    filedName2ExcludeToType(f.name, pagesFilteringTypes, filteringTypes));
+    fieldName2ExcludeToType(f.name, pagesFilteringTypes, filteringTypes));
 
-const filedName2MatchFromType = (fieldName, pageFilteringTypes, filteringTypes) => {
+const fieldName2MatchFromType = (fieldName, pageFilteringTypes, filteringTypes) => {
     if (pageFilteringTypes[fieldName] === filteringTypes.matchExcludeType) {
         return `${fieldName}-match`;
     } else if (pageFilteringTypes[fieldName] === filteringTypes.fromToType) {
@@ -141,7 +174,7 @@ const filedName2MatchFromType = (fieldName, pageFilteringTypes, filteringTypes) 
     }
 };
 
-const filedName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes) => {
+const fieldName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes) => {
     if (pagesFilteringParams[fieldName] === filteringTypes.matchExcludeType) {
         return `${fieldName}-exclude`;
     } else if (pagesFilteringParams[fieldName] === filteringTypes.fromToType) {

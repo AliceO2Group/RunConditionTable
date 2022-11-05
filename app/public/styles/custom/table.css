@@ -1,11 +1,106 @@
+/**
+ * @license
+ * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
+ * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
+ * All rights not expressly granted are reserved.
+ *
+ * This software is distributed under the terms of the GNU General Public
+ * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
+
+:root {
+    /* Color palette */
+    --active-color: #b3c5d7;
+    --focus-color: #778da9;
+    --row-selected-color: #8d99ae;
+    --highlight-blue: #D7EDFC;
+    --dark-blue: #1D3557;
+    --blue: #1e90ff;
+    --white: #ffffff;
+}
+
 .track:hover {
-    background-color: #D7EDFC !important;
+    background-color: var(--active-color) !important;
 }
 
-.table tbody tr:nth-child(odd).row-selected-color-alpha {
-    background-color: rgba(145, 207, 84, 0.286);
+.track.row-selected-color-alpha:hover {
+    background-color: var(--focus-color) !important;
 }
 
-.table tbody tr:nth-child(even).row-selected-color-alpha {
-    background-color: rgba(104, 162, 46, 0.286);
+table tbody tr.row-selected-color-alpha {
+    background-color: var(--row-selected-color);
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    background-color: var(--color-white);
+    border-radius: 0.15em;
+    font: inherit;
+    color: var(--color-gray) !important;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid var(--color-gray) !important;
+    display: grid;
+    place-content: center;
+}
+
+input[type="checkbox"].ticked {
+    background-color: var(--dark-blue);
+    border-radius: 0.15em;
+    border: 0.15em solid var(--dark-blue) !important;
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--form-control-color);
+
+    transform-origin: bottom left;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    background-color: var(--color-white);
+}
+  
+input[type="checkbox"]:checked::before {
+    transform: scale(1);
+    background-color: var(--color-white);
+}
+
+.text-field {
+    position: relative;
+    margin: 6px 0px;
+}
+
+input {
+    display: inline-block;
+    border: thin solid #fafafa;
+    border-bottom: solid medium #999;
+    color: #444;
+    background-color: #fafafa;
+}
+
+.placeholder {
+    color: #999;
+    position: absolute;
+    pointer-events: none;
+    left: 10px;
+    top: 5px;
+    transition: 0.2s;
+    font-weight: 500;
+}
+
+input:focus ~ .placeholder, input:valid ~ .placeholder {
+    top: -13px;
+    left: 10px;
+    font-size: small;
+    background-color: var(--active-color);
+    color: var(--color-white);
+    padding:0 3px;
+    border-radius: 5px;
 }

@@ -14,8 +14,9 @@
 
 import { h } from '/js/src/index.js';
 import tablePanel from './table/tablePanel.js';
-import spinner from '../../common/spinner.js';
-import viewButton from '../../common/viewButton.js';
+import spinnerAndReloadView from './fetchingStates/loading.js';
+import failureStatusAndReload from './fetchingStates/failure.js';
+import unknownError from './fetchingStates/unknown.js';
 
 /**
  * Create vnode tablePanel if data are fetched otherwise shows spinner
@@ -27,29 +28,10 @@ export default function dataPanel(model) {
     const { page, index } = model.getCurrentDataPointer();
     const data = model.fetchedData[page][index];
 
-    return h('.homePage',
-        [
-            h('.tableDiv', []),
-
-            data ? data.match({
-                NotAsked: () => h('', 'not asked'),
-                Loading: () => spinnerAndReloadView(model),
-                Success: () => tablePanel(model),
-                Failure: (status) => failureStatusAndReload(model, status),
-            }) : h('', 'data null :: Arrr...'),
-        ]);
-}
-
-function spinnerAndReloadView(model) {
-    return h('.item-center.justify-center', [
-        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'),
-        spinner(),
-    ]);
-}
-
-function failureStatusAndReload(model, status) {
-    return h('.item-center.justify-center', [
-        viewButton(model, 'reload data', () => model.fetchedData.reqForData(true), 'reload-btn'),
-        h('', status),
-    ]);
+    return data ? data.match({
+        NotAsked: () => h('', 'not asked'),
+        Loading: () => spinnerAndReloadView(model),
+        Success: () => tablePanel(model),
+        Failure: (status) => failureStatusAndReload(model, status),
+    }) : unknownError(model);
 }

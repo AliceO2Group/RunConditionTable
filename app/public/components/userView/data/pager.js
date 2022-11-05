@@ -84,7 +84,7 @@ export default function pager(model, data, scid) {
                 value: model.router.params['rows-on-site'],
             }, ''),
             h('.menu-title', 'per page'),
-            h('button.btn', { onclick: () => onclickSetRowsOnSite(model, scid) }, 'apply'),
+            h('button.btn.m1', { onclick: () => onclickSetRowsOnSite(model, scid) }, 'apply'),
 
             h('.menu-title.w-25'),
 

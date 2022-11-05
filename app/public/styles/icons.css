@@ -1,3 +1,17 @@
+/**
+ * @license
+ * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
+ * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
+ * All rights not expressly granted are reserved.
+ *
+ * This software is distributed under the terms of the GNU General Public
+ * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
+
 .chevron-down-20 {
     background-image: url('./images/20/Chevron\ Down.svg');
     width: 20px;
@@ -62,4 +76,58 @@
     display: inline-block;
     position: relative;
     top: 0.2em;
+}
+
+.eye-20 {
+    background-image: url('./images/20/Eye.svg');
+    width: 20px;
+    height: 20px;
+}
+
+.hide-20 {
+    background-image: url('./images/20/Hide.svg');
+    width: 20px;
+    height: 20px;
+}
+
+.clear-filters-20 {
+    background-image: url('./images/20/Clear\ Filters.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.hide-empty-20 {
+    background-image: url('./images/20/Hide\ Empty.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.nothing-found-90 {
+    background-image: url('./images/90/Nothing\ Found.svg');
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+}
+
+.no-network-90 {
+    background-image: url('./images/90/No\ Network.svg');
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+}
+
+.factory-breakdown-90 {
+    background-image: url('./images/90/Factory\ Breakdown.svg');
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+}
+
+.unexpected-90 {
+    background-image: url('./images/90/Unexpected.svg');
+    width: 90px;
+    height: 90px;
+    display: inline-block;
 }

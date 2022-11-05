@@ -11,20 +11,26 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-import { h } from '/js/src/index.js';
 
-export default function serviceUnavailablePanel(model) {
-    const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => model.retry() }, 'Retry');
-    const title = h('h1.primary', 'Run Condition Table');
-    const subtitle = h('h3', 'Service temporarily unavailable');
+import { h } from '/js/src/index.js';
+import viewButton from '../../../common/viewButton.js';
+
+export default function unknownError(model) {
+    const reloadBtn = viewButton(
+        model,
+        'Reload',
+        () => model.fetchedData.reqForData(true),
+        '',
+        undefined,
+        '.btn-primary.m3',
+    );
+    const loadingMessage = h('h3', 'Unknown error');
+    const explanation = h('h5', 'Request could not be handled properly');
 
     return h('.loginDiv.top-100', [
-        title,
-        h('.no-network-90'),
-        subtitle,
-        h('.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close',
-            { id: 'serviceUnavailableMessageFieldID' },
-            ''),
-        retryBtn,
+        h('.unexpected-90'),
+        loadingMessage,
+        explanation,
+        reloadBtn,
     ]);
 }

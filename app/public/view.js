@@ -25,5 +25,5 @@ export default function view(model) {
         sessionError: () => sessionErrorPanel(model),
         primary: () => userPanel(model.submodels[model.mode]),
         admin: () => loggingPanel(model),
-    }, () => waitingPanel())/*Switch returns function*/();
+    }, () => waitingPanel(model))/*Switch returns function*/();
 }

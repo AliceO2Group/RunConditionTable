@@ -21,7 +21,9 @@ import pager from '../pager.js';
 import postingDataConfig from '../posting/postingDataConfig.js';
 import { postForm } from '../posting/postForm.js';
 import filter from './filter.js';
-import container from '../../../common/container.js';
+
+import { RCT } from '../../../../config.js';
+const { pagesNames } = RCT;
 
 /**
  * Creates vnode containing table of fetched data (main content)
@@ -35,13 +37,25 @@ export default function tablePanel(model) {
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
 
     if (data.rows?.length == 0) {
-        const removeAndGoBackBtn = h('button.btn.br-primary.m4.p4.big-tap',
-            { onclick: () => model.removeCurrentData() }, 'Go Back & Remove This Page');
-        const noDataMessage = h('h3.warning.justify-center', 'No related data');
-        return h('div.loginDiv', h('div.loginDiv.bg-gray-lighter.br3.p4', [
+        const removeAndGoBackBtn = h('button.btn.btn-primary.m3', {
+            onclick: () => model.removeCurrentData(),
+        }, `${
+            dataPointer.page === pagesNames.periods
+                ? 'Reload'
+                : 'Go back'
+        }`);
+        const noDataMessage = h('h3', 'No data found');
+        const noDataExplanation = h('h5', `${
+            dataPointer.page === pagesNames.periods
+                ? 'Make sure the database works fine'
+                : 'There is no data to be displayed here'
+        }`);
+        return h('.loginDiv.top-100', [
+            h('.nothing-found-90'),
             noDataMessage,
-            container(removeAndGoBackBtn),
-        ]));
+            noDataExplanation,
+            removeAndGoBackBtn,
+        ]);
     }
     const cellsSpecials = pagesCellsSpecials[dataPointer.page];
 
@@ -50,16 +64,16 @@ export default function tablePanel(model) {
 
     const filteringPanel = model.searchFieldsVisible ? filter(model) : ' ';
 
-    return h('div.p3', [
+    return h('div', [
         filteringPanel,
-        pager(model, data, 1),
-        h('div', h('div.x-scrollable',
+        data.rows.length > 15 ? pager(model, data, 1) : '',
+        h('.x-scrollable',
             h('table.table', { id: `data-table-${data.url}` }, [
                 tableHeader(visibleFields, data, model),
                 tableBody(
                     model, visibleFields, data, cellsSpecials, dataPointer.page,
                 ),
-            ]))),
+            ])),
         pager(model, data, 2),
     ]);
 }
