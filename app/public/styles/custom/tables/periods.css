@@ -39,25 +39,25 @@
 }
 
 /* Names */
-.periods-table td:nth-child(2), .periods-table th:nth-child(2) {
+.periods-table .periods-name-cell, .periods-table .periods-name-header {
     min-width: 380px;
     text-align: left;
 }
 
 /* Years */
-.periods-table td:nth-child(3), .periods-table th:nth-child(3) {
+.periods-table .periods-year-cell, .periods-table .periods-year-header {
     min-width: 80px;
     text-align: right;
 }
 
 /* Beam types */
-.periods-table td:nth-child(4), .periods-table th:nth-child(4) {
+.periods-table .periods-beam-cell, .periods-table .periods-beam-header {
     min-width: 60px;
     text-align: right;
 }
 
 /* Energy */
-.periods-table td:nth-child(5), .periods-table th:nth-child(5) {
+.periods-table .periods-energy-cell, .periods-table .periods-energy-header {
     min-width: 60px;
     text-align: right;
 }

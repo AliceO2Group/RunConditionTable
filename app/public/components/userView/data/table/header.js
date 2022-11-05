@@ -24,8 +24,9 @@ export default function tableHeader(visibleFields, data, model) {
 }
 
 const columnsHeadersArray = (visibleFields, data, model) =>
-    visibleFields.map((f) => h('th', { scope: 'col' },
-        h('.relative', [
+    visibleFields.map((f) => h(`th.${model.getCurrentDataPointer().page}-${f.name}-header`, {
+            scope: 'col'
+        }, h('.relative', [
             headerSpecPresent(model, f) ? [
                 h('div.sort-up-20', {
                     onclick: () => sort(f.name, data, model, -1),
