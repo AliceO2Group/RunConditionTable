@@ -64,6 +64,16 @@
     right: auto;
 }
 
+.tooltip .tooltiptext2 {
+    visibility: hidden;
+    right: auto;
+}
+
+.tooltip:hover .tooltiptext2 {
+    visibility: visible;
+    right: auto;
+}
+
 .my-tooltip:hover .tooltiptext {
     visibility: visible;
 }
