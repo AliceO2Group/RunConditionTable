@@ -11,22 +11,3 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-
-.x-scrollable-periods {
-    width: 400px;
-    overflow-x: scroll;
-    position: relative !important;
-}
-
-.x-scrollable-periods table td:first-child, .x-scrollable-periods table th:first-child {
-    position: sticky !important;
-    width: 50px;
-    background-color: var(--color-white);
-    left: 0;
-    z-index: 1 !important;
-}
-
-.periods-table {
-    border-collapse: collapse;
-    width: 100%;
-}

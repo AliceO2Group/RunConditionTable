@@ -128,7 +128,7 @@
     top: 0px;
     padding-top: 10px;
     background-color: var(--color-white);
-    z-index: 1;
+    z-index: 2 !important;
 }
 
 .inline {

@@ -71,7 +71,7 @@ export default function tablePanel(model) {
         dataPointer.page === pagesNames.periods
             ? periodsTable(model, visibleFields, data, cellsSpecials)
             : h('.x-scrollable',
-                h('table.table', { id: `data-table-${data.url}` }, [
+                h('table.data-table', { id: `data-table-${data.url}` }, [
                     tableHeader(visibleFields, data, model),
                     tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
                 ])),
