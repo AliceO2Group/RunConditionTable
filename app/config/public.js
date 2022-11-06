@@ -47,7 +47,6 @@ module.exports = { // Properties that will be provided to frontend in the public
         insertData: '/Rct-Data/insert-data/',
         authControl: '/auth-control/',
         date: '/date/',
-        bookkeeping: '/bookkeeping/',
     },
     methods: {
         login: 'post',

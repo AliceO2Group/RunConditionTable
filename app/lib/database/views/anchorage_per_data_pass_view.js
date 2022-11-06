@@ -13,7 +13,6 @@
  */
 
 const anchorage_per_data_pass_view = (query) => `
-    WITH anchorage_per_data_pass_view AS (
         SELECT
             --sp.id
             sp.name,
@@ -28,6 +27,6 @@ const anchorage_per_data_pass_view = (query) => `
         INNER JOIN data_passes as dp
             ON dp.id = aps.data_pass_id
         WHERE dp.name = '${query.index}'
-    )`;
+    `;
 
 module.exports = anchorage_per_data_pass_view;

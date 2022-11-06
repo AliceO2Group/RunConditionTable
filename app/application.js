@@ -39,9 +39,6 @@ Log.configure(config);
 class RunConditionTableApplication {
     constructor() {
         this.logger = new Log(RunConditionTableApplication.name);
-        this.loggedUsers = {
-            tokenToUserData: {},
-        };
 
         this.buildServer();
         this.buildServices();
@@ -92,6 +89,9 @@ class RunConditionTableApplication {
             };
             Utils.switchCase(cmdAndArgs[0], {
                 '': () => {},
+                users: () => {
+                    this.con.log(this.databaseService.loggedUsers);
+                },
                 pool: () => {
                     this.con.log(this.databaseService.pool);
                 },
@@ -100,15 +100,6 @@ class RunConditionTableApplication {
                 },
                 psql: dbAdminExec,
                 sh: shExec,
-                tmp: () => {
-                    const DETECTORS_STORED_DEF_PATH = '/postgres/run/stored-data/';
-                    this.databaseService.adminClient
-                        .query(`COPY (select * from detectors_subsystems) TO '${DETECTORS_STORED_DEF_PATH}/detectors.csv';`)
-                        .then(this.con.log)
-                        .catch((e) => {
-                            this.con.log(e);
-                        });
-                },
                 bk: (args) => this.servCLI(this.alimonitorServices.bookkeepingService, args),
                 ml: (args) => this.servCLI(this.alimonitorServices.monalisaService, args),
                 mc: (args) => this.servCLI(this.alimonitorServices.monalisaServiceMC, args),
@@ -161,8 +152,8 @@ class RunConditionTableApplication {
 
         httpServer.post(EP.login, (req, res) => databaseService.login(req, res));
         httpServer.post(EP.logout, (req, res) => databaseService.logout(req, res));
-        httpServer.get(EP.rctData, (req, res) => databaseService.execDataReq(req, res));
-        httpServer.post(EP.insertData, (req, res) => databaseService.execDataInsert(req, res));
+        httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res));
+        httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res));
         httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
     }
 
@@ -172,7 +163,7 @@ class RunConditionTableApplication {
     }
 
     buildServices() {
-        this.databaseService = new DatabaseService(this.loggedUsers);
+        this.databaseService = new DatabaseService();
 
         const monalisaService = new MonalisaService();
         const monalisaServiceMC = new MonalisaServiceMC();

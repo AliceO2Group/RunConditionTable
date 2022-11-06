@@ -12,65 +12,80 @@
  * or submit itself to any jurisdiction.
  */
 
-const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
 const views = require("./views") 
 const { pagesNames } = config.public;
 const DRP = config.public.dataReqParams;
 const Utils = require("../Utils.js");
 
-console.log(views)
 
+const cases = {};
+cases[pagesNames.periods] = 'periods_view'
+cases[pagesNames.runsPerPeriod] = 'runs_per_period_view'
+cases[pagesNames.runsPerDataPass] = 'runs_per_data_pass_view'
+cases[pagesNames.dataPasses] = 'data_passes_view'
+cases[pagesNames.anchoragePerDatapass] = 'anchorage_per_data_pass_view'
+cases[pagesNames.mc] = 'mc_view'
+cases[pagesNames.anchoredPerMC] = 'anchored_per_mc_view'
+cases[pagesNames.flags] = 'flags_view'
 /**
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
 class QueryBuilder {
-    static async build(params) {
-        const matchParams = [];
-        const excludeParams = [];
-        const fromParams = [];
-        const toParams = [];
 
-        for (let [key, value] of Object.entries(params)) {
-            const queryParam = key.substring(0, key.lastIndexOf('-'));
+    static filteringPart(params) {
+        const filterTypes = ['match', 'exclude', 'from', 'to'];
+        const filtersTypesToParams = {
+            match: [],
+            exclude: [],
+            from: [],
+            to: []
+        }
+        const filtersTypesToSqlOperand = {
+            match: 'LIKE',
+            exclude: 'NOT LIKE',
+            from: '>=',
+            to: '<='
+        }
+        const filtersTypesToSqlValueQuoted = {
+            match: '\'',
+            exclude: '\'',
+            from: '',
+            to: ''
+        }
+        // assert correctness of previous
+        // Mapping search params to categoraized key, value pairs
+        const filterTypesRegex= new RegExp(filterTypes.map((t) => `(.*-${t})`).join('|'));
+        const filterParams = Object.entries(params).filter(([k, v]) => k.match(filterTypesRegex));
+    
+        for (let [filedNameAndFilterType, value] of Object.entries(params)) {
+            const [fieldName, filterType] = filedNameAndFilterType.split('-');
             if (Array.isArray(value)) {
                 value = value[0];
+                // TODO
             }
-            if (key.includes('match')) {
-                matchParams.push({ queryParam, value });
-            }
-
-            if (key.includes('exclude')) {
-                excludeParams.push({ queryParam, value });
-            }
-
-            if (key.includes('from')) {
-                fromParams.push({ queryParam, value });
-            }
-
-            if (key.includes('to') && key !== 'token') {
-                toParams.push({ queryParam, value });
-            }
+            if (filterType in filtersTypesToParams) {
+                filtersTypesToParams[filterType].push({ fieldName, value })
+            } 
         }
+        
+        // Joining previous to sql clause
+        const sqlWhereClause = Object.keys(filtersTypesToParams)
+            .map((t) => {
+                const qt = filtersTypesToSqlValueQuoted[t];
+                const operand = filtersTypesToSqlOperand[t];
+                return filtersTypesToParams[t]
+                    .map(({ queryParam, value }) => `"${queryParam}" ${operand} ${qt}${value}${qt}`)
+                    .join("AND");})
+            .filter((clause) => clause?.length > 0)
+            .join("AND");
 
-        const filteringPart = () => {
-            const matchPhrase = matchParams.map((filter) =>
-                `"${filter.queryParam}" LIKE '${filter.value}'`).join(' AND ');
+ 
+        return sqlWhereClause?.length > 0 ? `WHERE ${sqlWhereClause}` : '';
+    }
 
-            const excludePhrase = excludeParams.map(({ queryParam, value }) =>
-                `"${queryParam}" NOT LIKE '${value}'`).join(' AND ');
-
-            const fromPhrase = fromParams.map(({ queryParam, value }) =>
-                `"${queryParam}" >= ${value}`).join(' AND ');
-
-            const toPhrase = toParams.map(({ queryParam, value }) =>
-                `"${queryParam}" <= ${value}`).join(' AND ');
-
-            const filtersPhrase = [matchPhrase, excludePhrase, fromPhrase, toPhrase].filter((value) => value?.length > 0).join(' AND ');
-
-            return filtersPhrase?.length > 0 ? `WHERE ${filtersPhrase}` : '';
-        };
-
+    static build(params) {
+        
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
 
@@ -86,58 +101,21 @@ class QueryBuilder {
                 const field = sorting
                 return `ORDER BY ${field} ASC`;
             }
-
-
         }
 
-        const cases = {};
-        cases[pagesNames.periods] = 
-        `${views.periods_view}
-        SELECT *
-        FROM periods_view as main_view
-        `;
-        cases[pagesNames.runsPerPeriod] = 
-        `${views.runs_per_period_view(params)}
-        SELECT * 
-        FROM runs_per_period_view
-        `;
-        cases[pagesNames.runsPerDataPass] =
-        `${views.runs_per_data_pass_view(params)}
-        SELECT *
-        FROM runs_per_data_pass_view
-        `;
-        cases[pagesNames.dataPasses] = 
-        `${views.data_passes_view(params)}
-        SELECT * 
-        FROM data_passes_view
-        `;
-        cases[pagesNames.anchoragePerDatapass] = 
-        `${views.anchorage_per_data_pass_view(params)}
-        SELECT *
-        FROM anchorage_per_data_pass_view
-        `;
-        cases[pagesNames.mc] = 
-        `${views.mc_view(params)}
-        SELECT *  
-        FROM mc_view
-        `;
-        cases[pagesNames.anchoredPerMC] = 
-        `${views.anchored_per_mc_view(params)}
-        SELECT *
-        FROM anchored_per_mc_view
-        `;
-        cases[pagesNames.flags] = 
-        `${views.flags_view(params)}
-        SELECT * 
-        FROM flags_view
-        `;
+        const viewName = cases[params.page]
+        const viewGen = views[viewName]
 
-        const queryRest = () => 
-        `${filteringPart()}
+        const queryRest =
+        `${QueryBuilder.filteringPart(params)}
         ${orderingPart(params)}
         ${dataSubsetQueryPart(params)}`;
 
-        return `${Utils.switchCase(params.page, cases, null)} ${queryRest()};`;
+        return `WITH ${viewName} AS (
+                    ${viewGen(params)}) 
+                SELECT * 
+                FROM ${viewName}  
+                ${queryRest};`;
         
     }
 

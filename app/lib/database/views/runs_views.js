@@ -19,7 +19,6 @@
  
  
  const runs_per_period_view = (query) => `
-     WITH runs_per_period_view AS (
          SELECT
              --p.name, 
              r.run_number, 
@@ -45,10 +44,9 @@
                              WHERE periods.name = '${query.index}'
                              )
          ORDER BY r.run_number DESC
-         )`;
+        `;
  
  const runs_per_data_pass_view = (query) => `
-         WITH runs_per_data_pass_view AS (
              SELECT
                  --p.name, 
                  r.run_number, 
@@ -72,7 +70,7 @@
                      ON r.run_number=dpr.run_number
              WHERE dp.name = '${query.index}'
              ORDER BY r.run_number DESC
-             )`;
+            `;
  
 
 module.exports = {runs_per_period_view, runs_per_data_pass_view};

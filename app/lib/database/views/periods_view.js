@@ -12,8 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const periods_view = `
-WITH periods_view AS (
+const periods_view = () => `
     SELECT DISTINCT
         --p.id    
         p.name, 
@@ -28,6 +27,6 @@ WITH periods_view AS (
     LEFT JOIN runs as r
         ON r.period_id = p.id
     GROUP BY p.name, p.year, beam
-)`;
+`;
 
 module.exports = periods_view;

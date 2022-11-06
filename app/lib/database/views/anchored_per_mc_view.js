@@ -13,7 +13,6 @@
  */
 
 const anchored_per_mc_view = (query) => `
-    WITH anchored_per_mc_view AS (
         SELECT 
             --dp.id
             dp.name,
@@ -32,6 +31,6 @@ const anchored_per_mc_view = (query) => `
         INNER JOIN simulation_passes as sp
             ON sp.id = aps.sim_pass_id
         WHERE sp.name = '${query.index}'
-    )`;
+    `;
 
 module.exports = anchored_per_mc_view;

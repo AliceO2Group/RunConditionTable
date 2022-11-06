@@ -13,7 +13,6 @@
  */
 
 const data_passes_view = (query) => `
-    WITH data_passes_view AS (
         SELECT
             --dp.id
             dp.name,
@@ -28,6 +27,6 @@ const data_passes_view = (query) => `
         LEFT JOIN pass_types AS pt
             ON pt.id = dp.pass_type
         WHERE dp.period_id = (SELECT id from periods WHERE name ='${query.index}')
-        )`;
+        `;
 
 module.exports = data_passes_view;

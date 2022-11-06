@@ -13,7 +13,6 @@
  */
 
 const flags_view = (query) => `
-    WITH flags_view AS (
         SELECT
             --qcf.id, 
             qcf.start AS flagStart, 
@@ -35,9 +34,8 @@ const flags_view = (query) => `
         
         WHERE rd.run_id = ${query.index}
         
-    )`;
+    `;
 
 module.exports = () => {
-    return ''
-    throw 'TODO';
+    return 'NOT IMPLEMENTED PROPERLY'
 };

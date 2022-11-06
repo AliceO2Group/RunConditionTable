@@ -13,7 +13,6 @@
  */
 
 const mc_view = (query) => `
-    WITH mc_view AS (
         SELECT
             --sp.id
             sp.name,
@@ -33,6 +32,6 @@ const mc_view = (query) => `
                 WHERE p.name = '${query.index}' AND
                     sp1.id = sp.id
                 )
-        )`;
+        `;
 
 module.exports = mc_view;
