@@ -11,3 +11,55 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+
+.runs-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* Checkboxes */
+.runs-table td:first-child, .runs-table th:first-child {
+    position: sticky !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    width: 40px !important;
+    left: 0;
+    background-color: var(--color-white);
+    z-index: 1 !important;
+}
+
+.runs-table tr:hover td:first-child {
+    background-color: var(--active-color) !important;
+}
+
+.runs-table tr.row-selected-color-alpha td:first-child{
+    background-color: var(--row-selected-color);
+}
+
+.runs-table tr.row-selected-color-alpha:hover td:first-child{
+    background-color: var(--focus-color) !important;
+}
+
+/* Run number */
+.runs-table .runsPerPeriod-run_number-cell, .runs-table .runsPerPeriod-run_number-header,
+.runs-table .runsPerDataPass-run_number-cell, .runs-table .runsPerDataPass-run_number-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Start time, end time, trigger start time, trigger end time */
+.runs-table .runsPerPeriod-time_start-cell, .runs-table .runsPerPeriod-time_start-header,
+.runs-table .runsPerDataPass-time_start-cell, .runs-table .runsPerDataPass-time_start-header,
+.runs-table .runsPerPeriod-time_end-cell, .runs-table .runsPerPeriod-time_end-header,
+.runs-table .runsPerDataPass-time_end-cell, .runs-table .runsPerDataPass-time_end-header,
+.runs-table .runsPerPeriod-time_trg_start-cell, .runs-table .runsPerPeriod-time_trg_start-header,
+.runs-table .runsPerDataPass-time_trg_start-cell, .runs-table .runsPerDataPass-time_trg_start-header,
+.runs-table .runsPerPeriod-time_trg_end-cell, .runs-table .runsPerPeriod-time_trg_end-header,
+.runs-table .runsPerDataPass-time_trg_end-cell, .runs-table .runsPerDataPass-time_trg_end-header  {
+    min-width: 100px;
+    text-align: right;
+}
+
+.runs-table td:last-child, .runs-table th:last-child {
+    padding-right: 2em;
+}

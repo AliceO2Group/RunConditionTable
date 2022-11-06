@@ -12,13 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
- .periods-table {
+ .data-passes-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.periods-table td:first-child, .periods-table th:first-child {
+.data-passes-table td:first-child, .data-passes-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -28,42 +28,36 @@
     z-index: 1 !important;
 }
 
-.periods-table tr:hover td:first-child {
+.data-passes-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.periods-table tr.row-selected-color-alpha td:first-child{
+.data-passes-table tr.row-selected-color-alpha td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.periods-table tr.row-selected-color-alpha:hover td:first-child{
+.data-passes-table tr.row-selected-color-alpha:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
-/* Names */
-.periods-table .periods-name-cell, .periods-table .periods-name-header {
-    min-width: 380px;
+/* Name */
+.data-passes-table .dataPasses-name-cell, .data-passes-table .dataPasses-name-header {
+    min-width: 500px;
     text-align: left;
 }
 
-/* Years */
-.periods-table .periods-year-cell, .periods-table .periods-year-header {
-    min-width: 80px;
+/* Description */
+.data-passes-table .dataPasses-description-cell, .data-passes-table .dataPasses-description-header {
+    min-width: 300px;
+    text-align: left;
+}
+
+/* Size */
+.data-passes-table .dataPasses-size-cell, .data-passes-table .dataPasses-size-header {
+    min-width: 100px;
     text-align: right;
 }
 
-/* Beam types */
-.periods-table .periods-beam-cell, .periods-table .periods-beam-header {
-    min-width: 80px;
-    text-align: right;
-}
-
-/* Energy */
-.periods-table .periods-energy-cell, .periods-table .periods-energy-header {
-    min-width: 60px;
-    text-align: right;
-}
-
-.periods-table td:last-child, .periods-table th:last-child {
+.data-passes-table td:last-child, .data-passes-table th:last-child {
     padding-right: 2em;
 }
