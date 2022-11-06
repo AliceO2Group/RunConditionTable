@@ -34,7 +34,14 @@ export default function viewButton(
     }
 
     if (typeof href !== 'undefined' && !forceButton) {
-        return h(`a${buttonType}`, { id: id, onclick: onclickAction, href: href }, label);
+        return h(`a${buttonType}.no-text-decoration`, {
+            id: id,
+            onclick: onclickAction,
+            href: href,
+        }, label);
     }
-    return h(`button${buttonType}`, { id: id, onclick: onclickAction }, label);
+    return h(`button${buttonType}`, {
+        id: id,
+        onclick: onclickAction,
+    }, label);
 }

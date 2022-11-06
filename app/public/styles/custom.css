@@ -15,6 +15,8 @@
 :root {
     /* Color palette */
     --active-color: #b3c5d7;
+    --dark-blue: #1D3557;
+    --secondary-color: #577590;/*#6d6875;*/
     --highlight-blue: #D7EDFC;
     --blue: #1e90ff;
     --white: #ffffff;
@@ -30,6 +32,10 @@
 
 .noBorderBottom {
     border-bottom: 0px !important;
+}
+
+.no-text-decoration {
+    text-decoration: none !important;
 }
     
 .x-scrollable {
@@ -50,8 +56,18 @@
 }
 
 .tooltip:hover .tooltiptext {
-    right: 0% !important;
-    bottom: -100%;
+    right: 5% !important;
+    bottom: -50% !important;
+}
+
+.tooltip .tooltiptext2 {
+    visibility: hidden;
+    right: auto;
+}
+
+.tooltip:hover .tooltiptext2 {
+    visibility: visible;
+    right: auto;
 }
 
 .tooltip .tooltiptext2 {
@@ -68,10 +84,6 @@
     visibility: visible;
 }
 
-.rel {
-    position: relative;
-}
-
 .my-tooltip .tooltiptext {
     visibility: hidden;
     width: 118px;
@@ -83,10 +95,6 @@
     position: absolute;
     z-index: 1 !important;
     bottom: -100%;
-}
-
-.abs {
-    position: absolute !important;
 }
 
 .big-tap {
@@ -115,10 +123,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-    -ms-transform: translateX(-50%);
-    transform: translateX(-50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 
 .hidden {
@@ -130,7 +136,7 @@
     top: 0px;
     padding-top: 10px;
     background-color: var(--color-white);
-    z-index: 1;
+    z-index: 2 !important;
 }
 
 .inline {
@@ -203,8 +209,11 @@
     border-bottom-right-radius: 10px !important;
 }
 
-.btn-secondary {
-    border: var(--active-color) solid 1px !important;
-    background-color: var(--color-white) !important;
-    color: var(--active-color) !important;
+.btn:hover {
+    background-color: #577590 !important;
 }
+
+.btn:active {
+    background-color: #577590 !important;
+}
+

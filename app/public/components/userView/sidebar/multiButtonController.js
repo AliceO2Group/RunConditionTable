@@ -49,7 +49,8 @@ export const mainButton = (
 
 export const deleteCopyReloadButtonsController = (model, index, dropdownID, pageName) => [
     h('.relative',
-        hiddenButtonsControllerObj(model, index, dropdownID, pageName), periodsHamburger(index)),
+        hiddenButtonsControllerObj(model, index, dropdownID, pageName),
+        periodsHamburger(index)),
 ];
 
 export const hiddenButtonsControllerObj = (model, index, dropdownID, pageName) => {

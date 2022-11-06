@@ -23,6 +23,12 @@
     --white: #ffffff;
 }
 
+.x-scrollable-table {
+    width: 100%; /*400px;*/
+    overflow-x: scroll;
+    position: relative !important;
+}
+
 .track:hover {
     background-color: var(--active-color) !important;
 }
@@ -33,6 +39,10 @@
 
 table tbody tr.row-selected-color-alpha {
     background-color: var(--row-selected-color);
+}
+
+table.data-table thead {
+    height: 50px;
 }
 
 input[type="checkbox"] {
