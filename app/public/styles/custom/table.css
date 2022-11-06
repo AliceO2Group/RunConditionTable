@@ -41,6 +41,11 @@ table tbody tr.row-selected-color-alpha {
     background-color: var(--row-selected-color);
 }
 
+table.data-table thead {
+    background-color: aqua;
+    height: 50px;
+}
+
 input[type="checkbox"] {
     appearance: none;
     background-color: var(--color-white);

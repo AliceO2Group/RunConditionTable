@@ -27,17 +27,24 @@ const columnsHeadersArray = (visibleFields, data, model) =>
     visibleFields.map((f) => h(`th.${model.getCurrentDataPointer().page}-${f.name}-header`, {
             scope: 'col'
         }, h('.relative', [
-            headerSpecPresent(model, f) ? [
-                h('div.sort-up-20', {
-                    onclick: () => sort(f.name, data, model, -1),
-                    class: data.sorting.order === -1 && data.sorting.field === f.name ? 'selected' : '',
-                }),
-                h('div.sort-down-20', {
-                    onclick: () => sort(f.name, data, model, 1),
-                    class: data.sorting.order === 1 && data.sorting.field === f.name ? 'selected' : '',
-                }),
-            ] : '',
-            h('.vertical-center.mh4', getHeaderSpecial(model, f)),
+                headerSpecPresent(model, f) ? [
+                    h('.inline', getHeaderSpecial(model, f)),
+                    h('.inline',
+                        h('.vertical-center.sorting-chevrons',
+                            h('div.sort-up-20', {
+                                onclick: () => sort(f.name, data, model, -1),
+                                class: data.sorting.order === -1 && data.sorting.field === f.name
+                                    ? 'selected' :
+                                    '',
+                            }),
+                            h('div.sort-down-20', {
+                                onclick: () => sort(f.name, data, model, 1),
+                                class: data.sorting.order === 1 && data.sorting.field === f.name
+                                    ? 'selected'
+                                    : '',
+                            }),
+                    )),
+                ] : '',
         ])));
 
 const rowsOptions = (model, data) =>
