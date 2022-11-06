@@ -15,6 +15,8 @@
 :root {
     /* Color palette */
     --active-color: #b3c5d7;
+    --dark-blue: #1D3557;
+    --secondary-color: #577590;/*#6d6875;*/
     --highlight-blue: #D7EDFC;
     --blue: #1e90ff;
     --white: #ffffff;
@@ -30,6 +32,10 @@
 
 .noBorderBottom {
     border-bottom: 0px !important;
+}
+
+.no-text-decoration {
+    text-decoration: none !important;
 }
     
 .x-scrollable {
@@ -203,8 +209,11 @@
     border-bottom-right-radius: 10px !important;
 }
 
-.btn-secondary {
-    border: var(--active-color) solid 1px !important;
-    background-color: var(--color-white) !important;
-    color: var(--active-color) !important;
+.btn:hover {
+    background-color: #577590 !important;
 }
+
+.btn:active {
+    background-color: #577590 !important;
+}
+

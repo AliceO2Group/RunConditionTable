@@ -45,7 +45,7 @@ export default function filter(model) {
                     onclick: onclickSubmit(model, inputsIds),
                 }, 'Submit'),
                 '  ',
-                h('button.btn.btn-secondary', {
+                h('button.btn', {
                     onclick: onclickClear(model, inputsIds),
                 }, h('.clear-filters-20'), 'Clear filters'),
                 '     ',

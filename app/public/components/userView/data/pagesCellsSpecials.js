@@ -46,32 +46,32 @@ const pagesCellsSpecials = {};
 
 pagesCellsSpecials[pagesNames.periods] = {
     name: (model, item) => [
-        item.name,
-        '  ',
-        viewButton(
-            model,
-            'runs',
-            (e) => model.handleClick(e),
-            '',
-            // eslint-disable-next-line max-len
-            `/?page=${pagesNames.runsPerPeriod}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-run_number`,
-        ),
+        h('td', item.name),
+        h('td',
+            viewButton(
+                model,
+                'runs',
+                (e) => model.handleClick(e),
+                '',
+                // eslint-disable-next-line max-len
+                `/?page=${pagesNames.runsPerPeriod}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-run_number`,
+            ),
 
-        viewButton(
-            model,
-            'data passes',
-            (e) => model.handleClick(e),
-            '',
-            `/?page=${pagesNames.dataPasses}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
-        ),
+            viewButton(
+                model,
+                'data passes',
+                (e) => model.handleClick(e),
+                '',
+                `/?page=${pagesNames.dataPasses}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+            ),
 
-        viewButton(
-            model,
-            'MC',
-            (e) => model.handleClick(e),
-            '',
-            `/?page=${pagesNames.mc}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
-        ),
+            viewButton(
+                model,
+                'MC',
+                (e) => model.handleClick(e),
+                '',
+                `/?page=${pagesNames.mc}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+            )),
     ],
 
     energy: (model, item) => {
