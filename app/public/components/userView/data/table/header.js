@@ -18,8 +18,7 @@ import { sort } from '../../../../utils/sort.js';
 
 export default function tableHeader(visibleFields, data, model) {
     return h('thead',
-        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, data, model)))
-    );
+        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, data, model))));
 }
 
 const columnsHeadersArray = (visibleFields, data, model) =>
