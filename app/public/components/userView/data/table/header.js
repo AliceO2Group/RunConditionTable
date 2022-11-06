@@ -12,48 +12,42 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, switchCase } from '/js/src/index.js';
+import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent } from '../headersSpecials.js';
+import { sort } from '../../../../utils/sort.js';
 
 export default function tableHeader(visibleFields, data, model) {
     return h('thead',
-        h('tr', [rowsOptions(model, data)].concat(
-            columnsHeadersArray(visibleFields, data, model),
-        )));
+        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, data, model))));
 }
 
-const sort = (fName, data, model, order) => {
-    if (data.sorting.field != fName) {
-        data.sorting.field = fName;
-        data.sorting.order = null;
-    }
-    data.sorting.order = data.sorting.order = switchCase(order, {
-        1: 1,
-        '-1': -1,
-    }, null);
-    model.fetchedData.changeSorting(data.sorting);
-};
-
 const columnsHeadersArray = (visibleFields, data, model) =>
-    visibleFields.map((f) => h('th', { scope: 'col' },
-        h('.relative', [
-            headerSpecPresent(model, f) ? [
-                h('div.sort-up-20', {
-                    onclick: () => sort(f.name, data, model, -1),
-                    class: data.sorting.order === -1 && data.sorting.field === f.name ? 'selected' : '',
-                }),
-                h('div.sort-down-20', {
-                    onclick: () => sort(f.name, data, model, 1),
-                    class: data.sorting.order === 1 && data.sorting.field === f.name ? 'selected' : '',
-                }),
-            ] : '',
-            h('.vertical-center.mh4', getHeaderSpecial(model, f)),
-        ])));
+    visibleFields.map((f) => h(`th.${model.getCurrentDataPointer().page}-${f.name}-header`, {
+        scope: 'col',
+    }, h('.relative', [
+        headerSpecPresent(model, f) ? [
+            h('.inline', getHeaderSpecial(model, f)),
+            h('.inline',
+                h('.vertical-center',
+                    h('div.sort-up-20', {
+                        onclick: () => sort(f.name, data, model, -1),
+                        class: data.sorting.order === -1 && data.sorting.field === f.name
+                            ? 'selected' :
+                            '',
+                    }),
+                    h('div.sort-down-20', {
+                        onclick: () => sort(f.name, data, model, 1),
+                        class: data.sorting.order === 1 && data.sorting.field === f.name
+                            ? 'selected'
+                            : '',
+                    }))),
+        ] : '',
+    ])));
 
 const rowsOptions = (model, data) =>
     h('th', { scope: 'col' },
         h('.relative',
-            h(`input.vertical-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
+            h(`input.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
                 type: 'checkbox',
                 onclick: (e) => {
                     for (const row of data.rows) {

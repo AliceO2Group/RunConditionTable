@@ -40,12 +40,12 @@ export default function filter(model) {
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds, fields),
                     inputsRow(params, lowerInputIds, fields))),
-            h('.abs',
+            h('.absolute',
                 h('button.btn.btn-primary', {
                     onclick: onclickSubmit(model, inputsIds),
                 }, 'Submit'),
                 '  ',
-                h('button.btn.btn-secondary', {
+                h('button.btn', {
                     onclick: onclickClear(model, inputsIds),
                 }, h('.clear-filters-20'), 'Clear filters'),
                 '     ',
@@ -108,7 +108,7 @@ const createInputField = (inputId, currentValue, fields) => {
             ['to', 'exclude'].includes(inputId.substring(inputId.indexOf('-') + 1)) ? '.br-bottom-10' : ''}`,
         { className: `${isFieldMarked(inputId, fields) ? 'active' : ''}` },
         h('.text-field',
-            h('input.form-control.rel', {
+            h('input.form-control.relative', {
                 style: 'width:120px',
                 type: 'text',
                 value: currentValue ? currentValue : '',
