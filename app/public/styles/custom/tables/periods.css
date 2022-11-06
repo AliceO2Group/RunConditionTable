@@ -44,18 +44,10 @@
     text-align: left;
 }
 
-.periods-name-header-name {
-    padding-left: 1.7em;
-}
-
 /* Years */
 .periods-table .periods-year-cell, .periods-table .periods-year-header {
     min-width: 80px;
     text-align: right;
-}
-
-.periods-year-header-name {
-    padding-right: 10em;
 }
 
 /* Beam types */
@@ -64,18 +56,10 @@
     text-align: right;
 }
 
-.periods-beam-header-name {
-    padding-right: 1.7em;
-}
-
 /* Energy */
 .periods-table .periods-energy-cell, .periods-table .periods-energy-header {
     min-width: 60px;
     text-align: right;
-}
-
-.periods-energy-header-name {
-    padding-right: 1.7em;
 }
 
 .periods-table td:last-child, .periods-table th:last-child {

@@ -30,7 +30,7 @@ const columnsHeadersArray = (visibleFields, data, model) =>
                 headerSpecPresent(model, f) ? [
                     h('.inline', getHeaderSpecial(model, f)),
                     h('.inline',
-                        h('.vertical-center.sorting-chevrons',
+                        h('.vertical-center',
                             h('div.sort-up-20', {
                                 onclick: () => sort(f.name, data, model, -1),
                                 class: data.sorting.order === -1 && data.sorting.field === f.name
