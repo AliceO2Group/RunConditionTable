@@ -41,13 +41,12 @@ export default function row(
     const dataCells = visibleFields.map((field) =>
         h(`td.${model.getCurrentDataPointer().page}-${field.name}-cell`,
             item[field.name]
-            ? cellsSpecials[field.name]
-                ? cellsSpecials[field.name](model, item)
-                : (/.*_detector/.test(field.name))
-                    ? detectorIcon(model, item, field.name)
-                    : item[field.name]
-            : '..')
-    );
+                ? cellsSpecials[field.name]
+                    ? cellsSpecials[field.name](model, item)
+                    : /.*_detector/.test(field.name)
+                        ? detectorIcon(model, item, field.name)
+                        : item[field.name]
+                : '..'));
 
     const checkbox = h('td.relative.track',
         h(`input.abs-center${item.marked ? '.ticked' : ''}`, {

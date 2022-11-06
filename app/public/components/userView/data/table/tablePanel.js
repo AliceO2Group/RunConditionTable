@@ -66,16 +66,19 @@ export default function tablePanel(model) {
 
     return h('div', [
         filteringPanel,
-        data.rows.length > 15 ? pager(model, data, 1) : '',
-        h('.x-scrollable-table',
-            h('table.data-table', {
-                id: `data-table-${data.url}`,
-                className: `${dataPointer.page === pagesNames.periods ? 'periods-table' : ''}`,
-            }, [
-                tableHeader(visibleFields, data, model),
-                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
-            ])),
-        pager(model, data, 2),
+        visibleFields.length > 0
+            ? h('',
+                data.rows.length > 15 ? pager(model, data, 1) : '',
+                h('.x-scrollable-table',
+                    h('table.data-table', {
+                        id: `data-table-${data.url}`,
+                        className: `${dataPointer.page === pagesNames.periods ? 'periods-table' : ''}`,
+                    }, [
+                        tableHeader(visibleFields, data, model),
+                        tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
+                    ])),
+                pager(model, data, 2))
+            : '',
     ]);
 }
 

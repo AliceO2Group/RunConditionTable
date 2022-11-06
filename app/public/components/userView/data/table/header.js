@@ -18,34 +18,32 @@ import { sort } from '../../../../utils/sort.js';
 
 export default function tableHeader(visibleFields, data, model) {
     return h('thead',
-        h('tr', [rowsOptions(model, data)].concat(
-            columnsHeadersArray(visibleFields, data, model),
-        )));
+        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, data, model)))
+    );
 }
 
 const columnsHeadersArray = (visibleFields, data, model) =>
     visibleFields.map((f) => h(`th.${model.getCurrentDataPointer().page}-${f.name}-header`, {
-            scope: 'col'
-        }, h('.relative', [
-                headerSpecPresent(model, f) ? [
-                    h('.inline', getHeaderSpecial(model, f)),
-                    h('.inline',
-                        h('.vertical-center',
-                            h('div.sort-up-20', {
-                                onclick: () => sort(f.name, data, model, -1),
-                                class: data.sorting.order === -1 && data.sorting.field === f.name
-                                    ? 'selected' :
-                                    '',
-                            }),
-                            h('div.sort-down-20', {
-                                onclick: () => sort(f.name, data, model, 1),
-                                class: data.sorting.order === 1 && data.sorting.field === f.name
-                                    ? 'selected'
-                                    : '',
-                            }),
-                    )),
-                ] : '',
-        ])));
+        scope: 'col',
+    }, h('.relative', [
+        headerSpecPresent(model, f) ? [
+            h('.inline', getHeaderSpecial(model, f)),
+            h('.inline',
+                h('.vertical-center',
+                    h('div.sort-up-20', {
+                        onclick: () => sort(f.name, data, model, -1),
+                        class: data.sorting.order === -1 && data.sorting.field === f.name
+                            ? 'selected' :
+                            '',
+                    }),
+                    h('div.sort-down-20', {
+                        onclick: () => sort(f.name, data, model, 1),
+                        class: data.sorting.order === 1 && data.sorting.field === f.name
+                            ? 'selected'
+                            : '',
+                    }))),
+        ] : '',
+    ])));
 
 const rowsOptions = (model, data) =>
     h('th', { scope: 'col' },
