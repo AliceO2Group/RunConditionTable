@@ -74,5 +74,17 @@
     "request": "^2.88.2",
     "sinon": "^14.0.1",
     "socks-proxy-agent": "^7.0.0"
-  }
+  },
+  "files": [
+    "app/",
+    "docs/",
+    "lib/",
+    "database/"
+  ],
+  "bundledDependencies": [
+    "@aliceo2/web-ui",
+    "esm",
+    "less",
+    "pg"
+  ]
 }
