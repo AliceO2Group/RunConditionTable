@@ -213,7 +213,8 @@
     background-color: #577590 !important;
 }
 
-.btn:active {
-    background-color: #577590 !important;
+.btn.selected {
+    background-color: var(--color-gray-dark) !important;
+    color: var(--color-white) !important;
 }
 
