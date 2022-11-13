@@ -218,3 +218,6 @@
     color: var(--color-white) !important;
 }
 
+.pointer {
+    cursor: pointer !important;
+}

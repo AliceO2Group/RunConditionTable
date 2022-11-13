@@ -29,13 +29,13 @@ const columnsHeadersArray = (visibleFields, data, model) =>
             h('.inline', getHeaderSpecial(model, f)),
             h('.inline',
                 h('.vertical-center',
-                    h('div.sort-up-20', {
+                    h('div.sort-up-20.pointer', {
                         onclick: () => sort(f.name, data, model, -1),
                         class: data.sorting.order === -1 && data.sorting.field === f.name
                             ? 'selected' :
                             '',
                     }),
-                    h('div.sort-down-20', {
+                    h('div.sort-down-20.pointer', {
                         onclick: () => sort(f.name, data, model, 1),
                         class: data.sorting.order === 1 && data.sorting.field === f.name
                             ? 'selected'
