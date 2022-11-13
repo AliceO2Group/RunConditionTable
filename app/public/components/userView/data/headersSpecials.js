@@ -55,7 +55,7 @@ const headersSpecials = {
         name: 'Name',
         year: 'Year',
         beam: 'Beam type',
-        energy: 'Energy [GeV]',
+        energy: 'Mean energy [GeV]',
     },
     runsPerPeriod: runsViews,
     mc: mcViews,
