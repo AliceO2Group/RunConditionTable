@@ -24,7 +24,7 @@ export default class Model extends Observable {
         this.session = sessionService.get();
         this.session.personid = parseInt(this.session.personid, 10); // cast, sessionService has only strings
         // TODO if no personid then it is a computer so we need to parse it respectively
-        this.session.roles = this.getRoles();
+        this.session.role = this.getRole();
         
         this.router = new QueryRouter();
         this.router.bubbleTo(this);
@@ -57,7 +57,7 @@ export default class Model extends Observable {
         return role.toUpperCase().startsWith(PREFIX.SSO_DET_ROLE.toUpperCase());
     }
 
-    getRoles() {
+    getRole() {
         if (this.session.access.includes(ROLES.Admin)) {
           return [ ROLES.Admin ];
         } else if (this.session.access.includes(ROLES.Global)) {

@@ -37,6 +37,7 @@ export default function loggingPanel(model) {
 
     return h('div.loginDiv', h('div.loginDivInside', [
         title,
+        h('div', model.getRole() === 1 ? 'I AM ADMIN' : 'I am not admin'),
         container(inputForm('dbname', 'dbname', 'rct-db'),
             inputForm('username', 'username', 'username'),
             inputForm('password', 'password', 'password', true)),
