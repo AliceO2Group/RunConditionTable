@@ -21,9 +21,9 @@ import { switchCase } from '/js/src/index.js';
 
 export default function view(model) {
     return switchCase(model.mode, {
-        serviceUnavailable: () => serviceUnavailablePanel(model.submodels[model.mode]),
+        serviceUnavailable: () => serviceUnavailablePanel(model),
         sessionError: () => sessionErrorPanel(model),
-        primary: () => userPanel(model.submodels[model.mode]),
+        primary: () => userPanel(model),
         admin: () => loggingPanel(model),
     }, () => waitingPanel(model))/*Switch returns function*/();
 }

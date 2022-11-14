@@ -15,10 +15,17 @@
 import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
 import PrimaryModel from './model/PrimaryModel.js';
 import ServiceUnavailableModel from './model/ServiceUnavailableModel.js';
+import { PREFIX, ROLES } from './workflow/constants.js';
 
 export default class Model extends Observable {
     constructor() {
         super();
+
+        this.session = sessionService.get();
+        this.session.personid = parseInt(this.session.personid, 10); // cast, sessionService has only strings
+        // TODO if no personid then it is a computer so we need to parse it respectively
+        this.session.role = this.getRole();
+        
         this.router = new QueryRouter();
         this.router.bubbleTo(this);
         this.loader = new Loader();
@@ -45,6 +52,18 @@ export default class Model extends Observable {
     postLoginPasses(username) {
         return this.loader.post(this.logginEndpoint, { username: username });
     }
+
+    getRole() {
+        console.log(this.session);
+        if (this.session.access.includes('admin')) {
+          return ROLES.Admin;
+        } else if (this.session.access.includes('global')) {
+          return ROLES.Global;
+        } else if (this.session.access.some((role) => role.toUpperCase().startsWith(PREFIX.SSO_DET_ROLE.toUpperCase()))) {
+          return ROLES.Detector;
+        }
+        return ROLES.Guest;
+      }
 
     setServiceUnavailable(result) {
         const messageShowTimeout = 200;
