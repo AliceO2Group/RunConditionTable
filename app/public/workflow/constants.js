@@ -17,10 +17,11 @@ const PREFIX = {
 };
 
 const ROLES = Object.freeze({
-  Admin: 1,
-  Global: 2,
-  Detector: 3,
-  Guest: 4
+  Admin: 'admin',
+  Global: 'global',
+  DetectorABC: 'det-abc',
+  DetectorXYZ: 'det-xyz',
+  Guest: 'guest'
 });
   
 export {PREFIX, ROLES};

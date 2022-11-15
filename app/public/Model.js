@@ -24,7 +24,7 @@ export default class Model extends Observable {
         this.session = sessionService.get();
         this.session.personid = parseInt(this.session.personid, 10); // cast, sessionService has only strings
         // TODO if no personid then it is a computer so we need to parse it respectively
-        this.session.role = this.getRole();
+        this.session.roles = this.getRoles();
         
         this.router = new QueryRouter();
         this.router.bubbleTo(this);
@@ -53,17 +53,28 @@ export default class Model extends Observable {
         return this.loader.post(this.logginEndpoint, { username: username });
     }
 
-    getRole() {
+    getRoles() {
         console.log(this.session);
         if (this.session.access.includes('admin')) {
-          return ROLES.Admin;
+          return [ ROLES.Admin ];
         } else if (this.session.access.includes('global')) {
-          return ROLES.Global;
-        } else if (this.session.access.some((role) => role.toUpperCase().startsWith(PREFIX.SSO_DET_ROLE.toUpperCase()))) {
-          return ROLES.Detector;
+          return [ ROLES.Global ];
+        } else if (this.hasDetectorRole()) {
+            const roles = [];
+            if (this.session.access.includes('det-abc')) {
+                roles.push(ROLES.DetectorABC);
+            }
+            if (this.session.access.includes('det-xyz')) {
+                roles.push(ROLES.DetectorXYZ);
+            }
+            return roles;
         }
-        return ROLES.Guest;
+        return [ ROLES.Guest ];
       }
+
+    hasDetectorRole() {
+        return this.session.access.some((role) => role.toUpperCase().startsWith(PREFIX.SSO_DET_ROLE.toUpperCase()));
+    }
 
     setServiceUnavailable(result) {
         const messageShowTimeout = 200;
