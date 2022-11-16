@@ -53,27 +53,25 @@ export default class Model extends Observable {
         return this.loader.post(this.logginEndpoint, { username: username });
     }
 
+    isDetectorRole(role) {
+        return role.toUpperCase().startsWith(PREFIX.SSO_DET_ROLE.toUpperCase());
+    }
+
     getRoles() {
-        console.log(this.session);
-        if (this.session.access.includes('admin')) {
+        if (this.session.access.includes(ROLES.Admin)) {
           return [ ROLES.Admin ];
-        } else if (this.session.access.includes('global')) {
+        } else if (this.session.access.includes(ROLES.Global)) {
           return [ ROLES.Global ];
-        } else if (this.hasDetectorRole()) {
+        } else if (this.session.access.some((role) => this.isDetectorRole(role))) {
             const roles = [];
-            if (this.session.access.includes('det-abc')) {
-                roles.push(ROLES.DetectorABC);
-            }
-            if (this.session.access.includes('det-xyz')) {
-                roles.push(ROLES.DetectorXYZ);
-            }
+            Object.values(ROLES).filter(role => this.isDetectorRole(role)).forEach((detectorRole) => {
+                if (this.session.access.includes(detectorRole)) {
+                    roles.push(detectorRole);
+                }
+            });
             return roles;
         }
         return [ ROLES.Guest ];
-      }
-
-    hasDetectorRole() {
-        return this.session.access.some((role) => role.toUpperCase().startsWith(PREFIX.SSO_DET_ROLE.toUpperCase()));
     }
 
     setServiceUnavailable(result) {

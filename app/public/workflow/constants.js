@@ -19,8 +19,22 @@ const PREFIX = {
 const ROLES = Object.freeze({
   Admin: 'admin',
   Global: 'global',
-  DetectorABC: 'det-abc',
-  DetectorXYZ: 'det-xyz',
+  DetectorCPV: 'det-cpv',
+  DetectorEMC: 'det-emc',
+  DetectorFFD: 'det-fdd',
+  DetectorFT0: 'det-ft0',
+  DetectorFV0: 'det-fv0',
+  DetectorGLO: 'det-glo',
+  DetectorHMP: 'det-hmp',
+  DetectorITS: 'det-its',
+  DetectorMCH: 'det-mch',
+  DetectorMFT: 'det-mft',
+  DetectorMID: 'det-mid',
+  DetectorPHS: 'det-phs',
+  DetectorTOF: 'det-tof',
+  DetectorTPC: 'det-tpc',
+  DetectorTRD: 'det-trd',
+  DetectorZDC: 'det-zdc',
   Guest: 'guest'
 });
   
