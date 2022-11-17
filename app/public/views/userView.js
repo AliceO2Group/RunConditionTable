@@ -16,17 +16,19 @@ import { h } from '/js/src/index.js';
 import header from '../components/common/header.js';
 import dataPanel from '../components/userView/data/dataPanel.js';
 import sidebar from '../components/userView/sidebar/sidebar.js';
+import { PREFIX, ROLES } from '../workflow/constants.js';
 
 export default function userPanel(model) {
+    let submodel = model.submodels[model.mode];
     return h('.flex-column.absolute-fill', [
-        h('header.shadow-level2.level2', [header(model)]),
+        h('header.shadow-level2.level2', [header(submodel)]),
         h('.flex-grow.flex-row.outline-gray', [
-            sidebar(model),
+            sidebar(submodel),
 
             h('section.outline-gray.flex-grow.relative', [
                 h('.scroll-y.absolute-fill.bg-white',
                     { id: 'main-content' },
-                    [dataPanel(model)]),
+                    [dataPanel(submodel)]),
             ]),
         ]),
     ]);

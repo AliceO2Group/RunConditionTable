@@ -15,10 +15,17 @@
 import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
 import PrimaryModel from './model/PrimaryModel.js';
 import ServiceUnavailableModel from './model/ServiceUnavailableModel.js';
+import { PREFIX, ROLES } from './workflow/constants.js';
 
 export default class Model extends Observable {
     constructor() {
         super();
+
+        this.session = sessionService.get();
+        this.session.personid = parseInt(this.session.personid, 10); // cast, sessionService has only strings
+        // TODO if no personid then it is a computer so we need to parse it respectively
+        this.session.roles = this.getRoles();
+        
         this.router = new QueryRouter();
         this.router.bubbleTo(this);
         this.loader = new Loader();
@@ -44,6 +51,27 @@ export default class Model extends Observable {
 
     postLoginPasses(username) {
         return this.loader.post(this.logginEndpoint, { username: username });
+    }
+
+    isDetectorRole(role) {
+        return role.toUpperCase().startsWith(PREFIX.SSO_DET_ROLE.toUpperCase());
+    }
+
+    getRoles() {
+        if (this.session.access.includes(ROLES.Admin)) {
+          return [ ROLES.Admin ];
+        } else if (this.session.access.includes(ROLES.Global)) {
+          return [ ROLES.Global ];
+        } else if (this.session.access.some((role) => this.isDetectorRole(role))) {
+            const roles = [];
+            Object.values(ROLES).filter(role => this.isDetectorRole(role)).forEach((detectorRole) => {
+                if (this.session.access.includes(detectorRole)) {
+                    roles.push(detectorRole);
+                }
+            });
+            return roles;
+        }
+        return [ ROLES.Guest ];
     }
 
     setServiceUnavailable(result) {
