@@ -51,7 +51,7 @@ class DatabaseService {
         })
     }
 
-    async login(req, res) {
+    async loginSession(req, res) {
         const { body } = req;
         let userData = this.loggedUsers.tokenToUserData[req.query.token];
         if (!userData) {
@@ -70,7 +70,7 @@ class DatabaseService {
         }
     }
 
-    async logout(req, res) {
+    async logoutSession(req, res) {
         const { token } = req.query;
         const userData = this.loggedUsers.tokenToUserData[token];
         if (userData) {
@@ -99,7 +99,7 @@ class DatabaseService {
                 this.logger.error(e.message + ' :: ' + e.stack)
                 this.responseWithStatus(res, 500, e.code);
             });
-        release();
+            release();
         })
 
     }
@@ -140,7 +140,9 @@ class DatabaseService {
         }
     }
 
-    // dbResponseAdjuster(req, query, data) //TODO
+    dbResponseAdjuster(req, query, data) {
+        
+    }
 
     async pgExecDataInsert(req, res) {
         this.responseWithStatus(res, 400, 'NOT IMPLEMENTED');

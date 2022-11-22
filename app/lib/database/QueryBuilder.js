@@ -16,18 +16,16 @@ const config = require('../config/configProvider.js');
 const views = require("./views") 
 const { pagesNames } = config.public;
 const DRP = config.public.dataReqParams;
-const Utils = require("../Utils.js");
 
-
-const cases = {};
-cases[pagesNames.periods] = 'periods_view'
-cases[pagesNames.runsPerPeriod] = 'runs_per_period_view'
-cases[pagesNames.runsPerDataPass] = 'runs_per_data_pass_view'
-cases[pagesNames.dataPasses] = 'data_passes_view'
-cases[pagesNames.anchoragePerDatapass] = 'anchorage_per_data_pass_view'
-cases[pagesNames.mc] = 'mc_view'
-cases[pagesNames.anchoredPerMC] = 'anchored_per_mc_view'
-cases[pagesNames.flags] = 'flags_view'
+const pageToViewName = {};
+pageToViewName[pagesNames.periods] = 'periods_view'
+pageToViewName[pagesNames.runsPerPeriod] = 'runs_per_period_view'
+pageToViewName[pagesNames.runsPerDataPass] = 'runs_per_data_pass_view'
+pageToViewName[pagesNames.dataPasses] = 'data_passes_view'
+pageToViewName[pagesNames.anchoragePerDatapass] = 'anchorage_per_data_pass_view'
+pageToViewName[pagesNames.mc] = 'mc_view'
+pageToViewName[pagesNames.anchoredPerMC] = 'anchored_per_mc_view'
+pageToViewName[pagesNames.flags] = 'flags_view'
 /**
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
@@ -89,7 +87,7 @@ class QueryBuilder {
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
 
-        const orderingPart = (params) => { 
+        const orderingPart = (params) => {
             if (!params['sorting']) {
                 return '';
             }
@@ -103,20 +101,16 @@ class QueryBuilder {
             }
         }
 
-        const viewName = cases[params.page]
+        const viewName = pageToViewName[params.page]
         const viewGen = views[viewName]
 
-        const queryRest =
-        `${QueryBuilder.filteringPart(params)}
-        ${orderingPart(params)}
-        ${dataSubsetQueryPart(params)}`;
-
         return `WITH ${viewName} AS (
-                    ${viewGen(params)}) 
-                SELECT * 
-                FROM ${viewName}  
-                ${queryRest};`;
-        
+                    ${viewGen(params)})
+                SELECT *
+                FROM ${viewName}
+                ${QueryBuilder.filteringPart(params)}
+                ${orderingPart(params)}
+                ${dataSubsetQueryPart(params)};`;
     }
 
 }

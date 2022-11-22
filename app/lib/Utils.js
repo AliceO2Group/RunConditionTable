@@ -16,8 +16,11 @@
 const util = require('util');
 const http = require('http');
 const https = require('https');
+const { Log } = require('@aliceo2/web-ui');
 
 const exec = util.promisify(require('child_process').exec);
+
+const logger = new Log('Utils');
 
 const keywords = ['DEFAULT', 'NULL'];
 class Utils {
@@ -166,7 +169,7 @@ class Utils {
             case 'https:':
                 return https;
             default:
-                this.logger.error(unspecifiedProtocolMessage);
+                logger.error(unspecifiedProtocolMessage);
                 throw new Error(unspecifiedProtocolMessage);
         }
     }
@@ -208,7 +211,7 @@ class Utils {
                 });
 
                 req.on('error', (e) => {
-                    this.logger.error(`ERROR httpGet: ${e}`);
+                    logger.error(`ERROR httpGet: ${e}`);
                     if (onFialure) {
                         onFialure(endpoint, e);
                     }
@@ -225,7 +228,7 @@ class Utils {
                             resolve(data);
                         }
                     } catch (e) {
-                        this.logger.error(e.message);
+                        logger.error(e.message);
                         if (onFialure) {
                             onFialure(endpoint, e);
                         }
