@@ -42,6 +42,7 @@
     "prune": "./rctmake prune",
     "app:attach": "docker attach o2-rct_application",
     
+    "db-ip": "echo $(docker inspect o2-rct_database -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')",
     "db:check": "./rctmake prune,db,build,follow -t dev -S o2-rct_database ",
     "db:attach": "docker exec -it o2-rct_database psql -U postgres -d \"rct-db\"",
     "db:pattach": "docker exec -it o2-rct_database /bin/bash",

@@ -105,6 +105,8 @@ class DatabaseService {
     }
 
     async pgExecFetchData(req, res) {
+        const viewSpecificDataAdjuster = {}
+        
         const userData = this.loggedUsers.tokenToUserData[req.query.token];
         if (!userData) {
             const mess = 'SESSION_ERROR:: no user with such token';
@@ -114,20 +116,22 @@ class DatabaseService {
         }
 
        
-        const dbResponseHandler = (dbRes) => {
+        const dbResponseHandler = (params, dbRes) => {
             let { fields, rows } = dbRes;
             const data = {};
 
             if (req.query[DRP.countRecords] === 'true') {
                 data[DRF.totalRowsCount] = rows.length;
-                const offset = req.query[DRP.rowsOnSite] * (req.query[DRP.site] - 1);
-                const limit = req.query[DRP.rowsOnSite];
+                const offset = params[DRP.rowsOnSite] * (params[DRP.site] - 1);
+                const limit = params[DRP.rowsOnSite];
                 rows = rows.slice(offset, offset + limit);
             }
 
             data[DRF.rows] = rows;
             data[DRF.fields] = Utils.distinct(fields.map(f => f.name)).map(n => { return { name: n } });
 
+            adjuster = viewSpecificDataAdjuster[params.page]
+            data = adjuster ? adjuster(data) : data
             res.json({ data: data });
         };
 
