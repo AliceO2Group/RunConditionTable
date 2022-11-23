@@ -86,4 +86,12 @@ export const getHeaderSpecial = (model, f) => {
     }
 };
 
-export const headerSpecPresent = (model, f) => Boolean(headersSpecials[model.getCurrentDataPointer().page][f.name]);
+export const filterApplicableHeader = 'filterApplicableHeader';
+export const filterNonApplicableHeader = 'filterNonApplicableHeader';
+export const nonDisplayable = 'nonDisplayable';
+
+export const headerSpecPresent = (model, f) => headersSpecials[model.getCurrentDataPointer().page][f.name]
+    ? filterApplicableHeader
+    : /.*detector/.test(f.name)
+        ? filterNonApplicableHeader
+        : nonDisplayable;
