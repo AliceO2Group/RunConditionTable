@@ -120,7 +120,6 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         d = Utils.adjusetObjValuesToSql(d);
 
         const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
-        console.log(period_insert);
 
         const detectorsInSql = `${d.detectors}::varchar[]`;
         const pgCommand = `${period_insert}; call insert_run (

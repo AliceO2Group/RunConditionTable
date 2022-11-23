@@ -22,7 +22,7 @@ const periods_view = () => `
             FROM beams_dictionary AS bd 
                 where bd.id = p.beam_type_id
         ) AS beam,
-        string_agg(r.energy_per_beam::varchar, ',') as energy
+        array_agg(r.energy_per_beam) as energies
     FROM periods AS p
     LEFT JOIN runs as r
         ON r.period_id = p.id

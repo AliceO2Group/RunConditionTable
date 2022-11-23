@@ -17,6 +17,8 @@ const { Client, Pool } = require('pg');
 const QueryBuilder = require('./QueryBuilder.js');
 const config = require('./../config/configProvider.js');
 const Utils = require('../Utils.js')
+const viewSpecificDataAdjuster = require('./viewSpecificDataAdjusters')
+
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataRespondFields;
 
@@ -105,8 +107,6 @@ class DatabaseService {
     }
 
     async pgExecFetchData(req, res) {
-        const viewSpecificDataAdjuster = {}
-        
         const userData = this.loggedUsers.tokenToUserData[req.query.token];
         if (!userData) {
             const mess = 'SESSION_ERROR:: no user with such token';
@@ -132,9 +132,9 @@ class DatabaseService {
             data[DRF.rows] = rows;
             data[DRF.fields] = Utils.distinct(fields.map(f => f.name)).map(n => { return { name: n } });
 
-            const adjuster = viewSpecificDataAdjuster[params.page]
-            data = adjuster ? adjuster(data) : data
-            res.json({ data: data });
+            let adjuster = viewSpecificDataAdjuster[params.page];         
+            adjuster = adjuster ? adjuster : (d) => d;
+            res.json({ data: adjuster(data) });
         };
 
         try {
@@ -144,10 +144,6 @@ class DatabaseService {
             this.logger.error(e.stack)
             this.responseWithStatus(res, 400, e)
         }
-    }
-
-    dbResponseAdjuster(req, query, data) {
-        
     }
 
     async pgExecDataInsert(req, res) {

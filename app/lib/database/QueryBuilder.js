@@ -14,18 +14,18 @@
 
 const config = require('../config/configProvider.js');
 const views = require("./views") 
-const { pagesNames } = config.public;
+const { pagesNames: PN } = config.public;
 const DRP = config.public.dataReqParams;
 
 const pageToViewName = {};
-pageToViewName[pagesNames.periods] = 'periods_view'
-pageToViewName[pagesNames.runsPerPeriod] = 'runs_per_period_view'
-pageToViewName[pagesNames.runsPerDataPass] = 'runs_per_data_pass_view'
-pageToViewName[pagesNames.dataPasses] = 'data_passes_view'
-pageToViewName[pagesNames.anchoragePerDatapass] = 'anchorage_per_data_pass_view'
-pageToViewName[pagesNames.mc] = 'mc_view'
-pageToViewName[pagesNames.anchoredPerMC] = 'anchored_per_mc_view'
-pageToViewName[pagesNames.flags] = 'flags_view'
+pageToViewName[PN.periods] = 'periods_view'
+pageToViewName[PN.runsPerPeriod] = 'runs_per_period_view'
+pageToViewName[PN.runsPerDataPass] = 'runs_per_data_pass_view'
+pageToViewName[PN.dataPasses] = 'data_passes_view'
+pageToViewName[PN.anchoragePerDatapass] = 'anchorage_per_data_pass_view'
+pageToViewName[PN.mc] = 'mc_view'
+pageToViewName[PN.anchoredPerMC] = 'anchored_per_mc_view'
+pageToViewName[PN.flags] = 'flags_view'
 /**
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
