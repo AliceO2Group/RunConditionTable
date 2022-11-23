@@ -15,6 +15,7 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../Utils.js');
+const ServicesDataCommons = require('./ServicesDataCommons.js');
 const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
 
 /**
@@ -90,7 +91,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             }
             this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3_current');
             this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipole_current');
-
+            ServicesDataCommons.mapBeamTypeToCommonFormat(run);
             run.fill_number = Number(run.fill_number);
             return run;
         } catch (e) {
@@ -119,9 +120,10 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         d = Utils.adjusetObjValuesToSql(d);
 
         const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
+        console.log(period_insert);
 
         const detectorsInSql = `${d.detectors}::varchar[]`;
-        const pgCommand = `${period_insert} call insert_run (
+        const pgCommand = `${period_insert}; call insert_run (
             ${d.run_number},
             ${d.period}, 
             ${d.time_trg_start}, 

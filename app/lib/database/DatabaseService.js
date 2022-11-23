@@ -41,10 +41,10 @@ class DatabaseService {
 
         this.pool = new Pool(config.database)
         this.pool.on('remove', () => {
-            this.logger.info(`removing client, clients in pool: ${this.pool._clients.length}`);
+            // this.logger.info(`removing client, clients in pool: ${this.pool._clients.length}`);
         })
         this.pool.on('acquire', () => {
-            this.logger.info(`acquiring client, clients in pool: ${this.pool._clients.length}`);
+            // this.logger.info(`acquiring client, clients in pool: ${this.pool._clients.length}`);
         })
         this.pool.on('error', (e) => {
             this.logger.error(`database pg pool fatal error: ${e.stack}`);
@@ -115,10 +115,12 @@ class DatabaseService {
             return;
         }
 
-       
-        const dbResponseHandler = (params, dbRes) => {
+        
+        const params = {...req.query, ...req.params}
+
+        const dbResponseHandler = (dbRes) => {
             let { fields, rows } = dbRes;
-            const data = {};
+            let data = {};
 
             if (req.query[DRP.countRecords] === 'true') {
                 data[DRF.totalRowsCount] = rows.length;
@@ -130,13 +132,13 @@ class DatabaseService {
             data[DRF.rows] = rows;
             data[DRF.fields] = Utils.distinct(fields.map(f => f.name)).map(n => { return { name: n } });
 
-            adjuster = viewSpecificDataAdjuster[params.page]
+            const adjuster = viewSpecificDataAdjuster[params.page]
             data = adjuster ? adjuster(data) : data
             res.json({ data: data });
         };
 
         try {
-            const query = QueryBuilder.build({ ...req.query, ...req.params });
+            const query = QueryBuilder.build(params);
             await this.pgExec(res, query, dbResponseHandler);
         } catch (e) {
             this.logger.error(e.stack)

@@ -3,9 +3,9 @@ CREATE or REPLACE FUNCTION get_run_det_data(
     _detector_name varchar
 ) 
     returns varchar
-language plpgsql
-as $body$ 
-declare ret integer:= null;
+LANGUAGE plpgsql
+AS $body$ 
+DECLARE ret integer:= null;
 BEGIN
     SELECT rd.id INTO ret
         FROM runs_detectors AS rd 

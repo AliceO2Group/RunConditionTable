@@ -9,7 +9,7 @@ module.exports = {
     // App config
     winston: ResProvider.winston(),
     database: ResProvider.database(),
-    baseData: require('./baseData.js'),
+    databasePersistance: require('./databasePersistance.js'),
     public: require('./public.js'),
 
     // Other config

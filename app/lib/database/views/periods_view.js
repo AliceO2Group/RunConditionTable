@@ -19,8 +19,8 @@ const periods_view = () => `
         p.year, 
         (
             SELECT beam_type
-            FROM beams_dictionary
-            AS bd where bd.id = p.beam_type_id
+            FROM beams_dictionary AS bd 
+                where bd.id = p.beam_type_id
         ) AS beam,
         string_agg(r.energy_per_beam::varchar, ',') as energy
     FROM periods AS p
