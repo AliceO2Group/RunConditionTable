@@ -11,7 +11,7 @@ DESIGN_PNG="$SCRIPTS_DIR/exported/design.png"
 DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
 
 
-OTHER_SQL_FILES="$SCRIPTS_DIR/other-sql/"
+STORED_SQL_FUNCTIONALITIES_DIR="$SCRIPTS_DIR/stored-sql-functionalities/"
 
 usage () {
   cat << USAGE >&2
@@ -26,13 +26,13 @@ Usage:
     Possibile env vars (also in env file) have to be named exactly the same as upper placeholders. 
     Parameters specified via script arguments override those specified via env vars.
 
-    <OTHER_OPTS> can be ||| TODO add descriptions |||:
-      1. --main-sql-modify-daemon - 
-      2. --other-sql-modify-daemon - 
-      3. --export - 
-      4. --only-export - 
-      5. --convert - 
-      6. --drop - 
+    <OTHER_OPTS> can be:
+      1. --main-sql-modify-daemon - run watchdog on db definition in $SCRIPTS_DIR/exported/create-tables.sql, if any change db is recreated
+      2. --other-sql-modify-daemon - as upper but on files in $SCRIPTS_DIR/stored-sql-functionalities/
+      3. --export - if specifid before deploying DB update sql db design using pgmodeler design.dbm file
+      4. --only-export - do only export
+      5. --convert - recreate python script from jupyter notebook ($SCRIPTS_DIR/mock/mockData.ipynb)
+      6. --drop - if specified drop DB before creation
 
 USAGE
 exit 1;
@@ -173,7 +173,7 @@ create_main() {
 }
 
 create_other() {
-  for p in $(find "$OTHER_SQL_FILES" -name "*.sql") ; do
+  for p in $(find "$STORED_SQL_FUNCTIONALITIES_DIR" -name "*.sql") ; do
     echo "use of $p"
     psql -d $RCT_DB_NAME -a -f $p
   done;
@@ -213,7 +213,7 @@ if [ "$MAIN_SQL_MODIFY_DAEMON" = 'true' ]; then
     done &
 fi
 if [ "$OTHER_SQL_MODIFY_DAEMON" = 'true' ]; then
-  inotifywait --monitor --recursive --event modify $OTHER_SQL_FILES |
+  inotifywait --monitor --recursive --event modify $STORED_SQL_FUNCTIONALITIES_DIR |
     while read file_path file_event file_name; do 
       echo ${file_path}${file_name} event: ${file_event}; 
       psql -d $RCT_DB_NAME -a -f "${file_path}${file_name}";
