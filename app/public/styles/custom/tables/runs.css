@@ -88,6 +88,12 @@
     text-align: right;
 }
 
+/* Tof detector
+.runsPerPeriod-tof_detector-header {
+    min-width: 100px;
+}
+*/
+
 .runs-table td:last-child, .runs-table th:last-child {
     padding-right: 2em;
 }
