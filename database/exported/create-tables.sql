@@ -424,6 +424,23 @@ CREATE TABLE public.verifications (
 ALTER TABLE public.verifications OWNER TO postgres;
 -- ddl-end --
 
+-- object: public.particle_phys_data | type: TABLE --
+-- DROP TABLE IF EXISTS public.particle_phys_data CASCADE;
+CREATE TABLE public.particle_phys_data (
+	id serial NOT NULL,
+	name varchar NOT NULL,
+	full_name varchar NOT NULL,
+	"A" smallint NOT NULL,
+	"Z" smallint NOT NULL,
+	CONSTRAINT particle_phys_data_pk PRIMARY KEY (id),
+	CONSTRAINT name_unique UNIQUE (name),
+	CONSTRAINT "Z_unique" UNIQUE ("Z"),
+	CONSTRAINT full_name_unique UNIQUE (full_name)
+);
+-- ddl-end --
+ALTER TABLE public.particle_phys_data OWNER TO postgres;
+-- ddl-end --
+
 -- object: pass_type_fk | type: CONSTRAINT --
 -- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS pass_type_fk CASCADE;
 ALTER TABLE public.data_passes ADD CONSTRAINT pass_type_fk FOREIGN KEY (pass_type)

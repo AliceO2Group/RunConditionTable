@@ -35,7 +35,7 @@
     "deploy:db:local": "./database/setup-db.sh --env ./docker/env_file-dev",
     
     "dev": "./rctmake prune,db:export,build,stop --target dev --attach",
-    "dev-env-node": "(export RCT_DB_HOST=$(docker inspect o2-rct_database -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'); bash -c 'set -o allexport && ls && source ./docker/env_file-dev && set +o allexport && node')",
+    "node-dev-env": "(export RCT_DB_HOST=$(docker inspect o2-rct_database -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'); bash -c 'set -o allexport && ls && source ./docker/env_file-dev && set +o allexport && node')",
     "dev:up": "./rctmake build[up] --target dev --attach",
     "dev:up-re": "./rctmake build[up],dump:restore,attach --target dev -F ",
     "docker:test": "./rctmake prune,build,prune --target test",

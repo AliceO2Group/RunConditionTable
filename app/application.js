@@ -89,6 +89,7 @@ class RunConditionTableApplication {
             };
             Utils.switchCase(cmdAndArgs[0], {
                 '': () => {},
+                hc: () => this.databaseService.healthcheck(),
                 users: () => {
                     this.con.log(this.databaseService.loggedUsers);
                 },
@@ -234,19 +235,19 @@ class RunConditionTableApplication {
         }
     }
 
-    isInTestMode() {
+    static isInTestMode() {
         return process.env.ENV_MODE === 'test';
     }
 
-    isInDevMode() {
+    static isInDevMode() {
         return process.env.ENV_MODE === 'development';
     }
 
-    isInProdMode() {
+    static isInProdMode() {
         return process.env.ENV_MODE === 'production';
     }
 
-    getEnvMode() {
+    static getEnvMode() {
         return process.env.ENV_MODE;
     }
 

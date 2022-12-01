@@ -85,21 +85,25 @@ class DatabaseService {
         }
     }
 
-    async pgExec(res, query, dbResponseHandler) {
+    async pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler) {
         this.pool.connect((connectErr, client, release) => {
         if (connectErr) {
-            this.logger.error('Error acquiring client:: ' + connectErr.stack)
-            this.responseWithStatus(res, 500, connectErr.message);
+            if (connectErrorHandler) {
+                connectErrorHandler(connectErr);
+            }
             return;
         }
 
         client.query(query)
             .then((dbRes) => {
-                dbResponseHandler(dbRes);
+                if (dbResponseHandler) {
+                    dbResponseHandler(dbRes);
+                }
             })
             .catch((e) => {
-                this.logger.error(e.message + ' :: ' + e.stack)
-                this.responseWithStatus(res, 500, e.code);
+                if (dbResErrorHandler) {
+                    dbResErrorHandler(e);
+                }
             });
             release();
         })
@@ -117,6 +121,11 @@ class DatabaseService {
 
         
         const params = {...req.query, ...req.params}
+
+        const connectErrorHandler = (connectErr) => {
+            this.logger.error('Error acquiring client:: ' + connectErr.stack)
+            this.responseWithStatus(res, 500, connectErr.message);
+        }
 
         const dbResponseHandler = (dbRes) => {
             let { fields, rows } = dbRes;
@@ -137,9 +146,14 @@ class DatabaseService {
             res.json({ data: adjuster(data) });
         };
 
+        const dbResErrorHandler = (e) => {
+            this.logger.error(e.message + ' :: ' + e.stack)
+            this.responseWithStatus(res, 500, e.code);
+        }
+
         try {
             const query = QueryBuilder.build(params);
-            await this.pgExec(res, query, dbResponseHandler);
+            await this.pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler);
         } catch (e) {
             this.logger.error(e.stack)
             this.responseWithStatus(res, 400, e)
@@ -173,10 +187,22 @@ class DatabaseService {
         this.adminClient.on('error', (e) => this.logger.error(e));
 
         await this.adminClient.connect()
+            .then(() => this.healthcheck())
             .catch((e) => {
-                this.logger.error(`error when trying to establish admin connection with ${config.database.host}`, e);
+                this.logger.error(`error when trying to establish admin connection with ${config.database.host}::\n ${e.stack}`);
             });
     }
+
+    async healthcheck() {
+        for (const [d, def] of Object.entries(config.databasePersistance.healthcheckQueries)) {
+            for (const q of def.query) {
+                const logger = config.databasePersistance.suppressHealthcheckLogs ? null : (e) => this.logger.error(e.stack)
+                await this.pgExec(q, logger, null, logger)
+            }
+        }
+    }
+
+
 }
 
 module.exports = DatabaseService;

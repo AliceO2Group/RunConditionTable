@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4" use-changelog="false" last-position="0,565" last-zoom="0.75" max-obj-count="33"
+<dbmodel pgmodeler-ver="0.9.4" use-changelog="false" last-position="0,564" last-zoom="0.75" max-obj-count="33"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -70,7 +70,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="300" y="1300"/>
+	<position x="220" y="1300"/>
 	<column name="id" not-null="true" sequence="public.beams_dictionary_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -517,6 +517,39 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<constraint name="verifications_pk" type="pk-constr" table="public.verifications">
 		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="particle_phys_data" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="540" y="1280"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="full_name" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="A" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="Z" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<constraint name="particle_phys_data_pk" type="pk-constr" table="public.particle_phys_data">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="name_unique" type="uq-constr" table="public.particle_phys_data">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="Z_unique" type="uq-constr" table="public.particle_phys_data">
+		<columns names="Z" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="full_name_unique" type="uq-constr" table="public.particle_phys_data">
+		<columns names="full_name" ref-type="src-columns"/>
 	</constraint>
 </table>
 

@@ -19,47 +19,49 @@
 
 const queryForRunsFields = `
             --p.name, 
-             r.run_number, 
-             r.time_start, 
-             r.time_end, 
-             r.time_trg_start, 
-             r.time_trg_end,
-             r.energy_per_beam, 
-             r.ir, 
-             r.filling_scheme, 
-             r.triggers_conf,
-             r.fill_number,
-             r.mu, 
-             r.l3_current,
-             r.dipole_current,
-             ${run_detectors_field_in_sql_query}
+            r.run_number, 
+            r.time_start, 
+            r.time_end, 
+            r.time_trg_start, 
+            r.time_trg_end,
+            get_center_of_mass_energy(r.energy_per_beam, p.beam_type_id) as center_of_mass_energy, 
+            r.ir, 
+            r.filling_scheme, 
+            r.triggers_conf,
+            r.fill_number,
+            r.mu, 
+            r.l3_current,
+            r.dipole_current,
+            ${run_detectors_field_in_sql_query}
 `;
  
  
  const runs_per_period_view = (query) => `
-         SELECT
-             ${queryForRunsFields}
-         FROM runs AS r
-             INNER JOIN periods AS p
-             ON p.id = r.period_id
-         WHERE period_id = (
-                             SELECT id 
-                             FROM periods 
-                             WHERE periods.name = '${query.index}'
-                             )
-         ORDER BY r.run_number DESC
+        SELECT
+            ${queryForRunsFields}
+        FROM runs AS r
+        INNER JOIN periods AS p
+            ON p.id = r.period_id
+        WHERE period_id = (
+                            SELECT id 
+                            FROM periods 
+                            WHERE periods.name = '${query.index}'
+                            )
+        ORDER BY r.run_number DESC
         `;
  
  const runs_per_data_pass_view = (query) => `
-             SELECT
-             ${queryForRunsFields}
-             FROM data_passes AS dp
-                 INNER JOIN data_passes_runs AS dpr
-                     ON dp.id=dpr.data_pass_id
-                 INNER JOIN runs AS r
-                     ON r.run_number=dpr.run_number
-             WHERE dp.name = '${query.index}'
-             ORDER BY r.run_number DESC
+            SELECT
+            ${queryForRunsFields}
+            FROM data_passes AS dp
+            INNER JOIN data_passes_runs AS dpr
+                ON dp.id=dpr.data_pass_id
+            INNER JOIN runs AS r
+                ON r.run_number=dpr.run_number
+            INNER JOIN periods as p
+                ON r.period_id = p.id
+            WHERE dp.name = '${query.index}'
+            ORDER BY r.run_number DESC
             `;
  
 
