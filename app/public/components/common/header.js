@@ -64,6 +64,6 @@ const functionalities = (model) => h('.button-group.text-right',
     }, iconDataTransferDownload()),
 
     h('button.btn.filter-button', {
-        className: model.searchFieldsVisible ? 'active' : '',
+        className: model.searchFieldsVisible ? 'selected' : '',
         onclick: () => model.changeSearchFieldsVisibility(),
     }, h('.filter-20.icon')));

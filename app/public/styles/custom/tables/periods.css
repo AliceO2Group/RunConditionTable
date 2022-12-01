@@ -68,7 +68,7 @@
     text-align: right;
 }
 
-/* Energy */
+/* Mean energy */
 .periods-table .periods-energy-cell, .periods-table .periods-energy-header {
     min-width: 60px;
     text-align: right;

@@ -22,10 +22,10 @@ export default class Model extends Observable {
         super();
 
         this.session = sessionService.get();
-        this.session.personid = parseInt(this.session.personid, 10); // cast, sessionService has only strings
+        this.session.personid = parseInt(this.session.personid, 10); // Cast, sessionService has only strings
         // TODO if no personid then it is a computer so we need to parse it respectively
         this.session.roles = this.getRoles();
-        
+
         this.router = new QueryRouter();
         this.router.bubbleTo(this);
         this.loader = new Loader();
@@ -59,19 +59,19 @@ export default class Model extends Observable {
 
     getRoles() {
         if (this.session.access.includes(ROLES.Admin)) {
-          return [ ROLES.Admin ];
+            return [ROLES.Admin];
         } else if (this.session.access.includes(ROLES.Global)) {
-          return [ ROLES.Global ];
+            return [ROLES.Global];
         } else if (this.session.access.some((role) => this.isDetectorRole(role))) {
             const roles = [];
-            Object.values(ROLES).filter(role => this.isDetectorRole(role)).forEach((detectorRole) => {
+            Object.values(ROLES).filter((role) => this.isDetectorRole(role)).forEach((detectorRole) => {
                 if (this.session.access.includes(detectorRole)) {
                     roles.push(detectorRole);
                 }
             });
             return roles;
         }
-        return [ ROLES.Guest ];
+        return [ROLES.Guest];
     }
 
     setServiceUnavailable(result) {

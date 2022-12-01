@@ -14,7 +14,7 @@
 import { h } from '/js/src/index.js';
 
 export default function serviceUnavailablePanel(model) {
-    let submodel = model.submodels[model.mode];
+    const submodel = model.submodels[model.mode];
     const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => submodel.retry() }, 'Retry');
     const title = h('h1.primary', 'Run Condition Table');
     const subtitle = h('h3', 'Service temporarily unavailable');
