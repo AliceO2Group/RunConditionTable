@@ -60,6 +60,40 @@
     text-align: right;
 }
 
+/* Energy per beam */
+.runs-table .runsPerPeriod-energy_per_beam-cell, .runs-table .runsPerPeriod-energy_per_beam-header,
+.runs-table .runsPerDataPass-energy_per_beam-cell, .runs-table .runsPerDataPass-energy_per_beam-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Fill number */
+.runs-table .runsPerPeriod-fill_number-cell, .runs-table .runsPerPeriod-fill_number-header,
+.runs-table .runsPerDataPass-fill_number-cell, .runs-table .runsPerDataPass-fill_number-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* L3 current */
+.runs-table .runsPerPeriod-l3_current-cell, .runs-table .runsPerPeriod-l3_current-header,
+.runs-table .runsPerDataPass-l3_current-cell, .runs-table .runsPerDataPass-l3_current-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Dipole current */
+.runs-table .runsPerPeriod-dipole_current-cell, .runs-table .runsPerPeriod-dipole_current-header,
+.runs-table .runsPerDataPass-dipole_current-cell, .runs-table .runsPerDataPass-dipole_current-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Tof detector
+.runsPerPeriod-tof_detector-header {
+    min-width: 100px;
+}
+*/
+
 .runs-table td:last-child, .runs-table th:last-child {
     padding-right: 2em;
 }
