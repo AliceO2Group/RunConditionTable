@@ -59,9 +59,9 @@ export default class Model extends Observable {
 
     getRoles() {
         if (this.session.access.includes(ROLES.Admin)) {
-            return [ROLES.Admin];
+            return ROLES.Admin;
         } else if (this.session.access.includes(ROLES.Global)) {
-            return [ROLES.Global];
+            return ROLES.Global;
         } else if (this.session.access.some((role) => this.isDetectorRole(role))) {
             const roles = [];
             Object.values(ROLES).filter((role) => this.isDetectorRole(role)).forEach((detectorRole) => {
@@ -71,7 +71,7 @@ export default class Model extends Observable {
             });
             return roles;
         }
-        return [ROLES.Guest];
+        return ROLES.Guest;
     }
 
     setServiceUnavailable(result) {
