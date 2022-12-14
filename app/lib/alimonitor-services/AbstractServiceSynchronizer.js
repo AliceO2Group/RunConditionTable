@@ -209,7 +209,7 @@ class ServicesSynchronizer {
                 Cacher.cache(this.name, endpoint, data);
             }
         };
-        return await Utils.makeHttpRequest(endpoint, this.opts, this.logger, onSucces);
+        return await Utils.makeHttpRequestForJSON(endpoint, this.opts, this.logger, onSucces);
     }
 
     async dbConnect() {

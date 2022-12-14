@@ -47,11 +47,11 @@ module.exports = {
     detectors: detectors.sort(),
     healthcheckQueries: {
         detectors: {
-            description: '',
+            description: 'detectors dict insert',
             query: detectors.map((d) => `INSERT INTO detectors_subsystems("id", "name") VALUES (DEFAULT, '${d}');`),
         },
         particle: {
-            description: '',
+            description: 'particles dict insert',
             query: Object.entries(particle_phys_data).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "A", "Z")
                     VALUES (DEFAULT, '${name}', '${d.full_name}', ${d.A}, ${d.Z});`),
         },

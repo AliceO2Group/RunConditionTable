@@ -23,8 +23,9 @@ const viewSpecificDataAdjusters = {};
 
 viewSpecificDataAdjusters[PN.periods] = (data) => {
     data[DRF.rows] = data[DRF.rows].map((dataRow) => {
-        const { energies } = dataRow;
-        dataRow.energy = (energies && energies[0]) ? math.mean(energies) : null;
+        let { energies } = dataRow;
+        energies = energies?.filter((e) => e)
+        dataRow.energy = (energies && energies.length) ? math.mean(energies) : null;
         delete dataRow.energies;
         return dataRow;
     });

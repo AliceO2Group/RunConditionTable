@@ -12,11 +12,13 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+const path = require('path');
 
 const util = require('util');
 const http = require('http');
 const https = require('https');
 const { Log } = require('@aliceo2/web-ui');
+const fs = require('fs');
 
 const exec = util.promisify(require('child_process').exec);
 
@@ -174,7 +176,7 @@ class Utils {
         }
     }
 
-    static makeHttpRequest(endpoint, opts, logger, onSuccess, onFialure) {
+    static makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFialure) {
         return new Promise((resolve, reject) => {
             let rawData = '';
             const req = Utils.checkClientType(endpoint).request(endpoint, opts, async (res) => {
@@ -188,10 +190,10 @@ class Utils {
                     if (opts.allowRedirects) {
                         redirect = true;
                         logger.warn(mess);
-                        const nextHope = new URL(endpoint.origin + res.headers.location);
-                        nextHope.searchParams.set('res_path', 'json');
-                        logger.warn(`from ${endpoint.href} to ${nextHope.href}`);
-                        resolve(await this.getRawResponse(nextHope));
+                        const nextHop = new URL(endpoint.origin + res.headers.location);
+                        nextHop.searchParams.set('res_path', 'json');
+                        logger.warn(`from ${endpoint.href} to ${nextHop.href}`);
+                        resolve(await this.getRawResponse(nextHop));
                     } else {
                         throw new Error(mess);
                     }
@@ -221,6 +223,11 @@ class Utils {
                 res.on('end', () => {
                     try {
                         if (!redirect) {
+                            // TMP incorrect format handling
+                            if (/: *,/.test(rawData)) {
+                                rawData = rawData.replaceAll(/: *,/ig, ':"",');
+                            }
+
                             const data = JSON.parse(rawData);
                             if (onSuccess) {
                                 onSuccess(endpoint, data);
