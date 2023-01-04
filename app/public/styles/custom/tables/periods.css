@@ -1,15 +1,36 @@
 .x-scrollable-periods {
-    width: 400px;
+    width: 100%;
     overflow-x: scroll;
     position: relative !important;
 }
 
+/* Checkboxes */
 .x-scrollable-periods table td:first-child, .x-scrollable-periods table th:first-child {
     position: sticky !important;
-    width: 50px;
+    width: 50px !important;
     background-color: var(--color-white);
     left: 0;
     z-index: 1;
+}
+
+/* Name column */
+.x-scrollable-periods table td:nth-child(2), .x-scrollable-periods table th:nth-child(2) {
+    min-width: 400px;
+}
+
+/* Year column */
+.x-scrollable-periods table td:nth-child(3), .x-scrollable-periods table th:nth-child(3) {
+    min-width: 200px;
+}
+
+/* Beam type column */
+.x-scrollable-periods table td:nth-child(4), .x-scrollable-periods table th:nth-child(4) {
+    min-width: 200px;
+}
+
+/* Energy column */ 
+.x-scrollable-periods table td:nth-child(5), .x-scrollable-periods table th:nth-child(5) {
+    min-width: 200px;
 }
 
 .periods-table {
