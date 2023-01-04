@@ -34,13 +34,13 @@ export default function filter(model) {
     const { params } = model.router;
 
     return h('.filter-panel', [
-        h('.x-scrollable',
+        h('.filter-panel-content',
             h('table.no-spacing',
                 h('tbody',
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds, fields),
                     inputsRow(params, lowerInputIds, fields))),
-            h('.absolute',
+            h('.filter-panel-buttons',
                 h('button.btn.btn-primary', {
                     onclick: onclickSubmit(model, inputsIds),
                 }, 'Submit'),

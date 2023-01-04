@@ -37,13 +37,6 @@
 .no-text-decoration {
     text-decoration: none !important;
 }
-    
-.x-scrollable {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    width: 100%;
-    padding-bottom: 40px;
-}
 
 .table-cell-like {
     display: table-cell !important;
@@ -129,14 +122,6 @@
 
 .hidden {
     visibility: hidden !important;
-}
-
-.filter-panel {
-    position: sticky !important;
-    top: 0px;
-    padding-top: 10px;
-    background-color: var(--color-white);
-    z-index: 2 !important;
 }
 
 .inline {
