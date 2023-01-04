@@ -17,3 +17,12 @@
     position: absolute;
     padding: 10px;
 }
+
+.filter-btn {
+    min-height: 40px;
+}
+
+.icon-btn-text {
+    padding-left: 30px !important;
+    display: inline-block !important;
+}
