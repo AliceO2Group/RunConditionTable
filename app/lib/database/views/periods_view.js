@@ -22,7 +22,8 @@ const periods_view = () => `
             FROM beams_dictionary AS bd 
                 where bd.id = p.beam_type_id
         ) AS beam,
-        array_agg(get_center_of_mass_energy(r.energy_per_beam, p.beam_type_id)) as energies
+        AVG(get_center_of_mass_energy(r.energy_per_beam, p.beam_type_id)) as energy
+    
     FROM periods AS p
     LEFT JOIN runs as r
         ON r.period_id = p.id
