@@ -12,13 +12,11 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const path = require('path');
 
 const util = require('util');
 const http = require('http');
 const https = require('https');
 const { Log } = require('@aliceo2/web-ui');
-const fs = require('fs');
 
 const exec = util.promisify(require('child_process').exec);
 
