@@ -101,13 +101,13 @@ class RunConditionTableApplication {
                 },
                 psql: dbAdminExec,
                 sh: shExec,
-                bk: (args) => this.servCLI(this.alimonitorServices.bookkeepingService, args),
-                ml: (args) => this.servCLI(this.alimonitorServices.monalisaService, args),
-                mc: (args) => this.servCLI(this.alimonitorServices.monalisaServiceMC, args),
+                bk: (args) => this.servCLI(this.services.bookkeepingService, args),
+                ml: (args) => this.servCLI(this.services.monalisaService, args),
+                mc: (args) => this.servCLI(this.services.monalisaServiceMC, args),
                 sync: async () => {
-                    await this.alimonitorServices.bookkeepingService.setSyncTask();
-                    await this.alimonitorServices.monalisaService.setSyncTask();
-                    await this.alimonitorServices.monalisaServiceMC.setSyncTask();
+                    await this.services.bookkeepingService.setSyncTask();
+                    await this.services.monalisaService.setSyncTask();
+                    await this.services.monalisaServiceMC.setSyncTask();
                 },
                 connServ: async () => {
                     await this.connectServices();
@@ -168,7 +168,7 @@ class RunConditionTableApplication {
 
         const monalisaService = new MonalisaService();
         const monalisaServiceMC = new MonalisaServiceMC();
-        this.alimonitorServices = {
+        this.services = {
             bookkeepingService: new BookkeepingService(),
             monalisaService: monalisaService,
             monalisaServiceDetails: monalisaService.monalisaServiceDetails,
@@ -196,7 +196,7 @@ class RunConditionTableApplication {
         await this.databaseService.setAdminConnection()
             .catch((e) => errors.push(e));
         await Promise.all(
-            Object.values(this.alimonitorServices)
+            Object.values(this.services)
                 .map((serv) => serv.dbConnect()),
         ).catch((e) => errors.push(e));
         if (errors.length > 0) {
@@ -227,7 +227,7 @@ class RunConditionTableApplication {
         await this.databaseService.disconnect()
             .catch((e) => errors.push(e));
         await Promise.all(
-            Object.values(this.alimonitorServices)
+            Object.values(this.services)
                 .map((serv) => serv.close()),
         ).catch((e) => errors.push(e));
         if (errors.length > 0) {

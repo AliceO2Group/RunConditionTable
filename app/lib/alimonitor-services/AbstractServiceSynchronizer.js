@@ -34,7 +34,46 @@ const defaultServiceSynchronizerOptions = {
     allowRedirects: true, // TODO
 };
 
-class ServicesSynchronizer {
+class PassCorrectnessMonitor {
+    constructor(logger, loglev) {
+        this.logger = logger;
+        this.loglev = loglev;
+        this.correct = 0;
+        this.incorrect = 0;
+        this.errors = [];
+    }
+
+    correct() {
+        this.correct ++;
+    }
+
+    incorrect(e, data) {
+        this.incorrect ++;
+        e.data = data;
+        this.errors.push(e);
+    }
+
+    logResults() {
+        const { correct, incorrect, errors, loglev, logger } = this;
+        const dataSize = incorrect + correct;
+
+        if (incorrect > 0) {
+            if (loglev > 3) {
+                errors.forEach((e) => logger.error(JSON.stringify(e, null, 2)));
+            } else if (loglev > 2) {
+                errors.forEach((e) => logger.error(e.stack));
+            } else if (loglev > 1) {
+                errors.forEach((e) => logger.error(e.message));
+            }
+            logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
+        }
+        if (correct > 0) {
+            logger.info(`sync successful for  ${correct}/${dataSize}`);
+        }
+    }
+}
+
+class AbstractServiceSynchronizer {
     constructor() {
         this.name = this.constructor.name;
         this.logger = new Log(this.name);
@@ -66,16 +105,16 @@ class ServicesSynchronizer {
     }
 
     setSLLForHttpOpts(opts) {
-        const pfx = ResProvider.securityFilesContentProvider(
+        const pfxWrp = ResProvider.securityFilesContentProvider(
             ['myCertificate.p12'],
             'pfx - pkcs12 cert',
             'RCT_CERT_PATH',
             true,
         );
 
-        const { logsStacker } = pfx;
+        const { logsStacker } = pfxWrp;
         logsStacker.typeLog('info');
-        if (!pfx.content) {
+        if (!pfxWrp.content) {
             if (logsStacker.any('error')) {
                 logsStacker.typeLog('warn');
                 logsStacker.typeLog('error');
@@ -83,7 +122,7 @@ class ServicesSynchronizer {
         }
         const passphrase = ResProvider.passphraseProvider();
 
-        opts.pfx = pfx.content;
+        opts.pfx = pfxWrp.content;
         opts.passphrase = passphrase;
 
         return opts;
@@ -135,67 +174,48 @@ class ServicesSynchronizer {
             return;
         }
         try {
-            const { loglev } = this;
-            const result = await this.getRawResponse(endpoint);
+            this.dbAction = dbAction; //TODO
+            this.monitor = new PassCorrectnessMonitor(this.logger, this.loglev);
+
+            const rawResponse = await this.getRawResponse(endpoint);
             if (metaDataHandler) {
-                metaDataHandler(result);
+                metaDataHandler(rawResponse);
             }
-            const rows = responsePreprocess(result)
+            const data = responsePreprocess(rawResponse)
                 .map((r) => dataAdjuster(r))
                 .filter((r) => r && filterer(r));
 
-            let correct = 0;
-            let incorrect = 0;
-            const errors = [];
-            const dataSize = rows.length;
-
-            const correctDataSyncHandler = () => {
-                correct ++;
-            };
-            const errorsHandler = (e, data) => {
-                incorrect ++;
-                e.data = data;
-                errors.push(e);
-            };
-
             if (this.batchedRequestes) {
-                const rowsChunks = Utils.arrayToChunks(rows, this.batchSize);
-                for (const chunk of rowsChunks) {
-                    const promises = chunk.map((r) => dbAction(this.dbclient, r)
-                        .then(correctDataSyncHandler)
-                        .catch((e) => errorsHandler(e, { row: r })));
-
-                    await Promise.all(promises);
-                }
+                this.makeBatchedRequest(data);
             } else {
-                for (const r of rows) {
-                    await dbAction(this.dbclient, r)
-                        .then(correctDataSyncHandler)
-                        .catch((e) => errorsHandler(e, { row: r }));
-                }
+                this.makeSequentialRequest(data);
             }
-
-            if (this.loglev > 0) {
-                if (incorrect > 0) {
-                    if (loglev > 3) {
-                        errors.forEach((e) => this.logger.error(JSON.stringify(e, null, 2)));
-                    } else if (loglev > 2) {
-                        errors.forEach((e) => this.logger.error(e.stack));
-                    } else if (loglev > 1) {
-                        errors.forEach((e) => this.logger.error(e.message));
-                    }
-                    this.logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
-                }
-                if (correct > 0) {
-                    this.logger.info(`sync successful for  ${correct}/${dataSize}`);
-                }
-            }
+            this.monitor.logResults();
         } catch (fatalError) {
             this.logger.error(fatalError.stack);
             if ((fatalError.name + fatalError.message).includes('ECONNREFUSED')) {
                 this.forceStop = true;
                 this.logger.warn('terminated due to fatal error (ECONNREFUSED)');
             }
+        }
+    }
+
+    async makeBatchedRequest(data) {
+        const rowsChunks = Utils.arrayToChunks(data, this.batchSize);
+        for (const chunk of rowsChunks) {
+            const promises = chunk.map((dataUnit) => this.dbAction(this.dbclient, dataUnit)
+                .then(this.monitor.correct)
+                .catch((e) => this.monitor.incorrect(e, { dataUnit: dataUnit })));
+
+            await Promise.all(promises);
+        }
+    }
+
+    async makeSequentialRequest(data) {
+        for (const dataUnit of data) {
+            await this.dbAction(this.dbclient, dataUnit)
+                .then(this.monitor.correct)
+                .catch((e) => this.monitor.incorrect(e, { dataUnit: dataUnit }));
         }
     }
 
@@ -245,4 +265,4 @@ class ServicesSynchronizer {
     }
 }
 
-module.exports = ServicesSynchronizer;
+module.exports = AbstractServiceSynchronizer;
