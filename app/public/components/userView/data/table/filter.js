@@ -34,22 +34,18 @@ export default function filter(model) {
     const { params } = model.router;
 
     return h('.filter-panel', [
-        h('.x-scrollable',
+        h('.filter-panel-content',
             h('table.no-spacing',
                 h('tbody',
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds, fields),
                     inputsRow(params, lowerInputIds, fields))),
-            h('.absolute',
-                h('button.btn.btn-primary', {
-                    onclick: onclickSubmit(model, inputsIds),
-                }, 'Submit'),
-                '  ',
-                h('button.btn', {
+            h('.filter-panel-buttons',
+                h('button.btn.filter-btn', {
                     onclick: onclickClear(model, inputsIds),
-                }, h('.clear-filters-20'), 'Clear filters'),
-                '     ',
-                h('button.btn', {
+                }, h('.clear-filters-20.vertical-center'), h('.icon-btn-text', 'Clear filters')),
+                '  ',
+                h('button.btn.filter-btn', {
                     onclick: () => {
                         for (const field of data.fields) {
                             field.marked = true;
@@ -58,7 +54,7 @@ export default function filter(model) {
                     },
                 }, 'Show all columns'),
                 '  ',
-                h('button.btn', {
+                h('button.btn.filter-btn', {
                     onclick: () => data.fields.forEach((f) => {
                         model.fetchedData.changeItemStatus(
                             f,
@@ -66,7 +62,11 @@ export default function filter(model) {
                         );
                         model.notify();
                     }),
-                }, h('.hide-empty-20'), 'Hide empty columns'))),
+                }, h('.hide-empty-20.vertical-center'), h('.icon-btn-text', 'Hide empty columns')),
+                '  ',
+                h('button.btn.btn-primary.filter-btn', {
+                    onclick: onclickSubmit(model, inputsIds),
+                }, 'Submit'))),
     ]);
 }
 
