@@ -223,6 +223,7 @@ class Utils {
                         if (!redirect) {
                             // TMP incorrect format handling
                             if (/: *,/.test(rawData)) {
+                                logger.warn(`incorrect data format from endpoint ${endpoint}`);
                                 rawData = rawData.replaceAll(/: *,/ig, ':"",');
                             }
 
@@ -244,6 +245,14 @@ class Utils {
 
             req.end();
         });
+    }
+
+    static throwNotImplemented() {
+        throw new Error('Not implemented');
+    }
+
+    static throwAbstract() {
+        throw new Error('Abstract, can not be used');
     }
 }
 
