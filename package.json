@@ -41,6 +41,8 @@
     "docker:test": "./rctmake prune,build,prune --target test",
     "prune": "./rctmake prune",
     "app:attach": "docker attach o2-rct_application",
+    "app:pattach": "docker exec -it o2-rct_application bash",
+
     
     "db-ip": "echo $(docker inspect o2-rct_database -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')",
     "db:check": "./rctmake prune,db,build,follow -t dev -S o2-rct_database ",

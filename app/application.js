@@ -38,6 +38,8 @@ Log.configure(config);
  */
 class RunConditionTableApplication {
     constructor() {
+        Log.configure(config.winston);
+
         this.logger = new Log(RunConditionTableApplication.name);
 
         this.buildServer();
@@ -132,7 +134,7 @@ class RunConditionTableApplication {
             state: () => this.con.log(args[1] ? serv?.[args[1]] : serv),
             stop: () => serv.clearSyncTask(),
             start: () => serv.setSyncTask(),
-            loglev: () => serv.setLogginLevel(args[1]),
+            logdepth: () => serv.setLogginLevel(args[1]),
         }, this.incorrectCommand())();
     }
 

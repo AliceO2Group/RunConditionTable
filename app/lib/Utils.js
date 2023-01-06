@@ -105,7 +105,8 @@ class Utils {
     static switchCase(caseName, cases, defaultCaseValue) {
         return Object.prototype.hasOwnProperty.call(cases, caseName)
             ? cases[caseName]
-            : defaultCaseValue;
+            : defaultCaseValue
+                ? defaultCaseValue : Utils.throw('no case, no default case');
     }
 
     static delay(time) {
@@ -253,6 +254,10 @@ class Utils {
 
     static throwAbstract() {
         throw new Error('Abstract, can not be used');
+    }
+
+    static throw(mess) {
+        throw new Error(mess);
     }
 }
 

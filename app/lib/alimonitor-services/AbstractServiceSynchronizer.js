@@ -35,36 +35,31 @@ const defaultServiceSynchronizerOptions = {
 };
 
 class PassCorrectnessMonitor {
-    constructor(logger, loglev) {
+    constructor(logger, errorsLoggingDepth) {
         this.logger = logger;
-        this.loglev = loglev;
+        this.errorsLoggingDepth = errorsLoggingDepth;
         this.correct = 0;
         this.incorrect = 0;
         this.errors = [];
     }
 
-    correct() {
+    handleCorrect() {
         this.correct ++;
     }
 
-    incorrect(e, data) {
+    handleIncorrect(e, data) {
         this.incorrect ++;
         e.data = data;
         this.errors.push(e);
     }
 
     logResults() {
-        const { correct, incorrect, errors, loglev, logger } = this;
+        const { correct, incorrect, errors, errorsLoggingDepth, logger } = this;
         const dataSize = incorrect + correct;
 
         if (incorrect > 0) {
-            if (loglev > 3) {
-                errors.forEach((e) => logger.error(JSON.stringify(e, null, 2)));
-            } else if (loglev > 2) {
-                errors.forEach((e) => logger.error(e.stack));
-            } else if (loglev > 1) {
-                errors.forEach((e) => logger.error(e.message));
-            }
+            const logFunc = Utils.switchCase(errorsLoggingDepth, config.errorsLoggingDepths);
+            errors.forEach((e) => logFunc(logger, e));
             logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
         }
         if (correct > 0) {
@@ -81,7 +76,7 @@ class AbstractServiceSynchronizer {
         this.opts = this.createHttpOpts();
 
         this.metaStore = {};
-        this.loglev = config.defaultLoglev; // TODO
+        this.errorsLoggingDepth = config.defaultErrorsLogginDepth;
         Utils.applyOptsToObj(this, defaultServiceSynchronizerOptions);
     }
 
@@ -140,6 +135,7 @@ class AbstractServiceSynchronizer {
     }
 
     setLogginLevel(logginLevel) {
+        Utils.throwNotImplemented();
         logginLevel = parseInt(logginLevel, 10);
         if (!logginLevel || logginLevel < 0 || logginLevel > 3) {
             throw new Error('Invalid debug level') ;
@@ -175,7 +171,7 @@ class AbstractServiceSynchronizer {
         }
         try {
             this.dbAction = dbAction; //TODO
-            this.monitor = new PassCorrectnessMonitor(this.logger, this.loglev);
+            this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
 
             const rawResponse = await this.getRawResponse(endpoint);
             if (metaDataHandler) {
@@ -204,8 +200,8 @@ class AbstractServiceSynchronizer {
         const rowsChunks = Utils.arrayToChunks(data, this.batchSize);
         for (const chunk of rowsChunks) {
             const promises = chunk.map((dataUnit) => this.dbAction(this.dbclient, dataUnit)
-                .then(this.monitor.correct)
-                .catch((e) => this.monitor.incorrect(e, { dataUnit: dataUnit })));
+                .then(this.monitor.handleCorrect)
+                .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 
             await Promise.all(promises);
         }
@@ -214,8 +210,8 @@ class AbstractServiceSynchronizer {
     async makeSequentialRequest(data) {
         for (const dataUnit of data) {
             await this.dbAction(this.dbclient, dataUnit)
-                .then(this.monitor.correct)
-                .catch((e) => this.monitor.incorrect(e, { dataUnit: dataUnit }));
+                .then(this.monitor.handleCorrect)
+                .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit }));
         }
     }
 

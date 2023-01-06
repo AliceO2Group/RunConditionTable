@@ -77,7 +77,6 @@ class MonalisaService extends AbstractServiceSynchronizer {
             ${d.description}, 
             ${null},
             ${null},
-            ${null},
             ${d.number_of_events},
             ${null},
             ${d.size}

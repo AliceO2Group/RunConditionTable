@@ -12,9 +12,15 @@ module.exports = {
     databasePersistance: require('./databasePersistance.js'),
     public: require('./public.js'),
 
-    // Other config
+    // RCT data config
     dataFromYearIncluding: 2015,
-    defaultLoglev: 1,
-};
 
-// TODO config validation
+    // Other config
+    errorsLoggingDepths: {
+        no: () => null,
+        message: (logger, er) => logger.error(er.message),
+        stack: (logger, er) => logger.error(er.stack),
+        object: (logger, er) => logger.error(JSON.stringify(er, null, 2)),
+    },
+    defaultErrorsLogginDepth: 'object',
+};

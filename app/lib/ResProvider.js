@@ -22,7 +22,9 @@ const Utils = require('./Utils.js');
 // eslint-disable-next-line prefer-const
 let logger;
 
-const defaultSecuredDirPath = path.join(__dirname, '..', '..', 'security');
+const resProviderDefaults = {
+    defaultSecuredDirPath: path.join(__dirname, '..', '..', 'security'),
+};
 
 class ResProvider {
     /**
@@ -31,25 +33,28 @@ class ResProvider {
      * @param {Object} objDefinition define mapping of env vars names to local nodejs process names
      * @param {CallableFunction} failurePredicate func(res, objDefinition) that get res - object with read env vars values and objDefinition
      * and examine if combination of read env vars fulfil some requirements - default check if all fildes are set
-     * @param {CallableFunction} onFailureAction action on failure - defualt throw error with message about unset fileds
+     * @param {CallableFunction|String} onFailureAction action on failure - defualt throw error with message about unset fileds
+     * can be string: warn just log warning, error: log error and throw error,
      * @returns {Object} desired env vars stored in object under names defined by mapping
      */
     static viaEnvVars(objDefinition, failurePredicate, onFailureAction) {
-        const reversedObjDefintion = Utils.reversePrimitiveObject(objDefinition);
         const res = {};
         for (const [envVName, key] of Object.entries(objDefinition)) {
             res[key] = process.env[envVName];
         }
         if (!failurePredicate && !ResProvider.areDesiredValuesPresent(res, objDefinition)
             || failurePredicate && failurePredicate(res, objDefinition)) {
-            return (onFailureAction ?
-                onFailureAction :
-                () => {
-                    const nulledFields = Object.entries(res).filter((e) => ! e[1]).map((e) => `${e[0]}{<-${reversedObjDefintion[e[0]]}}`);
-                    const mess = `unset fields: ' + ${nulledFields.join(', ')}`;
-                    logger.error(mess);
-                    throw mess;
+            if (!onFailureAction) {
+                ResProvider.onFailureAction_error(res, objDefinition);
+            } else if (typeof onFailureAction == 'function') {
+                return onFailureAction(res, objDefinition);
+            } else if (typeof onFailureAction == 'string') {
+                return Utils.switchCase(onFailureAction, {
+                    error: ResProvider.onFailureAction_error,
+                    warn: ResProvider.onFailureAction_warn,
+                    no: () => null,
                 })(res, objDefinition);
+            }
         }
         return res;
     }
@@ -61,6 +66,25 @@ class ResProvider {
             }
         }
         return true;
+    }
+
+    static nulledGetter(res, objDef) {
+        return Object.entries(res).filter((e) => ! e[1]).map((e) => `${e[0]}{<-${Utils.reversePrimitiveObject(objDef)[e[0]]}}`);
+    }
+
+    static nulledMessageGetter(res, objDef) {
+        return `unset fields from envvars: ' + ${ResProvider.nulledGetter(res, objDef).join(', ')}`;
+    }
+
+    static onFailureAction_error(res, objDef) {
+        const mess = ResProvider.nulledMessageGetter(res, objDef);
+        logger.error(mess);
+        throw mess;
+    }
+
+    static onFailureAction_warn(res, objDef) {
+        const mess = ResProvider.nulledMessageGetter(res, objDef);
+        logger.warn(mess);
     }
 
     static securityFilesContentProvider(fileNames, description, envVarName, supressLogs = false) {
@@ -78,7 +102,7 @@ class ResProvider {
             for (const fileName of fileNames) {
                 try {
                     const filePath = path.join(
-                        defaultSecuredDirPath, fileName,
+                        resProviderDefaults.defaultSecuredDirPath, fileName,
                     );
                     secContent = fs.readFileSync(filePath);
                     logsStacker.substitute('info', `${description}: loaded from file ${filePath}`);
@@ -167,7 +191,17 @@ class ResProvider {
 
     static winston() {
         return { //TODO
-            file: path.join(__dirname, '..', '..', 'reports/logs.txt'),
+            file: ResProvider.viaEnvVars({
+                RCT_LOG_FILENAME: 'name',
+                RCT_LOG_FILE_LOGLEV: 'level',
+            }, null, 'warn'),
+            console: ResProvider.viaEnvVars({
+                RCT_LOG_CONSOLE_LOGLEV: 'level',
+                RCT_LOG_CONSOLE_SYSD: 'systemD',
+            }, null, 'warn'),
+            infologger: ResProvider.viaEnvVars({
+                RCT_INFOLOGGER: 'infologger',
+            }, null, 'warn')?.infologger,
         };
     }
 

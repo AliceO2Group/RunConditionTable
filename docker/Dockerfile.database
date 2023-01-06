@@ -1,12 +1,12 @@
 FROM postgres:14.2-bullseye as base
 
-    WORKDIR /postgres/run
+WORKDIR /postgres/run
 
-    RUN apt update -y
-    RUN apt install -y \
-        bash \
-        sudo \
-        procps
+RUN apt update -y && \
+    apt install -y \
+    bash \
+    sudo \
+    procps
 
 FROM base as development
     RUN apt install -y inotify-tools
