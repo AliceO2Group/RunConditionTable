@@ -73,7 +73,6 @@ CREATE TABLE public.data_passes (
 	id integer NOT NULL DEFAULT nextval('public.data_passes_id_seq'::regclass),
 	name character varying(50) NOT NULL,
 	period_id integer NOT NULL,
-	pass_type integer,
 	description text,
 	jira text,
 	ml text,
@@ -181,18 +180,6 @@ CREATE SEQUENCE public.pass_types_id_seq
 
 -- ddl-end --
 ALTER SEQUENCE public.pass_types_id_seq OWNER TO postgres;
--- ddl-end --
-
--- object: public.pass_types | type: TABLE --
--- DROP TABLE IF EXISTS public.pass_types CASCADE;
-CREATE TABLE public.pass_types (
-	id integer NOT NULL DEFAULT nextval('public.pass_types_id_seq'::regclass),
-	pass_type character varying(10) NOT NULL,
-	CONSTRAINT pass_types_pkey PRIMARY KEY (id),
-	CONSTRAINT pt_name_unique UNIQUE (pass_type)
-);
--- ddl-end --
-ALTER TABLE public.pass_types OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.periods_id_seq | type: SEQUENCE --
@@ -441,13 +428,6 @@ CREATE TABLE public.particle_phys_data (
 ALTER TABLE public.particle_phys_data OWNER TO postgres;
 -- ddl-end --
 
--- object: pass_type_fk | type: CONSTRAINT --
--- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS pass_type_fk CASCADE;
-ALTER TABLE public.data_passes ADD CONSTRAINT pass_type_fk FOREIGN KEY (pass_type)
-REFERENCES public.pass_types (id) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
 -- object: period_id_fk | type: CONSTRAINT --
 -- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS period_id_fk CASCADE;
 ALTER TABLE public.data_passes ADD CONSTRAINT period_id_fk FOREIGN KEY (period_id)
@@ -629,18 +609,6 @@ GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
 -- object: "grant_rawdDxt_64d10fc454" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.flags_types_dictionary
-   TO "rct-user";
--- ddl-end --
-
--- object: "grant_rawdDxt_4169274856" | type: PERMISSION --
-GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
-   ON TABLE public.pass_types
-   TO postgres;
--- ddl-end --
-
--- object: "grant_rawdDxt_a7eb0766e8" | type: PERMISSION --
-GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
-   ON TABLE public.pass_types
    TO "rct-user";
 -- ddl-end --
 
