@@ -3,8 +3,8 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.4" use-changelog="false" last-position="0,138" last-zoom="0.55" max-obj-count="31"
-	 default-schema="public" default-owner="postgres"
+<dbmodel pgmodeler-ver="1.0.0-beta1" use-changelog="false" last-position="0,0" last-zoom="1" max-obj-count="31"
+	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
 	 layer-name-colors="#000000"
@@ -13,7 +13,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <role name="rct-user"
  inherit="true"
  login="true"
- encrypted="true"
  password="********">
 </role>
 
@@ -627,78 +626,67 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
+<relationship name="rel_data_passes_periods" type="relfk" layers="0"
+	 src-table="public.data_passes"
+	 dst-table="public.periods" reference-fk="period_id_fk"
+	 src-required="false" dst-required="true"/>
+
 <relationship name="rel_data_passes_runs_data_passes" type="relfk" layers="0"
-	 custom-color="#df6ee6"
 	 src-table="public.data_passes_runs"
 	 dst-table="public.data_passes" reference-fk="data_pass_fk"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_data_passes_runs_runs" type="relfk" layers="0"
-	 custom-color="#da6d14"
 	 src-table="public.data_passes_runs"
 	 dst-table="public.runs" reference-fk="run_fk"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_periods_beams_dictionary" type="relfk" layers="0"
-	 custom-color="#177163"
 	 src-table="public.periods"
 	 dst-table="public.beams_dictionary" reference-fk="beam_type_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_quality_control_flags_runs_detectors" type="relfk" layers="0"
-	 custom-color="#aebe38"
 	 src-table="public.quality_control_flags"
 	 dst-table="public.runs_detectors" reference-fk="run_detector_fk"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_quality_control_flags_flags_types_dictionary" type="relfk" layers="0"
-	 custom-color="#1a7b79"
 	 src-table="public.quality_control_flags"
 	 dst-table="public.flags_types_dictionary" reference-fk="flag_type_fk"
 	 src-required="false" dst-required="true"/>
 
+<relationship name="rel_runs_detectors_runs" type="relfk" layers="0"
+	 src-table="public.runs_detectors"
+	 dst-table="public.runs" reference-fk="run_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_runs_detectors_detectors_subsystems" type="relfk" layers="0"
+	 src-table="public.runs_detectors"
+	 dst-table="public.detectors_subsystems" reference-fk="detector_fk"
+	 src-required="false" dst-required="false"/>
+
 <relationship name="rel_runs_periods" type="relfk" layers="0"
-	 custom-color="#2721b8"
 	 src-table="public.runs"
 	 dst-table="public.periods" reference-fk="period_fk"
 	 src-required="false" dst-required="true"/>
 
-<relationship name="rel_runs_detectors_runs" type="relfk" layers="0"
-	 custom-color="#0bc867"
-	 src-table="public.runs_detectors"
-	 dst-table="public.runs" reference-fk="run_fk"
-	 src-required="false" dst-required="true"/>
-
-<relationship name="rel_runs_detectors_detectors_subsystems" type="relfk" layers="0"
-	 custom-color="#add625"
-	 src-table="public.runs_detectors"
-	 dst-table="public.detectors_subsystems" reference-fk="detector_fk"
-	 src-required="false" dst-required="true"/>
-
-<relationship name="rel_sim_and_data_passess_simulation_passes" type="relfk" layers="0"
-	 custom-color="#07cdf1"
+<relationship name="rel_anchored_passes_simulation_passes" type="relfk" layers="0"
 	 src-table="public.anchored_passes"
 	 dst-table="public.simulation_passes" reference-fk="sim_passes_fk"
 	 src-required="false" dst-required="true"/>
 
-<relationship name="rel_sim_and_data_passess_data_passes" type="relfk" layers="0"
-	 custom-color="#2eface"
+<relationship name="rel_anchored_passes_data_passes" type="relfk" layers="0"
 	 src-table="public.anchored_passes"
 	 dst-table="public.data_passes" reference-fk="data_passes_fk"
-	 src-required="false" dst-required="true">
-	<label ref-type="dst-label">
-		<position x="-417.439" y="-54.585"/>
-	</label>
-</relationship>
+	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_simulation_passes_runs_simulation_passes" type="relfk" layers="0"
-	 custom-color="#948fb3"
 	 src-table="public.simulation_passes_runs"
 	 dst-table="public.simulation_passes" reference-fk="sim_pass_id"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_simulation_passes_runs_runs" type="relfk" layers="0"
-	 custom-color="#df2ad9"
 	 src-table="public.simulation_passes_runs"
 	 dst-table="public.runs" reference-fk="run_fk"
 	 src-required="false" dst-required="true"/>
@@ -710,11 +698,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_anchored_periods_periods" type="relfk" layers="0"
 	 src-table="public.anchored_periods"
-	 dst-table="public.periods" reference-fk="period_id_fk"
-	 src-required="false" dst-required="true"/>
-
-<relationship name="rel_data_passes_periods" type="relfk" layers="0"
-	 src-table="public.data_passes"
 	 dst-table="public.periods" reference-fk="period_id_fk"
 	 src-required="false" dst-required="true"/>
 
