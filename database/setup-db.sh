@@ -112,17 +112,13 @@ if [ ! "$RERUN" = 'true' ]; then
       sleep 1
     else 
       echo 'exporting fresh sql file from design'
-      pgmodeler-cli --input $DESIGN_FILE --export-to-file --output $CREATE_TABLES_SQL
-      pgmodeler-cli --input $DESIGN_FILE --export-to-png --output $DESIGN_PNG
-      DB_DESIGN_EXPORT_DONE="true"
+      pgmodeler-cli --input $DESIGN_FILE --export-to-file --output $CREATE_TABLES_SQL \
+          && pgmodeler-cli --input $DESIGN_FILE --export-to-png --output $DESIGN_PNG;
+      PGEXPORT_EXIT_CODE=$?
     fi
 
     if [ "$ONLY_EXPORT" = 'true' ]; then
-      if [ "$DB_DESIGN_EXPORT_DONE" = "true" ]; then
-        exit 0;
-      else
-        exit 1;
-      fi
+      exit $PGEXPORT_EXIT_CODE;
     fi
   fi
 

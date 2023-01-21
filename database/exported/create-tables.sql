@@ -1,6 +1,6 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler version: 0.9.4
--- PostgreSQL version: 13.0
+-- pgModeler version: 1.0.0-beta1
+-- PostgreSQL version: 15.0
 -- Project Site: pgmodeler.io
 -- Model Author: ---
 -- object: "rct-user" | type: ROLE --
@@ -8,7 +8,7 @@
 CREATE ROLE "rct-user" WITH 
 	INHERIT
 	LOGIN
-	ENCRYPTED PASSWORD '********';
+	 PASSWORD '********';
 -- ddl-end --
 
 
