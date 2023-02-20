@@ -53,15 +53,16 @@ Usage:
             6. db:export - export db sql definition from pgmodeler design
             7. db:clean | db:truncate - truncate database in db contatiner
 
-            8. dump:make - make dump of current database (in docker contatiner) data, 
+            8. dump:(make|mk) - make dump of current database (in docker contatiner) data, 
                       need option -F|--dump-file <FILE> to specify dump file relative path
                 e.g.: ./$SCRIPT_NAME dump -F dump_file
-            9. dump:list - make list cached dumps
-            10. dump:remove -F|--dump-file <FILE> - remove dump from cache specified by the flag
-            11. dump:restore -F|--dump-file <FILE> - restore data from dump specified by the flag
+            9. dump:(list|ls) - print list cached dumps
+            10. dump:tree - print tree of cached dumps
+            11. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
+            12. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
                 e.g.: ./$SCRIPT_NAME restore -F dump_file
-            12. dump:export -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
-            13. dump:import -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
+            13. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
+            14. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
         ! For build, follow, stop, prune stages an additional flag can be specified: -S|--service <SERVICE>,
             witch specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
@@ -126,10 +127,6 @@ else
                 MOCK_DB=true;
                 shift 1;
                 ;;
-            -a|--attach)
-                ATTACH_TO_APP=true;
-                shift 1;
-                ;;
             -F|--dump-file)
                 DUMP_FILE=$2;
                 shift 2;
@@ -164,16 +161,7 @@ build() {
             $DOCKER_COMP_CMD \
                 -f $DOCKER_DIR/docker-compose-dev.yml \
                 -f $DOCKER_DIR/docker-compose-expose.yml \
-                $ORDER $OTHER_OPTS $SERVICES;
-            if [ "$ATTACH_TO_APP" = 'true' ]; then
-                docker attach $APP_CONTATINER_NAME;
-            fi
-        ;;
-
-        prod)
-            $DOCKER_COMP_CMD \
-                -f $DOCKER_DIR/docker-compose-prod.yml \
-                -f $DOCKER_DIR/docker-compose-expose.yml \
+                --env-file $DOCKER_DIR/env_file-dev \
                 $ORDER $OTHER_OPTS $SERVICES;
         ;;
 
@@ -181,6 +169,7 @@ build() {
             mkdir -p $PROJECT_DIR/reports;
             $DOCKER_COMP_CMD \
                 -f $DOCKER_DIR/docker-compose-test.yml \
+                --env-file $DOCKER_DIR/env_file-test \
                 up --build --abort-on-container-exit $OTHER_OPTS;
         ;;
         *)
@@ -223,12 +212,12 @@ for stage in $STAGES; do
             CONTATINER_DUMP_PATH="/postgres/run/database/cache/dumps/$DUMP_FILE";
 
             case $DUMP_CMD in
-                make)
+                make|mk)
                     if [ -z "$DUMP_FILE" ]; then
                         usage "Dump file unspecified, use flag -F|--dump-file <FILE>";
                     fi
                     if [ -f "$DUMP_PATH" ]; then
-                        echo "Do you want to overwrite existing file $DUMP_FILE :  y|[n] ?";
+                        echo "Do you want to overwrite existing file $DUMP_PATH :  y|[n] ?";
                         read permission;
                         if [[ "$permission" =~ ^y|Y|yes|Yes$ ]]; then
                             echo "continuing";
@@ -245,7 +234,7 @@ for stage in $STAGES; do
                     fi
                 ;;
 
-                list)
+                list|ls)
                     ls -lthR "$DUMPS_DIR";
                 ;;
 
@@ -253,14 +242,14 @@ for stage in $STAGES; do
                     tree $DUMPS_DIR -t;
                 ;;
 
-                browse)
+                browse|br)
                     DUMPS_HTML="$PROJECT_DIR/reports/dumps.html";
                     tree -t $DUMPS_DIR -H $DUMPS_DIR -o $DUMPS_HTML;
                     x-www-browser $DUMPS_HTML &
                 ;;
 
-                restore)
-                    if [ -z "$DUMP_FILE" ]; then
+                restore|re)
+                    if [ -z "$DUMP_PATH" ]; then
                         usage "Dump file name unspecified, use flag -F|--dump-file <FILE>";
                     fi
                     docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTATINER_NAME:/postgres/run/" \
@@ -268,18 +257,18 @@ for stage in $STAGES; do
                     && docker exec $DB_CONTATINER_NAME pg_restore --data-only -U $RCT_USER -d $RCT_DATABASE $CONTATINER_DUMP_PATH;
                 ;;
 
-                remove)
-                    if [ -z "$DUMP_FILE" ]; then
+                remove|rm)
+                    if [ -z "$DUMP_PATH" ]; then
                         usage "dump file unspecified, use flag -F|--dump-file <FILE>";
                     fi 
                     rm $DUMP_PATH;
                 ;;
 
-                export)
+                export|ex)
                     tar -c -f $PREVIOD_USER_LOC/$DUMPS_ARCHIVE_NAME -C $DUMPS_DIR .;
                 ;;
 
-                import)
+                import|im)
                     tar xvf $PREVIOD_USER_LOC/$DUMPS_ARCHIVE_NAME -C $DUMPS_DIR;
                 ;;
 
