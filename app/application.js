@@ -245,10 +245,6 @@ class RunConditionTableApplication {
         return process.env.ENV_MODE === 'development';
     }
 
-    static isInProdMode() {
-        return process.env.ENV_MODE === 'production';
-    }
-
     static getEnvMode() {
         return process.env.ENV_MODE;
     }

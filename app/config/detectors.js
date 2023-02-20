@@ -11,19 +11,23 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+const detectors = [
+    'CPV',
+    'EMC',
+    'FDD',
+    'FT0',
+    'FV0',
+    'ITS',
+    'HMP',
+    'MCH',
+    'MFT',
+    'MID',
+    'PHS',
+    'TOF',
+    'TPC',
+    'TRD',
+    'TST',
+    'ZDC',
+];
 
-const data_passes_view = (query) => `
-        SELECT
-            --dp.id
-            dp.name,
-            dp.description,
-            dp.jira,
-            dp.ml,
-            dp.number_of_events,
-            dp.software_version,
-            dp.size
-        FROM data_passes AS dp
-        WHERE dp.period_id = (SELECT id from periods WHERE name ='${query.index}')
-        `;
-
-module.exports = data_passes_view;
+module.exports = detectors;

@@ -12,18 +12,22 @@
  * or submit itself to any jurisdiction.
  */
 
-const data_passes_view = (query) => `
-        SELECT
-            --dp.id
-            dp.name,
-            dp.description,
-            dp.jira,
-            dp.ml,
-            dp.number_of_events,
-            dp.software_version,
-            dp.size
-        FROM data_passes AS dp
-        WHERE dp.period_id = (SELECT id from periods WHERE name ='${query.index}')
-        `;
+const meta = {
+    SSO_DET_ROLE: 'det-',
+};
 
-module.exports = data_passes_view;
+const detectors = require('./detectors.js');
+
+const dict = {
+    Admin: 'admin',
+    Global: 'global',
+    Guest: 'guest',
+};
+
+/**
+ * Produces roles like det-cpv present in config object under name DetectorCPV
+ */
+// eslint-disable-next-line no-return-assign
+detectors.forEach((d) => dict[`Detector${d}`] = `det-${d.toLowerCase()}`);
+
+module.exports = { meta, dict };
