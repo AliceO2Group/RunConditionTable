@@ -44,11 +44,11 @@ class PassCorrectnessMonitor {
     }
 
     handleCorrect() {
-        this.correct ++;
+        this.correct++;
     }
 
     handleIncorrect(e, data) {
-        this.incorrect ++;
+        this.incorrect++;
         e.data = data;
         this.errors.push(e);
     }
@@ -200,7 +200,7 @@ class AbstractServiceSynchronizer {
         const rowsChunks = Utils.arrayToChunks(data, this.batchSize);
         for (const chunk of rowsChunks) {
             const promises = chunk.map((dataUnit) => this.dbAction(this.dbclient, dataUnit)
-                .then(this.monitor.handleCorrect)
+                .then(() => this.monitor.handleCorrect())
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 
             await Promise.all(promises);

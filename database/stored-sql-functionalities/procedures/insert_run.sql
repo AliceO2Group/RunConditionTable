@@ -1,6 +1,6 @@
 
 create or replace procedure insert_run(
-    _run_number bigint,
+    _run_number integer,
     _period varchar,
     _time_trg_start bigint,
     _time_trg_stop bigint,
@@ -46,31 +46,31 @@ BEGIN
         END IF; --TODO else throw error or sth
 
         IF _time_start IS NOT NULL THEN 
-            UPDATE runs SET time_start = $_time_start WHERE run_number = _run_number; 
+            UPDATE runs SET time_start = _time_start WHERE run_number = _run_number; 
         END IF;
         IF _time_end IS NOT NULL THEN 
-            UPDATE runs SET time_end = $_time_end WHERE run_number = _run_number; 
+            UPDATE runs SET time_end = _time_end WHERE run_number = _run_number; 
         END IF;
         IF _energy_per_beam IS NOT NULL THEN 
-            UPDATE runs SET energy_per_beam = $_energy_per_beam WHERE run_number = _run_number; 
+            UPDATE runs SET energy_per_beam = _energy_per_beam WHERE run_number = _run_number; 
         END IF;
         IF _fill_number IS NOT NULL THEN 
-            UPDATE runs SET fill_number = $_fill_number WHERE run_number = _run_number; 
+            UPDATE runs SET fill_number = _fill_number WHERE run_number = _run_number; 
         END IF;
         IF _run_type IS NOT NULL THEN 
-            UPDATE runs SET run_type = $_run_type WHERE run_number = _run_number; 
+            UPDATE runs SET run_type = _run_type WHERE run_number = _run_number; 
         END IF;
         IF _time_trg_start IS NOT NULL THEN 
-            UPDATE runs SET time_trg_start = $_time_trg_start WHERE run_number = _run_number; 
+            UPDATE runs SET time_trg_start = _time_trg_start WHERE run_number = _run_number; 
         END IF;
         IF _time_trg_stop IS NOT NULL THEN 
-            UPDATE runs SET time_trg_stop = $_time_trg_stop WHERE run_number = _run_number; 
+            UPDATE runs SET time_trg_stop = _time_trg_stop WHERE run_number = _run_number; 
         END IF;
         IF _l3_current IS NOT NULL THEN 
-            UPDATE runs SET l3_current = $_l3_current WHERE run_number = _run_number; 
+            UPDATE runs SET l3_current = _l3_current WHERE run_number = _run_number; 
         END IF;
         IF _dipole_current IS NOT NULL THEN 
-            UPDATE runs SET dipole_current = $_dipole_current WHERE run_number = _run_number; 
+            UPDATE runs SET dipole_current = _dipole_current WHERE run_number = _run_number; 
         END IF;
     END IF;
 

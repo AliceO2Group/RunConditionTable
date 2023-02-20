@@ -52,24 +52,25 @@ Usage:
 
             6. db:export - export db sql definition from pgmodeler design
             7. db:clean | db:truncate - truncate database in db contatiner
+            8. db:ip - print db container ipv4 address
 
-            8. dump:(make|mk) - make dump of current database (in docker contatiner) data, 
+            9. app:ip - print app container ipv4 address
+
+            10. dump:(make|mk) - make dump of current database (in docker contatiner) data, 
                       need option -F|--dump-file <FILE> to specify dump file relative path
                 e.g.: ./$SCRIPT_NAME dump -F dump_file
-            9. dump:(list|ls) - print list cached dumps
-            10. dump:tree - print tree of cached dumps
-            11. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
-            12. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
+            11. dump:(list|ls) - print list cached dumps
+            12. dump:tree - print tree of cached dumps
+            13. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
+            14. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
                 e.g.: ./$SCRIPT_NAME restore -F dump_file
-            13. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
-            14. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
+            15. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
+            16. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
         ! For build, follow, stop, prune stages an additional flag can be specified: -S|--service <SERVICE>,
             witch specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
 
         @Deprecated - as the Alice tool RCT production will NOT be handeled with dockers
-        Default behaviour of $SCRIPT_NAME (./$SCRIPT_NAME) is build prod it is equivalent to
-            ./$SCRIPT_NAME prune,build --target prod
     
 $ERROR_MESSAGE_PRINT
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -105,8 +106,7 @@ DOCKER_COMP_CMD="docker compose -f $MAIN_DOCKER_COMPOSE_YML --project-directory 
 
 # defualt behaviour => dettached production built
 if [[  $# -eq 0 ]]; then
-    STAGES='prune build'
-    TARGET='prod'
+    usage 'no option specfied'
 else
     STAGES=$(echo $1 | tr ',' ' ');
     shift 1;
@@ -197,6 +197,22 @@ for stage in $STAGES; do
                 ;;
                 clean | truncate)
                     docker exec $DB_CONTATINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "database/utils/delete-data.sql";
+                ;;
+                
+                ip)
+                    docker inspect $DB_CONTATINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+                ;;
+                *)
+                    incorrect_stage_err $stage;
+                ;;
+            esac
+        ;;
+
+        app*)
+            APP_CMD=$(echo ${stage#app:});
+            case $APP_CMD in
+                ip)
+                    docker inspect $APP_CONTATINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
                 ;;
                 *)
                     incorrect_stage_err $stage;
