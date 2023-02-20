@@ -70,7 +70,7 @@ Usage:
         ! For build, follow, stop, prune stages an additional flag can be specified: -S|--service <SERVICE>,
             witch specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
 
-        @Deprecated - as the Alice tool RCT production will NOT be handeled with dockers
+        ! Production - Deprecated - as the Alice tool RCT production will NOT be handeled with dockers
     
 $ERROR_MESSAGE_PRINT
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
