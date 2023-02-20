@@ -1,0 +1,28 @@
+.filter-panel {
+    position: sticky !important;
+    top: 0px;
+    padding-top: 10px;
+    background-color: var(--color-white);
+    z-index: 2 !important;
+}
+
+.filter-panel-content {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    width: 100%;
+    padding-bottom: 65px;
+}
+
+.filter-panel-buttons {
+    position: absolute;
+    padding: 10px;
+}
+
+.filter-btn {
+    min-height: 40px;
+}
+
+.icon-btn-text {
+    padding-left: 30px !important;
+    display: inline-block !important;
+}
