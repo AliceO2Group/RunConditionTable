@@ -20,18 +20,18 @@ Within docker:
 
 2. `dev` - prune, build and run containers, one for the database and one for the application. Changes in the local repo force the application restart on docker (see nodemon and the `start:dev` script).
 Dev does not deploy the new database, it only clears it. In case of any changes in the database or docker images, the use of `dev:prune` is advised.
-3. `dev:up` - up stopped (previoulsy) built contatiners (no data from db are ereased)
-4. `dev:up-r <DUMP_NAME>`  - as dev:up but also restore specified dump (existing in `<ProjectDir>/database/cache/dumps`), see task `dump:list`
-5. `app:attach` - attach to application contatiner console
-6. `db:check` - export database definition file from pgmodelere design after chagnes, delete database contatiner and rebuild (only it). Application contatiner will be deleted as well.
-7. `db:attach` - run psql as postgres (connected to RCT database) on database contatiner
-8. `db:clean` - clean database in running database docker
+3. `dev:up` - up stopped (previously) built contatiners (no data in db is erased)
+4. `dev:up-r <DUMP_NAME>`  - as dev:up but also restore specified dump (existing in `<ProjectDir>/database/cache/dumps`), see the `dump:list` task
+5. `app:attach` - attach to the application container console
+6. `db:check` - export the current pgmodeler design as the database definition file, delete the database container and rebuild it with the new design. Application container will be deleted as well.
+7. `db:attach` - run psql as postgres (connected to RCT database) on database container
+8. `db:clean` - clean database in the running database docker
 
     <br>(Database dumps managing, dumps are stored in `<ProjectDir>/database/cache/dumps`)
-9. `dump:make <DUMP_NAME>` - make dump (only data) and store it with specified name
-10. `dump:list` - list dumps stored in local cache
-11. `dump:restore <DUMP_NAME>` - clean db and restore (only data) from specified dump file
-12. `dump:remove <DUMP_NAME>` - remove dump file from cache
+9. `dump:make <DUMP_NAME>` - make a data dump and store it under the specified name
+10. `dump:list` - list all the dumps stored in local cache
+11. `dump:restore <DUMP_NAME>` - clean the db and restore the data from the specified dump file
+12. `dump:remove <DUMP_NAME>` - remove the dump file from cache
 
     <br>(Testing)
 13. `eslint` - static analysis, results in `<ProjectDir>/reports/static/static-analyzis.html`
