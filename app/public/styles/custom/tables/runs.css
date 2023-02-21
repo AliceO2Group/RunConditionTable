@@ -60,9 +60,9 @@
     text-align: right;
 }
 
-/* Energy per beam */
-.runs-table .runsPerPeriod-energy_per_beam-cell, .runs-table .runsPerPeriod-energy_per_beam-header,
-.runs-table .runsPerDataPass-energy_per_beam-cell, .runs-table .runsPerDataPass-energy_per_beam-header {
+/* Center of mass energy */
+.runs-table .runsPerPeriod-center_of_mass_energy-cell, .runs-table .runsPerPeriod-center_of_mass_energy-header,
+.runs-table .runsPerDataPass-center_of_mass_energy-cell, .runs-table .runsPerDataPass-center_of_mass_energy-header {
     min-width: 100px;
     text-align: right;
 }
