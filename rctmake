@@ -67,10 +67,10 @@ Usage:
             15. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
             16. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
-        ! For build, follow, stop, prune stages an additional flag can be specified: -S|--service <SERVICE>,
-            witch specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
+        ! An additional -S|--service <SERVICE> flag can be specified for build, follow, stop and prune stages.
+        <SERVICE> ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) is the name of the service the stages are performed for.
 
-        ! Production - Deprecated - as the Alice tool RCT production will NOT be handeled with dockers
+        ! Production - Deprecated - as the Alice tool, RCT production will NOT be handeled with the use of dockers
     
 $ERROR_MESSAGE_PRINT
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
