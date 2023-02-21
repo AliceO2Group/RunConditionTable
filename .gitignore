@@ -14,3 +14,4 @@ scratch
 env_file
 database/cache
 notes
+.vscode
