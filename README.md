@@ -18,8 +18,8 @@ Tasks:
 Within docker:
 1. `prune` - removes each container related to this project
 
-2. `dev` - prune, build and run containers, one for database and one for application, changes in local repo force to restart application on docker, see nodeom, also script: npm run start:dev.
-Does not deploy new database, only clear it. If some changes with database were made or dockers images have been changed use rather npm run dev:prune.
+2. `dev` - prune, build and run containers, one for the database and one for the application. Changes in the local repo force the application restart on docker (see nodemon and the `start:dev` script).
+Dev does not deploy the new database, it only clears it. In case of any changes in the database or docker images, the use of `dev:prune` is advised.
 3. `dev:up` - up stopped (previoulsy) built contatiners (no data from db are ereased)
 4. `dev:up-r <DUMP_NAME>`  - as dev:up but also restore specified dump (existing in `<ProjectDir>/database/cache/dumps`), see task `dump:list`
 5. `app:attach` - attach to application contatiner console
