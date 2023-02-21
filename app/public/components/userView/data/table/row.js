@@ -17,16 +17,18 @@ import { reduceSerialIf } from '../../../../utils/utils.js';
 
 // eslint-disable-next-line no-unused-vars
 const detectorIcon = (model, item, n) =>
-    h('.tooltip',
+    h('.tooltip.noBorderBottom',
         h('svg', { width: '50px', height: '50px' },
             h('circle',
                 {
                     cx: '50%',
                     cy: '50%',
                     r: '15px',
-                    stroke: 'black',
+                    /*
+                    stroke: '#F7B538', strokes for the limited acceptance flags only
                     'stroke-width': '3',
-                    fill: 'green',
+                    */
+                    fill: '#8CB369',
                 })),
         h('span.tooltiptext', `run_det_id: ${item[n]}`));
 
