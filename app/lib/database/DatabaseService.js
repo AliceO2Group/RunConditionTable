@@ -13,10 +13,11 @@
  */
 
 const { Log } = require('@aliceo2/web-ui');
-const { Client } = require('pg');
+const { Client, Pool } = require('pg');
 const QueryBuilder = require('./QueryBuilder.js');
 const config = require('./../config/configProvider.js');
 const Utils = require('../Utils.js')
+
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataRespondFields;
 
@@ -26,109 +27,113 @@ const DRF = config.public.dataRespondFields;
  * so backend must communicate with database in order to check client credentials
  */
 class DatabaseService {
-    constructor(loggedUsers) {
-        this.loggedUsers = loggedUsers;
+    constructor() {
+        this.loggedUsers = {
+            tokenToUserData: {},
+        };
+
         this.logger = new Log(DatabaseService.name);
+        this.buildPool();
     }
 
-    async login(req, res) {
+    buildPool() {
+        config.database.idleTimeoutMillis = 2000;
+        config.database.max = 20
+
+        this.pool = new Pool(config.database)
+        this.pool.on('remove', () => {
+            // this.logger.info(`removing client, clients in pool: ${this.pool._clients.length}`);
+        })
+        this.pool.on('acquire', () => {
+            // this.logger.info(`acquiring client, clients in pool: ${this.pool._clients.length}`);
+        })
+        this.pool.on('error', (e) => {
+            this.logger.error(`database pg pool fatal error: ${e.stack}`);
+        })
+    }
+
+    async loginSession(req, res) {
         const { body } = req;
-        let client = this.loggedUsers.tokenToUserData[req.query.token];
-        let error;
-        if (!client) {
+        let userData = this.loggedUsers.tokenToUserData[req.query.token];
+        if (!userData) {
             this.logger.info('Logging new client: ');
-            client = new Client(config.database);
-            client.on('error', (e) => {
-                this.logger.error(e)
-            });
-
-
-            await client.connect()
-                .catch((e) => {
-                    this.logger.error(e);
-                    error = e;
-                });
+            userData = {
+                loginDate: new Date(),
+                name: body.username,
+                lastReqTime: new Date(),
+                token: req.query.token,
+            };
+            this.loggedUsers.tokenToUserData[req.query.token] = userData;
+            this.responseWithStatus(res, 200, "logged");
         } else {
-
-            this.logger.info('Restoring session with client');
-        }
-        try {
-            client.query('SELECT NOW();')
-                .then(async (dbRes) => {
-                    await res.json({ data: dbRes.rows });
-                    this.loggedUsers.tokenToUserData[req.query.token] = {
-                        pgClient: client,
-                        loginDate: new Date(),
-                        name: body.username,
-                        lastReqTime: new Date(),
-                    };
-                    this.logger.info('Logged client: ');
-                }).catch((e) => {
-                    error = e;
-                });
-        } catch (e) {
-                error = e;
-        }
-        if (error) {
-            this.responseWithStatus(res, 500, error.code);
+            this.logger.info(`Restoring session with client: ${userData}`);
+            this.responseWithStatus(res, 200, "session restored");
         }
     }
 
-    async logout(req, res) {
+    async logoutSession(req, res) {
         const { token } = req.query;
-        const clientData = this.loggedUsers.tokenToUserData[token];
-        if (clientData) {
+        const userData = this.loggedUsers.tokenToUserData[token];
+        if (userData) {
             this.loggedUsers.tokenToUserData[token] = undefined;
-            clientData.pgClient.end((e) => {
-                this.logger.error(e);
-            });
         }
-        if (clientData) {
+        if (userData) {
             this.responseWithStatus(res, 200, 'successfully logout');
         } else {
-            this.responseWithStatus(res, 409, 'no such user');
+            this.responseWithStatus(res, 409, 'not logged');
         }
     }
 
-    async exec(req, res, dbResponseHandler, query = null) {
-        const userData = this.loggedUsers.tokenToUserData[req.query.token];
-        if (!userData) {
-            const mess = 'SESSION_ERROR';
-            this.logger.error(mess, req.query);
-            this.responseWithStatus(res, 500, mess);
+    async pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler) {
+        this.pool.connect((connectErr, client, release) => {
+        if (connectErr) {
+            if (connectErrorHandler) {
+                connectErrorHandler(connectErr);
+            }
             return;
         }
-        const client = userData.pgClient;
 
+        client.query(query)
+            .then((dbRes) => {
+                if (dbResponseHandler) {
+                    dbResponseHandler(dbRes);
+                }
+            })
+            .catch((e) => {
+                if (dbResErrorHandler) {
+                    dbResErrorHandler(e);
+                }
+            });
+            release();
+        })
 
-        if (client) {
-            if (query === null) {
-                query = await QueryBuilder.build({ ...req.query, ...req.params }, this.adminClient);
-            }
-
-            client.query(query)
-                .then((dbRes) => {
-                    dbResponseHandler(req, res, dbRes);
-                })
-                .catch((e) => {
-                    this.logger.error(e);
-                    this.logger.error(e.stack)
-                    res.json({ data: e.code });
-                });
-        } else {
-            this.responseWithStatus(res, 401, 'no user with such token');
-        }
     }
 
-    async execDataReq(req, res, query = null) {
-        const dbResponseHandler = (req, res, dbRes) => {
+    async pgExecFetchData(req, res) {
+        const userData = this.loggedUsers.tokenToUserData[req.query.token];
+        if (!userData) {
+            const mess = 'SESSION_ERROR:: no user with such token';
+            this.logger.error(mess, req.query);
+            this.responseWithStatus(res, 400, mess);
+            return;
+        }
+
+        
+        const params = {...req.query, ...req.params}
+
+        const connectErrorHandler = (connectErr) => {
+            this.logger.error('Error acquiring client:: ' + connectErr.stack)
+            this.responseWithStatus(res, 500, connectErr.message);
+        }
+
+        const dbResponseHandler = (dbRes) => {
             let { fields, rows } = dbRes;
-            const data = {};
+            let data = {};
 
             if (req.query[DRP.countRecords] === 'true') {
                 data[DRF.totalRowsCount] = rows.length;
-                const offset = req.query[DRP.rowsOnSite] * (req.query[DRP.site] - 1);
-                const limit = req.query[DRP.rowsOnSite];
+                const offset = params[DRP.rowsOnSite] * (params[DRP.site] - 1);
+                const limit = params[DRP.rowsOnSite];
                 rows = rows.slice(offset, offset + limit);
             }
 
@@ -138,28 +143,34 @@ class DatabaseService {
             res.json({ data: data });
         };
 
-        await this.exec(req, res, dbResponseHandler, query);
-    }
+        const dbResErrorHandler = (e) => {
+            this.logger.error(e.message + ' :: ' + e.stack)
+            this.responseWithStatus(res, 500, e.code);
+        }
 
-    async execDataInsert(req, res, query = null) {
-        if (query) {
-            const dbResponseHandler = (req, res, _) => {
-                res.json({ data: 'data inserted' });
-            };
-            await this.exec(req, res, dbResponseHandler, query);
+        try {
+            const query = QueryBuilder.build(params);
+            await this.pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler);
+        } catch (e) {
+            this.logger.error(e.stack)
+            this.responseWithStatus(res, 400, e)
         }
     }
 
+    async pgExecDataInsert(req, res) {
+        this.responseWithStatus(res, 400, 'NOT IMPLEMENTED');
+    }
+
     async getDate(req, res) {
-        await this.execDataReq(req, res, 'SELECT NOW();');
+        await this.pgExecFetchData(req, res, 'SELECT NOW();');
     }
 
     responseWithStatus(res, status, message) {
-        this.logger.error(message);
         res.status(status).json({ message: message });
     }
 
     
+
     async disconnect() {
         const promises = Object.entries(this.loggedUsers.tokenToUserData).map(([_, data]) => {
             this.logger.info(`ending for ${data.name}`);
@@ -173,10 +184,23 @@ class DatabaseService {
         this.adminClient.on('error', (e) => this.logger.error(e));
 
         await this.adminClient.connect()
+            .then(() => this.healthcheck())
             .catch((e) => {
-                this.logger.error(`error when trying to establish admin connection with ${config.database.host}`, e);
+                this.logger.error(`error when trying to establish admin connection with ${config.database.host}::\n ${e.stack}`);
             });
     }
+
+    async healthcheck() {
+        for (const [d, def] of Object.entries(config.databasePersistance.healthcheckQueries)) {
+            this.logger.info(`healthcheck for ${def.description}`);
+            for (const q of def.query) {
+                const logger = config.databasePersistance.suppressHealthcheckLogs ? null : (e) => this.logger.error(e.stack)
+                await this.pgExec(q, logger, null, logger)
+            }
+        }
+    }
+
+
 }
 
 module.exports = DatabaseService;

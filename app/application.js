@@ -11,21 +11,25 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-
+// RCT
 const { HttpServer, Log } = require('@aliceo2/web-ui');
 const config = require('./lib/config/configProvider.js');
 const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
-const AuthControlManager = require('./lib/other/AuthControlManager.js');
-const DatabaseService = require('./lib/database/DatabaseService.js');
+
+// IO
 const path = require('path');
-const BookkeepingService = require('./lib/alimonitor-services/BookkeepingService.js');
 const readline = require('readline');
 const Utils = require('./lib/Utils.js');
-
 const { Console } = require('node:console');
+
+// Services
+const DatabaseService = require('./lib/database/DatabaseService.js');
+const BookkeepingService = require('./lib/alimonitor-services/BookkeepingService.js');
 const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
 const MonalisaServiceMC = require('./lib/alimonitor-services/MonalisaServiceMC.js');
+const AuthControlManager = require('./lib/other/AuthControlManager.js');
 
+// Extract important
 const EP = config.public.endpoints;
 Log.configure(config);
 
@@ -34,12 +38,11 @@ Log.configure(config);
  */
 class RunConditionTableApplication {
     constructor() {
-        this.loggedUsers = {
-            tokenToUserData: {},
-        };
-        this.httpServer = new HttpServer(config.http, config.jwt, config.openId);
+        Log.configure(config.winston);
+
         this.logger = new Log(RunConditionTableApplication.name);
 
+        this.buildServer();
         this.buildServices();
         this.defineStaticRoutes();
         this.defineEndpoints();
@@ -49,6 +52,14 @@ class RunConditionTableApplication {
         this.buildCli();
     }
 
+    buildServer() {
+        if (!config.openId) {
+            this.httpServer = new HttpServer(config.http, config.jwt);
+        } else {
+            this.httpServer = new HttpServer(config.http, config.jwt, config.openId);
+        }
+    }
+
     buildCli() {
         this.rl = readline.createInterface({
             input: process.stdin,
@@ -56,36 +67,49 @@ class RunConditionTableApplication {
             terminal: true,
             prompt: '==> ',
         });
-
-        this.con = new Console({ stdout: process.stdout, stderr: process.stderr });
-
         this.rl.on('line', (line) => this.cli(line));
+        this.con = new Console({ stdout: process.stdout, stderr: process.stderr });
     }
 
     cli(line) {
         try {
             const cmdAndArgs = line.trim().split(/ +/).map((s) => s.trim());
+            const dbAdminExec = (args) => {
+                this.databaseService.adminClient
+                    .query(args.join(' '))
+                    .then(this.con.log)
+                    .catch((e) => {
+                        this.con.log(e);
+                    });
+            };
+            const shExec = (args) => {
+                Utils.exec(args)
+                    .then(this.con.log)
+                    .catch((e) => {
+                        this.con.log(e);
+                    });
+            };
             Utils.switchCase(cmdAndArgs[0], {
                 '': () => {},
-                bk: (args) => this.servCLI(this.alimonitorServices.bookkeepingService, args),
-                ml: (args) => this.servCLI(this.alimonitorServices.monalisaService, args),
-                mc: (args) => this.servCLI(this.alimonitorServices.monalisaServiceMC, args),
+                hc: () => this.databaseService.healthcheck(),
+                users: () => {
+                    this.con.log(this.databaseService.loggedUsers);
+                },
+                pool: () => {
+                    this.con.log(this.databaseService.pool);
+                },
+                now: () => {
+                    dbAdminExec(['select now();']);
+                },
+                psql: dbAdminExec,
+                sh: shExec,
+                bk: (args) => this.servCLI(this.services.bookkeepingService, args),
+                ml: (args) => this.servCLI(this.services.monalisaService, args),
+                mc: (args) => this.servCLI(this.services.monalisaServiceMC, args),
                 sync: async () => {
-                    try {
-                        await this.alimonitorServices.bookkeepingService.setSyncTask();
-                    } catch (e) {
-                        this.con.log(e);
-                    }
-                    try {
-                        await this.alimonitorServices.monalisaService.setSyncTask();
-                    } catch (e) {
-                        this.con.log(e);
-                    }
-                    try {
-                        await this.alimonitorServices.monalisaServiceMC.setSyncTask();
-                    } catch (e) {
-                        this.con.log(e);
-                    }
+                    await this.services.bookkeepingService.setSyncTask();
+                    await this.services.monalisaService.setSyncTask();
+                    await this.services.monalisaServiceMC.setSyncTask();
                 },
                 connServ: async () => {
                     await this.connectServices();
@@ -110,7 +134,7 @@ class RunConditionTableApplication {
             state: () => this.con.log(args[1] ? serv?.[args[1]] : serv),
             stop: () => serv.clearSyncTask(),
             start: () => serv.setSyncTask(),
-            loglev: () => serv.setLogginLevel(args[1]),
+            logdepth: () => serv.setLogginLevel(args[1]),
         }, this.incorrectCommand())();
     }
 
@@ -129,10 +153,10 @@ class RunConditionTableApplication {
         const { httpServer } = this;
         const { databaseService } = this;
 
-        httpServer.post(EP.login, (req, res) => databaseService.login(req, res));
-        httpServer.post(EP.logout, (req, res) => databaseService.logout(req, res));
-        httpServer.get(EP.rctData, (req, res) => databaseService.execDataReq(req, res));
-        httpServer.post(EP.insertData, (req, res) => databaseService.execDataInsert(req, res));
+        httpServer.post(EP.login, (req, res) => databaseService.loginSession(req, res));
+        httpServer.post(EP.logout, (req, res) => databaseService.logoutSession(req, res));
+        httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res));
+        httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res));
         httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
     }
 
@@ -142,11 +166,11 @@ class RunConditionTableApplication {
     }
 
     buildServices() {
-        this.databaseService = new DatabaseService(this.loggedUsers);
+        this.databaseService = new DatabaseService();
 
         const monalisaService = new MonalisaService();
         const monalisaServiceMC = new MonalisaServiceMC();
-        this.alimonitorServices = {
+        this.services = {
             bookkeepingService: new BookkeepingService(),
             monalisaService: monalisaService,
             monalisaServiceDetails: monalisaService.monalisaServiceDetails,
@@ -174,8 +198,8 @@ class RunConditionTableApplication {
         await this.databaseService.setAdminConnection()
             .catch((e) => errors.push(e));
         await Promise.all(
-            Object.values(this.alimonitorServices)
-                .map((serv) => serv.setupConnection()),
+            Object.values(this.services)
+                .map((serv) => serv.dbConnect()),
         ).catch((e) => errors.push(e));
         if (errors.length > 0) {
             this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
@@ -205,7 +229,7 @@ class RunConditionTableApplication {
         await this.databaseService.disconnect()
             .catch((e) => errors.push(e));
         await Promise.all(
-            Object.values(this.alimonitorServices)
+            Object.values(this.services)
                 .map((serv) => serv.close()),
         ).catch((e) => errors.push(e));
         if (errors.length > 0) {
@@ -213,19 +237,15 @@ class RunConditionTableApplication {
         }
     }
 
-    isInTestMode() {
+    static isInTestMode() {
         return process.env.ENV_MODE === 'test';
     }
 
-    isInDevMode() {
+    static isInDevMode() {
         return process.env.ENV_MODE === 'development';
     }
 
-    isInProdMode() {
-        return process.env.ENV_MODE === 'production';
-    }
-
-    getEnvMode() {
+    static getEnvMode() {
         return process.env.ENV_MODE;
     }
 

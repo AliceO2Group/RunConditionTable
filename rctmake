@@ -31,9 +31,10 @@ Some tasks might or have to be run with dedicated flags.
 Tasks are called stages.
 
 Usage:  
-        ./$SCRIPT_NAME <STAGES> [<OTHER_OPTS>]
+        ./$SCRIPT_NAME <STAGES> [<FLAGS>]
             'raw usage of script is for production purpose and is described at the end'
-        where STAGES is comma separeted list of stages performed sequentialy.
+        where STAGES is comma separeted list of stages performed sequentialy. 
+        In default behaviour failure of one stage causes stopping pipeline execution, it can be changes via flag --ignore-errors.
         STAGE can be a:
             1. build|build[BUILD_STATGES] - build application (deploys contatiners). By defualt 
                     build stage behaves as docker-compose ... up --build.
@@ -51,40 +52,61 @@ Usage:
 
             6. db:export - export db sql definition from pgmodeler design
             7. db:clean | db:truncate - truncate database in db contatiner
+            8. db:ip - print db container ipv4 address
 
-            8. dump:make - make dump of current database (in docker contatiner) data, 
-                      need option -F|--dump-file <FILE> to specify dump file name
+            9. app:ip - print app container ipv4 address
+
+            10. dump:(make|mk) - make dump of current database (in docker contatiner) data, 
+                      need option -F|--dump-file <FILE> to specify dump file relative path
                 e.g.: ./$SCRIPT_NAME dump -F dump_file
-            9. dump:list - make list cached dumps
-            10. dump:remove -F|--dump-file <FILE> - remove dump from cache specified by the flag
-            11. dump:restore -F|--dump-file <FILE> - restore data from dump specified by the flag
+            11. dump:(list|ls) - print list cached dumps
+            12. dump:tree - print tree of cached dumps
+            13. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
+            14. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
                 e.g.: ./$SCRIPT_NAME restore -F dump_file
-            12. dump:export -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
-            13. dump:import -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
+            15. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
+            16. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
-        ! For build, follow, stop, prune stages an additional flag can be specified; -S|--service <SERVICE>,
-        which specify service ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) which stages are performed for.
+        ! An additional -S|--service <SERVICE> flag can be specified for build, follow, stop and prune stages.
+        <SERVICE> ($DB_CONTATINER_NAME or $APP_CONTATINER_NAME) is the name of the service the stages are performed for.
 
-        Default behaviour of $SCRIPT_NAME (./$SCRIPT_NAME) is build prod it is equivalent to
-            ./$SCRIPT_NAME prune,build --target prod
+        ! Production - Deprecated - as the Alice tool, RCT production will NOT be handeled with the use of dockers
     
 $ERROR_MESSAGE_PRINT
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 USAGE
-exit 1;
+
+if [ -n "$ERROR" ]; then
+    exit 1;
+else
+    exit 0;
+fi;
+}
+
+incorrect_stage_err() {
+    usage "Incorrect stage: $1";
+}
+
+exit_codes_filter() {
+    LAST_CMD_EXIT_CODE=$?
+    IGNORABLE_CODES=$@
+    for ie in $IGNORABLE_CODES; do
+        if [ $LAST_CMD_EXIT_CODE -eq $ie ]; then
+            return 0;
+        fi;
+    done
+    return $LAST_CMD_EXIT_CODE
 }
 
 
 PREVIOD_USER_LOC=$(pwd);
 DOCKER_DIR="$PROJECT_DIR/docker";
-cd $DOCKER_DIR;
 MAIN_DOCKER_COMPOSE_YML="$DOCKER_DIR/docker-compose.yml"
 DOCKER_COMP_CMD="docker compose -f $MAIN_DOCKER_COMPOSE_YML --project-directory $PROJECT_DIR ";
 
 # defualt behaviour => dettached production built
 if [[  $# -eq 0 ]]; then
-    STAGES='prune build'
-    TARGET='prod'
+    usage 'no option specfied'
 else
     STAGES=$(echo $1 | tr ',' ' ');
     shift 1;
@@ -105,14 +127,6 @@ else
                 MOCK_DB=true;
                 shift 1;
                 ;;
-            -f|--follow)
-                FOLLOW=true;
-                shift 1;
-                ;;
-            -a|--attach)
-                ATTACH_TO_APP=true;
-                shift 1;
-                ;;
             -F|--dump-file)
                 DUMP_FILE=$2;
                 shift 2;
@@ -121,10 +135,14 @@ else
                 DUMPS_ARCHIVE_NAME=$2;
                 shift 2;
                 ;;
-            *)
-                OTHER_OPTS="$OTHER_OPTS $1";
+            --ignore-errors)
+                IGNORE_STAGE_ERRORS='true';
                 shift 1;
-                ;;
+            ;;
+            
+            *)
+                usage "Incorrect flag: $1"
+            ;;
         esac
     done
 fi
@@ -132,11 +150,6 @@ fi
 MOCK_DB=${MOCK_DB:-false};
 export MOCK_DB;
 
-follow() {
-    cd $DOCKER_DIR
-    $DOCKER_COMP_CMD logs --follow $OTHER_OPTS $SERVICES
-    cd -
-}
 
 build() {
     mkdir -p $PROJECT_DIR/security;
@@ -146,35 +159,23 @@ build() {
     case $TARGET in 
         dev)
             $DOCKER_COMP_CMD \
-                -f docker-compose-dev.yml \
-                -f docker-compose-expose.yml \
-                $ORDER $OTHER_OPTS $SERVICES;
-            if [ "$ATTACH_TO_APP" = 'true' ]; then
-                docker attach $APP_CONTATINER_NAME;
-            fi
-        ;;
-
-        prod)
-            $DOCKER_COMP_CMD \
-                -f docker-compose-prod.yml \
-                -f docker-compose-expose.yml \
+                -f $DOCKER_DIR/docker-compose-dev.yml \
+                -f $DOCKER_DIR/docker-compose-expose.yml \
+                --env-file $DOCKER_DIR/env_file-dev \
                 $ORDER $OTHER_OPTS $SERVICES;
         ;;
 
         test)
             mkdir -p $PROJECT_DIR/reports;
             $DOCKER_COMP_CMD \
-                -f docker-compose-test.yml \
+                -f $DOCKER_DIR/docker-compose-test.yml \
+                --env-file $DOCKER_DIR/env_file-test \
                 up --build --abort-on-container-exit $OTHER_OPTS;
         ;;
         *)
-            usage "incorrect build target: $TARGET";
-            ;;
+            usage "Incorrect build target: $TARGET";
+        ;;
     esac
-
-    if [ "$TARGET" != 'test' ] && [ "$FOLLOW" = 'true' ]; then
-        follow;
-    fi
 }
 
 
@@ -197,77 +198,98 @@ for stage in $STAGES; do
                 clean | truncate)
                     docker exec $DB_CONTATINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "database/utils/delete-data.sql";
                 ;;
+                
+                ip)
+                    docker inspect $DB_CONTATINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+                ;;
                 *)
-                    usage "incorrect stage:$stage";
+                    incorrect_stage_err $stage;
+                ;;
+            esac
+        ;;
+
+        app*)
+            APP_CMD=$(echo ${stage#app:});
+            case $APP_CMD in
+                ip)
+                    docker inspect $APP_CONTATINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+                ;;
+                *)
+                    incorrect_stage_err $stage;
                 ;;
             esac
         ;;
         
         dump*)
             DUMP_CMD=$(echo ${stage#dump:});
-            DUMPS_DIR="$PROJECT_DIR/database/cache/dumps"
+            DUMPS_DIR="$PROJECT_DIR/database/cache/dumps";
             mkdir -p "$DUMPS_DIR";
             DUMP_PATH="$DUMPS_DIR/$DUMP_FILE";
-            CONTATINER_DUMP_PATH="/postgres/run/database/cache/dumps/$DUMP_FILE" 
+            CONTATINER_DUMP_PATH="/postgres/run/database/cache/dumps/$DUMP_FILE";
 
             case $DUMP_CMD in
-                make)
+                make|mk)
                     if [ -z "$DUMP_FILE" ]; then
-                        usage "dump file unspecified, use flag -F|--dump-file <FILE>";
+                        usage "Dump file unspecified, use flag -F|--dump-file <FILE>";
                     fi
                     if [ -f "$DUMP_PATH" ]; then
-                        echo "Do you want to overwrite existing file $DUMP_FILE :  y|[n] ?"
-                        read permission
-                        if [[ "$permission" =~ ^yes|y|Y|Yes$ ]]; then
-                            echo "continuing"
+                        echo "Do you want to overwrite existing file $DUMP_PATH :  y|[n] ?";
+                        read permission;
+                        if [[ "$permission" =~ ^y|Y|yes|Yes$ ]]; then
+                            echo "continuing";
                         else 
-                            DO_NOT_PERFORME_WHILE_FILE_EXISTS=true;
-                            echo 'making dump stopped';
+                            DO_NOT_PERFORME_WHILE_FILE_EXISTS="true";
+                            echo 'making dump canceled';
                         fi
                     fi
 
                     if [ -z $DO_NOT_PERFORME_WHILE_FILE_EXISTS ]; then
-                        docker exec $DB_CONTATINER_NAME \
-                            mkdir -p $(dirname $CONTATINER_DUMP_PATH);
-                        docker exec $DB_CONTATINER_NAME \
-                            pg_dump --data-only --format=tar -d $RCT_DATABASE -U $RCT_USER \
-                                --file="$CONTATINER_DUMP_PATH";
+                        docker exec $DB_CONTATINER_NAME mkdir -p $(dirname $CONTATINER_DUMP_PATH) \
+                        && docker exec $DB_CONTATINER_NAME \
+                            pg_dump --data-only --format=tar -d $RCT_DATABASE -U $RCT_USER --file="$CONTATINER_DUMP_PATH";
                     fi
                 ;;
 
-                list)
-                    ls -lth "$DUMPS_DIR";
+                list|ls)
+                    ls -lthR "$DUMPS_DIR";
                 ;;
 
-                restore)
-                    if [ -z "$DUMP_FILE" ]; then
-                        usage "dump file unspecified, use flag -F|--dump-file <FILE>";
+                tree)
+                    tree $DUMPS_DIR -t;
+                ;;
+
+                browse|br)
+                    DUMPS_HTML="$PROJECT_DIR/reports/dumps.html";
+                    tree -t $DUMPS_DIR -H $DUMPS_DIR -o $DUMPS_HTML;
+                    x-www-browser $DUMPS_HTML &
+                ;;
+
+                restore|re)
+                    if [ -z "$DUMP_PATH" ]; then
+                        usage "Dump file name unspecified, use flag -F|--dump-file <FILE>";
                     fi
-                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTATINER_NAME:/postgres/run/"
-                    docker exec $DB_CONTATINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "database/utils/delete-data.sql";
-                    
-                    docker exec $DB_CONTATINER_NAME \
-                        pg_restore --data-only -U $RCT_USER \
-                            -d $RCT_DATABASE $CONTATINER_DUMP_PATH;
+                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTATINER_NAME:/postgres/run/" \
+                    && docker exec $DB_CONTATINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "database/utils/delete-data.sql" \
+                    && docker exec $DB_CONTATINER_NAME pg_restore --data-only -U $RCT_USER -d $RCT_DATABASE $CONTATINER_DUMP_PATH;
                 ;;
 
-                remove)
-                    if [ -z "$DUMP_FILE" ]; then
+                remove|rm)
+                    if [ -z "$DUMP_PATH" ]; then
                         usage "dump file unspecified, use flag -F|--dump-file <FILE>";
                     fi 
                     rm $DUMP_PATH;
                 ;;
 
-                export)
-                    tar -c -f $PREVIOD_USER_LOC/$DUMPS_ARCHIVE_NAME -C $DUMPS_DIR .
+                export|ex)
+                    tar -c -f $PREVIOD_USER_LOC/$DUMPS_ARCHIVE_NAME -C $DUMPS_DIR .;
                 ;;
 
-                import)
-                    tar xvf $PREVIOD_USER_LOC/$DUMPS_ARCHIVE_NAME -C $DUMPS_DIR
+                import|im)
+                    tar xvf $PREVIOD_USER_LOC/$DUMPS_ARCHIVE_NAME -C $DUMPS_DIR;
                 ;;
 
                 *)
-                    usage "incorrect stage:$stage";
+                    incorrect_stage_err $stage;
                 ;;
             esac
         ;;
@@ -290,25 +312,30 @@ for stage in $STAGES; do
         ;;
 
         attach)
-            docker attach $APP_CONTATINER_NAME;
+            docker attach $APP_CONTATINER_NAME || exit_codes_filter 130;
         ;;
 
         follow)
-            follow;
+            $DOCKER_COMP_CMD logs --follow $OTHER_OPTS $SERVICES || exit_codes_filter 1;
         ;;
 
         stop)
-            $DOCKER_COMP_CMD stop $OTHER_OPTS;
+            $DOCKER_COMP_CMD stop $OTHER_OPTS $SERVICES;
         ;;
 
         *)
-            usage "incorrect stage: $stage";
+            incorrect_stage_err $stage
         ;;
     esac
+
+    CURRENT_STAGE_STATUS_CODE=$?
+    if [ $CURRENT_STAGE_STATUS_CODE -ne 0 ]; then
+        echo "stage $stage ended with code: $CURRENT_STAGE_STATUS_CODE"
+        if [ -z $IGNORE_STAGE_ERRORS ]; then
+            exit $CURRENT_STAGE_STATUS_CODE;
+        fi;
+    fi;
 done
 
-if [ "$PRUNE_AT_THE_END" = 'true' ]; then
-    $DOCKER_COMP_CMD rm --stop --force -v;
-fi
 
 cd $PREVIOD_USER_LOC;

@@ -9,9 +9,8 @@ Usage:
     Script dedicated to open ssh proxy for dockers to reach CERN network,
     CERN network is exposed to assoc $TARGET_HOST:$TARGET_PORT
     syntax :: ---------------------------------------
-    |    $(basename $0) USER SERVER_NAME             |
+    |    $(basename $0) USER           |
     -------------------------------------------------
-    SERVER_NAME is part of <SERVER_NAME>.cern.ch
     USER is your cern username
 USAGE
 
@@ -25,11 +24,11 @@ fi
 USER=$1
 SERVER_NAME=$2
 
-if [ -z "$USER" ] || [ -z "$SERVER_NAME" ]; then
+if [ -z "$USER" ]; then
     usage
     exit 1
 fi
 
 
 echo $1@$2
-ssh -D "$TARGET_HOST:$TARGET_PORT" "$USER@$SERVER_NAME.cern.ch"
+ssh -D "$TARGET_HOST:$TARGET_PORT" "$USER@lxplus.cern.ch"

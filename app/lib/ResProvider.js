@@ -22,23 +22,39 @@ const Utils = require('./Utils.js');
 // eslint-disable-next-line prefer-const
 let logger;
 
+const resProviderDefaults = {
+    defaultSecuredDirPath: path.join(__dirname, '..', '..', 'security'),
+};
+
 class ResProvider {
+    /**
+     * Function to get collection of desired env vars into js object fulfiling some requiremnts
+     * and executing action after requiremnts checking failure
+     * @param {Object} objDefinition define mapping of env vars names to local nodejs process names
+     * @param {CallableFunction} failurePredicate func(res, objDefinition) that get res - object with read env vars values and objDefinition
+     * and examine if combination of read env vars fulfil some requirements - default check if all fildes are set
+     * @param {CallableFunction|String} onFailureAction action on failure - defualt throw error with message about unset fileds
+     * can be string: warn just log warning, error: log error and throw error,
+     * @returns {Object} desired env vars stored in object under names defined by mapping
+     */
     static viaEnvVars(objDefinition, failurePredicate, onFailureAction) {
-        const reversedObjDefintion = Utils.reversePrimitiveObject(objDefinition);
         const res = {};
         for (const [envVName, key] of Object.entries(objDefinition)) {
             res[key] = process.env[envVName];
         }
         if (!failurePredicate && !ResProvider.areDesiredValuesPresent(res, objDefinition)
             || failurePredicate && failurePredicate(res, objDefinition)) {
-            const nulledFields = Object.entries(res).filter((e) => ! e[1]).map((e) => `${e[0]}{<-${reversedObjDefintion[e[0]]}}`);
-            const mess = `unset fields: ' + ${nulledFields.join(', ')}`;
-            logger.error(mess);
-            return (onFailureAction ?
-                (res, objDefinition) => onFailureAction(res, objDefinition) :
-                () => {
-                    throw mess;
+            if (!onFailureAction) {
+                ResProvider.onFailureAction_error(res, objDefinition);
+            } else if (typeof onFailureAction == 'function') {
+                return onFailureAction(res, objDefinition);
+            } else if (typeof onFailureAction == 'string') {
+                return Utils.switchCase(onFailureAction, {
+                    error: ResProvider.onFailureAction_error,
+                    warn: ResProvider.onFailureAction_warn,
+                    no: () => null,
                 })(res, objDefinition);
+            }
         }
         return res;
     }
@@ -52,25 +68,43 @@ class ResProvider {
         return true;
     }
 
-    // TODO generalize this methods ::( single content provider method)
-    static securityFilesProvider(fileNames, description, envVarName = '_') {
+    static nulledGetter(res, objDef) {
+        return Object.entries(res).filter((e) => ! e[1]).map((e) => `${e[0]}{<-${Utils.reversePrimitiveObject(objDef)[e[0]]}}`);
+    }
+
+    static nulledMessageGetter(res, objDef) {
+        return `unset fields from envvars: ' + ${ResProvider.nulledGetter(res, objDef).join(', ')}`;
+    }
+
+    static onFailureAction_error(res, objDef) {
+        const mess = ResProvider.nulledMessageGetter(res, objDef);
+        logger.error(mess);
+        throw mess;
+    }
+
+    static onFailureAction_warn(res, objDef) {
+        const mess = ResProvider.nulledMessageGetter(res, objDef);
+        logger.warn(mess);
+    }
+
+    static securityFilesContentProvider(fileNames, description, envVarName, supressLogs = false) {
         const logsStacker = new LogsStacker(ResProvider.name);
         const file_path = process.env[envVarName];
-        let securityContent;
+        let secContent;
         try {
-            securityContent = fs.readFileSync(file_path);
+            secContent = fs.readFileSync(file_path);
             logsStacker.substitute('info', `${description}: loaded from file`);
         } catch (err) {
             logsStacker.put('warn', `cannot load file at ${envVarName} ${err}`);
         }
 
-        if (!securityContent) {
+        if (!secContent) {
             for (const fileName of fileNames) {
                 try {
                     const filePath = path.join(
-                        __dirname, '..', '..', 'security', fileName,
+                        resProviderDefaults.defaultSecuredDirPath, fileName,
                     );
-                    securityContent = fs.readFileSync(filePath);
+                    secContent = fs.readFileSync(filePath);
                     logsStacker.substitute('info', `${description}: loaded from file ${filePath}`);
                     break;
                 } catch (e) {
@@ -78,19 +112,21 @@ class ResProvider {
                 }
             }
         }
-        if (!securityContent) {
+        if (!secContent) {
             logsStacker.put(
                 'error',
                 `${description}: cannot load file from provided files: [${fileNames.join(',')}] nor from env var ${envVarName}`,
             );
         }
 
-        logsStacker.typeLog('info');
-        if (logsStacker.any('error')) {
-            logsStacker.typeLog('warn');
-            logsStacker.typeLog('error');
+        if (!supressLogs) {
+            logsStacker.typeLog('info');
+            if (logsStacker.any('error')) {
+                logsStacker.typeLog('warn');
+                logsStacker.typeLog('error');
+            }
         }
-        return securityContent;
+        return { content: secContent, logsStacker: logsStacker };
     }
 
     static socksProvider() {
@@ -110,6 +146,26 @@ class ResProvider {
                 logger.error(`incorrect format of socks address: ${socks}`);
             }
         }
+    }
+
+    static http() {
+        const httpEnvVarsDef = {
+            RCT_HTTP_PORT: 'port',
+            RCT_HOSTNAME: 'hostname',
+            RCT_TLS_ENABLED: 'tls',
+        };
+        const http = ResProvider.viaEnvVars(httpEnvVarsDef);
+        http.autoListen = false;
+        http.tls = http.tls.toLowerCase() == 'true';
+        return http;
+    }
+
+    static jwt() {
+        const jwtEnvVarsDef = {
+            RCT_JWT_SECRET: 'secret',
+            RCT_JWT_EXPIRATION: 'expiration',
+        };
+        return ResProvider.viaEnvVars(jwtEnvVarsDef);
     }
 
     static openid() {
@@ -133,6 +189,22 @@ class ResProvider {
         return ResProvider.viaEnvVars(databaseEnvVarsDef);
     }
 
+    static winston() {
+        return { //TODO
+            file: ResProvider.viaEnvVars({
+                RCT_LOG_FILENAME: 'name',
+                RCT_LOG_FILE_LOGLEV: 'level',
+            }, null, 'warn'),
+            console: ResProvider.viaEnvVars({
+                RCT_LOG_CONSOLE_LOGLEV: 'level',
+                RCT_LOG_CONSOLE_SYSD: 'systemD',
+            }, null, 'warn'),
+            infologger: ResProvider.viaEnvVars({
+                RCT_INFOLOGGER: 'infologger',
+            }, null, 'warn')?.infologger,
+        };
+    }
+
     static passphraseProvider() {
         if (process.env.ALIMONITOR_PASSPHRASE) {
             logger.info('using passphrase');
@@ -142,6 +214,7 @@ class ResProvider {
         return process.env.ALIMONITOR_PASSPHRASE;
     }
 }
+
 logger = new Log(ResProvider.name);
 
 module.exports = ResProvider;

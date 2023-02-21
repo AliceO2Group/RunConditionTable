@@ -1,28 +1,39 @@
-const path = require('path');
+/**
+ * @license
+ * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
+ * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
+ * All rights not expressly granted are reserved.
+ *
+ * This software is distributed under the terms of the GNU General Public
+ * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
 const ResProvider = require('../lib/ResProvider.js');
 
-module.exports = {
-    jwt: {
-        secret: process.env.RCT_JWT_SECRET,
-        expiration: process.env.RCT_JWT_EXPIRATION,
-    },
-    http: {
-        port: process.env.RCT_HTTP_PORT,
-        hostname: process.env.RCT_HOSTNAME,
-        tls: process.env.RCT_TLS_ENABLED == 'true' ? true : false,
-        autoListen: false,
-    },
+module.exports = Object.freeze({
+    // Web-Ui config
+    http: ResProvider.http(),
+    jwt: ResProvider.jwt(),
     openId: ResProvider.openid(),
-    winston: {
-        file: path.join(__dirname, '..', '..', 'reports/logs.txt'),
-    },
-    database: ResProvider.database(),
 
+    // App config
+    winston: ResProvider.winston(),
+    database: ResProvider.database(),
+    databasePersistance: require('./databasePersistance.js'),
     public: require('./public.js'),
 
+    // RCT data config
     dataFromYearIncluding: 2015,
 
-    defaultLoglev: 1,
-};
-
-// TODO config validation
+    // Other config
+    errorsLoggingDepths: {
+        no: () => null,
+        message: (logger, er) => logger.error(er.message),
+        stack: (logger, er) => logger.error(er.stack),
+        object: (logger, er) => logger.error(JSON.stringify(er, null, 2)),
+    },
+    defaultErrorsLogginDepth: 'object',
+});

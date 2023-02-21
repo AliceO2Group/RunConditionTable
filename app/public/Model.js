@@ -15,7 +15,8 @@
 import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
 import PrimaryModel from './model/PrimaryModel.js';
 import ServiceUnavailableModel from './model/ServiceUnavailableModel.js';
-import { PREFIX, ROLES } from './workflow/constants.js';
+import { RCT } from './config.js';
+const { roles } = RCT;
 
 export default class Model extends Observable {
     constructor() {
@@ -54,24 +55,24 @@ export default class Model extends Observable {
     }
 
     isDetectorRole(role) {
-        return role.toUpperCase().startsWith(PREFIX.SSO_DET_ROLE.toUpperCase());
+        return role.toUpperCase().startsWith(role.meta.SSO_DET_ROLE.toUpperCase());
     }
 
     getRoles() {
-        if (this.session.access.includes(ROLES.Admin)) {
-            return [ROLES.Admin];
-        } else if (this.session.access.includes(ROLES.Global)) {
-            return [ROLES.Global];
+        if (this.session.access.includes(roles.dict.Admin)) {
+            return [roles.dict.Admin];
+        } else if (this.session.access.includes(roles.dict.Global)) {
+            return [roles.dict.Global];
         } else if (this.session.access.some((role) => this.isDetectorRole(role))) {
             const roles = [];
-            Object.values(ROLES).filter((role) => this.isDetectorRole(role)).forEach((detectorRole) => {
+            Object.values(roles.dict).filter((role) => this.isDetectorRole(role)).forEach((detectorRole) => {
                 if (this.session.access.includes(detectorRole)) {
                     roles.push(detectorRole);
                 }
             });
             return roles;
         }
-        return [ROLES.Guest];
+        return [roles.dict.Guest];
     }
 
     setServiceUnavailable(result) {

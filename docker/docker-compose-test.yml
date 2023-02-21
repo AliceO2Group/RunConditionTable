@@ -4,7 +4,7 @@ services:
     build: 
       target: test
     env_file:
-      - ./docker/env_fiel-test
+      - ./docker/env_file-test
     volumes:
       - type: bind
         read_only: false
@@ -17,7 +17,7 @@ services:
     build: 
       target: test
     env_file:
-      - ./docker/env_fiel-test
+      - ./docker/env_file-test
 
     
     restart: "no"

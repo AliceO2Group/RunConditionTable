@@ -20,6 +20,10 @@ services:
         read_only: false
         source: ./database/cache
         target: /opt/RunConditionTable/database/cache
+      - type: bind
+        read_only: false
+        source: ./reports
+        target: /opt/RunConditionTable/reports
     
   o2-rct_database:
     container_name: o2-rct_database

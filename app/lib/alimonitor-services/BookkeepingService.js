@@ -15,6 +15,7 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../Utils.js');
+const ServicesDataCommons = require('./ServicesDataCommons.js');
 const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
 
 /**
@@ -71,7 +72,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         }
 
         await Promise.all(pendingSyncs);
-        this.logger.info('bookkeeping sync trvers called ended');
+        this.logger.info('bookkeeping sync travers ended');
     }
 
     dataAdjuster(run) {
@@ -80,9 +81,9 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             if (run.detectors) {
                 if (typeof run.detectors === 'string') {
                     if (run.detectors.includes(',')) { // TODO may other delimiters
-                        run.detectors = run.detectors.split(/,/).map((d) => d.trim());
+                        run.detectors = run.detectors.split(/,/).map((d) => d.trim().toUpperCase());
                     } else {
-                        run.detectors = run.detectors.split(/ +/).map((d) => d.trim());
+                        run.detectors = run.detectors.split(/ +/).map((d) => d.trim().toUpperCase());
                     }
                 }
             } else {
@@ -90,7 +91,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             }
             this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3_current');
             this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipole_current');
-
+            ServicesDataCommons.mapBeamTypeToCommonFormat(run);
             run.fill_number = Number(run.fill_number);
             return run;
         } catch (e) {
@@ -121,7 +122,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
 
         const detectorsInSql = `${d.detectors}::varchar[]`;
-        const pgCommand = `${period_insert} call insert_run (
+        const pgCommand = `${period_insert}; call insert_run (
             ${d.run_number},
             ${d.period}, 
             ${d.time_trg_start}, 

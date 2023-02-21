@@ -14,8 +14,8 @@
 import { h } from '/js/src/index.js';
 import viewButton from '../../common/viewButton.js';
 import { RCT } from '../../../config.js';
-const { dataReqParams } = RCT;
-const { pagesNames } = RCT;
+const { dataReqParams: DRP } = RCT;
+const { pagesNames: PN } = RCT;
 import { getReadableFileSizeString } from '../../../utils/utils.js';
 
 /**
@@ -44,7 +44,7 @@ import { getReadableFileSizeString } from '../../../utils/utils.js';
 
 const pagesCellsSpecials = {};
 
-pagesCellsSpecials[pagesNames.periods] = {
+pagesCellsSpecials[PN.periods] = {
     name: (model, item) => [
         h('td', item.name),
         h('td',
@@ -54,7 +54,7 @@ pagesCellsSpecials[pagesNames.periods] = {
                 (e) => model.handleClick(e),
                 '',
                 // eslint-disable-next-line max-len
-                `/?page=${pagesNames.runsPerPeriod}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-run_number`,
+                `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`,
             ),
 
             viewButton(
@@ -62,7 +62,7 @@ pagesCellsSpecials[pagesNames.periods] = {
                 'data passes',
                 (e) => model.handleClick(e),
                 '',
-                `/?page=${pagesNames.dataPasses}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+                `/?page=${PN.dataPasses}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`,
             ),
 
             viewButton(
@@ -70,19 +70,16 @@ pagesCellsSpecials[pagesNames.periods] = {
                 'MC',
                 (e) => model.handleClick(e),
                 '',
-                `/?page=${pagesNames.mc}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`,
+                `/?page=${PN.mc}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`,
             )),
     ],
 
-    energy: (model, item) => {
-        const energies = item.energy.split(/,/).map((v) => Number(v.trim()));
-        const avg = energies.reduce((acc, c, _, __) => acc + c, 0) / (energies.length || 1);
-        return `${Number(avg).toFixed(2)}`;
-        // TODO maybe charts
-    },
+    energy: (model, item) =>
+        `${Number(item.energy).toFixed(2)}`
+    ,
 };
 
-pagesCellsSpecials[pagesNames.dataPasses] = {
+pagesCellsSpecials[PN.dataPasses] = {
     name: (model, item) => [
         item.name,
         '  ',
@@ -92,7 +89,7 @@ pagesCellsSpecials[pagesNames.dataPasses] = {
             (e) => model.handleClick(e),
             '',
             // eslint-disable-next-line max-len
-            `/?page=${pagesNames.runsPerDataPass}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-run_number`,
+            `/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`,
         ),
         viewButton(
             model,
@@ -100,12 +97,12 @@ pagesCellsSpecials[pagesNames.dataPasses] = {
             (e) => model.handleClick(e),
             '',
             // eslint-disable-next-line max-len
-            `/?page=${pagesNames.anchoragePerDatapass}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`,
+            `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
         ),
     ],
     size: (model, item) => getReadableFileSizeString(Number(item.size)),
 };
-pagesCellsSpecials[pagesNames.mc] = {
+pagesCellsSpecials[PN.mc] = {
     name: (model, item) => [
         item.name,
         '  ',
@@ -115,7 +112,7 @@ pagesCellsSpecials[pagesNames.mc] = {
             (e) => model.handleClick(e),
             '',
             // eslint-disable-next-line max-len
-            `/?page=${pagesNames.anchoredPerMC}&index=${item.name}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`,
+            `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
         ),
     ],
 };
@@ -129,7 +126,7 @@ const dateFormatter = (sec) => {
     return h('', h('.skinny', dateString), timeString);
 };
 
-pagesCellsSpecials[pagesNames.runsPerPeriod] = {
+pagesCellsSpecials[PN.runsPerPeriod] = {
     run_number: (model, item) => h('.thick', item.run_number),
     time_start: (mode, item) => dateFormatter(item.time_start),
     time_end: (mode, item) => dateFormatter(item.time_end),
@@ -137,15 +134,15 @@ pagesCellsSpecials[pagesNames.runsPerPeriod] = {
     time_trg_end: (mode, item) => dateFormatter(item.time_trg_end),
 };
 
-pagesCellsSpecials[pagesNames.flags] = {};
-pagesCellsSpecials[pagesNames.runsPerDataPass] = pagesCellsSpecials[pagesNames.runsPerPeriod];
-pagesCellsSpecials[pagesNames.anchoredPerMC] = pagesCellsSpecials[pagesNames.dataPasses];
-pagesCellsSpecials[pagesNames.anchoragePerDatapass] = pagesCellsSpecials[pagesNames.mc];
+pagesCellsSpecials[PN.flags] = {};
+pagesCellsSpecials[PN.runsPerDataPass] = pagesCellsSpecials[PN.runsPerPeriod];
+pagesCellsSpecials[PN.anchoredPerMC] = pagesCellsSpecials[PN.dataPasses];
+pagesCellsSpecials[PN.anchoragePerDatapass] = pagesCellsSpecials[PN.mc];
 
 // Checking correctness of configuration
 for (const p in pagesCellsSpecials) {
     if (pagesCellsSpecials[p]) {
-        if (! pagesNames[p]) {
+        if (! PN[p]) {
             throw Error('incorrect configuration');
         }
     }

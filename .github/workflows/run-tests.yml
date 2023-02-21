@@ -9,7 +9,7 @@ on:
 jobs:
   coverage:
     name: coverage
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./
@@ -29,7 +29,7 @@ jobs:
           fail_ci_if_error: true
 
   static-analysis:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:

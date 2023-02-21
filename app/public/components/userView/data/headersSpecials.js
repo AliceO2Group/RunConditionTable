@@ -19,7 +19,7 @@ const runsViews = {
     time_end: 'End time',
     time_trg_start: 'Trg. start',
     time_trg_end: 'Trg. end',
-    energy_per_beam: 'Energy per beam [GeV]',
+    center_of_mass_energy: 'Center of mass energy [GeV]',
     ir: 'IR [Hz]',
     filling_scheme: 'Filling scheme',
     triggers_conf: 'Triggers conf.',

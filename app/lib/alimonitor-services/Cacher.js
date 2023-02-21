@@ -22,7 +22,7 @@ class Cacher {
             fs.mkdirSync(cacheDir, { recursive: true });
         }
         fs.writeFileSync(
-            path.join(cacheDir, endpoint.searchParams.toString()),
+            Cacher.cachedFilePath(synchronizerName, endpoint),
             JSON.stringify(data, null, 2),
         );
     }
@@ -48,7 +48,7 @@ class Cacher {
     }
 
     static cachedFileName(endpoint) {
-        return endpoint.searchParams.toString();
+        return `${endpoint.searchParams.toString()}.json`;
     }
 
     static serivceCacheDir(synchronizerName) {

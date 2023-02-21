@@ -3,5 +3,5 @@ services:
 
   o2-rct_application:
     ports:
-      - target: ${RCT_HTTP_PORT:-8081}
-        published: ${RCT_HTTP_PORT:-8081}
+      - target: $RCT_HTTP_PORT
+        published: $RCT_HTTP_PORT

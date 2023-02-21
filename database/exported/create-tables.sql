@@ -1,6 +1,6 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler version: 0.9.4
--- PostgreSQL version: 13.0
+-- pgModeler version: 1.0.0-beta1
+-- PostgreSQL version: 15.0
 -- Project Site: pgmodeler.io
 -- Model Author: ---
 -- object: "rct-user" | type: ROLE --
@@ -8,7 +8,7 @@
 CREATE ROLE "rct-user" WITH 
 	INHERIT
 	LOGIN
-	ENCRYPTED PASSWORD '********';
+	 PASSWORD '********';
 -- ddl-end --
 
 
@@ -73,7 +73,6 @@ CREATE TABLE public.data_passes (
 	id integer NOT NULL DEFAULT nextval('public.data_passes_id_seq'::regclass),
 	name character varying(50) NOT NULL,
 	period_id integer NOT NULL,
-	pass_type integer,
 	description text,
 	jira text,
 	ml text,
@@ -183,18 +182,6 @@ CREATE SEQUENCE public.pass_types_id_seq
 ALTER SEQUENCE public.pass_types_id_seq OWNER TO postgres;
 -- ddl-end --
 
--- object: public.pass_types | type: TABLE --
--- DROP TABLE IF EXISTS public.pass_types CASCADE;
-CREATE TABLE public.pass_types (
-	id integer NOT NULL DEFAULT nextval('public.pass_types_id_seq'::regclass),
-	pass_type character varying(10) NOT NULL,
-	CONSTRAINT pass_types_pkey PRIMARY KEY (id),
-	CONSTRAINT pt_name_unique UNIQUE (pass_type)
-);
--- ddl-end --
-ALTER TABLE public.pass_types OWNER TO postgres;
--- ddl-end --
-
 -- object: public.periods_id_seq | type: SEQUENCE --
 -- DROP SEQUENCE IF EXISTS public.periods_id_seq CASCADE;
 CREATE SEQUENCE public.periods_id_seq
@@ -249,6 +236,10 @@ CREATE TABLE public.quality_control_flags (
 	time_end integer NOT NULL,
 	flag_type_id integer NOT NULL,
 	comment text,
+	added_by varchar NOT NULL,
+	addition_time bigint NOT NULL,
+	last_modification_by varchar,
+	last_modification_time bigint,
 	CONSTRAINT quality_control_flags_pkey PRIMARY KEY (id)
 );
 -- ddl-end --
@@ -301,7 +292,7 @@ ALTER TABLE public.runs_detectors OWNER TO postgres;
 -- object: public.runs | type: TABLE --
 -- DROP TABLE IF EXISTS public.runs CASCADE;
 CREATE TABLE public.runs (
-	run_number bigint NOT NULL,
+	run_number integer NOT NULL,
 	period_id integer NOT NULL,
 	time_start bigint,
 	time_end bigint,
@@ -407,11 +398,34 @@ CREATE TABLE public.anchored_periods (
 ALTER TABLE public.anchored_periods OWNER TO postgres;
 -- ddl-end --
 
--- object: pass_type_fk | type: CONSTRAINT --
--- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS pass_type_fk CASCADE;
-ALTER TABLE public.data_passes ADD CONSTRAINT pass_type_fk FOREIGN KEY (pass_type)
-REFERENCES public.pass_types (id) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- object: public.verifications | type: TABLE --
+-- DROP TABLE IF EXISTS public.verifications CASCADE;
+CREATE TABLE public.verifications (
+	id integer NOT NULL,
+	run_detector_id integer NOT NULL,
+	verification_time bigint NOT NULL,
+	verified_by varchar NOT NULL,
+	CONSTRAINT verifications_pk PRIMARY KEY (id)
+);
+-- ddl-end --
+ALTER TABLE public.verifications OWNER TO postgres;
+-- ddl-end --
+
+-- object: public.particle_phys_data | type: TABLE --
+-- DROP TABLE IF EXISTS public.particle_phys_data CASCADE;
+CREATE TABLE public.particle_phys_data (
+	id serial NOT NULL,
+	name varchar NOT NULL,
+	full_name varchar NOT NULL,
+	"A" smallint NOT NULL,
+	"Z" smallint NOT NULL,
+	CONSTRAINT particle_phys_data_pk PRIMARY KEY (id),
+	CONSTRAINT name_unique UNIQUE (name),
+	CONSTRAINT "Z_unique" UNIQUE ("Z"),
+	CONSTRAINT full_name_unique UNIQUE (full_name)
+);
+-- ddl-end --
+ALTER TABLE public.particle_phys_data OWNER TO postgres;
 -- ddl-end --
 
 -- object: period_id_fk | type: CONSTRAINT --
@@ -519,6 +533,13 @@ REFERENCES public.periods (id) MATCH SIMPLE
 ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: run_det_verification_fk | type: CONSTRAINT --
+-- ALTER TABLE public.verifications DROP CONSTRAINT IF EXISTS run_det_verification_fk CASCADE;
+ALTER TABLE public.verifications ADD CONSTRAINT run_det_verification_fk FOREIGN KEY (run_detector_id)
+REFERENCES public.runs_detectors (id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
 -- object: "grant_CU_eb94f049ac" | type: PERMISSION --
 GRANT CREATE,USAGE
    ON SCHEMA public
@@ -588,18 +609,6 @@ GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
 -- object: "grant_rawdDxt_64d10fc454" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    ON TABLE public.flags_types_dictionary
-   TO "rct-user";
--- ddl-end --
-
--- object: "grant_rawdDxt_4169274856" | type: PERMISSION --
-GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
-   ON TABLE public.pass_types
-   TO postgres;
--- ddl-end --
-
--- object: "grant_rawdDxt_a7eb0766e8" | type: PERMISSION --
-GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
-   ON TABLE public.pass_types
    TO "rct-user";
 -- ddl-end --
 

@@ -15,6 +15,7 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../Utils.js');
+const ServicesDataCommons = require('./ServicesDataCommons.js');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 const MonalisaServiceDetails = require('./MonalisaServiceDetails.js');
 const config = require('../config/configProvider.js');
@@ -59,7 +60,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
     dataAdjuster(dp) {
         dp = Utils.filterObject(dp, this.ketpFields);
         dp.size = Number(dp.size);
-        dp.period = this.extractPeriod(dp);
+        dp.period = ServicesDataCommons.mapBeamTypeToCommonFormat(this.extractPeriod(dp));
         return dp;
     }
 
@@ -74,7 +75,6 @@ class MonalisaService extends AbstractServiceSynchronizer {
             ${d.name}, 
             ${d.period.name},
             ${d.description}, 
-            ${null},
             ${null},
             ${null},
             ${d.number_of_events},
