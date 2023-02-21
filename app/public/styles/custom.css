@@ -48,6 +48,8 @@
     background-color: var(--active-color) !important;
 }
 
+.tooltip {position: relative; display: inline-block; border: none !important;}
+
 .tooltip:hover .tooltiptext {
     right: 5% !important;
     bottom: -50% !important;

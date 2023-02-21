@@ -39,7 +39,7 @@ export default function row(
     );
 
     const dataCells = visibleFields.map((field) =>
-        h(`td.${model.getCurrentDataPointer().page}-${field.name}-cell`,
+        h(`td.${model.getCurrentDataPointer().page}-${field.name.includes("detector") ? "detector" : field.name}-cell`,
             item[field.name]
                 ? cellsSpecials[field.name]
                     ? cellsSpecials[field.name](model, item)
