@@ -24,10 +24,11 @@ const detectorIcon = (model, item, n) =>
                     cx: '50%',
                     cy: '50%',
                     r: '15px',
+
                     /*
-                    stroke: '#F7B538', strokes for the limited acceptance flags only
-                    'stroke-width': '3',
-                    */
+                     *Stroke: '#F7B538', strokes for the limited acceptance flags only
+                     *'stroke-width': '3',
+                     */
                     fill: '#8CB369',
                 })),
         h('span.tooltiptext', `run_det_id: ${item[n]}`));
@@ -41,7 +42,7 @@ export default function row(
     );
 
     const dataCells = visibleFields.map((field) =>
-        h(`td.${model.getCurrentDataPointer().page}-${field.name.includes("detector") ? "detector" : field.name}-cell`,
+        h(`td.${model.getCurrentDataPointer().page}-${field.name.includes('detector') ? 'detector' : field.name}-cell`,
             item[field.name]
                 ? cellsSpecials[field.name]
                     ? cellsSpecials[field.name](model, item)
