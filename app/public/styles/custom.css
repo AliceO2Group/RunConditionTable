@@ -48,48 +48,6 @@
     background-color: var(--active-color) !important;
 }
 
-.tooltip:hover .tooltiptext {
-    right: 5% !important;
-    bottom: -50% !important;
-}
-
-.tooltip .tooltiptext2 {
-    visibility: hidden;
-    right: auto;
-}
-
-.tooltip:hover .tooltiptext2 {
-    visibility: visible;
-    right: auto;
-}
-
-.tooltip .tooltiptext2 {
-    visibility: hidden;
-    right: auto;
-}
-
-.tooltip:hover .tooltiptext2 {
-    visibility: visible;
-    right: auto;
-}
-
-.my-tooltip:hover .tooltiptext {
-    visibility: visible;
-}
-
-.my-tooltip .tooltiptext {
-    visibility: hidden;
-    width: 118px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    padding: 3px;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1 !important;
-    bottom: -100%;
-}
-
 .vertical-center {
     margin: 0;
     position: absolute;

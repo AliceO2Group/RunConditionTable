@@ -17,6 +17,11 @@
 	--y: 0.5;
 }
 
+.tooltip:hover .tooltiptext {
+    right: 5% !important;
+    bottom: -10% !important;
+}
+
 .my-tooltip-bg .tooltiptext2 {
     visibility: hidden;
 }
@@ -30,6 +35,22 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+/* Detector tooltip field */
+.tooltip .detector-tooltip-field {
+    visibility: hidden;
+    padding: 3px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+}
+.tooltip:hover .detector-tooltip-field {
+    visibility: visible;
+    background-color: white !important;
+    width: 100px;
+    top: 100%;
+    left: -50%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .tracker {

@@ -31,7 +31,7 @@ const detectorIcon = (model, item, n) =>
                      */
                     fill: '#8CB369',
                 })),
-        h('span.tooltiptext', `run_det_id: ${item[n]}`));
+        h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
 
 export default function row(
     model, visibleFields, data, item, cellsSpecials,
