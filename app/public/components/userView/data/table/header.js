@@ -22,7 +22,7 @@ export default function tableHeader(visibleFields, data, model) {
 }
 
 const columnsHeadersArray = (visibleFields, data, model) =>
-    visibleFields.map((f) => h(`th.${model.getCurrentDataPointer().page}-${f.name}-header`, {
+    visibleFields.map((f) => h(`th.${model.getCurrentDataPointer().page}-${f.name.includes('detector') ? 'detector' : f.name}-header`, {
         scope: 'col',
     }, h('.relative', [
         headerSpecPresent(model, f) !== nonDisplayable ? [

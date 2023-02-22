@@ -17,18 +17,21 @@ import { reduceSerialIf } from '../../../../utils/utils.js';
 
 // eslint-disable-next-line no-unused-vars
 const detectorIcon = (model, item, n) =>
-    h('.tooltip',
+    h('.tooltip.noBorderBottom.pointer',
         h('svg', { width: '50px', height: '50px' },
             h('circle',
                 {
                     cx: '50%',
                     cy: '50%',
                     r: '15px',
-                    stroke: 'black',
-                    'stroke-width': '3',
-                    fill: 'green',
+
+                    /*
+                     *Stroke: '#F7B538', strokes for the limited acceptance flags only
+                     *'stroke-width': '3',
+                     */
+                    fill: '#8CB369',
                 })),
-        h('span.tooltiptext', `run_det_id: ${item[n]}`));
+        h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
 
 export default function row(
     model, visibleFields, data, item, cellsSpecials,
@@ -39,7 +42,7 @@ export default function row(
     );
 
     const dataCells = visibleFields.map((field) =>
-        h(`td.${model.getCurrentDataPointer().page}-${field.name}-cell`,
+        h(`td.${model.getCurrentDataPointer().page}-${field.name.includes('detector') ? 'detector' : field.name}-cell`,
             item[field.name]
                 ? cellsSpecials[field.name]
                     ? cellsSpecials[field.name](model, item)

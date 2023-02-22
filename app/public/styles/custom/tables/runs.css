@@ -60,9 +60,9 @@
     text-align: right;
 }
 
-/* Energy per beam */
-.runs-table .runsPerPeriod-energy_per_beam-cell, .runs-table .runsPerPeriod-energy_per_beam-header,
-.runs-table .runsPerDataPass-energy_per_beam-cell, .runs-table .runsPerDataPass-energy_per_beam-header {
+/* Center of mass energy */
+.runs-table .runsPerPeriod-center_of_mass_energy-cell, .runs-table .runsPerPeriod-center_of_mass_energy-header,
+.runs-table .runsPerDataPass-center_of_mass_energy-cell, .runs-table .runsPerDataPass-center_of_mass_energy-header {
     min-width: 100px;
     text-align: right;
 }
@@ -88,11 +88,13 @@
     text-align: right;
 }
 
-/* Tof detector
-.runsPerPeriod-tof_detector-header {
-    min-width: 100px;
+/* Detectors */
+.runs-table .runsPerPeriod-detector-header, .runs-table .runsPerPeriod-detector-cell,
+.runs-table .runsPerDataPass-detector-header, .runs-table .runsPerDataPass-detector-cell {
+    min-width: 50px;
+    text-align: center;
+    border: none !important;
 }
-*/
 
 .runs-table td:last-child, .runs-table th:last-child {
     padding-right: 2em;

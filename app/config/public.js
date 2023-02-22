@@ -31,6 +31,7 @@ const runsViewsFilteringTypes = {
     fill_number: fromToType,
     run_type: matchExcludeType,
     mu: matchExcludeType,
+    center_of_mass_energy: fromToType,
 };
 
 const dataPassesViews = {
