@@ -40,6 +40,6 @@ export default function loggingPanel(model) {
             loginInputForm('Database', 'dbname', 'rct-db'),
             loginInputForm('Username', 'username', ''),
             loginInputForm('Password', 'password', '', true),
-            loginButton])
-    );
+            loginButton,
+        ]));
 }

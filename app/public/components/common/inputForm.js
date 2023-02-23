@@ -15,13 +15,13 @@
 import { h, switchCase } from '/js/src/index.js';
 
 export default function loginInputForm(label, id, placeholder, hide = false) {
-    return h('', 
-    h('label.input-label', label),
-    h('form.icon-input', [
-        h('input.loginFormInput', { id: id, type: hide ? 'password' : 'input', placeholder: placeholder }),
-        switchCase(label, {
-            'Database': () => h('i.input-database-24'),
-            'Password': () => h('i.input-key-24'),
-        }, () => h('i.input-user-24'))(),
-    ]));
+    return h('',
+        h('label.input-label', label),
+        h('form.icon-input', [
+            h('input.loginFormInput', { id: id, type: hide ? 'password' : 'input', placeholder: placeholder }),
+            switchCase(label, {
+                Database: () => h('i.input-database-24'),
+                Password: () => h('i.input-key-24'),
+            }, () => h('i.input-user-24'))(),
+        ]));
 }
