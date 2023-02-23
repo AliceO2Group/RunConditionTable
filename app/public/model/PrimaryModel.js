@@ -65,6 +65,8 @@ export default class PrimaryModel extends Observable {
         const { result, status, ok } = this.loader.post(logoutEndpoint);
         this.parent._tokenExpirationHandler(status);
 
+        //
+
         localStorage.token = null;
         this.parent.mode = 'default';
 

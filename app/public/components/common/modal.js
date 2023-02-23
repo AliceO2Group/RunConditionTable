@@ -13,17 +13,17 @@
  */
 
 import { h } from '/js/src/index.js';
-import loggingForm from './loginForm.js';
 
-export default function loggingPanel(model) {
-    const title = h('h5.italic', 'Run Condition Table');
-    const adminPanel = h('h3', 'Admin panel');
+window.addEventListener('click', (event) => {
+    const modalContent = document.getElementsByClassName('modal-content');
+    const modal = document.getElementsByClassName('modal');
+    if (Array.from(modalContent).find((e) => e == event.target)
+        || Array.from(modal).find((e) => e == event.target)) {
+        document.getElementById('myModal').style.display = 'none';
+    }
+});
 
-    return h('div.loginDiv.top-100',
-        h('.flex',
-            h('.inspect-90'),
-            h('.inline.top-15.left-10',
-                title,
-                adminPanel)),
-        loggingForm(model));
+export default function modal(content) {
+    return h('.modal', { id: 'myModal' },
+        h('.modal-content', content));
 }

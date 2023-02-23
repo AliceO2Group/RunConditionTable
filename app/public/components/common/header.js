@@ -14,16 +14,26 @@
 
 import { h, iconHome, iconPerson, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 import downloadCSV from '../../utils/csvExport.js';
+import modal from './modal.js';
+import loggingForm from '../../views/loginForm.js';
 
 export default function header(model) {
     return h('',
+        modal(loggingForm(model)),
         h('.header-specific', headerSpecific(model)),
         h('.flex-row.p2', [
             h('.w-50', [
                 h('button.btn.btn-primary', iconHome()),
                 ' ',
                 h('button.btn', {
-                    onclick: () => model.logout(),
+                    onclick: () => {
+                        document.getElementById('myModal').style.display = 'block';
+
+                        /*
+                         * Model.logout();
+                         * model.router.go('/', true);
+                         */
+                    }, // Model.router.go('/admin', true)
                 }, iconPerson()),
                 ' ',
                 h('span.f4.gray', {
