@@ -13,13 +13,8 @@
  */
 
 import { h } from '/js/src/index.js';
-import inputForm from '../components/common/inputForm.js';
+import loginInputForm from '../components/common/inputForm.js';
 import viewButton from '../components/common/viewButton.js';
-import container from '../components/common/container.js';
-
-function handleRegistration() {
-    alert('Registration has not been implemented yet :(');
-}
 
 async function handleLogin(model) {
     const password = document.getElementById('password').value;
@@ -31,15 +26,20 @@ async function handleLogin(model) {
 }
 
 export default function loggingPanel(model) {
-    const loginButton = viewButton(model, 'login', () => handleLogin(model));
-    const registerButton = viewButton(model, 'register', handleRegistration);
-    const title = h('h1.primary', 'TEST APP');
+    const loginButton = viewButton(model, 'Login', () => handleLogin(model), '', undefined, '.loginButton');
+    const title = h('h5.italic', 'Run Condition Table');
+    const adminPanel = h('h3', 'Admin panel');
 
-    return h('div.loginDiv', h('div.loginDivInside', [
-        title,
-        container(inputForm('dbname', 'dbname', 'rct-db'),
-            inputForm('username', 'username', 'username'),
-            inputForm('password', 'password', 'password', true)),
-        container(loginButton, registerButton),
-    ]));
+    return h('div.loginDiv.top-100',
+        h('.flex',
+            h('.inspect-90'),
+            h('.inline.top-15.left-10',
+                title,
+                adminPanel)),
+        h('div.loginForm', [
+            loginInputForm('Database', 'dbname', 'rct-db'),
+            loginInputForm('Username', 'username', ''),
+            loginInputForm('Password', 'password', '', true),
+            loginButton])
+    );
 }

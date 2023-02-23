@@ -131,3 +131,10 @@
     height: 90px;
     display: inline-block;
 }
+
+.inspect-90 {
+    background-image: url('./images/90/Inspect.svg');
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+}

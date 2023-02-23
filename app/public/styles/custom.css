@@ -106,6 +106,14 @@
     scale: 1.875;
 }
 
+.top-15 {
+    padding-top: 15px;
+}
+
+.left-10 {
+    padding-left: 10px;
+}
+
 .top-100 {
     padding-top: 100px;
 }
@@ -158,4 +166,8 @@
 
 .pointer {
     cursor: pointer !important;
+}
+
+.italic {
+    font-style: italic;
 }
