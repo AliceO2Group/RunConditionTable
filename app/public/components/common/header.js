@@ -23,19 +23,20 @@ export default function header(model) {
         h('.header-specific', headerSpecific(model)),
         h('.flex-row.p2', [
             h('.w-50', [
-                h('button.btn.btn-primary', { onclick: () => model.router.go('/', true) }, iconHome()),
-                h('button.btn', {
-                    onclick: () => {
-                        document.getElementById('myModal').style.display = 'block';
-                    },
-                }, iconPerson()),
-                h('button.btn.icon-only-button', { onclick: () => model.logout() }, h('.logout-24')),
+                h('.btn-group',
+                    h('button.btn.btn-primary.icon-only-button', { onclick: () => model.router.go('/', true) }, iconHome()),
+                    h('button.btn.icon-only-button', {
+                        onclick: () => {
+                            document.getElementById('myModal').style.display = 'block';
+                        },
+                    }, iconPerson()),
+                    h('button.btn.icon-only-button', { onclick: () => model.logout() }, h('.logout-24'))),
                 ' ',
                 h('span.f4.gray', {
                     onclick: () => model.router.go('/', true),
                 }, 'Run Condition Table'),
             ]),
-            h('.w-50', functionalities(model)),
+            h('.w-50.text-right', functionalities(model)),
         ]));
 }
 
@@ -54,21 +55,21 @@ const headerSpecific = (model) => {
 
 const title = (text) => h('b.f4', text);
 
-const functionalities = (model) => h('.button-group.text-right',
-    h('button.btn', {
+const functionalities = (model) => h('.btn-group',
+    h('button.btn.icon-only-button', {
         onclick: () => {
             model.fetchedData.reqForData(true);
             model.notify();
         },
     }, iconReload()),
 
-    h('button.btn', {
+    h('button.btn.icon-only-button', {
         onclick: () => {
             downloadCSV(model);
         },
     }, iconDataTransferDownload()),
 
-    h('button.btn.filter-button', {
+    h('button.btn.icon-only-button', {
         className: model.searchFieldsVisible ? 'selected' : '',
         onclick: () => model.changeSearchFieldsVisibility(),
     }, h('.filter-20.icon')));

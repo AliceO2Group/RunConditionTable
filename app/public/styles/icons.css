@@ -69,13 +69,12 @@
     display: inline-block;
 }
 
-.filter-button {
+.icon-only-button {
     width: 48px;
     height: 32px;
     padding: 0 !important;
     display: inline-block;
     position: relative;
-    top: 0.2em;
 }
 
 .eye-20 {
@@ -106,21 +105,9 @@
 
 .logout-24 {
     background-image: url('./images/24/Logout.svg');
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 }
-
-.icon-only-button {
-    width: 48px;
-    height: 32px;
-    padding: 0 0 0 12px !important;
-    display: inline-block;
-    position: relative;
-    top: 0.4em;
-    margin: 0 !important;
-    align-content: center;
-}
-
 
 .nothing-found-90 {
     background-image: url('./images/90/Nothing\ Found.svg');
