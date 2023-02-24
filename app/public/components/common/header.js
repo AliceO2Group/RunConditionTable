@@ -23,7 +23,7 @@ export default function header(model) {
         h('.header-specific', headerSpecific(model)),
         h('.flex-row.p2', [
             h('.w-50', [
-                h('button.btn.btn-primary', iconHome()),
+                h('button.btn.btn-primary', { onclick: () => model.router.go('/', true) }, iconHome()),
                 h('button.btn', {
                     onclick: () => {
                         document.getElementById('myModal').style.display = 'block';
