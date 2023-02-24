@@ -25,10 +25,17 @@ async function handleLogin(model) {
     await model.login(username, password, dbname);
 }
 
-export default function loggingForm(model) {
+export default function loginForm(model) {
     const loginButton = viewButton(model, 'Login', () => handleLogin(model), '', undefined, '.loginButton');
+    const title = h('h5.italic', 'Run Condition Table');
+    const adminPanel = h('h3', 'Admin panel');
 
-    return h('div.loginForm', [
+    return h('.loginForm', [
+        h('.flex.bottom-20',
+            h('.inspect-90'),
+            h('.inline.top-15.left-10',
+                title,
+                adminPanel)),
         loginInputForm('Database', 'dbname', 'rct-db'),
         loginInputForm('Username', 'username', ''),
         loginInputForm('Password', 'password', '', true),

@@ -110,12 +110,16 @@
     padding-top: 15px;
 }
 
+.top-100 {
+    padding-top: 100px;
+}
+
 .left-10 {
     padding-left: 10px;
 }
 
-.top-100 {
-    padding-top: 100px;
+.bottom-20 {
+    padding-bottom: 20px;
 }
 
 .header-specific {

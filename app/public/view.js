@@ -13,17 +13,26 @@
  */
 
 import userPanel from './views/userView.js';
-import loggingPanel from './views/loggingView.js';
 import serviceUnavailablePanel from './views/serviceUnavailableView.js';
 import sessionErrorPanel from './views/sessionErrorView.js';
 import waitingPanel from './views/waitingView.js';
 import { switchCase } from '/js/src/index.js';
+import loginForm from './views/loginForm.js';
+import modal from './components/common/modal.js';
+import { h } from '/js/src/index.js';
+
+export const adminLoginModalId = 'adminLoginModal';
 
 export default function view(model) {
-    return switchCase(model.mode, {
-        serviceUnavailable: () => serviceUnavailablePanel(model),
-        sessionError: () => sessionErrorPanel(model),
-        primary: () => userPanel(model),
-        admin: () => loggingPanel(model),
-    }, () => waitingPanel(model))/*Switch returns function*/();
+    return h('',
+        modal(loginForm(model), adminLoginModalId),
+        switchCase(model.mode, {
+            serviceUnavailable: () => serviceUnavailablePanel(model),
+            sessionError: () => sessionErrorPanel(model),
+            primary: () => userPanel(model),
+            admin: () => {
+                document.getElementById(adminLoginModalId).style.display = 'block';
+                return '';
+            },
+        }, () => waitingPanel(model))/*Switch returns function*/());
 }
