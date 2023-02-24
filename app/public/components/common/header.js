@@ -24,17 +24,12 @@ export default function header(model) {
         h('.flex-row.p2', [
             h('.w-50', [
                 h('button.btn.btn-primary', iconHome()),
-                ' ',
                 h('button.btn', {
                     onclick: () => {
                         document.getElementById('myModal').style.display = 'block';
-
-                        /*
-                         * Model.logout();
-                         * model.router.go('/', true);
-                         */
-                    }, // Model.router.go('/admin', true)
+                    },
                 }, iconPerson()),
+                h('button.btn.icon-only-button', { onclick: () => model.logout() }, h('.logout-24')),
                 ' ',
                 h('span.f4.gray', {
                     onclick: () => model.router.go('/', true),
