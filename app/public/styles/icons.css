@@ -12,6 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
+ .icon-only-button {
+    width: 48px;
+    height: 32px;
+    padding: 0 !important;
+    display: inline-block;
+    position: relative;
+}
+
 .chevron-down-20 {
     background-image: url('./images/20/Chevron\ Down.svg');
     width: 20px;
@@ -69,15 +77,6 @@
     display: inline-block;
 }
 
-.filter-button {
-    width: 48px;
-    height: 32px;
-    padding: 0 !important;
-    display: inline-block;
-    position: relative;
-    top: 0.2em;
-}
-
 .eye-20 {
     background-image: url('./images/20/Eye.svg');
     width: 20px;
@@ -99,6 +98,20 @@
 
 .hide-empty-20 {
     background-image: url('./images/20/Hide\ Empty.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.logout-20 {
+    background-image: url('./images/20/Logout.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.settings-20 {
+    background-image: url('./images/20/Settings.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
@@ -127,6 +140,13 @@
 
 .unexpected-90 {
     background-image: url('./images/90/Unexpected.svg');
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+}
+
+.inspect-90 {
+    background-image: url('./images/90/Inspect.svg');
     width: 90px;
     height: 90px;
     display: inline-block;

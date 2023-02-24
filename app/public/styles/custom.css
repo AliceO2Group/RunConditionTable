@@ -106,8 +106,20 @@
     scale: 1.875;
 }
 
+.top-15 {
+    padding-top: 15px;
+}
+
 .top-100 {
     padding-top: 100px;
+}
+
+.left-10 {
+    padding-left: 10px;
+}
+
+.bottom-20 {
+    padding-bottom: 20px;
 }
 
 .header-specific {
@@ -158,4 +170,8 @@
 
 .pointer {
     cursor: pointer !important;
+}
+
+.italic {
+    font-style: italic;
 }

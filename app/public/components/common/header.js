@@ -12,25 +12,31 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconHome, iconPerson, iconDataTransferDownload, iconReload } from '/js/src/index.js';
+import { h, iconHome, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 import downloadCSV from '../../utils/csvExport.js';
+import modal from './modal.js';
+import loggingForm from '../../views/loginForm.js';
 
 export default function header(model) {
     return h('',
+        modal(loggingForm(model)),
         h('.header-specific', headerSpecific(model)),
         h('.flex-row.p2', [
             h('.w-50', [
-                h('button.btn.btn-primary', iconHome()),
-                ' ',
-                h('button.btn', {
-                    onclick: () => model.logout(),
-                }, iconPerson()),
+                h('.btn-group',
+                    h('button.btn.btn-primary.icon-only-button', { onclick: () => model.router.go('/', true) }, iconHome()),
+                    h('button.btn.icon-only-button', {
+                        onclick: () => {
+                            document.getElementById('myModal').style.display = 'block';
+                        },
+                    }, h('.settings-20.abs-center')),
+                    h('button.btn.icon-only-button', { onclick: () => model.logout() }, h('.logout-20.abs-center'))),
                 ' ',
                 h('span.f4.gray', {
                     onclick: () => model.router.go('/', true),
                 }, 'Run Condition Table'),
             ]),
-            h('.w-50', functionalities(model)),
+            h('.w-50.text-right', functionalities(model)),
         ]));
 }
 
@@ -49,21 +55,21 @@ const headerSpecific = (model) => {
 
 const title = (text) => h('b.f4', text);
 
-const functionalities = (model) => h('.button-group.text-right',
-    h('button.btn', {
+const functionalities = (model) => h('.btn-group',
+    h('button.btn.icon-only-button', {
         onclick: () => {
             model.fetchedData.reqForData(true);
             model.notify();
         },
     }, iconReload()),
 
-    h('button.btn', {
+    h('button.btn.icon-only-button', {
         onclick: () => {
             downloadCSV(model);
         },
     }, iconDataTransferDownload()),
 
-    h('button.btn.filter-button', {
+    h('button.btn.icon-only-button', {
         className: model.searchFieldsVisible ? 'selected' : '',
         onclick: () => model.changeSearchFieldsVisibility(),
-    }, h('.filter-20.icon')));
+    }, h('.filter-20.abs-center')));

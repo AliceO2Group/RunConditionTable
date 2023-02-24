@@ -19,10 +19,13 @@
 @import (less) "./custom/table.css";
 @import (less) "./custom/pager.css";
 @import (less) "./custom/tooltip.css";
+@import (less) "./custom/modal.css";
 @import (less) "./custom/tables/periods.css";
 @import (less) "./custom/tables/runs.css";
 @import (less) "./custom/tables/data-passes.css";
 @import (less) "./custom/filter/filter.css";
+@import (less) "./custom/input/icons.css";
+@import (less) "./custom/input/form.css";
 
 .container {
     .flex-wrap;
@@ -35,11 +38,13 @@
     .justify-center;
 }
 
-.loginDivInside {
+.loginForm {
     .flex-column;
-    .bg-gray-lighter;
-    .br3;
     .p4;
+    .abs-center;
+    background-color: var(--color-white);
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+    border-radius: 20px;
 }
 
 .homePage {
