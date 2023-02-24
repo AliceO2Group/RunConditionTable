@@ -12,6 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
+ .icon-only-button {
+    width: 48px;
+    height: 32px;
+    padding: 0 !important;
+    display: inline-block;
+    position: relative;
+}
+
 .chevron-down-20 {
     background-image: url('./images/20/Chevron\ Down.svg');
     width: 20px;
@@ -69,14 +77,6 @@
     display: inline-block;
 }
 
-.icon-only-button {
-    width: 48px;
-    height: 32px;
-    padding: 0 !important;
-    display: inline-block;
-    position: relative;
-}
-
 .eye-20 {
     background-image: url('./images/20/Eye.svg');
     width: 20px;
@@ -103,10 +103,18 @@
     display: inline-block;
 }
 
-.logout-24 {
-    background-image: url('./images/24/Logout.svg');
+.logout-20 {
+    background-image: url('./images/20/Logout.svg');
     width: 20px;
     height: 20px;
+    display: inline-block;
+}
+
+.settings-20 {
+    background-image: url('./images/20/Settings.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
 }
 
 .nothing-found-90 {

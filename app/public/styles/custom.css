@@ -164,10 +164,6 @@
     color: var(--color-white) !important;
 }
 
-.btn-icon-24 {
-    background-color: #1e90ff;
-}
-
 .pointer {
     cursor: pointer !important;
 }

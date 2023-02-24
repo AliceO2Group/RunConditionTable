@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconHome, iconPerson, iconDataTransferDownload, iconReload } from '/js/src/index.js';
+import { h, iconHome, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 import downloadCSV from '../../utils/csvExport.js';
 import modal from './modal.js';
 import loggingForm from '../../views/loginForm.js';
@@ -29,8 +29,8 @@ export default function header(model) {
                         onclick: () => {
                             document.getElementById('myModal').style.display = 'block';
                         },
-                    }, iconPerson()),
-                    h('button.btn.icon-only-button', { onclick: () => model.logout() }, h('.logout-24'))),
+                    }, h('.settings-20.abs-center')),
+                    h('button.btn.icon-only-button', { onclick: () => model.logout() }, h('.logout-20.abs-center'))),
                 ' ',
                 h('span.f4.gray', {
                     onclick: () => model.router.go('/', true),
@@ -72,4 +72,4 @@ const functionalities = (model) => h('.btn-group',
     h('button.btn.icon-only-button', {
         className: model.searchFieldsVisible ? 'selected' : '',
         onclick: () => model.changeSearchFieldsVisibility(),
-    }, h('.filter-20.icon')));
+    }, h('.filter-20.abs-center')));
