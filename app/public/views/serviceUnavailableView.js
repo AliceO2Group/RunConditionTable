@@ -17,7 +17,7 @@ export default function serviceUnavailablePanel(model) {
     const submodel = model.submodels[model.mode];
     const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => submodel.retry() }, 'Retry');
     const title = h('h1.primary', 'Run Condition Table');
-    const subtitle = h('h3', 'Service temporarily unavailable');
+    const subtitle = h('h3', 'Service temporarily unavailable - please conntact an administrator');
 
     return h('.loginDiv.top-100', [
         title,

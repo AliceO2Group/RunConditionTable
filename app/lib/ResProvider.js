@@ -132,11 +132,11 @@ class ResProvider {
     static socksProvider() {
         const cern_socks_env_var = process.env.CERN_SOCKS;
         logger.info(`CERN_SOCKS set to '${cern_socks_env_var}'`);
-        if (process.env.RUNNING_ENV == 'DOCKER' && cern_socks_env_var == 'true') {
+        if (process.env.RUNNING_ENV == 'DOCKER' && cern_socks_env_var.toLowerCase() == 'true') {
             return 'socks://172.200.200.1:12345';
         }
         if (cern_socks_env_var) {
-            if (cern_socks_env_var == 'false') {
+            if (cern_socks_env_var.toLowerCase() == 'false') {
                 return null;
             }
             const socks = cern_socks_env_var.trim();
@@ -144,6 +144,7 @@ class ResProvider {
                 return socks;
             } else {
                 logger.error(`incorrect format of socks address: ${socks}`);
+                return null;
             }
         }
     }

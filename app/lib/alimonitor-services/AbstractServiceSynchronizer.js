@@ -25,11 +25,11 @@ const defaultServiceSynchronizerOptions = {
     forceStop: false,
 
     rawCacheUse: true,
-    useCacheJsonInsteadIfPresent: true,
+    useCacheJsonInsteadIfPresent: false,
     omitWhenCached: false,
 
     batchedRequestes: true,
-    batchSize: 5,
+    batchSize: 4,
 
     allowRedirects: true, // TODO
 };
@@ -252,6 +252,10 @@ class AbstractServiceSynchronizer {
     async close() {
         this.forecStop = true;
         await this.dbDisconnect();
+    }
+
+    isConnected() {
+        return this.dbClient._connected;
     }
 
     async restart() {

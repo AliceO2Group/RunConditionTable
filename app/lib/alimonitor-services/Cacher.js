@@ -41,6 +41,10 @@ class Cacher {
     }
 
     static cachedFilePath(synchronizerName, endpoint) {
+        const maxSystemFilenameLength = 255;
+        if (endpoint.length > maxSystemFilenameLength) {
+            endpoint = endpoint.slice(0, maxSystemFilenameLength); // TODO better solution
+        }
         return path.join(
             Cacher.serivceCacheDir(synchronizerName),
             Cacher.cachedFileName(endpoint),

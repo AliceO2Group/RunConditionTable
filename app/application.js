@@ -67,11 +67,11 @@ class RunConditionTableApplication {
             terminal: true,
             prompt: '==> ',
         });
-        this.rl.on('line', (line) => this.cli(line));
+        this.rl.on('line', (line) => this.devCli(line));
         this.con = new Console({ stdout: process.stdout, stderr: process.stderr });
     }
 
-    cli(line) {
+    devCli(line) {
         try {
             const cmdAndArgs = line.trim().split(/ +/).map((s) => s.trim());
             const dbAdminExec = (args) => {
@@ -106,11 +106,7 @@ class RunConditionTableApplication {
                 bk: (args) => this.servCLI(this.services.bookkeepingService, args),
                 ml: (args) => this.servCLI(this.services.monalisaService, args),
                 mc: (args) => this.servCLI(this.services.monalisaServiceMC, args),
-                sync: async () => {
-                    await this.services.bookkeepingService.setSyncTask();
-                    await this.services.monalisaService.setSyncTask();
-                    await this.services.monalisaServiceMC.setSyncTask();
-                },
+                sync: () => this.syncAll(),
                 connServ: async () => {
                     await this.connectServices();
                 },
@@ -158,6 +154,7 @@ class RunConditionTableApplication {
         httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res));
         httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res));
         httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
+        httpServer.get('sync', (req, res) => this.syncAll());
     }
 
     buildAuthControl() {
@@ -179,6 +176,26 @@ class RunConditionTableApplication {
         };
     }
 
+    async syncAll() {
+        await this.services.bookkeepingService.setSyncTask();
+        await this.services.monalisaService.setSyncTask();
+        await this.services.monalisaServiceMC.setSyncTask();
+    }
+
+    async setSyncAllTask() {
+        this.syncAll();
+        this.syncAllTask = setInterval(this.syncAll, 24 * 60 * 60 * 1000);
+    }
+
+    async clearSyncAllTask() {
+        clearInterval(this.setSyncAllTask);
+    }
+
+    async restart() {
+        await this.stop();
+        await this.run();
+    }
+
     async run() {
         this.logger.info('Starting RCT app...');
         try {
@@ -189,7 +206,7 @@ class RunConditionTableApplication {
         }
 
         await this.connectServices();
-
+        this.setSyncAllTask();
         this.logger.info('RCT app started');
     }
 
@@ -216,6 +233,7 @@ class RunConditionTableApplication {
                 this.logger.error(`Error while stopping RCT app: ${error}`);
             }
             await this.disconnectServices();
+            await this.clearSyncAllTask();
             this.rl.close();
 
             this.logger.info('RCT app stopped');

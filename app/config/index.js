@@ -22,6 +22,7 @@ module.exports = Object.freeze({
     // App config
     winston: ResProvider.winston(),
     database: ResProvider.database(),
+    syncTaskByDefault: process.env['RCT_SYNC_TASK_BY_DEFAULT'] ? process.env['RCT_SYNC_TASK_BY_DEFAULT'] : true,
     databasePersistance: require('./databasePersistance.js'),
     public: require('./public.js'),
 

@@ -12,7 +12,6 @@ FROM base as development
     RUN apt install -y inotify-tools
 
 FROM base as test
-FROM base as production
 
 
 
