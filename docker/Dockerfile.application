@@ -27,14 +27,3 @@ FROM devdependencies as test
     COPY ./scripts ./scripts
 
     CMD [ "./scripts/check-host-and-exec.sh", "o2-rct_database", "5432", "10", "--", "npm", "run", "test" ]
-
-
-FROM base as production
-
-    COPY ./app ./app
-    COPY ./scripts ./scripts
-    COPY ./package*.json ./
-    RUN npm install
-
-    CMD [ "./scripts/check-host-and-exec.sh", "o2-rct_database", "5432", "10", "--", "npm", "run", "start:prod" ]
-
