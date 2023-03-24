@@ -222,12 +222,6 @@ class Utils {
                 res.on('end', () => {
                     try {
                         if (!redirect) {
-                            // TMP incorrect format handling
-                            if (/: *,/.test(rawData)) {
-                                logger.warn(`incorrect data format from endpoint ${endpoint}`);
-                                rawData = rawData.replaceAll(/: *,/ig, ':"",');
-                            }
-
                             const data = JSON.parse(rawData);
                             if (onSuccess) {
                                 onSuccess(endpoint, data);
