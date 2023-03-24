@@ -1,6 +1,6 @@
 {
   "name": "@aliceo2/run-condition-table",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Run Condition Table",
   "main": "main.js",
   "author": "ALICEO2",
@@ -29,11 +29,9 @@
     "test:mocha": "mocha",
     "reports:show": "open ./reports/**/*.html",
     "reports:clean": "rm -rf ./reports; rm -rf .nyc_output",
-    
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
     "start:dev:local": "(export RCT_DB_HOST=${RCT_DB_HOST:-localhost}; bash -c 'set -o allexport && ls && source ./docker/env_file-dev && set +o allexport && npm run start:dev')",
     "deploy:db:local": "./database/setup-db.sh --env ./docker/env_file-dev",
-    
     "dev": "./rctmake prune,db:export,build,attach,stop --target dev",
     "node-dev-env": "(export RCT_DB_HOST=$(docker inspect o2-rct_database -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'); bash -c 'set -o allexport && ls && source ./docker/env_file-dev && set +o allexport && node')",
     "dev:up": "./rctmake build[up],attach --target dev",
@@ -42,19 +40,15 @@
     "prune": "./rctmake prune",
     "app:attach": "docker attach o2-rct_application",
     "app:pattach": "docker exec -it o2-rct_application bash",
-
-    
     "db-ip": "echo $(docker inspect o2-rct_database -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')",
     "db:check": "./rctmake prune,db,build,follow -t dev -S o2-rct_database ",
     "db:attach": "docker exec -it o2-rct_database psql -U postgres -d \"rct-db\"",
     "db:pattach": "docker exec -it o2-rct_database /bin/bash",
     "db:clean": "./rctmake db:clean",
-    
     "dump:make": "./rctmake dump:make -F ",
     "dump:list": "./rctmake dump:list",
     "dump:restore": "./rctmake dump:restore -F ",
     "dump:remove": "./rctmake dump:remove -F ",
-    
     "tmp": "nodemon ./tmp/tmp.js"
   },
   "bugs": {
