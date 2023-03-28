@@ -9,7 +9,7 @@ Once all desired issues for the given release are in the `Ready for Release` sta
 - `Z - PATCH` version when you make backwards compatible bug fixes
 The following command can be used in the local terminal to automatically bump the version: `npm version <type>` where `type` can be: `major`, `minor` or `patch`.
 2. Using the newly created branch, raise a Pull-Request against the default repository branch to validate checks. Once checks passed, merge the PullRequest.
-3. Create a **DRAFT** GitHub release with **BOTH** the **title** and **tag** in the following format: `aliceo2/run-condition-table@<version>` where `version` follows `x.y.z` format
+3. Create a **DRAFT** GitHub release with **BOTH** the **title** and **tag** in the following format: `@aliceo2/run-condition-table@<version>` where `version` follows `x.y.z` format
 4. Update status of JIRA issues to `CLOSE` (You can use Bulk Change feature to edit multiple issues at once)
 5. Generate `Release Notes` from JIRA and add them to the earlier GitHub release description.
 6. Publish release
