@@ -79,3 +79,4 @@ for using, managing mock data changes:
 ## Documentation links
 
 1. Environment variables: [Configuration](./docs/CONFIGURATION.md)
+2. RCT release procedure: [Release](./docs/RELEASE.md)
