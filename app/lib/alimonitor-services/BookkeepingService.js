@@ -141,6 +141,10 @@ class BookkeepingService extends AbstractServiceSynchronizer {
 
     metaDataHandler(requestJsonResult) {
         const { page } = requestJsonResult['meta'];
+        if (!page || !page['pageCount'] || !this.metaStore['pageCount']) {
+            this.logger.error(`No page meta date from bookkeping: page=${JSON.strinfgify(page)}`);
+            this.forceStop = true;
+        }
         this.metaStore['pageCount'] = page['pageCount'];
         this.metaStore['totalCount'] = page['totalCount'];
     }

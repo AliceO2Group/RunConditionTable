@@ -155,9 +155,10 @@ class ResProvider {
             RCT_HOSTNAME: 'hostname',
             RCT_TLS_ENABLED: 'tls',
         };
+
         const http = ResProvider.viaEnvVars(httpEnvVarsDef);
         http.autoListen = false;
-        http.tls = http.tls.toLowerCase() == 'true';
+        http.tls = http.tls?.toLowerCase() == 'true';
         return http;
     }
 
