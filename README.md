@@ -43,7 +43,7 @@ Staging locally:
  2. `deploy:db:local` - deploy database locally using scripts `<ProjectDir>/database/setup-db.sh`. It uses the same env as upper task and follows the logic of env vars substitution.
 
 ### Using grid certificates
-Grid certificates need to be located in `<ProjectDir>/security/`. It have to be named (TMP TODO): `myCertificate.p12`. It is also required to set `ALIMONITOR_PASSPHRASE` env var which holds passphrase to that certificate.
+Grid certificates need to be located in `<ProjectDir>/security/`. It have to be named (TMP TODO): `rct-alimonitor-cert.p12`. It is also required to set `ALIMONITOR_PASSPHRASE` env var which holds passphrase to that certificate.
 
 
 ## Reaching CERN network

@@ -104,7 +104,7 @@ class AbstractServiceSynchronizer {
 
     setSLLForHttpOpts(opts) {
         const pfxWrp = ResProvider.securityFilesContentProvider(
-            ['myCertificate.p12'],
+            ['rct-alimonitor-cert.p12'],
             'pfx - pkcs12 cert',
             'RCT_CERT_PATH',
             true,
