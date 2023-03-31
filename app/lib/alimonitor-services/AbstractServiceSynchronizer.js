@@ -30,7 +30,9 @@ const defaultServiceSynchronizerOptions = {
 
     batchedRequestes: true,
     batchSize: 4,
+};
 
+const additionalHttpOpts = {
     allowRedirects: true, // TODO
 };
 
@@ -78,6 +80,7 @@ class AbstractServiceSynchronizer {
         this.metaStore = {};
         this.errorsLoggingDepth = config.defaultErrorsLogginDepth;
         Utils.applyOptsToObj(this, defaultServiceSynchronizerOptions);
+        Utils.applyOptsToObj(this.opts, additionalHttpOpts);
     }
 
     createHttpOpts() {
@@ -101,7 +104,7 @@ class AbstractServiceSynchronizer {
 
     setSLLForHttpOpts(opts) {
         const pfxWrp = ResProvider.securityFilesContentProvider(
-            ['myCertificate.p12'],
+            ['rct-alimonitor-cert.p12'],
             'pfx - pkcs12 cert',
             'RCT_CERT_PATH',
             true,
@@ -189,9 +192,9 @@ class AbstractServiceSynchronizer {
             this.monitor.logResults();
         } catch (fatalError) {
             this.logger.error(fatalError.stack);
-            if ((fatalError.name + fatalError.message).includes('ECONNREFUSED')) {
+            if (/ECONREFUSED|ENOTFOUND|ECONNRESET|ETIMEDOUT|ECONNABORTED|EHOSTUNREACH|EAI_AGAIN/.test(fatalError.name + fatalError.message)) {
                 this.forceStop = true;
-                this.logger.warn('terminated due to fatal error (ECONNREFUSED)');
+                this.logger.error(`terminated due to fatal error ${fatalError.name}`);
             }
         }
     }
@@ -242,11 +245,15 @@ class AbstractServiceSynchronizer {
     }
 
     async setSyncTask() {
-        this.forceStop = false;
-        await this.sync()
-            .catch((e) => {
-                this.logger.error(e.stack);
-            });
+        if (this.isConnected()) {
+            this.forceStop = false;
+            await this.sync()
+                .catch((e) => {
+                    this.logger.error(e.stack);
+                });
+        } else {
+            this.logger.error('Cannot start the sync task becuse the database is not connected, check the configuration or database state');
+        }
     }
 
     async close() {

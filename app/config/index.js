@@ -27,7 +27,7 @@ module.exports = Object.freeze({
     public: require('./public.js'),
 
     // RCT data config
-    dataFromYearIncluding: 2015,
+    dataFromYearIncluding: 2018,
 
     // Other config
     errorsLoggingDepths: {

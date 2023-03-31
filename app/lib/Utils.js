@@ -175,7 +175,7 @@ class Utils {
         }
     }
 
-    static makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFialure) {
+    static makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFailure) {
         return new Promise((resolve, reject) => {
             let rawData = '';
             const req = Utils.checkClientType(endpoint).request(endpoint, opts, async (res) => {
@@ -192,7 +192,7 @@ class Utils {
                         const nextHop = new URL(endpoint.origin + res.headers.location);
                         nextHop.searchParams.set('res_path', 'json');
                         logger.warn(`from ${endpoint.href} to ${nextHop.href}`);
-                        resolve(await this.getRawResponse(nextHop));
+                        resolve(await Utils.makeHttpRequestForJSON(nextHop, opts, logger, onSuccess, onFailure));
                     } else {
                         throw new Error(mess);
                     }
@@ -213,8 +213,8 @@ class Utils {
 
                 req.on('error', (e) => {
                     logger.error(`ERROR httpGet: ${e}`);
-                    if (onFialure) {
-                        onFialure(endpoint, e);
+                    if (onFailure) {
+                        onFailure(endpoint, e);
                     }
                     reject(e);
                 });
@@ -229,15 +229,17 @@ class Utils {
                             resolve(data);
                         }
                     } catch (e) {
-                        logger.error(e.message);
-                        if (onFialure) {
-                            onFialure(endpoint, e);
+                        logger.error(`${e.message} for endpoint ${endpoint}`);
+                        if (onFailure) {
+                            onFailure(endpoint, e);
                         }
                         reject(e);
                     }
                 });
             });
-
+            req.on('error', (err) => {
+                reject(err);
+            });
             req.end();
         });
     }

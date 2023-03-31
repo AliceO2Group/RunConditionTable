@@ -184,7 +184,7 @@ class RunConditionTableApplication {
 
     async setSyncAllTask() {
         this.syncAll();
-        this.syncAllTask = setInterval(this.syncAll, 24 * 60 * 60 * 1000);
+        this.syncAllTask = setInterval(this.syncAll, 24 * 60 * 60 * 1000); // Ones per day
     }
 
     async clearSyncAllTask() {
