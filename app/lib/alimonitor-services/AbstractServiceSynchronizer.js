@@ -252,7 +252,7 @@ class AbstractServiceSynchronizer {
                     this.logger.error(e.stack);
                 });
         } else {
-            this.logger.error('Cannot start sync task becuse db is not connected, check configuration or database state');
+            this.logger.error('Cannot start the sync task becuse the database is not connected, check the configuration or database state');
         }
     }
 
