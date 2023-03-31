@@ -93,7 +93,7 @@ class ResProvider {
         let secContent;
         try {
             secContent = fs.readFileSync(file_path);
-            logsStacker.substitute('info', `${description}: loaded from file`);
+            logsStacker.substitute('info', `${description}: loaded from file ${file_path}`);
         } catch (err) {
             logsStacker.put('warn', `cannot load file at ${envVarName} ${err}`);
         }
@@ -132,7 +132,7 @@ class ResProvider {
     static socksProvider() {
         const cern_socks_env_var = process.env.CERN_SOCKS;
         logger.info(`CERN_SOCKS set to '${cern_socks_env_var}'`);
-        if (process.env.RUNNING_ENV == 'DOCKER' && cern_socks_env_var.toLowerCase() == 'true') {
+        if (process.env.RUNNING_ENV == 'DOCKER' && cern_socks_env_var?.toLowerCase() === 'true') {
             return 'socks://172.200.200.1:12345';
         }
         if (cern_socks_env_var) {
