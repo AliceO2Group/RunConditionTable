@@ -262,7 +262,7 @@ class AbstractServiceSynchronizer {
     }
 
     isConnected() {
-        return this.dbClient._connected;
+        return this.dbclient?._connected;
     }
 
     async restart() {
