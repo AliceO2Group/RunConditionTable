@@ -1,0 +1,45 @@
+version: '3.1'
+services:
+  o2-rct_application:
+    volumes:
+      - type: bind
+        read_only: false
+        source: ./app
+        target: /opt/RunConditionTable/app
+      - type: bind
+        read_only: true
+        source: ./scripts
+        target: /opt/RunConditionTable/scripts
+      - type: bind
+        read_only: true
+        source: ./package.json
+        target: /opt/RunConditionTable/package.json
+      - type: bind
+        read_only: true
+        source: ./package-lock.json
+        target: /opt/RunConditionTable/package-lock.json
+      - type: bind
+        read_only: true
+        source: ./security
+        target: /opt/RunConditionTable/security
+      - type: bind
+        read_only: false
+        source: ./database/cache
+        target: /opt/RunConditionTable/database/cache
+      - type: bind
+        read_only: false
+        source: ./reports
+        target: /opt/RunConditionTable/reports
+    
+  o2-rct_database:
+    volumes:
+      - type: bind
+        read_only: true
+        source: ./database
+        target: /docker-entrypoint-initdb.d
+      - type: bind
+        read_only: false
+        source: ./database/cache
+        target: /postgres/run/database/cache
+
+

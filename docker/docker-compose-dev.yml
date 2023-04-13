@@ -1,36 +1,25 @@
 
 services:
   o2-rct_application:
+    container_name: o2-rct_application
     build: 
       target: development
     env_file:
-      - ./docker/env_file-dev
-
-    volumes:
-      - type: bind
-        read_only: false
-        source: ./app
-        target: /opt/RunConditionTable/app
-      - type: bind
-        read_only: true
-        source: ./scripts
-        target: /opt/RunConditionTable/scripts
-      - type: bind
-        read_only: true
-        source: ./package.json
-        target: /opt/RunConditionTable/package.json
-      - type: bind
-        read_only: true
-        source: ./package-lock.json
-        target: /opt/RunConditionTable/package-lock.json
+    - ./docker/dev.env
+    
+    ports:
+    - target: $RCT_HTTP_PORT
+      published: $RCT_HTTP_PORT
     
 
     restart: "no"
 
   o2-rct_database:
+    container_name: o2-rct_database
     build: 
       target: development
+    
     env_file:
-      - ./docker/env_file-dev
+    - ./docker/dev.env
 
     restart: "no"

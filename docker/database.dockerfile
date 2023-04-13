@@ -5,7 +5,6 @@ WORKDIR /postgres/run
 FROM base as development
     RUN apt update -y && \
         apt install -y \
-        bash \
         sudo \
         procps \
         inotify-tools

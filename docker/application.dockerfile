@@ -2,21 +2,19 @@
 FROM node:16.20.0-buster as base 
 
     WORKDIR /opt/RunConditionTable
-    RUN apt update -y && apt install -y netcat
-
-
-FROM base as devdependencies
-    RUN apt install -y bash
+    RUN apt update -y && apt install -y \
+        netcat \
+        bash
     COPY ./package*.json ./
     RUN npm --silent ci
 
 
-FROM devdependencies as development
+FROM base as development
 
     CMD [ "./scripts/check-host-and-exec.sh", "o2-rct_database", "5432", "10", "--", "npm", "run", "start:dev" ]
 
 
-FROM devdependencies as test
+FROM base as test
 
     COPY ./.eslintrc ./
     COPY ./.nycrc ./
@@ -25,4 +23,4 @@ FROM devdependencies as test
     COPY ./app ./app
     COPY ./scripts ./scripts
 
-    CMD [ "./scripts/check-host-and-exec.sh", "o2-rct_database", "5432", "10", "--", "npm", "run", "test" ]
+    CMD [ "./scripts/check-host-and-exec.sh", "o2-rct_database-test", "5432", "10", "--", "npm", "run", "test" ]

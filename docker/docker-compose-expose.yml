@@ -1,7 +1,0 @@
-
-services:
-
-  o2-rct_application:
-    ports:
-      - target: $RCT_HTTP_PORT
-        published: $RCT_HTTP_PORT
