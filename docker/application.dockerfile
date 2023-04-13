@@ -1,13 +1,12 @@
-FROM node:16.9.1-alpine3.12 as base
+# TODO upgrade node version
+FROM node:16.20.0-buster as base 
 
     WORKDIR /opt/RunConditionTable
-
-    RUN apk add --no-cache \
-        bash=5.0.17-r0
+    RUN apt update -y && apt install -y netcat
 
 
 FROM base as devdependencies
-
+    RUN apt install -y bash
     COPY ./package*.json ./
     RUN npm --silent ci
 
