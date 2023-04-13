@@ -6,7 +6,7 @@ services:
     tty: true 
     build:
       context: ./
-      dockerfile: docker/Dockerfile.application
+      dockerfile: docker/application.dockerfile
     environment:
       - RUNNING_ENV=DOCKER
     networks:
@@ -29,7 +29,7 @@ services:
     container_name: o2-rct_database
     build: 
       context: ./
-      dockerfile: docker/Dockerfile.database
+      dockerfile: docker/database.dockerfile
     environment:
       - RUNNING_ENV=DOCKER
     volumes:
