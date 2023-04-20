@@ -206,7 +206,9 @@ class RunConditionTableApplication {
         }
 
         await this.connectServices();
-        this.setSyncAllTask();
+        if (config.syncTaskAtStart) {
+            this.setSyncAllTask();
+        }
         this.logger.info('RCT app started');
     }
 
