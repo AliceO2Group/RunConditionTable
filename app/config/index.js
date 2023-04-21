@@ -38,5 +38,5 @@ module.exports = Object.freeze({
         stack: (logger, er) => logger.error(er.stack),
         object: (logger, er) => logger.error(JSON.stringify(er, null, 2)),
     },
-    defaultErrorsLogginDepth: 'object',
+    defaultErrorsLogginDepth: process.env['RCT_ERR_DEPTH']?.length() > 0 ? process.env['RCT_ERR_DEPTH'] : 'object',
 });

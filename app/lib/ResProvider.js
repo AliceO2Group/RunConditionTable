@@ -220,6 +220,7 @@ class ResProvider {
     static endpointFor(serviceAbbr) {
         // BK-RUNS, ML-DP, ML-MC
         const varsDef = {};
+        varsDef[`RCT_EP_${serviceAbbr}_PROT`] = 'prot';
         varsDef[`RCT_EP_${serviceAbbr}_HOST`] = 'host';
         varsDef[`RCT_EP_${serviceAbbr}_PORT`] = 'port';
         varsDef[`RCT_EP_${serviceAbbr}_PATH`] = 'path';
@@ -227,10 +228,13 @@ class ResProvider {
         const { host } = p;
         let { path } = p;
         // eslint-disable-next-line prefer-destructuring
+        let prot = p['prot'];
+        prot = prot ? prot : 'https';
+        // eslint-disable-next-line prefer-destructuring
         let port = p['port'];
         port = port ? `:${port}` : '';
         path = path ? path.trim().replace(/^\/*/, '') : '';
-        return `https://${host}${port}/${path}`;
+        return `${prot}://${host}${port}/${path}`;
     }
 }
 
