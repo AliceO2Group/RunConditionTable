@@ -52,7 +52,7 @@ class ResProvider {
                 return Utils.switchCase(onFailureAction, {
                     error: ResProvider.onFailureAction_error,
                     warn: ResProvider.onFailureAction_warn,
-                    no: () => null,
+                    no: () => res,
                 })(res, objDefinition);
             }
         }
@@ -85,6 +85,7 @@ class ResProvider {
     static onFailureAction_warn(res, objDef) {
         const mess = ResProvider.nulledMessageGetter(res, objDef);
         logger.warn(mess);
+        return res;
     }
 
     static securityFilesContentProvider(fileNames, description, envVarName, supressLogs = false) {
@@ -214,6 +215,26 @@ class ResProvider {
             logger.info('no passphrase');
         }
         return process.env.ALIMONITOR_PASSPHRASE;
+    }
+
+    static getServiceEndpoint(serviceAbbr) {
+        // BK-RUNS, ML-DP, ML-MC
+        const varsDef = {};
+        varsDef[`RCT_EP_${serviceAbbr}_PROT`] = 'prot';
+        varsDef[`RCT_EP_${serviceAbbr}_HOST`] = 'host';
+        varsDef[`RCT_EP_${serviceAbbr}_PORT`] = 'port';
+        varsDef[`RCT_EP_${serviceAbbr}_PATH`] = 'path';
+        const p = ResProvider.viaEnvVars(varsDef, null, 'warn');
+        const { host } = p;
+        let { path } = p;
+        // eslint-disable-next-line prefer-destructuring
+        let prot = p['prot'];
+        prot = prot ? prot : 'https';
+        // eslint-disable-next-line prefer-destructuring
+        let port = p['port'];
+        port = port ? `:${port}` : '';
+        path = path ? path.trim().replace(/^\/*/, '') : '';
+        return `${prot}://${host}${port}/${path}`;
     }
 }
 

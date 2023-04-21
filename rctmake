@@ -159,17 +159,17 @@ build() {
     case $TARGET in 
         dev)
             $DOCKER_COMP_CMD \
-                -f $DOCKER_DIR/docker-compose-dev.yml \
-                -f $DOCKER_DIR/docker-compose-expose.yml \
-                --env-file $DOCKER_DIR/env_file-dev \
+                -f "$DOCKER_DIR/docker-compose-dev.yml" \
+                -f "$DOCKER_DIR/docker-compose-volumes.yml" \
+                --env-file "$DOCKER_DIR/dev.env" \
                 $ORDER $OTHER_OPTS $SERVICES;
         ;;
 
         test)
             mkdir -p $PROJECT_DIR/reports;
             $DOCKER_COMP_CMD \
-                -f $DOCKER_DIR/docker-compose-test.yml \
-                --env-file $DOCKER_DIR/env_file-test \
+                -f "$DOCKER_DIR/docker-compose-test.yml" \
+                --env-file $DOCKER_DIR/test.env \
                 up --build --abort-on-container-exit $OTHER_OPTS;
         ;;
         *)

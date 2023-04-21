@@ -11,7 +11,6 @@
         ".eslintrc": true,
         ".nycrc": true,
         ".github": true,
-        ".env-default": true,
         "codecov.yml": true,
 
         "LICENSE": true,

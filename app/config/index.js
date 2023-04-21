@@ -22,10 +22,12 @@ module.exports = Object.freeze({
     // App config
     winston: ResProvider.winston(),
     database: ResProvider.database(),
-    syncTaskByDefault: process.env['RCT_SYNC_TASK_BY_DEFAULT'] ? process.env['RCT_SYNC_TASK_BY_DEFAULT'] : true,
+    syncTaskAtStart: process.env['RCT_SYNC_TASK_AT_START']?.trim().toLowerCase() === 'true' ? process.env['RCT_SYNC_TASK_AT_START'] : false,
     databasePersistance: require('./databasePersistance.js'),
     public: require('./public.js'),
 
+    // External services config
+    services: require('./services.js'),
     // RCT data config
     dataFromYearIncluding: 2018,
 
@@ -36,5 +38,5 @@ module.exports = Object.freeze({
         stack: (logger, er) => logger.error(er.stack),
         object: (logger, er) => logger.error(JSON.stringify(er, null, 2)),
     },
-    defaultErrorsLogginDepth: 'object',
+    defaultErrorsLogginDepth: process.env['RCT_ERR_DEPTH']?.length() > 0 ? process.env['RCT_ERR_DEPTH'] : 'object',
 });

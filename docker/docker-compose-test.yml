@@ -1,11 +1,20 @@
 
 services:
   o2-rct_application:
+    container_name: o2-rct_application-test
     build: 
       target: test
     env_file:
-      - ./docker/env_file-test
+      - ./docker/test.env
     volumes:
+      - type: bind
+        read_only: true
+        source: ./security
+        target: /opt/RunConditionTable/security
+      - type: bind
+        read_only: false
+        source: ./database/cache
+        target: /opt/RunConditionTable/database/cache
       - type: bind
         read_only: false
         source: ./reports
@@ -14,10 +23,21 @@ services:
     restart: "no"
 
   o2-rct_database:
+    container_name: o2-rct_database-test
     build: 
       target: test
     env_file:
-      - ./docker/env_file-test
+      - ./docker/test.env
+
+    volumes:
+    - type: bind
+      read_only: true
+      source: ./database
+      target: /docker-entrypoint-initdb.d
+    - type: bind
+      read_only: false
+      source: ./database/cache
+      target: /postgres/run/database/cache
 
     
     restart: "no"
