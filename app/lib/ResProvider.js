@@ -217,7 +217,7 @@ class ResProvider {
         return process.env.ALIMONITOR_PASSPHRASE;
     }
 
-    static endpointFor(serviceAbbr) {
+    static getServiceEndpoint(serviceAbbr) {
         // BK-RUNS, ML-DP, ML-MC
         const varsDef = {};
         varsDef[`RCT_EP_${serviceAbbr}_PROT`] = 'prot';
