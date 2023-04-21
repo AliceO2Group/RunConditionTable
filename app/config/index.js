@@ -22,7 +22,7 @@ module.exports = Object.freeze({
     // App config
     winston: ResProvider.winston(),
     database: ResProvider.database(),
-    syncTaskAtStart: process.env['RCT_SYNC_TASK_AT_START'] ? process.env['RCT_SYNC_TASK_AT_START'] : false,
+    syncTaskAtStart: process.env['RCT_SYNC_TASK_AT_START']?.trim().toLowerCase() === 'true' ? process.env['RCT_SYNC_TASK_AT_START'] : false,
     databasePersistance: require('./databasePersistance.js'),
     public: require('./public.js'),
 
