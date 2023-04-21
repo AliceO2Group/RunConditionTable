@@ -225,13 +225,30 @@ class ResProvider {
         varsDef[`RCT_EP_${serviceAbbr}_PORT`] = 'port';
         varsDef[`RCT_EP_${serviceAbbr}_PATH`] = 'path';
         const p = ResProvider.viaEnvVars(varsDef, null, 'warn');
-        const { host } = p;
+        let { host } = p;
         let { path } = p;
         // eslint-disable-next-line prefer-destructuring
         let prot = p['prot'];
         prot = prot ? prot.trim().replace('://', '') : 'https';
         // eslint-disable-next-line prefer-destructuring
         let port = p['port'];
+        const hs = host.split(':');
+        if (hs.length === 2) {
+            // eslint-disable-next-line prefer-destructuring
+            port = hs[1];
+            // eslint-disable-next-line prefer-destructuring
+            host = hs[0];
+        } else if (hs.length != 1) {
+            const mess = `incorrect format of hostname: ${host}`;
+            logger.error(mess);
+            throw mess;
+        }
+
+        if (port && isNaN(port)) {
+            const mess = `incorrect port <${port}> for hostname: ${host}`;
+            logger.error(mess);
+            throw mess;
+        }
         port = port ? `:${port}` : '';
         path = path ? path.trim().replace(/^\/*/, '') : '';
         return `${prot}://${host}${port}/${path}`;
