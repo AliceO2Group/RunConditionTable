@@ -18,17 +18,17 @@ const services = {
     bookkeeping: {
         url: {
             rct: 'http://rct-bookkeeping.cern.ch:4000/api/runs',
-            ali: ResProvider.endpointFor('BK_RUNS'),
+            ali: ResProvider.getServiceEndpoint('BK_RUNS'),
         },
     },
     monalisa: {
         url: {
-            dataPassesRaw: ResProvider.endpointFor('ML_DP_RAW'),
-            dataPassesDetailed: ResProvider.endpointFor('ML_DP_DET'),
+            dataPassesRaw: ResProvider.getServiceEndpoint('ML_DP_RAW'),
+            dataPassesDetailed: ResProvider.getServiceEndpoint('ML_DP_DET'),
 
-            mcRaw: ResProvider.endpointFor('ML_MC_RAW'),
-            mcDetailed: ResProvider.endpointFor('ML_MC_DET'),
-            mcDetTag: ResProvider.endpointFor('ML_MC_TAG'),
+            mcRaw: ResProvider.getServiceEndpoint('ML_MC_RAW'),
+            mcDetailed: ResProvider.getServiceEndpoint('ML_MC_DET'),
+            mcDetTag: ResProvider.getServiceEndpoint('ML_MC_TAG'),
         },
     },
 };
