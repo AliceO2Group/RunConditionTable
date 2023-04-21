@@ -229,7 +229,7 @@ class ResProvider {
         let { path } = p;
         // eslint-disable-next-line prefer-destructuring
         let prot = p['prot'];
-        prot = prot ? prot : 'https';
+        prot = prot ? prot.trim().replace('://', '') : 'https';
         // eslint-disable-next-line prefer-destructuring
         let port = p['port'];
         port = port ? `:${port}` : '';
