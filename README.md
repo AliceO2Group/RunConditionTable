@@ -38,7 +38,7 @@ Dev does not deploy the new database, it only clears it. In case of any changes 
 14. `reports:show` - open reports
 15. `docker:test` - run static analysis and codecov on docker containers, results are available in `<ProjectDir>/reports/`
 
-Staging locally:
+Starting locally:
  1. `start:dev:local` - run RCT application locally, by default it fetch env vars from `<ProjectDir>/docker/env_file-dev` with exception that RCT_DB_HOST env var is substituted to localhost. If you want to make other substituions do in bash something like: `(export FOO=bar; npm run start:dev:local)`
  2. `deploy:db:local` - deploy database locally using scripts `<ProjectDir>/database/setup-db.sh`. It uses the same env as upper task and follows the logic of env vars substitution.
 
