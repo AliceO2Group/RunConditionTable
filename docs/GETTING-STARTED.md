@@ -18,7 +18,7 @@ Dev does not deploy the new database, it only clears it. In case of any changes 
 7. `db:attach` - run psql as postgres (connected to RCT database) on database container
 8. `db:clean` - clean database in the running database docker
 
-    <br>(Database dumps managing, dumps are stored in `<ProjectDir>/database/cache/dumps`)
+### Database dumps managing, dumps are stored in `<ProjectDir>/database/cache/dumps`
 9. `dump:make <DUMP_NAME>` - make a data dump and store it under the specified name
 10. `dump:list` - list all the dumps stored in local cache
 11. `dump:restore <DUMP_NAME>` - clean the db and restore the data from the specified dump file
@@ -30,12 +30,11 @@ Dev does not deploy the new database, it only clears it. In case of any changes 
 15. `docker:test` - run static analysis and codecov on docker containers, results are available in `<ProjectDir>/reports/`
 
 ### Starting locally:
- 1. `start:dev:local` - run RCT application locally, by default it fetch env vars from `<ProjectDir>/docker/env_file-dev` with exception that RCT_DB_HOST env var is substituted to localhost. If you want to make other substituions do in bash something like: `(export FOO=bar; npm run start:dev:local)`
- 2. `deploy:db:local` - deploy database locally using scripts `<ProjectDir>/database/setup-db.sh`. It uses the same env as upper task and follows the logic of env vars substitution.
+ 1. `start:dev:local` - run the RCT application locally, by default it fetches env vars from `<ProjectDir>/docker/env_file-dev` with exception that RCT_DB_HOST env var is substituted to localhost. If you want to make other substitutions, specify them as follows (bash) before the aplication start: `(export FOO=bar; npm run start:dev:local)`
+ 2. `deploy:db:local` - deploy the database locally with the use of `<ProjectDir>/database/setup-db.sh` script. It uses the same env as the upper task and follows the same env vars substitution logic.
 
 ## Using grid certificates
-Grid certificates need to be located in `<ProjectDir>/security/`. It have to be named (TMP TODO): `rct-alimonitor-cert.p12`. It is also required to set `ALIMONITOR_PASSPHRASE` env var which holds passphrase to that certificate.
-
+Grid certificates need to be located in `<ProjectDir>/security/`. The certificate used by the application has to be named (TMP *TODO filename convention*) `rct-alimonitor-cert.p12`. It is also required to set `ALIMONITOR_PASSPHRASE` env var which holds the passphrase to that certificate.
 
 ## Reaching CERN network
 1. Default behaviour of the application running on docker (var `RUNNING_ENV` is set to `DOCKER`) is to use ssh proxy `socks://172.200.200.1:12345` opened on a host, so you need to locally open ssh socket via command:
