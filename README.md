@@ -20,7 +20,7 @@ Within docker:
 
 2. `dev` - prune, build and run containers, one for the database and one for the application. Changes in the local repo force the application restart on docker (see nodemon and the `start:dev` script).
 Dev does not deploy the new database, it only clears it. In case of any changes in the database or docker images, the use of `dev:prune` is advised.
-3. `dev:up` - up stopped (previously) built contatiners (no data in db is erased)
+3. `dev:up` - up stopped (previously) built containers (no data in db is erased)
 4. `dev:up-r <DUMP_NAME>`  - as dev:up but also restore specified dump (existing in `<ProjectDir>/database/cache/dumps`), see the `dump:list` task
 5. `app:attach` - attach to the application container console
 6. `db:check` - export the current pgmodeler design as the database definition file, delete the database container and rebuild it with the new design. Application container will be deleted as well.
