@@ -20,7 +20,7 @@ Within docker:
 
 2. `dev` - prune, build and run containers, one for the database and one for the application. Changes in the local repo force the application restart on docker (see nodemon and the `start:dev` script).
 Dev does not deploy the new database, it only clears it. In case of any changes in the database or docker images, the use of `dev:prune` is advised.
-3. `dev:up` - up stopped (previously) built contatiners (no data in db is erased)
+3. `dev:up` - up stopped (previously) built containers (no data in db is erased)
 4. `dev:up-r <DUMP_NAME>`  - as dev:up but also restore specified dump (existing in `<ProjectDir>/database/cache/dumps`), see the `dump:list` task
 5. `app:attach` - attach to the application container console
 6. `db:check` - export the current pgmodeler design as the database definition file, delete the database container and rebuild it with the new design. Application container will be deleted as well.
@@ -38,7 +38,7 @@ Dev does not deploy the new database, it only clears it. In case of any changes 
 14. `reports:show` - open reports
 15. `docker:test` - run static analysis and codecov on docker containers, results are available in `<ProjectDir>/reports/`
 
-Staging locally:
+Starting locally:
  1. `start:dev:local` - run RCT application locally, by default it fetch env vars from `<ProjectDir>/docker/env_file-dev` with exception that RCT_DB_HOST env var is substituted to localhost. If you want to make other substituions do in bash something like: `(export FOO=bar; npm run start:dev:local)`
  2. `deploy:db:local` - deploy database locally using scripts `<ProjectDir>/database/setup-db.sh`. It uses the same env as upper task and follows the logic of env vars substitution.
 
