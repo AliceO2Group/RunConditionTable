@@ -79,6 +79,7 @@ CREATE TABLE public.data_passes (
 	number_of_events integer,
 	software_version text,
 	size real,
+	last_run integer NOT NULL,
 	CONSTRAINT data_passes_pkey PRIMARY KEY (id),
 	CONSTRAINT dp_name_unique UNIQUE (name)
 );

@@ -25,7 +25,7 @@ const defaultServiceSynchronizerOptions = {
     forceStop: false,
 
     rawCacheUse: true,
-    useCacheJsonInsteadIfPresent: false,
+    useCacheJsonInsteadIfPresent: true,
     omitWhenCached: false,
 
     batchedRequestes: true,
@@ -202,7 +202,7 @@ class AbstractServiceSynchronizer {
     async makeBatchedRequest(data) {
         const rowsChunks = Utils.arrayToChunks(data, this.batchSize);
         for (const chunk of rowsChunks) {
-            const promises = chunk.map((dataUnit) => this.dbAction(this.dbclient, dataUnit)
+            const promises = chunk.map((dataUnit) => this.dbAction(this.dbClient, dataUnit)
                 .then(() => this.monitor.handleCorrect())
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 
@@ -212,7 +212,7 @@ class AbstractServiceSynchronizer {
 
     async makeSequentialRequest(data) {
         for (const dataUnit of data) {
-            await this.dbAction(this.dbclient, dataUnit)
+            await this.dbAction(this.dbClient, dataUnit)
                 .then(this.monitor.handleCorrect)
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit }));
         }
@@ -232,15 +232,15 @@ class AbstractServiceSynchronizer {
     }
 
     async dbConnect() {
-        this.dbclient = new Client(config.database);
-        this.dbclient.on('error', (e) => this.logger.error(e));
+        this.dbClient = new Client(config.database);
+        this.dbClient.on('error', (e) => this.logger.error(e));
 
-        return await this.dbclient.connect()
+        return await this.dbClient.connect()
             .then(() => this.logger.info('database connection established'));
     }
 
     async dbDisconnect() {
-        return await this.dbclient.end()
+        return await this.dbClient.end()
             .then(() => this.logger.info('database connection ended'));
     }
 
@@ -262,7 +262,7 @@ class AbstractServiceSynchronizer {
     }
 
     isConnected() {
-        return this.dbclient?._connected;
+        return this.dbClient?._connected;
     }
 
     async restart() {

@@ -33,17 +33,24 @@ class MonalisaService extends AbstractServiceSynchronizer {
             description: 'description',
             output_size: 'size',
             interaction_type: 'beam_type',
+            last_run: 'last_run',
         };
 
         this.monalisaServiceDetails = new MonalisaServiceDetails();
     }
 
-    sync() {
-        return this.syncPerEndpoint(
+    async sync() {
+        const last_runs_res = await this.dbClient.query('SELECT name, last_run from data_passes;');
+        if (! last_runs_res || ! last_runs_res.rows) {
+            this.logger.error(`Could last_runs of data_passes are ${last_runs_res}`);
+        }
+        this.last_runs = Object.fromEntries(last_runs_res.rows.map((r) => Object.values(r)));
+
+        return await this.syncPerEndpoint(
             EndpointsFormatter.dataPassesRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
-            (r) => r.period.year >= config.dataFromYearIncluding,
+            (r) => r.period.year >= config.dataFromYearIncluding && r.last_run != this.last_runs[r.name],
             this.dbAction.bind(this),
         );
     }
@@ -79,7 +86,8 @@ class MonalisaService extends AbstractServiceSynchronizer {
             ${null},
             ${d.number_of_events},
             ${null},
-            ${d.size}
+            ${d.size},
+            ${d.last_run}
         );`;
         return await Promise.all([dbClient.query(pgCommand), this.monalisaServiceDetails.sync(d)]);
     }
