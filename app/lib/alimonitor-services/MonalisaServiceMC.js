@@ -69,7 +69,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         sp = Utils.filterObject(sp, this.ketpFields);
         sp.size = Number(sp.size);
 
-        const adustAnchoredOnesToList = (rawString) => Utils
+        const parseListLikeString = (rawString) => Utils
             .replaceAll(rawString, /,|'|;"/, ' ')
             .split(/ +/)
             .map((v) => v.trim())
@@ -81,8 +81,9 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
          */
 
         sp.period = this.extractPeriod(sp);
-        sp.anchor_passes = adustAnchoredOnesToList(sp.anchor_passes);
-        sp.anchor_productions = adustAnchoredOnesToList(sp.anchor_productions);
+        sp.anchor_passes = parseListLikeString(sp.anchor_passes);
+        sp.anchor_productions = parseListLikeString(sp.anchor_productions);
+        sp.runs = parseListLikeString(sp.runs).map((s) => Number(s));
 
         return sp;
     }
@@ -111,8 +112,10 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             ${null},
             ${d.number_of_events},
             ${d.size}
-        );`;
-        return await Promise.all([dbClient.query(pgCommand), this.monalisaServiceMCDetails.sync(d)]);
+        ); call insert_mc_details(${d.name}, ${d.runs}::integer[], ${period.name});`;
+        return await dbClient.query(pgCommand);
+        // eslint-disable-next-line capitalized-comments
+        // return await Promise.all([dbClient.query(pgCommand), this.monalisaServiceMCDetails.sync(d)]);
     }
 
     extractPeriod(rowData) {
