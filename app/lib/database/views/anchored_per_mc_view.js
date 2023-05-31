@@ -17,15 +17,12 @@ const anchored_per_mc_view = (query) => `
             --dp.id
             dp.name,
             dp.description,
-            pt.pass_type,
             dp.jira,
             dp.ml,
             dp.number_of_events,
             dp.software_version,
             dp.size
         FROM data_passes AS dp
-        LEFT JOIN pass_types AS pt
-            ON pt.id = dp.pass_type
         INNER JOIN anchored_passes as aps
             ON aps.data_pass_id = dp.id
         INNER JOIN simulation_passes as sp
