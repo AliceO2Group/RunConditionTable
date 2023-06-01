@@ -46,7 +46,7 @@ jobs:
     - name: Install production dependencies
       run: npm install --only=production
     - name: Create package tarball
-      run:  echo ::set-output name=tgz_name::$(npm pack)
+      run: echo "tgz_name=$(npm pack)" >> $GITHUB_OUTPUT
       id: tgz
     - name: Upload tarball to release assets via GH CLI
       working-directory: ./RunConditionTable
