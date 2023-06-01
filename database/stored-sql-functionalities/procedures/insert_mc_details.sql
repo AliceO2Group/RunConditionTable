@@ -13,7 +13,9 @@ BEGIN
     if NOT EXISTS (SELECT * FROM runs WHERE run_number = _run_number) OR prod_id IS NULL THEN
         RAISE EXCEPTION 'nulls %', now();
     END IF;
-    INSERT INTO simulation_passes_runs(run_number, simulation_pass_id, qc) VALUES(_run_number, prod_id, null);
+    IF NOT EXISTS (SELECT * from simulation_passes_runs where run_number = _run_number and simulation_pass_id = prod_id ) then
+            INSERT INTO simulation_passes_runs(run_number, simulation_pass_id, qc) VALUES(_run_number, prod_id, null);
+    end if;
 END;
 $$;
 
@@ -35,7 +37,9 @@ BEGIN
         if NOT EXISTS (SELECT * FROM runs WHERE run_number = _run_number) OR prod_id IS NULL THEN
             RAISE EXCEPTION 'nulls %', now();
         END IF;
-        INSERT INTO simulation_passes_runs(run_number, simulation_pass_id, qc) VALUES(_run_number, prod_id, null);
+        IF NOT EXISTS (SELECT * from simulation_passes_runs where run_number = _run_number and simulation_pass_id = prod_id ) then
+            INSERT INTO simulation_passes_runs(run_number, simulation_pass_id, qc) VALUES(_run_number, prod_id, null);
+        end if;
     END LOOP;
 END;
 $$

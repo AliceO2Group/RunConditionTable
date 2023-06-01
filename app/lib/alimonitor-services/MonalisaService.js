@@ -89,7 +89,11 @@ class MonalisaService extends AbstractServiceSynchronizer {
             ${d.size},
             ${d.last_run}
         );`;
-        return await Promise.all([dbClient.query(pgCommand), this.monalisaServiceDetails.sync(d)]);
+        const q1 = await dbClient.query(pgCommand);
+        const q2 = await this.monalisaServiceDetails.sync(d);
+        return Promise.all([q1, q2]);
+        // eslint-disable-next-line capitalized-comments
+        // return await Promise.all([dbClient.query(pgCommand), this.monalisaServiceDetails.sync(d)]);
     }
 
     extractPeriod(rowData) {

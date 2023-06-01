@@ -122,7 +122,6 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
 
         const detectorsInSql = `${d.detectors}::varchar[]`;
-        console.log(detectorsInSql)
         const pgCommand = `${period_insert}; call insert_run (
             ${d.run_number},
             ${d.period}, 

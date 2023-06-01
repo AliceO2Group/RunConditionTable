@@ -19,13 +19,14 @@ const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
 const ResProvider = require('../ResProvider.js');
 const Utils = require('../Utils.js');
+const JsonsFetcher = require('./JsonsFetcher.js');
 const Cacher = require('./Cacher.js');
 
 const defaultServiceSynchronizerOptions = {
     forceStop: false,
 
     rawCacheUse: true,
-    useCacheJsonInsteadIfPresent: true,
+    useCacheJsonInsteadIfPresent: false,
     omitWhenCached: false,
 
     batchedRequestes: true,
@@ -42,6 +43,7 @@ class PassCorrectnessMonitor {
         this.errorsLoggingDepth = errorsLoggingDepth;
         this.correct = 0;
         this.incorrect = 0;
+        this.ommited = 0;
         this.errors = [];
     }
 
@@ -55,17 +57,21 @@ class PassCorrectnessMonitor {
         this.errors.push(e);
     }
 
+    handleOmmited() {
+        this.ommited++;
+    }
+
     logResults() {
-        const { correct, incorrect, errors, errorsLoggingDepth, logger } = this;
-        const dataSize = incorrect + correct;
+        const { correct, incorrect, ommited, errors, errorsLoggingDepth, logger } = this;
+        const dataSize = incorrect + correct + ommited;
 
         if (incorrect > 0) {
             const logFunc = Utils.switchCase(errorsLoggingDepth, config.errorsLoggingDepths);
             errors.forEach((e) => logFunc(logger, e));
             logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
         }
-        if (correct > 0) {
-            logger.info(`sync successful for  ${correct}/${dataSize}`);
+        if (ommited > 0) {
+            logger.info(`ommited data units ${ommited}/${dataSize}`);
         }
     }
 }
@@ -182,12 +188,18 @@ class AbstractServiceSynchronizer {
             }
             const data = responsePreprocess(rawResponse)
                 .map((r) => dataAdjuster(r))
-                .filter((r) => r && filterer(r));
+                .filter((r) => {
+                    const f = r && filterer(r);
+                    if (!f) {
+                        this.monitor.handleOmmited();
+                    }
+                    return f;
+                });
 
             if (this.batchedRequestes) {
-                this.makeBatchedRequest(data);
+                await this.makeBatchedRequest(data);
             } else {
-                this.makeSequentialRequest(data);
+                await this.makeSequentialRequest(data);
             }
             this.monitor.logResults();
         } catch (fatalError) {
@@ -220,7 +232,8 @@ class AbstractServiceSynchronizer {
 
     async getRawResponse(endpoint) {
         if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint)) {
-            this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
+            // eslint-disable-next-line capitalized-comments
+            // this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return Cacher.getJsonSync(this.name, endpoint);
         }
         const onSucces = (endpoint, data) => {
@@ -228,7 +241,7 @@ class AbstractServiceSynchronizer {
                 Cacher.cache(this.name, endpoint, data);
             }
         };
-        return await Utils.makeHttpRequestForJSON(endpoint, this.opts, this.logger, onSucces);
+        return await JsonsFetcher.makeHttpRequestForJSON(endpoint, this.opts, this.logger, onSucces);
     }
 
     async dbConnect() {
