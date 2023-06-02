@@ -43,7 +43,7 @@ class PassCorrectnessMonitor {
         this.errorsLoggingDepth = errorsLoggingDepth;
         this.correct = 0;
         this.incorrect = 0;
-        this.ommited = 0;
+        this.omitted = 0;
         this.errors = [];
     }
 
@@ -57,21 +57,21 @@ class PassCorrectnessMonitor {
         this.errors.push(e);
     }
 
-    handleOmmited() {
-        this.ommited++;
+    handleOmitted() {
+        this.omitted++;
     }
 
     logResults() {
-        const { correct, incorrect, ommited, errors, errorsLoggingDepth, logger } = this;
-        const dataSize = incorrect + correct + ommited;
+        const { correct, incorrect, omitted, errors, errorsLoggingDepth, logger } = this;
+        const dataSize = incorrect + correct + omitted;
 
         if (incorrect > 0) {
             const logFunc = Utils.switchCase(errorsLoggingDepth, config.errorsLoggingDepths);
             errors.forEach((e) => logFunc(logger, e));
             logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
         }
-        if (ommited > 0) {
-            logger.info(`ommited data units ${ommited}/${dataSize}`);
+        if (omitted > 0) {
+            logger.info(`omitted data units ${omitted}/${dataSize}`);
         }
     }
 }
@@ -191,7 +191,7 @@ class AbstractServiceSynchronizer {
                 .filter((r) => {
                     const f = r && filterer(r);
                     if (!f) {
-                        this.monitor.handleOmmited();
+                        this.monitor.handleOmitted();
                     }
                     return f;
                 });
