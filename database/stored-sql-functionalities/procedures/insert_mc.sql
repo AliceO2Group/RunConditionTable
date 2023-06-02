@@ -52,13 +52,17 @@ BEGIN
                     IF dp_ids IS NOT NULL THEN
                         any_related_pass_found = TRUE;
                         foreach dp_id in array dp_ids loop
-                            INSERT INTO anchored_passes(data_pass_id, sim_pass_id) values(dp_id, sp_id);
+                            IF NOT EXISTS (SELECT * from anchored_passes where data_pass_id = dp_id AND sim_pass_id = sp_id) THEN
+                                INSERT INTO anchored_passes(data_pass_id, sim_pass_id) values(dp_id, sp_id);
+                            END IF;
                         END loop;
                     END IF;
                 END LOOP;
                 IF any_related_pass_found THEN
                     SELECT id INTO p_id FROM periods WHERE name = an_period;
-                    INSERT INTO anchored_periods(period_id, sim_pass_id) VALUES(p_id, sp_id);
+                    if not exists (select * from anchored_periods where period_id = p_id and  sim_pass_id  = sp_id) then
+                        INSERT INTO anchored_periods(period_id, sim_pass_id) VALUES(p_id, sp_id);
+                    end if;
                 END IF;
             END LOOP;
         ELSE 

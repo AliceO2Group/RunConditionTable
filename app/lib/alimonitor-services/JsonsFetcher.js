@@ -83,6 +83,7 @@ class JsonsFetcher {
                             __dirname,
                             '..',
                             '..',
+                            '..',
                             'database',
                             'cache',
                             'rawJson',

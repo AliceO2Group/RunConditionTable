@@ -7,7 +7,8 @@ create or replace procedure insert_prod(
     _ml text,
     _number_of_events  integer,
     _softwar_version text,
-    _size real)
+    _size real,
+    _last_run integer)
 LANGUAGE plpgsql
 AS $$
 
@@ -33,7 +34,8 @@ BEGIN
             ml, 
             number_of_events, 
             software_version, 
-            size) values (
+            size,
+            last_run) values (
                 DEFAULT, 
                 trg_period_id,
                 _name, 
@@ -42,7 +44,15 @@ BEGIN
                 _ml, 
                 _number_of_events, 
                 _softwar_version, 
-                _size);
+                _size,
+                _last_run);
+    ELSE
+        IF _last_run IS NOT NULL THEN 
+            UPDATE data_passes SET last_run = _last_run WHERE id = dp_id;
+        END IF;
+        IF _number_of_events IS NOT NULL THEN 
+            UPDATE data_passes SET number_of_events = _number_of_events WHERE id = dp_id;
+        END IF;
     END IF;
 end;
 $$;

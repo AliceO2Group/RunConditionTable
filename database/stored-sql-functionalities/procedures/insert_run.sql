@@ -3,7 +3,7 @@ create or replace procedure insert_run(
     _run_number integer,
     _period varchar,
     _time_trg_start bigint,
-    _time_trg_stop bigint,
+    _time_trg_end bigint,
     _time_start bigint,
     _time_end bigint,
     _run_type varchar,
@@ -31,7 +31,7 @@ BEGIN
     
     IF NOT EXISTS (SELECT * FROM runs WHERE run_number = _run_number) THEN
         INSERT INTO runs(period_id, run_number, time_start, time_end, energy_per_beam, ir, filling_scheme, triggers_conf, fill_number, run_type, mu, time_trg_start, time_trg_end, l3_current, dipole_current) 
-                    VALUES(trg_id, _run_number, _time_start, _time_end, _energy_per_beam, null, null, null, _fill_number, _run_type, null, _time_trg_start, _time_trg_stop, _l3_current, _dipole_current);
+                    VALUES(trg_id, _run_number, _time_start, _time_end, _energy_per_beam, null, null, null, _fill_number, _run_type, null, _time_trg_start, _time_trg_end, _l3_current, _dipole_current);
     ELSE 
         raise notice 'run % already present', _run_number;
 
@@ -63,8 +63,8 @@ BEGIN
         IF _time_trg_start IS NOT NULL THEN 
             UPDATE runs SET time_trg_start = _time_trg_start WHERE run_number = _run_number; 
         END IF;
-        IF _time_trg_stop IS NOT NULL THEN 
-            UPDATE runs SET time_trg_stop = _time_trg_stop WHERE run_number = _run_number; 
+        IF _time_trg_end IS NOT NULL THEN 
+            UPDATE runs SET time_trg_end = _time_trg_end WHERE run_number = _run_number; 
         END IF;
         IF _l3_current IS NOT NULL THEN 
             UPDATE runs SET l3_current = _l3_current WHERE run_number = _run_number; 

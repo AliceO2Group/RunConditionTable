@@ -19,6 +19,7 @@ const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
 const ResProvider = require('../ResProvider.js');
 const Utils = require('../Utils.js');
+const JsonsFetcher = require('./JsonsFetcher.js');
 const Cacher = require('./Cacher.js');
 
 const defaultServiceSynchronizerOptions = {
@@ -42,6 +43,7 @@ class PassCorrectnessMonitor {
         this.errorsLoggingDepth = errorsLoggingDepth;
         this.correct = 0;
         this.incorrect = 0;
+        this.omitted = 0;
         this.errors = [];
     }
 
@@ -55,17 +57,21 @@ class PassCorrectnessMonitor {
         this.errors.push(e);
     }
 
+    handleOmitted() {
+        this.omitted++;
+    }
+
     logResults() {
-        const { correct, incorrect, errors, errorsLoggingDepth, logger } = this;
-        const dataSize = incorrect + correct;
+        const { correct, incorrect, omitted, errors, errorsLoggingDepth, logger } = this;
+        const dataSize = incorrect + correct + omitted;
 
         if (incorrect > 0) {
             const logFunc = Utils.switchCase(errorsLoggingDepth, config.errorsLoggingDepths);
             errors.forEach((e) => logFunc(logger, e));
             logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
         }
-        if (correct > 0) {
-            logger.info(`sync successful for  ${correct}/${dataSize}`);
+        if (omitted > 0) {
+            logger.info(`omitted data units ${omitted}/${dataSize}`);
         }
     }
 }
@@ -182,12 +188,18 @@ class AbstractServiceSynchronizer {
             }
             const data = responsePreprocess(rawResponse)
                 .map((r) => dataAdjuster(r))
-                .filter((r) => r && filterer(r));
+                .filter((r) => {
+                    const f = r && filterer(r);
+                    if (!f) {
+                        this.monitor.handleOmitted();
+                    }
+                    return f;
+                });
 
             if (this.batchedRequestes) {
-                this.makeBatchedRequest(data);
+                await this.makeBatchedRequest(data);
             } else {
-                this.makeSequentialRequest(data);
+                await this.makeSequentialRequest(data);
             }
             this.monitor.logResults();
         } catch (fatalError) {
@@ -202,7 +214,7 @@ class AbstractServiceSynchronizer {
     async makeBatchedRequest(data) {
         const rowsChunks = Utils.arrayToChunks(data, this.batchSize);
         for (const chunk of rowsChunks) {
-            const promises = chunk.map((dataUnit) => this.dbAction(this.dbclient, dataUnit)
+            const promises = chunk.map((dataUnit) => this.dbAction(this.dbClient, dataUnit)
                 .then(() => this.monitor.handleCorrect())
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 
@@ -212,7 +224,7 @@ class AbstractServiceSynchronizer {
 
     async makeSequentialRequest(data) {
         for (const dataUnit of data) {
-            await this.dbAction(this.dbclient, dataUnit)
+            await this.dbAction(this.dbClient, dataUnit)
                 .then(this.monitor.handleCorrect)
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit }));
         }
@@ -220,7 +232,8 @@ class AbstractServiceSynchronizer {
 
     async getRawResponse(endpoint) {
         if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint)) {
-            this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
+            // eslint-disable-next-line capitalized-comments
+            // this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return Cacher.getJsonSync(this.name, endpoint);
         }
         const onSucces = (endpoint, data) => {
@@ -228,19 +241,19 @@ class AbstractServiceSynchronizer {
                 Cacher.cache(this.name, endpoint, data);
             }
         };
-        return await Utils.makeHttpRequestForJSON(endpoint, this.opts, this.logger, onSucces);
+        return await JsonsFetcher.makeHttpRequestForJSON(endpoint, this.opts, this.logger, onSucces);
     }
 
     async dbConnect() {
-        this.dbclient = new Client(config.database);
-        this.dbclient.on('error', (e) => this.logger.error(e));
+        this.dbClient = new Client(config.database);
+        this.dbClient.on('error', (e) => this.logger.error(e));
 
-        return await this.dbclient.connect()
+        return await this.dbClient.connect()
             .then(() => this.logger.info('database connection established'));
     }
 
     async dbDisconnect() {
-        return await this.dbclient.end()
+        return await this.dbClient.end()
             .then(() => this.logger.info('database connection ended'));
     }
 
@@ -262,7 +275,7 @@ class AbstractServiceSynchronizer {
     }
 
     isConnected() {
-        return this.dbclient?._connected;
+        return this.dbClient?._connected;
     }
 
     async restart() {

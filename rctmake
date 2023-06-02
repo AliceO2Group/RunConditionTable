@@ -196,7 +196,8 @@ for stage in $STAGES; do
                     $PROJECT_DIR/database/setup-db.sh --only-export;
                 ;;
                 clean | truncate)
-                    docker exec $DB_CONTAINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "database/utils/delete-data.sql";
+                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/delete-data.sql" \
+                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "/postgres/run/delete-data.sql";
                 ;;
                 
                 ip)
@@ -268,8 +269,8 @@ for stage in $STAGES; do
                     if [ -z "$DUMP_PATH" ]; then
                         usage "Dump file name unspecified, use flag -F|--dump-file <FILE>";
                     fi
-                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/" \
-                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "database/utils/delete-data.sql" \
+                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/delete-data.sql" \
+                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "/postgres/run/delete-data.sql" \
                     && docker exec $DB_CONTAINER_NAME pg_restore --data-only -U $RCT_USER -d $RCT_DATABASE $CONTAINER_DUMP_PATH;
                 ;;
 
