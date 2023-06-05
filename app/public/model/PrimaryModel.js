@@ -80,7 +80,7 @@ export default class PrimaryModel extends Observable {
 
     async sync() {
         const syncEndpoint = '/api/sync/';
-        const { result, status, ok } = this.loader.get(syncEndpoint);
+        this.loader.get(syncEndpoint);
         await this.fetchedData.reqForData(true);
         document.location.reload(true);
         this.notify();

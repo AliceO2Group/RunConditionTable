@@ -41,7 +41,7 @@ export default function tablePanel(model) {
     if (data.rows?.length == 0) {
         return noDataView(model, dataPointer);
     }
-    
+
     const cellsSpecials = pagesCellsSpecials[dataPointer.page];
 
     const { fields } = data;

@@ -18,25 +18,25 @@ const { pagesNames } = RCT;
 
 function useState(defaultValue) {
     let value = defaultValue;
-  
+
     function getValue() {
-      return value;
+        return value;
     }
-  
+
     function setValue(newValue) {
-      value = newValue;
+        value = newValue;
     }
-  
+
     return [getValue, setValue];
-  }
-  
-  const modes = {
-	requested: 0,
-	waiting: 1,
 }
 
+const modes = {
+    requested: 0,
+    waiting: 1,
+};
+
 export default function noDataView(
-    model, dataPointer
+    model, dataPointer,
 ) {
     const [mode, setMode] = useState(modes.waiting);
     const goBackBtn = h('button.btn.btn-primary.m3', {
@@ -46,9 +46,12 @@ export default function noDataView(
         onclick: async () => {
             if (mode() === modes.waiting) {
                 await model.sync();
-                // await model.fetchedData.reqForData(true);
-                // model.notify();
-                // document.location.reload(true);
+
+                /*
+                 * Await model.fetchedData.reqForData(true);
+                 * model.notify();
+                 * document.location.reload(true);
+                 */
             } else {
                 model.fetchedData.reqForData(true);
             }

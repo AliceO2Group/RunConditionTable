@@ -8,12 +8,12 @@
         }
     },
     "files.exclude": {
-        ".eslintrc": true,
+        // ".eslintrc": true,
         ".nycrc": true,
         ".github": true,
         "codecov.yml": true,
 
         "LICENSE": true,
-        "node_modules": true,
+        // "node_modules": true,
       }
 }
