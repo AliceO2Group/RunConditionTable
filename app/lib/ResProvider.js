@@ -227,11 +227,9 @@ class ResProvider {
         const p = ResProvider.viaEnvVars(varsDef, null, 'warn');
         let { host } = p;
         let { path } = p;
-        // eslint-disable-next-line prefer-destructuring
-        let prot = p['prot'];
+        let { prot } = p || {};
         prot = prot ? prot.trim().replace('://', '') : 'https';
-        // eslint-disable-next-line prefer-destructuring
-        let port = p['port'];
+        let { port } = p || {};
         const hs = host.split(':');
         if (hs.length === 2) {
             // eslint-disable-next-line prefer-destructuring
