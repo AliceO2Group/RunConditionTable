@@ -154,7 +154,7 @@ class RunConditionTableApplication {
         httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res));
         httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res));
         httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
-        httpServer.get('sync', (req, res) => this.syncAll());
+        httpServer.get(EP.sync, async (req, res) => this.syncAll());
     }
 
     buildAuthControl() {
