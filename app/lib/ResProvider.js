@@ -232,7 +232,7 @@ class ResProvider {
         prot = prot ? prot.trim().replace('://', '') : 'https';
         const hs = host.split(':');
         if (hs.length === 2) {
-            [host, port] = host.split(':');
+            [host, port] = hs;
         } else if (hs.length != 1) {
             const mess = `incorrect format of hostname: ${host}`;
             logger.error(mess);
