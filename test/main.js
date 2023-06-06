@@ -13,7 +13,7 @@
  */
 
 const DatabaseSuite = require('./database');
-// const ApiSuite = require('./api');
+const ApiSuite = require('./api');
 const PublicSuite = require('./public');
 const LibSuite = require('./lib');
 const assert = require('assert');
@@ -23,6 +23,7 @@ describe('Run Condition Table', () => {
   
     describe('Unit Suite', () => {
       describe('Database', DatabaseSuite);
+      describe('API', ApiSuite),
       describe('Public', PublicSuite);
       describe('Lib', LibSuite);
     });
