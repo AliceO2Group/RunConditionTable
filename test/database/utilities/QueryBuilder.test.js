@@ -12,7 +12,7 @@
  */
 
 const QueryBuilder = require('../../../app/lib/database/QueryBuilder');
-const views = require('../../../app/lib/database/viewsDefinitions');
+const periods_view = require('../../../app/lib/database/views/periods_view');
 const expect = require('chai').expect;
 
 module.exports = () => {
@@ -36,7 +36,7 @@ module.exports = () => {
             });
 
             it('return period view query correctly', async () => {
-                const expectedOutcome = `${views.period_view}
+                const expectedOutcome = `${periods_view}
                     SELECT name, year, beam, string_agg(energy::varchar, ',') as energy
                     FROM period_view
                     GROUP BY name, year, beam;`
