@@ -28,7 +28,6 @@ module.exports = () => {
                 const expectedOutcome = `WITH periods_view AS (${views.periods_view()})
                     SELECT *
                     FROM periods_view`
-
                 const params = {page: 'periods'};
                 const result = QueryBuilder.build(params);
                 expect(result).to.not.be.null;
