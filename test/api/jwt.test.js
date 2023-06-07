@@ -19,21 +19,12 @@ const app = new Application({});
 const server = app.httpServer;
 
 module.exports = () => {
-    describe('GET /api/date', () => {
+    describe('Get requests', () => {
         
-        it('should return 200', async () => {
+        it('should be protected by a Json Web Token', async () => {
             const response = await request(server)
                 .get('/api/date');
-            console.log(response);
-                expect(response.status).to.equal(200);
-        });
-    });
-
-    describe('GET /api/rctData', () => {
-        it('should return 200', async () => {
-            const response = await request(server)
-                .get('/api/RCT-Data');
-            expect(response.status).to.equal(200);
+            expect(response.status).to.equal(403);
         });
     });
 };
