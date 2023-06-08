@@ -33,7 +33,6 @@ const { webUiServer } = require('./server/index.js');
 
 // Extract important
 const EP = config.public.endpoints;
-// const roles = config.public.roles;
 Log.configure(config);
 
 /**
@@ -51,7 +50,6 @@ class RunConditionTableApplication {
         this.buildAuthControl();
 
         buildPublicConfig(config);
-        // if (process.env.ENV_MODE !== "test")
         this.buildCli();
     }
 
