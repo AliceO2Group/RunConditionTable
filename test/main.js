@@ -18,21 +18,30 @@ const PublicSuite = require('./public');
 const LibSuite = require('./lib');
 const assert = require('assert');
 
+const application = require('../app/application.js');
+
 describe('Run Condition Table', () => {
-    const Application = require('../app/application.js');
+    before(async () => {
+        await application.run();
+    });
+
+    after(async () => {
+        await application.stop(true);
+    });
   
+    describe('App initialization', () => {
+        it('should initialize the app instance', () => {
+            assert.doesNotThrow(async () => {
+                app = new Application({});
+                await app.stop()
+            });
+        });
+    });
+    
     describe('Unit Suite', () => {
       describe('Database', DatabaseSuite);
       describe('API', ApiSuite),
       describe('Public', PublicSuite);
       describe('Lib', LibSuite);
-    });
-    
-    describe('App initialization', () => {
-        it('should initialize the app instance', () => {
-            assert.doesNotThrow(() => {
-                new Application({});
-            });
-        });
     });
 });

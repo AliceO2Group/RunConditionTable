@@ -12,19 +12,30 @@
  */
 
 const request = require('supertest');
-const Application = require('../../app/application');
+const { httpServer } = require('../../app/application');
 const { expect } = require('chai');
 
-const app = new Application({});
-const server = app.httpServer;
-
-module.exports = () => {
+module.exports = async () => {
     describe('Get requests', () => {
         
         it('should be protected by a Json Web Token', async () => {
-            const response = await request(server)
+            const response = await request(httpServer)
+                .get('/api/date');
+            expect(response.status).to.equal(403);
+        });
+
+        it('should be protected by a Json Web Token', async () => {
+            const response = await request(httpServer)
+                .post('/api/login');
+            expect(response.status).to.equal(200);
+        });
+
+        it('should be protected by a Json Web Token', async () => {
+            const token = jwt.sign({ user: { id: 1, name: 'ME!', role: 'average' } }, 'dsfklgj');
+            const response = await request(httpServer)
                 .get('/api/date');
             expect(response.status).to.equal(403);
         });
     });
+
 };

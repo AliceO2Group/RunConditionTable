@@ -11,12 +11,6 @@
  * or submit itself to any jurisdiction.
  */
 
-const SyncSuite = require('./sync.test.js');
-const RctDataSuite = require('./rctData.test.js');
-const JwtSuite = require('./jwt.test.js');
+const { WebUiServer } = require('./WebUiServer');
 
-module.exports = () => {
-    describe('RCT data API', RctDataSuite);
-    describe('Synchronization API', SyncSuite);
-    describe('JWT sample', JwtSuite);
-};
+exports.webUiServer = new WebUiServer();

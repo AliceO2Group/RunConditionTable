@@ -12,26 +12,22 @@
  */
 
 const request = require('supertest');
-const Application = require('../../app/application');
+const { httpServer } = require('../../app/application');
 const { expect } = require('chai');
 
-const app = new Application({});
-const server = app.httpServer;
-
-module.exports = () => {
+module.exports = async () => {
     describe('GET /api/date', () => {
         
         it('should return 200', async () => {
-            const response = await request(server)
+            const response = await request(httpServer)
                 .get('/api/date');
-            console.log(response);
-                expect(response.status).to.equal(200);
+            expect(response.status).to.equal(200);
         });
     });
 
     describe('GET /api/rctData', () => {
         it('should return 200', async () => {
-            const response = await request(server)
+            const response = await request(httpServer)
                 .get('/api/RCT-Data');
             expect(response.status).to.equal(200);
         });

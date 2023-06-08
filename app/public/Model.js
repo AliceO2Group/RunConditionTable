@@ -27,8 +27,29 @@ export default class Model extends Observable {
         // TODO if no personid then it is a computer so we need to parse it respectively
         this.session.roles = this.getRoles();
 
+        /*
+
+        this.session = {
+            personid: 1,
+            id: 1,
+            name: 'John Doe',
+            access: 'admin'
+        };
+        */
+
         this.router = new QueryRouter();
         this.router.bubbleTo(this);
+
+        /*
+        this.router.use(async (request, response, next) => {
+            // if (process.env.NODE_ENV === 'test') {
+                request.session = {
+                    personid: 1,
+                    id: 1,
+                    name: 'John Doe',
+                    access: 'admin'
+                }});
+        */
         this.loader = new Loader();
 
         this.mode = null;

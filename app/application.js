@@ -12,12 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 // RCT
-const { HttpServer, Log } = require('@aliceo2/web-ui');
+const { Log } = require('@aliceo2/web-ui');
 const config = require('./lib/config/configProvider.js');
 const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
 
 // IO
-const path = require('path');
 const readline = require('readline');
 const Utils = require('./lib/Utils.js');
 const { Console } = require('node:console');
@@ -29,8 +28,12 @@ const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
 const MonalisaServiceMC = require('./lib/alimonitor-services/MonalisaServiceMC.js');
 const AuthControlManager = require('./lib/other/AuthControlManager.js');
 
+// Server
+const { webUiServer } = require('./server/index.js');
+
 // Extract important
 const EP = config.public.endpoints;
+// const roles = config.public.roles;
 Log.configure(config);
 
 /**
@@ -42,22 +45,14 @@ class RunConditionTableApplication {
 
         this.logger = new Log(RunConditionTableApplication.name);
 
-        this.buildServer();
+        this.webUiServer = webUiServer;
         this.buildServices();
-        this.defineStaticRoutes();
         this.defineEndpoints();
         this.buildAuthControl();
 
         buildPublicConfig(config);
+        // if (process.env.ENV_MODE !== "test")
         this.buildCli();
-    }
-
-    buildServer() {
-        if (!config.openId) {
-            this.httpServer = new HttpServer(config.http, config.jwt);
-        } else {
-            this.httpServer = new HttpServer(config.http, config.jwt, config.openId);
-        }
     }
 
     buildCli() {
@@ -136,13 +131,6 @@ class RunConditionTableApplication {
 
     incorrectCommand() {
         return () => this.con.log('incorrect command');
-    }
-
-    defineStaticRoutes() {
-        const { httpServer } = this;
-
-        httpServer.addStaticPath(path.join(__dirname, 'public'));
-        httpServer.addStaticPath(path.join(__dirname, '..', 'node_modules', 'less/dist'), '/scripts');
     }
 
     defineEndpoints() {
@@ -269,9 +257,9 @@ class RunConditionTableApplication {
         return process.env.ENV_MODE;
     }
 
-    getAddress() {
-        return this.httpServer.address();
+    get httpServer() {
+        return this.webUiServer.httpServer;
     }
 }
 
-module.exports = RunConditionTableApplication;
+module.exports = new RunConditionTableApplication();

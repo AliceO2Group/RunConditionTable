@@ -12,13 +12,13 @@
  */
 
 const request = require('supertest');
-const server = require('../../app/application');
+const { httpServer } = require('../../app/application');
 const { expect } = require('chai');
 
-module.exports = () => {
+module.exports = async () => {
     describe('GET /api/sync', () => {
         it('should return 200', async () => {
-            const response = await request(server)
+            const response = await request(httpServer)
                 .get('/api/sync');
             expect(response.status).to.equal(200);
         });
