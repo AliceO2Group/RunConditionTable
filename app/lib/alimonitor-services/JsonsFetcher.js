@@ -17,7 +17,7 @@ const path = require('path');
 const Utils = require('../Utils.js');
 
 class JsonsFetcher {
-    static makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFialure) {
+    static makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFailure) {
         return new Promise((resolve, reject) => {
             let rawData = '';
             const req = Utils.checkClientType(endpoint).request(endpoint, opts, async (res) => {
@@ -55,8 +55,8 @@ class JsonsFetcher {
 
                 req.on('error', (e) => {
                     logger.error(`ERROR httpGet: ${e}`);
-                    if (onFialure) {
-                        onFialure(endpoint, e);
+                    if (onFailure) {
+                        onFailure(endpoint, e);
                     }
                     reject(e);
                 });
@@ -90,8 +90,8 @@ class JsonsFetcher {
                             'failing-endpoints.txt',
                         );
                         fs.appendFileSync(fp, `${endpoint.href}\n     ${e.message}\n`);
-                        if (onFialure) {
-                            onFialure(endpoint, e);
+                        if (onFailure) {
+                            onFailure(endpoint, e);
                         }
                         reject(e);
                     }

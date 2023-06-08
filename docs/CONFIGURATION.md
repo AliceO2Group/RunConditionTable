@@ -29,5 +29,5 @@ The following configuration items can be set using environment variables, note t
 ## Misc.
 | Variable name | Description | Default value |
 |---------------|-------------|---------------|
-| ALIMONITOR_PASSPHRASE | passphrase to grid certificate myCertificate.p12 | |
+| ALIMONITOR_PASSPHRASE | passphrase to the grid certificate (`rct-alimonitor-cert.p12`) | |
 | CERN_SOCKS | address of proxy socket used for reaching CERN network | false |

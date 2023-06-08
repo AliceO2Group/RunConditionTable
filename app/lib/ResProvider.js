@@ -227,17 +227,12 @@ class ResProvider {
         const p = ResProvider.viaEnvVars(varsDef, null, 'warn');
         let { host } = p;
         let { path } = p;
-        // eslint-disable-next-line prefer-destructuring
-        let prot = p['prot'];
+        let { port } = p || {};
+        let { prot } = p || {};
         prot = prot ? prot.trim().replace('://', '') : 'https';
-        // eslint-disable-next-line prefer-destructuring
-        let port = p['port'];
         const hs = host.split(':');
         if (hs.length === 2) {
-            // eslint-disable-next-line prefer-destructuring
-            port = hs[1];
-            // eslint-disable-next-line prefer-destructuring
-            host = hs[0];
+            [host, port] = hs;
         } else if (hs.length != 1) {
             const mess = `incorrect format of hostname: ${host}`;
             logger.error(mess);

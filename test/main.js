@@ -13,6 +13,7 @@
  */
 
 const DatabaseSuite = require('./database');
+// const ApiSuite = require('./api');
 const PublicSuite = require('./public');
 const LibSuite = require('./lib');
 const assert = require('assert');

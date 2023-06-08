@@ -17,7 +17,7 @@ const fs = require('fs');
 
 class Cacher {
     static cache(synchronizerName, endpoint, data) {
-        const cacheDir = Cacher.serivceCacheDir(synchronizerName);
+        const cacheDir = Cacher.serviceCacheDir(synchronizerName);
         if (!fs.existsSync(cacheDir)) {
             fs.mkdirSync(cacheDir, { recursive: true });
         }
@@ -46,7 +46,7 @@ class Cacher {
             endpoint = endpoint.slice(0, maxSystemFilenameLength); // TODO better solution
         }
         return path.join(
-            Cacher.serivceCacheDir(synchronizerName),
+            Cacher.serviceCacheDir(synchronizerName),
             Cacher.cachedFileName(endpoint),
         );
     }
@@ -55,7 +55,7 @@ class Cacher {
         return `${endpoint.searchParams.toString()}.json`;
     }
 
-    static serivceCacheDir(synchronizerName) {
+    static serviceCacheDir(synchronizerName) {
         return path.join(
             __dirname,
             '..',

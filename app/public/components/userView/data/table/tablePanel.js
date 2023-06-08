@@ -21,6 +21,7 @@ import pager from '../pager.js';
 import postingDataConfig from '../posting/postingDataConfig.js';
 import { postForm } from '../posting/postForm.js';
 import filter from './filter.js';
+import noDataView from './noDataView.js';
 
 import { RCT } from '../../../../config.js';
 const { pagesNames } = RCT;
@@ -35,28 +36,12 @@ const { pagesNames } = RCT;
 export default function tablePanel(model) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
+    data.rows = data.rows.filter((item) => item.name != 'null');
 
     if (data.rows?.length == 0) {
-        const removeAndGoBackBtn = h('button.btn.btn-primary.m3', {
-            onclick: () => model.removeCurrentData(),
-        }, `${
-            dataPointer.page === pagesNames.periods
-                ? 'Reload'
-                : 'Go back'
-        }`);
-        const noDataMessage = h('h3', 'No data found');
-        const noDataExplanation = h('h5', `${
-            dataPointer.page === pagesNames.periods
-                ? 'Make sure the database works fine'
-                : 'There is no data to be displayed here'
-        }`);
-        return h('.loginDiv.top-100', [
-            h('.nothing-found-90'),
-            noDataMessage,
-            noDataExplanation,
-            removeAndGoBackBtn,
-        ]);
+        return noDataView(model, dataPointer);
     }
+
     const cellsSpecials = pagesCellsSpecials[dataPointer.page];
 
     const { fields } = data;
