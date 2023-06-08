@@ -12,7 +12,7 @@
  */
 
 const QueryBuilder = require('../../../app/lib/database/QueryBuilder');
-const periods_view = require('../../../app/lib/database/views/periods_view');
+const { periods_view } = require('../../../app/lib/database/views');
 const expect = require('chai').expect;
 
 module.exports = () => {
