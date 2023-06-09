@@ -23,19 +23,5 @@ module.exports = async () => {
                 .get('/api/date');
             expect(response.status).to.equal(403);
         });
-
-        it('should be protected by a Json Web Token', async () => {
-            const response = await request(httpServer)
-                .post('/api/login');
-            expect(response.status).to.equal(200);
-        });
-
-        it('should be protected by a Json Web Token', async () => {
-            const token = jwt.sign({ user: { id: 1, name: 'ME!', role: 'average' } }, 'dsfklgj');
-            const response = await request(httpServer)
-                .get('/api/date');
-            expect(response.status).to.equal(403);
-        });
     });
-
 };

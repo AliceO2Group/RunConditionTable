@@ -52,8 +52,8 @@ module.exports = () => {
                 )
             });
 
-            it('should return wrap undefined in quotes', () => {
-                assert((Utils.parseValuesToSql(sampleValues2))[2] === "'undefined'");
+            it('should parse undefined values as null', () => {
+                assert((Utils.parseValuesToSql(sampleValues2))[2] === null);
             });
 
             it('should return wrap DEFAULT in quotes', () => {

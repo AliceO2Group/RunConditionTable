@@ -169,8 +169,6 @@ class DatabaseService {
         res.status(status).json({ message: message });
     }
 
-    
-
     async disconnect() {
         const promises = Object.entries(this.loggedUsers.tokenToUserData).map(([_, data]) => {
             this.logger.info(`ending for ${data.name}`);
