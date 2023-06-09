@@ -12,9 +12,10 @@
  */
 
 const { HttpServer } = require('@aliceo2/web-ui');
+const AuthControlManager =require('../lib/other/AuthControlManager.js');
 const path = require('path');
 const config = require('../lib/config/configProvider.js');
-
+const EP = config.public.endpoints;
 /**
  * WebUI implementation of the Server.
  */
@@ -25,6 +26,8 @@ class WebUiServer {
     constructor() {
         this.httpServer = new HttpServer(config.http, config.jwt, config.openId ? config.openId : null);
         this.defineStaticRoutes();
+        // this.authControlManager = new AuthControlManager(this.httpServer);
+        this.buildAuthControl();
     }
 
     /**
@@ -41,6 +44,11 @@ class WebUiServer {
 
         httpServer.addStaticPath(path.join(__dirname, '..', 'public'));
         httpServer.addStaticPath(path.join(__dirname, '../..', 'node_modules', 'less/dist'), '/scripts');
+    }
+
+    buildAuthControl() {
+        this.authControlManager = new AuthControlManager(this.httpServer);
+        this.authControlManager.bindToTokenControl(EP.authControl);
     }
 }
 

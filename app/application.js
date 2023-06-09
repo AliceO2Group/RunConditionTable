@@ -22,11 +22,10 @@ const Utils = require('./lib/Utils.js');
 const { Console } = require('node:console');
 
 // Services
-const DatabaseService = require('./lib/database/DatabaseService.js');
-const BookkeepingService = require('./lib/alimonitor-services/BookkeepingService.js');
-const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
-const MonalisaServiceMC = require('./lib/alimonitor-services/MonalisaServiceMC.js');
-const AuthControlManager = require('./lib/other/AuthControlManager.js');
+const services = require('./lib/alimonitor-services');
+
+// Database
+const database = require('./lib/database');
 
 // Server
 const { webUiServer } = require('./server/index.js');
@@ -45,9 +44,9 @@ class RunConditionTableApplication {
         this.logger = new Log(RunConditionTableApplication.name);
 
         this.webUiServer = webUiServer;
-        this.buildServices();
+        this.databaseService = database.databaseService;
+        this.services = services;
         this.defineEndpoints();
-        this.buildAuthControl();
 
         buildPublicConfig(config);
         this.buildCli();
@@ -141,25 +140,6 @@ class RunConditionTableApplication {
         httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res));
         httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
         httpServer.get(EP.sync, async (_req, _res) => this.syncAll());
-    }
-
-    buildAuthControl() {
-        this.authControlManager = new AuthControlManager(this.httpServer);
-        this.authControlManager.bindToTokenControl(EP.authControl);
-    }
-
-    buildServices() {
-        this.databaseService = new DatabaseService();
-
-        const monalisaService = new MonalisaService();
-        const monalisaServiceMC = new MonalisaServiceMC();
-        this.services = {
-            bookkeepingService: new BookkeepingService(),
-            monalisaService: monalisaService,
-            monalisaServiceDetails: monalisaService.monalisaServiceDetails,
-            monalisaServiceMC: monalisaServiceMC,
-            monalisaServiceMCDetails: monalisaServiceMC.monalisaServiceMCDetails,
-        };
     }
 
     async syncAll() {

@@ -159,4 +159,4 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     }
 }
 
-module.exports = BookkeepingService;
+module.exports = new BookkeepingService();

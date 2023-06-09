@@ -117,4 +117,4 @@ class MonalisaService extends AbstractServiceSynchronizer {
     }
 }
 
-module.exports = MonalisaService;
+module.exports = new MonalisaService();
