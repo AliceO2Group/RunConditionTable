@@ -139,4 +139,4 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
     }
 }
 
-module.exports = MonalisaServiceMC;
+module.exports = new MonalisaServiceMC();

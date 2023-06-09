@@ -52,7 +52,7 @@ class QueryBuilder {
             to: ''
         }
         // assert correctness of previous
-        // Mapping search params to categoraized key, value pairs
+        // Mapping search params to categorized { key, value } pairs
         const filterTypesRegex= new RegExp(filterTypes.map((t) => `(.*-${t})`).join('|'));
         const filterParams = Object.entries(params).filter(([k, v]) => k.match(filterTypesRegex));
     

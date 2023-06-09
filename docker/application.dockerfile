@@ -1,5 +1,4 @@
-# TODO upgrade node version
-FROM node:16.20.0-buster as base 
+FROM node:18.16.0-buster as base 
 
     WORKDIR /opt/RunConditionTable
     RUN apt update -y && apt install -y \

@@ -12,22 +12,23 @@
  * or submit itself to any jurisdiction.
  */
 // RCT
-const { HttpServer, Log } = require('@aliceo2/web-ui');
+const { Log } = require('@aliceo2/web-ui');
 const config = require('./lib/config/configProvider.js');
 const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
 
 // IO
-const path = require('path');
 const readline = require('readline');
 const Utils = require('./lib/Utils.js');
 const { Console } = require('node:console');
 
 // Services
-const DatabaseService = require('./lib/database/DatabaseService.js');
-const BookkeepingService = require('./lib/alimonitor-services/BookkeepingService.js');
-const MonalisaService = require('./lib/alimonitor-services/MonalisaService.js');
-const MonalisaServiceMC = require('./lib/alimonitor-services/MonalisaServiceMC.js');
-const AuthControlManager = require('./lib/other/AuthControlManager.js');
+const services = require('./lib/alimonitor-services');
+
+// Database
+const database = require('./lib/database');
+
+// Server
+const { webUiServer } = require('./server/index.js');
 
 // Extract important
 const EP = config.public.endpoints;
@@ -42,22 +43,13 @@ class RunConditionTableApplication {
 
         this.logger = new Log(RunConditionTableApplication.name);
 
-        this.buildServer();
-        this.buildServices();
-        this.defineStaticRoutes();
+        this.webUiServer = webUiServer;
+        this.databaseService = database.databaseService;
+        this.services = services;
         this.defineEndpoints();
-        this.buildAuthControl();
 
         buildPublicConfig(config);
         this.buildCli();
-    }
-
-    buildServer() {
-        if (!config.openId) {
-            this.httpServer = new HttpServer(config.http, config.jwt);
-        } else {
-            this.httpServer = new HttpServer(config.http, config.jwt, config.openId);
-        }
     }
 
     buildCli() {
@@ -138,13 +130,6 @@ class RunConditionTableApplication {
         return () => this.con.log('incorrect command');
     }
 
-    defineStaticRoutes() {
-        const { httpServer } = this;
-
-        httpServer.addStaticPath(path.join(__dirname, 'public'));
-        httpServer.addStaticPath(path.join(__dirname, '..', 'node_modules', 'less/dist'), '/scripts');
-    }
-
     defineEndpoints() {
         const { httpServer } = this;
         const { databaseService } = this;
@@ -154,26 +139,7 @@ class RunConditionTableApplication {
         httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res));
         httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res));
         httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
-        httpServer.get(EP.sync, async (req, res) => this.syncAll());
-    }
-
-    buildAuthControl() {
-        this.authControlManager = new AuthControlManager(this.httpServer);
-        this.authControlManager.bindToTokenControl(EP.authControl);
-    }
-
-    buildServices() {
-        this.databaseService = new DatabaseService();
-
-        const monalisaService = new MonalisaService();
-        const monalisaServiceMC = new MonalisaServiceMC();
-        this.services = {
-            bookkeepingService: new BookkeepingService(),
-            monalisaService: monalisaService,
-            monalisaServiceDetails: monalisaService.monalisaServiceDetails,
-            monalisaServiceMC: monalisaServiceMC,
-            monalisaServiceMCDetails: monalisaServiceMC.monalisaServiceMCDetails,
-        };
+        httpServer.get(EP.sync, async (_req, _res) => this.syncAll());
     }
 
     async syncAll() {
@@ -269,9 +235,9 @@ class RunConditionTableApplication {
         return process.env.ENV_MODE;
     }
 
-    getAddress() {
-        return this.httpServer.address();
+    get httpServer() {
+        return this.webUiServer.httpServer;
     }
 }
 
-module.exports = RunConditionTableApplication;
+module.exports = new RunConditionTableApplication();

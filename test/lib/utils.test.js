@@ -52,8 +52,8 @@ module.exports = () => {
                 )
             });
 
-            it('should return wrap undefined in quotes', () => {
-                assert((Utils.parseValuesToSql(sampleValues2))[2] === "'undefined'");
+            it('should parse undefined values as null', () => {
+                assert((Utils.parseValuesToSql(sampleValues2))[2] === null);
             });
 
             it('should return wrap DEFAULT in quotes', () => {
@@ -69,8 +69,9 @@ module.exports = () => {
                 year: 2000,
             };
 
-            const compareString = `INSERT INTO periods (name, beam, energy, year)
-                VALUES('LHC00', 'PbPb', 962, 2000)`
+            const compareString = `INSERT INTO periods(name, beam, energy, year)
+                VALUES('LHC00', 'PbPb', 962, 2000)`;
+
             it('should create insert query correctly', () => {
                 assert(Utils.simpleBuildInsertQuery('periods', sampleValues) === compareString);
             });

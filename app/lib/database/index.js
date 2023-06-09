@@ -12,14 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const runConditionTableApplication = require('./application.js');
+const databaseService = require('./DatabaseService');
 
-runConditionTableApplication.run();
-
-/**
- * Signals handlers
- */
-const signals = ['SIGTERM', 'SIGINT', 'SIGHUP'];
-signals.forEach(
-    (event) => process.on(event, runConditionTableApplication.stop.bind(runConditionTableApplication)),
-);
+module.exports = {
+    databaseService
+}

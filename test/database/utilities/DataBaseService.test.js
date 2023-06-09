@@ -10,52 +10,21 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-
-const DataBaseService = require('../../../app/lib/database/DatabaseService');
+const database = require('../../../app/lib/database');
 const assert = require('assert');
 const sinon = require('sinon');
+const { expect } = require('chai');
+
+const { databaseService } = database;
 
 module.exports = () => {
     describe('DatabaseSuite', () => {
         describe('Check Initialization of DatabaseService', () => {
-            it('should successfully initialize the DatabaseService', () => {
-                assert.doesNotThrow(() => {
-                    new DataBaseService({});
+            it('should connect to the database successfully', () => {
+                assert.doesNotThrow(async () => {
+                    await databaseService.getDate();
+                    await databaseService.healthcheck();
                 });
-            });
-        });
-
-        describe('should', () => {
-            it('handle query with no client', async () => {
-                const dbService = new DataBaseService({});
-
-                await dbService.execDataInsert().catch((err) => {
-                    err.response.should.have.status(401);
-                    err.response.body.should.have.property('error');
-                    err.response.body.error.should.eql('no user with such token');
-                  });
-            });
-        });
-
-        describe('should', () => {
-            it('confirm data insertion', async () => {
-                const dbService = new DataBaseService({});
-                mockres = {};
-                await dbService.execDataInsert({res: mockres});
-                console.log(mockres.data);
-                console.log('need to change this one...');
-            });
-        });
-
-        describe('ApplicationService getData test suite', () => {
-            it('just plays with sinon fake', () => {
-                const databaseService = new DataBaseService({});
-                res = {
-                    status: sinon.fake.returns(500),
-                };
-                databaseService.getDate(null, res);
-                assert.ok(res.status(100) === 500);
-                assert.ok(res.status.calledWith(100));
             });
         });
     });

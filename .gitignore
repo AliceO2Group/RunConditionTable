@@ -10,7 +10,6 @@ database**/cached/
 *__pycache__
 security
 scratch
-.env
 env_file
 database/cache
 notes

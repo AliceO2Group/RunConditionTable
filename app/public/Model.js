@@ -29,6 +29,7 @@ export default class Model extends Observable {
 
         this.router = new QueryRouter();
         this.router.bubbleTo(this);
+
         this.loader = new Loader();
 
         this.mode = null;

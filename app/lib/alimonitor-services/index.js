@@ -12,14 +12,17 @@
  * or submit itself to any jurisdiction.
  */
 
-const runConditionTableApplication = require('./application.js');
+const monalisaService = require('./MonalisaService');
+const monalisaServiceMC = require('./MonalisaServiceMC');
+const bookkeepingService = require('./BookkeepingService');
 
-runConditionTableApplication.run();
+const { monalisaServiceDetails } = monalisaService;
+const { monalisaServiceMCDetails } = monalisaServiceMC;
 
-/**
- * Signals handlers
- */
-const signals = ['SIGTERM', 'SIGINT', 'SIGHUP'];
-signals.forEach(
-    (event) => process.on(event, runConditionTableApplication.stop.bind(runConditionTableApplication)),
-);
+module.exports = {
+    bookkeepingService,
+    monalisaService,
+    monalisaServiceDetails,
+    monalisaServiceMC,
+    monalisaServiceMCDetails,
+};
