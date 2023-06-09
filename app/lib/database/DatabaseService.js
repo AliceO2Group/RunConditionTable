@@ -118,7 +118,6 @@ class DatabaseService {
             return;
         }
 
-        
         const params = {...req.query, ...req.params}
 
         const connectErrorHandler = (connectErr) => {
