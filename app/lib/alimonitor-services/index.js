@@ -16,13 +16,13 @@ const monalisaService = require('./MonalisaService');
 const monalisaServiceMC = require('./MonalisaServiceMC');
 const bookkeepingService = require('./BookkeepingService');
 
-const monalisaServiceDetails = monalisaService.monalisaServiceDetails;
-const monalisaServiceMCDetails = monalisaServiceMC.monalisaServiceMCDetails;
+const { monalisaServiceDetails } = monalisaService;
+const { monalisaServiceMCDetails } = monalisaServiceMC;
 
 module.exports = {
     bookkeepingService,
     monalisaService,
     monalisaServiceDetails,
     monalisaServiceMC,
-    monalisaServiceMCDetails
-}
+    monalisaServiceMCDetails,
+};
