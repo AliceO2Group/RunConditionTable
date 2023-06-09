@@ -69,8 +69,9 @@ module.exports = () => {
                 year: 2000,
             };
 
-            const compareString = `INSERT INTO periods (name, beam, energy, year)
-                VALUES('LHC00', 'PbPb', 962, 2000)`
+            const compareString = `INSERT INTO periods(name, beam, energy, year)
+                VALUES('LHC00', 'PbPb', 962, 2000)`;
+
             it('should create insert query correctly', () => {
                 assert(Utils.simpleBuildInsertQuery('periods', sampleValues) === compareString);
             });
