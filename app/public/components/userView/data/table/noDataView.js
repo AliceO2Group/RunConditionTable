@@ -61,7 +61,7 @@ export default function noDataView(
     const noDataMessage = h('h3', 'No data found');
     const noDataExplanation = h('h5', `${
         dataPointer.page === pagesNames.periods
-            ? 'Please sysnchronize with outer services'
+            ? 'Please synchronize with outer services'
             : 'There is no data to be displayed here'
     }`);
 

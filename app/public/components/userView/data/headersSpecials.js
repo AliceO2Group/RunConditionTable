@@ -14,7 +14,7 @@
 
 const runsViews = {
     name: 'Name',
-    run_number: 'Run number',
+    run_number: 'Run #',
     time_start: 'Start time',
     time_end: 'End time',
     time_trg_start: 'Trg. start',
@@ -25,7 +25,7 @@ const runsViews = {
     triggers_conf: 'Triggers conf.',
     fill_number: 'Fill number',
     run_type: 'Run type',
-    mu: 'Mu',
+    mu: '\u03BC',
     l3_current: 'L3 curr. [A]',
     dipole_current: 'Dipole curr. [A]',
 };
