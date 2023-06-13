@@ -23,7 +23,7 @@ const runsViews = {
     ir: 'IR [Hz]',
     filling_scheme: 'Filling scheme',
     triggers_conf: 'Triggers conf.',
-    fill_number: 'Fill number',
+    fill_number: 'Fill #',
     run_type: 'Run type',
     mu: '\u03BC',
     l3_current: 'L3 curr. [A]',
@@ -36,7 +36,7 @@ const dpViews = {
     pass_type: 'Type',
     jira: 'Jira',
     ml: 'ML',
-    number_of_events: 'Events number',
+    number_of_events: 'Events #',
     software_version: 'Soft. version',
     size: 'Size',
 };
@@ -47,7 +47,7 @@ const mcViews = {
     jira: 'Jira',
     ml: 'ML',
     pwg: 'PWG',
-    number_of_events: 'Events number',
+    number_of_events: 'Events #',
 };
 
 const headersSpecials = {
