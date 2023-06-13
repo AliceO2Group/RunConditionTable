@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconShareBoxed, iconReload, iconTrash } from '/js/src/index.js';
+import { h, iconShareBoxed, iconReload, iconX } from '/js/src/index.js';
 
 export function multiButtonController(model, pageName, index) {
     const page = model.fetchedData[pageName];
@@ -106,7 +106,7 @@ const deletePageButton = (model, pageName, index) => h('a.menu-item', {
         model.fetchedData.delete(pageName, index);
         model.notify();
     },
-}, iconTrash());
+}, iconX());
 
 const reloadPageButton = (model, pageName, index, url) => h('a.menu-item', {
     onclick: () => {
