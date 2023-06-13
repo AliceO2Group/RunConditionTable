@@ -12,6 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
+import { h } from '/js/src/index.js';
+ 
 const runsViews = {
     name: 'Name',
     run_number: 'Run #',
@@ -19,7 +21,7 @@ const runsViews = {
     time_end: 'End time',
     time_trg_start: 'Trg. start',
     time_trg_end: 'Trg. end',
-    center_of_mass_energy: 'Center of mass energy [GeV]',
+    center_of_mass_energy: h('.center-of-mass-energy'),
     ir: 'IR [Hz]',
     filling_scheme: 'Filling scheme',
     triggers_conf: 'Triggers conf.',
