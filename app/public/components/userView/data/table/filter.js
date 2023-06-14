@@ -97,7 +97,6 @@ const createClickableLabel = (model, field) =>
             },
             className: field.marked ? 'active' : '',
         },
-        h(`${field.marked ? '.eye-20' : '.hide-20'}`),
         getHeaderSpecial(model, field),
         h('span.tooltiptext', field.marked ? 'hide' : 'display')));
 

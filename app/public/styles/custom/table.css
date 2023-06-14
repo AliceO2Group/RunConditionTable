@@ -33,6 +33,12 @@
     background-color: var(--active-color) !important;
 }
 
+/*
+.track :nth-child(even) {
+    background-color: #D7EDFC;
+}
+*/
+
 .track.row-selected-color-alpha:hover {
     background-color: var(--focus-color) !important;
 }
@@ -42,8 +48,39 @@ table tbody tr.row-selected-color-alpha {
 }
 
 table.data-table thead {
-    height: 50px;
+    height: 50px !important;
+    font-size: x-small;
 }
+
+table.data-table tbody tr {
+    max-height: 20px !important;
+    margin: -5em !important;
+    padding: -5em !important;
+    font-size: xx-small !important;
+}
+
+/*
+table.data-table :nth-child(even) {
+    background-color: #D7EDFC;
+}
+*/
+
+.black-font {
+    color: white !important;
+    z-index: 1 !important;
+    position: relative !important;
+    top: -20.5px !important;
+}
+
+
+/*table.data-table tbody tr td {
+    background-color: #1e90ff;
+    max-height: 6px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: x-small !important;
+}
+*/
 
 input[type="checkbox"] {
     appearance: none;

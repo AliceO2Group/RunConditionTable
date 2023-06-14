@@ -27,24 +27,16 @@ const columnsHeadersArray = (visibleFields, data, model) =>
     }, h('.relative', [
         headerSpecPresent(model, f) !== nonDisplayable ? [
             h('.inline', getHeaderSpecial(model, f)),
-            headerSpecPresent(model, f) === filterApplicableHeader
-                ? h('.inline',
-                    h('.vertical-center',
-                        h('div.sort-up-20.pointer', {
-                            onclick: () => sort(f.name, data, model, -1),
-                            class: data.sorting.order === -1 && data.sorting.field === f.name
-                                ? 'selected' :
-                                '',
-                        }),
+            h('.',
+                data.sorting.order === -1 ?            
+                    h('div.sort-up-20.pointer', {
+                            onclick: () => sort(f.name, data, model, -data.sorting.order),
+                        }) :
+                        
                         h('div.sort-down-20.pointer', {
-                            onclick: () => sort(f.name, data, model, 1),
-                            class: data.sorting.order === 1 && data.sorting.field === f.name
-                                ? 'selected'
-                                : '',
-                        })))
-                : '',
-        ] : '',
-    ])));
+                            onclick: () => sort(f.name, data, model, -data.sorting.order),
+                        })),
+        ]: '' ])));
 
 const rowsOptions = (model, data) =>
     h('th', { scope: 'col' },
