@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
  
 const runsViews = {
     name: 'Name',
-    run_number: 'Run #',
+    run_number: 'Run',
     time_start: 'Start time',
     time_end: 'End time',
     time_trg_start: 'Trg. start',
@@ -25,7 +25,7 @@ const runsViews = {
     ir: 'IR [Hz]',
     filling_scheme: 'Filling scheme',
     triggers_conf: 'Triggers conf.',
-    fill_number: 'Fill #',
+    fill_number: 'Fill',
     run_type: 'Run type',
     mu: '\u03BC',
     l3_current: 'L3 curr. [A]',
@@ -38,7 +38,7 @@ const dpViews = {
     pass_type: 'Type',
     jira: 'Jira',
     ml: 'ML',
-    number_of_events: 'Events #',
+    number_of_events: 'Events',
     software_version: 'Soft. version',
     size: 'Size',
 };
@@ -49,7 +49,7 @@ const mcViews = {
     jira: 'Jira',
     ml: 'ML',
     pwg: 'PWG',
-    number_of_events: 'Events #',
+    number_of_events: 'Events',
 };
 
 const headersSpecials = {
