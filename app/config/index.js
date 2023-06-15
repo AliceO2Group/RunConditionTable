@@ -22,7 +22,7 @@ module.exports = Object.freeze({
     // App config
     winston: ResProvider.winston(),
     database: ResProvider.database(),
-    syncTaskAtStart: process.env['RCT_SYNC_TASK_AT_START']?.trim().toLowerCase() === 'true' ? process.env['RCT_SYNC_TASK_AT_START'] : false,
+    syncTaskAtStart: ResProvider.envOrDef('RCT_SYNC_TASK_AT_START', false, Boolean),
     databasePersistance: require('./databasePersistance.js'),
     public: require('./public.js'),
 
@@ -38,5 +38,5 @@ module.exports = Object.freeze({
         stack: (logger, er) => logger.error(er.stack),
         object: (logger, er) => logger.error(JSON.stringify(er, null, 2)),
     },
-    defaultErrorsLogginDepth: process.env['RCT_ERR_DEPTH']?.length() > 0 ? process.env['RCT_ERR_DEPTH'] : 'object',
+    defaultErrorsLogginDepth: ResProvider.envOrDef('RCT_ERR_DEPTH', 'object'),
 });

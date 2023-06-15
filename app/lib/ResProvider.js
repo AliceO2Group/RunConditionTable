@@ -59,6 +59,13 @@ class ResProvider {
         return res;
     }
 
+    static envOrDef(name, def, castType = String) {
+        if (castType == Boolean) {
+            return process.env[name]?.length > 0 ? Boolean(process.env[name] == 'true') : def;
+        }
+        return process.env[name]?.length > 0 ? castType(process.env[name]) : def;
+    }
+
     static areDesiredValuesPresent(obj, objDefinition) {
         for (const key of Object.values(objDefinition)) {
             if (!obj[key]) {

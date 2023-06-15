@@ -23,9 +23,7 @@ const config = require('../config/configProvider.js');
 class MonalisaService extends AbstractServiceSynchronizer {
     constructor() {
         super();
-        this.batchedRequestes = true;
-        this.batchSize = 5;
-        this.omitWhenCached = false;
+        this.batchSize = config.services.batchSize.ML;
 
         this.ketpFields = {
             name: 'name',
@@ -92,8 +90,6 @@ class MonalisaService extends AbstractServiceSynchronizer {
         const q1 = await dbClient.query(pgCommand);
         const q2 = await this.monalisaServiceDetails.sync(d);
         return Promise.all([q1, q2]);
-        // eslint-disable-next-line capitalized-comments
-        // return await Promise.all([dbClient.query(pgCommand), this.monalisaServiceDetails.sync(d)]);
     }
 
     extractPeriod(rowData) {

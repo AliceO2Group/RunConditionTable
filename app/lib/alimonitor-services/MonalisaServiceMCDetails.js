@@ -21,7 +21,6 @@ class MonalisaServiceMCDetails extends AbstractServiceSynchronizer {
     constructor() {
         super();
 
-        this.batchedRequestes = true;
         this.batchSize = 5;
 
         this.keptFields = {

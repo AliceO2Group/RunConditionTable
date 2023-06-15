@@ -201,6 +201,7 @@ class AbstractServiceSynchronizer {
             } else {
                 await this.makeSequentialRequest(data);
             }
+
             this.monitor.logResults();
         } catch (fatalError) {
             this.logger.error(fatalError.stack);
