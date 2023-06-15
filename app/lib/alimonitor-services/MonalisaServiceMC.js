@@ -23,8 +23,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
     constructor() {
         super();
 
-        this.batchedRequestes = true;
-        this.batchSize = 5;
+        this.batchSize = config.services.batchSize.ML;
 
         this.ketpFields = {
             name: 'name',

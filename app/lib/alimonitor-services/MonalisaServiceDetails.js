@@ -20,9 +20,7 @@ const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 class MonalisaServiceDetails extends AbstractServiceSynchronizer {
     constructor() {
         super();
-        this.batchedRequestes = true;
         this.batchSize = 5;
-        this.omitWhenCached = false;
 
         this.ketpFields = {
             run_no: 'run_number',

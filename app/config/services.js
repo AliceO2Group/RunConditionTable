@@ -31,6 +31,10 @@ const services = {
             mcDetTag: ResProvider.getServiceEndpoint('ML_MC_TAG'),
         },
     },
+
+    batchSize: {
+        ML: ResProvider.envOrDef('RCT_ML_BATCH_SIZE', 2),
+    },
 };
 
 /*

@@ -24,9 +24,7 @@ const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
 class BookkeepingService extends AbstractServiceSynchronizer {
     constructor() {
         super();
-        this.batchedRequestes = true;
         this.batchSize = 100;
-        this.omitWhenCached = false;
 
         this.ketpFields = {
             id: 'ali-bk-id',
