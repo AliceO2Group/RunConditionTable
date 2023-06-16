@@ -8,10 +8,10 @@ jobs:
     outputs:
       VERSION: ${{ steps.set-project.outputs.version }}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: '16.x'
+        node-version: '18.x'
         registry-url: 'https://registry.npmjs.org'
     - name: Check released tag matches ALICE O2 naming pattern
       run: |
@@ -38,10 +38,10 @@ jobs:
     outputs:
       ASSET_URL: ${{ steps.upload.outputs.asset_url }}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: '16.x'
+        node-version: '18.x'
         registry-url: 'https://registry.npmjs.org'
     - name: Install production dependencies
       run: npm install --only=production
