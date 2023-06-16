@@ -46,7 +46,7 @@ jobs:
     - name: Install production dependencies
       run: npm install --only=production
     - name: Create package tarball
-      run:  echo ::set-output name=tgz_name::$(npm pack)
+      run: echo ::set-output name=tgz_name::$(npm pack)
       id: tgz
     - name: Upload tarball to GH release assets
       uses: actions/upload-release-asset@v1
