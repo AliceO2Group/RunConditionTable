@@ -24,6 +24,7 @@ import filter from './filter.js';
 import noDataView from './noDataView.js';
 
 import { RCT } from '../../../../config.js';
+import sortingRow from './sortingRow.js';
 const { pagesNames } = RCT;
 
 /**
@@ -67,6 +68,7 @@ export default function tablePanel(model) {
                                         : ''}`,
                     }, [
                         tableHeader(visibleFields, data, model),
+                        sortingRow(visibleFields, data, model),
                         tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
                     ])),
                 pager(model, data, 2))
