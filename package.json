@@ -20,7 +20,9 @@
   "scripts": {
     "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html",
     "eslint:fix": "npm run eslint -- --fix",
-    "eslint:show": "npm run eslint; firefox ./reports/static/static-analysis.html",
+    "eslint:show": "run-script-os",
+    "eslint:show:linux": "npm run eslint; firefox ./reports/static/static-analysis.html",
+    "eslint:show:macos": "npm run eslint; open -a firefox ./reports/static/static-analysis.html",
     "static": "npm run eslint",
     "coverage:test": "mocha --exit test/*",
     "coverage:report": "nyc report --report=html --report=json",
@@ -70,6 +72,7 @@
     "mocha": "^10.1.0",
     "nodemon": "^2.0.20",
     "nyc": "^15.1.0",
+    "run-script-os": "^1.1.6",
     "sinon": "^14.0.1",
     "socks-proxy-agent": "^7.0.0"
   },

@@ -13,7 +13,7 @@
  */
 
 import { h } from '/js/src/index.js';
- 
+
 const runsViews = {
     name: 'Name',
     run_number: 'Run',

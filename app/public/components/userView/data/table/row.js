@@ -30,9 +30,9 @@ const detectorIcon = (model, item, n) =>
                      *'stroke-width': '3',
                      */
                     fill: '#8CB369',
-                    // content: '99',
+                    // Content: '99',
                 }, '90')),
-                h('.black-font', '90'),
+        h('.black-font', '90'),
         h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
 
 export default function row(

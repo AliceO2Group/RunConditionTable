@@ -13,7 +13,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import { filterApplicableHeader, getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../headersSpecials.js';
+import { filterApplicableHeader, headerSpecPresent } from '../headersSpecials.js';
 import { sort } from '../../../../utils/sort.js';
 
 export default function sortingRow(visibleFields, data, model) {
@@ -22,22 +22,24 @@ export default function sortingRow(visibleFields, data, model) {
 }
 
 const columnsHeadersArray = (visibleFields, data, model) =>
-    visibleFields.map((f) => [h(`th.${model.getCurrentDataPointer().page}-${f.name.includes('detector') ? 'detector' : f.name}-header`, {
-        scope: 'col',
-    }, h('.relative', [
-        headerSpecPresent(model, f) === filterApplicableHeader ? [
-            h('.inline', data.sorting.order === -1 ?            
-            h('div.sort-up-20.pointer', {
-                onclick: () => sort(f.name, data, model, -data.sorting.order),
-                }) :
-                
-            h('div.sort-down-20.pointer', {
-                onclick: () => sort(f.name, data, model, -data.sorting.order),
-            })),
-        ]: '' ])), 
+    visibleFields.map((f) => [
+        h(`th.${model.getCurrentDataPointer().page}-${f.name.includes('detector') ? 'detector' : f.name}-header`, {
+            scope: 'col',
+        }, h('.relative', [
+            headerSpecPresent(model, f) === filterApplicableHeader ? [
+                h('.inline', data.sorting.order === -1 ?
+                    h('div.sort-up-20.pointer', {
+                        onclick: () => sort(f.name, data, model, -data.sorting.order),
+                    }) :
+
+                    h('div.sort-down-20.pointer', {
+                        onclick: () => sort(f.name, data, model, -data.sorting.order),
+                    })),
+            ] : '',
+        ])),
     ]);
 
-    const rowsOptions = (model, data) =>
+const rowsOptions = (model, data) =>
     h('th', { scope: 'col' },
         h('.relative',
             h(`input.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
