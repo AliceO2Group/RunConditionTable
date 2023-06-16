@@ -93,6 +93,7 @@ input[type="checkbox"] {
     border: 0.15em solid var(--color-gray) !important;
     display: grid;
     place-content: center;
+    cursor: pointer;
 }
 
 input[type="checkbox"].ticked {
