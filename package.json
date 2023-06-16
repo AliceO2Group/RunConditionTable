@@ -26,7 +26,7 @@
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run coverage:test && npm run coverage:report ",
     "test": "mkdir -pv ./reports; npm run static; npm run coverage; if [ \"RUNNING_ENV\" = \"DOCKER\" ]; then chmod -R o+w ./reports; fi;",
-    "test:mocha": "env-cmd mocha",
+    "test:mocha": "env-cmd -f .env.test mocha",
     "reports:show": "open ./reports/**/*.html",
     "reports:clean": "rm -rf ./reports; rm -rf .nyc_output",
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
