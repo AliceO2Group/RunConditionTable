@@ -29,15 +29,14 @@
     position: relative !important;
 }
 
-.track:hover {
+.track.row-unselected-color-alpha:hover {
     background-color: var(--active-color) !important;
 }
 
-/*
-.track :nth-child(even) {
-    background-color: #D7EDFC;
+.track.row-unselected-color-alpha:hover td {
+    background-color: var(--active-color) !important;
 }
-*/
+
 
 .track.row-selected-color-alpha:hover {
     background-color: var(--focus-color) !important;
@@ -47,6 +46,11 @@ table tbody tr.row-selected-color-alpha {
     background-color: var(--row-selected-color);
 }
 
+
+tbody tr.track.row-unselected-color-alpha:nth-child(odd) td {
+    background-color: var(--color-gray-lighter);
+}
+
 table.data-table thead {
     height: 50px !important;
     font-size: x-small;
@@ -54,33 +58,12 @@ table.data-table thead {
 
 table.data-table tbody tr {
     max-height: 20px !important;
-    margin: -5em !important;
-    padding: -5em !important;
+    
+    margin: 0em !important;
+    padding: 0em !important;
+
     font-size: xx-small !important;
 }
-
-/*
-table.data-table :nth-child(even) {
-    background-color: #D7EDFC;
-}
-*/
-
-.black-font {
-    color: white !important;
-    z-index: 1 !important;
-    position: relative !important;
-    top: -20.5px !important;
-}
-
-
-/*table.data-table tbody tr td {
-    background-color: #1e90ff;
-    max-height: 6px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: x-small !important;
-}
-*/
 
 input[type="checkbox"] {
     appearance: none;

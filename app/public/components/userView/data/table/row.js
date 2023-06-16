@@ -19,7 +19,7 @@ import { reduceSerialIf } from '../../../../utils/utils.js';
 const detectorIcon = (model, item, n) =>
     h('.tooltip.noBorderBottom.pointer',
         h('svg', { width: '20px', height: '20px' },
-            h('circle.black-font',
+            h('circle',
                 {
                     cx: '50%',
                     cy: '50%',
@@ -31,15 +31,14 @@ const detectorIcon = (model, item, n) =>
                      */
                     fill: '#8CB369',
                     // Content: '99',
-                }, '90')),
-        h('.black-font', '90'),
+                })),
         h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
 
 export default function row(
     model, visibleFields, data, item, cellsSpecials,
 ) {
     const rowDivDef = reduceSerialIf(
-        'tr.track', ['', '.d-none'], ['.row-selected-color-alpha', ''],
+        'tr.track', ['.row-unselected-color-alpha', '.d-none'], ['.row-selected-color-alpha', ''],
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 
