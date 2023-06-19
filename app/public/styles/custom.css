@@ -138,11 +138,13 @@
     display: block !important;
     cursor: pointer;
     padding: 10px;
+    color: grey;
 }
 
 .clickable-label.active {
     background-color: var(--active-color);
     border-radius: 10px;
+    color: #1D3557;
 }
 
 .no-spacing {

@@ -13,9 +13,10 @@
  */
 
 import { h } from '/js/src/index.js';
-import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../headersSpecials.js';
+import { filterApplicableHeader, headerSpecPresent } from '../headersSpecials.js';
+import { sort } from '../../../../utils/sort.js';
 
-export default function tableHeader(visibleFields, data, model) {
+export default function sortingRow(visibleFields, data, model) {
     return h('thead',
         h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, data, model))));
 }
@@ -25,16 +26,23 @@ const columnsHeadersArray = (visibleFields, data, model) =>
         h(`th.${model.getCurrentDataPointer().page}-${f.name.includes('detector') ? 'detector' : f.name}-header`, {
             scope: 'col',
         }, h('.relative', [
-            headerSpecPresent(model, f) !== nonDisplayable ?
-                h('.inline', getHeaderSpecial(model, f))
-                : '',
+            headerSpecPresent(model, f) === filterApplicableHeader ? [
+                h('.inline', data.sorting.order === -1 ?
+                    h('div.sort-up-20.pointer', {
+                        onclick: () => sort(f.name, data, model, -data.sorting.order),
+                    }) :
+
+                    h('div.sort-down-20.pointer', {
+                        onclick: () => sort(f.name, data, model, -data.sorting.order),
+                    })),
+            ] : '',
         ])),
     ]);
 
 const rowsOptions = (model, data) =>
     h('th', { scope: 'col' },
         h('.relative',
-            h(`input.hidden.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
+            h(`input.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
                 type: 'checkbox',
                 onclick: (e) => {
                     for (const row of data.rows) {

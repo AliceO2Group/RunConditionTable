@@ -81,9 +81,8 @@ pagesCellsSpecials[PN.periods] = {
 
 pagesCellsSpecials[PN.dataPasses] = {
     name: (model, item) => [
-        item.name,
-        '  ',
-        viewButton(
+        h('td', item.name),
+        h('td', viewButton(
             model,
             'runs',
             (e) => model.handleClick(e),
@@ -98,7 +97,7 @@ pagesCellsSpecials[PN.dataPasses] = {
             '',
             // eslint-disable-next-line max-len
             `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
-        ),
+        )),
     ],
     size: (model, item) => getReadableFileSizeString(Number(item.size)),
 };

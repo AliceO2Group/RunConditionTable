@@ -18,18 +18,19 @@ import { reduceSerialIf } from '../../../../utils/utils.js';
 // eslint-disable-next-line no-unused-vars
 const detectorIcon = (model, item, n) =>
     h('.tooltip.noBorderBottom.pointer',
-        h('svg', { width: '50px', height: '50px' },
+        h('svg', { width: '20px', height: '20px' },
             h('circle',
                 {
                     cx: '50%',
                     cy: '50%',
-                    r: '15px',
+                    r: '8px', //
 
                     /*
                      *Stroke: '#F7B538', strokes for the limited acceptance flags only
                      *'stroke-width': '3',
                      */
                     fill: '#8CB369',
+                    // Content: '99',
                 })),
         h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
 
@@ -37,7 +38,7 @@ export default function row(
     model, visibleFields, data, item, cellsSpecials,
 ) {
     const rowDivDef = reduceSerialIf(
-        'tr.track', ['', '.d-none'], ['.row-selected-color-alpha', ''],
+        'tr.track', ['.row-unselected-color-alpha', '.d-none'], ['.row-selected-color-alpha', ''],
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 

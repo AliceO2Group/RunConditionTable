@@ -29,9 +29,14 @@
     position: relative !important;
 }
 
-.track:hover {
+.track.row-unselected-color-alpha:hover {
     background-color: var(--active-color) !important;
 }
+
+.track.row-unselected-color-alpha:hover td {
+    background-color: var(--active-color) !important;
+}
+
 
 .track.row-selected-color-alpha:hover {
     background-color: var(--focus-color) !important;
@@ -41,8 +46,23 @@ table tbody tr.row-selected-color-alpha {
     background-color: var(--row-selected-color);
 }
 
+
+tbody tr.track.row-unselected-color-alpha:nth-child(odd) td {
+    background-color: var(--color-gray-lighter);
+}
+
 table.data-table thead {
-    height: 50px;
+    height: 50px !important;
+    font-size: x-small;
+}
+
+table.data-table tbody tr {
+    max-height: 20px !important;
+    
+    margin: 0em !important;
+    padding: 0em !important;
+
+    font-size: xx-small !important;
 }
 
 input[type="checkbox"] {
@@ -56,6 +76,7 @@ input[type="checkbox"] {
     border: 0.15em solid var(--color-gray) !important;
     display: grid;
     place-content: center;
+    cursor: pointer;
 }
 
 input[type="checkbox"].ticked {

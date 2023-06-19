@@ -12,20 +12,22 @@
  * or submit itself to any jurisdiction.
  */
 
+import { h } from '/js/src/index.js';
+
 const runsViews = {
     name: 'Name',
-    run_number: 'Run number',
+    run_number: 'Run',
     time_start: 'Start time',
     time_end: 'End time',
     time_trg_start: 'Trg. start',
     time_trg_end: 'Trg. end',
-    center_of_mass_energy: 'Center of mass energy [GeV]',
+    center_of_mass_energy: h('.center-of-mass-energy'),
     ir: 'IR [Hz]',
     filling_scheme: 'Filling scheme',
     triggers_conf: 'Triggers conf.',
-    fill_number: 'Fill number',
+    fill_number: 'Fill',
     run_type: 'Run type',
-    mu: 'Mu',
+    mu: '\u03BC',
     l3_current: 'L3 curr. [A]',
     dipole_current: 'Dipole curr. [A]',
 };
@@ -36,7 +38,7 @@ const dpViews = {
     pass_type: 'Type',
     jira: 'Jira',
     ml: 'ML',
-    number_of_events: 'Events number',
+    number_of_events: 'Events',
     software_version: 'Soft. version',
     size: 'Size',
 };
@@ -47,7 +49,7 @@ const mcViews = {
     jira: 'Jira',
     ml: 'ML',
     pwg: 'PWG',
-    number_of_events: 'Events number',
+    number_of_events: 'Events',
 };
 
 const headersSpecials = {

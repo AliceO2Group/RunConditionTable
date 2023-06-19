@@ -4,6 +4,7 @@
     padding-top: 10px;
     background-color: var(--color-white);
     z-index: 2 !important;
+    font-size: xx-small;
 }
 
 .filter-panel-content {
