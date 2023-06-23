@@ -173,6 +173,13 @@
     display: inline-block;
 }
 
+.settings-90 {
+    background-image: url('./images/90/primary/Settings.svg');
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+}
+
 .center-of-mass-energy {
     background-image: url('./images/other/Center\ of\ Mass\ Energy.svg');
     width: 40px;

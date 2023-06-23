@@ -14,6 +14,8 @@
 
 import { h } from '/js/src/index.js';
 
+
+/*
 window.addEventListener('click', (event) => {
     const modalContent = document.getElementsByClassName('modal-content');
     const modal = document.getElementsByClassName('modal');
@@ -23,8 +25,19 @@ window.addEventListener('click', (event) => {
         document.getElementById('myModal').style.display = 'none';
     }
 });
+*/
 
 export default function modal(content, modalId = 'myModal') {
+    window.addEventListener('click', (event) => {
+        const modalContent = document.getElementsByClassName('modal-content');
+        const modal = document.getElementsByClassName('modal');
+        if ((Array.from(modalContent).find((e) => e == event.target)
+            || Array.from(modal).find((e) => e == event.target))
+            && document.getElementById('myModal')) {
+            document.getElementById('myModal').style.display = 'none';
+        }
+    });
+    
     return h('.modal', { id: modalId },
         h('.modal-content', content));
 }
