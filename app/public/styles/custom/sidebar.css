@@ -24,15 +24,15 @@
 }
 
 .page-title:hover {
-    font-weight: 900;
+    font-weight: 200;
 }
 
 .page-title.selected {
-    font-weight: 900;
+    font-weight: 600;
 }
 
 .title-text {
-    color: black !important;
+    color: #f1f4fb !important;
     padding-left: 30px;
     padding-top: 0;
     margin-top: 0;
@@ -46,7 +46,8 @@
 }
 
 .current-page {
-    background-color: var(--color-gray-dark) !important;
+    background-color: /*var(--color-gray-dark)*/ #586BA4 !important;
+    /* #30638e !important; */
     border-radius: 25px;
     position: relative;
     left: -5px;
@@ -56,4 +57,14 @@
 
 .periods-hamburger {
     padding-left: 25px;
+}
+
+.sidebar {
+    
+    /* background-color: #274c77/*003566 !important; */
+    
+    background-color: #324376 !important;
+
+    color: #fdfbf9 !important;
+    font-size: small !important;
 }

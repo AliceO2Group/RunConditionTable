@@ -1,8 +1,7 @@
 .filter-panel {
-    position: sticky !important;
+    /* position: sticky !important; */
     top: 0px;
     padding-top: 10px;
-    background-color: var(--color-white);
     z-index: 2 !important;
     font-size: xx-small;
 }
@@ -11,7 +10,7 @@
     overflow-x: auto !important;
     overflow-y: hidden !important;
     width: 100%;
-    padding-bottom: 65px;
+    /* padding-bottom: 65px; */
 }
 
 .filter-panel-buttons {
@@ -19,11 +18,17 @@
     padding: 10px;
 }
 
-.filter-btn {
-    min-height: 40px;
-}
-
 .icon-btn-text {
     padding-left: 30px !important;
     display: inline-block !important;
+}
+
+.table-cell-like {
+    display: table-cell !important;
+    margin: 0 !important;
+    padding: 0 10px !important;
+}
+
+.table-cell-like.active {
+    background-color: #bbd0ff /* var(--active-color) */ !important;
 }

@@ -41,6 +41,15 @@
     scale: 0.5;
 }
 
+.close-10 {
+    background-image: url('./images/20/Close.svg');
+    width: 20px;
+    height: 20px;
+    scale: 0.5;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .sort-down-20.selected {
     background-color: var(--color-primary) !important;
     border-radius: 10px;
@@ -63,6 +72,14 @@
     width: 20px;
     height: 20px;
     display: inline-block;
+}
+
+.folder-20 {
+    background-image: url('./images/20/Folder.svg');
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    /* scale: 0.7; */
 }
 
 .hamburger-20 {

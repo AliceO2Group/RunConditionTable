@@ -14,12 +14,17 @@
 
 :root {
     /* Color palette */
-    --active-color: #b3c5d7;
+    --active-color: #ABC4FF /* #b3c5d7 */;
     --dark-blue: #1D3557;
-    --secondary-color: #577590;/*#6d6875;*/
+    --secondary-color: #577590;
     --highlight-blue: #D7EDFC;
     --blue: #1e90ff;
     --white: #ffffff;
+}
+
+.zeropadding {
+    padding: 0;
+    margin: 0;
 }
 
 .thick {
@@ -36,16 +41,6 @@
 
 .no-text-decoration {
     text-decoration: none !important;
-}
-
-.table-cell-like {
-    display: table-cell !important;
-    margin: 0 !important;
-    padding: 0 5px !important;
-}
-
-.table-cell-like.active {
-    background-color: var(--active-color) !important;
 }
 
 .vertical-center {
@@ -137,12 +132,12 @@
 .clickable-label {
     display: block !important;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px;
     color: grey;
 }
 
 .clickable-label.active {
-    background-color: var(--active-color);
+    /* background-color: /* var(--active-color);  #bbd0ff; */
     border-radius: 10px;
     color: #1D3557;
 }
@@ -163,6 +158,7 @@
 
 .btn:hover {
     background-color: #577590 !important;
+    border: none !important;
 }
 
 .btn.selected {
@@ -177,3 +173,72 @@
 .italic {
     font-style: italic;
 }
+
+.main-content {
+    background-color: #fdfbf9; /* off-white */
+    padding-top: 0px !important;
+}
+
+.mainContent {
+    padding: 20px;
+    /* background-color: #1e90ff; */
+}
+
+.left {
+    float: right;
+    width: 100%;
+    background-color: #1e90ff;
+}
+
+.chip {
+    background-color:#e2eafc;
+    border-radius: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+select.select {
+    -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('./images/10/Expand\ Arrow.svg');
+background-repeat: no-repeat;
+  background-position-x: 90%;
+  background-position-y: 10px;
+  background-color: white;
+    border: 1px solid #e2eafc !important;
+    border-radius: 10px;
+    font-size: xx-small;
+    padding-left: 10px;
+    max-height: 30px;
+  }
+
+  .small-settings-btn {
+    max-width: 20px !important;
+    max-height: 20px !important;
+    padding: auto;
+  }
+
+  .p-left-15 {
+    padding-right: 15px !important;
+  }
+
+  .p-left-5 {
+    padding-right: 5px !important;
+  }
+
+  /*
+  .btn {
+    background-color: white !important;
+    border: 2px solid #e2eafc !important;
+    border-radius: 10px;
+    font-size: xx-small;
+  }
+*/
+.logo {
+    background-image: url('./images/logo/Logo\ Placeholder.svg');
+    width: 160px;
+    height: 70px;
+    display: inline-block;
+}
+
+

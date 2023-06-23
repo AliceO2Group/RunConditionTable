@@ -14,7 +14,7 @@
 
 :root {
     /* Color palette */
-    --active-color: #b3c5d7;
+    --active-color: #ABC4FF /* #b3c5d7 */;
     --focus-color: #778da9;
     --row-selected-color: #8d99ae;
     --highlight-blue: #D7EDFC;
@@ -48,7 +48,7 @@ table tbody tr.row-selected-color-alpha {
 
 
 tbody tr.track.row-unselected-color-alpha:nth-child(odd) td {
-    background-color: var(--color-gray-lighter);
+    background-color: #f1f4fb/*var(--color-gray-lighter)*/;
 }
 
 table.data-table thead {
@@ -63,6 +63,19 @@ table.data-table tbody tr {
     padding: 0em !important;
 
     font-size: xx-small !important;
+    border-collapse: collapse;
+    border: 0;
+}
+
+table.data-table tbody td {
+    border: 0;
+}
+
+.border-sh {
+    background-color: white !important;
+    border-radius: 15px !important;
+    /* border-collapse: separate; */
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
 input[type="checkbox"] {

@@ -26,9 +26,10 @@ const { pagesNames } = RCT;
  */
 
 export default function sidebar(model) {
-    return h('nav.sidebar.sidebar-content.scroll-y.flex-column.p3', [sidebarMenu(model)]);
+    return h('.sidebar.sidebar-content.p3', [sidebarMenu(model)]);
 }
 const sidebarMenu = (model) => [
+    h('div.logo'),
     alonePageButton(model, pagesNames.periods, 'Periods'),
     fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes'),
     fetchedDataPages(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),

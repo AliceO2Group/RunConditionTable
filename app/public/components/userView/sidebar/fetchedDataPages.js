@@ -25,10 +25,10 @@ export default function fetchedDataPages(model, pageName, label) {
             h('.vertical-center',
                 h('.current-page',
                     h('.title-text-relative.hidden', label))),
-            h('.chevron-right-20.vertical-center', { id: `${pageName}ToggleChevron` }),
+            h('.folder-20.vertical-center'), //{ id: `${pageName}ToggleChevron` }),
             h('.title-text.vertical-center', label))
         : h('div',
-            h('.chevron-down-20.vertical-center', { id: `${pageName}ToggleChevron` }),
+            h('.folder-20.vertical-center'),// { id: `${pageName}ToggleChevron` }),
             h('.title-text.vertical-center', label));
 
     if (pageName) {

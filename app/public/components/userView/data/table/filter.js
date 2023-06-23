@@ -36,10 +36,11 @@ export default function filter(model) {
     return h('.filter-panel', [
         h('.filter-panel-content',
             h('table.no-spacing',
-                h('tbody',
+                h('tbody.zeropadding',
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds, fields),
                     inputsRow(params, lowerInputIds, fields))),
+            /*
             h('.filter-panel-buttons',
                 h('button.btn.filter-btn', {
                     onclick: onclickClear(model, inputsIds),
@@ -66,7 +67,8 @@ export default function filter(model) {
                 '  ',
                 h('button.btn.btn-primary.filter-btn', {
                     onclick: onclickSubmit(model, inputsIds),
-                }, 'Submit'))),
+                }, 'Submit'))
+                */),
     ]);
 }
 

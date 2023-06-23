@@ -72,11 +72,24 @@ export default function pager(model, data, scid) {
         : currentSite * data.rowsOnSite;
 
     const siteChangingController = (onclickF, label) => h('a.site-changing-controller', { onclick: onclickF }, label);
-
+    
     return [
         h('.flex-row.pager-panel', [
-            h('.flex.menu-title', `${firstRowIdx}-${lastRowIdx} out of ${data.totalRecordsNumber} items`),
+            h('select.select', { id: 'showOptions', name: 'showOptions'},
+            [    
+                h('option', 'All columns'),
+                h('option', 'Non empty columns'),
+                h('option', 'Custom'),
+        ], iconChevronBottom()),
 
+        h('select.select', { id: 'showOptions', name: 'showOptions'},
+            [    
+                h('option', 'All columns'),
+                h('option', 'Non empty columns'),
+                h('option', 'Custom'),
+        ], iconChevronBottom()),
+        
+            /*
             h('.flex',
                 h('input.pager.p2', {
                     id: `rows-on-site-input-${scid}`,
@@ -86,6 +99,7 @@ export default function pager(model, data, scid) {
                 }, ''),
                 h('.menu-title', 'per page'),
                 h('button.btn.m1', { onclick: () => onclickSetRowsOnSite(model, scid) }, 'apply')),
+            */
 
             h('.flex.pager-buttons',
                 // Move to first site
