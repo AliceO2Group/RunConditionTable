@@ -32,8 +32,8 @@ export default function pager(model, data, scid) {
             () => model.fetchedData.changePage(site),
             '',
             url.pathname + url.search,
-            `${currentSite.toString() === site.toString() ? '.selected' : ''}`,
-            '.m1',
+            `.btn.btn-secondary${currentSite.toString() === site.toString() ? '.selected' : ''}`,
+            '',
             true,
         );
     });
@@ -72,34 +72,34 @@ export default function pager(model, data, scid) {
         : currentSite * data.rowsOnSite;
 
     const siteChangingController = (onclickF, label) => h('a.site-changing-controller', { onclick: onclickF }, label);
-    
+
     return [
         h('.flex-row.pager-panel', [
-            h('select.select', { id: 'showOptions', name: 'showOptions'},
-            [    
-                h('option', 'All columns'),
-                h('option', 'Non empty columns'),
-                h('option', 'Custom'),
-        ], iconChevronBottom()),
+            h('select.select', { id: 'showOptions', name: 'showOptions' },
+                [
+                    h('option', 'All columns'),
+                    h('option', 'Non empty columns'),
+                    h('option', 'Customize'),
+                ], iconChevronBottom()),
 
-        h('select.select', { id: 'showOptions', name: 'showOptions'},
-            [    
-                h('option', 'All columns'),
-                h('option', 'Non empty columns'),
-                h('option', 'Custom'),
-        ], iconChevronBottom()),
-        
+            h('select.select', { id: 'showOptions', name: 'showOptions' },
+                [
+                    h('option', 'All columns'),
+                    h('option', 'Non empty columns'),
+                    h('option', 'Customize'),
+                ], iconChevronBottom()),
+
             /*
-            h('.flex',
-                h('input.pager.p2', {
-                    id: `rows-on-site-input-${scid}`,
-                    type: 'number',
-                    placeholder: 50,
-                    value: model.router.params['rows-on-site'],
-                }, ''),
-                h('.menu-title', 'per page'),
-                h('button.btn.m1', { onclick: () => onclickSetRowsOnSite(model, scid) }, 'apply')),
-            */
+             *H('.flex',
+             *    h('input.pager.p2', {
+             *        id: `rows-on-site-input-${scid}`,
+             *        type: 'number',
+             *        placeholder: 50,
+             *        value: model.router.params['rows-on-site'],
+             *    }, ''),
+             *    h('.menu-title', 'per page'),
+             *    h('button.btn.m1', { onclick: () => onclickSetRowsOnSite(model, scid) }, 'apply')),
+             */
 
             h('.flex.pager-buttons',
                 // Move to first site

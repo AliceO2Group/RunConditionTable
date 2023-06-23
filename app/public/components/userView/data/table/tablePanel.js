@@ -13,7 +13,6 @@
  */
 
 import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
-// import downloadCSV from '../../utils/csvExport.js';
 import downloadCSV from '../../../../utils/csvExport.js';
 import tableHeader from './header.js';
 import row from './row.js';
@@ -57,52 +56,50 @@ export default function tablePanel(model) {
         const { page, index } = model.getCurrentDataPointer();
         switch (page) {
             case 'periods': return 'Periods';
-            case 'runsPerPeriod': return 'Runs per period';//  period index
-            case 'runsPerDataPass': return 'Runs per data pass'; // data pass index
-            case 'dataPasses': return 'Data passes per period'; // period index
-            case 'mc': return 'Monte Carlo'; // period index
-            case 'flags': return 'Flags'; // run index
+            case 'runsPerPeriod': return 'Runs per period';//  Period index
+            case 'runsPerDataPass': return 'Runs per data pass'; // Data pass index
+            case 'dataPasses': return 'Data passes per period'; // Period index
+            case 'mc': return 'Monte Carlo'; // Period index
+            case 'flags': return 'Flags'; // Run index
             default: return null;
         }
     };
 
     const functionalities = (model) => h('.btn-group',
-    h('button.btn.icon-only-button', {
-        onclick: () => {
-            model.fetchedData.reqForData(true);
-            model.notify();
-        },
-    }, iconReload()),
+        h('button.btn.btn-secondary.icon-only-button', {
+            onclick: () => {
+                model.fetchedData.reqForData(true);
+                model.notify();
+            },
+        }, iconReload()),
 
-    h('button.btn.icon-only-button', {
-        onclick: () => {
-            downloadCSV(model);
-        },
-    }, iconDataTransferDownload()),
+        h('button.btn.btn-secondary.icon-only-button', {
+            onclick: () => {
+                downloadCSV(model);
+            },
+        }, iconDataTransferDownload()),
 
-    h('button.btn.icon-only-button', {
-        className: model.searchFieldsVisible ? 'selected' : '',
-        onclick: () => model.changeSearchFieldsVisibility(),
-    }, h('.filter-20.abs-center')));
+        h('button.btn.icon-only-button', {
+            className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',
+            onclick: () => model.changeSearchFieldsVisibility(),
+        }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
-    return h('div.mainContent', [
-       h('div.flex-wrap.justify-between.items-center', 
-        h('div.flex-wrap.justify-between.items-baseline',
-            h('h3.p-left-15', headerSpecific(model)),
-             model.getCurrentDataPointer().page !== 'periods' ? h('div.chip.p-left-15', model.getCurrentDataPointer().index, h('.close-10')) : '',
-            h('div.italic.p-left-5', itemsCounter(data)),
-            //h('button.btn.small-settings-btn',
-            h('.settings-20'),// ),
-       ),
-       
-        h('div', functionalities(model)),
-    ),
-    filteringPanel,
-       visibleFields.length > 0
+    return h('div.main-content', [
+        h('div.flex-wrap.justify-between.items-center',
+            h('div.flex-wrap.justify-between.items-baseline',
+                h('h3.p-left-15.text-primary', headerSpecific(model)),
+                model.getCurrentDataPointer().page !== 'periods' ? h('div.chip.p-left-15', model.getCurrentDataPointer().index, h('.close-10')) : '',
+                h('div.italic.p-left-5.text-primary', itemsCounter(data)),
+                h('button.btn.btn-secondary', h('.settings-20')), // ),
+            ),
+
+            h('div', functionalities(model))),
+        filteringPanel,
+        visibleFields.length > 0
             ? h('',
-                // data.rows.length > 15 ? pager(model, data, 1) : '',
+                // Data.rows.length > 15 ? pager(model, data, 1) : '',
                 h('.x-scrollable-table.border-sh',
-                pager(model, data, 1),
+                    pager(model, data, 1),
                     h('table.data-table', {
                         id: `data-table-${data.url}`,
                         className: `${
@@ -118,9 +115,8 @@ export default function tablePanel(model) {
                         sortingRow(visibleFields, data, model),
                         tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
                     ]),
-                    data.rows.length > 15 ? pager(model, data, 2) : '',
-                ))
-                // pager(model, data, 2))
+                    data.rows.length > 15 ? pager(model, data, 2) : ''))
+        // Pager(model, data, 2))
             : '',
     ]);
 }

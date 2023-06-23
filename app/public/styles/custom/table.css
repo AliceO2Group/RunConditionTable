@@ -78,7 +78,7 @@ table.data-table tbody td {
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
-input[type="checkbox"] {
+input[type="checkbox"].row-checkbox {
     appearance: none;
     background-color: var(--color-white);
     border-radius: 0.15em;
@@ -92,13 +92,13 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-input[type="checkbox"].ticked {
+input[type="checkbox"].row-checkbox.ticked {
     background-color: var(--dark-blue);
     border-radius: 0.15em;
     border: 0.15em solid var(--dark-blue) !important;
 }
 
-input[type="checkbox"]::before {
+input[type="checkbox"].row-checkbox::before {
     content: "";
     width: 0.65em;
     height: 0.65em;
@@ -111,7 +111,7 @@ input[type="checkbox"]::before {
     background-color: var(--color-white);
 }
   
-input[type="checkbox"]:checked::before {
+input[type="checkbox"].row-checkbox:checked::before {
     transform: scale(1);
     background-color: var(--color-white);
 }

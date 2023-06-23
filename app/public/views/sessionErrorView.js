@@ -21,6 +21,6 @@ export default function serviceUnavailablePanel(model) {
         title,
         subtitle,
         h('.p1'),
-        h('.flex-wrap.justify-center', retryBtn,)
+        h('.flex-wrap.justify-center', retryBtn),
     ]));
 }

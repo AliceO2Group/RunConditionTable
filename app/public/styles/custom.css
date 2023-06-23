@@ -19,7 +19,11 @@
     --secondary-color: #577590;
     --highlight-blue: #D7EDFC;
     --blue: #1e90ff;
-    --white: #ffffff;
+
+    --white: #ffffff; /* stays */
+    --off-white: #fdfbf9; /* stays */
+    --selection-color: #e2eafc; /* up to rethink */
+    --primary: #324376;
 }
 
 .zeropadding {
@@ -156,14 +160,17 @@
     border-bottom-right-radius: 10px !important;
 }
 
-.btn:hover {
-    background-color: #577590 !important;
-    border: none !important;
+.btn.btn-primary:hover {
+    background-color: #586BA4 !important;
+}
+
+.btn.btn-secondary:hover {
+    background-color: var(--selection-color) !important;
+    /* border: none !important; */
 }
 
 .btn.selected {
-    background-color: var(--color-gray-dark) !important;
-    color: var(--color-white) !important;
+    background-color: var(--selection-color) !important;
 }
 
 .pointer {
@@ -174,20 +181,13 @@
     font-style: italic;
 }
 
-.main-content {
-    background-color: #fdfbf9; /* off-white */
+.user-panel-main-content {
+    background-color: var(--off-white);
     padding-top: 0px !important;
 }
 
-.mainContent {
+.main-content {
     padding: 20px;
-    /* background-color: #1e90ff; */
-}
-
-.left {
-    float: right;
-    width: 100%;
-    background-color: #1e90ff;
 }
 
 .chip {
@@ -225,20 +225,24 @@ background-repeat: no-repeat;
   .p-left-5 {
     padding-right: 5px !important;
   }
-
-  /*
-  .btn {
-    background-color: white !important;
-    border: 2px solid #e2eafc !important;
-    border-radius: 10px;
-    font-size: xx-small;
+  
+  .btn-primary {
+    background-color: var(--primary) !important;
+    color: #FDFBF9 !important;
   }
-*/
-.logo {
+
+  .btn-secondary {
+    background: transparent !important;
+    color: var(--primary) !important;
+  }
+  
+  .logo {
     background-image: url('./images/logo/Logo\ Placeholder.svg');
     width: 160px;
     height: 70px;
     display: inline-block;
 }
 
-
+.text-primary {
+    color: var(--primary);
+}

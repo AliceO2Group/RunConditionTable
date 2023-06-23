@@ -89,8 +89,15 @@
     display: inline-block;
 }
 
-.filter-20 {
-    background-image: url('./images/20/Filter.svg');
+.slider-20-primary {
+    background-image: url('./images/20/primary/Slider.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.slider-20-off-white {
+    background-image: url('./images/20/off-white/Slider.svg');
     width: 20px;
     height: 20px;
     display: inline-block;

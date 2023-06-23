@@ -28,7 +28,7 @@ export default function fetchedDataPages(model, pageName, label) {
             h('.folder-20.vertical-center'), //{ id: `${pageName}ToggleChevron` }),
             h('.title-text.vertical-center', label))
         : h('div',
-            h('.folder-20.vertical-center'),// { id: `${pageName}ToggleChevron` }),
+            h('.folder-20.vertical-center'), // { id: `${pageName}ToggleChevron` }),
             h('.title-text.vertical-center', label));
 
     if (pageName) {

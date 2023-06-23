@@ -13,19 +13,17 @@
  */
 
 import { h } from '/js/src/index.js';
-// import header from '../components/common/header.js';
 import dataPanel from '../components/userView/data/dataPanel.js';
 import sidebar from '../components/userView/sidebar/sidebar.js';
 
 export default function userPanel(model) {
     const submodel = model.submodels[model.mode];
     return h('.flex-column.absolute-fill', [
-        // h('header.shadow-level2.level2', [header(submodel)]),
         h('.flex-grow.flex-row.outline-gray', [
             sidebar(submodel),
-            h('section.outline-gray.flex-grow.relative.main-content', [
+            h('section.outline-gray.flex-grow.relative.user-panel-main-content', [
                 h('.scroll-y.absolute-fill',
-                    { id: 'main-content' },
+                    { id: 'user-panel-main-content' },
                     [dataPanel(submodel)]),
             ]),
         ]),
