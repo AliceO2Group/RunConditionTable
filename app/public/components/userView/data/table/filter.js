@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 import { getHeaderSpecial } from '../headersSpecials.js';
 
-const { dataReqParams } = RCT;
+/* Const { dataReqParams } = RCT; */
 
 export default function filter(model) {
     const data = model.getCurrentData();
@@ -29,7 +29,7 @@ export default function filter(model) {
 
     const upperInputIds = getUpperInputIds(fields, pageFilteringTypes, filteringTypes);
     const lowerInputIds = getLowerInputIds(fields, pageFilteringTypes, filteringTypes);
-    const inputsIds = upperInputIds.concat(lowerInputIds);
+    // Const inputsIds = upperInputIds.concat(lowerInputIds);
 
     const { params } = model.router;
 
@@ -39,36 +39,37 @@ export default function filter(model) {
                 h('tbody.zeropadding',
                     labelsRow(model, fields),
                     inputsRow(params, upperInputIds, fields),
-                    inputsRow(params, lowerInputIds, fields))),
-            /*
-             *H('.filter-panel-buttons',
-             *    h('button.btn.filter-btn', {
-             *        onclick: onclickClear(model, inputsIds),
-             *    }, h('.clear-filters-20.vertical-center'), h('.icon-btn-text', 'Clear filters')),
-             *    '  ',
-             *    h('button.btn.filter-btn', {
-             *        onclick: () => {
-             *            for (const field of data.fields) {
-             *                field.marked = true;
-             *            }
-             *            model.notify();
-             *        },
-             *    }, 'Show all columns'),
-             *    '  ',
-             *    h('button.btn.filter-btn', {
-             *        onclick: () => data.fields.forEach((f) => {
-             *            model.fetchedData.changeItemStatus(
-             *                f,
-             *                data.rows.some((r) => r[f.name]),
-             *            );
-             *            model.notify();
-             *        }),
-             *    }, h('.hide-empty-20.vertical-center'), h('.icon-btn-text', 'Hide empty columns')),
-             *    '  ',
-             *    h('button.btn.btn-primary.filter-btn', {
-             *        onclick: onclickSubmit(model, inputsIds),
-             *    }, 'Submit'))
-             */),
+                    inputsRow(params, lowerInputIds, fields)))),
+
+        /*
+         *H('.filter-panel-buttons',
+         *    h('button.btn.filter-btn', {
+         *        onclick: onclickClear(model, inputsIds),
+         *    }, h('.clear-filters-20.vertical-center'), h('.icon-btn-text', 'Clear filters')),
+         *    '  ',
+         *    h('button.btn.filter-btn', {
+         *        onclick: () => {
+         *            for (const field of data.fields) {
+         *                field.marked = true;
+         *            }
+         *            model.notify();
+         *        },
+         *    }, 'Show all columns'),
+         *    '  ',
+         *    h('button.btn.filter-btn', {
+         *        onclick: () => data.fields.forEach((f) => {
+         *            model.fetchedData.changeItemStatus(
+         *                f,
+         *                data.rows.some((r) => r[f.name]),
+         *            );
+         *            model.notify();
+         *        }),
+         *    }, h('.hide-empty-20.vertical-center'), h('.icon-btn-text', 'Hide empty columns')),
+         *    '  ',
+         *    h('button.btn.btn-primary.filter-btn', {
+         *        onclick: onclickSubmit(model, inputsIds),
+         *    }, 'Submit'))
+         */
     ]);
 }
 
@@ -129,35 +130,39 @@ const isFieldMarked = (inputId, fields) => {
     return false;
 };
 
-const onclickSubmit = (model, inputsIds) => () => {
-    const filteringParamsPhrase = inputsIds
-        .map((inputId) => [
-            inputId,
-            encodeURI(document.getElementById(inputId)?.value || ''),
-        ])
-        .filter(([_, v]) => v?.length > 0)
-        .map(([id, v]) => `${id}=${v}`)
-        .join('&');
+/*
+ *Const onclickSubmit = (model, inputsIds) => () => {
+ *    const filteringParamsPhrase = inputsIds
+ *        .map((inputId) => [
+ *            inputId,
+ *            encodeURI(document.getElementById(inputId)?.value || ''),
+ *        ])
+ *        .filter(([_, v]) => v?.length > 0)
+ *        .map(([id, v]) => `${id}=${v}`)
+ *        .join('&');
+ *
+ *    const { params } = model.router;
+ *    const newSearch =
+ *        `?page=${params.page}&index=${params.index}` +
+ *        `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&${filteringParamsPhrase}`;
+ *
+ *    const url = model.router.getUrl();
+ *    const newUrl = new URL(url.origin + url.pathname + newSearch);
+ *    model.router.go(newUrl);
+ *};
+ */
 
-    const { params } = model.router;
-    const newSearch =
-        `?page=${params.page}&index=${params.index}` +
-        `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&${filteringParamsPhrase}`;
-
-    const url = model.router.getUrl();
-    const newUrl = new URL(url.origin + url.pathname + newSearch);
-    model.router.go(newUrl);
-};
-
-const onclickClear = (model, inputsIds) => () => {
-    inputsIds.forEach((inputId) => {
-        const element = document.getElementById(inputId);
-        if (element) {
-            element.value = '';
-        }
-    });
-    onclickSubmit(model, inputsIds)();
-};
+/*
+ *Const onclickClear = (model, inputsIds) => () => {
+ *    inputsIds.forEach((inputId) => {
+ *        const element = document.getElementById(inputId);
+ *        if (element) {
+ *            element.value = '';
+ *        }
+ *    });
+ *    onclickSubmit(model, inputsIds)();
+ *};
+ */
 
 const getUpperInputIds = (fields, pageFilteringTypes, filteringTypes) =>
     fields.map((f) => fieldName2MatchFromType(f.name, pageFilteringTypes, filteringTypes));

@@ -173,10 +173,10 @@
     display: inline-block;
 }
 
-.settings-90 {
-    background-image: url('./images/90/primary/Settings.svg');
-    width: 90px;
-    height: 90px;
+.settings-40 {
+    background-image: url('./images/40/Settings.svg');
+    width: 40px;
+    height: 40px;
     display: inline-block;
 }
 

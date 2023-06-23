@@ -12,10 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
+import { h, iconChevronBottom } from '/js/src/index.js';
 
 export default function pageSettings(model) {
-    const loginButton = h('button.btn', 'Login');
     const title = h('h3', 'Page settings');
 
     function onclickSetRowsOnSite(model, scid) {
@@ -29,19 +28,34 @@ export default function pageSettings(model) {
         model.fetchedData.changeRowsOnSite(rowsOnSite);
         // CLOSE MODAL HERE document.getElementsByClassName('modal').display=none
     }
-    
+
     return h('.pageSettings', [
-        h('.flex.bottom-20',
-            h('.settings-90'),
+        h('.flex.bottom-20.justify-center.items-center',
+            h('.settings-40'),
             h('.inline.top-15.left-10',
                 title)),
-        h('.menu-title', 'Rows per page'),
-        h('input.pager.p2', {
-            id: `rows-on-site-input-3`,
-            type: 'number',
-            placeholder: 50,
-            value: model.router.params['rows-on-site'],
-        }, ''),
-        h('button.btn.btn-primary.m1', { onclick: () => onclickSetRowsOnSite(model, 3) }, 'Apply changes'),
+
+        h('.flex-wrap.justify-between.items-center',
+            h('', 'Rows per page'),
+            h('input.pager.p2', {
+                id: 'rows-on-site-input-3',
+                type: 'number',
+                placeholder: 50,
+                value: model.router.params['rows-on-site'],
+            }, '')),
+
+        h('.flex-wrap.justify-between.items-center',
+            h('', 'Color theme'),
+            h('select.select.color-theme', { id: 'showOptions', name: 'showOptions' }, [
+                h('option', 'Ehevi'),
+                h('option', 'WebUI'),
+                h('option', 'Alice'),
+                h('option', 'Chiara'),
+            ], iconChevronBottom())),
+
+        h('.flex-wrap.justify-center.items-center',
+            h('button.btn.btn-primary.m1', {
+                onclick: () => onclickSetRowsOnSite(model, 3),
+            }, 'Apply changes')),
     ]);
 }

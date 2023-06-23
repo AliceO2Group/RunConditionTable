@@ -54,7 +54,7 @@ export default function tablePanel(model) {
     const filteringPanel = model.searchFieldsVisible ? filter(model) : ' ';
 
     const headerSpecific = (model) => {
-        const { page, index } = model.getCurrentDataPointer();
+        const { page } = model.getCurrentDataPointer();
         switch (page) {
             case 'periods': return 'Periods';
             case 'runsPerPeriod': return 'Runs per period';//  Period index
@@ -84,28 +84,31 @@ export default function tablePanel(model) {
             className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
-        
 
     return h('div.main-content', [
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-baseline',
                 h('h3.p-left-15.text-primary', headerSpecific(model)),
-                model.getCurrentDataPointer().page !== 'periods' ? h('div.chip.p-left-15', model.getCurrentDataPointer().index, h('.close-10')) : '',
+                model.getCurrentDataPointer().page !== 'periods'
+                    ? h('div.chip.p-left-15',
+                        model.getCurrentDataPointer().index,
+                        h('.close-10'))
+                    : '',
                 h('div.italic.p-left-5.text-primary', itemsCounter(data)),
-                h('button.btn.btn-secondary', {onclick: () => {
-                    document.getElementById('pageSettingsModal').style.display = 'block';
-                    document.addEventListener('click', (event) => {
-                        const modalContent = document.getElementsByClassName('modal-content');
-                        const modal = document.getElementsByClassName('modal');
-                        if ((Array.from(modalContent).find((e) => e != event.target)
-                            && Array.from(modal).find((e) => e == event.target))
-                            && document.getElementById('pageSettingsModal')) {
-                            document.getElementById('pageSettingsModal').style.display = 'none';
-                        };
-                    });
-                }
-                }, h('.settings-20')), // ),
-            ),
+                h('button.btn.btn-secondary', {
+                    onclick: () => {
+                        document.getElementById('pageSettingsModal').style.display = 'block';
+                        document.addEventListener('click', (event) => {
+                            const modalContent = document.getElementsByClassName('modal-content');
+                            const modal = document.getElementsByClassName('modal');
+                            if (Array.from(modalContent).find((e) => e != event.target)
+                                && Array.from(modal).find((e) => e == event.target)
+                                && document.getElementById('pageSettingsModal')) {
+                                document.getElementById('pageSettingsModal').style.display = 'none';
+                            }
+                        });
+                    },
+                }, h('.settings-20'))),
 
             h('div', functionalities(model))),
         filteringPanel,
@@ -132,8 +135,8 @@ export default function tablePanel(model) {
                     data.rows.length > 15 ? pager(model, data, 2) : ''))
         // Pager(model, data, 2))
             : '',
-            h('.modal', { id: 'pageSettingsModal' },
-                h('.modal-content.abs-center', {id: 'pageSettingsModalContent'}, pageSettings(model))),
+        h('.modal', { id: 'pageSettingsModal' },
+            h('.modal-content.abs-center.p3', { id: 'pageSettingsModalContent' }, pageSettings(model))),
     ]);
 }
 

@@ -201,6 +201,15 @@ select.select {
     max-height: 30px;
   }
 
+.select.show-columns {
+    min-width: 150px;
+}
+
+.select.color-theme {
+    min-width: 80px;
+    padding: 5px;
+}
+
 .small-settings-btn {
     max-width: 20px !important;
     max-height: 20px !important;
