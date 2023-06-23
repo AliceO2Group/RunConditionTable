@@ -17,6 +17,7 @@ import { RCT } from '../../../config.js';
 const { dataReqParams: DRP } = RCT;
 const { pagesNames: PN } = RCT;
 import { getReadableFileSizeString } from '../../../utils/utils.js';
+import actionChip from '../../common/actionChip.js';
 
 /**
  * Configuration what buttons at which cells and which pages are supposed
@@ -48,7 +49,7 @@ pagesCellsSpecials[PN.periods] = {
     name: (model, item) => [
         h('td', item.name),
         h('td',
-            viewButton(
+            actionChip(
                 model,
                 'runs',
                 (e) => model.handleClick(e),
@@ -57,7 +58,7 @@ pagesCellsSpecials[PN.periods] = {
                 `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`,
             ),
 
-            viewButton(
+            actionChip(
                 model,
                 'data passes',
                 (e) => model.handleClick(e),
@@ -65,7 +66,7 @@ pagesCellsSpecials[PN.periods] = {
                 `/?page=${PN.dataPasses}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`,
             ),
 
-            viewButton(
+            actionChip(
                 model,
                 'MC',
                 (e) => model.handleClick(e),
@@ -82,22 +83,23 @@ pagesCellsSpecials[PN.periods] = {
 pagesCellsSpecials[PN.dataPasses] = {
     name: (model, item) => [
         h('td', item.name),
-        h('td', viewButton(
+        h('td',
+            actionChip(
+                model,
+                'runs',
+                (e) => model.handleClick(e),
+                '',
+                // eslint-disable-next-line max-len
+                `/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`,
+            ),
+            actionChip(
             model,
-            'runs',
-            (e) => model.handleClick(e),
-            '',
-            // eslint-disable-next-line max-len
-            `/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`,
-        ),
-        viewButton(
-            model,
-            'anchorage',
-            (e) => model.handleClick(e),
-            '',
-            // eslint-disable-next-line max-len
-            `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
-        )),
+                'anchorage',
+                (e) => model.handleClick(e),
+                '',
+                // eslint-disable-next-line max-len
+                `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
+            )),
     ],
     size: (model, item) => getReadableFileSizeString(Number(item.size)),
 };
@@ -105,7 +107,7 @@ pagesCellsSpecials[PN.mc] = {
     name: (model, item) => [
         item.name,
         '  ',
-        viewButton(
+        actionChip(
             model,
             'anchored',
             (e) => model.handleClick(e),

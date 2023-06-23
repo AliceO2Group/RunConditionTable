@@ -34,3 +34,8 @@
     background-color: var(--primary) !important;
     color: var(--off-white) !important;
 }
+
+.btn.chip:hover {
+    background-color: var(--selection-color) !important;
+    color: var(--primary) !important;
+}
