@@ -23,7 +23,8 @@
     --white: #ffffff; /* stays */
     --off-white: #fdfbf9; /* stays */
     --selection-color: #e2eafc; /* up to rethink */
-    --primary: #324376;
+    --primary: #324376; /* stays */
+    --primary-hover: #586BA4; /* stays */
 }
 
 .zeropadding {
@@ -141,7 +142,6 @@
 }
 
 .clickable-label.active {
-    /* background-color: /* var(--active-color);  #bbd0ff; */
     border-radius: 10px;
     color: #1D3557;
 }
@@ -158,19 +158,6 @@
 .br-bottom-10 {
     border-bottom-left-radius: 10px !important;
     border-bottom-right-radius: 10px !important;
-}
-
-.btn.btn-primary:hover {
-    background-color: #586BA4 !important;
-}
-
-.btn.btn-secondary:hover {
-    background-color: var(--selection-color) !important;
-    /* border: none !important; */
-}
-
-.btn.selected {
-    background-color: var(--selection-color) !important;
 }
 
 .pointer {
@@ -191,52 +178,44 @@
 }
 
 .chip {
-    background-color:#e2eafc;
+    background-color:var(--selection-color);
+    color: var(--primary);
     border-radius: 10px;
     padding-left: 15px;
     padding-right: 15px;
+    align-items: center;
 }
 
 select.select {
     -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url('./images/10/Expand\ Arrow.svg');
-background-repeat: no-repeat;
-  background-position-x: 90%;
-  background-position-y: 10px;
-  background-color: white;
-    border: 1px solid #e2eafc !important;
+    -moz-appearance: none;
+    background-image: url('./images/10/Expand\ Arrow.svg');
+    background-repeat: no-repeat;
+    background-position-x: 90%;
+    background-position-y: 10px;
+    background-color: var(--white);
+    border: 1px solid var(--selection-color) !important;
     border-radius: 10px;
     font-size: xx-small;
     padding-left: 10px;
     max-height: 30px;
   }
 
-  .small-settings-btn {
+.small-settings-btn {
     max-width: 20px !important;
     max-height: 20px !important;
     padding: auto;
-  }
+}
 
-  .p-left-15 {
+.p-left-15 {
     padding-right: 15px !important;
-  }
+}
 
-  .p-left-5 {
+.p-left-5 {
     padding-right: 5px !important;
-  }
+}
   
-  .btn-primary {
-    background-color: var(--primary) !important;
-    color: #FDFBF9 !important;
-  }
-
-  .btn-secondary {
-    background: transparent !important;
-    color: var(--primary) !important;
-  }
-  
-  .logo {
+.logo {
     background-image: url('./images/logo/Logo\ Placeholder.svg');
     width: 160px;
     height: 70px;
