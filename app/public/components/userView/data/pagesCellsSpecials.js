@@ -12,12 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 import { h } from '/js/src/index.js';
-import viewButton from '../../common/viewButton.js';
 import { RCT } from '../../../config.js';
-const { dataReqParams: DRP } = RCT;
-const { pagesNames: PN } = RCT;
 import { getReadableFileSizeString } from '../../../utils/utils.js';
 import actionChip from '../../common/actionChip.js';
+const { dataReqParams: DRP } = RCT;
+const { pagesNames: PN } = RCT;
 
 /**
  * Configuration what buttons at which cells and which pages are supposed
@@ -93,7 +92,7 @@ pagesCellsSpecials[PN.dataPasses] = {
                 `/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`,
             ),
             actionChip(
-            model,
+                model,
                 'anchorage',
                 (e) => model.handleClick(e),
                 '',
