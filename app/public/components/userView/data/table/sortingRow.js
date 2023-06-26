@@ -17,7 +17,7 @@ import { filterApplicableHeader, headerSpecPresent } from '../headersSpecials.js
 import { sort } from '../../../../utils/sort.js';
 
 export default function sortingRow(visibleFields, data, model) {
-    return h('thead',
+    return h('thead', { id: 'sortingRow' },
         h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, data, model))));
 }
 

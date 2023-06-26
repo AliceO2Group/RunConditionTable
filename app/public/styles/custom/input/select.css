@@ -12,6 +12,30 @@
  * or submit itself to any jurisdiction.
  */
 
+select.select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('./images/10/Expand\ Arrow.svg');
+    background-repeat: no-repeat;
+    background-color: var(--white);
+    border: 1px solid var(--selection-color) !important;
+    border-radius: 10px;
+    font-size: xx-small;
+    padding-left: 10px;
+    max-height: 30px;
+  }
+
+.select.show-columns {
+    min-width: 150px;
+    background-position-x: 90%;
+    background-position-y: 10px;
+}
+
+.select.color-theme {
+    min-width: 80px;
+    padding: 5px;
+}
+
 select.filter-select {
     font-size: small !important;
     min-height: fit-content;

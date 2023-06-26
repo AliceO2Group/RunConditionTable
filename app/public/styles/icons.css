@@ -124,6 +124,13 @@
     display: inline-block;
 }
 
+.sort-20 {
+    background-image: url('./images/20/Sort.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
 .settings-20 {
     background-image: url('./images/20/Settings.svg');
     width: 20px;

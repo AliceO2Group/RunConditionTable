@@ -68,21 +68,57 @@ export default function pager(model, data) {
 
     const siteChangingController = (onclickF, label) => h('a.site-changing-controller', { onclick: onclickF }, label);
 
+    function handleOptionChange() {
+        const columnsOptionsSelect = document.getElementById('columns-options');
+        const selectedValue = columnsOptionsSelect.options[columnsOptionsSelect.selectedIndex].value;
+        switch (selectedValue) {
+            case '0':
+                /* Show non empty columns */
+                data.fields.forEach((f) => {
+                    model.fetchedData.changeItemStatus(
+                        f,
+                        data.rows.some((r) => r[f.name]),
+                    );
+                    model.notify();
+                });
+                break;
+            case '1':
+                /* Show all columns */
+                for (const field of data.fields) {
+                    field.marked = true;
+                }
+                model.notify();
+                break;
+            case '2':
+                /* Customize */
+                break;
+            default:
+                break;
+        }
+    }
+
     return [
         h('.flex-row.pager-panel', [
-            h('select.select.show-columns', { id: 'showOptions', name: 'showOptions' },
-                [
-                    h('option', 'All columns'),
-                    h('option', 'Non empty columns'),
-                    h('option', 'Customize'),
-                ], iconChevronBottom()),
-
-            h('select.select.show-columns', { id: 'showOptions', name: 'showOptions' },
-                [
-                    h('option', 'All columns'),
-                    h('option', 'Non empty columns'),
-                    h('option', 'Customize'),
-                ], iconChevronBottom()),
+            h('button.btn.icon-only-button.btn-secondary', {
+                onclick: () => {
+                    const sortingRow = document.getElementById('sortingRow');
+                    if (sortingRow.style.display === 'none') {
+                        sortingRow.style.display = 'table-header-group';
+                    } else {
+                        sortingRow.style.display = 'none';
+                    }
+                },
+            }, h('.sort-20')),
+            h('select.select.show-columns', {
+                id: 'columns-options',
+                name: 'showOptions',
+                onchange: () => handleOptionChange(),
+            },
+            [
+                h('option', { value: 0 }, 'Non empty columns'),
+                h('option', { value: 1 }, 'All columns'),
+                h('option', { value: 2 }, 'Customize'),
+            ], iconChevronBottom()),
 
             h('.flex.pager-buttons',
                 // Move to first site
