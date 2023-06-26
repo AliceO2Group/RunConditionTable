@@ -35,6 +35,10 @@
     color: var(--off-white) !important;
 }
 
+.btn.chip {
+    align-items: center !important;
+}
+
 .btn.chip:hover {
     background-color: var(--selection-color) !important;
     color: var(--primary) !important;

@@ -14,7 +14,8 @@
 
 :root {
     /* Color palette */
-    --active-color: #ABC4FF /* #b3c5d7 */;
+    --active-color: #F9EAC2;
+    /*#ABC4FF /* #b3c5d7 */
     --dark-blue: #1D3557;
     --secondary-color: #577590;
     --highlight-blue: #D7EDFC;
@@ -22,6 +23,7 @@
 
     --white: #ffffff; /* stays */
     --off-white: #fdfbf9; /* stays */
+    --yellow: #F9EAC2; /* stays */
     --selection-color: #e2eafc; /* up to rethink */
     --primary: #324376; /* stays */
     --primary-hover: #586BA4; /* stays */
@@ -191,8 +193,6 @@ select.select {
     -moz-appearance: none;
     background-image: url('./images/10/Expand\ Arrow.svg');
     background-repeat: no-repeat;
-    background-position-x: 90%;
-    background-position-y: 10px;
     background-color: var(--white);
     border: 1px solid var(--selection-color) !important;
     border-radius: 10px;
@@ -203,17 +203,13 @@ select.select {
 
 .select.show-columns {
     min-width: 150px;
+    background-position-x: 90%;
+    background-position-y: 10px;
 }
 
 .select.color-theme {
     min-width: 80px;
     padding: 5px;
-}
-
-.small-settings-btn {
-    max-width: 20px !important;
-    max-height: 20px !important;
-    padding: auto;
 }
 
 .p-left-15 {

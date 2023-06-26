@@ -13,33 +13,134 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../../../config.js';
 import { getHeaderSpecial } from '../headersSpecials.js';
-
-/* Const { dataReqParams } = RCT; */
 
 export default function filter(model) {
     const data = model.getCurrentData();
     const { fields } = data;
 
-    const dataPointer = model.getCurrentDataPointer();
+    function onFilteringTypeChange() {
+        const filteringTypeSelect = document.getElementById("showOptionsType");
+        const selectedValue = filteringTypeSelect.options[filteringTypeSelect.selectedIndex].value;
+        const types = selectedValue.split('-');
 
-    const pageFilteringTypes = RCT.filteringParams.pages[dataPointer.page];
-    const filteringTypes = RCT.filteringParams.types;
+        const matchFromPlaceholder = document.getElementById('match-from-placeholder');
+        const excludeToPlaceholder = document.getElementById('exclude-to-placeholder');
+        matchFromPlaceholder.innerHTML = types[0];
+        excludeToPlaceholder.innerHTML = types[1];
+    }
 
-    const upperInputIds = getUpperInputIds(fields, pageFilteringTypes, filteringTypes);
-    const lowerInputIds = getLowerInputIds(fields, pageFilteringTypes, filteringTypes);
-    // Const inputsIds = upperInputIds.concat(lowerInputIds);
+    function onFilterSubmit() {
+        const fieldNameSelect = document.getElementById("showOptionsField");
+        const fieldNameValue = fieldNameSelect.options[fieldNameSelect.selectedIndex].value;
 
-    const { params } = model.router;
+        const matchFromType = document.getElementById('match-from-placeholder').innerHTML;
+        const excludeToType = document.getElementById('exclude-to-placeholder').innerHTML;
+
+        const matchFromInput = document.getElementById('match-from-input').value;
+        const excludeToInput = document.getElementById('exclude-to-input').value;
+
+        console.log(fieldNameValue);
+        console.log(matchFromType);
+        console.log(matchFromInput);
+        console.log(excludeToInput);
+        
+        let matchFromPhrase = '';
+        let excludeToPhrase = '';
+        if (matchFromInput) {
+            matchFromPhrase = `${encodeURI(fieldNameValue)}-${encodeURI(matchFromType)}=${encodeURI(matchFromInput)}`;
+        }
+        if (excludeToInput) {
+            excludeToPhrase = `${encodeURI(fieldNameValue)}-${encodeURI(excludeToType)}=${encodeURI(excludeToInput)}`;
+        }
+
+        const url = model.router.getUrl();
+        console.log(url);
+
+        const newUrl = new URL(`${url.href}`
+            + `${matchFromPhrase ? `&${matchFromPhrase}`: ''}`
+            + `${excludeToPhrase ? `&${excludeToPhrase}`: ''}`);
+        
+        console.log(newUrl);
+        
+        // model.router.go(newUrl);
+    }
 
     return h('.filter-panel', [
-        h('.filter-panel-content',
-            h('table.no-spacing',
-                h('tbody.zeropadding',
-                    labelsRow(model, fields),
-                    inputsRow(params, upperInputIds, fields),
-                    inputsRow(params, lowerInputIds, fields)))),
+        h('h5', 'Defined filters'),
+        h('h5', 'Filter data'),
+            h('div.flex-wrap.justify-between.items-center',
+                h('div.flex-wrap.justify-between.items-center',
+                    h('select.select.filter-select', {
+                        id: 'showOptionsField',
+                        name: 'showOptions'}, [
+                            h('option', { value: "", selected: true, disabled: true, hidden: true},  'Field'),
+                            fields.map((field) => h('option', {value: field.name},  field.name))
+                    ], h('.close-10')),
+
+                    h('select.select.filter-select', {
+                        id: 'showOptionsType',
+                        name: 'showOptions',
+                        onchange: () => onFilteringTypeChange()
+                    }, [
+                            h('option', { value: "", selected: true, disabled: true, hidden: true},  'Filtering type'),
+                            h('option', { value: 'match-exclude' }, 'match-exclude'),
+                            h('option', { value: 'from-to' }, 'from-to'),
+                    ], h('.close-10')),
+
+                    h('.text-field',
+                        h('input.form-control.relative', {
+                            style: 'width:120px',
+                            type: 'text',
+                            value: document.getElementById('showOptionsType')?.options[Selection.selectedIndex]?.value,
+                            disabled: false,
+                            id: 'match-from-input',
+                            required: true,
+                            // TODO: pattern
+                        }),
+                        h('span.placeholder', {id: 'match-from-placeholder'}, 'match/from')
+                    ),
+
+                    h('.text-field',
+                        h('input.form-control.relative', {
+                            style: 'width:120px',
+                            type: 'text',
+                            value: '',
+                            disabled: false,
+                            id: 'exclude-to-input',
+                            required: true,
+                            // TODO: pattern
+                        }),
+                        h('span.placeholder', {id: 'exclude-to-placeholder'}, 'to/exclude')
+                    ),
+
+            h('button.btn.btn-primary', {
+                onclick: () => onFilterSubmit()
+            }, 'Filter')
+            )),
+
+
+            h('h5', 'Active filters'),
+            h('.flex-wrap.items-center.chips',
+            h('div.chip.filter-chip.inline',
+                h('.filter-field.inline', 'name'),
+                h('.filter-type.inline', 'match'),
+                h('.filter-input.inline', 'LHC'),
+                model.getCurrentDataPointer().index,
+                h('.close-10'))
+            ,
+            h('div.chip.filter-chip.inline',
+                model.getCurrentDataPointer().index,
+                h('.close-10'))
+            ,
+            h('div.chip.filter-chip.inline',
+                model.getCurrentDataPointer().index,
+                h('.close-10'))
+            ,
+            h('div.chip.filter-chip.inline',
+                model.getCurrentDataPointer().index,
+                h('.close-10'))
+            )
 
         /*
          *H('.filter-panel-buttons',
@@ -65,93 +166,9 @@ export default function filter(model) {
          *            model.notify();
          *        }),
          *    }, h('.hide-empty-20.vertical-center'), h('.icon-btn-text', 'Hide empty columns')),
-         *    '  ',
-         *    h('button.btn.btn-primary.filter-btn', {
-         *        onclick: onclickSubmit(model, inputsIds),
-         *    }, 'Submit'))
          */
     ]);
 }
-
-const labelsRow = (model, fields) => h('tr.br-top-10',
-    fields.map((field) => createClickableLabel(model, field)));
-
-const inputsRow = (params, inputsIds, fields) => h('tr.br-bottom-10',
-    inputsIds.map((id) => createInputField(id, params[id], fields)));
-
-const createClickableLabel = (model, field) =>
-    h(`th.tooltip.noBorderBottom.table-cell-like.${field.name}-class.br-top-10`,
-        { className: field.marked ? 'active' : '' },
-        h('.clickable-label', {
-            style: 'width:120px',
-            onclick: () => {
-                model.fetchedData.changeItemStatus(field);
-                if (field.marked) {
-                    for (const element of document.getElementsByClassName(`${field.name}-class`)) {
-                        element.classList.add('active');
-                    }
-                } else {
-                    for (const element of document.getElementsByClassName(`${field.name}-class`)) {
-                        if (element.classList.contains('active')) {
-                            element.classList.remove('active');
-                        }
-                    }
-                }
-            },
-            className: field.marked ? 'active' : '',
-        },
-        getHeaderSpecial(model, field),
-        h('span.tooltiptext', field.marked ? 'hide' : 'display')));
-
-const createInputField = (inputId, currentValue, fields) => {
-    const type = inputId.substring(inputId.indexOf('-') + 1);
-    return type !== 'undefined' ?
-        h(`th.noBorderBottom.table-cell-like.${inputId.substring(0, inputId.indexOf('-'))}-class${
-            ['to', 'exclude'].includes(inputId.substring(inputId.indexOf('-') + 1)) ? '.br-bottom-10' : ''}`,
-        { className: `${isFieldMarked(inputId, fields) ? 'active' : ''}` },
-        h('.text-field',
-            h('input.form-control.relative', {
-                style: 'width:120px',
-                type: 'text',
-                value: currentValue ? currentValue : '',
-                disabled: type == null,
-                id: inputId,
-                required: true,
-                // TODO: pattern
-            }), h('span.placeholder', type))) : '';
-};
-
-const isFieldMarked = (inputId, fields) => {
-    for (const field of fields) {
-        if (field.name === `${inputId.substring(0, inputId.indexOf('-'))}`) {
-            return field.marked;
-        }
-    }
-    return false;
-};
-
-/*
- *Const onclickSubmit = (model, inputsIds) => () => {
- *    const filteringParamsPhrase = inputsIds
- *        .map((inputId) => [
- *            inputId,
- *            encodeURI(document.getElementById(inputId)?.value || ''),
- *        ])
- *        .filter(([_, v]) => v?.length > 0)
- *        .map(([id, v]) => `${id}=${v}`)
- *        .join('&');
- *
- *    const { params } = model.router;
- *    const newSearch =
- *        `?page=${params.page}&index=${params.index}` +
- *        `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&${filteringParamsPhrase}`;
- *
- *    const url = model.router.getUrl();
- *    const newUrl = new URL(url.origin + url.pathname + newSearch);
- *    model.router.go(newUrl);
- *};
- */
-
 /*
  *Const onclickClear = (model, inputsIds) => () => {
  *    inputsIds.forEach((inputId) => {
@@ -163,29 +180,3 @@ const isFieldMarked = (inputId, fields) => {
  *    onclickSubmit(model, inputsIds)();
  *};
  */
-
-const getUpperInputIds = (fields, pageFilteringTypes, filteringTypes) =>
-    fields.map((f) => fieldName2MatchFromType(f.name, pageFilteringTypes, filteringTypes));
-
-const getLowerInputIds = (fields, pagesFilteringTypes, filteringTypes) => fields.map((f) =>
-    fieldName2ExcludeToType(f.name, pagesFilteringTypes, filteringTypes));
-
-const fieldName2MatchFromType = (fieldName, pageFilteringTypes, filteringTypes) => {
-    if (pageFilteringTypes[fieldName] === filteringTypes.matchExcludeType) {
-        return `${fieldName}-match`;
-    } else if (pageFilteringTypes[fieldName] === filteringTypes.fromToType) {
-        return `${fieldName}-from`;
-    } else {
-        return 'undefined';
-    }
-};
-
-const fieldName2ExcludeToType = (fieldName, pagesFilteringParams, filteringTypes) => {
-    if (pagesFilteringParams[fieldName] === filteringTypes.matchExcludeType) {
-        return `${fieldName}-exclude`;
-    } else if (pagesFilteringParams[fieldName] === filteringTypes.fromToType) {
-        return `${fieldName}-to`;
-    } else {
-        return 'undefined';
-    }
-};

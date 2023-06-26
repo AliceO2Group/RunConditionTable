@@ -12,32 +12,15 @@
  * or submit itself to any jurisdiction.
  */
 
-.input-user-24 {
-    background-image: url('./images/24/User.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
+select.filter-select {
+    font-size: small !important;
+    min-height: fit-content;
+    min-width: fit-content;
+    padding-right: 30px;
+    background-position-x: 85%;
+    background-position-y: 7px;
 }
 
-.input-key-24 {
-    background-image: url('./images/24/Key.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
-}
-
-.input-database-24 {
-    background-image: url('./images/24/Database.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
+select.filter-select option[disabled]:first-child {
+    display: none !important;
 }

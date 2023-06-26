@@ -53,6 +53,7 @@
     left: -5px;
     padding-right: 45px;
     min-height: 25px;
+    align-items: center;
 }
 
 .periods-hamburger {
