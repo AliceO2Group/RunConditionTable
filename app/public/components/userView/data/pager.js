@@ -122,19 +122,13 @@ export default function pager(model, data) {
 
             h('.flex.pager-buttons',
                 // Move to first site
-                /*
-                 *CurrentSite > 1 ?
-                 */
-                siteChangingController(() => model.fetchedData.changePage(1), iconMediaSkipBackward()), // : ' ',
+                currentSite > 1 ? siteChangingController(() => model.fetchedData.changePage(1), iconMediaSkipBackward()) : ' ',
                 // Move to middle of sites range [first, current]
                 currentSite > 3
                     ? siteChangingController(() => model.fetchedData.changePage(Math.floor(currentSite / 2)), iconChevronBottom())
                     : ' ',
                 // Move one site back
-                /*
-                 *CurrentSite > 1 ?
-                 */
-                siteChangingController(() => model.fetchedData.changePage(currentSite - 1), iconCaretLeft()), // : ' ',
+                currentSite > 1 ? siteChangingController(() => model.fetchedData.changePage(currentSite - 1), iconCaretLeft()) : ' ',
 
                 mapArrayToButtons(leftButtonsR),
                 leftThreeDotsPresent ? h('.ellipsis-20') : '',
@@ -143,23 +137,20 @@ export default function pager(model, data) {
                 mapArrayToButtons(rightButtonsR),
 
                 // Analogically as above
-                /*
-                 *CurrentSite < sitesNumber
-                 *    ?
-                 */ siteChangingController(
-                    () => model.fetchedData.changePage(currentSite + 1),
-                    iconCaretRight(),
-                ),
-                //    : ' ',
+                currentSite < sitesNumber
+                    ? siteChangingController(
+                        () => model.fetchedData.changePage(currentSite + 1),
+                        iconCaretRight(),
+                    )
+                    : ' ',
 
-                /*
-                 *CurrentSite < sitesNumber - 2
-                 *  ?
-                 */ siteChangingController(
-                    () => model.fetchedData.changePage(currentSite + Math.floor((sitesNumber - currentSite) / 2)),
-                    iconChevronBottom(),
-                ),
-                //: ' ',
+                currentSite < sitesNumber - 2
+                    ? siteChangingController(
+                        () => model.fetchedData.changePage(currentSite + Math.floor((sitesNumber - currentSite) / 2)),
+                        iconChevronBottom(),
+                    )
+                    : ' ',
+
                 currentSite < sitesNumber
                     ? siteChangingController(
                         () => model.fetchedData.changePage(sitesNumber),
