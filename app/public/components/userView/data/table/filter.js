@@ -14,9 +14,13 @@
 
 import { h } from '/js/src/index.js';
 import { getHeaderSpecial } from '../headersSpecials.js';
+import { RCT } from '../../../../config.js';
+
+const { dataReqParams } = RCT;
 
 export default function filter(model) {
     const data = model.getCurrentData();
+    const dataPointer = model.getCurrentDataPointer();
     const { fields } = data;
 
     function onFilteringTypeChange() {
@@ -68,13 +72,18 @@ export default function filter(model) {
         // Model.router.go(newUrl);
     }
 
+    function onClear() {
+        // eslint-disable-next-line max-len
+        model.router.go(`/?page=${dataPointer.page}&index=${dataPointer.index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`);
+    }
+
     return h('.filter-panel', [
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-center',
                 h('h5', 'Filter data'),
                 h('button.btn.btn-secondary', {
                     onclick: () => onFilterSubmit(),
-                }, 'Defined filters'))),
+                }, 'Use defined filters'))),
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-center',
                 h('select.select.filter-select', {
@@ -120,27 +129,36 @@ export default function filter(model) {
 
                 h('button.btn.btn-primary', {
                     onclick: () => onFilterSubmit(),
-                }, 'Filter'))),
+                }, 'Filter'),
 
-        h('h5', 'Active filters'),
+                h('button.btn.btn-secondary.icon-only-button', {
+                    onclick: () => onFilterSubmit(),
+                }, h('.save-20')))),
+
+        h('div.flex-wrap.justify-between.items-center',
+            h('div.flex-wrap.justify-between.items-center',
+                h('h5', 'Active filters'),
+                h('button.btn.btn-secondary', {
+                    onclick: () => onClear(),
+                }, 'Clear all'))),
         h('.flex-wrap.items-center.chips',
             h('div.chip.filter-chip.inline',
                 h('.filter-field.inline', 'name'),
                 h('.filter-type.inline', 'match'),
                 h('.filter-input.inline', 'LHC'),
-                model.getCurrentDataPointer().index,
+                dataPointer.index,
                 h('.close-10'))
             ,
             h('div.chip.filter-chip.inline',
-                model.getCurrentDataPointer().index,
+                dataPointer.index,
                 h('.close-10'))
             ,
             h('div.chip.filter-chip.inline',
-                model.getCurrentDataPointer().index,
+                dataPointer.index,
                 h('.close-10'))
             ,
             h('div.chip.filter-chip.inline',
-                model.getCurrentDataPointer().index,
+                dataPointer.index,
                 h('.close-10'))),
 
         /*
@@ -170,15 +188,3 @@ export default function filter(model) {
          */
     ]);
 }
-
-/*
- *Const onclickClear = (model, inputsIds) => () => {
- *    inputsIds.forEach((inputId) => {
- *        const element = document.getElementById(inputId);
- *        if (element) {
- *            element.value = '';
- *        }
- *    });
- *    onclickSubmit(model, inputsIds)();
- *};
- */

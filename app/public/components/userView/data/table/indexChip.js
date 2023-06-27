@@ -18,7 +18,7 @@ import { RCT } from '../../../../config.js';
 const { dataReqParams } = RCT;
 
 export default function indexChip(model, index) {
-    const dataPointer = model.getCurrentDataPointer();
+    const dataPointer = model.getCurrentDataPointer(); //
 
     const chip = (pageName) => dataPointer.page !== 'periods' && model.fetchedData[pageName][index]
         ? h('.chip', {

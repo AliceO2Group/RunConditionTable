@@ -126,8 +126,6 @@ export default class PrimaryModel extends Observable {
             history.back();
         }
         this.notify();
-
-        // History.back();
     }
 
     removeCurrentData() {

@@ -138,6 +138,13 @@
     display: inline-block;
 }
 
+.save-20 {
+    background-image: url('./images/20/primary/Save.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
 .nothing-found-90 {
     background-image: url('./images/90/Nothing\ Found.svg');
     width: 90px;
