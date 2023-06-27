@@ -24,6 +24,7 @@
     --white: #ffffff; /* stays */
     --off-white: #fdfbf9; /* stays */
     --yellow: #F9EAC2; /* stays */
+    --orange: #E9C46A;
     --selection-color: #e2eafc; /* up to rethink */
     --primary: #324376; /* stays */
     --primary-hover: #586BA4; /* stays */
@@ -88,6 +89,10 @@
 }
 
 .none {
+    display: none !important;
+}
+
+.none > * {
     display: none !important;
 }
 
@@ -186,6 +191,11 @@
     padding-left: 15px;
     padding-right: 15px;
     align-items: center;
+}
+
+.chip.primary {
+    background-color: var(--primary-hover) !important;
+    color: var(--off-white) !important;
 }
 
 .p-left-15 {

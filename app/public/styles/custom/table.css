@@ -14,8 +14,8 @@
 
 :root {
     /* Color palette */
-    --focus-color: #778da9;
-    --row-selected-color: #8d99ae;
+    --focus-color: var(--yellow) /* #778da9 */;
+    --row-selected-color: #FCDA5E;
     --highlight-blue: #D7EDFC;
     --dark-blue: #1D3557;
     --blue: #1e90ff;
@@ -23,7 +23,7 @@
 }
 
 .x-scrollable-table {
-    width: 100%; /*400px;*/
+    width: 100%;
     overflow-x: scroll;
     position: relative !important;
 }
@@ -36,8 +36,11 @@
     background-color: var(--active-color) !important;
 }
 
-
 .track.row-selected-color-alpha:hover {
+    background-color: var(--focus-color) !important;
+}
+
+.track.row-selected-color-alpha:hover td {
     background-color: var(--focus-color) !important;
 }
 
@@ -45,14 +48,26 @@ table tbody tr.row-selected-color-alpha {
     background-color: var(--row-selected-color);
 }
 
+table tr.track.row-selected-color-alpha:nth-child(odd) td {
+    background-color: #FCCA61;
+}
+
+table tr.track.row-selected-color-alpha td .chip{
+    background-color: #FACB80;
+    color: #634F40;
+    /*#EAE7FA; /* remember this color!*/
+}
 
 tbody tr.track.row-unselected-color-alpha:nth-child(odd) td {
-    background-color: #f1f4fb/*var(--color-gray-lighter)*/;
+    background-color: #f1f4fb;
 }
 
 table.data-table thead {
-    height: 50px !important;
     font-size: x-small;
+}
+
+table.data-table thead.header tr {
+    height: 30px !important;
 }
 
 table.data-table tbody tr {
@@ -113,4 +128,8 @@ input[type="checkbox"]::before {
 input[type="checkbox"]:checked::before {
     transform: scale(1);
     background-color: var(--color-white);
+}
+
+#sortingRow {
+    display: none;
 }

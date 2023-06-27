@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
+import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
 import downloadCSV from '../../../../utils/csvExport.js';
 import tableHeader from './header.js';
 import row from './row.js';
@@ -28,6 +28,7 @@ import { RCT } from '../../../../config.js';
 import sortingRow from './sortingRow.js';
 import itemsCounter from './items-counter.js';
 import pageSettings from '../pageSettings/pageSettings.js';
+import indexChip from './indexChip.js';
 const { pagesNames } = RCT;
 
 /**
@@ -40,6 +41,11 @@ const { pagesNames } = RCT;
 export default function tablePanel(model) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
+    const page = model.fetchedData[dataPointer.page];
+    const { url } = page[dataPointer.index].payload;
+    
+    const chips = model.getSubPages(dataPointer.page).map(index => indexChip(model, index, url));
+
     data.rows = data.rows.filter((item) => item.name != 'null');
 
     if (data.rows?.length == 0) {
@@ -80,6 +86,16 @@ export default function tablePanel(model) {
             },
         }, iconDataTransferDownload()),
 
+        h('button.btn.btn-secondary.icon-only-button', {
+            onclick: () => {
+                navigator.clipboard.writeText(url.toString())
+                    .then(() => {
+                    })
+                    .catch(() => {
+                    });
+            },
+        }, iconShareBoxed()),
+
         h('button.btn.icon-only-button', {
             className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',
             onclick: () => model.changeSearchFieldsVisibility(),
@@ -89,11 +105,7 @@ export default function tablePanel(model) {
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-baseline',
                 h('h3.p-left-15.text-primary', headerSpecific(model)),
-                model.getCurrentDataPointer().page !== 'periods'
-                    ? h('div.chip.p-left-15',
-                        model.getCurrentDataPointer().index,
-                        h('.close-10'))
-                    : '',
+                chips,
                 h('div.italic.p-left-5.text-primary', itemsCounter(data)),
                 h('button.btn.btn-secondary', {
                     onclick: () => {

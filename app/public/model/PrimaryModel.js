@@ -103,6 +103,10 @@ export default class PrimaryModel extends Observable {
         return this.fetchedData[dataPointer.page][dataPointer.index].payload;
     }
 
+    getSubPages(pageName) {
+        return Object.keys(this.fetchedData[pageName]);
+    }
+
     getCurrentRemoteData() {
         const dataPointer = this.getCurrentDataPointer();
         return this.fetchedData[dataPointer.page][dataPointer.index];
@@ -116,6 +120,16 @@ export default class PrimaryModel extends Observable {
         return this.fetchedData[page][defaultIndex(index)];
     }
 
+    removeSubPage(page, index) {
+        this.fetchedData[page][index] = null;
+        if (this.getCurrentDataPointer().page === page && this.getCurrentDataPointer().index === index) {
+            history.back();
+        }
+        this.notify();
+        
+        // history.back();
+    }
+    
     removeCurrentData() {
         const { page, index } = this.getCurrentDataPointer();
         this.fetchedData[page][index] = null;

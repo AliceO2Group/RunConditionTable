@@ -16,8 +16,8 @@ import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../headersSpecials.js';
 
 export default function tableHeader(visibleFields, data, model) {
-    return h('thead',
-        h('tr.track', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, data, model))));
+    return h('thead.header',
+        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, data, model))));
 }
 
 const columnsHeadersArray = (visibleFields, data, model) =>
