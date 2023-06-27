@@ -160,31 +160,5 @@ export default function filter(model) {
             h('div.chip.filter-chip.inline',
                 dataPointer.index,
                 h('.close-10'))),
-
-        /*
-         *H('.filter-panel-buttons',
-         *    h('button.btn.filter-btn', {
-         *        onclick: onclickClear(model, inputsIds),
-         *    }, h('.clear-filters-20.vertical-center'), h('.icon-btn-text', 'Clear filters')),
-         *    '  ',
-         *    h('button.btn.filter-btn', {
-         *        onclick: () => {
-         *            for (const field of data.fields) {
-         *                field.marked = true;
-         *            }
-         *            model.notify();
-         *        },
-         *    }, 'Show all columns'),
-         *    '  ',
-         *    h('button.btn.filter-btn', {
-         *        onclick: () => data.fields.forEach((f) => {
-         *            model.fetchedData.changeItemStatus(
-         *                f,
-         *                data.rows.some((r) => r[f.name]),
-         *            );
-         *            model.notify();
-         *        }),
-         *    }, h('.hide-empty-20.vertical-center'), h('.icon-btn-text', 'Hide empty columns')),
-         */
     ]);
 }
