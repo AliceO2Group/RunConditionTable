@@ -104,16 +104,16 @@ pagesCellsSpecials[PN.dataPasses] = {
 };
 pagesCellsSpecials[PN.mc] = {
     name: (model, item) => [
-        item.name,
-        '  ',
-        actionChip(
-            model,
-            'anchored',
-            (e) => model.handleClick(e),
-            '',
-            // eslint-disable-next-line max-len
-            `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
-        ),
+        h('td', item.name),
+        h('td',
+            actionChip(
+                model,
+                'anchored',
+                (e) => model.handleClick(e),
+                '',
+                // eslint-disable-next-line max-len
+                `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
+            )),
     ],
 };
 

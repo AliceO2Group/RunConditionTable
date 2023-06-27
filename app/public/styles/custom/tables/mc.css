@@ -1,0 +1,79 @@
+/**
+ * @license
+ * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
+ * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
+ * All rights not expressly granted are reserved.
+ *
+ * This software is distributed under the terms of the GNU General Public
+ * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
+
+ .mc-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* Checkboxes */
+.mc-table td:first-child, .mc-table th:first-child {
+    position: sticky !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    width: 40px !important;
+    left: 0;
+    background-color: var(--color-white);
+    z-index: 1 !important;
+}
+
+.mc-table tr:hover td:first-child {
+    background-color: var(--active-color) !important;
+}
+
+.mc-table tr.row-selected-color-alpha td:first-child{
+    background-color: var(--row-selected-color);
+}
+
+.mc-table tr.row-selected-color-alpha:hover td:first-child{
+    background-color: var(--focus-color) !important;
+}
+
+/* Name */
+.mc-table .mc-name-cell, .mc-table .mc-name-header {
+    min-width: 150px;
+    text-align: left;
+}
+
+.mc-table .mc-name-cell :first-child {
+    margin-left: 80px;
+}
+
+/* Description */
+.mc-table .mc-description-cell, .mc-table .mc-description-header {
+    min-width: 300px;
+    text-align: left;
+}
+
+/* Jira */
+.mc-table .mc-jira-cell, .mc-table .mc-jira-header {
+    min-width: 80px;
+    text-align: right !important;
+}
+
+/* PWG */
+.mc-table .mc-pwg-cell, .mc-table .mc-pwg-header {
+    min-width: 50px;
+    text-align: right !important;
+}
+
+/* Number of events */
+.mc-table .mc-number_of_events-cell, .mc-table .mc-number_of_events-header {
+    min-width: 80px;
+    text-align: right;
+}
+
+.mc-table td:last-child, .mc-table th:last-child {
+    padding-right: 2em;
+}
