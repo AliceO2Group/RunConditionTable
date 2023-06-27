@@ -36,26 +36,5 @@ export default function indexChip(model, index) {
         }, h('.close-10')))
         : '';
 
-    /*
-     *Switch (model.getCurrentDataPointer().page) {
-     *    case pagesNames.periods:
-     *        return chip(pagesNames.periods);
-     *    case pagesNames.dataPasses:
-     *        return chip(pagesNames.dataPasses);
-     *    case pagesNames.runsPerPeriod:
-     *        return chip(pagesNames.runsPerPeriod);
-     *    case pagesNames.anchoragePerDatapass:
-     *        return chip(pagesNames.anchoragePerDatapass);
-     *    case pagesNames.mc:
-     *        return chip(pagesNames.mc);
-     *    case pagesNames.anchoredPerMC:
-     *        return chip(pagesNames.anchoredPerMC);
-     *    case pagesNames.runsPerDataPass:
-     *        return chip(pagesNames.runsPerDataPass);
-     *    case pagesNames.flags:
-     *        return chip(pagesNames.flags);
-     *}
-     */
-
     return chip(dataPointer.page);
 }
