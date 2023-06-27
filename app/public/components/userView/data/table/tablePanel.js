@@ -68,7 +68,9 @@ export default function tablePanel(model) {
             case 'dataPasses': return 'Data passes per period';
             case 'mc': return 'Monte Carlo';
             case 'flags': return 'Flags';
-            default: return null;
+            case 'anchoragePerDatapass': return 'Anchorage per data pass';
+            case 'anchoredPerMC': return 'Anchored per MC';
+            default: return page;
         }
     };
 
@@ -131,14 +133,9 @@ export default function tablePanel(model) {
                     pager(model, data, 1),
                     h('table.data-table', {
                         id: `data-table-${data.url}`,
-                        className: `${
-                            dataPointer.page === pagesNames.periods
-                                ? 'periods-table'
-                                : [pagesNames.runsPerDataPass, pagesNames.runsPerPeriod].includes(dataPointer.page)
-                                    ? 'runs-table'
-                                    : dataPointer.page === pagesNames.dataPasses
-                                        ? 'data-passes-table'
-                                        : ''}`,
+                        className: `${[pagesNames.runsPerDataPass, pagesNames.runsPerPeriod].includes(dataPointer.page)
+                            ? 'runs-table'
+                            : `${dataPointer.page}-table`}`,
                     }, [
                         tableHeader(visibleFields, data, model),
                         sortingRow(visibleFields, data, model),
