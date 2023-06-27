@@ -17,25 +17,25 @@ import { RCT } from '../../../../config.js';
 
 const { dataReqParams, pagesNames } = RCT;
 
-export default function indexChip(model, index, url) {
+export default function indexChip(model, index) {
     const dataPointer = model.getCurrentDataPointer();
-    
+
     const chip = (pageName) => dataPointer.page !== 'periods' && model.fetchedData[pageName][index]
-                    ? h('.chip', {
-                        id: `chip-${pageName}-${index}`,
-                        class: dataPointer.index === index && dataPointer.page === pageName ? 'primary' : ''
-                    },
-                        h('button.btn.transparent', {onclick: () => {
-                            model.router.go(`/?page=${pageName}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`)
-                        }}, index),
-                        h('button.btn.icon-only-button.transparent', {
-                            onclick: () => {
-                                model.removeSubPage(pageName, index);
-                                model.notify();
-                            }
-                        }, h('.close-10')))
-                    : '';
-    
+        ? h('.chip', {
+            id: `chip-${pageName}-${index}`,
+            class: dataPointer.index === index && dataPointer.page === pageName ? 'primary' : '',
+        },
+        h('button.btn.transparent', { onclick: () => {
+            model.router.go(`/?page=${pageName}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`);
+        } }, index),
+        h('button.btn.icon-only-button.transparent', {
+            onclick: () => {
+                model.removeSubPage(pageName, index);
+                model.notify();
+            },
+        }, h('.close-10')))
+        : '';
+
     switch (model.getCurrentDataPointer().page) {
         case pagesNames.periods:
             return chip(pagesNames.periods);
@@ -54,6 +54,6 @@ export default function indexChip(model, index, url) {
         case pagesNames.flags:
             return chip(pagesNames.flags);
     }
-    
+
     return chip(pagesNames.periods);
 }

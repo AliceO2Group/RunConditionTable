@@ -126,10 +126,10 @@ export default class PrimaryModel extends Observable {
             history.back();
         }
         this.notify();
-        
-        // history.back();
+
+        // History.back();
     }
-    
+
     removeCurrentData() {
         const { page, index } = this.getCurrentDataPointer();
         this.fetchedData[page][index] = null;

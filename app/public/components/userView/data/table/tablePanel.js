@@ -43,8 +43,8 @@ export default function tablePanel(model) {
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
     const page = model.fetchedData[dataPointer.page];
     const { url } = page[dataPointer.index].payload;
-    
-    const chips = model.getSubPages(dataPointer.page).map(index => indexChip(model, index, url));
+
+    const chips = model.getSubPages(dataPointer.page).map((index) => indexChip(model, index));
 
     data.rows = data.rows.filter((item) => item.name != 'null');
 
