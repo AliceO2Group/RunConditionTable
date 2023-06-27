@@ -20,41 +20,20 @@ const { dataReqParams, pagesNames } = RCT;
 export default function indexChip(model, index, url) {
     const dataPointer = model.getCurrentDataPointer();
     
-    function removeNode(id) {
-        const node = document.getElementById(id);
-        console.log(node);
-        
-        /*
-        if (node) {
-            while (node.firstChild) {
-                node.removeChild(node.lastChild);
-            }
-            node.remove();
-        }
-        */
-    }
-    
     const chip = (pageName) => dataPointer.page !== 'periods' && model.fetchedData[pageName][index]
-                    ? h('.chip.pointer.p-left-15', {
-                        onclick: () => {
-                            model.router.go(`/?page=${pageName}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`)
-                        },
+                    ? h('.chip', {
                         id: `chip-${pageName}-${index}`,
                         class: dataPointer.index === index && dataPointer.page === pageName ? 'primary' : ''
                     },
-                        index,
-                        h('button.btn.close-10', {
+                        h('button.btn.transparent', {onclick: () => {
+                            model.router.go(`/?page=${pageName}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`)
+                        }}, index),
+                        h('button.btn.icon-only-button.transparent', {
                             onclick: () => {
-                                // e.preventDefault();
-                                /* e.stopPropagation();*/
-                                // model.removeSubPage(pageName, index);
-                                console.log('delete clicked!');
                                 model.removeSubPage(pageName, index);
                                 model.notify();
-                                removeNode(`chip-${pageName}-${index}`);
-                                console.log('done!');
                             }
-                        }, 'hello'))
+                        }, h('.close-10')))
                     : '';
     
     switch (model.getCurrentDataPointer().page) {
@@ -64,17 +43,17 @@ export default function indexChip(model, index, url) {
             return chip(pagesNames.dataPasses);
         case pagesNames.runsPerPeriod:
             return chip(pagesNames.runsPerPeriod);
+        case pagesNames.anchoragePerDatapass:
+            return chip(pagesNames.anchoragePerDatapass);
+        case pagesNames.mc:
+            return chip(pagesNames.mc);
+        case pagesNames.anchoredPerMC:
+            return chip(pagesNames.anchoredPerMC);
+        case pagesNames.runsPerDataPass:
+            return chip(pagesNames.runsPerDataPass);
+        case pagesNames.flags:
+            return chip(pagesNames.flags);
     }
-    /*
-    alonePageButton(model, pagesNames.periods, 'Periods'),
-    fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes'),
-    fetchedDataPages(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),
-    fetchedDataPages(model, pagesNames.mc, 'Monte Carlo'),
-    fetchedDataPages(model, pagesNames.anchoredPerMC, 'Anchored per MC'),
-    fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period'),
-    fetchedDataPages(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
-    fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging'),
-    */
     
     return chip(pagesNames.periods);
 }

@@ -96,6 +96,12 @@
     display: none !important;
 }
 
+.transparent {
+    background-color: transparent !important;
+    color: inherit;
+    border: none !important;
+}
+
 .flex {
     display: flex !important;
 }
