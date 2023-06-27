@@ -32,8 +32,12 @@ select.select {
 }
 
 .select.color-theme {
-    min-width: 80px;
-    padding: 5px;
+    font-size: small !important;
+    min-height: fit-content;
+    min-width: fit-content;
+    padding-right: 30px;
+    background-position-x: 85%;
+    background-position-y: 7px;
 }
 
 select.filter-select {

@@ -69,8 +69,12 @@ export default function filter(model) {
     }
 
     return h('.filter-panel', [
-        h('h5', 'Defined filters'),
-        h('h5', 'Filter data'),
+        h('div.flex-wrap.justify-between.items-center',
+            h('div.flex-wrap.justify-between.items-center',
+                h('h5', 'Filter data'),
+                h('button.btn.btn-secondary', {
+                    onclick: () => onFilterSubmit(),
+                }, 'Defined filters'))),
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-center',
                 h('select.select.filter-select', {

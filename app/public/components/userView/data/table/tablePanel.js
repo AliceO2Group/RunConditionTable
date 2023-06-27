@@ -63,11 +63,11 @@ export default function tablePanel(model) {
         const { page } = model.getCurrentDataPointer();
         switch (page) {
             case 'periods': return 'Periods';
-            case 'runsPerPeriod': return 'Runs per period';//  Period index
-            case 'runsPerDataPass': return 'Runs per data pass'; // Data pass index
-            case 'dataPasses': return 'Data passes per period'; // Period index
-            case 'mc': return 'Monte Carlo'; // Period index
-            case 'flags': return 'Flags'; // Run index
+            case 'runsPerPeriod': return 'Runs per period';
+            case 'runsPerDataPass': return 'Runs per data pass';
+            case 'dataPasses': return 'Data passes per period';
+            case 'mc': return 'Monte Carlo';
+            case 'flags': return 'Flags';
             default: return null;
         }
     };
