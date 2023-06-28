@@ -73,8 +73,9 @@ export default function filter(model) {
     }
 
     function onClear() {
+        const firstField = fields.find((f) => f !== undefined && f.name);
         // eslint-disable-next-line max-len
-        model.router.go(`/?page=${dataPointer.page}&index=${dataPointer.index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`);
+        model.router.go(`/?page=${dataPointer.page}&index=${dataPointer.index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`);
     }
 
     return h('.filter-panel', [
@@ -146,19 +147,6 @@ export default function filter(model) {
                 h('.filter-field.inline', 'name'),
                 h('.filter-type.inline', 'match'),
                 h('.filter-input.inline', 'LHC'),
-                dataPointer.index,
-                h('.close-10'))
-            ,
-            h('div.chip.filter-chip.inline',
-                dataPointer.index,
-                h('.close-10'))
-            ,
-            h('div.chip.filter-chip.inline',
-                dataPointer.index,
-                h('.close-10'))
-            ,
-            h('div.chip.filter-chip.inline',
-                dataPointer.index,
                 h('.close-10'))),
     ]);
 }

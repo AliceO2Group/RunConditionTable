@@ -18,7 +18,10 @@ import { RCT } from '../../../../config.js';
 const { dataReqParams } = RCT;
 
 export default function indexChip(model, index) {
-    const dataPointer = model.getCurrentDataPointer(); //
+    const dataPointer = model.getCurrentDataPointer();
+    const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
+    const { fields } = data;
+    const firstField = fields.find((f) => f !== undefined && f.name);
 
     const chip = (pageName) => dataPointer.page !== 'periods' && model.fetchedData[pageName][index]
         ? h('.chip', {
@@ -26,7 +29,8 @@ export default function indexChip(model, index) {
             class: dataPointer.index === index && dataPointer.page === pageName ? 'primary' : '',
         },
         h('button.btn.transparent', { onclick: () => {
-            model.router.go(`/?page=${pageName}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`);
+            // eslint-disable-next-line max-len
+            model.router.go(`/?page=${pageName}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`);
         } }, index),
         h('button.btn.icon-only-button.transparent', {
             onclick: () => {
