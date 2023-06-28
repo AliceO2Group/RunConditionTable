@@ -21,7 +21,7 @@ import pager from '../pager.js';
 
 import postingDataConfig from '../posting/postingDataConfig.js';
 import { postForm } from '../posting/postForm.js';
-import filter from './filter.js';
+import filter from './filtering/filter.js';
 import noDataView from './noDataView.js';
 
 import { RCT } from '../../../../config.js';
@@ -29,6 +29,7 @@ import sortingRow from './sortingRow.js';
 import itemsCounter from './items-counter.js';
 import pageSettings from '../pageSettings/pageSettings.js';
 import indexChip from './indexChip.js';
+import activeFilters from './filtering/activeFilters.js';
 const { pagesNames } = RCT;
 
 /**
@@ -57,7 +58,7 @@ export default function tablePanel(model) {
     const { fields } = data;
     const visibleFields = fields.filter((f) => f.marked);
 
-    const filteringPanel = model.searchFieldsVisible ? filter(model) : ' ';
+    const filteringPanel = model.searchFieldsVisible ? filter(model) : '';
 
     const headerSpecific = (model) => {
         const { page } = model.getCurrentDataPointer();
@@ -126,6 +127,7 @@ export default function tablePanel(model) {
 
             h('div', functionalities(model))),
         filteringPanel,
+        activeFilters(model),
         visibleFields.length > 0
             ? h('',
                 // Data.rows.length > 15 ? pager(model, data, 1) : '',

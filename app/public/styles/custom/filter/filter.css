@@ -12,22 +12,6 @@
  * or submit itself to any jurisdiction.
  */
 
-.filter-panel {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: small;
-}
-
-.filter-panel-buttons {
-    position: absolute;
-    padding: 10px;
-}
-
-.icon-btn-text {
-    padding-left: 30px !important;
-    display: inline-block !important;
-}
-
 .text-field {
     position: relative;
 }

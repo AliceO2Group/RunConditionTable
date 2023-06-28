@@ -13,14 +13,10 @@
  */
 
 import { h } from '/js/src/index.js';
-import { getHeaderSpecial } from '../headersSpecials.js';
-import { RCT } from '../../../../config.js';
-
-const { dataReqParams } = RCT;
+import { getHeaderSpecial } from '../../headersSpecials.js';
 
 export default function filter(model) {
     const data = model.getCurrentData();
-    const dataPointer = model.getCurrentDataPointer();
     const { fields } = data;
 
     function onFilteringTypeChange() {
@@ -72,13 +68,7 @@ export default function filter(model) {
         // Model.router.go(newUrl);
     }
 
-    function onClear() {
-        const firstField = fields.find((f) => f !== undefined && f.name);
-        // eslint-disable-next-line max-len
-        model.router.go(`/?page=${dataPointer.page}&index=${dataPointer.index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`);
-    }
-
-    return h('.filter-panel', [
+    return h('.font-size-small', [
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-center',
                 h('h5', 'Filter data'),
@@ -135,18 +125,5 @@ export default function filter(model) {
                 h('button.btn.btn-secondary.icon-only-button', {
                     onclick: () => onFilterSubmit(),
                 }, h('.save-20')))),
-
-        h('div.flex-wrap.justify-between.items-center',
-            h('div.flex-wrap.justify-between.items-center',
-                h('h5', 'Active filters'),
-                h('button.btn.btn-secondary', {
-                    onclick: () => onClear(),
-                }, 'Clear all'))),
-        h('.flex-wrap.items-center.chips',
-            h('div.chip.filter-chip.inline',
-                h('.filter-field.inline', 'name'),
-                h('.filter-type.inline', 'match'),
-                h('.filter-input.inline', 'LHC'),
-                h('.close-10'))),
     ]);
 }

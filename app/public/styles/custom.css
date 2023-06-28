@@ -35,6 +35,10 @@
     margin: 0;
 }
 
+.font-size-small {
+    font-size: small !important;
+}
+
 .thick {
     font-weight: bold;
 }
