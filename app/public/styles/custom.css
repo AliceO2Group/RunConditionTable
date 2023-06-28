@@ -194,26 +194,16 @@
     padding: 20px;
 }
 
-.chip {
-    background-color:var(--selection-color);
-    color: var(--primary);
-    border-radius: 10px;
-    padding-left: 15px;
-    padding-right: 15px;
-    align-items: center;
-}
-
-.chip.primary {
-    background-color: var(--primary-hover) !important;
-    color: var(--off-white) !important;
-}
-
 .p-left-15 {
     padding-right: 15px !important;
 }
 
 .p-left-5 {
     padding-right: 5px !important;
+}
+
+.p-top-10 {
+    padding-top: 10px !important;
 }
   
 .logo {

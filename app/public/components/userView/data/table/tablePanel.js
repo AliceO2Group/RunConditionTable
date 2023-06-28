@@ -44,6 +44,8 @@ export default function tablePanel(model) {
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
     const page = model.fetchedData[dataPointer.page];
     const { url } = page[dataPointer.index].payload;
+    console.log(url.href);
+    // const anyFiltersActive = url.href.includes();
 
     const chips = model.getSubPages(dataPointer.page).map((index) => indexChip(model, index));
 
@@ -129,7 +131,7 @@ export default function tablePanel(model) {
         filteringPanel,
         activeFilters(model),
         visibleFields.length > 0
-            ? h('',
+            ? h('.p-top-10', //
                 // Data.rows.length > 15 ? pager(model, data, 1) : '',
                 h('.x-scrollable-table.border-sh',
                     pager(model, data, 1),
