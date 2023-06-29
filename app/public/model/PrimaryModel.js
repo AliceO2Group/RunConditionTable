@@ -86,6 +86,10 @@ export default class PrimaryModel extends Observable {
         this.notify();
     }
 
+    goToDefaultPageUrl(page) {
+        this.router.go(`/?page=${page}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
+    }
+
     getDataPointerFromUrl(url) {
         const pointer = Object.fromEntries(new URLSearchParams(url.search));
         return {
@@ -127,7 +131,7 @@ export default class PrimaryModel extends Observable {
     removeSubPage(page, index) {
         this.fetchedData[page][index] = null;
         if (this.getCurrentDataPointer().page === page && this.getCurrentDataPointer().index === index) {
-            history.back();
+            this.goToDefaultPageUrl(page);
         }
         Reflect.deleteProperty(this.fetchedData[page], index);
         this.notify();
@@ -136,8 +140,8 @@ export default class PrimaryModel extends Observable {
     removeCurrentData() {
         const { page, index } = this.getCurrentDataPointer();
         this.fetchedData[page][index] = null;
+        this.goToDefaultPageUrl(page);
         Reflect.deleteProperty(this.fetchedData[page], index);
-        history.back();
     }
 
     handleClick(e) {

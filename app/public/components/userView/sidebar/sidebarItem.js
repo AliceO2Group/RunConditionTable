@@ -13,27 +13,23 @@
  */
 
 import { h } from '/js/src/index.js';
-import { defaultIndexString } from '../../../utils/defaults.js';
 import subPagesCount from './subPagesCount.js';
-import { RCT } from '../../../config.js';
-const { dataReqParams } = RCT;
 
 export default function sidebarItem(model, pageName, label) {
-    const pageUrl = `/?page=${pageName}&index=${defaultIndexString}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
     return h('.flex-wrap', [
         h('.page-title',
             { class: model.router.params.page === pageName ? 'selected' : '',
-                onclick: () => model.router.go(pageUrl),
+                onclick: () => model.goToDefaultPageUrl(pageName),
             },
             model.router.params.page === pageName
                 ? h('div',
                     h('.vertical-center',
                         h('.current-page',
                             h('.title-text-relative.hidden', label))),
-                    h('.folder-20.vertical-center'), //{ id: `${pageName}ToggleChevron` }),
+                    h('.folder-20.vertical-center'),
                     h('.title-text.vertical-center', label, subPagesCount(model, pageName)))
                 : h('div',
-                    h('.folder-20.vertical-center'), // { id: `${pageName}ToggleChevron` }),
+                    h('.folder-20.vertical-center'),
                     h('.title-text.vertical-center', label, subPagesCount(model, pageName)))),
     ]);
 }
