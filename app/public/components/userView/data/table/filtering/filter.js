@@ -13,7 +13,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import { getHeaderSpecial } from '../../headersSpecials.js';
+import { getFieldName } from '../../headersSpecials.js';
 
 export default function filter(model) {
     const data = model.getCurrentData();
@@ -81,7 +81,8 @@ export default function filter(model) {
                     id: 'showOptionsField',
                     name: 'showOptions' }, [
                     h('option', { value: '', selected: true, disabled: true, hidden: true }, 'Field'),
-                    fields.map((field) => h('option', { value: field.name }, getHeaderSpecial(model, field))),
+                    fields.filter((field) => getFieldName(model, field))
+                        .map((field) => h('option', { value: field.name }, getFieldName(model, field))),
                 ], h('.close-10')),
 
                 h('select.select.filter-select', {
