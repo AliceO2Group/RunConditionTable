@@ -15,7 +15,7 @@
 import { Observable, Loader } from '/js/src/index.js';
 import FetchedDataManager from './data/FetchedDataManager.js';
 import { RCT } from '../config.js';
-import { defaultIndex } from '../utils/defaults.js';
+import { defaultIndex, defaultIndexString } from '../utils/defaults.js';
 const { dataReqParams } = RCT;
 
 export default class PrimaryModel extends Observable {
@@ -29,7 +29,7 @@ export default class PrimaryModel extends Observable {
 
         this.fetchedData = new FetchedDataManager(this.router, this);
 
-        this.searchFieldsVisible = true;
+        this.searchFieldsVisible = false;
 
         this.loader = new Loader();
 
@@ -120,17 +120,23 @@ export default class PrimaryModel extends Observable {
         return this.fetchedData[page][defaultIndex(index)];
     }
 
+    getSubPagesCount(page) {
+        return Object.keys(this.fetchedData[page]).filter((index) => index !== defaultIndexString).length;
+    }
+
     removeSubPage(page, index) {
         this.fetchedData[page][index] = null;
         if (this.getCurrentDataPointer().page === page && this.getCurrentDataPointer().index === index) {
             history.back();
         }
+        Reflect.deleteProperty(this.fetchedData[page], index);
         this.notify();
     }
 
     removeCurrentData() {
         const { page, index } = this.getCurrentDataPointer();
         this.fetchedData[page][index] = null;
+        Reflect.deleteProperty(this.fetchedData[page], index);
         history.back();
     }
 

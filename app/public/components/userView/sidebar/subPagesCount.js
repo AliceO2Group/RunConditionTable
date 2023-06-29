@@ -12,5 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-export const defaultIndexString = '_0';
-export const defaultIndex = (_index) => _index ? _index : defaultIndexString;
+export default function subPagesCount(model, pageName) {
+    const subPagesCount = model.getSubPagesCount(pageName);
+    return subPagesCount > 0
+        ? ` (${model.getSubPagesCount(pageName)})`
+        : '';
+}

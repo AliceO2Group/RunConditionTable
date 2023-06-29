@@ -30,6 +30,8 @@ import itemsCounter from './items-counter.js';
 import pageSettings from '../pageSettings/pageSettings.js';
 import indexChip from './indexChip.js';
 import activeFilters from './filtering/activeFilters.js';
+import { defaultIndexString } from '../../../../utils/defaults.js';
+import noSubPageSelected from './noSubPageSelected.js';
 const { pagesNames } = RCT;
 
 /**
@@ -44,21 +46,16 @@ export default function tablePanel(model) {
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
     const page = model.fetchedData[dataPointer.page];
     const { url } = page[dataPointer.index].payload;
+
     const anyFiltersActive = url.href.includes('match') || url.href.includes('exclude') || url.href.includes('from') || url.href.includes('to');
-    const chips = model.getSubPages(dataPointer.page).map((index) => indexChip(model, index));
+    const chips = model.getSubPages(dataPointer.page).filter((index) => index !== defaultIndexString).map((index) => indexChip(model, index));
 
     data.rows = data.rows.filter((item) => item.name != 'null');
-
-    if (data.rows?.length == 0) {
-        return noDataView(model, dataPointer);
-    }
 
     const cellsSpecials = pagesCellsSpecials[dataPointer.page];
 
     const { fields } = data;
     const visibleFields = fields.filter((f) => f.marked);
-
-    const filteringPanel = model.searchFieldsVisible ? filter(model) : '';
 
     const headerSpecific = (model) => {
         const { page } = model.getCurrentDataPointer();
@@ -104,51 +101,56 @@ export default function tablePanel(model) {
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
-    return h('div.main-content', [
-        h('div.flex-wrap.justify-between.items-center',
-            h('div.flex-wrap.justify-between.items-baseline',
-                h('h3.p-left-15.text-primary', headerSpecific(model)),
-                chips,
-                h('div.italic.p-left-5.text-primary', itemsCounter(data)),
-                h('button.btn.btn-secondary', {
-                    onclick: () => {
-                        document.getElementById('pageSettingsModal').style.display = 'block';
-                        document.addEventListener('click', (event) => {
-                            const modalContent = document.getElementsByClassName('modal-content');
-                            const modal = document.getElementsByClassName('modal');
-                            if (Array.from(modalContent).find((e) => e != event.target)
+    return dataPointer.index !== defaultIndexString || dataPointer.page == pagesNames.periods
+        ? h('div.main-content', [
+            h('div.flex-wrap.justify-between.items-center',
+                h('div.flex-wrap.justify-between.items-baseline',
+                    h('h3.p-left-15.text-primary', headerSpecific(model)),
+                    chips,
+                    h('div.italic.p-left-5.text-primary', itemsCounter(data)),
+                    h('button.btn.btn-secondary', {
+                        onclick: () => {
+                            document.getElementById('pageSettingsModal').style.display = 'block';
+                            document.addEventListener('click', (event) => {
+                                const modalContent = document.getElementsByClassName('modal-content');
+                                const modal = document.getElementsByClassName('modal');
+                                if (Array.from(modalContent).find((e) => e != event.target)
                                 && Array.from(modal).find((e) => e == event.target)
                                 && document.getElementById('pageSettingsModal')) {
-                                document.getElementById('pageSettingsModal').style.display = 'none';
-                            }
-                        });
-                    },
-                }, h('.settings-20'))),
+                                    document.getElementById('pageSettingsModal').style.display = 'none';
+                                }
+                            });
+                        },
+                    }, h('.settings-20'))),
 
-            h('div', functionalities(model))),
-        filteringPanel,
-        anyFiltersActive ? activeFilters(model) : '',
-        visibleFields.length > 0
-            ? h('.p-top-10', //
-                // Data.rows.length > 15 ? pager(model, data, 1) : '',
-                h('.x-scrollable-table.border-sh',
-                    pager(model, data, 1),
-                    h('table.data-table', {
-                        id: `data-table-${data.url}`,
-                        className: `${[pagesNames.runsPerDataPass, pagesNames.runsPerPeriod].includes(dataPointer.page)
-                            ? 'runs-table'
-                            : `${dataPointer.page}-table`}`,
-                    }, [
-                        tableHeader(visibleFields, data, model),
-                        sortingRow(visibleFields, data, model),
-                        tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
-                    ]),
-                    data.rows.length > 15 ? pager(model, data, 2) : ''))
-        // Pager(model, data, 2))
-            : '',
-        h('.modal', { id: 'pageSettingsModal' },
-            h('.modal-content.abs-center.p3', { id: 'pageSettingsModalContent' }, pageSettings(model))),
-    ]);
+                h('div', functionalities(model))),
+            model.searchFieldsVisible ? filter(model) : '',
+            anyFiltersActive ? activeFilters(model) : '',
+
+            data.rows?.length > 0
+                ? visibleFields.length > 0
+                    ? h('.p-top-10', //
+                        // Data.rows.length > 15 ? pager(model, data, 1) : '',
+                        h('.x-scrollable-table.border-sh',
+                            pager(model, data, 1),
+                            h('table.data-table', {
+                                id: `data-table-${data.url}`,
+                                className: `${[pagesNames.runsPerDataPass, pagesNames.runsPerPeriod].includes(dataPointer.page)
+                                    ? 'runs-table'
+                                    : `${dataPointer.page}-table`}`,
+                            }, [
+                                tableHeader(visibleFields, data, model),
+                                sortingRow(visibleFields, data, model),
+                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
+                            ]),
+                            data.rows.length > 15 ? pager(model, data, 2) : ''))
+                // Pager(model, data, 2))
+                    : ''
+                : noDataView(model, dataPointer),
+            h('.modal', { id: 'pageSettingsModal' },
+                h('.modal-content.abs-center.p3', { id: 'pageSettingsModalContent' }, pageSettings(model))),
+        ])
+        : noSubPageSelected(model);
 }
 
 function tableBody(

@@ -13,9 +13,9 @@
  */
 
 import { h } from '/js/src/index.js';
-import fetchedDataPages from './fetchedDataPages.js';
 import alonePageButton from './alonePageButton.js';
 import { RCT } from '../../../config.js';
+import sidebarItem from './sidebarItem.js';
 const { pagesNames } = RCT;
 
 /**
@@ -31,11 +31,11 @@ export default function sidebar(model) {
 const sidebarMenu = (model) => [
     h('div.logo'),
     alonePageButton(model, pagesNames.periods, 'Periods'),
-    fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes'),
-    fetchedDataPages(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),
-    fetchedDataPages(model, pagesNames.mc, 'Monte Carlo'),
-    fetchedDataPages(model, pagesNames.anchoredPerMC, 'Anchored per MC'),
-    fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period'),
-    fetchedDataPages(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
-    fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging'),
+    sidebarItem(model, pagesNames.dataPasses, 'Data Passes'),
+    sidebarItem(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),
+    sidebarItem(model, pagesNames.mc, 'Monte Carlo'),
+    sidebarItem(model, pagesNames.anchoredPerMC, 'Anchored per MC'),
+    sidebarItem(model, pagesNames.runsPerPeriod, 'Runs per period'),
+    sidebarItem(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
+    sidebarItem(model, pagesNames.flags, 'QA Expert Flagging'),
 ];
