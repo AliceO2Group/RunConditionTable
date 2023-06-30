@@ -14,9 +14,8 @@
 
 :root {
     /* Color palette */
-    --active-color: #b3c5d7;
-    --focus-color: #778da9;
-    --row-selected-color: #8d99ae;
+    --focus-color: var(--yellow) /* #778da9 */;
+    --row-selected-color: #FCDA5E;
     --highlight-blue: #D7EDFC;
     --dark-blue: #1D3557;
     --blue: #1e90ff;
@@ -24,7 +23,7 @@
 }
 
 .x-scrollable-table {
-    width: 100%; /*400px;*/
+    width: 100%;
     overflow-x: scroll;
     position: relative !important;
 }
@@ -37,8 +36,11 @@
     background-color: var(--active-color) !important;
 }
 
-
 .track.row-selected-color-alpha:hover {
+    background-color: var(--focus-color) !important;
+}
+
+.track.row-selected-color-alpha:hover td {
     background-color: var(--focus-color) !important;
 }
 
@@ -46,14 +48,26 @@ table tbody tr.row-selected-color-alpha {
     background-color: var(--row-selected-color);
 }
 
+table tr.track.row-selected-color-alpha:nth-child(odd) td {
+    background-color: #FCCA61;
+}
+
+table tr.track.row-selected-color-alpha td .chip{
+    background-color: #FACB80;
+    color: #634F40;
+    /*#EAE7FA; /* remember this color!*/
+}
 
 tbody tr.track.row-unselected-color-alpha:nth-child(odd) td {
-    background-color: var(--color-gray-lighter);
+    background-color: #f1f4fb;
 }
 
 table.data-table thead {
-    height: 50px !important;
     font-size: x-small;
+}
+
+table.data-table thead.header tr {
+    height: 30px !important;
 }
 
 table.data-table tbody tr {
@@ -63,6 +77,19 @@ table.data-table tbody tr {
     padding: 0em !important;
 
     font-size: xx-small !important;
+    border-collapse: collapse;
+    border: 0;
+}
+
+table.data-table tbody td {
+    border: 0;
+}
+
+.border-sh {
+    background-color: white !important;
+    border-radius: 15px !important;
+    /* border-collapse: separate; */
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
 input[type="checkbox"] {
@@ -103,35 +130,6 @@ input[type="checkbox"]:checked::before {
     background-color: var(--color-white);
 }
 
-.text-field {
-    position: relative;
-    margin: 6px 0px;
-}
-
-input {
-    display: inline-block;
-    border: thin solid #fafafa;
-    border-bottom: solid medium #999;
-    color: #444;
-    background-color: #fafafa;
-}
-
-.placeholder {
-    color: #999;
-    position: absolute;
-    pointer-events: none;
-    left: 10px;
-    top: 5px;
-    transition: 0.2s;
-    font-weight: 500;
-}
-
-input:focus ~ .placeholder, input:valid ~ .placeholder {
-    top: -13px;
-    left: 10px;
-    font-size: small;
-    background-color: var(--active-color);
-    color: var(--color-white);
-    padding:0 3px;
-    border-radius: 5px;
+#sortingRow {
+    display: none;
 }

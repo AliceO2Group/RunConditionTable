@@ -12,4 +12,5 @@
  * or submit itself to any jurisdiction.
  */
 
-export const defaultIndex = (_index) => _index ? _index : '_0';
+export const defaultIndexString = '_0';
+export const defaultIndex = (_index) => _index ? _index : defaultIndexString;

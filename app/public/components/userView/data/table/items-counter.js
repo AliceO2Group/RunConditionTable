@@ -11,16 +11,18 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-import { h } from '/js/src/index.js';
-export default function serviceUnavailablePanel(model) {
-    const retryBtn = h('button.btn.br-primary.m4.p4', { onclick: () => model.login() }, 'Retry login');
-    const title = h('h1.primary.justify-center', 'Run Condition Table');
-    const subtitle = h('h3.danger.justify-center', 'Session Error');
 
-    return h('div.loginDiv', h('div.loginDiv.bg-gray-lighter.br3.p4', [
-        title,
-        subtitle,
-        h('.p1'),
-        h('.flex-wrap.justify-center', retryBtn),
-    ]));
+import { RCT } from '../../../../config.js';
+
+const siteParamName = RCT.dataReqParams.site;
+
+export default function itemsCounter(data) {
+    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
+
+    const firstRowIdx = (currentSite - 1) * data.rowsOnSite + 1;
+    const lastRowIdx = currentSite * data.rowsOnSite > data.totalRecordsNumber
+        ? data.totalRecordsNumber
+        : currentSite * data.rowsOnSite;
+
+    return `${firstRowIdx}-${lastRowIdx} of ${data.totalRecordsNumber}`;
 }

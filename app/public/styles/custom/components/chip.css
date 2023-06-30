@@ -12,32 +12,16 @@
  * or submit itself to any jurisdiction.
  */
 
-.input-user-24 {
-    background-image: url('./images/24/User.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
+.chip {
+    background-color:var(--selection-color);
+    color: var(--primary);
+    border-radius: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    align-items: center;
 }
 
-.input-key-24 {
-    background-image: url('./images/24/Key.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
-}
-
-.input-database-24 {
-    background-image: url('./images/24/Database.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
+.chip.primary {
+    background-color: var(--primary-hover) !important;
+    color: var(--off-white) !important;
 }

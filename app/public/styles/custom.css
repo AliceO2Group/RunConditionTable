@@ -14,12 +14,29 @@
 
 :root {
     /* Color palette */
-    --active-color: #b3c5d7;
+    --active-color: #F9EAC2;
+    /*#ABC4FF /* #b3c5d7 */
     --dark-blue: #1D3557;
-    --secondary-color: #577590;/*#6d6875;*/
+    --secondary-color: #577590;
     --highlight-blue: #D7EDFC;
     --blue: #1e90ff;
-    --white: #ffffff;
+
+    --white: #ffffff; /* stays */
+    --off-white: #fdfbf9; /* stays */
+    --yellow: #F9EAC2; /* stays */
+    --orange: #E9C46A;
+    --selection-color: #e2eafc; /* up to rethink */
+    --primary: #324376; /* stays */
+    --primary-hover: #586BA4; /* stays */
+}
+
+.zeropadding {
+    padding: 0;
+    margin: 0;
+}
+
+.font-size-small {
+    font-size: small !important;
 }
 
 .thick {
@@ -36,16 +53,6 @@
 
 .no-text-decoration {
     text-decoration: none !important;
-}
-
-.table-cell-like {
-    display: table-cell !important;
-    margin: 0 !important;
-    padding: 0 5px !important;
-}
-
-.table-cell-like.active {
-    background-color: var(--active-color) !important;
 }
 
 .vertical-center {
@@ -87,6 +94,16 @@
 
 .none {
     display: none !important;
+}
+
+.none > * {
+    display: none !important;
+}
+
+.transparent {
+    background-color: transparent !important;
+    color: inherit;
+    border: none !important;
 }
 
 .flex {
@@ -137,12 +154,11 @@
 .clickable-label {
     display: block !important;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px;
     color: grey;
 }
 
 .clickable-label.active {
-    background-color: var(--active-color);
     border-radius: 10px;
     color: #1D3557;
 }
@@ -161,19 +177,46 @@
     border-bottom-right-radius: 10px !important;
 }
 
-.btn:hover {
-    background-color: #577590 !important;
-}
-
-.btn.selected {
-    background-color: var(--color-gray-dark) !important;
-    color: var(--color-white) !important;
-}
-
 .pointer {
     cursor: pointer !important;
 }
 
 .italic {
     font-style: italic;
+}
+
+.user-panel-main-content {
+    background-color: var(--off-white);
+    padding-top: 0px !important;
+}
+
+.main-content {
+    padding: 20px;
+}
+
+.p-left-15 {
+    padding-right: 15px !important;
+}
+
+.p-left-5 {
+    padding-right: 5px !important;
+}
+
+.p-top-10 {
+    padding-top: 10px !important;
+}
+
+.gap-20 {
+    gap: 20px;
+}
+  
+.logo {
+    background-image: url('./images/logo/Logo\ Placeholder.svg');
+    width: 160px;
+    height: 70px;
+    display: inline-block;
+}
+
+.text-primary {
+    color: var(--primary);
 }

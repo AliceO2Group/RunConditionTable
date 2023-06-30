@@ -12,13 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
- .dataPasses-table {
+ .anchoredPerMC-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.dataPasses-table td:first-child, .dataPasses-table th:first-child {
+.anchoredPerMC-table td:first-child, .anchoredPerMC-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -28,40 +28,46 @@
     z-index: 1 !important;
 }
 
-.dataPasses-table tr:hover td:first-child {
+.anchoredPerMC-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.dataPasses-table tr.row-selected-color-alpha td:first-child{
+.anchoredPerMC-table tr.row-selected-color-alpha td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.dataPasses-table tr.row-selected-color-alpha:hover td:first-child{
+.anchoredPerMC-table tr.row-selected-color-alpha:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
 /* Name */
-.dataPasses-table .dataPasses-name-cell, .dataPasses-table .dataPasses-name-header {
+.anchoredPerMC-table .anchoredPerMC-name-cell, .anchoredPerMC-table .anchoredPerMC-name-header {
     min-width: 500px;
     text-align: left;
 }
 
-.dataPasses-table .dataPasses-name-cell :first-child {
-    margin-left: 170px;
+.anchoredPerMC-table .anchoredPerMC-name-cell :first-child {
+    margin-left: 120px;
 }
 
 /* Description */
-.dataPasses-table .dataPasses-description-cell, .dataPasses-table .dataPasses-description-header {
+.anchoredPerMC-table .anchoredPerMC-description-cell, .anchoredPerMC-table .anchoredPerMC-description-header {
     min-width: 300px;
     text-align: left;
 }
 
+/* Number of events */
+.anchoredPerMC-table .anchoredPerMC-number_of_events-cell, .anchoredPerMC-table .anchoredPerMC-number_of_events-header {
+    min-width: 50px;
+    text-align: right;
+}
+
 /* Size */
-.dataPasses-table .dataPasses-size-cell, .dataPasses-table .dataPasses-size-header {
+.anchoredPerMC-table .anchoredPerMC-size-cell, .anchoredPerMC-table .anchoredPerMC-size-header {
     min-width: 100px;
     text-align: right;
 }
 
-.dataPasses-table td:last-child, .dataPasses-table th:last-child {
+.anchoredPerMC-table td:last-child, .anchoredPerMC-table th:last-child {
     padding-right: 2em;
 }

@@ -12,8 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
-
-export default function container(...options) {
-    return h('container', h('div', [options]));
+export default function subPagesCount(model, pageName) {
+    const subPagesCount = model.getSubPagesCount(pageName);
+    return subPagesCount > 0
+        ? ` (${model.getSubPagesCount(pageName)})`
+        : '';
 }

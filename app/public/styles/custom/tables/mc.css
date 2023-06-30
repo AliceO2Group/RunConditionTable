@@ -12,13 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
- .dataPasses-table {
+ .mc-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.dataPasses-table td:first-child, .dataPasses-table th:first-child {
+.mc-table td:first-child, .mc-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -28,40 +28,52 @@
     z-index: 1 !important;
 }
 
-.dataPasses-table tr:hover td:first-child {
+.mc-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.dataPasses-table tr.row-selected-color-alpha td:first-child{
+.mc-table tr.row-selected-color-alpha td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.dataPasses-table tr.row-selected-color-alpha:hover td:first-child{
+.mc-table tr.row-selected-color-alpha:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
 /* Name */
-.dataPasses-table .dataPasses-name-cell, .dataPasses-table .dataPasses-name-header {
-    min-width: 500px;
+.mc-table .mc-name-cell, .mc-table .mc-name-header {
+    min-width: 150px;
     text-align: left;
 }
 
-.dataPasses-table .dataPasses-name-cell :first-child {
-    margin-left: 170px;
+.mc-table .mc-name-cell :first-child {
+    margin-left: 80px;
 }
 
 /* Description */
-.dataPasses-table .dataPasses-description-cell, .dataPasses-table .dataPasses-description-header {
+.mc-table .mc-description-cell, .mc-table .mc-description-header {
     min-width: 300px;
     text-align: left;
 }
 
-/* Size */
-.dataPasses-table .dataPasses-size-cell, .dataPasses-table .dataPasses-size-header {
-    min-width: 100px;
+/* Jira */
+.mc-table .mc-jira-cell, .mc-table .mc-jira-header {
+    min-width: 80px;
+    text-align: right !important;
+}
+
+/* PWG */
+.mc-table .mc-pwg-cell, .mc-table .mc-pwg-header {
+    min-width: 50px;
+    text-align: right !important;
+}
+
+/* Number of events */
+.mc-table .mc-number_of_events-cell, .mc-table .mc-number_of_events-header {
+    min-width: 80px;
     text-align: right;
 }
 
-.dataPasses-table td:last-child, .dataPasses-table th:last-child {
+.mc-table td:last-child, .mc-table th:last-child {
     padding-right: 2em;
 }

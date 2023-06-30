@@ -13,9 +13,8 @@
  */
 
 import { h } from '/js/src/index.js';
-import fetchedDataPages from './fetchedDataPages.js';
-import alonePageButton from './alonePageButton.js';
 import { RCT } from '../../../config.js';
+import sidebarItem from './sidebarItem.js';
 const { pagesNames } = RCT;
 
 /**
@@ -26,15 +25,23 @@ const { pagesNames } = RCT;
  */
 
 export default function sidebar(model) {
-    return h('nav.sidebar.sidebar-content.scroll-y.flex-column.p3', [sidebarMenu(model)]);
+    return h('.sidebar.p3',
+        h('.logo'),
+        h('.flex-column.gap-20',
+            h('.sidebar-section',
+                h('.sidebar-section-title', 'Pages'),
+                sidebarItem(model, pagesNames.periods, 'Periods'),
+                sidebarItem(model, pagesNames.dataPasses, 'Data Passes'),
+                sidebarItem(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),
+                sidebarItem(model, pagesNames.mc, 'Monte Carlo'),
+                sidebarItem(model, pagesNames.anchoredPerMC, 'Anchored per MC'),
+                sidebarItem(model, pagesNames.runsPerPeriod, 'Runs per period'),
+                sidebarItem(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
+                sidebarItem(model, pagesNames.flags, 'QA Expert Flagging')),
+
+            h('.sidebar-section',
+                h('.sidebar-section-title', 'Preferences'),
+                h('', 'Color theme'),
+                h('', 'List of detectors'),
+                h('', 'Defined filters'))));
 }
-const sidebarMenu = (model) => [
-    alonePageButton(model, pagesNames.periods, 'Periods'),
-    fetchedDataPages(model, pagesNames.dataPasses, 'Data Passes'),
-    fetchedDataPages(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),
-    fetchedDataPages(model, pagesNames.mc, 'Monte Carlo'),
-    fetchedDataPages(model, pagesNames.anchoredPerMC, 'Anchored per MC'),
-    fetchedDataPages(model, pagesNames.runsPerPeriod, 'Runs per period'),
-    fetchedDataPages(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
-    fetchedDataPages(model, pagesNames.flags, 'QA Expert Flagging'),
-];

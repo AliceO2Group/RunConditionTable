@@ -16,12 +16,13 @@ import viewButton from '../../common/viewButton.js';
 import { range, replaceUrlParams } from '../../../utils/utils.js';
 import { h, iconMediaSkipBackward, iconCaretLeft, iconChevronBottom, iconCaretRight, iconMediaSkipForward } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
+import itemsCounter from './table/items-counter.js';
 
 const siteParamName = RCT.dataReqParams.site;
 const visibleNeighbourButtonsRange = 2;
 const maxVisibleButtons = 10;
 
-export default function pager(model, data, scid) {
+export default function pager(model, data, pagerOnly = true) {
     const mapArrayToButtons = (arr) => arr.map((i) => {
         const site = i + 1;
         const url = replaceUrlParams(data.url, [[siteParamName, site]]);
@@ -32,8 +33,8 @@ export default function pager(model, data, scid) {
             () => model.fetchedData.changePage(site),
             '',
             url.pathname + url.search,
-            `${currentSite.toString() === site.toString() ? '.selected' : ''}`,
-            '.m1',
+            `.btn.btn-secondary${currentSite.toString() === site.toString() ? '.selected' : ''}`,
+            '',
             true,
         );
     });
@@ -66,26 +67,70 @@ export default function pager(model, data, scid) {
     const leftThreeDotsPresent = !(leftButtonsR[leftButtonsR.length - 1] === middleButtonsR[0] - 1 || leftButtonsR.length === 0);
     const rightThreeDotsPresent = !(rightButtonsR[0] === middleButtonsR[middleButtonsR.length - 1] + 1 || rightButtonsR.length === 0);
 
-    const firstRowIdx = (currentSite - 1) * data.rowsOnSite + 1;
-    const lastRowIdx = currentSite * data.rowsOnSite > data.totalRecordsNumber
-        ? data.totalRecordsNumber
-        : currentSite * data.rowsOnSite;
-
     const siteChangingController = (onclickF, label) => h('a.site-changing-controller', { onclick: onclickF }, label);
 
-    return [
-        h('.flex-row.pager-panel', [
-            h('.flex.menu-title', `${firstRowIdx}-${lastRowIdx} out of ${data.totalRecordsNumber} items`),
+    function handleOptionChange() {
+        const columnsOptionsSelect = document.getElementById('columns-options');
+        const selectedValue = columnsOptionsSelect.options[columnsOptionsSelect.selectedIndex].value;
+        switch (selectedValue) {
+            case '0':
+                /* Show non empty columns */
+                data.fields.forEach((f) => {
+                    model.fetchedData.changeItemStatus(
+                        f,
+                        data.rows.some((r) => r[f.name]),
+                    );
+                    model.notify();
+                });
+                break;
+            case '1':
+                /* Show all columns */
+                for (const field of data.fields) {
+                    field.marked = true;
+                }
+                model.notify();
+                break;
+            case '2':
+                /* Customize */
+                break;
+            default:
+                break;
+        }
+    }
 
-            h('.flex',
-                h('input.pager.p2', {
-                    id: `rows-on-site-input-${scid}`,
-                    type: 'number',
-                    placeholder: 50,
-                    value: model.router.params['rows-on-site'],
-                }, ''),
-                h('.menu-title', 'per page'),
-                h('button.btn.m1', { onclick: () => onclickSetRowsOnSite(model, scid) }, 'apply')),
+    return [
+        h('.flex-row.pager-panel.items-center', [
+            pagerOnly
+                ? ''
+                : [
+                    h('.flex-wrap.justify-between.items-center',
+                        h('.flex-wrap.justify-between.items-center.ph3',
+                            h('.italic', itemsCounter(data)))),
+
+                    h('button.btn.icon-only-button.btn-secondary', {
+                        onclick: () => {
+                            const sortingRow = document.getElementById('sortingRow');
+                            if (sortingRow.style.display === 'none') {
+                                sortingRow.style.display = 'table-header-group';
+                            } else {
+                                sortingRow.style.display = 'none';
+                            }
+                        },
+                    }, h('.sort-20')),
+
+                    h('.flex-wrap.justify-between.items-center',
+
+                        h('select.select.show-columns', {
+                            id: 'columns-options',
+                            name: 'showOptions',
+                            onchange: () => handleOptionChange(),
+                        },
+                        [
+                            h('option', { value: 0 }, 'Non empty columns'),
+                            h('option', { value: 1 }, 'All columns'),
+                            h('option', { value: 2 }, 'Customize'),
+                        ], iconChevronBottom())),
+                ],
 
             h('.flex.pager-buttons',
                 // Move to first site
@@ -98,7 +143,7 @@ export default function pager(model, data, scid) {
                 currentSite > 1 ? siteChangingController(() => model.fetchedData.changePage(currentSite - 1), iconCaretLeft()) : ' ',
 
                 mapArrayToButtons(leftButtonsR),
-                leftThreeDotsPresent ? h('.ellipsis') : '',
+                leftThreeDotsPresent ? h('.ellipsis-20') : '',
                 mapArrayToButtons(middleButtonsR),
                 rightThreeDotsPresent ? '...' : '',
                 mapArrayToButtons(rightButtonsR),
@@ -117,6 +162,7 @@ export default function pager(model, data, scid) {
                         iconChevronBottom(),
                     )
                     : ' ',
+
                 currentSite < sitesNumber
                     ? siteChangingController(
                         () => model.fetchedData.changePage(sitesNumber),
@@ -125,15 +171,4 @@ export default function pager(model, data, scid) {
                     : ' '),
         ]),
     ];
-}
-
-function onclickSetRowsOnSite(model, scid) {
-    const input = document.getElementById(`rows-on-site-input-${scid}`);
-    let rowsOnSite = input.value === '' ? input.placeholder : input.value;
-    if (rowsOnSite < 1 || rowsOnSite > 200) {
-        alert('incorrect number of rows on page: must be in range of [1, 200]');
-        input.value = 50;
-        rowsOnSite = 50;
-    }
-    model.fetchedData.changeRowsOnSite(rowsOnSite);
 }

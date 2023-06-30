@@ -41,6 +41,15 @@
     scale: 0.5;
 }
 
+.close-10 {
+    background-image: url('./images/20/Close.svg');
+    width: 20px;
+    height: 20px;
+    scale: 0.5;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .sort-down-20.selected {
     background-color: var(--color-primary) !important;
     border-radius: 10px;
@@ -65,6 +74,14 @@
     display: inline-block;
 }
 
+.folder-20 {
+    background-image: url('./images/20/Folder.svg');
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    /* scale: 0.7; */
+}
+
 .hamburger-20 {
     background-image: url('./images/20/Hamburger.svg');
     width: 20px;
@@ -72,8 +89,15 @@
     display: inline-block;
 }
 
-.filter-20 {
-    background-image: url('./images/20/Filter.svg');
+.slider-20-primary {
+    background-image: url('./images/20/primary/Slider.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.slider-20-off-white {
+    background-image: url('./images/20/off-white/Slider.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
@@ -100,8 +124,22 @@
     display: inline-block;
 }
 
+.sort-20 {
+    background-image: url('./images/20/Sort.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
 .settings-20 {
     background-image: url('./images/20/Settings.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.save-20 {
+    background-image: url('./images/20/primary/Save.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
@@ -146,6 +184,13 @@
     background-image: url('./images/90/Synchronize.svg');
     width: 90px;
     height: 90px;
+    display: inline-block;
+}
+
+.settings-40 {
+    background-image: url('./images/40/Settings.svg');
+    width: 40px;
+    height: 40px;
     display: inline-block;
 }
 

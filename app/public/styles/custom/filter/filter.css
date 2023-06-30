@@ -1,29 +1,69 @@
-.filter-panel {
-    position: sticky !important;
-    top: 0px;
-    padding-top: 10px;
-    background-color: var(--color-white);
-    z-index: 2 !important;
-    font-size: xx-small;
+/**
+ * @license
+ * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
+ * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
+ * All rights not expressly granted are reserved.
+ *
+ * This software is distributed under the terms of the GNU General Public
+ * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
+
+.text-field {
+    position: relative;
 }
 
-.filter-panel-content {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    width: 100%;
-    padding-bottom: 65px;
+input {
+    display: inline-block;
+    border: thin solid #fafafa;
+    border-bottom: solid medium #999;
+    color: #444;
+    background-color: #fafafa;
+    outline: none !important;
 }
 
-.filter-panel-buttons {
+input:focus {
+    outline: none !important;
+    border: thin solid #E9C46A !important;
+    box-shadow: none !important;
+}
+
+.placeholder {
+    color: #999;
     position: absolute;
-    padding: 10px;
+    pointer-events: none;
+    left: 10px;
+    top: 5px;
+    transition: 0.2s;
 }
 
-.filter-btn {
-    min-height: 40px;
+input:focus ~ .placeholder, input:valid ~ .placeholder {
+    top: -13px;
+    left: 10px;
+    font-size: small;
+    background-color: var(--color-white);
+    color: var(--primary);
+    padding:0 3px;
+    border-radius: 5px;
 }
 
-.icon-btn-text {
-    padding-left: 30px !important;
-    display: inline-block !important;
+.chips {
+    gap: 10px;
+}
+
+.chip.filter-chip {
+    background-color: #E9C46A;
+    color: #444;
+    align-items: center;
+}
+
+.chip.filter-chip * {
+    padding: 0px 2px !important;
+}
+
+.chip.filter-chip .filter-type {
+    font-style: italic !important;
 }

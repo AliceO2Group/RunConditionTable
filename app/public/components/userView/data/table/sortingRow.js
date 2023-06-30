@@ -17,7 +17,7 @@ import { filterApplicableHeader, headerSpecPresent } from '../headersSpecials.js
 import { sort } from '../../../../utils/sort.js';
 
 export default function sortingRow(visibleFields, data, model) {
-    return h('thead',
+    return h('thead', { id: 'sortingRow' },
         h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, data, model))));
 }
 
@@ -42,7 +42,7 @@ const columnsHeadersArray = (visibleFields, data, model) =>
 const rowsOptions = (model, data) =>
     h('th', { scope: 'col' },
         h('.relative',
-            h(`input.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
+            h(`input.hidden.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
                 type: 'checkbox',
                 onclick: (e) => {
                     for (const row of data.rows) {

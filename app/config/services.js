@@ -33,7 +33,7 @@ const services = {
     },
 
     batchSize: {
-        ML: ResProvider.envOrDef('RCT_ML_BATCH_SIZE', 2),
+        ML: ResProvider.envOrDef('RCT_ML_BATCH_SIZE', 1),
     },
 };
 

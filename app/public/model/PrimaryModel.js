@@ -15,7 +15,7 @@
 import { Observable, Loader } from '/js/src/index.js';
 import FetchedDataManager from './data/FetchedDataManager.js';
 import { RCT } from '../config.js';
-import { defaultIndex } from '../utils/defaults.js';
+import { defaultIndex, defaultIndexString } from '../utils/defaults.js';
 const { dataReqParams } = RCT;
 
 export default class PrimaryModel extends Observable {
@@ -29,7 +29,7 @@ export default class PrimaryModel extends Observable {
 
         this.fetchedData = new FetchedDataManager(this.router, this);
 
-        this.searchFieldsVisible = true;
+        this.searchFieldsVisible = false;
 
         this.loader = new Loader();
 
@@ -86,6 +86,10 @@ export default class PrimaryModel extends Observable {
         this.notify();
     }
 
+    goToDefaultPageUrl(page) {
+        this.router.go(`/?page=${page}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
+    }
+
     getDataPointerFromUrl(url) {
         const pointer = Object.fromEntries(new URLSearchParams(url.search));
         return {
@@ -103,6 +107,10 @@ export default class PrimaryModel extends Observable {
         return this.fetchedData[dataPointer.page][dataPointer.index].payload;
     }
 
+    getSubPages(pageName) {
+        return Object.keys(this.fetchedData[pageName]);
+    }
+
     getCurrentRemoteData() {
         const dataPointer = this.getCurrentDataPointer();
         return this.fetchedData[dataPointer.page][dataPointer.index];
@@ -116,10 +124,24 @@ export default class PrimaryModel extends Observable {
         return this.fetchedData[page][defaultIndex(index)];
     }
 
+    getSubPagesCount(page) {
+        return Object.keys(this.fetchedData[page]).filter((index) => index !== defaultIndexString).length;
+    }
+
+    removeSubPage(page, index) {
+        this.fetchedData[page][index] = null;
+        if (this.getCurrentDataPointer().page === page && this.getCurrentDataPointer().index === index) {
+            this.goToDefaultPageUrl(page);
+        }
+        Reflect.deleteProperty(this.fetchedData[page], index);
+        this.notify();
+    }
+
     removeCurrentData() {
         const { page, index } = this.getCurrentDataPointer();
         this.fetchedData[page][index] = null;
-        history.back();
+        this.goToDefaultPageUrl(page);
+        Reflect.deleteProperty(this.fetchedData[page], index);
     }
 
     handleClick(e) {

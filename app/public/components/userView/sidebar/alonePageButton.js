@@ -45,10 +45,10 @@ export default function alonePageButton(model, page, title, index = null) {
             h('.vertical-center',
                 h('.current-page',
                     h('.title-text-relative.hidden', title))),
-            h('.chevron-right-20.vertical-center'),
+            h('.folder-20.vertical-center'),
             h('.title-text.vertical-center', title))
         : h('div',
-            h('.chevron-down-20.vertical-center'),
+            h('.folder-20.vertical-center'),
             h('.title-text.vertical-center', title));
 
     const dropdownID = `dropdown-${dataHref}`;

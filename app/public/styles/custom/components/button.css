@@ -1,0 +1,45 @@
+/**
+ * @license
+ * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
+ * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
+ * All rights not expressly granted are reserved.
+ *
+ * This software is distributed under the terms of the GNU General Public
+ * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
+
+.btn-primary {
+    background-color: var(--primary) !important;
+    color: #FDFBF9 !important;
+}
+
+.btn-secondary {
+    background: transparent !important;
+    color: var(--primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+.btn-secondary:hover {
+    background-color: var(--selection-color) !important;
+}
+
+.btn-secondary.selected {
+    background-color: var(--primary) !important;
+    color: var(--off-white) !important;
+}
+
+.btn.chip {
+    align-items: center !important;
+}
+
+.btn.chip:hover {
+    background-color: var(--selection-color) !important;
+    color: var(--primary) !important;
+}

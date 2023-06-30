@@ -13,14 +13,27 @@
  */
 
 .pager-panel {
+    background-color: white !important;
+    border-radius: 15px;
     justify-content: space-between;
+    font-size: xx-small;
+}
+
+.rows-per-page {
+    padding-left: 10px;
+    padding-right: 5px;
 }
 
 input.pager {
+    padding: 0 !important;
     border: none !important;
-    width: 70px;
+    width: 43px;
     box-shadow: none !important;
     background-color: var(--color-white);
+}
+
+input.pager:focus {
+    border: none !important;
 }
 
 .site-changing-controller {
