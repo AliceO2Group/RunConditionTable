@@ -12,11 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
-.text-field {
+.ehevi .text-field {
     position: relative;
 }
 
-input {
+.ehevi input {
     display: inline-block;
     border: thin solid #fafafa;
     border-bottom: solid medium #999;
@@ -25,13 +25,13 @@ input {
     outline: none !important;
 }
 
-input:focus {
+.ehevi input:focus {
     outline: none !important;
     border: thin solid #E9C46A !important;
     box-shadow: none !important;
 }
 
-.placeholder {
+.ehevi .placeholder {
     color: #999;
     position: absolute;
     pointer-events: none;
@@ -40,7 +40,7 @@ input:focus {
     transition: 0.2s;
 }
 
-input:focus ~ .placeholder, input:valid ~ .placeholder {
+.ehevi input:focus ~ .placeholder, input:valid ~ .placeholder {
     top: -13px;
     left: 10px;
     font-size: small;
@@ -50,20 +50,20 @@ input:focus ~ .placeholder, input:valid ~ .placeholder {
     border-radius: 5px;
 }
 
-.chips {
+.ehevi .chips {
     gap: 10px;
 }
 
-.chip.filter-chip {
+.ehevi .chip.filter-chip {
     background-color: #E9C46A;
     color: #444;
     align-items: center;
 }
 
-.chip.filter-chip * {
+.ehevi .chip.filter-chip * {
     padding: 0px 2px !important;
 }
 
-.chip.filter-chip .filter-type {
+.ehevi .chip.filter-chip .filter-type {
     font-style: italic !important;
 }

@@ -19,7 +19,6 @@ import { RCT } from '../../../../config.js';
 export default function pageSettings(model, close) {
     const rowsPerPageInputId = 'rows-per-page-input-id-modal';
     const themeSelectId = 'theme-selection';
-    const themeClasses = Object.values(RCT.themes);
     const title = h('h3', 'Page settings');
 
     function onclickSetRowsOnSite(model) {
@@ -35,9 +34,28 @@ export default function pageSettings(model, close) {
     }
 
     function removeAllThemeClasses(element) {
-        for (const theme of themeClasses) {
+        for (const theme of Object.keys(RCT.themes)) {
             if (element.classList.contains(theme)) {
                 element.classList.remove(theme);
+            }
+
+            for (const element of Object.keys(RCT.themes[theme])) {
+                document.querySelectorAll(element).forEach((e) => {
+                    const classes = RCT.themes[theme][element].split(' ');
+                    classes.forEach((className) => {
+                        e.classList.remove(className);
+                    });
+                });
+            }
+        }
+    }
+
+    function assignCustomThemeClasses(theme) {
+        for (const element of Object.keys(RCT.themes[theme])) {
+            for (const className of RCT.themes[theme][element].split(' ')) {
+                document.querySelectorAll(element).forEach((e) => {
+                    e.classList.add(className);
+                });
             }
         }
     }
@@ -46,22 +64,23 @@ export default function pageSettings(model, close) {
         const documentBody = document.getElementById('body');
         const themesSelection = document.getElementById(themeSelectId);
         const selectedTheme = themesSelection.options[themesSelection.selectedIndex].value;
+        removeAllThemeClasses(documentBody);
         switch (selectedTheme) {
             case '0':
                 /* Ehevi */
-                removeAllThemeClasses(documentBody);
-                documentBody.classList.add(RCT.themes.ehevi);
+                documentBody.classList.add(RCT.themeNames.ehevi);
+                assignCustomThemeClasses(RCT.themeNames.ehevi);
                 break;
             case '1':
                 /* WebUI */
-                removeAllThemeClasses(documentBody);
+                assignCustomThemeClasses(RCT.themeNames.webui);
                 break;
             default:
                 break;
         }
     }
 
-    return h('.pageSettings', [
+    return h('', [
         h('.flex.bottom-20.justify-center.items-center',
             h('.settings-40'),
             h('.inline.top-15.left-10',

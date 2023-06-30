@@ -12,13 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
- .anchoredPerMC-table {
+.ehevi .anchoredPerMC-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.anchoredPerMC-table td:first-child, .anchoredPerMC-table th:first-child {
+.ehevi .anchoredPerMC-table td:first-child,
+.ehevi .anchoredPerMC-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -28,46 +29,51 @@
     z-index: 1 !important;
 }
 
-.anchoredPerMC-table tr:hover td:first-child {
+.ehevi .anchoredPerMC-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.anchoredPerMC-table tr.row-selected-color-alpha td:first-child{
+.ehevi .anchoredPerMC-table tr.row-selected-color-alpha td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.anchoredPerMC-table tr.row-selected-color-alpha:hover td:first-child{
+.ehevi .anchoredPerMC-table tr.row-selected-color-alpha:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
 /* Name */
-.anchoredPerMC-table .anchoredPerMC-name-cell, .anchoredPerMC-table .anchoredPerMC-name-header {
+.ehevi .anchoredPerMC-table .anchoredPerMC-name-cell,
+.ehevi .anchoredPerMC-table .anchoredPerMC-name-header {
     min-width: 500px;
     text-align: left;
 }
 
-.anchoredPerMC-table .anchoredPerMC-name-cell :first-child {
+.ehevi .anchoredPerMC-table .anchoredPerMC-name-cell :first-child {
     margin-left: 120px;
 }
 
 /* Description */
-.anchoredPerMC-table .anchoredPerMC-description-cell, .anchoredPerMC-table .anchoredPerMC-description-header {
+.ehevi .anchoredPerMC-table .anchoredPerMC-description-cell,
+.ehevi .anchoredPerMC-table .anchoredPerMC-description-header {
     min-width: 300px;
     text-align: left;
 }
 
 /* Number of events */
-.anchoredPerMC-table .anchoredPerMC-number_of_events-cell, .anchoredPerMC-table .anchoredPerMC-number_of_events-header {
+.ehevi .anchoredPerMC-table .anchoredPerMC-number_of_events-cell,
+.ehevi .anchoredPerMC-table .anchoredPerMC-number_of_events-header {
     min-width: 50px;
     text-align: right;
 }
 
 /* Size */
-.anchoredPerMC-table .anchoredPerMC-size-cell, .anchoredPerMC-table .anchoredPerMC-size-header {
+.ehevi .anchoredPerMC-table .anchoredPerMC-size-cell,
+.ehevi .anchoredPerMC-table .anchoredPerMC-size-header {
     min-width: 100px;
     text-align: right;
 }
 
-.anchoredPerMC-table td:last-child, .anchoredPerMC-table th:last-child {
+.ehevi .anchoredPerMC-table td:last-child,
+.ehevi .anchoredPerMC-table th:last-child {
     padding-right: 2em;
 }

@@ -41,7 +41,7 @@ export default function sidebar(model) {
 
             h('.sidebar-section',
                 h('.sidebar-section-title', 'Preferences'),
-                h('', 'Color theme'),
+                h('', 'UI theme'),
                 h('', 'List of detectors'),
                 h('', 'Defined filters'))));
 }

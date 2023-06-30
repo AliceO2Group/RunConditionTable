@@ -12,13 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
- .periods-table {
+.ehevi .periods-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.periods-table td:first-child, .periods-table th:first-child {
+.ehevi .periods-table td:first-child,
+.ehevi .periods-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -28,46 +29,51 @@
     z-index: 1 !important;
 }
 
-.periods-table tr:hover td:first-child {
+.ehevi .periods-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.periods-table tr.row-selected-color-alpha td:first-child{
+.ehevi .periods-table tr.row-selected-color-alpha td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.periods-table tr.row-selected-color-alpha:hover td:first-child{
+.ehevi .periods-table tr.row-selected-color-alpha:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
 /* Names */
-.periods-table .periods-name-cell, .periods-table .periods-name-header {
+.ehevi .periods-table .periods-name-cell,
+.ehevi .periods-table .periods-name-header {
     min-width: 380px;
     text-align: left;
 }
 
-.periods-table .periods-name-cell :first-child {
+.ehevi .periods-table .periods-name-cell :first-child {
     margin-left: 80px;
 }
 
 /* Years */
-.periods-table .periods-year-cell, .periods-table .periods-year-header {
+.ehevi .periods-table .periods-year-cell,
+.ehevi .periods-table .periods-year-header {
     min-width: 80px;
     text-align: right;
 }
 
 /* Beam types */
-.periods-table .periods-beam-cell, .periods-table .periods-beam-header {
+.ehevi .periods-table .periods-beam-cell,
+.ehevi .periods-table .periods-beam-header {
     min-width: 80px;
     text-align: right;
 }
 
 /* Mean energy */
-.periods-table .periods-energy-cell, .periods-table .periods-energy-header {
+.ehevi .periods-table .periods-energy-cell,
+.ehevi .periods-table .periods-energy-header {
     min-width: 60px;
     text-align: right;
 }
 
-.periods-table td:last-child, .periods-table th:last-child {
+.ehevi .periods-table td:last-child,
+.ehevi .periods-table th:last-child {
     padding-right: 2em;
 }

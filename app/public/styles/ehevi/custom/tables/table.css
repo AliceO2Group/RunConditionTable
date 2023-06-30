@@ -22,55 +22,55 @@
     --white: #ffffff;
 }
 
-.x-scrollable-table {
+.ehevi .x-scrollable-table {
     width: 100%;
     overflow-x: scroll;
     position: relative !important;
 }
 
-.track.row-unselected-color-alpha:hover {
+.ehevi .track.row-unselected-color-alpha:hover {
     background-color: var(--active-color) !important;
 }
 
-.track.row-unselected-color-alpha:hover td {
+.ehevi .track.row-unselected-color-alpha:hover td {
     background-color: var(--active-color) !important;
 }
 
-.track.row-selected-color-alpha:hover {
+.ehevi .track.row-selected-color-alpha:hover {
     background-color: var(--focus-color) !important;
 }
 
-.track.row-selected-color-alpha:hover td {
+.ehevi .track.row-selected-color-alpha:hover td {
     background-color: var(--focus-color) !important;
 }
 
-table tbody tr.row-selected-color-alpha {
+.ehevi table tbody tr.row-selected-color-alpha {
     background-color: var(--row-selected-color);
 }
 
-table tr.track.row-selected-color-alpha:nth-child(odd) td {
+.ehevi table tr.track.row-selected-color-alpha:nth-child(odd) td {
     background-color: #FCCA61;
 }
 
-table tr.track.row-selected-color-alpha td .chip{
+.ehevi table tr.track.row-selected-color-alpha td .chip{
     background-color: #FACB80;
     color: #634F40;
     /*#EAE7FA; /* remember this color!*/
 }
 
-tbody tr.track.row-unselected-color-alpha:nth-child(odd) td {
+.ehevi tbody tr.track.row-unselected-color-alpha:nth-child(odd) td {
     background-color: #f1f4fb;
 }
 
-table.data-table thead {
+.ehevi table.data-table thead {
     font-size: x-small;
 }
 
-table.data-table thead.header tr {
+.ehevi table.data-table thead.header tr {
     height: 30px !important;
 }
 
-table.data-table tbody tr {
+.ehevi table.data-table tbody tr {
     max-height: 20px !important;
     
     margin: 0em !important;
@@ -81,18 +81,18 @@ table.data-table tbody tr {
     border: 0;
 }
 
-table.data-table tbody td {
+.ehevi table.data-table tbody td {
     border: 0;
 }
 
-.border-sh {
+.ehevi .border-sh {
     background-color: white !important;
     border-radius: 15px !important;
     /* border-collapse: separate; */
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
-input[type="checkbox"] {
+.ehevi input[type="checkbox"] {
     appearance: none;
     background-color: var(--color-white);
     border-radius: 0.15em;
@@ -106,13 +106,13 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-input[type="checkbox"].ticked {
+.ehevi input[type="checkbox"].ticked {
     background-color: var(--dark-blue);
     border-radius: 0.15em;
     border: 0.15em solid var(--dark-blue) !important;
 }
 
-input[type="checkbox"]::before {
+.ehevi input[type="checkbox"]::before {
     content: "";
     width: 0.65em;
     height: 0.65em;
@@ -125,11 +125,11 @@ input[type="checkbox"]::before {
     background-color: var(--color-white);
 }
   
-input[type="checkbox"]:checked::before {
+.ehevi input[type="checkbox"]:checked::before {
     transform: scale(1);
     background-color: var(--color-white);
 }
 
-#sortingRow {
+.ehevi #sortingRow {
     display: none;
 }

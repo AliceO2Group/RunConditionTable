@@ -50,7 +50,7 @@
     vertical-align: middle;
 }
 
-.sort-down-20.selected {
+.ehevi .sort-down-20.selected {
     background-color: var(--color-primary) !important;
     border-radius: 10px;
 }
@@ -62,7 +62,7 @@
     scale: 0.5;
 }
 
-.sort-up-20.selected {
+.ehevi .sort-up-20.selected {
     background-color: var(--color-primary) !important;
     border-radius: 10px;
 }
