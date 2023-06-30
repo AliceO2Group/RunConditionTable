@@ -16,7 +16,7 @@ select.select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: url('./images/10/Expand\ Arrow.svg');
+    background-image: url('/styles/images/icons/10/Expand\ Arrow.svg');
     background-repeat: no-repeat;
     background-color: var(--white);
     border: 1px solid var(--selection-color) !important;

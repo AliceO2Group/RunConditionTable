@@ -12,6 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-@import (less) "./icons/index.css";
-@import (less) "./logo/index.css";
-@import (less) "./other/index.css";
+ .center-of-mass-energy {
+    background-image: url('/styles/images/other/Center\ of\ Mass\ Energy.svg');
+    width: 40px;
+    height: 15.66px;
+    display: inline-block;
+}

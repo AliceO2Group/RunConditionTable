@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
- .icon-only-button {
+.icon-only-button {
     width: 48px;
     height: 32px;
     padding: 0 !important;
@@ -190,13 +190,6 @@
     background-image: url('/styles/images/icons/40/Settings.svg');
     width: 40px;
     height: 40px;
-    display: inline-block;
-}
-
-.center-of-mass-energy {
-    background-image: url('/styles/images/other/Center\ of\ Mass\ Energy.svg');
-    width: 40px;
-    height: 15.66px;
     display: inline-block;
 }
 
