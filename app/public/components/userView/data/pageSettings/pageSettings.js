@@ -38,27 +38,6 @@ export default function pageSettings(model, close) {
             if (element.classList.contains(theme)) {
                 element.classList.remove(theme);
             }
-
-            /*
-            for (const element of Object.keys(themeConfig.themes[theme])) {
-                document.querySelectorAll(element).forEach((e) => {
-                    const classes = themeConfig.themes[theme][element].split(' ');
-                    classes.forEach((className) => {
-                        e.classList.remove(className);
-                    });
-                });
-            }
-            */
-        }
-    }
-
-    function assignCustomThemeClasses(theme) {
-        for (const element of Object.keys(themeConfig.themes[theme])) {
-            for (const className of themeConfig.themes[theme][element].split(' ')) {
-                document.querySelectorAll(element).forEach((e) => {
-                    e.classList.add(className);
-                });
-            }
         }
     }
 
@@ -71,12 +50,10 @@ export default function pageSettings(model, close) {
             case '0':
                 /* Ehevi */
                 documentBody.classList.add(themeConfig.themeNames.ehevi);
-                // assignCustomThemeClasses(themeConfig.themeNames.ehevi);
                 break;
             case '1':
                 /* WebUI */
                 documentBody.classList.add(themeConfig.themeNames.webui);
-                // assignCustomThemeClasses(themeConfig.themeNames.webui);
                 break;
             default:
                 break;
