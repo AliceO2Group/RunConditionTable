@@ -17,14 +17,23 @@
     border-radius: 15px;
     justify-content: space-between;
     font-size: xx-small;
-    /* box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);*/
+}
+
+.rows-per-page {
+    padding-left: 10px;
+    padding-right: 5px;
 }
 
 input.pager {
+    padding: 0 !important;
     border: none !important;
-    width: 70px;
+    width: 43px;
     box-shadow: none !important;
     background-color: var(--color-white);
+}
+
+input.pager:focus {
+    border: none !important;
 }
 
 .site-changing-controller {

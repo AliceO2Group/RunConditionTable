@@ -205,6 +205,10 @@
 .p-top-10 {
     padding-top: 10px !important;
 }
+
+.gap-20 {
+    gap: 20px;
+}
   
 .logo {
     background-image: url('./images/logo/Logo\ Placeholder.svg');

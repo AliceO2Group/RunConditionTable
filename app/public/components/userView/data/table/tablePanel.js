@@ -26,7 +26,6 @@ import noDataView from './noDataView.js';
 
 import { RCT } from '../../../../config.js';
 import sortingRow from './sortingRow.js';
-import itemsCounter from './items-counter.js';
 import pageSettings from '../pageSettings/pageSettings.js';
 import indexChip from './indexChip.js';
 import activeFilters from './filtering/activeFilters.js';
@@ -107,7 +106,6 @@ export default function tablePanel(model) {
                 h('div.flex-wrap.justify-between.items-baseline',
                     h('h3.p-left-15.text-primary', headerSpecific(model)),
                     chips,
-                    h('div.italic.p-left-5.text-primary', itemsCounter(data)),
                     h('button.btn.btn-secondary', {
                         onclick: () => {
                             document.getElementById('pageSettingsModal').style.display = 'block';

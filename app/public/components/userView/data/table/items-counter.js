@@ -24,5 +24,5 @@ export default function itemsCounter(data) {
         ? data.totalRecordsNumber
         : currentSite * data.rowsOnSite;
 
-    return `${firstRowIdx}-${lastRowIdx} out of ${data.totalRecordsNumber} items`;
+    return `${firstRowIdx}-${lastRowIdx} of ${data.totalRecordsNumber}`;
 }

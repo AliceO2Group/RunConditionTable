@@ -25,18 +25,23 @@ const { pagesNames } = RCT;
  */
 
 export default function sidebar(model) {
-    return h('.sidebar.sidebar-content.p3', [sidebarMenu(model)]);
+    return h('.sidebar.p3',
+        h('.logo'),
+        h('.flex-column.gap-20',
+            h('.sidebar-section',
+                h('.sidebar-section-title', 'Pages'),
+                sidebarItem(model, pagesNames.periods, 'Periods'),
+                sidebarItem(model, pagesNames.dataPasses, 'Data Passes'),
+                sidebarItem(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),
+                sidebarItem(model, pagesNames.mc, 'Monte Carlo'),
+                sidebarItem(model, pagesNames.anchoredPerMC, 'Anchored per MC'),
+                sidebarItem(model, pagesNames.runsPerPeriod, 'Runs per period'),
+                sidebarItem(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
+                sidebarItem(model, pagesNames.flags, 'QA Expert Flagging')),
+
+            h('.sidebar-section',
+                h('.sidebar-section-title', 'Preferences'),
+                h('', 'Color theme'),
+                h('', 'List of detectors'),
+                h('', 'Defined filters'))));
 }
-const sidebarMenu = (model) => [
-    h('div.logo'),
-    'Pages',
-    sidebarItem(model, pagesNames.periods, 'Periods'),
-    sidebarItem(model, pagesNames.dataPasses, 'Data Passes'),
-    sidebarItem(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),
-    sidebarItem(model, pagesNames.mc, 'Monte Carlo'),
-    sidebarItem(model, pagesNames.anchoredPerMC, 'Anchored per MC'),
-    sidebarItem(model, pagesNames.runsPerPeriod, 'Runs per period'),
-    sidebarItem(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
-    sidebarItem(model, pagesNames.flags, 'QA Expert Flagging'),
-    'Preferences',
-];

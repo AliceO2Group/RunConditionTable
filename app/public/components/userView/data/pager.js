@@ -16,6 +16,7 @@ import viewButton from '../../common/viewButton.js';
 import { range, replaceUrlParams } from '../../../utils/utils.js';
 import { h, iconMediaSkipBackward, iconCaretLeft, iconChevronBottom, iconCaretRight, iconMediaSkipForward } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
+import itemsCounter from './table/items-counter.js';
 
 const siteParamName = RCT.dataReqParams.site;
 const visibleNeighbourButtonsRange = 2;
@@ -98,7 +99,20 @@ export default function pager(model, data) {
     }
 
     return [
-        h('.flex-row.pager-panel', [
+        h('.flex-row.pager-panel.items-center', [
+            h('.flex-wrap.justify-between.items-center',
+                h('.flex-wrap.justify-between.items-center.ph3',
+                    h('.italic', itemsCounter(data)),
+
+                    h('.flex-wrap.items-center',
+                        h('.rows-per-page', 'Rows per page'),
+                        h('input.pager', {
+                            id: 'rows-on-site-input-3',
+                            type: 'number',
+                            placeholder: 50,
+                            value: model.router.params['rows-on-site'],
+                        }, '')))),
+
             h('button.btn.icon-only-button.btn-secondary', {
                 onclick: () => {
                     const sortingRow = document.getElementById('sortingRow');
@@ -109,16 +123,19 @@ export default function pager(model, data) {
                     }
                 },
             }, h('.sort-20')),
-            h('select.select.show-columns', {
-                id: 'columns-options',
-                name: 'showOptions',
-                onchange: () => handleOptionChange(),
-            },
-            [
-                h('option', { value: 0 }, 'Non empty columns'),
-                h('option', { value: 1 }, 'All columns'),
-                h('option', { value: 2 }, 'Customize'),
-            ], iconChevronBottom()),
+
+            h('.flex-wrap.justify-between.items-center',
+
+                h('select.select.show-columns', {
+                    id: 'columns-options',
+                    name: 'showOptions',
+                    onchange: () => handleOptionChange(),
+                },
+                [
+                    h('option', { value: 0 }, 'Non empty columns'),
+                    h('option', { value: 1 }, 'All columns'),
+                    h('option', { value: 2 }, 'Customize'),
+                ], iconChevronBottom())),
 
             h('.flex.pager-buttons',
                 // Move to first site
