@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-.chip {
+.ehevi .chip {
     background-color:var(--selection-color);
     color: var(--primary);
     border-radius: 10px;
@@ -21,7 +21,7 @@
     align-items: center;
 }
 
-.chip.primary {
+.ehevi .chip.primary {
     background-color: var(--primary-hover) !important;
     color: var(--off-white) !important;
 }

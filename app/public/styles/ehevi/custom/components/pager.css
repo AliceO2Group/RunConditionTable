@@ -12,19 +12,19 @@
  * or submit itself to any jurisdiction.
  */
 
-.pager-panel {
+.ehevi .pager-panel {
     background-color: white !important;
     border-radius: 15px;
     justify-content: space-between;
     font-size: xx-small;
 }
 
-.rows-per-page {
+.ehevi .rows-per-page {
     padding-left: 10px;
     padding-right: 5px;
 }
 
-input.pager {
+.ehevi input.pager {
     padding: 0 !important;
     border: none !important;
     width: 43px;
@@ -32,16 +32,16 @@ input.pager {
     background-color: var(--color-white);
 }
 
-input.pager:focus {
+.ehevi input.pager:focus {
     border: none !important;
 }
 
-.site-changing-controller {
+.ehevi .site-changing-controller {
     padding: 5px;
     margin: 3px;
     cursor: pointer;
 }
 
-.pager-buttons {
+.ehevi .pager-buttons {
     margin-right: 10px;
 }

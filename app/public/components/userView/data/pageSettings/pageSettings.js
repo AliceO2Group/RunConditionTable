@@ -74,7 +74,7 @@ export default function pageSettings(model, close) {
                 model.fetchedData.changeRowsOnSite)),
 
         h('.flex-wrap.justify-between.items-center',
-            h('', 'Color theme'),
+            h('', 'UI theme'),
             h('select.select.color-theme', {
                 id: themeSelectId,
                 name: themeSelectId,
