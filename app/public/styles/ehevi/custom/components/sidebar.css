@@ -17,6 +17,9 @@
     text-decoration: none !important;
     color: var(--color-gray-darker);
     line-height: normal;
+}
+
+.page-title {
     display: block;
     position: relative;
     height: 35px;
@@ -38,7 +41,7 @@
     margin-top: 0;
 }
 
-.ehevi .title-text-relative {
+.title-text-relative {
     position: relative;
     top: -20px;
     padding: 0;

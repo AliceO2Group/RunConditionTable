@@ -130,7 +130,7 @@ export default function tablePanel(model) {
                     ? h('.p-top-10', //
                         h('.x-scrollable-table.border-sh',
                             pager(model, data, false),
-                            h('table.data-table', {
+                            h('table', {
                                 id: `data-table-${data.url}`,
                                 className: `${[pagesNames.runsPerDataPass, pagesNames.runsPerPeriod].includes(dataPointer.page)
                                     ? 'runs-table'

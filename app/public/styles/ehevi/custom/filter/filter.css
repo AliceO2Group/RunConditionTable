@@ -16,16 +16,13 @@
     position: relative;
 }
 
-.ehevi input {
-    display: inline-block;
-    border: thin solid #fafafa;
-    border-bottom: solid medium #999;
-    color: #444;
-    background-color: #fafafa;
+.ehevi .text-field input[type=text] {
+    background-color: var(--white);
+    border: 1px solid var(--selection-color) !important;
     outline: none !important;
 }
 
-.ehevi input:focus {
+.ehevi .text-field input[type=text]:focus {
     outline: none !important;
     border: thin solid #E9C46A !important;
     box-shadow: none !important;
@@ -40,7 +37,8 @@
     transition: 0.2s;
 }
 
-.ehevi input:focus ~ .placeholder, input:valid ~ .placeholder {
+.ehevi .text-field input[type=text]:focus ~ .placeholder,
+.ehevi .text-field input[type=text]:valid ~ .placeholder {
     top: -13px;
     left: 10px;
     font-size: small;

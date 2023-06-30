@@ -14,7 +14,7 @@
 
 import { h, iconChevronBottom } from '/js/src/index.js';
 import quantityInput from '../../../common/quantityInput.js';
-import { RCT } from '../../../../config.js';
+import { themeConfig } from './config.js';
 
 export default function pageSettings(model, close) {
     const rowsPerPageInputId = 'rows-per-page-input-id-modal';
@@ -34,25 +34,27 @@ export default function pageSettings(model, close) {
     }
 
     function removeAllThemeClasses(element) {
-        for (const theme of Object.keys(RCT.themes)) {
+        for (const theme of Object.keys(themeConfig.themes)) {
             if (element.classList.contains(theme)) {
                 element.classList.remove(theme);
             }
 
-            for (const element of Object.keys(RCT.themes[theme])) {
+            /*
+            for (const element of Object.keys(themeConfig.themes[theme])) {
                 document.querySelectorAll(element).forEach((e) => {
-                    const classes = RCT.themes[theme][element].split(' ');
+                    const classes = themeConfig.themes[theme][element].split(' ');
                     classes.forEach((className) => {
                         e.classList.remove(className);
                     });
                 });
             }
+            */
         }
     }
 
     function assignCustomThemeClasses(theme) {
-        for (const element of Object.keys(RCT.themes[theme])) {
-            for (const className of RCT.themes[theme][element].split(' ')) {
+        for (const element of Object.keys(themeConfig.themes[theme])) {
+            for (const className of themeConfig.themes[theme][element].split(' ')) {
                 document.querySelectorAll(element).forEach((e) => {
                     e.classList.add(className);
                 });
@@ -68,12 +70,13 @@ export default function pageSettings(model, close) {
         switch (selectedTheme) {
             case '0':
                 /* Ehevi */
-                documentBody.classList.add(RCT.themeNames.ehevi);
-                assignCustomThemeClasses(RCT.themeNames.ehevi);
+                documentBody.classList.add(themeConfig.themeNames.ehevi);
+                // assignCustomThemeClasses(themeConfig.themeNames.ehevi);
                 break;
             case '1':
                 /* WebUI */
-                assignCustomThemeClasses(RCT.themeNames.webui);
+                documentBody.classList.add(themeConfig.themeNames.webui);
+                // assignCustomThemeClasses(themeConfig.themeNames.webui);
                 break;
             default:
                 break;

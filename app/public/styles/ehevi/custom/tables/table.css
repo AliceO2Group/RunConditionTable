@@ -62,15 +62,15 @@
     background-color: #f1f4fb;
 }
 
-.ehevi table.data-table thead {
+.ehevi table thead {
     font-size: x-small;
 }
 
-.ehevi table.data-table thead.header tr {
+.ehevi table thead.header tr {
     height: 30px !important;
 }
 
-.ehevi table.data-table tbody tr {
+.ehevi table tbody tr {
     max-height: 20px !important;
     
     margin: 0em !important;
@@ -81,7 +81,7 @@
     border: 0;
 }
 
-.ehevi table.data-table tbody td {
+.ehevi table tbody td {
     border: 0;
 }
 
