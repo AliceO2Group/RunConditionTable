@@ -128,9 +128,8 @@ export default function tablePanel(model) {
             data.rows?.length > 0
                 ? visibleFields.length > 0
                     ? h('.p-top-10', //
-                        // Data.rows.length > 15 ? pager(model, data, 1) : '',
                         h('.x-scrollable-table.border-sh',
-                            pager(model, data, 1),
+                            pager(model, data, false),
                             h('table.data-table', {
                                 id: `data-table-${data.url}`,
                                 className: `${[pagesNames.runsPerDataPass, pagesNames.runsPerPeriod].includes(dataPointer.page)
@@ -141,12 +140,15 @@ export default function tablePanel(model) {
                                 sortingRow(visibleFields, data, model),
                                 tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
                             ]),
-                            data.rows.length > 15 ? pager(model, data, 2) : ''))
-                // Pager(model, data, 2))
+                            data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
                 : noDataView(model, dataPointer),
             h('.modal', { id: 'pageSettingsModal' },
-                h('.modal-content.abs-center.p3', { id: 'pageSettingsModalContent' }, pageSettings(model))),
+                h('.modal-content.abs-center.p3', {
+                    id: 'pageSettingsModalContent',
+                }, pageSettings(model, () => {
+                    document.getElementById('pageSettingsModal').style.display = 'none'; }
+                ))),
         ])
         : noSubPageSelected(model);
 }

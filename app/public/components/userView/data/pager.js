@@ -22,7 +22,7 @@ const siteParamName = RCT.dataReqParams.site;
 const visibleNeighbourButtonsRange = 2;
 const maxVisibleButtons = 10;
 
-export default function pager(model, data) {
+export default function pager(model, data, pagerOnly = true) {
     const mapArrayToButtons = (arr) => arr.map((i) => {
         const site = i + 1;
         const url = replaceUrlParams(data.url, [[siteParamName, site]]);
@@ -100,42 +100,37 @@ export default function pager(model, data) {
 
     return [
         h('.flex-row.pager-panel.items-center', [
-            h('.flex-wrap.justify-between.items-center',
-                h('.flex-wrap.justify-between.items-center.ph3',
-                    h('.italic', itemsCounter(data)),
+            pagerOnly
+                ? ''
+                : [
+                    h('.flex-wrap.justify-between.items-center',
+                        h('.flex-wrap.justify-between.items-center.ph3',
+                            h('.italic', itemsCounter(data)))),
 
-                    h('.flex-wrap.items-center',
-                        h('.rows-per-page', 'Rows per page'),
-                        h('input.pager', {
-                            id: 'rows-on-site-input-3',
-                            type: 'number',
-                            placeholder: 50,
-                            value: model.router.params['rows-on-site'],
-                        }, '')))),
+                    h('button.btn.icon-only-button.btn-secondary', {
+                        onclick: () => {
+                            const sortingRow = document.getElementById('sortingRow');
+                            if (sortingRow.style.display === 'none') {
+                                sortingRow.style.display = 'table-header-group';
+                            } else {
+                                sortingRow.style.display = 'none';
+                            }
+                        },
+                    }, h('.sort-20')),
 
-            h('button.btn.icon-only-button.btn-secondary', {
-                onclick: () => {
-                    const sortingRow = document.getElementById('sortingRow');
-                    if (sortingRow.style.display === 'none') {
-                        sortingRow.style.display = 'table-header-group';
-                    } else {
-                        sortingRow.style.display = 'none';
-                    }
-                },
-            }, h('.sort-20')),
+                    h('.flex-wrap.justify-between.items-center',
 
-            h('.flex-wrap.justify-between.items-center',
-
-                h('select.select.show-columns', {
-                    id: 'columns-options',
-                    name: 'showOptions',
-                    onchange: () => handleOptionChange(),
-                },
-                [
-                    h('option', { value: 0 }, 'Non empty columns'),
-                    h('option', { value: 1 }, 'All columns'),
-                    h('option', { value: 2 }, 'Customize'),
-                ], iconChevronBottom())),
+                        h('select.select.show-columns', {
+                            id: 'columns-options',
+                            name: 'showOptions',
+                            onchange: () => handleOptionChange(),
+                        },
+                        [
+                            h('option', { value: 0 }, 'Non empty columns'),
+                            h('option', { value: 1 }, 'All columns'),
+                            h('option', { value: 2 }, 'Customize'),
+                        ], iconChevronBottom())),
+                ],
 
             h('.flex.pager-buttons',
                 // Move to first site

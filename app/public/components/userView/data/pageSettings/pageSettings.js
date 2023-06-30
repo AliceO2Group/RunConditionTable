@@ -13,12 +13,14 @@
  */
 
 import { h, iconChevronBottom } from '/js/src/index.js';
+import quantityInput from '../../../common/quantityInput.js';
 
-export default function pageSettings(model) {
+export default function pageSettings(model, close) {
+    const rowsPerPageInputId = 'rows-per-page-input-id-modal';
     const title = h('h3', 'Page settings');
 
-    function onclickSetRowsOnSite(model, scid) {
-        const input = document.getElementById(`rows-on-site-input-${scid}`);
+    function onclickSetRowsOnSite(model) {
+        const input = document.getElementById(rowsPerPageInputId);
         let rowsOnSite = input.value === '' ? input.placeholder : input.value;
         if (rowsOnSite < 1 || rowsOnSite > 200) {
             alert('incorrect number of rows on page: must be in range of [1, 200]');
@@ -26,6 +28,7 @@ export default function pageSettings(model) {
             rowsOnSite = 50;
         }
         model.fetchedData.changeRowsOnSite(rowsOnSite);
+        close();
         // CLOSE MODAL HERE document.getElementsByClassName('modal').display=none
     }
 
@@ -37,12 +40,9 @@ export default function pageSettings(model) {
 
         h('.flex-wrap.justify-between.items-center',
             h('', 'Rows per page'),
-            h('input.pager.p2', {
-                id: 'rows-on-site-input-3',
-                type: 'number',
-                placeholder: 50,
-                value: model.router.params['rows-on-site'],
-            }, '')),
+            quantityInput(rowsPerPageInputId,
+                model.router.params['rows-on-site'],
+                model.fetchedData.changeRowsOnSite)),
 
         h('.flex-wrap.justify-between.items-center',
             h('', 'Color theme'),
@@ -55,7 +55,7 @@ export default function pageSettings(model) {
 
         h('.flex-wrap.justify-center.items-center',
             h('button.btn.btn-primary.m1', {
-                onclick: () => onclickSetRowsOnSite(model, 3),
+                onclick: () => onclickSetRowsOnSite(model),
             }, 'Apply changes')),
     ]);
 }
