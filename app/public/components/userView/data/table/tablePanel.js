@@ -147,8 +147,8 @@ export default function tablePanel(model) {
                 h('.modal-content.abs-center.p3', {
                     id: 'pageSettingsModalContent',
                 }, pageSettings(model, () => {
-                    document.getElementById('pageSettingsModal').style.display = 'none'; }
-                ))),
+                    document.getElementById('pageSettingsModal').style.display = 'none';
+                }))),
         ])
         : noSubPageSelected(model);
 }
