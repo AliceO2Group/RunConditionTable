@@ -12,34 +12,34 @@
  * or submit itself to any jurisdiction.
  */
 
-.btn-primary {
+ .ehevi .btn-primary {
     background-color: var(--primary) !important;
     color: #FDFBF9 !important;
 }
 
-.btn-secondary {
+.ehevi .btn-secondary {
     background: transparent !important;
     color: var(--primary) !important;
 }
 
-.btn-primary:hover {
+.ehevi .btn-primary:hover {
     background-color: var(--primary-hover) !important;
 }
 
-.btn-secondary:hover {
+.ehevi .btn-secondary:hover {
     background-color: var(--selection-color) !important;
 }
 
-.btn-secondary.selected {
+.ehevi .btn-secondary.selected {
     background-color: var(--primary) !important;
     color: var(--off-white) !important;
 }
 
-.btn.chip {
+.ehevi .btn.chip {
     align-items: center !important;
 }
 
-.btn.chip:hover {
+.ehevi .btn.chip:hover {
     background-color: var(--selection-color) !important;
     color: var(--primary) !important;
 }
