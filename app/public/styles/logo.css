@@ -12,32 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-.input-user-24 {
-    background-image: url('./images/24/User.svg');
-    width: 24px;
-    height: 24px;
+.logo {
+    background-image: url('./images/logo/Logo\ Placeholder.svg');
+    width: 160px;
+    height: 70px;
     display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
-}
-
-.input-key-24 {
-    background-image: url('./images/24/Key.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
-}
-
-.input-database-24 {
-    background-image: url('./images/24/Database.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
 }

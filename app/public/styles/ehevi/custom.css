@@ -209,13 +209,6 @@
 .gap-20 {
     gap: 20px;
 }
-  
-.logo {
-    background-image: url('./images/logo/Logo\ Placeholder.svg');
-    width: 160px;
-    height: 70px;
-    display: inline-block;
-}
 
 .text-primary {
     color: var(--primary);
