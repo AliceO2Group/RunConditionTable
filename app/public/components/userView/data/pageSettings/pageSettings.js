@@ -14,7 +14,7 @@
 
 import { h, iconChevronBottom } from '/js/src/index.js';
 import quantityInput from '../../../common/quantityInput.js';
-import { themeConfig } from './config.js';
+import { RCT } from '../../../../config.js';
 
 export default function pageSettings(model, close) {
     const rowsPerPageInputId = 'rows-per-page-input-id-modal';
@@ -34,7 +34,7 @@ export default function pageSettings(model, close) {
     }
 
     function removeAllThemeClasses(element) {
-        for (const theme of Object.keys(themeConfig.themes)) {
+        for (const theme of Object.keys(RCT.themes)) {
             if (element.classList.contains(theme)) {
                 element.classList.remove(theme);
             }
@@ -49,11 +49,11 @@ export default function pageSettings(model, close) {
         switch (selectedTheme) {
             case '0':
                 /* Ehevi */
-                documentBody.classList.add(themeConfig.themeNames.ehevi);
+                documentBody.classList.add(RCT.themes.ehevi);
                 break;
             case '1':
                 /* WebUI */
-                documentBody.classList.add(themeConfig.themeNames.webui);
+                documentBody.classList.add(RCT.themes.webui);
                 break;
             default:
                 break;
