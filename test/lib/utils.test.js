@@ -18,7 +18,11 @@ const arrayEquals = (a, b) => {
     return Array.isArray(a) &&
         Array.isArray(b) &&
         a.length === b.length &&
-        a.every((val, index) => val === b[index]);
+        a.every((val, index) => {
+            if (Array.isArray(val)) {
+                return arrayEquals(val, b[index])
+            } else return val === b[index];
+        });
 }
 
 module.exports = () => {
@@ -121,6 +125,17 @@ module.exports = () => {
                 await Utils.delay(delayTime);
                 const end = Date.now();
                 assert(start + delayTime <= end);
+              });
+           });
+
+        describe('Array to chunks', () => {
+            it('Should split an array into chunks', async () => {
+                const array = [1, 2, 3, 4, 5];
+                const chunkSize = 3;
+                const expectedOutcome = [[1, 2, 3], [4, 5]];
+                const outcome = Utils.arrayToChunks(array, chunkSize);
+
+                assert(arrayEquals(expectedOutcome, outcome));
               });
            });
 
