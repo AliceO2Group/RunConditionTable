@@ -1,0 +1,123 @@
+/**
+ * @license
+ * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
+ * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
+ * All rights not expressly granted are reserved.
+ *
+ * This software is distributed under the terms of the GNU General Public
+ * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
+
+ .ehevi .runs-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* Checkboxes */
+.ehevi .runs-table td:first-child,
+.ehevi .runs-table th:first-child {
+    position: sticky !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    width: 40px !important;
+    left: 0;
+    background-color: var(--color-white);
+    z-index: 1 !important;
+}
+
+.ehevi .runs-table tr:hover td:first-child {
+    background-color: var(--active-color) !important;
+}
+
+.ehevi .runs-table tr.row-selected-color-alpha td:first-child{
+    background-color: var(--row-selected-color);
+}
+
+.ehevi .runs-table tr.row-selected-color-alpha:hover td:first-child{
+    background-color: var(--focus-color) !important;
+}
+
+/* Run number */
+.ehevi .runs-table .runsPerPeriod-run_number-cell,
+.ehevi .runs-table .runsPerPeriod-run_number-header,
+.ehevi .runs-table .runsPerDataPass-run_number-cell,
+.ehevi .runs-table .runsPerDataPass-run_number-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Start time, end time, trigger start time, trigger end time */
+.ehevi .runs-table .runsPerPeriod-time_start-cell,
+.ehevi .runs-table .runsPerPeriod-time_start-header,
+.ehevi .runs-table .runsPerDataPass-time_start-cell,
+.ehevi .runs-table .runsPerDataPass-time_start-header,
+.ehevi .runs-table .runsPerPeriod-time_end-cell,
+.ehevi .runs-table .runsPerPeriod-time_end-header,
+.ehevi .runs-table .runsPerDataPass-time_end-cell,
+.ehevi .runs-table .runsPerDataPass-time_end-header,
+.ehevi .runs-table .runsPerPeriod-time_trg_start-cell,
+.ehevi .runs-table .runsPerPeriod-time_trg_start-header,
+.ehevi .runs-table .runsPerDataPass-time_trg_start-cell,
+.ehevi .runs-table .runsPerDataPass-time_trg_start-header,
+.ehevi .runs-table .runsPerPeriod-time_trg_end-cell,
+.ehevi .runs-table .runsPerPeriod-time_trg_end-header,
+.ehevi .runs-table .runsPerDataPass-time_trg_end-cell,
+.ehevi .runs-table .runsPerDataPass-time_trg_end-header  {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Center of mass energy */
+.ehevi .runs-table .runsPerPeriod-center_of_mass_energy-cell,
+.ehevi .runs-table .runsPerPeriod-center_of_mass_energy-header,
+.ehevi .runs-table .runsPerDataPass-center_of_mass_energy-cell,
+.ehevi .runs-table .runsPerDataPass-center_of_mass_energy-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Fill number */
+.ehevi .runs-table .runsPerPeriod-fill_number-cell,
+.ehevi .runs-table .runsPerPeriod-fill_number-header,
+.ehevi .runs-table .runsPerDataPass-fill_number-cell,
+.ehevi .runs-table .runsPerDataPass-fill_number-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* L3 current */
+.ehevi .runs-table .runsPerPeriod-l3_current-cell,
+.ehevi .runs-table .runsPerPeriod-l3_current-header,
+.ehevi .runs-table .runsPerDataPass-l3_current-cell,
+.ehevi .runs-table .runsPerDataPass-l3_current-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Dipole current */
+.ehevi .runs-table .runsPerPeriod-dipole_current-cell,
+.ehevi .runs-table .runsPerPeriod-dipole_current-header,
+.ehevi .runs-table .runsPerDataPass-dipole_current-cell,
+.ehevi .runs-table .runsPerDataPass-dipole_current-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Detectors */
+.ehevi .runs-table .runsPerPeriod-detector-header,
+.ehevi .runs-table .runsPerPeriod-detector-cell,
+.ehevi .runs-table .runsPerDataPass-detector-header,
+.ehevi .runs-table .runsPerDataPass-detector-cell {
+    min-width: 50px;
+    text-align: center;
+    border: none !important;
+}
+
+.ehevi .runs-table td:last-child,
+.ehevi .runs-table th:last-child {
+    padding-right: 2em;
+}

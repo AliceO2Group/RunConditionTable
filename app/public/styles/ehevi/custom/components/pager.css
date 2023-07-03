@@ -1,0 +1,47 @@
+/**
+ * @license
+ * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
+ * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
+ * All rights not expressly granted are reserved.
+ *
+ * This software is distributed under the terms of the GNU General Public
+ * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
+
+.ehevi .pager-panel {
+    background-color: white !important;
+    border-radius: 15px;
+    justify-content: space-between;
+    font-size: xx-small;
+}
+
+.ehevi .rows-per-page {
+    padding-left: 10px;
+    padding-right: 5px;
+}
+
+.ehevi input.pager {
+    padding: 0 !important;
+    border: none !important;
+    width: 43px;
+    box-shadow: none !important;
+    background-color: var(--color-white);
+}
+
+.ehevi input.pager:focus {
+    border: none !important;
+}
+
+.ehevi .site-changing-controller {
+    padding: 5px;
+    margin: 3px;
+    cursor: pointer;
+}
+
+.ehevi .pager-buttons {
+    margin-right: 10px;
+}

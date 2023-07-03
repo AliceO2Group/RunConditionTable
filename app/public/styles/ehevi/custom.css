@@ -110,7 +110,7 @@
     display: flex !important;
 }
 
-.highlight-blue {
+.ehevi .highlight-blue {
     background-color: var(--highlight-blue) !important;
 }
 
@@ -151,18 +151,6 @@
     margin: 21px !important;
 }
 
-.clickable-label {
-    display: block !important;
-    cursor: pointer;
-    padding: 5px;
-    color: grey;
-}
-
-.clickable-label.active {
-    border-radius: 10px;
-    color: #1D3557;
-}
-
 .no-spacing {
     border-spacing: 10px 0;
 }
@@ -170,11 +158,6 @@
 .br-top-10 {
     border-top-left-radius: 10px !important;
     border-top-right-radius: 10px !important;
-}
-
-.br-bottom-10 {
-    border-bottom-left-radius: 10px !important;
-    border-bottom-right-radius: 10px !important;
 }
 
 .pointer {
@@ -185,7 +168,7 @@
     font-style: italic;
 }
 
-.user-panel-main-content {
+.ehevi .user-panel-main-content {
     background-color: var(--off-white);
     padding-top: 0px !important;
 }
@@ -209,14 +192,7 @@
 .gap-20 {
     gap: 20px;
 }
-  
-.logo {
-    background-image: url('./images/logo/Logo\ Placeholder.svg');
-    width: 160px;
-    height: 70px;
-    display: inline-block;
-}
 
-.text-primary {
+.ehevi .text-primary {
     color: var(--primary);
 }

@@ -12,13 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
- .dataPasses-table {
+.ehevi .periods-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.dataPasses-table td:first-child, .dataPasses-table th:first-child {
+.ehevi .periods-table td:first-child,
+.ehevi .periods-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -28,40 +29,51 @@
     z-index: 1 !important;
 }
 
-.dataPasses-table tr:hover td:first-child {
+.ehevi .periods-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.dataPasses-table tr.row-selected-color-alpha td:first-child{
+.ehevi .periods-table tr.row-selected-color-alpha td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.dataPasses-table tr.row-selected-color-alpha:hover td:first-child{
+.ehevi .periods-table tr.row-selected-color-alpha:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
-/* Name */
-.dataPasses-table .dataPasses-name-cell, .dataPasses-table .dataPasses-name-header {
-    min-width: 500px;
+/* Names */
+.ehevi .periods-table .periods-name-cell,
+.ehevi .periods-table .periods-name-header {
+    min-width: 380px;
     text-align: left;
 }
 
-.dataPasses-table .dataPasses-name-cell :first-child {
-    margin-left: 170px;
+.ehevi .periods-table .periods-name-cell :first-child {
+    margin-left: 80px;
 }
 
-/* Description */
-.dataPasses-table .dataPasses-description-cell, .dataPasses-table .dataPasses-description-header {
-    min-width: 300px;
-    text-align: left;
-}
-
-/* Size */
-.dataPasses-table .dataPasses-size-cell, .dataPasses-table .dataPasses-size-header {
-    min-width: 100px;
+/* Years */
+.ehevi .periods-table .periods-year-cell,
+.ehevi .periods-table .periods-year-header {
+    min-width: 80px;
     text-align: right;
 }
 
-.dataPasses-table td:last-child, .dataPasses-table th:last-child {
+/* Beam types */
+.ehevi .periods-table .periods-beam-cell,
+.ehevi .periods-table .periods-beam-header {
+    min-width: 80px;
+    text-align: right;
+}
+
+/* Mean energy */
+.ehevi .periods-table .periods-energy-cell,
+.ehevi .periods-table .periods-energy-header {
+    min-width: 60px;
+    text-align: right;
+}
+
+.ehevi .periods-table td:last-child,
+.ehevi .periods-table th:last-child {
     padding-right: 2em;
 }

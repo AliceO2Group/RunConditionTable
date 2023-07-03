@@ -12,10 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
-select.select {
+ .ehevi select.select {
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url('./images/10/Expand\ Arrow.svg');
+    appearance: none;
+    background-image: url('/styles/images/icons/10/Expand\ Arrow.svg');
     background-repeat: no-repeat;
     background-color: var(--white);
     border: 1px solid var(--selection-color) !important;
@@ -25,13 +26,13 @@ select.select {
     max-height: 30px;
   }
 
-.select.show-columns {
+.ehevi .select.show-columns {
     min-width: 150px;
     background-position-x: 90%;
     background-position-y: 10px;
 }
 
-.select.color-theme {
+.ehevi .select.color-theme {
     font-size: small !important;
     min-height: fit-content;
     min-width: fit-content;
@@ -40,7 +41,7 @@ select.select {
     background-position-y: 7px;
 }
 
-select.filter-select {
+.ehevi select.filter-select {
     font-size: small !important;
     min-height: fit-content;
     min-width: fit-content;
@@ -49,6 +50,6 @@ select.filter-select {
     background-position-y: 7px;
 }
 
-select.filter-select option[disabled]:first-child {
+.ehevi select.filter-select option[disabled]:first-child {
     display: none !important;
 }

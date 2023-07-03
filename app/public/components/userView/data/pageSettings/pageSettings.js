@@ -14,9 +14,11 @@
 
 import { h, iconChevronBottom } from '/js/src/index.js';
 import quantityInput from '../../../common/quantityInput.js';
+import { RCT } from '../../../../config.js';
 
 export default function pageSettings(model, close) {
     const rowsPerPageInputId = 'rows-per-page-input-id-modal';
+    const themeSelectId = 'theme-selection';
     const title = h('h3', 'Page settings');
 
     function onclickSetRowsOnSite(model) {
@@ -29,10 +31,36 @@ export default function pageSettings(model, close) {
         }
         model.fetchedData.changeRowsOnSite(rowsOnSite);
         close();
-        // CLOSE MODAL HERE document.getElementsByClassName('modal').display=none
     }
 
-    return h('.pageSettings', [
+    function removeAllThemeClasses(element) {
+        for (const theme of Object.keys(RCT.themes)) {
+            if (element.classList.contains(theme)) {
+                element.classList.remove(theme);
+            }
+        }
+    }
+
+    function handleThemeSelection() {
+        const documentBody = document.getElementById('body');
+        const themesSelection = document.getElementById(themeSelectId);
+        const selectedTheme = themesSelection.options[themesSelection.selectedIndex].value;
+        removeAllThemeClasses(documentBody);
+        switch (selectedTheme) {
+            case '0':
+                /* Ehevi */
+                documentBody.classList.add(RCT.themes.ehevi);
+                break;
+            case '1':
+                /* WebUI */
+                documentBody.classList.add(RCT.themes.webui);
+                break;
+            default:
+                break;
+        }
+    }
+
+    return h('', [
         h('.flex.bottom-20.justify-center.items-center',
             h('.settings-40'),
             h('.inline.top-15.left-10',
@@ -45,12 +73,16 @@ export default function pageSettings(model, close) {
                 model.fetchedData.changeRowsOnSite)),
 
         h('.flex-wrap.justify-between.items-center',
-            h('', 'Color theme'),
-            h('select.select.color-theme', { id: 'showOptions', name: 'showOptions' }, [
-                h('option', 'Ehevi'),
-                h('option', 'WebUI'),
-                h('option', 'Alice'),
-                h('option', 'Chiara'),
+            h('', 'UI theme'),
+            h('select.select.color-theme', {
+                id: themeSelectId,
+                name: themeSelectId,
+                onchange: () => handleThemeSelection(),
+            }, [
+                h('option', { value: 0 }, 'Ehevi'),
+                h('option', { value: 1 }, 'WebUI'),
+                h('option', { value: 2 }, 'Alice'),
+                h('option', { value: 3 }, 'Chiara'),
             ], iconChevronBottom())),
 
         h('.flex-wrap.justify-center.items-center',

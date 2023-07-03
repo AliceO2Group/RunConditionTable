@@ -127,4 +127,8 @@ module.exports = { // Properties that will be provided to frontend in the public
         },
 
     },
+    themes: {
+        ehevi: 'ehevi',
+        webui: 'webui',
+    },
 };

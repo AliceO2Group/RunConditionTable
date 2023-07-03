@@ -12,13 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
- .periods-table {
+.ehevi .dataPasses-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.periods-table td:first-child, .periods-table th:first-child {
+.ehevi .dataPasses-table td:first-child,
+.ehevi .dataPasses-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -28,46 +29,44 @@
     z-index: 1 !important;
 }
 
-.periods-table tr:hover td:first-child {
+.ehevi .dataPasses-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.periods-table tr.row-selected-color-alpha td:first-child{
+.ehevi .dataPasses-table tr.row-selected-color-alpha td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.periods-table tr.row-selected-color-alpha:hover td:first-child{
+.ehevi .dataPasses-table tr.row-selected-color-alpha:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
-/* Names */
-.periods-table .periods-name-cell, .periods-table .periods-name-header {
-    min-width: 380px;
+/* Name */
+.ehevi .dataPasses-table .dataPasses-name-cell,
+.ehevi .dataPasses-table .dataPasses-name-header {
+    min-width: 500px;
     text-align: left;
 }
 
-.periods-table .periods-name-cell :first-child {
-    margin-left: 80px;
+.ehevi .dataPasses-table .dataPasses-name-cell :first-child {
+    margin-left: 170px;
 }
 
-/* Years */
-.periods-table .periods-year-cell, .periods-table .periods-year-header {
-    min-width: 80px;
+/* Description */
+.ehevi .dataPasses-table .dataPasses-description-cell,
+.ehevi .dataPasses-table .dataPasses-description-header {
+    min-width: 300px;
+    text-align: left;
+}
+
+/* Size */
+.ehevi .dataPasses-table .dataPasses-size-cell,
+.ehevi .dataPasses-table .dataPasses-size-header {
+    min-width: 100px;
     text-align: right;
 }
 
-/* Beam types */
-.periods-table .periods-beam-cell, .periods-table .periods-beam-header {
-    min-width: 80px;
-    text-align: right;
-}
-
-/* Mean energy */
-.periods-table .periods-energy-cell, .periods-table .periods-energy-header {
-    min-width: 60px;
-    text-align: right;
-}
-
-.periods-table td:last-child, .periods-table th:last-child {
+.ehevi .dataPasses-table td:last-child,
+.ehevi .dataPasses-table th:last-child {
     padding-right: 2em;
 }

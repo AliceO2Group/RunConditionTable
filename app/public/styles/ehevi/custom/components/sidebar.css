@@ -12,26 +12,29 @@
  * or submit itself to any jurisdiction.
  */
 
-.page-title {
+.ehevi .page-title {
     cursor: pointer;
     text-decoration: none !important;
     color: var(--color-gray-darker);
     line-height: normal;
+}
+
+.page-title {
     display: block;
     position: relative;
     height: 35px;
     width: 100%;
 }
 
-.page-title:hover {
+.ehevi .page-title:hover {
     font-weight: 200;
 }
 
-.page-title.selected {
+.ehevi .page-title.selected {
     font-weight: 600;
 }
 
-.title-text {
+.ehevi .title-text {
     color: var(--off-white) !important;
     padding-left: 30px;
     padding-top: 0;
@@ -45,7 +48,7 @@
     margin: 0;
 }
 
-.current-page {
+.ehevi .current-page {
     background-color: var(--white) !important;
     opacity: 0.1;
     border-radius: 25px;
@@ -56,16 +59,16 @@
     align-items: center;
 }
 
-.periods-hamburger {
+.ehevi .periods-hamburger {
     padding-left: 25px;
 }
 
-.sidebar {
+.ehevi .sidebar {
     background-color: var(--primary) !important;
     color: var(--off-white) !important;
     font-size: small !important;
 }
 
-.sidebar-section-title {
+.ehevi .sidebar-section-title {
     text-transform: uppercase;
 }

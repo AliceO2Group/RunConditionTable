@@ -14,6 +14,17 @@
 const assert = require('assert');
 const Utils = require('../../app/lib/Utils');
 
+const arrayEquals = (a, b) => {
+    return Array.isArray(a) &&
+        Array.isArray(b) &&
+        a.length === b.length &&
+        a.every((val, index) => {
+            if (Array.isArray(val)) {
+                return arrayEquals(val, b[index])
+            } else return val === b[index];
+        });
+}
+
 module.exports = () => {
     describe('Utils', () => {        
         describe('Filtering objects', () => {
@@ -80,12 +91,6 @@ module.exports = () => {
         describe('Preserve SQL keywords', () => {
             const expectedRes = ['"end"'];
             const basicCase = ['sth else'];
-            const arrayEquals = (a, b) => {
-                return Array.isArray(a) &&
-                    Array.isArray(b) &&
-                    a.length === b.length &&
-                    a.every((val, index) => val === b[index]);
-            }
             it('should wrap END keyword in quotes', () => {
                 assert(arrayEquals(Utils.preserveSQLKeywords(['end']), expectedRes));
             });
@@ -122,5 +127,25 @@ module.exports = () => {
                 assert(start + delayTime <= end);
               });
            });
+
+        describe('Array to chunks', () => {
+            it('Should split an array into chunks', async () => {
+                const array = [1, 2, 3, 4, 5];
+                const chunkSize = 3;
+                const expectedOutcome = [[1, 2, 3], [4, 5]];
+                const outcome = Utils.arrayToChunks(array, chunkSize);
+
+                assert(arrayEquals(expectedOutcome, outcome));
+              });
+           });
+
+        describe('Extracting period year', () => {
+            it('Should extract period year from period name', () => {
+                const periodNameSamples = ['LHC12c', 'LHC23j', 'LHC00q', 'LHC', 'LHC51', null];
+                const expectedOutcome = [2012, 2023, 2000, 'NULL', 1951, 'NULL'];
+                const outcome = periodNameSamples.map(periodName => Utils.extractPeriodYear(periodName));
+                assert(arrayEquals(expectedOutcome, outcome));
+            })
+        })
     });
 };

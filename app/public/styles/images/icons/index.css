@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
- .icon-only-button {
+.icon-only-button {
     width: 48px;
     height: 32px;
     padding: 0 !important;
@@ -21,28 +21,28 @@
 }
 
 .chevron-down-20 {
-    background-image: url('./images/20/Chevron\ Down.svg');
+    background-image: url('/styles/images/icons/20/Chevron\ Down.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .chevron-right-20 {
-    background-image: url('./images/20/Chevron\ Right.svg');
+    background-image: url('/styles/images/icons/20/Chevron\ Right.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .sort-down-20 {
-    background-image: url('./images/20/Sort\ Down.svg');
+    background-image: url('/styles/images/icons/20/Sort\ Down.svg');
     width: 20px;
     height: 20px;
     scale: 0.5;
 }
 
 .close-10 {
-    background-image: url('./images/20/Close.svg');
+    background-image: url('/styles/images/icons/20/Close.svg');
     width: 20px;
     height: 20px;
     scale: 0.5;
@@ -50,153 +50,176 @@
     vertical-align: middle;
 }
 
-.sort-down-20.selected {
+.ehevi .sort-down-20.selected {
     background-color: var(--color-primary) !important;
     border-radius: 10px;
 }
 
 .sort-up-20 {
-    background-image: url('./images/20/Sort\ Up.svg');
+    background-image: url('/styles/images/icons/20/Sort\ Up.svg');
     width: 20px;
     height: 20px;
     scale: 0.5;
 }
 
-.sort-up-20.selected {
+.ehevi .sort-up-20.selected {
     background-color: var(--color-primary) !important;
     border-radius: 10px;
 }
 
 .ellipsis-20 {
-    background-image: url('./images/20/Ellipsis.svg');
+    background-image: url('/styles/images/icons/20/Ellipsis.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .folder-20 {
-    background-image: url('./images/20/Folder.svg');
+    background-image: url('/styles/images/icons/20/Folder.svg');
     width: 15px;
     height: 15px;
     display: inline-block;
-    /* scale: 0.7; */
 }
 
 .hamburger-20 {
-    background-image: url('./images/20/Hamburger.svg');
+    background-image: url('/styles/images/icons/20/Hamburger.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .slider-20-primary {
-    background-image: url('./images/20/primary/Slider.svg');
+    background-image: url('/styles/images/icons/20/primary/Slider.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .slider-20-off-white {
-    background-image: url('./images/20/off-white/Slider.svg');
+    background-image: url('/styles/images/icons/20/off-white/Slider.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .clear-filters-20 {
-    background-image: url('./images/20/Clear\ Filters.svg');
+    background-image: url('/styles/images/icons/20/Clear\ Filters.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .hide-empty-20 {
-    background-image: url('./images/20/Hide\ Empty.svg');
+    background-image: url('/styles/images/icons/20/Hide\ Empty.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .logout-20 {
-    background-image: url('./images/20/Logout.svg');
+    background-image: url('/styles/images/icons/20/Logout.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .sort-20 {
-    background-image: url('./images/20/Sort.svg');
+    background-image: url('/styles/images/icons/20/Sort.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .settings-20 {
-    background-image: url('./images/20/Settings.svg');
+    background-image: url('/styles/images/icons/20/Settings.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .save-20 {
-    background-image: url('./images/20/primary/Save.svg');
+    background-image: url('/styles/images/icons/20/primary/Save.svg');
     width: 20px;
     height: 20px;
     display: inline-block;
 }
 
 .nothing-found-90 {
-    background-image: url('./images/90/Nothing\ Found.svg');
+    background-image: url('/styles/images/icons/90/Nothing\ Found.svg');
     width: 90px;
     height: 90px;
     display: inline-block;
 }
 
 .no-network-90 {
-    background-image: url('./images/90/No\ Network.svg');
+    background-image: url('/styles/images/icons/90/No\ Network.svg');
     width: 90px;
     height: 90px;
     display: inline-block;
 }
 
 .factory-breakdown-90 {
-    background-image: url('./images/90/Factory\ Breakdown.svg');
+    background-image: url('/styles/images/icons/90/Factory\ Breakdown.svg');
     width: 90px;
     height: 90px;
     display: inline-block;
 }
 
 .unexpected-90 {
-    background-image: url('./images/90/Unexpected.svg');
+    background-image: url('/styles/images/icons/90/Unexpected.svg');
     width: 90px;
     height: 90px;
     display: inline-block;
 }
 
 .inspect-90 {
-    background-image: url('./images/90/Inspect.svg');
+    background-image: url('/styles/images/icons/90/Inspect.svg');
     width: 90px;
     height: 90px;
     display: inline-block;
 }
 
 .synchronize-90 {
-    background-image: url('./images/90/Synchronize.svg');
+    background-image: url('/styles/images/icons/90/Synchronize.svg');
     width: 90px;
     height: 90px;
     display: inline-block;
 }
 
 .settings-40 {
-    background-image: url('./images/40/Settings.svg');
+    background-image: url('/styles/images/icons/40/Settings.svg');
     width: 40px;
     height: 40px;
     display: inline-block;
 }
 
-.center-of-mass-energy {
-    background-image: url('./images/other/Center\ of\ Mass\ Energy.svg');
-    width: 40px;
-    height: 15.66px;
+/* input icons */
+.input-user-24 {
+    background-image: url('/styles/images/icons/24/User.svg');
+    width: 24px;
+    height: 24px;
     display: inline-block;
+    position: relative;
+    left: 7px;
+    top: -28px;
+}
+
+.input-key-24 {
+    background-image: url('/styles/images/icons/24/Key.svg');
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    position: relative;
+    left: 7px;
+    top: -28px;
+}
+
+.input-database-24 {
+    background-image: url('/styles/images/icons/24/Database.svg');
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    position: relative;
+    left: 7px;
+    top: -28px;
 }
