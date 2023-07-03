@@ -128,13 +128,9 @@ class Utils {
 
     static extractPeriodYear(name) {
         try {
-            let year = parseInt(name.slice(3, 5), 10);
-            if (year > 50) {
-                year += 1900;
-            } else {
-                year += 2000;
-            }
-            return year;
+            const year = parseInt(name.slice(3, 5), 10);
+            if (isNaN(year)) return 'NULL';
+            return year > 50 ? year + 1900 : year + 2000;
         } catch (e) {
             return 'NULL';
         }

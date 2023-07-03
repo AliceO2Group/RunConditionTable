@@ -14,6 +14,13 @@
 const assert = require('assert');
 const Utils = require('../../app/lib/Utils');
 
+const arrayEquals = (a, b) => {
+    return Array.isArray(a) &&
+        Array.isArray(b) &&
+        a.length === b.length &&
+        a.every((val, index) => val === b[index]);
+}
+
 module.exports = () => {
     describe('Utils', () => {        
         describe('Filtering objects', () => {
@@ -80,12 +87,6 @@ module.exports = () => {
         describe('Preserve SQL keywords', () => {
             const expectedRes = ['"end"'];
             const basicCase = ['sth else'];
-            const arrayEquals = (a, b) => {
-                return Array.isArray(a) &&
-                    Array.isArray(b) &&
-                    a.length === b.length &&
-                    a.every((val, index) => val === b[index]);
-            }
             it('should wrap END keyword in quotes', () => {
                 assert(arrayEquals(Utils.preserveSQLKeywords(['end']), expectedRes));
             });
@@ -122,5 +123,14 @@ module.exports = () => {
                 assert(start + delayTime <= end);
               });
            });
+
+        describe('Extracting period year', () => {
+            it('Should extract period year from period name', () => {
+                const periodNameSamples = ['LHC12c', 'LHC23j', 'LHC00q', 'LHC', 'LHC51', null];
+                const expectedOutcome = [2012, 2023, 2000, 'NULL', 1951, 'NULL'];
+                const outcome = periodNameSamples.map(periodName => Utils.extractPeriodYear(periodName));
+                assert(arrayEquals(expectedOutcome, outcome));
+            })
+        })
     });
 };
