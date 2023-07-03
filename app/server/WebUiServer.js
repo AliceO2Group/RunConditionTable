@@ -37,7 +37,7 @@ class WebUiServer {
      * @returns {Object} Object represents the bound address, the address family name, and port of the server.
      */
     address() {
-        return this.http.address();
+        return this.httpServer.address();
     }
 
     defineStaticRoutes() {
