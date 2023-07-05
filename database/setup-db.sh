@@ -5,7 +5,6 @@ ORG_ARGS="$*"
 SCRIPTS_DIR=$(dirname $0)
 MAIN_SCRIPT_NAME=$(basename $0)
 
-CONVERT_SCRIPT="$SCRIPTS_DIR/mock/convert.sh"
 CREATE_TABLES_SQL="$SCRIPTS_DIR/exported/create-tables.sql"
 DESIGN_PNG="$SCRIPTS_DIR/exported/design.png"
 DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
@@ -33,7 +32,6 @@ Usage:
       3. --no-modify-daemon - block modification watcher irregardless to previous flags or env vars
       4. --export - if specifid before deploying DB update sql db design using pgmodeler design.dbm file
       5. --only-export - do only export
-      6. --convert - recreate python script from jupyter notebook ($SCRIPTS_DIR/mock/mockData.ipynb)
       7. --drop - if specified drop DB before creation
 
 USAGE
@@ -64,15 +62,10 @@ while [[ $# -gt 0 ]]; do
         --export)
             EXPORT='true';
             shift 1;
-            ;;
-        --only-export)
-            EXPORT='true';
-            ONLY_EXPORT='true';
-            shift 1;
         ;;
-        --convert)
-            CONVERT='true';
-            shift 1;
+        --only-export)
+          ONLY_EXPORT='true';
+          shift 1;
         ;;
         --drop)
           DROP='true';
@@ -85,27 +78,27 @@ while [[ $# -gt 0 ]]; do
         -h|--host)
             __RCT_DB_HOST="$2";
             shift 2;
-            ;;
+        ;;
         -p|--port)
             __RCT_DB_PORT="$2";
             shift 2;
-            ;;
+        ;;
         -d|--database)
             __RCT_DB_NAME="$2"
             shift 2;
-            ;;
+        ;;
         -u|--username)
             __RCT_DB_USERNAME="$2";
             shift 2;
-            ;;
+        ;;
         -P|--password)
             __RCT_DB_PASSWORD="$2";
             shift 2;
-            ;;
+        ;;
 
         *)
             usage;
-            ;;
+        ;;
     esac
 done
 
@@ -122,16 +115,10 @@ if [ ! "$RERUN" = 'true' ]; then
           && pgmodeler-cli --input $DESIGN_FILE --export-to-png --output $DESIGN_PNG;
       PGEXPORT_EXIT_CODE=$?
     fi
-
-    if [ "$ONLY_EXPORT" = 'true' ]; then
-      exit $PGEXPORT_EXIT_CODE;
-    fi
   fi
 
-
-  if [ "$CONVERT" = 'true' ] && ! $CONVERT_SCRIPT; then
-      echo "converting mock.ipynb to python script was not successful"
-      sleep 1
+  if [ "$ONLY_EXPORT" = 'true' ]; then
+      exit $PGEXPORT_EXIT_CODE;
   fi
 fi
 
@@ -224,50 +211,26 @@ if [ "$NO_MODIFY_DAEMON" != 'true' ]; then
   fi
 fi
 
- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
- # TODO section
 
 mock_use_info() {
   car << info >&2
 Info: 
   ***********************************************
   ***********************************************
-  *********                         *************
-  *********       MOCK DATA         *************
-  *********                         *************
-  *********                         *************
+  *********                          ************
+  *********        MOCK DATA         ************
+  *********                          ************
   ***********************************************
   ***********************************************
 info
 }
 
 if [ "$MOCK_DB" = "true" ] || [ "$1" == "--mock" ]; then
-  mock_use_info
-
-  SCRIPT_PATH="$SCRIPTS_DIR/mock/mockData.py"
-  MOCK_DATA="$SCRIPTS_DIR/mock/mock.tar"
+  echo "mock temporarly disabled"
+  exit 0
   
-  if [ "$2" != "--python" ]; then
-    echo "restoring database data from $MOCK_DATA"
-    pg_restore -d $RCT_DB_NAME $MOCK_DATA
-  else 
-    # TODO '--big-data' flag
-
-    (\
-    export CACHED_PATH="$SCRIPTS_DIR/local-dev/cached"
-    export RCT_DB_USERNAME=$RCT_DB_USERNAME \
-    export RCT_DB_NAME=$RCT_DB_NAME \
-    export RCT_DB_PASSWORD=$RCT_DB_PASSWORD \
-    export RCT_DB_HOST=$RCT_DB_HOST \
-    export CACHED_PATH="$CACHED_PATH" \
-    export DUMP_PATH="$SCRIPT_DIR/mock/mock.tar" \
-    export RCT_MOCKDATA_GENERATOR_DEL_CACHE="true" \
-    export LOG_EXCEPTIONS=$(if [ "$3" = "--debug" ]; then echo true; else echo false; fi) \
-      python3 $SCRIPT_PATH \
-    )
-    echo "creating dump of database data to $MOCK_DATA"
-    pg_dump --file=$MOCK_DATA --format=tar --data-only $RCT_DB_NAME
-    chmod -R o+w $CACHED_PATH
-    chmod o+w $MOCK_DATA
-  fi
+  # mock_use_info
+  # MOCK_DATA="$SCRIPTS_DIR/mock/mock.tar"
+  # echo "restoring database data from $MOCK_DATA"
+  # pg_restore -d $RCT_DB_NAME $MOCK_DATA
 fi
