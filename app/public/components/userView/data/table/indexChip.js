@@ -23,7 +23,7 @@ export default function indexChip(model, index) {
     const { fields } = data;
     const firstField = fields.find((f) => f !== undefined && f.name);
 
-    const chip = (pageName) => dataPointer.page !== 'periods' && model.fetchedData[pageName][index]
+    const chip = (pageName) => pageName !== 'periods' && model.fetchedData[pageName][index]
         ? h('.chip', {
             id: `chip-${pageName}-${index}`,
             class: dataPointer.index === index && dataPointer.page === pageName ? 'primary' : '',

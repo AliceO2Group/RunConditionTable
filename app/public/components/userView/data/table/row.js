@@ -15,9 +15,10 @@
 import { h } from '/js/src/index.js';
 import { reduceSerialIf } from '../../../../utils/utils.js';
 
-// eslint-disable-next-line no-unused-vars
 const detectorIcon = (model, item, n) =>
-    h('.tooltip.noBorderBottom.pointer',
+    h('button.btn.transparent.tooltip.noBorderBottom.pointer', {
+        onclick: () => model.router.go(`/?page=flags&index=${item[n]}&run=${item.run_number}&detector=${n}`)
+    },
         h('svg', { width: '20px', height: '20px' },
             h('circle',
                 {
@@ -38,7 +39,7 @@ export default function row(
     model, visibleFields, data, item, cellsSpecials,
 ) {
     const rowDivDef = reduceSerialIf(
-        'tr.track', ['.row-unselected-color-alpha', '.d-none'], ['.row-selected-color-alpha', ''],
+        'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 

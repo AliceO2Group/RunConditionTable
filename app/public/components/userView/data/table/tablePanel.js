@@ -22,13 +22,13 @@ import pager from '../pager.js';
 import postingDataConfig from '../posting/postingDataConfig.js';
 import { postForm } from '../posting/postForm.js';
 import filter from './filtering/filter.js';
+import activeFilters from './filtering/activeFilters.js';
 import noDataView from './noDataView.js';
 
 import { RCT } from '../../../../config.js';
 import sortingRow from './sortingRow.js';
 import pageSettings from '../pageSettings/pageSettings.js';
 import indexChip from './indexChip.js';
-import activeFilters from './filtering/activeFilters.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import noSubPageSelected from './noSubPageSelected.js';
 const { pagesNames } = RCT;

@@ -17,8 +17,8 @@ import subPagesCount from './subPagesCount.js';
 
 export default function sidebarItem(model, pageName, label) {
     return h('.flex-wrap', [
-        h('.page-title',
-            { class: model.router.params.page === pageName ? 'selected' : '',
+        h('.page-title', {
+                class: model.router.params.page === pageName ? 'selected' : '',
                 onclick: () => model.goToDefaultPageUrl(pageName),
             },
             model.router.params.page === pageName
