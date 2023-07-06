@@ -25,8 +25,6 @@ import flagsTable from './flags/flagsTable.js';
 export default function flagsDataPanel(model) {
     const urlParams = model.router.getUrl().searchParams;
 
-    const page = urlParams.get('page');
-    const index = urlParams.get('index');
     const run = urlParams.get('run');
     const detector = urlParams.get('detector');
 
@@ -48,7 +46,7 @@ export default function flagsDataPanel(model) {
 
         h('button.btn.btn-secondary.icon-only-button', {
             onclick: () => {
-                navigator.clipboard.writeText(url.toString())
+                navigator.clipboard.writeText(model.router.getUrl().toString())
                     .then(() => {
                     })
                     .catch(() => {
@@ -87,7 +85,7 @@ export default function flagsDataPanel(model) {
         model.searchFieldsVisible ? filter(model) : '',
         // AnyFiltersActive ? activeFilters(model) : '',
 
-        flagsVisualization(model, run),
+        flagsVisualization(model),
         flagsTable(model),
         h('.modal', { id: 'pageSettingsModal' },
             h('.modal-content.abs-center.p3', {

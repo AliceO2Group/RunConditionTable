@@ -16,8 +16,8 @@ import flagVisualization from './flagVisualization.js';
 import flagsMockData from './flagsMockData.js';
 import { h } from '/js/src/index.js';
 
-export default function flagsVisualization(model, run) {
-    const runData = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows[0];
+export default function flagsVisualization(model) {
+    const [runData] = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows;
     const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
 
     const distinctFlagReasons = data.map((flag) => flag.flag).filter((value, index, array) => array.indexOf(value) === index);
@@ -27,5 +27,6 @@ export default function flagsVisualization(model, run) {
         return prev;
     }, {});
 
-    return h('.relative', Object.keys(flagsGroupedByFlagReason).map((flagReason) => flagVisualization(flagsGroupedByFlagReason[flagReason], runData.time_start, runData.time_end, '277DA1')));
+    return h('.relative',
+        Object.keys(flagsGroupedByFlagReason).map((flagReason) => flagVisualization(flagsGroupedByFlagReason[flagReason], runData.time_start, runData.time_end, '277DA1')));
 }

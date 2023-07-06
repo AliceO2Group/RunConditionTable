@@ -19,7 +19,7 @@ import flagsDataPanel from '../components/userView/data/flagsDataPanel.js';
 
 export default function userPanel(model) {
     const submodel = model.submodels[model.mode];
-    const { page, index } = submodel.getCurrentDataPointer();
+    const { page } = submodel.getCurrentDataPointer();
     return h('.flex-column.absolute-fill', [
         h('.flex-grow.flex-row.outline-gray', [
             sidebar(submodel),
