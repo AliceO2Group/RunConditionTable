@@ -14,8 +14,9 @@
 
 import { h } from '/js/src/index.js';
 
-export default function flagVisualization(colorHexCode) {
-    return h('canvas', {
+export default function flagVisualization(flag, start, end, colorHexCode) {
+  console.log(flag);  
+  return h('canvas', {
         width: '5000',
         height: '100',
         oncreate: (vnode) => draw(vnode.dom, colorHexCode),

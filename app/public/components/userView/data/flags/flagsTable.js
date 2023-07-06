@@ -16,11 +16,7 @@ import flagsMockData from './flagsMockData.js';
 import { h } from '/js/src/index.js';
 
 export default function flagsTable(model, run) {
-    console.log(run);
-    console.log(model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows[0]);
     const runData = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows[0];
-    console.log(runData);
-
     const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
 
     const dateFormatter = (sec) => {
@@ -41,7 +37,6 @@ export default function flagsTable(model, run) {
     };
 
     function itemProps(item) {
-        console.log(item);
         const result = [];
         for (const [key, value] of Object.entries(item)) {
             result.push(h('td', ['start', 'end'].includes(key)

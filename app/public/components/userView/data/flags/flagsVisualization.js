@@ -13,8 +13,21 @@
  */
 
 import flagVisualization from './flagVisualization.js';
+import flagsMockData from './flagsMockData.js';
 import { h } from '/js/src/index.js';
 
-export default function flagsVisualization() {
-    return h('.relative', flagVisualization('277DA1'));
+export default function flagsVisualization(model, run) {
+  const runData = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows[0];
+  const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
+
+  const distinctFlagReasons = data.map(flag => flag.flag).filter((value, index, array) => array.indexOf(value) === index);
+  
+  const flagsGroupedByFlagReason = distinctFlagReasons.reduce((prev, curr) => {
+    prev[curr.replace(/\s+/g, '')] = data.filter(flag => flag.flag === curr);
+    return prev;}, {}
+    );
+  
+  console.log(flagsGroupedByFlagReason);
+
+  return h('.relative', Object.keys(flagsGroupedByFlagReason).map(flagReason => flagVisualization(flagsGroupedByFlagReason[flagReason], runData.time_start, runData.time_end, '277DA1')));
 }

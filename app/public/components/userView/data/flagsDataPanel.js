@@ -87,7 +87,7 @@ export default function flagsDataPanel(model) {
         model.searchFieldsVisible ? filter(model) : '',
         // AnyFiltersActive ? activeFilters(model) : '',
 
-        flagsVisualization(),
+        flagsVisualization(model, run),
         flagsTable(model, run),
         h('.modal', { id: 'pageSettingsModal' },
             h('.modal-content.abs-center.p3', {

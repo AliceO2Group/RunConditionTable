@@ -68,5 +68,27 @@ export default function flagsMockData(run_start, run_end) {
                 time: randomDate(parseInt(run_start), parseInt(run_end)),
             },
         },
+        {
+            start: start4,
+            end: randomDate(start4.getTime(), parseInt(run_end)),
+            flag: 'Wrong flag',
+            comment: 'Software configuration was totally wrong',
+            addedBy: 'John Smith',
+            lastChange: {
+                person: 'Alice Brown',
+                time: randomDate(parseInt(run_start), parseInt(run_end)),
+            },
+        },
+        {
+            start: start4,
+            end: randomDate(start2.getTime(), parseInt(run_end)),
+            flag: 'Another wrong flag',
+            comment: 'Software configuration was totally wrong',
+            addedBy: 'John Smith',
+            lastChange: {
+                person: 'Alice Brown',
+                time: randomDate(parseInt(run_start), parseInt(run_end)),
+            },
+        },
     ];
 }
