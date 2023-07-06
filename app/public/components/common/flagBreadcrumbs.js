@@ -13,15 +13,16 @@
  */
 
 import { h } from '/js/src/index.js';
+import flagsIndexChip from '../userView/data/table/flagsIndexChip.js';
 
-export default function flagsIndexChip(model, targetPage, label) {
-    return h('.chip', {
-        id: `chip-${targetPage}-${label}`,
-    },
-    h('button.btn.transparent', { onclick: () => {
-        // TODO once url scheme is confirmed
-        // eslint-disable-next-line max-len
-        // Model.router.go(`/?page=${targetPage}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`);
-        history.back();
-    } }, label));
+export default function flagBreadCrumbs(model, dataPass, run, detector) {
+    return [
+        h('h3.p-right-15.text-primary', 'Flags'),
+        h('.forward-20'),
+        h('h3.ph-15.text-primary', dataPass),
+        h('.forward-20'),
+        flagsIndexChip(model, 'run', run),
+        h('.forward-20'),
+        h('h3.ph-15.text-primary', detector),
+    ];
 }

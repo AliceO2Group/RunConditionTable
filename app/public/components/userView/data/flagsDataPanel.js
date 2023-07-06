@@ -12,23 +12,22 @@
  * or submit itself to any jurisdiction.
  */
 
-import filter from './table/filtering/filter.js';
-import flagsIndexChip from './table/flagsIndexChip.js';
-
 import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
+import filter from './table/filtering/filter.js';
+
 import downloadCSV from '../../../../utils/csvExport.js';
 
 import pageSettings from './pageSettings/pageSettings.js';
 import flagsVisualization from './flags/flagsVisualization.js';
 import flagsTable from './flags/flagsTable.js';
+import flagBreadCrumbs from '../../common/flagBreadcrumbs.js';
 
 export default function flagsDataPanel(model) {
     const urlParams = model.router.getUrl().searchParams;
 
+    const dataPass = 'dataPass';
     const run = urlParams.get('run');
     const detector = urlParams.get('detector');
-
-    const chips = [flagsIndexChip(model, 'run', run), flagsIndexChip(model, 'detector', detector)];
 
     const functionalities = (model) => h('.btn-group',
         h('button.btn.btn-secondary.icon-only-button', {
@@ -61,11 +60,8 @@ export default function flagsDataPanel(model) {
 
     return h('div.main-content', [
         h('div.flex-wrap.justify-between.items-center',
-            h('div.flex-wrap.justify-between.items-baseline',
-                h('h3.p-left-15.text-primary', 'Flags'),
-                h('h3.p-left-15.text-primary', run),
-                h('h3.p-left-15.text-primary', detector),
-                chips,
+            h('div.flex-wrap.justify-between.items-center',
+                flagBreadCrumbs(model, dataPass, run, detector),
                 h('button.btn.btn-secondary', {
                     onclick: () => {
                         document.getElementById('pageSettingsModal').style.display = 'block';

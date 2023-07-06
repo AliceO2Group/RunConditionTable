@@ -103,8 +103,8 @@ export default function tablePanel(model) {
     return dataPointer.index !== defaultIndexString || dataPointer.page == pagesNames.periods
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
-                h('div.flex-wrap.justify-between.items-baseline',
-                    h('h3.p-left-15.text-primary', headerSpecific(model)),
+                h('div.flex-wrap.justify-between.items-center',
+                    h('h3.p-right-15.text-primary', headerSpecific(model)),
                     chips,
                     h('button.btn.btn-secondary', {
                         onclick: () => {

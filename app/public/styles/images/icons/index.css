@@ -20,6 +20,23 @@
     position: relative;
 }
 
+/**
+ * 10px
+ */
+
+.close-10 {
+    background-image: url('/styles/images/icons/20/Close.svg');
+    width: 20px;
+    height: 20px;
+    scale: 0.5;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/**
+ * 20px
+ */
+
 .chevron-down-20 {
     background-image: url('/styles/images/icons/20/Chevron\ Down.svg');
     width: 20px;
@@ -41,30 +58,11 @@
     scale: 0.5;
 }
 
-.close-10 {
-    background-image: url('/styles/images/icons/20/Close.svg');
-    width: 20px;
-    height: 20px;
-    scale: 0.5;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.ehevi .sort-down-20.selected {
-    background-color: var(--color-primary) !important;
-    border-radius: 10px;
-}
-
 .sort-up-20 {
     background-image: url('/styles/images/icons/20/Sort\ Up.svg');
     width: 20px;
     height: 20px;
     scale: 0.5;
-}
-
-.ehevi .sort-up-20.selected {
-    background-color: var(--color-primary) !important;
-    border-radius: 10px;
 }
 
 .ellipsis-20 {
@@ -144,6 +142,62 @@
     display: inline-block;
 }
 
+.forward-20 {
+    background-image: url('/styles/images/icons/20/primary/Forward.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+/**
+ * 24px
+ */
+
+.input-user-24 {
+    background-image: url('/styles/images/icons/24/User.svg');
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    position: relative;
+    left: 7px;
+    top: -28px;
+}
+
+.input-key-24 {
+    background-image: url('/styles/images/icons/24/Key.svg');
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    position: relative;
+    left: 7px;
+    top: -28px;
+}
+
+.input-database-24 {
+    background-image: url('/styles/images/icons/24/Database.svg');
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    position: relative;
+    left: 7px;
+    top: -28px;
+}
+
+/**
+ * 40px
+ */
+
+.settings-40 {
+    background-image: url('/styles/images/icons/40/Settings.svg');
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+}
+
+/**
+ * 90px
+ */
+
 .nothing-found-90 {
     background-image: url('/styles/images/icons/90/Nothing\ Found.svg');
     width: 90px;
@@ -184,42 +238,4 @@
     width: 90px;
     height: 90px;
     display: inline-block;
-}
-
-.settings-40 {
-    background-image: url('/styles/images/icons/40/Settings.svg');
-    width: 40px;
-    height: 40px;
-    display: inline-block;
-}
-
-/* input icons */
-.input-user-24 {
-    background-image: url('/styles/images/icons/24/User.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
-}
-
-.input-key-24 {
-    background-image: url('/styles/images/icons/24/Key.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
-}
-
-.input-database-24 {
-    background-image: url('/styles/images/icons/24/Database.svg');
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    position: relative;
-    left: 7px;
-    top: -28px;
 }

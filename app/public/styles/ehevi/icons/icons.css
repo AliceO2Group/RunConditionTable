@@ -12,16 +12,12 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
+.ehevi .sort-down-20.selected {
+    background-color: var(--color-primary) !important;
+    border-radius: 10px;
+}
 
-export default function flagsIndexChip(model, targetPage, label) {
-    return h('.chip', {
-        id: `chip-${targetPage}-${label}`,
-    },
-    h('button.btn.transparent', { onclick: () => {
-        // TODO once url scheme is confirmed
-        // eslint-disable-next-line max-len
-        // Model.router.go(`/?page=${targetPage}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`);
-        history.back();
-    } }, label));
+.ehevi .sort-up-20.selected {
+    background-color: var(--color-primary) !important;
+    border-radius: 10px;
 }

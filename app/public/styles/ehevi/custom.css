@@ -177,12 +177,13 @@
     padding: 20px;
 }
 
-.p-left-15 {
+.p-right-15 {
     padding-right: 15px !important;
 }
 
-.p-left-5 {
-    padding-right: 5px !important;
+.ph-15 {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
 }
 
 .p-top-10 {
