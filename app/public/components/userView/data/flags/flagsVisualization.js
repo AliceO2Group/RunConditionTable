@@ -22,6 +22,7 @@ function filterDistinct(a) {
 
 export default function flagsVisualization(model) {
     const [runData] = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows;
+    const { time_start, time_end } = runData;
     const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
 
     const distinctFlagReasons = filterDistinct(data.map((flag) => flag.flag.replace(/\s+/g, '')));
@@ -31,7 +32,7 @@ export default function flagsVisualization(model) {
         return prev;
     }, {});
 
-    const visualizeFlag = (flagReason) => flagVisualization(flagsGroupedByFlagReason[flagReason], runData.time_start, runData.time_end, '277DA1');
+    const visualizeFlag = (flagReason) => flagVisualization(flagsGroupedByFlagReason[flagReason], time_start, time_end, '277DA1');
 
     return h('.relative',
         distinctFlagReasons.map((flagReason) => visualizeFlag(flagReason)));
