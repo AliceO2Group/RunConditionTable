@@ -18,15 +18,15 @@ export default function flagsMockData(run_start, run_end) {
         return new Date(d);
     }
     const radix = 10;
-    const start1 = randomDate(parseInt(run_start, radix), parseInt(run_end, radix));
-    const start2 = randomDate(start1.getTime(), parseInt(run_end, radix));
+    const start1 = () => randomDate(parseInt(run_start, radix), parseInt(run_end, radix));
+    const start2 = randomDate(start1().getTime(), parseInt(run_end, radix));
     const start3 = randomDate(start2.getTime(), parseInt(run_end, radix));
     const start4 = randomDate(start3.getTime(), parseInt(run_end, radix));
 
     return [
         {
-            start: start1,
-            end: randomDate(start1.getTime(), parseInt(run_end, radix)),
+            start: start1(),
+            end: randomDate(start1().getTime(), parseInt(run_end, radix)),
             flag: 'Limited Acceptance',
             comment: 'Software configuration was totally wrong',
             addedBy: 'John Smith',
@@ -69,7 +69,7 @@ export default function flagsMockData(run_start, run_end) {
             },
         },
         {
-            start: start4,
+            start: start1(),
             end: randomDate(start4.getTime(), parseInt(run_end, radix)),
             flag: 'Wrong flag',
             comment: 'Software configuration was totally wrong',
@@ -80,9 +80,20 @@ export default function flagsMockData(run_start, run_end) {
             },
         },
         {
-            start: start4,
+            start: start1(),
             end: randomDate(start2.getTime(), parseInt(run_end, radix)),
             flag: 'Another wrong flag',
+            comment: 'Software configuration was totally wrong',
+            addedBy: 'John Smith',
+            lastChange: {
+                person: 'Alice Brown',
+                time: randomDate(parseInt(run_start, radix), parseInt(run_end, radix)),
+            },
+        },
+        {
+            start: start1(),
+            end: randomDate(start1().getTime(), parseInt(run_end, radix)),
+            flag: 'Not bad',
             comment: 'Software configuration was totally wrong',
             addedBy: 'John Smith',
             lastChange: {

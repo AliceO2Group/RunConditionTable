@@ -15,6 +15,7 @@
 import flagVisualization from './flagVisualization.js';
 import flagsMockData from './flagsMockData.js';
 import { h } from '/js/src/index.js';
+import { RCT } from '../../../../config.js';
 
 function filterDistinct(a) {
     return a.filter((value, index, array) => array.indexOf(value) === index);
@@ -32,9 +33,21 @@ export default function flagsVisualization(model) {
         return prev;
     }, {});
 
+    const flagColor = (flagReason) => {
+        const colors = RCT.flagReasonColors;
+        switch (flagReason) {
+            case 'LimitedAcceptance':
+                return colors.limitedAcceptance;
+            case 'Notbad':
+                return colors.neutral;
+            default:
+                return colors.bad;
+        }
+    };
+
     const flagReasonVisualization = (flagReason) => h('.flex-wrap.justify-between.items-center.pv1',
         h('.w-10', flagReason),
-        flagVisualization(flagsGroupedByFlagReason[flagReason], time_start, time_end, '277DA1'));
+        flagVisualization(flagsGroupedByFlagReason[flagReason], time_start, time_end, flagColor(flagReason)));
 
     return h('.relative', distinctFlagReasons.map((flagReason) => flagReasonVisualization(flagReason)));
 }

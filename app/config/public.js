@@ -139,4 +139,9 @@ module.exports = { // Properties that will be provided to frontend in the public
         ehevi: 'ehevi',
         webui: 'webui',
     },
+    flagReasonColors: {
+        neutral: '277DA1',
+        bad: '922C40',
+        limitedAcceptance: 'DC9750',
+    },
 };
