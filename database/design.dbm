@@ -245,7 +245,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="880" y="1340"/>
+	<position x="880" y="1320"/>
 	<column name="id" not-null="true" sequence="public.quality_control_flags_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -253,6 +253,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer" length="0"/>
 	</column>
 	<column name="run_number" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="detector_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="time_start" not-null="true">
@@ -278,9 +281,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="last_modification_time">
 		<type name="bigint" length="0"/>
-	</column>
-	<column name="detector_id" not-null="true">
-		<type name="integer" length="0"/>
 	</column>
 	<constraint name="quality_control_flags_pkey" type="pk-constr" table="public.quality_control_flags">
 		<columns names="id" ref-type="src-columns"/>

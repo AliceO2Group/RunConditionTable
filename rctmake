@@ -266,7 +266,7 @@ for stage in $STAGES; do
                 ;;
 
                 restore|re)
-                    if [ -z "$DUMP_PATH" ]; then
+                    if [ -z "$DUMP_FILE" ]; then
                         usage "Dump file name unspecified, use flag -F|--dump-file <FILE>";
                     fi
                     docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/delete-data.sql" \
@@ -275,7 +275,7 @@ for stage in $STAGES; do
                 ;;
 
                 remove|rm)
-                    if [ -z "$DUMP_PATH" ]; then
+                    if [ -z "$DUMP_FIL" ]; then
                         usage "dump file unspecified, use flag -F|--dump-file <FILE>";
                     fi 
                     rm $DUMP_PATH;
@@ -310,6 +310,13 @@ for stage in $STAGES; do
                 fi
                 build "$bs";
             done
+            if [[ -n "$FAST_DUMP" ]]; then
+                ctr=''
+                while (! docker ps | grep -E "o2-rct_database.*Up" &> /dev/null) || (! $PROJECT_DIR/rctmake dump:restore -F $FAST_DUMP &> /dev/null) && [[ $(echo $ctr | wc -c) -lt 20 ]]; do
+                    sleep 0.5;    
+                done
+                docker logs $APP_CONTAINER_NAME
+            fi
         ;;
 
         attach)
