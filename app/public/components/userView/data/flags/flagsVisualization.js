@@ -32,8 +32,9 @@ export default function flagsVisualization(model) {
         return prev;
     }, {});
 
-    const visualizeFlag = (flagReason) => flagVisualization(flagsGroupedByFlagReason[flagReason], time_start, time_end, '277DA1');
+    const flagReasonVisualization = (flagReason) => h('.flex-wrap.justify-between.items-center.pv1',
+        h('.w-10', flagReason),
+        flagVisualization(flagsGroupedByFlagReason[flagReason], time_start, time_end, '277DA1'));
 
-    return h('.relative',
-        distinctFlagReasons.map((flagReason) => visualizeFlag(flagReason)));
+    return h('.relative', distinctFlagReasons.map((flagReason) => flagReasonVisualization(flagReason)));
 }
