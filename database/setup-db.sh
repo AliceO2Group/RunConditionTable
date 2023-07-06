@@ -65,6 +65,7 @@ while [[ $# -gt 0 ]]; do
         ;;
         --only-export)
           ONLY_EXPORT='true';
+          EXPORT='true';
           shift 1;
         ;;
         --drop)
