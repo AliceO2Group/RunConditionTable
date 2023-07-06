@@ -12,11 +12,16 @@
  * or submit itself to any jurisdiction.
  */
 
-import flagsMockData from "./flagsMockData.js";
+import flagsMockData from './flagsMockData.js';
 import { h } from '/js/src/index.js';
 
-export default function flagsTable() {
-    const data = flagsMockData();
+export default function flagsTable(model, run) {
+    console.log(run);
+    console.log(model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows[0]);
+    const runData = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows[0];
+    console.log(runData);
+
+    const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
 
     const dateFormatter = (sec) => {
         const cestOffset = 2 * 60 * 60 * 1000;
@@ -47,23 +52,21 @@ export default function flagsTable() {
     }
 
     return h('.p-top-10',
-                        h('.x-scrollable-table.border-sh',
-                            h('table', {
-                                id: `data-table-${data.url}`,
-                                className: `flags-table`,
-                            }, [
-                                h('thead.header',
-                                h('tr',  
-                                    h('th', 'Start'),
-                                    h('th', 'End'),
-                                    h('th', 'Flag'),
-                                    h('th', 'Comment'),
-                                    h('th', 'Added by'),
-                                    h('th', 'Last change'))),
+        h('.x-scrollable-table.border-sh',
+            h('table', {
+                //Id: `data-table-${data.url}`,
+                className: 'flags-table',
+            }, [
+                h('thead.header',
+                    h('tr',
+                        h('th', 'Start'),
+                        h('th', 'End'),
+                        h('th', 'Flag'),
+                        h('th', 'Comment'),
+                        h('th', 'Added by'),
+                        h('th', 'Last change'))),
 
-                                h('tbody',
-                                    data.map(item => h('tr.track', itemProps(item)))
-                                )
-                            ]),
-                            ));
+                h('tbody',
+                    data.map((item) => h('tr.track', itemProps(item)))),
+            ])));
 }

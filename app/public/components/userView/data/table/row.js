@@ -17,23 +17,23 @@ import { reduceSerialIf } from '../../../../utils/utils.js';
 
 const detectorIcon = (model, item, n) =>
     h('button.btn.transparent.tooltip.noBorderBottom.pointer', {
-        onclick: () => model.router.go(`/?page=flags&index=${item[n]}&run=${item.run_number}&detector=${n}`)
+        onclick: () => model.router.go(`/?page=flags&index=${item[n]}&run=${item.run_number}&detector=${n}`),
     },
-        h('svg', { width: '20px', height: '20px' },
-            h('circle',
-                {
-                    cx: '50%',
-                    cy: '50%',
-                    r: '8px', //
+    h('svg', { width: '20px', height: '20px' },
+        h('circle',
+            {
+                cx: '50%',
+                cy: '50%',
+                r: '8px', //
 
-                    /*
-                     *Stroke: '#F7B538', strokes for the limited acceptance flags only
-                     *'stroke-width': '3',
-                     */
-                    fill: '#8CB369',
-                    // Content: '99',
-                })),
-        h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
+                /*
+                 *Stroke: '#F7B538', strokes for the limited acceptance flags only
+                 *'stroke-width': '3',
+                 */
+                fill: '#8CB369',
+                // Content: '99',
+            })),
+    h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
 
 export default function row(
     model, visibleFields, data, item, cellsSpecials,

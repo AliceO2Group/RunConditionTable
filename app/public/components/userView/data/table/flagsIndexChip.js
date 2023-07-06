@@ -20,7 +20,7 @@ export default function flagsIndexChip(model, targetPage, label) {
     },
     h('button.btn.transparent', { onclick: () => {
         // eslint-disable-next-line max-len
-        // model.router.go(`/?page=${targetPage}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`);
+        // Model.router.go(`/?page=${targetPage}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`);
         history.back();
     } }, label));
 }

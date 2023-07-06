@@ -15,18 +15,16 @@
 import filter from './table/filtering/filter.js';
 import flagsIndexChip from './table/flagsIndexChip.js';
 
-
 import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
 import downloadCSV from '../../../../utils/csvExport.js';
 
 import pageSettings from './pageSettings/pageSettings.js';
 import flagsVisualization from './flags/flagsVisualization.js';
 import flagsTable from './flags/flagsTable.js';
-import flagVisualization from './flags/flagVisualization.js';
 
 export default function flagsDataPanel(model) {
     const urlParams = model.router.getUrl().searchParams;
-    
+
     const page = urlParams.get('page');
     const index = urlParams.get('index');
     const run = urlParams.get('run');
@@ -87,10 +85,10 @@ export default function flagsDataPanel(model) {
 
             h('div', functionalities(model))),
         model.searchFieldsVisible ? filter(model) : '',
-        // anyFiltersActive ? activeFilters(model) : '',
+        // AnyFiltersActive ? activeFilters(model) : '',
 
         flagsVisualization(),
-        flagsTable(),
+        flagsTable(model, run),
         h('.modal', { id: 'pageSettingsModal' },
             h('.modal-content.abs-center.p3', {
                 id: 'pageSettingsModalContent',

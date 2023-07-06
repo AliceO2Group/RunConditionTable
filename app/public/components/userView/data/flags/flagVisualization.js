@@ -10,41 +10,27 @@
  * In applying this license CERN does not waive the privileges and immunities
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
-*/
+ */
 
 import { h } from '/js/src/index.js';
 
-export default function flagVisualization() {
-  const defaults = {
-    series: [], // [{value:number, timestamp:number:ms}]
-    background: 'white',
-    colorPrimary: 'black',
-    colorSecondary: 'gray',
-    title: '',
-    devicePixelRatio: window.devicePixelRatio, // default=1, retina=2, higher=3
-    timeWindow: 1000, // how many ms to represent in the width available
-  };
-  // const options = Object.assign({}, defaults, userOptions);
-
-  const options = defaults;
-
-  // Canvas is 2x bigger than element, to handle high resolution (retina)
-  return h('canvas', {
-    width: '100',
-    height: '100',
-    oncreate: (vnode) => draw(vnode.dom),
-    onupdate: (vnode) => draw(vnode.dom),
-  });
+export default function flagVisualization(colorHexCode) {
+    return h('canvas', {
+        width: '5000',
+        height: '100',
+        oncreate: (vnode) => draw(vnode.dom, colorHexCode),
+        onupdate: (vnode) => draw(vnode.dom, colorHexCode),
+    });
 }
 
-function draw(dom) {
+function draw(dom, colorHexCode) {
     const ctx = dom.getContext('2d');
-    ctx.fillStyle = "rgb(200, 0, 0)";
-    ctx.fillRect(0, 0, 10, 50);
+    ctx.fillStyle = `#${colorHexCode}`;
+    ctx.fillRect(0, 0, 50, 100);
+    // X_start, y_start, x_length, y_length
+    ctx.fillRect(300, 0, 20, 100);
 
-    ctx.fillRect(20, 0, 20, 50);
-
-    ctx.fillRect(90, 0, 20, 50);
+    ctx.fillRect(900, 0, 20, 100);
 }
 
 /**
@@ -61,8 +47,8 @@ const sortByTimestamp = (pointA, pointB) => pointA.timestamp - pointB.timestamp;
  * @return {number}
  */
 const maxOf = (points) => points.reduce(
-  (max, point) => point.value > max ? point.value : max,
-  -Infinity
+    (max, point) => point.value > max ? point.value : max,
+    -Infinity,
 );
 
 /**
@@ -71,6 +57,6 @@ const maxOf = (points) => points.reduce(
  * @return {number}
  */
 const minOf = (points) => points.reduce(
-  (min, point) => point.value < min ? point.value : min,
-  +Infinity
+    (min, point) => point.value < min ? point.value : min,
+    Number(Infinity),
 );
