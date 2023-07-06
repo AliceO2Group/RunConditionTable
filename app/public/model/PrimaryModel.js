@@ -30,6 +30,7 @@ export default class PrimaryModel extends Observable {
         this.fetchedData = new FetchedDataManager(this.router, this);
 
         this.searchFieldsVisible = false;
+        this.sortingRowVisible = false;
 
         this.loader = new Loader();
 
@@ -38,6 +39,11 @@ export default class PrimaryModel extends Observable {
 
     changeSearchFieldsVisibility() {
         this.searchFieldsVisible = !this.searchFieldsVisible;
+        this.notify();
+    }
+
+    changeSortingRowVisibility() {
+        this.sortingRowVisible = !this.sortingRowVisible;
         this.notify();
     }
 

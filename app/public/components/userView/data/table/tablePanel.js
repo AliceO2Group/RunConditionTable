@@ -96,6 +96,11 @@ export default function tablePanel(model) {
         }, iconShareBoxed()),
 
         h('button.btn.icon-only-button', {
+            className: model.sortingRowVisible ? 'btn-primary' : 'btn-secondary',
+            onclick: () => model.changeSortingRowVisibility(),
+        }, model.sortingRowVisible ? h('.sort-20.abs-center') : h('.sort-20.abs-center')),
+
+        h('button.btn.icon-only-button', {
             className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
@@ -137,7 +142,7 @@ export default function tablePanel(model) {
                                     : `${dataPointer.page}-table`}`,
                             }, [
                                 tableHeader(visibleFields, data, model),
-                                sortingRow(visibleFields, data, model),
+                                model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
                                 tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
