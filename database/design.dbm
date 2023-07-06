@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="514,651" last-zoom="1" max-obj-count="31"
+<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="636,651" last-zoom="1" max-obj-count="31"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -245,7 +245,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="860" y="1300"/>
+	<position x="880" y="1300"/>
 	<column name="id" not-null="true" sequence="public.quality_control_flags_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -482,9 +482,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="1300" y="1480"/>
+	<position x="1300" y="1420"/>
 	<column name="id" not-null="true">
-		<type name="integer" length="0"/>
+		<type name="serial" length="0"/>
 	</column>
 	<column name="qcf_id" not-null="true">
 		<type name="integer" length="0"/>

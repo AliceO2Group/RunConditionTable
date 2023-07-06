@@ -207,6 +207,9 @@ for stage in $STAGES; do
                 ip)
                     docker inspect $DB_CONTAINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
                 ;;
+                counts)
+                    docker exec $DB_CONTAINER_NAME /docker-entrypoint-initdb.d/utils/print-data.sh
+                ;;
                 *)
                     incorrect_stage_err $stage;
                 ;;

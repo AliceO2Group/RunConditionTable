@@ -402,7 +402,7 @@ ALTER TABLE public.anchored_periods OWNER TO postgres;
 -- object: public.verifications | type: TABLE --
 -- DROP TABLE IF EXISTS public.verifications CASCADE;
 CREATE TABLE public.verifications (
-	id integer NOT NULL,
+	id serial NOT NULL,
 	qcf_id integer NOT NULL,
 	verification_time bigint NOT NULL,
 	verified_by varchar NOT NULL,
