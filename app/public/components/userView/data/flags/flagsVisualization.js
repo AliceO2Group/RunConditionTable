@@ -27,7 +27,5 @@ export default function flagsVisualization(model, run) {
     return prev;}, {}
     );
   
-  console.log(flagsGroupedByFlagReason);
-
   return h('.relative', Object.keys(flagsGroupedByFlagReason).map(flagReason => flagVisualization(flagsGroupedByFlagReason[flagReason], runData.time_start, runData.time_end, '277DA1')));
 }

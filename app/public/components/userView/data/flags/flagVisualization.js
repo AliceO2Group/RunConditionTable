@@ -14,50 +14,31 @@
 
 import { h } from '/js/src/index.js';
 
+const width = '5000';
+const height = '100';
+
 export default function flagVisualization(flag, start, end, colorHexCode) {
-  console.log(flag);  
+  const run_length = end - start;
+  
   return h('canvas', {
-        width: '5000',
-        height: '100',
-        oncreate: (vnode) => draw(vnode.dom, colorHexCode),
-        onupdate: (vnode) => draw(vnode.dom, colorHexCode),
+        width: width,
+        height: height,
+        oncreate: (vnode) => draw(vnode.dom, colorHexCode, flag, run_length, start),
+        onupdate: (vnode) => draw(vnode.dom, colorHexCode, flag, run_length, start),
     });
 }
 
-function draw(dom, colorHexCode) {
-    const ctx = dom.getContext('2d');
+function draw(dom, colorHexCode, flag, run_length, start) { 
+  const ctx = dom.getContext('2d');
     ctx.fillStyle = `#${colorHexCode}`;
-    ctx.fillRect(0, 0, 50, 100);
-    // X_start, y_start, x_length, y_length
-    ctx.fillRect(300, 0, 20, 100);
 
-    ctx.fillRect(900, 0, 20, 100);
+    for (const f of flag) {
+      ctx.fillRect(getFlagCoordinates(f, start, run_length).x_start, 0, getFlagCoordinates(f, start, run_length).x_length, height);
+    }
 }
 
-/**
- * Comparison function to sort points by `timestamp` field
- * @param {Object} pointA - {value:number, timestamp:number:ms}
- * @param {Object} pointB - {value:number, timestamp:number:ms}
- * @return {number}
- */
-const sortByTimestamp = (pointA, pointB) => pointA.timestamp - pointB.timestamp;
-
-/**
- * Find the maximum '.value' of array of points
- * @param {Array.<Point>} points
- * @return {number}
- */
-const maxOf = (points) => points.reduce(
-    (max, point) => point.value > max ? point.value : max,
-    -Infinity,
-);
-
-/**
- * Find the minimum '.value' of array of points
- * @param {Array.<Point>} points
- * @return {number}
- */
-const minOf = (points) => points.reduce(
-    (min, point) => point.value < min ? point.value : min,
-    Number(Infinity),
-);
+function getFlagCoordinates(flag, start, run_length) {
+  const x_start = (flag.start.getTime() - start) *  width / run_length;
+  const x_length = (flag.end.getTime() - flag.start.getTime()) * width / run_length;
+  return {x_start: x_start, x_length: x_length};
+}
