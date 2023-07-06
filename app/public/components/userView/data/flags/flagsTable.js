@@ -15,7 +15,7 @@
 import flagsMockData from './flagsMockData.js';
 import { h } from '/js/src/index.js';
 
-export default function flagsTable(model, run) {
+export default function flagsTable(model) {
     const runData = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows[0];
     const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
 
