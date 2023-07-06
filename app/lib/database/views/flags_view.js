@@ -23,16 +23,18 @@ const flags_view = (query) => `
             ds.name
 
         FROM quality_control_flags AS qcf
-        INNER JOIN data_passes_runs as dpr
-            ON dpr.id = qcf.pass_run_id
-        INNER JOIN runs_detectors as rd
-            ON qcf.run_detector_id = rd.id
+        INNER JOIN data_passes as dp
+            ON dp.id = qcf.data_pass_id
+        INNER JOIN runs as r
+            ON qcf.run_number = r.run_number
         INNER JOIN detectors_subsystems AS ds
             ON ds.id = rd.detector_id
         INNER JOIN flags_types_dictionary as ftd
             ON ftd.id = qcf.flag_type_id
         
-        WHERE rd.run_id = ${query.index}
+        WHERE rd.run_number = ${query.run_number} AND 
+            dp.id = ${query.data_pass} AND 
+            ds.name = ${query.detector}
         
     `;
 

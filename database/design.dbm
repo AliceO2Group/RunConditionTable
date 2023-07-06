@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="0,502" last-zoom="1" max-obj-count="31"
+<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="456,650" last-zoom="1" max-obj-count="31"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -162,7 +162,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="1340" y="1260"/>
+	<position x="1320" y="1260"/>
 	<column name="id" not-null="true" sequence="public.detectors_subsystems_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -245,11 +245,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="880" y="1320"/>
+	<position x="860" y="1300"/>
 	<column name="id" not-null="true" sequence="public.quality_control_flags_id_seq">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="pass_id" not-null="true">
+	<column name="data_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="run_number" not-null="true">
@@ -258,13 +258,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="detector_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
+	<column name="flag_type_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
 	<column name="time_start" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="time_end" not-null="true">
-		<type name="integer" length="0"/>
-	</column>
-	<column name="flag_type_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="comment">
@@ -486,7 +486,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="run_detector_id" not-null="true">
+	<column name="qcf_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="verification_time" not-null="true">
@@ -565,7 +565,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <constraint name="pass_id_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.data_passes" table="public.quality_control_flags">
-	<columns names="pass_id" ref-type="src-columns"/>
+	<columns names="data_pass_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -635,9 +635,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="run_det_verification_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+<constraint name="qcf_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.quality_control_flags" table="public.verifications">
-	<columns names="run_detector_id" ref-type="src-columns"/>
+	<columns names="qcf_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -718,7 +718,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_verifications_quality_control_flags" type="relfk" layers="0"
 	 src-table="public.verifications"
-	 dst-table="public.quality_control_flags" reference-fk="run_det_verification_fk"
+	 dst-table="public.quality_control_flags" reference-fk="qcf_fk"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_quality_control_flags_runs" type="relfk" layers="0"

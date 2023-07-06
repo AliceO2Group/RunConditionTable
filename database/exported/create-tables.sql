@@ -233,6 +233,7 @@ CREATE TABLE public.quality_control_flags (
 	id integer NOT NULL DEFAULT nextval('public.quality_control_flags_id_seq'::regclass),
 	pass_id integer NOT NULL,
 	run_number integer NOT NULL,
+	detector_id integer NOT NULL,
 	time_start integer NOT NULL,
 	time_end integer NOT NULL,
 	flag_type_id integer NOT NULL,
@@ -241,7 +242,6 @@ CREATE TABLE public.quality_control_flags (
 	addition_time bigint NOT NULL,
 	last_modification_by varchar,
 	last_modification_time bigint,
-	detector_id integer NOT NULL,
 	CONSTRAINT quality_control_flags_pkey PRIMARY KEY (id)
 );
 -- ddl-end --
