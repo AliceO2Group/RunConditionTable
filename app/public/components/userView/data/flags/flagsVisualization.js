@@ -49,5 +49,13 @@ export default function flagsVisualization(model) {
         h('.w-10', flagReason),
         flagVisualization(flagsGroupedByFlagReason[flagReason], time_start, time_end, flagColor(flagReason)));
 
-    return h('.relative', distinctFlagReasons.map((flagReason) => flagReasonVisualization(flagReason)));
+    return [
+        h('.relative', distinctFlagReasons.map((flagReason) => flagReasonVisualization(flagReason))),
+        h('.relative',
+            h('.flex-wrap.justify-between.items-center.pv1',
+                h('.w-10', ''),
+                h('.w-90.flex-wrap.justify-between.items-center',
+                    h('', 'start'),
+                    h('', 'end')))),
+    ];
 }
