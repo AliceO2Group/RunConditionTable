@@ -231,16 +231,16 @@ ALTER SEQUENCE public.quality_control_flags_id_seq OWNER TO postgres;
 -- DROP TABLE IF EXISTS public.quality_control_flags CASCADE;
 CREATE TABLE public.quality_control_flags (
 	id integer NOT NULL DEFAULT nextval('public.quality_control_flags_id_seq'::regclass),
-	pass_id integer NOT NULL,
+	data_pass_id integer NOT NULL,
 	run_number integer NOT NULL,
 	detector_id integer NOT NULL,
+	flag_type_id integer NOT NULL,
 	time_start integer NOT NULL,
 	time_end integer NOT NULL,
-	flag_type_id integer NOT NULL,
 	comment text,
 	added_by varchar NOT NULL,
 	addition_time bigint NOT NULL,
-	last_modification_by varchar,
+	last_modified_by varchar,
 	last_modification_time bigint,
 	CONSTRAINT quality_control_flags_pkey PRIMARY KEY (id)
 );
@@ -403,7 +403,7 @@ ALTER TABLE public.anchored_periods OWNER TO postgres;
 -- DROP TABLE IF EXISTS public.verifications CASCADE;
 CREATE TABLE public.verifications (
 	id integer NOT NULL,
-	run_detector_id integer NOT NULL,
+	qcf_id integer NOT NULL,
 	verification_time bigint NOT NULL,
 	verified_by varchar NOT NULL,
 	CONSTRAINT verifications_pk PRIMARY KEY (id)
@@ -466,7 +466,7 @@ ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- object: pass_id_fk | type: CONSTRAINT --
 -- ALTER TABLE public.quality_control_flags DROP CONSTRAINT IF EXISTS pass_id_fk CASCADE;
-ALTER TABLE public.quality_control_flags ADD CONSTRAINT pass_id_fk FOREIGN KEY (pass_id)
+ALTER TABLE public.quality_control_flags ADD CONSTRAINT pass_id_fk FOREIGN KEY (data_pass_id)
 REFERENCES public.data_passes (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
@@ -548,9 +548,9 @@ REFERENCES public.periods (id) MATCH SIMPLE
 ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: run_det_verification_fk | type: CONSTRAINT --
--- ALTER TABLE public.verifications DROP CONSTRAINT IF EXISTS run_det_verification_fk CASCADE;
-ALTER TABLE public.verifications ADD CONSTRAINT run_det_verification_fk FOREIGN KEY (run_detector_id)
+-- object: qcf_fk | type: CONSTRAINT --
+-- ALTER TABLE public.verifications DROP CONSTRAINT IF EXISTS qcf_fk CASCADE;
+ALTER TABLE public.verifications ADD CONSTRAINT qcf_fk FOREIGN KEY (qcf_id)
 REFERENCES public.quality_control_flags (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
