@@ -23,8 +23,10 @@ function filterDistinct(a) {
 }
 
 export default function flagsVisualization(model) {
-    // Const [runData] = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows;
-    // console.log(model.fetchedData[PN.flags]);
+    /*
+     * Const [runData] = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows;
+     * console.log(model.fetchedData[PN.flags]);
+     */
     return 'flagsVisualization';
     const { time_start, time_end } = runData;
     const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);

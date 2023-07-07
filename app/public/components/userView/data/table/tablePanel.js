@@ -138,7 +138,7 @@ export default function tablePanel(model) {
                             }, [
                                 tableHeader(visibleFields, data, model),
                                 model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
+                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page, dataPointer.index),
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
@@ -154,11 +154,11 @@ export default function tablePanel(model) {
 }
 
 function tableBody(
-    model, visibleFields, data, cellsSpecials, page,
+    model, visibleFields, data, cellsSpecials, page, index,
 ) {
     return h('tbody', { id: `table-body-${data.url}` },
         [postingDataConfig[page] ? postForm(model, data) : '']
             .concat(data.rows.map((item) => row(
-                model, visibleFields, data, item, cellsSpecials,
+                model, visibleFields, data, item, cellsSpecials, index,
             ))));
 }

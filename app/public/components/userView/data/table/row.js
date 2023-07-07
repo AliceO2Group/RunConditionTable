@@ -15,9 +15,11 @@
 import { h } from '/js/src/index.js';
 import { reduceSerialIf } from '../../../../utils/utils.js';
 
-const detectorIcon = (model, item, n) =>
+const detectorIcon = (model, item, n, index) =>
     h('button.btn.transparent.tooltip.noBorderBottom.pointer', {
-        onclick: () => model.router.go(`/?page=flags&data_pass_name=${item[n]}&run_numbers=${item.run_number}&rows-on-site=50&site=1`),
+        onclick: () => {
+            model.router.go(`/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&rows-on-site=50&site=1`);
+        },
     },
     h('svg', { width: '20px', height: '20px' },
         h('circle',
@@ -35,7 +37,7 @@ const detectorIcon = (model, item, n) =>
     h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
 
 export default function row(
-    model, visibleFields, data, item, cellsSpecials,
+    model, visibleFields, data, item, cellsSpecials, index,
 ) {
     const rowDivDef = reduceSerialIf(
         'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
@@ -48,7 +50,7 @@ export default function row(
                 ? cellsSpecials[field.name]
                     ? cellsSpecials[field.name](model, item)
                     : /.*_detector/.test(field.name)
-                        ? detectorIcon(model, item, field.name)
+                        ? detectorIcon(model, item, field.name, index)
                         : item[field.name]
                 : '..'));
 
