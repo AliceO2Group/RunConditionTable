@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="450,695" last-zoom="1" max-obj-count="31"
+<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="803,636" last-zoom="1" max-obj-count="31"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -271,10 +271,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer" length="0"/>
 	</column>
 	<column name="time_start" not-null="true">
-		<type name="integer" length="0"/>
+		<type name="bigint" length="0"/>
 	</column>
 	<column name="time_end" not-null="true">
-		<type name="integer" length="0"/>
+		<type name="bigint" length="0"/>
 	</column>
 	<column name="comment">
 		<type name="text" length="0"/>
@@ -491,7 +491,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="1300" y="1420"/>
+	<position x="1360" y="1480"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -499,7 +499,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer" length="0"/>
 	</column>
 	<column name="verification_time" not-null="true">
-		<type name="bigint" length="0"/>
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
 	</column>
 	<column name="verified_by" not-null="true">
 		<type name="varchar" length="0"/>

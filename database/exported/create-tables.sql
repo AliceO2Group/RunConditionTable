@@ -238,8 +238,8 @@ CREATE TABLE public.quality_control_flags (
 	run_number integer NOT NULL,
 	detector_id integer NOT NULL,
 	flag_type_id integer NOT NULL,
-	time_start integer NOT NULL,
-	time_end integer NOT NULL,
+	time_start bigint NOT NULL,
+	time_end bigint NOT NULL,
 	comment text,
 	added_by varchar NOT NULL,
 	addition_time timestamp with time zone NOT NULL,
@@ -407,7 +407,7 @@ ALTER TABLE public.anchored_periods OWNER TO postgres;
 CREATE TABLE public.verifications (
 	id serial NOT NULL,
 	qcf_id integer NOT NULL,
-	verification_time bigint NOT NULL,
+	verification_time timestamp with time zone NOT NULL,
 	verified_by varchar NOT NULL,
 	CONSTRAINT verifications_pk PRIMARY KEY (id)
 );
