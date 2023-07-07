@@ -25,17 +25,50 @@
  */
 
 .close-10 {
-    background-image: url('/styles/images/icons/20/Close.svg');
-    width: 20px;
-    height: 20px;
-    scale: 0.5;
+    background-image: url('/styles/images/icons/10/primary/Close.svg');
+    width: 10px;
+    height: 10px;
     display: inline-block;
-    vertical-align: middle;
+}
+
+.expand-arrow-10-primary {
+    background-image: url('/styles/images/icons/10/primary/Expand\ Arrow.svg');
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+}
+
+.sort-up-10-primary {
+    background-image: url('/styles/images/icons/10/primary/Sort\ Up.svg');
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+}
+
+.sort-down-10-primary {
+    background-image: url('/styles/images/icons/10/primary/Sort\ Down.svg');
+    width: 10px;
+    height: 10px;
+    display: inline-block;
 }
 
 /**
  * 20px
  */
+
+.close-20-primary {
+    background-image: url('/styles/images/icons/20/primary/Close.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.close-20-off-white {
+    background-image: url('/styles/images/icons/20/off-white/Close.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
 
 .chevron-down-20 {
     background-image: url('/styles/images/icons/20/Chevron\ Down.svg');

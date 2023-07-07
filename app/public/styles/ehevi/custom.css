@@ -194,6 +194,10 @@
     gap: 20px;
 }
 
+.ehevi .vertical-middle {
+    vertical-align: middle !important;
+}
+
 .ehevi .text-primary {
     color: var(--primary);
 }
