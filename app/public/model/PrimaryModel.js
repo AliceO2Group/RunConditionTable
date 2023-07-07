@@ -153,7 +153,7 @@ export default class PrimaryModel extends Observable {
     fetchRunsPerDataPass(dataPassName) {
         console.log(dataPassName);
     }
-    
+
     handleClick(e) {
         this.router.handleLinkEvent(e);
         this.notify();
