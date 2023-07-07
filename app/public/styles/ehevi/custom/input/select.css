@@ -27,9 +27,9 @@
   }
 
 .ehevi .select.show-columns {
-    min-width: 150px;
-    background-position-x: 90%;
-    background-position-y: 10px;
+    min-width: 170px;
+    background-position-x: 92%;
+    background-position-y: 5px;
 }
 
 .ehevi .select.color-theme {
@@ -38,7 +38,7 @@
     min-width: fit-content;
     padding-right: 30px;
     background-position-x: 85%;
-    background-position-y: 7px;
+    background-position-y: 5px;
 }
 
 .ehevi select.filter-select {
