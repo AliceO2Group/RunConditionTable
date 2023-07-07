@@ -19,6 +19,7 @@
     background-image: url('/styles/images/icons/10/Expand\ Arrow.svg');
     background-repeat: no-repeat;
     background-color: var(--white);
+    background-position-y: 5px;
     border: 1px solid var(--selection-color) !important;
     border-radius: 10px;
     font-size: xx-small;
@@ -38,7 +39,6 @@
     min-width: fit-content;
     padding-right: 30px;
     background-position-x: 85%;
-    background-position-y: 5px;
 }
 
 .ehevi select.filter-select {
@@ -46,8 +46,7 @@
     min-height: fit-content;
     min-width: fit-content;
     padding-right: 30px;
-    background-position-x: 85%;
-    background-position-y: 7px;
+    background-position-x: 90%;
 }
 
 .ehevi select.filter-select option[disabled]:first-child {
