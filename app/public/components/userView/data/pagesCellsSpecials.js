@@ -97,7 +97,6 @@ pagesCellsSpecials[PN.dataPasses] = {
                     const search = `?page=${PN.flags}&data_pass_name=${item.name}&run_numbers=${runNumbers}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
                     const flagsUrl = new URL(url.origin + url.pathname + search);
                     await model.fetchedData.reqForData(true, flagsUrl);
-                    console.log(model.fetchedData[PN.flags]);
                     model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`);
                 },
             }, 'runs'),
