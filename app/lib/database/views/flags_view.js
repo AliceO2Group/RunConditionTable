@@ -15,13 +15,18 @@
 const flags_view = (query) => {
     
     rn = query.run_numbers;
-    let rn_sql = null;
+    let rn_sql = "";
     if (typeof(rn) === 'object') {
         rn_sql = rn.join(",");
     } else if (typeof(rn) === 'string') {
         rn_sql = rn
     } else {
         throw `run_number seems to be incorrect ${rn}`
+    }
+
+    let det_sql = "";
+    if (query.detector) {
+        det_sql = `AND ds.name = '${query.detector}'`
     }
     
     return `
@@ -50,7 +55,8 @@ const flags_view = (query) => {
             ON qcf.id = v.qcf_id
 
         WHERE r.run_number in (${rn_sql}) AND 
-            dp.name = ${query.data_pass_name}
+            dp.name = '${query.data_pass_name}'
+            ${det_sql}
         GROUP BY qcf.id, qcf.time_start, qcf.time_end, ftd.name, qcf.comment, r.run_number, ds.name
 
     `;

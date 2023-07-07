@@ -14,7 +14,8 @@
 /* eslint-disable max-len */
 
 const detectors = require('./detectors.js');
-const flags = require('./flagsDefinitions.json')
+const flags = require('./flagsDefinitions.json');
+
 const particle_phys_data = {
     p: {
         full_name: 'proton',

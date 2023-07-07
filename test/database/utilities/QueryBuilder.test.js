@@ -20,7 +20,7 @@ module.exports = () => {
         describe('should', () => {
             it('build query', async () => {
                 const params = {page: 'periods'};
-                const result = QueryBuilder.build(params);
+                const result = QueryBuilder.buildSelect(params);
                 expect(result).to.not.be.null;
             });
 
@@ -30,7 +30,7 @@ module.exports = () => {
                     FROM periods_view`
 
                 const params = {page: 'periods'};
-                const result = QueryBuilder.build(params);
+                const result = QueryBuilder.buildSelect(params);
                 expect(result).to.not.be.null;
                 expect(result).to.not.be.equal(expectedOutcome);
             });
