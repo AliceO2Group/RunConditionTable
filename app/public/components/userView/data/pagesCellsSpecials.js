@@ -84,7 +84,7 @@ pagesCellsSpecials[PN.dataPasses] = {
         h('td', item.name),
         h('td',
             h('button.btn.chip.m1', {
-                onclick: async (/* E */) => {
+                onclick: async () => {
                     const page = model.fetchedData[PN.dataPasses];
                     const [pIndex] = Object.keys(page);
                     const { url } = page[pIndex].payload;
@@ -96,31 +96,12 @@ pagesCellsSpecials[PN.dataPasses] = {
 
                     const runNumbers = model.fetchedData[PN.runsPerDataPass][dpIndex].payload.rows.map((row) => row.run_number);
 
-                    /*
-                     * Console.log(runNumbers);
-                     * console.log(url);
-                     * const search =
-                     */
                     model.fetchRunsPerDataPass(item.name);
                     const search = `?page=${PN.flags}&data_pass_name=${item.name}&run_numbers=${runNumbers}`;
                     const flagsUrl = new URL(url.origin + url.pathname + search);
-
-                    /*
-                     * Const page = model.fetchedData[PN.dataPasses];
-                     * const { url } = page[index].payload;
-                     * console.log(url);
-                     */
                     console.log(flagsUrl);
                     await model.fetchedData.reqForData(true, flagsUrl);
                     console.log(model.fetchedData[PN.flags]);
-
-                    /*
-                     * Model.fetchedData.reqForData(true, `/?page=${}`);
-                     * model.handleClick(e);
-                     * model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`);
-                     */
-
-                    // Model.handleClick(e);
                     model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`);
                 },
             }, 'runs'),
