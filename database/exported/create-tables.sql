@@ -159,10 +159,13 @@ ALTER SEQUENCE public.flags_types_dictionary_id_seq OWNER TO postgres;
 -- object: public.flags_types_dictionary | type: TABLE --
 -- DROP TABLE IF EXISTS public.flags_types_dictionary CASCADE;
 CREATE TABLE public.flags_types_dictionary (
-	id integer NOT NULL DEFAULT nextval('public.flags_types_dictionary_id_seq'::regclass),
-	flag text NOT NULL,
+	id integer NOT NULL,
+	name varchar NOT NULL,
+	method varchar NOT NULL,
+	bad bool NOT NULL,
+	obsolate bool NOT NULL,
 	CONSTRAINT flags_types_dictionary_pkey PRIMARY KEY (id),
-	CONSTRAINT ftp_name_unique UNIQUE (flag)
+	CONSTRAINT ftp_name_unique UNIQUE (name)
 );
 -- ddl-end --
 ALTER TABLE public.flags_types_dictionary OWNER TO postgres;
@@ -239,9 +242,9 @@ CREATE TABLE public.quality_control_flags (
 	time_end integer NOT NULL,
 	comment text,
 	added_by varchar NOT NULL,
-	addition_time bigint NOT NULL,
+	addition_time timestamp with time zone NOT NULL,
 	last_modified_by varchar,
-	last_modification_time bigint,
+	last_modification_time timestamp with time zone,
 	CONSTRAINT quality_control_flags_pkey PRIMARY KEY (id)
 );
 -- ddl-end --
@@ -552,7 +555,7 @@ ON DELETE CASCADE ON UPDATE CASCADE;
 -- ALTER TABLE public.verifications DROP CONSTRAINT IF EXISTS qcf_fk CASCADE;
 ALTER TABLE public.verifications ADD CONSTRAINT qcf_fk FOREIGN KEY (qcf_id)
 REFERENCES public.quality_control_flags (id) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
+ON DELETE CASCADE ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: "grant_CU_eb94f049ac" | type: PERMISSION --

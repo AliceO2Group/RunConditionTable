@@ -12,11 +12,24 @@
  * or submit itself to any jurisdiction.
  */
 
-const flags_view = (query) => `
+const flags_view = (query) => {
+    
+    rn = query.run_numbers;
+    let rn_sql = null;
+    if (typeof(rn) === 'object') {
+        rn_sql = rn.join(",");
+    } else if (typeof(rn) === 'string') {
+        rn_sql = rn
+    } else {
+        throw `run_number seems to be incorrect ${rn}`
+    }
+    
+    return `
+    SELECT
         qcf.id, 
         qcf.time_start, 
         qcf.time_end, 
-        ftd.flag, 
+        ftd.name, 
         qcf.comment,
         r.run_number,
         ds.name,
@@ -36,10 +49,11 @@ const flags_view = (query) => `
         LEFT OUTER JOIN verifications as v
             ON qcf.id = v.qcf_id
 
-        WHERE r.run_number in (${query.run_numbers.join(",")}) AND 
-            dp.name = ${query.data_pass_id}
-        GROUP BY qcf.id, qcf.time_start, qcf.time_end, ftd.flag, qcf.comment, r.run_number, ds.name
+        WHERE r.run_number in (${rn_sql}) AND 
+            dp.name = ${query.data_pass_name}
+        GROUP BY qcf.id, qcf.time_start, qcf.time_end, ftd.name, qcf.comment, r.run_number, ds.name
 
     `;
+}
 
 module.exports = flags_view;

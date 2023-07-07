@@ -1,0 +1,100 @@
+[
+  {
+    "id": "1",
+    "method": "Unknown",
+    "name": "Unknown",
+    "bad": "1",
+    "obsolete": "0"
+  },
+  {
+    "id": "2",
+    "method": "UnknownQuality",
+    "name": "Unknown Quality",
+    "bad": "1",
+    "obsolete": "0"
+  },
+  {
+    "id": "3",
+    "method": "CertifiedByExpert",
+    "name": "Certified by Expert",
+    "bad": "0",
+    "obsolete": "0"
+  },
+  {
+    "id": "10",
+    "method": "NoDetectorData",
+    "name": "No Detector Data",
+    "bad": "1",
+    "obsolete": "0"
+  },
+  {
+    "id": "11",
+    "method": "LimitedAcceptance",
+    "name": "Limited acceptance",
+    "bad": "1",
+    "obsolete": "0"
+  },
+  {
+    "id": "12",
+    "method": "BadPID",
+    "name": "Bad PID",
+    "bad": "1",
+    "obsolete": "0"
+  },
+  {
+    "id": "13",
+    "method": "BadTracking",
+    "name": "Bad Tracking",
+    "bad": "1",
+    "obsolete": "0"
+  },
+  {
+    "id": "14",
+    "method": "BadHadronPID",
+    "name": "Bad Hadron PID",
+    "bad": "1",
+    "obsolete": "0"
+  },
+  {
+    "id": "15",
+    "method": "BadElectronPID",
+    "name": "Bad Electron PID",
+    "bad": "1",
+    "obsolete": "0"
+  },
+  {
+    "id": "16",
+    "method": "BadEMCalorimetry",
+    "name": "Bad EM Calorimetry",
+    "bad": "1",
+    "obsolete": "0"
+  },
+  {
+    "id": "17",
+    "method": "BadPhotonCalorimetry",
+    "name": "Bad Photon Calorimetry",
+    "bad": "1",
+    "obsolete": "0"
+  },
+  {
+    "id": "65500",
+    "method": "ObsoleteFlagExample",
+    "name": "Obsolete flag example",
+    "bad": "1",
+    "obsolete": "1"
+  },
+  {
+    "id": "65501",
+    "method": "NotBadFlagExample",
+    "name": "Not bad flag example",
+    "bad": "0",
+    "obsolete": "0"
+  },
+  {
+    "id": "65535",
+    "method": "Invalid",
+    "name": "Invalid",
+    "bad": "1",
+    "obsolete": "0"
+  }
+]

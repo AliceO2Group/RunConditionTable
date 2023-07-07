@@ -149,8 +149,35 @@ class DatabaseService {
         }
 
         try {
-            const query = QueryBuilder.build(params);
+            const query = QueryBuilder.buildSelect(params);
             await this.pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler);
+        } catch (e) {
+            this.logger.error(e.stack)
+            this.responseWithStatus(res, 400, e)
+        }
+    }
+
+
+    async pgExecDataInsert(req, res) {
+        this.checkToken(req, res);
+        const dbResponseHandler = (dbRes) => {
+            return res.json({data: dbRes})
+        }
+        const dbResErrorHandler = (e) => {
+            this.logger.error(e.message + ' :: ' + e.stack)
+            this.responseWithStatus(res, 500, e.code);
+        }
+        const connectErrorHandler = (connectErr) => {
+            this.logger.error('Error acquiring client:: ' + connectErr.stack)
+            this.responseWithStatus(res, 500, connectErr.message);
+        }
+        
+        try {
+            await this.pgExec(
+                QueryBuilder.buildInsert(params), 
+                connectErrorHandler, 
+                dbResponseHandler, 
+                dbResErrorHandler);
         } catch (e) {
             this.logger.error(e.stack)
             this.responseWithStatus(res, 400, e)
