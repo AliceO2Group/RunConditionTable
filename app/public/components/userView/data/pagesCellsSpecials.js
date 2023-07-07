@@ -96,7 +96,6 @@ pagesCellsSpecials[PN.dataPasses] = {
 
                     const runNumbers = model.fetchedData[PN.runsPerDataPass][dpIndex].payload.rows.map((row) => row.run_number);
 
-                    model.fetchRunsPerDataPass(item.name);
                     const search = `?page=${PN.flags}&data_pass_name=${item.name}&run_numbers=${runNumbers}`;
                     const flagsUrl = new URL(url.origin + url.pathname + search);
                     console.log(flagsUrl);

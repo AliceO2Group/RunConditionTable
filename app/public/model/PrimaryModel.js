@@ -150,10 +150,6 @@ export default class PrimaryModel extends Observable {
         Reflect.deleteProperty(this.fetchedData[page], index);
     }
 
-    fetchRunsPerDataPass(dataPassName) {
-        console.log(dataPassName);
-    }
-
     handleClick(e) {
         this.router.handleLinkEvent(e);
         this.notify();
