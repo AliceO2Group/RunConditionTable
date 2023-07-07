@@ -14,7 +14,7 @@
 /* eslint-disable max-len */
 
 const detectors = require('./detectors.js');
-
+const flags = require('./flagsDefinitions.json')
 const particle_phys_data = {
     p: {
         full_name: 'proton',
@@ -51,6 +51,11 @@ module.exports = {
             description: 'particles dict insert',
             query: Object.entries(particle_phys_data).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "A", "Z")
                     VALUES (DEFAULT, '${name}', '${d.full_name}', ${d.A}, ${d.Z});`),
+        },
+        flags: {
+            description: 'flags types dict insert',
+            query: flags.map((f) => `INSERT INTO flags_types_dictionary("id", "name", "method", "bad", "obsolate")
+                    VALUES (${f.id}, '${f.name}', '${f.method}', ${f.bad}::bool, ${f.obsolete}::bool);`),
         },
     },
 

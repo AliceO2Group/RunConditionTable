@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="636,651" last-zoom="1" max-obj-count="31"
+<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="450,695" last-zoom="1" max-obj-count="31"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -182,22 +182,31 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </sequence>
 
-<table name="flags_types_dictionary" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+<table name="flags_types_dictionary" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="480" y="1560"/>
-	<column name="id" not-null="true" sequence="public.flags_types_dictionary_id_seq">
+	<position x="560" y="1560"/>
+	<column name="id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="flag" not-null="true">
-		<type name="text" length="0"/>
+	<column name="name" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="method" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="bad" not-null="true">
+		<type name="bool" length="0"/>
+	</column>
+	<column name="obsolate" not-null="true">
+		<type name="bool" length="0"/>
 	</column>
 	<constraint name="flags_types_dictionary_pkey" type="pk-constr" table="public.flags_types_dictionary">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 	<constraint name="ftp_name_unique" type="uq-constr" table="public.flags_types_dictionary">
-		<columns names="flag" ref-type="src-columns"/>
+		<columns names="name" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -274,13 +283,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="varchar" length="0"/>
 	</column>
 	<column name="addition_time" not-null="true">
-		<type name="bigint" length="0"/>
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
 	</column>
 	<column name="last_modified_by">
 		<type name="varchar" length="0"/>
 	</column>
 	<column name="last_modification_time">
-		<type name="bigint" length="0"/>
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
 	</column>
 	<constraint name="quality_control_flags_pkey" type="pk-constr" table="public.quality_control_flags">
 		<columns names="id" ref-type="src-columns"/>
@@ -636,7 +645,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="qcf_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.quality_control_flags" table="public.verifications">
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="public.quality_control_flags" table="public.verifications">
 	<columns names="qcf_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>

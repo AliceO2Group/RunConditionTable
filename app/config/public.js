@@ -56,6 +56,7 @@ const mcViews = {
 
 module.exports = { // Properties that will be provided to frontend in the public folder
     roles: require('./roles.js'),
+    flagsTypes: require('./flagsDefinitions.json'),
     endpoints: {
         login: '/login/',
         logout: '/logout/',
@@ -95,6 +96,13 @@ module.exports = { // Properties that will be provided to frontend in the public
         runsPerPeriod: 'runsPerPeriod',
         runsPerDataPass: 'runsPerDataPass',
         flags: 'flags',
+    },
+
+    operationsNames: {
+        flag_insert: 'flags_insert',
+        flag_delete: 'flag_delete',
+        flag_update: 'flag_update',
+        verification_insert: 'verification_insert'
     },
 
     filteringParams: {

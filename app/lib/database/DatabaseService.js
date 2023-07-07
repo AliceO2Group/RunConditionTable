@@ -149,7 +149,7 @@ class DatabaseService {
         }
 
         try {
-            const query = QueryBuilder.build(params);
+            const query = QueryBuilder.buildSelect(params);
             await this.pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler);
         } catch (e) {
             this.logger.error(e.stack)

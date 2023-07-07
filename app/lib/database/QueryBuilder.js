@@ -13,8 +13,10 @@
  */
 
 const config = require('../config/configProvider.js');
-const views = require("./views") 
-const { pagesNames: PN } = config.public;
+const views = require('./views');
+const procedures = require('./procedures')
+
+const { pagesNames: PN, procedures: PC } = config.public;
 const DRP = config.public.dataReqParams;
 
 const pageToViewName = {};
@@ -82,7 +84,7 @@ class QueryBuilder {
         return sqlWhereClause?.length > 0 ? `WHERE ${sqlWhereClause}` : '';
     }
 
-    static build(params) {
+    static buildSelect(params) {
         
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
@@ -113,6 +115,9 @@ class QueryBuilder {
                 ${dataSubsetQueryPart(params)};`;
     }
 
+    static buildInsertOrUpdate(params) {
+        return procedures[params.procedure](params)
+    }
 }
 
 module.exports = QueryBuilder;
