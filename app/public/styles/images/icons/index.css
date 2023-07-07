@@ -70,6 +70,20 @@
     display: inline-block;
 }
 
+.sorting-20-primary {
+    background-image: url('/styles/images/icons/20/primary/Sorting.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.sorting-20-off-white {
+    background-image: url('/styles/images/icons/20/off-white/Sorting.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
 .chevron-down-20 {
     background-image: url('/styles/images/icons/20/Chevron\ Down.svg');
     width: 20px;
