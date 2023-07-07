@@ -102,7 +102,7 @@ module.exports = { // Properties that will be provided to frontend in the public
         flag_insert: 'flags_insert',
         flag_delete: 'flag_delete',
         flag_update: 'flag_update',
-        verification_insert: 'verification_insert'
+        verification_insert: 'verification_insert',
     },
 
     filteringParams: {
