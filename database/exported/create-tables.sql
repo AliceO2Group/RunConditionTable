@@ -1,5 +1,5 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler version: 1.0.0-beta1
+-- pgModeler version: 1.0.4
 -- PostgreSQL version: 15.0
 -- Project Site: pgmodeler.io
 -- Model Author: ---
@@ -231,15 +231,16 @@ ALTER SEQUENCE public.quality_control_flags_id_seq OWNER TO postgres;
 -- DROP TABLE IF EXISTS public.quality_control_flags CASCADE;
 CREATE TABLE public.quality_control_flags (
 	id integer NOT NULL DEFAULT nextval('public.quality_control_flags_id_seq'::regclass),
-	pass_run_id integer NOT NULL,
-	run_detector_id integer NOT NULL,
+	data_pass_id integer NOT NULL,
+	run_number integer NOT NULL,
+	detector_id integer NOT NULL,
+	flag_type_id integer NOT NULL,
 	time_start integer NOT NULL,
 	time_end integer NOT NULL,
-	flag_type_id integer NOT NULL,
 	comment text,
 	added_by varchar NOT NULL,
 	addition_time bigint NOT NULL,
-	last_modification_by varchar,
+	last_modified_by varchar,
 	last_modification_time bigint,
 	CONSTRAINT quality_control_flags_pkey PRIMARY KEY (id)
 );
@@ -280,10 +281,9 @@ ALTER SEQUENCE public.runs_detectors_id_seq OWNER TO postgres;
 -- object: public.runs_detectors | type: TABLE --
 -- DROP TABLE IF EXISTS public.runs_detectors CASCADE;
 CREATE TABLE public.runs_detectors (
-	id integer NOT NULL DEFAULT nextval('public.runs_detectors_id_seq'::regclass),
-	detector_id integer,
-	run_number integer,
-	CONSTRAINT runs_detectors_pkey PRIMARY KEY (id),
+	detector_id integer NOT NULL,
+	run_number integer NOT NULL,
+	CONSTRAINT runs_detectors_pkey PRIMARY KEY (detector_id,run_number),
 	CONSTRAINT rd_pair_unique UNIQUE (detector_id,run_number)
 );
 -- ddl-end --
@@ -402,8 +402,8 @@ ALTER TABLE public.anchored_periods OWNER TO postgres;
 -- object: public.verifications | type: TABLE --
 -- DROP TABLE IF EXISTS public.verifications CASCADE;
 CREATE TABLE public.verifications (
-	id integer NOT NULL,
-	run_detector_id integer NOT NULL,
+	id serial NOT NULL,
+	qcf_id integer NOT NULL,
 	verification_time bigint NOT NULL,
 	verified_by varchar NOT NULL,
 	CONSTRAINT verifications_pk PRIMARY KEY (id)
@@ -457,18 +457,32 @@ REFERENCES public.beams_dictionary (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: run_detector_fk | type: CONSTRAINT --
--- ALTER TABLE public.quality_control_flags DROP CONSTRAINT IF EXISTS run_detector_fk CASCADE;
-ALTER TABLE public.quality_control_flags ADD CONSTRAINT run_detector_fk FOREIGN KEY (run_detector_id)
-REFERENCES public.runs_detectors (id) MATCH SIMPLE
-ON DELETE CASCADE ON UPDATE CASCADE;
--- ddl-end --
-
 -- object: flag_type_fk | type: CONSTRAINT --
 -- ALTER TABLE public.quality_control_flags DROP CONSTRAINT IF EXISTS flag_type_fk CASCADE;
 ALTER TABLE public.quality_control_flags ADD CONSTRAINT flag_type_fk FOREIGN KEY (flag_type_id)
 REFERENCES public.flags_types_dictionary (id) MATCH SIMPLE
 ON DELETE CASCADE ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: pass_id_fk | type: CONSTRAINT --
+-- ALTER TABLE public.quality_control_flags DROP CONSTRAINT IF EXISTS pass_id_fk CASCADE;
+ALTER TABLE public.quality_control_flags ADD CONSTRAINT pass_id_fk FOREIGN KEY (data_pass_id)
+REFERENCES public.data_passes (id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: run_number_fk | type: CONSTRAINT --
+-- ALTER TABLE public.quality_control_flags DROP CONSTRAINT IF EXISTS run_number_fk CASCADE;
+ALTER TABLE public.quality_control_flags ADD CONSTRAINT run_number_fk FOREIGN KEY (run_number)
+REFERENCES public.runs (run_number) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: detector_id_fk | type: CONSTRAINT --
+-- ALTER TABLE public.quality_control_flags DROP CONSTRAINT IF EXISTS detector_id_fk CASCADE;
+ALTER TABLE public.quality_control_flags ADD CONSTRAINT detector_id_fk FOREIGN KEY (detector_id)
+REFERENCES public.detectors_subsystems (id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: run_fk | type: CONSTRAINT --
@@ -534,10 +548,10 @@ REFERENCES public.periods (id) MATCH SIMPLE
 ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: run_det_verification_fk | type: CONSTRAINT --
--- ALTER TABLE public.verifications DROP CONSTRAINT IF EXISTS run_det_verification_fk CASCADE;
-ALTER TABLE public.verifications ADD CONSTRAINT run_det_verification_fk FOREIGN KEY (run_detector_id)
-REFERENCES public.runs_detectors (id) MATCH SIMPLE
+-- object: qcf_fk | type: CONSTRAINT --
+-- ALTER TABLE public.verifications DROP CONSTRAINT IF EXISTS qcf_fk CASCADE;
+ALTER TABLE public.verifications ADD CONSTRAINT qcf_fk FOREIGN KEY (qcf_id)
+REFERENCES public.quality_control_flags (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 

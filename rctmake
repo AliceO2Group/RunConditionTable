@@ -139,6 +139,10 @@ else
                 IGNORE_STAGE_ERRORS='true';
                 shift 1;
             ;;
+            -Y)
+                ALL_PERMISSIONS='true';
+                shift 1;
+            ;;
             
             *)
                 usage "Incorrect flag: $1"
@@ -203,6 +207,9 @@ for stage in $STAGES; do
                 ip)
                     docker inspect $DB_CONTAINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
                 ;;
+                counts)
+                    docker exec $DB_CONTAINER_NAME /docker-entrypoint-initdb.d/utils/print-data.sh
+                ;;
                 *)
                     incorrect_stage_err $stage;
                 ;;
@@ -234,13 +241,16 @@ for stage in $STAGES; do
                         usage "Dump file unspecified, use flag -F|--dump-file <FILE>";
                     fi
                     if [ -f "$DUMP_PATH" ]; then
-                        echo "Do you want to overwrite existing file $DUMP_PATH :  y|[n] ?";
-                        read permission;
-                        if [[ "$permission" =~ ^y|Y|yes|Yes$ ]]; then
-                            echo "continuing";
-                        else 
-                            DO_NOT_PERFORME_WHILE_FILE_EXISTS="true";
-                            echo 'making dump canceled';
+                        if [[ "$ALL_PERMISSIONS" != 'true' ]]; then
+                            echo "Do you want to overwrite existing file $DUMP_PATH :  y|[n] ?";
+                            read permission;
+                        
+                            if [[ "$ALL_PERMISSIONS" = 'true' ]] || [[ "$permission" =~ ^y|Y|yes|Yes$ ]]; then
+                                echo "continuing";
+                            else 
+                                DO_NOT_PERFORME_WHILE_FILE_EXISTS="true";
+                                echo 'making dump canceled';
+                            fi
                         fi
                     fi
 
@@ -266,7 +276,7 @@ for stage in $STAGES; do
                 ;;
 
                 restore|re)
-                    if [ -z "$DUMP_PATH" ]; then
+                    if [ -z "$DUMP_FILE" ]; then
                         usage "Dump file name unspecified, use flag -F|--dump-file <FILE>";
                     fi
                     docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/delete-data.sql" \
@@ -274,8 +284,32 @@ for stage in $STAGES; do
                     && docker exec $DB_CONTAINER_NAME pg_restore --data-only -U $RCT_USER -d $RCT_DATABASE $CONTAINER_DUMP_PATH;
                 ;;
 
+                migrate|mg)
+                    if [ -z "$DUMP_FILE" ]; then
+                        usage "Dump file name unspecified, use flag -F|--dump-file <FILE>";
+                    fi
+                    if ! $PROJECT_DIR/rctmake dump:restore -F $DUMP_FILE; then
+                        docker exec $DB_CONTAINER_NAME /docker-entrypoint-initdb.d/utils/print-data.sh
+
+                        echo Is it ok?
+                        echo "What do you want to do with file: $DUMP_PATH  ?";
+                        echo "Cancel operation | Replace | As new File";
+                        echo  " : [c]|r|n" 
+                        read opt;
+                        if [[ "$opt" =~ ^r$ ]]; then
+                            $PROJECT_DIR/rctmake dump:make -F $DUMP_FILE -Y
+                        elif [[ "$opt" =~ ^n$ ]]; then
+                            $PROJECT_DIR/rctmake dump:make -F $DUMP_FILE.migrated
+                        else 
+                            exit 0;
+                        fi
+                    else
+                        echo nothing to do;
+                    fi
+                ;;
+
                 remove|rm)
-                    if [ -z "$DUMP_PATH" ]; then
+                    if [ -z "$DUMP_FIL" ]; then
                         usage "dump file unspecified, use flag -F|--dump-file <FILE>";
                     fi 
                     rm $DUMP_PATH;
@@ -310,6 +344,13 @@ for stage in $STAGES; do
                 fi
                 build "$bs";
             done
+            # if [[ -n "$FAST_DUMP" ]]; then
+            #     ctr=''
+            #     while (! docker ps | grep -E "o2-rct_database.*Up" &> /dev/null) || (! $PROJECT_DIR/rctmake dump:restore -F $FAST_DUMP &> /dev/null) && [[ $(echo $ctr | wc -c) -lt 20 ]]; do
+            #         sleep 0.5;    
+            #     done
+            #     docker logs $APP_CONTAINER_NAME
+            # fi
         ;;
 
         attach)

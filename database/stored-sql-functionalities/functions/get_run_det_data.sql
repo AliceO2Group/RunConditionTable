@@ -7,7 +7,7 @@ LANGUAGE plpgsql
 AS $body$ 
 DECLARE ret integer:= null;
 BEGIN
-    SELECT rd.id INTO ret
+    SELECT 0 INTO ret -- TODO
         FROM runs_detectors AS rd 
         INNER JOIN detectors_subsystems AS ds 
             ON rd.detector_id = ds.id

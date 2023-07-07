@@ -15,5 +15,6 @@
 
         "LICENSE": true,
         "node_modules": true,
-      }
+    },
+    "cmake.configureOnOpen": false
 }

@@ -13,29 +13,33 @@
  */
 
 const flags_view = (query) => `
-        SELECT
-            --qcf.id, 
-            qcf.start AS flagStart, 
-            qcf.end AS flagEnd, 
-            ftd.flag, 
-            qcf.comment, 
-            dpr.data_pass_id,
-            ds.name
+        qcf.id, 
+        qcf.time_start, 
+        qcf.time_end, 
+        ftd.flag, 
+        qcf.comment,
+        r.run_number,
+        ds.name,
+        array_agg(v.verified_by) as by,
+        array_agg(v.verification_time) as ver_time
+
 
         FROM quality_control_flags AS qcf
-        INNER JOIN data_passes_runs as dpr
-            ON dpr.id = qcf.pass_run_id
-        INNER JOIN runs_detectors as rd
-            ON qcf.run_detector_id = rd.id
+        INNER JOIN data_passes as dp
+            ON dp.id = qcf.data_pass_id
+        INNER JOIN runs as r
+            ON qcf.run_number = r.run_number
         INNER JOIN detectors_subsystems AS ds
-            ON ds.id = rd.detector_id
+            ON ds.id = qcf.detector_id
         INNER JOIN flags_types_dictionary as ftd
             ON ftd.id = qcf.flag_type_id
-        
-        WHERE rd.run_id = ${query.index}
-        
+        LEFT OUTER JOIN verifications as v
+            ON qcf.id = v.qcf_id
+
+        WHERE r.run_number in (${query.run_numbers.join(",")}) AND 
+            dp.name = ${query.data_pass_id}
+        GROUP BY qcf.id, qcf.time_start, qcf.time_end, ftd.flag, qcf.comment, r.run_number, ds.name
+
     `;
 
-module.exports = () => {
-    return 'NOT IMPLEMENTED PROPERLY'
-};
+module.exports = flags_view;
