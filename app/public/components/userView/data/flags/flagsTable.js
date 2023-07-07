@@ -14,10 +14,20 @@
 
 import flagsMockData from './flagsMockData.js';
 import { h } from '/js/src/index.js';
+import { RCT } from '../../../../config.js';
+const { pagesNames: PN } = RCT;
 
 export default function flagsTable(model) {
-    const [runData] = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows;
-    const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
+    const data = model.fetchedData[PN.flags];
+    console.log(data);
+
+    /*
+     * Const [ runData ] = model.fetchedData['runsPerDataPass'][Object]
+     * const [runData] = model.fetchedData['flags']
+     */
+    return 'flags table';
+    // [Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows;
+    // const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
 
     const dateFormatter = (sec) => {
         const cestOffset = 2 * 60 * 60 * 1000;

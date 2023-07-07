@@ -16,13 +16,16 @@ import flagVisualization from './flagVisualization.js';
 import flagsMockData from './flagsMockData.js';
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
+const { pagesNames: PN } = RCT;
 
 function filterDistinct(a) {
     return a.filter((value, index, array) => array.indexOf(value) === index);
 }
 
 export default function flagsVisualization(model) {
-    const [runData] = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows;
+    // Const [runData] = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows;
+    // console.log(model.fetchedData[PN.flags]);
+    return 'flagsVisualization';
     const { time_start, time_end } = runData;
     const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
 

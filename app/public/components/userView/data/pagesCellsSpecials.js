@@ -88,17 +88,14 @@ pagesCellsSpecials[PN.dataPasses] = {
                     const page = model.fetchedData[PN.dataPasses];
                     const [pIndex] = Object.keys(page);
                     const { url } = page[pIndex].payload;
-                    const dpSearchParams = `?page=${PN.runsPerDataPass}&index=${item.name}&rows-on-site=50&site=1&sorting=-run_number`;
+                    const dpSearchParams = `?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
                     await model.fetchedData.reqForData(true, new URL(url.origin + url.pathname + dpSearchParams));
 
                     const [dpIndex] = Object.keys(model.fetchedData[PN.runsPerDataPass]);
-                    console.log(model.fetchedData[PN.runsPerDataPass][dpIndex].payload.rows);
-
                     const runNumbers = model.fetchedData[PN.runsPerDataPass][dpIndex].payload.rows.map((row) => row.run_number);
 
-                    const search = `?page=${PN.flags}&data_pass_name=${item.name}&run_numbers=${runNumbers}`;
+                    const search = `?page=${PN.flags}&data_pass_name=${item.name}&run_numbers=${runNumbers}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
                     const flagsUrl = new URL(url.origin + url.pathname + search);
-                    console.log(flagsUrl);
                     await model.fetchedData.reqForData(true, flagsUrl);
                     console.log(model.fetchedData[PN.flags]);
                     model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`);

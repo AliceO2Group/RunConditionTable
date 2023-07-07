@@ -126,13 +126,6 @@
     display: inline-block;
 }
 
-.hamburger-20 {
-    background-image: url('/styles/images/icons/20/Hamburger.svg');
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-}
-
 .slider-20-primary {
     background-image: url('/styles/images/icons/20/primary/Slider.svg');
     width: 20px;
