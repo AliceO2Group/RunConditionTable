@@ -18,6 +18,7 @@ import { reduceSerialIf } from '../../../../utils/utils.js';
 const detectorIcon = (model, item, n) =>
     h('button.btn.transparent.tooltip.noBorderBottom.pointer', {
         onclick: () => model.router.go(`/?page=flags&index=${item[n]}&run=${item.run_number}&detector=${n}`),
+        //
     },
     h('svg', { width: '20px', height: '20px' },
         h('circle',
@@ -31,7 +32,6 @@ const detectorIcon = (model, item, n) =>
                  *'stroke-width': '3',
                  */
                 fill: '#8CB369',
-                // Content: '99',
             })),
     h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
 
