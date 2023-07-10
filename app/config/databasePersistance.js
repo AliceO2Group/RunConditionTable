@@ -13,7 +13,7 @@
  */
 /* eslint-disable max-len */
 
-const detectors = require('./detectors.js');
+const detectors = require('./detectors.js').sort();
 const flags = require('./flagsDefinitions.json');
 
 const particle_phys_data = {
@@ -39,35 +39,37 @@ const particle_phys_data = {
     },
 };
 
+const healthcheckQueries = {
+    detectors: {
+        description: 'detectors dict insert',
+        query: detectors.map((d) => `INSERT INTO detectors_subsystems("id", "name") VALUES (DEFAULT, '${d}');`),
+    },
+    particle: {
+        description: 'particles dict insert',
+        query: Object.entries(particle_phys_data).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "A", "Z")
+                VALUES (DEFAULT, '${name}', '${d.full_name}', ${d.A}, ${d.Z});`),
+    },
+    flags: {
+        description: 'flags types dict insert',
+        query: flags.map((f) => `INSERT INTO flags_types_dictionary("id", "name", "method", "bad", "obsolate")
+                VALUES (${f.id}, '${f.name}', '${f.method}', ${f.bad}::bool, ${f.obsolete}::bool);`),
+    },
+};
+
+const suppressHealthcheckLogs = true;
+const beam_type_mappings = {
+    pp: 'p-p',
+    nn: 'n-n',
+    XeXe: 'Xe-Xe',
+    PbPb: 'Pb-Pb',
+    pPb: 'p-Pb',
+    Pbp: 'p-Pb',
+    pA: 'p-A',
+};
+
 module.exports = {
-    suppressHealthcheckLogs: true,
-
-    detectors: detectors.sort(),
-    healthcheckQueries: {
-        detectors: {
-            description: 'detectors dict insert',
-            query: detectors.map((d) => `INSERT INTO detectors_subsystems("id", "name") VALUES (DEFAULT, '${d}');`),
-        },
-        particle: {
-            description: 'particles dict insert',
-            query: Object.entries(particle_phys_data).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "A", "Z")
-                    VALUES (DEFAULT, '${name}', '${d.full_name}', ${d.A}, ${d.Z});`),
-        },
-        flags: {
-            description: 'flags types dict insert',
-            query: flags.map((f) => `INSERT INTO flags_types_dictionary("id", "name", "method", "bad", "obsolate")
-                    VALUES (${f.id}, '${f.name}', '${f.method}', ${f.bad}::bool, ${f.obsolete}::bool);`),
-        },
-    },
-
-    beam_type_mappings: {
-        pp: 'p-p',
-        nn: 'n-n',
-        XeXe: 'Xe-Xe',
-        PbPb: 'Pb-Pb',
-        pPb: 'p-Pb',
-        Pbp: 'p-Pb',
-        pA: 'p-A',
-    },
-
+    suppressHealthcheckLogs,
+    detectors,
+    healthcheckQueries,
+    beam_type_mappings,
 };

@@ -38,12 +38,27 @@ class ResProvider {
      * @returns {Object} desired env vars stored in object under names defined by mapping
      */
     static viaEnvVars(objDefinition, failurePredicate, onFailureAction) {
+        const res = ResProvider.readEnvVarsObj(objDefinition);
+        ResProvider.validateEnvVars(res, objDefinition, failurePredicate, onFailureAction);
+        return res;
+    }
+
+    static readEnvVarsObj(objDefinition) {
         const res = {};
         for (const [envVName, key] of Object.entries(objDefinition)) {
-            res[key] = process.env[envVName];
+            if (typeof key == 'string') {
+                res[key] = process.env[envVName];
+            } else if (Array.isArray(key)) {
+                const [k, def] = key;
+                res[k] == process.env[envVName] || def;
+            }
         }
+        return res;
+    }
+
+    static validateEnvVars(res, objDefinition, failurePredicate, onFailureAction) {
         if (!failurePredicate && !ResProvider.areDesiredValuesPresent(res, objDefinition)
-            || failurePredicate && failurePredicate(res, objDefinition)) {
+        || failurePredicate && failurePredicate(res, objDefinition)) {
             if (!onFailureAction) {
                 ResProvider.onFailureAction_error(res, objDefinition);
             } else if (typeof onFailureAction == 'function') {
@@ -56,7 +71,6 @@ class ResProvider {
                 })(res, objDefinition);
             }
         }
-        return res;
     }
 
     static envOrDef(name, def, castType = String) {
