@@ -14,62 +14,36 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
+import flagsTableHeader from './table/flagsTableHeader.js';
+import flagsTableRow from './table/flagsTableRow.js';
+import pagesCellsSpecials from '../pagesCellsSpecials.js';
 const { pagesNames: PN } = RCT;
 
 export default function flagsTable(model, run, detector) {
     const [flagsDataIndex] = Object.keys(model.fetchedData[PN.flags]);
-    const flagsData = model.fetchedData[PN.flags][flagsDataIndex].payload.rows;
+    const { fields, rows } = model.fetchedData[PN.flags][flagsDataIndex].payload;
+    const cellsSpecials = pagesCellsSpecials[PN.flags];
 
-    if (!Array.isArray(flagsData)) {
+    if (!Array.isArray(rows)) {
         return '';
     }
 
-    const filteredFlagsData = flagsData.filter((e) => e.detector === detector && e.run_number.toString() === run.toString());
+    const flagsData = rows.filter((e) => e.detector === detector && e.run_number.toString() === run.toString());
 
-    const dateFormatter = (sec) => {
-        const cestOffset = 2 * 60 * 60 * 1000;
-        const localOffset = new Date().getTimezoneOffset() * 60 * 1000;
-        const d = new Date(Number(sec) + cestOffset + localOffset);
-        const dateString = d.toLocaleDateString();
-        const timeString = d.toLocaleTimeString();
-        return h('', h('.skinny', dateString), timeString);
-    };
+    return flagsData.length > 0
+        ? h('.p-top-10',
+            h('.x-scrollable-table.border-sh',
+                h('table', {
+                    id: 'flags-data-table',
+                    className: 'flags-table',
+                }, [
+                    flagsTableHeader(fields, flagsData, model),
 
-    const lastChangeFormatter = (lastChange) => {
-        const cestOffset = 2 * 60 * 60 * 1000;
-        const localOffset = new Date().getTimezoneOffset() * 60 * 1000;
-        const d = new Date(Number(lastChange.time) + cestOffset + localOffset);
-        const dateString = d.toLocaleDateString();
-        return h('', h('.skinny', dateString), lastChange.person);
-    };
+                    h('tbody', { id: 'table-body-flagsData' },
+                        [''].concat(flagsData.map((item) => flagsTableRow(
+                            model, fields, flagsData, item, cellsSpecials,
+                        )))),
 
-    function itemProps(item) {
-        const result = [];
-        for (const [key, value] of Object.entries(item)) {
-            result.push(h('td', ['start', 'end'].includes(key)
-                ? dateFormatter(value)
-                : key === 'lastChange' ? lastChangeFormatter(value) : value));
-        }
-        return result;
-    }
-
-    return h('.p-top-10',
-        h('.x-scrollable-table.border-sh',
-            h('table', {
-                //Id: `data-table-${data.url}`,
-                className: 'flags-table',
-            }, [
-                h('thead.header',
-                    h('tr',
-                        //FilteredFlagsData.map((item) => Object.keys(item))
-                        h('th', 'Start'),
-                        h('th', 'End'),
-                        h('th', 'Flag'),
-                        h('th', 'Comment'),
-                        h('th', 'Added by'),
-                        h('th', 'Last change'))),
-
-                h('tbody',
-                    filteredFlagsData.map((item) => h('tr.track', itemProps(item)))),
-            ])));
+                ])))
+        : '';
 }

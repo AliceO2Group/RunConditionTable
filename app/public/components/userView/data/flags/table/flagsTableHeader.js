@@ -13,12 +13,12 @@
  */
 
 import { h } from '/js/src/index.js';
-import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../headersSpecials.js';
+import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../headersSpecials.js';
 
-export default function tableHeader(visibleFields, data, model) {
-    const columnsHeadersArray = (visibleFields, model) =>
-        visibleFields.map((f) => [
-            h(`th.${model.getCurrentDataPointer().page}-${f.name.includes('detector') ? 'detector' : f.name}-header`, {
+export default function flagsTableHeader(fields, data, model) {
+    const columnsHeadersArray = (fields, model) =>
+        fields.map((f) => [
+            h(`th.${model.getCurrentDataPointer().page}-header`, {
                 scope: 'col',
             }, h('.relative', [
                 headerSpecPresent(model, f) !== nonDisplayable ?
@@ -30,17 +30,17 @@ export default function tableHeader(visibleFields, data, model) {
     const rowsOptions = (model, data) =>
         h('th', { scope: 'col' },
             h('.relative',
-                h(`input.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
+                h(`input.abs-center${data.every((r) => r.marked) ? '.ticked' : ''}`, {
                     type: 'checkbox',
                     onclick: (e) => {
-                        for (const row of data.rows) {
+                        for (const row of data) {
                             row.marked = e.target.checked;
                         }
                         model.notify();
                     },
-                    checked: data.rows.every((r) => r.marked),
+                    checked: data.every((r) => r.marked),
                 })));
 
     return h('thead.header',
-        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, model))));
+        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(fields, model))));
 }

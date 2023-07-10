@@ -137,13 +137,25 @@ const dateFormatter = (sec) => {
 
 pagesCellsSpecials[PN.runsPerPeriod] = {
     run_number: (model, item) => h('.thick', item.run_number),
-    time_start: (mode, item) => dateFormatter(item.time_start),
-    time_end: (mode, item) => dateFormatter(item.time_end),
-    time_trg_start: (mode, item) => dateFormatter(item.time_trg_start),
-    time_trg_end: (mode, item) => dateFormatter(item.time_trg_end),
+    time_start: (model, item) => dateFormatter(item.time_start),
+    time_end: (model, item) => dateFormatter(item.time_end),
+    time_trg_start: (model, item) => dateFormatter(item.time_trg_start),
+    time_trg_end: (model, item) => dateFormatter(item.time_trg_end),
 };
 
-pagesCellsSpecials[PN.flags] = {};
+pagesCellsSpecials[PN.flags] = {
+    time_start: (model, item) => dateFormatter(item.time_start),
+    time_end: (model, item) => dateFormatter(item.time_end),
+    ver_time: (model, item) => item.ver_time.isEmpty
+        ? 'unverified'
+        : item.ver_time.map((e) => {
+            if (!e) {
+                return 'unverified';
+            }
+            const date = new Date(e);
+            return dateFormatter(date.getTime());
+        }),
+};
 pagesCellsSpecials[PN.runsPerDataPass] = pagesCellsSpecials[PN.runsPerPeriod];
 pagesCellsSpecials[PN.anchoredPerMC] = pagesCellsSpecials[PN.dataPasses];
 pagesCellsSpecials[PN.anchoragePerDatapass] = pagesCellsSpecials[PN.mc];
