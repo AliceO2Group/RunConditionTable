@@ -22,19 +22,33 @@ function filterDistinct(a) {
     return a.filter((value, index, array) => array.indexOf(value) === index);
 }
 
-export default function flagsVisualization(model) {
-    /*
-     * Const [runData] = model.fetchedData['runsPerPeriod'][Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows;
-     * console.log(model.fetchedData[PN.flags]);
-     */
-    return 'flagsVisualization';
-    const { time_start, time_end } = runData;
-    const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
+const dateFormatter = (sec) => {
+    const cestOffset = 2 * 60 * 60 * 1000;
+    const localOffset = new Date().getTimezoneOffset() * 60 * 1000;
+    const d = new Date(Number(sec) + cestOffset + localOffset);
+    const dateString = d.toLocaleDateString();
+    const timeString = d.toLocaleTimeString();
+    return h('', h('.skinny', dateString), timeString);
+};
 
-    const distinctFlagReasons = filterDistinct(data.map((flag) => flag.flag.replace(/\s+/g, '')));
+export default function flagsVisualization(model, dataPass, run, detector) {
+    const runData = model.fetchedData[PN.runsPerDataPass][dataPass].payload.rows.find(e => e.run_number.toString() === run.toString());
+    const { time_start, time_end } = runData;
+
+    const [flagsDataIndex] = Object.keys(model.fetchedData[PN.flags]);
+    const flagsData = model.fetchedData[PN.flags][flagsDataIndex].payload.rows;
+
+    if (!Array.isArray(flagsData)) return '';
+
+    const filteredFlagsData = flagsData.filter(e => e.detector === detector && e.run_number.toString() === run.toString());
+    console.log('filtered flags data');
+    console.log(filteredFlagsData);
+
+    const distinctFlagReasons = filterDistinct(flagsData.map((flag) => flag.flag_reason.replace(/\s+/g, '')));
+    console.log(distinctFlagReasons);
 
     const flagsGroupedByFlagReason = distinctFlagReasons.reduce((prev, curr) => {
-        prev[curr] = data.filter((flag) => flag.flag.replace(/\s+/g, '') === curr);
+        prev[curr] = flagsData.filter((flag) => flag.flag_reason.replace(/\s+/g, '') === curr);
         return prev;
     }, {});
 
@@ -44,6 +58,8 @@ export default function flagsVisualization(model) {
             case 'LimitedAcceptance':
                 return colors.limitedAcceptance;
             case 'Notbad':
+                return colors.neutral;
+            case 'UnknownQuality':
                 return colors.neutral;
             default:
                 return colors.bad;
@@ -60,7 +76,7 @@ export default function flagsVisualization(model) {
             h('.flex-wrap.justify-between.items-center.pv1',
                 h('.w-10', ''),
                 h('.w-90.flex-wrap.justify-between.items-center',
-                    h('', 'start'),
-                    h('', 'end')))),
+                    h('', dateFormatter(time_start), 'start'),
+                    h('', dateFormatter(time_end), 'end')))),
     ];
 }

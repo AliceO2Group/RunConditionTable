@@ -17,9 +17,9 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 const { pagesNames: PN } = RCT;
 
-export default function flagsTable(model) {
+export default function flagsTable(model, run) {
     const data = model.fetchedData[PN.flags];
-    console.log(data);
+    // console.log(data);
 
     /*
      * Const [ runData ] = model.fetchedData['runsPerDataPass'][Object]

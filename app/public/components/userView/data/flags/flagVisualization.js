@@ -38,7 +38,7 @@ function draw(dom, colorHexCode, flag, run_length, start) {
 }
 
 function getFlagCoordinates(flag, start, run_length) {
-    const x_start = (flag.start.getTime() - start) * width / run_length;
-    const x_length = (flag.end.getTime() - flag.start.getTime()) * width / run_length;
+    const x_start = (flag.time_start - start) * width / run_length;
+    const x_length = (flag.time_end - flag.time_start) * width / run_length;
     return { x_start: x_start, x_length: x_length };
 }

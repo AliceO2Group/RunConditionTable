@@ -21,12 +21,13 @@ import pageSettings from './pageSettings/pageSettings.js';
 import flagsVisualization from './flags/flagsVisualization.js';
 import flagsTable from './flags/flagsTable.js';
 import flagBreadCrumbs from '../../common/flagBreadcrumbs.js';
+import detectorName from './flags/detectorName.js';
 
 export default function flagsDataPanel(model) {
     const urlParams = model.router.getUrl().searchParams;
 
-    const dataPass = 'dataPass';
-    const run = urlParams.get('run');
+    const dataPassName = urlParams.get('data_pass_name');
+    const run = urlParams.get('run_numbers');
     const detector = urlParams.get('detector');
 
     const functionalities = (model) => h('.btn-group',
@@ -61,7 +62,7 @@ export default function flagsDataPanel(model) {
     return h('div.main-content', [
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-center',
-                flagBreadCrumbs(model, dataPass, run, detector),
+                flagBreadCrumbs(model, dataPassName, run, detectorName(detector)),
                 h('button.btn.btn-secondary', {
                     onclick: () => {
                         document.getElementById('pageSettingsModal').style.display = 'block';
@@ -81,8 +82,8 @@ export default function flagsDataPanel(model) {
         model.searchFieldsVisible ? filter(model) : '',
         // AnyFiltersActive ? activeFilters(model) : '',
 
-        flagsVisualization(model),
-        flagsTable(model),
+        flagsVisualization(model, dataPassName, run, detectorName(detector)),
+        flagsTable(model, run),
         h('.modal', { id: 'pageSettingsModal' },
             h('.modal-content.abs-center.p3', {
                 id: 'pageSettingsModalContent',
