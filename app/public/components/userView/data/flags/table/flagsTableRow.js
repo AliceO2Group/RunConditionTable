@@ -14,16 +14,17 @@
 
 import { h } from '/js/src/index.js';
 import { reduceSerialIf } from '../../../../../utils/utils.js';
+import visibleFields from './fields.js';
 
-export default function (
-    model, fields, data, item, cellsSpecials,
+export default function flagsTableRow(
+    model, data, item, cellsSpecials,
 ) {
     const rowDivDef = reduceSerialIf(
         'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 
-    const dataCells = fields.map((field) =>
+    const dataCells = visibleFields.filter((e) => e.display).map((field) =>
         h(`td.${model.getCurrentDataPointer().page}-${field.name}-cell`,
             item[field.name]
                 ? cellsSpecials[field.name]

@@ -14,8 +14,10 @@
 
 import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../headersSpecials.js';
+import visibleFields from './fields.js';
 
-export default function flagsTableHeader(fields, data, model) {
+export default function flagsTableHeader(data, model) {
+    const fields = visibleFields.filter((e) => e.display === true);
     const columnsHeadersArray = (fields, model) =>
         fields.map((f) => [
             h(`th.${model.getCurrentDataPointer().page}-header`, {
@@ -23,7 +25,7 @@ export default function flagsTableHeader(fields, data, model) {
             }, h('.relative', [
                 headerSpecPresent(model, f) !== nonDisplayable ?
                     h('.inline', getHeaderSpecial(model, f))
-                    : '',
+                    : 'aaa',
             ])),
         ]);
 
