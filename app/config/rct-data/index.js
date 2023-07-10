@@ -12,22 +12,18 @@
  * or submit itself to any jurisdiction.
  */
 
-const meta = {
-    SSO_DET_ROLE: 'det-',
+const detectors = require('./detectors.js').sort();
+const flags = require('./flags.json');
+const roles = require('./roles.js');
+const physicalParticlesData = require('./physicalParticlesData.js');
+const beamTypesMappings = require('./beamTypesMappings.js');
+const healthcheckQueries = require('./healthcheckQueries.js');
+
+module.exports = {
+    detectors,
+    roles,
+    flags,
+    physicalParticlesData,
+    beamTypesMappings,
+    ...healthcheckQueries,
 };
-
-const detectors = require('./detectors.js');
-
-const dict = {
-    Admin: 'admin',
-    Global: 'global',
-    Guest: 'guest',
-};
-
-/**
- * Produces roles like det-cpv present in config object under name DetectorCPV
- */
-// eslint-disable-next-line no-return-assign
-detectors.forEach((d) => dict[`Detector${d}`] = `det-${d.toLowerCase()}`);
-
-module.exports = { meta, dict };

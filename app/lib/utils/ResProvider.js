@@ -39,8 +39,7 @@ class ResProvider {
      */
     static viaEnvVars(objDefinition, failurePredicate, onFailureAction) {
         const res = ResProvider.readEnvVarsObj(objDefinition);
-        ResProvider.validateEnvVars(res, objDefinition, failurePredicate, onFailureAction);
-        return res;
+        return ResProvider.validateEnvVars(res, objDefinition, failurePredicate, onFailureAction);
     }
 
     static readEnvVarsObj(objDefinition) {
@@ -71,6 +70,8 @@ class ResProvider {
                 })(res, objDefinition);
             }
         }
+
+        return res;
     }
 
     static envOrDef(name, def, castType = String) {

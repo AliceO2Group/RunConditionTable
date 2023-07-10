@@ -216,10 +216,10 @@ class DatabaseService {
     }
 
     async healthcheck() {
-        for (const [d, def] of Object.entries(config.databasePersistance.healthcheckQueries)) {
+        for (const [d, def] of Object.entries(config.rctData.healthcheckQueries)) {
             this.logger.info(`healthcheck for ${def.description}`);
             for (const q of def.query) {
-                const logger = config.databasePersistance.suppressHealthcheckLogs ? null : (e) => this.logger.error(e.stack)
+                const logger = config.rctData.suppressHealthcheckLogs ? null : (e) => this.logger.error(e.stack)
                 await this.pgExec(q, logger, null, logger)
             }
         }

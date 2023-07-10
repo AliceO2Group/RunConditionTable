@@ -11,33 +11,10 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-/* eslint-disable max-len */
 
 const detectors = require('./detectors.js').sort();
-const flags = require('./flagsDefinitions.json');
-
-const particle_phys_data = {
-    p: {
-        full_name: 'proton',
-        Z: 1,
-        A: 1,
-    },
-    Pb: {
-        full_name: 'lead',
-        Z: 83,
-        A: 207,
-    },
-    O: {
-        full_name: 'oxygen',
-        A: 8,
-        Z: 16,
-    },
-    Xe: {
-        full_name: 'xenon',
-        A: 54,
-        Z: 131,
-    },
-};
+const flags = require('./flags.json');
+const physicalParticlesData = require('./physicalParticlesData.js');
 
 const healthcheckQueries = {
     detectors: {
@@ -46,7 +23,7 @@ const healthcheckQueries = {
     },
     particle: {
         description: 'particles dict insert',
-        query: Object.entries(particle_phys_data).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "A", "Z")
+        query: Object.entries(physicalParticlesData).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "A", "Z")
                 VALUES (DEFAULT, '${name}', '${d.full_name}', ${d.A}, ${d.Z});`),
     },
     flags: {
@@ -56,20 +33,9 @@ const healthcheckQueries = {
     },
 };
 
-const suppressHealthcheckLogs = true;
-const beam_type_mappings = {
-    pp: 'p-p',
-    nn: 'n-n',
-    XeXe: 'Xe-Xe',
-    PbPb: 'Pb-Pb',
-    pPb: 'p-Pb',
-    Pbp: 'p-Pb',
-    pA: 'p-A',
-};
+const suppressHealthcheckLogs = (process.env['RCT_SUPRESS_HEALTHCECK_LOGS']?.toLowerCase() || 'false') == 'true';
 
 module.exports = {
     suppressHealthcheckLogs,
-    detectors,
     healthcheckQueries,
-    beam_type_mappings,
 };

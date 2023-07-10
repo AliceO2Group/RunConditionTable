@@ -11,23 +11,22 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const detectors = [
-    'CPV',
-    'EMC',
-    'FDD',
-    'FT0',
-    'FV0',
-    'ITS',
-    'HMP',
-    'MCH',
-    'MFT',
-    'MID',
-    'PHS',
-    'TOF',
-    'TPC',
-    'TRD',
-    'TST',
-    'ZDC',
-];
+const detectors = require('./detectors.js');
 
-module.exports = detectors;
+const meta = {
+    SSO_DET_ROLE: 'det-',
+};
+
+const dict = {
+    Admin: 'admin',
+    Global: 'global',
+    Guest: 'guest',
+};
+
+/**
+ * Produces roles like det-cpv present in config object under name DetectorCPV
+ */
+// eslint-disable-next-line no-return-assign
+detectors.forEach((d) => dict[`Detector${d}`] = `det-${d.toLowerCase()}`);
+
+module.exports = { meta, dict };

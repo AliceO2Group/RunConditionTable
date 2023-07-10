@@ -54,9 +54,11 @@ const mcViews = {
     number_of_events: fromToType,
 };
 
+const { roles, flags: flagsTypes } = require('./rct-data');
+
 module.exports = { // Properties that will be provided to frontend in the public folder
-    roles: require('./roles.js'),
-    flagsTypes: require('./flagsDefinitions.json'),
+    roles,
+    flagsTypes,
     endpoints: {
         login: '/login/',
         logout: '/logout/',

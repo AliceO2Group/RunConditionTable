@@ -14,7 +14,7 @@
  */
 
 const Utils = require('../utils');
-const { databasePersistance } = require('../config/configProvider.js');
+const { rctData } = require('../config/configProvider.js');
 
 /**
  * Update objectData.beam_type to valid format if mapping is provided with app config
@@ -25,7 +25,7 @@ const { databasePersistance } = require('../config/configProvider.js');
 function mapBeamTypeToCommonFormat(dataObject) {
     dataObject.beam_type = Utils.switchCase(
         dataObject.beam_type,
-        databasePersistance.beam_type_mappings,
+        rctData.beamTypesMappings,
         dataObject.beam_type,
     );
     return dataObject;
