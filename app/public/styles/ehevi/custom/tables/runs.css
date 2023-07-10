@@ -33,11 +33,11 @@
     background-color: var(--active-color) !important;
 }
 
-.ehevi .runs-table tr.row-selected-color-alpha td:first-child{
+.ehevi .runs-table tr.row-selected td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.ehevi .runs-table tr.row-selected-color-alpha:hover td:first-child{
+.ehevi .runs-table tr.row-selected:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 

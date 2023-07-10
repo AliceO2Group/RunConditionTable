@@ -22,13 +22,13 @@ import pager from '../pager.js';
 import postingDataConfig from '../posting/postingDataConfig.js';
 import { postForm } from '../posting/postForm.js';
 import filter from './filtering/filter.js';
+import activeFilters from './filtering/activeFilters.js';
 import noDataView from './noDataView.js';
 
 import { RCT } from '../../../../config.js';
 import sortingRow from './sortingRow.js';
 import pageSettings from '../pageSettings/pageSettings.js';
 import indexChip from './indexChip.js';
-import activeFilters from './filtering/activeFilters.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import noSubPageSelected from './noSubPageSelected.js';
 const { pagesNames } = RCT;
@@ -103,8 +103,8 @@ export default function tablePanel(model) {
     return dataPointer.index !== defaultIndexString || dataPointer.page == pagesNames.periods
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
-                h('div.flex-wrap.justify-between.items-baseline',
-                    h('h3.p-left-15.text-primary', headerSpecific(model)),
+                h('div.flex-wrap.justify-between.items-center',
+                    h('h3.p-right-15.text-primary', headerSpecific(model)),
                     chips,
                     h('button.btn.btn-secondary', {
                         onclick: () => {
@@ -137,8 +137,8 @@ export default function tablePanel(model) {
                                     : `${dataPointer.page}-table`}`,
                             }, [
                                 tableHeader(visibleFields, data, model),
-                                sortingRow(visibleFields, data, model),
-                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page),
+                                model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
+                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page, dataPointer.index),
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
@@ -154,11 +154,11 @@ export default function tablePanel(model) {
 }
 
 function tableBody(
-    model, visibleFields, data, cellsSpecials, page,
+    model, visibleFields, data, cellsSpecials, page, index,
 ) {
     return h('tbody', { id: `table-body-${data.url}` },
         [postingDataConfig[page] ? postForm(model, data) : '']
             .concat(data.rows.map((item) => row(
-                model, visibleFields, data, item, cellsSpecials,
+                model, visibleFields, data, item, cellsSpecials, index,
             ))));
 }

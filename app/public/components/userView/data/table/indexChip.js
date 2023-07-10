@@ -23,8 +23,8 @@ export default function indexChip(model, index) {
     const { fields } = data;
     const firstField = fields.find((f) => f !== undefined && f.name);
 
-    const chip = (pageName) => dataPointer.page !== 'periods' && model.fetchedData[pageName][index]
-        ? h('.chip', {
+    const chip = (pageName) => pageName !== 'periods' && model.fetchedData[pageName][index]
+        ? h('.chip.flex-wrap.justify-between.items-center', {
             id: `chip-${pageName}-${index}`,
             class: dataPointer.index === index && dataPointer.page === pageName ? 'primary' : '',
         },
@@ -37,7 +37,7 @@ export default function indexChip(model, index) {
                 model.removeSubPage(pageName, index);
                 model.notify();
             },
-        }, h('.close-10')))
+        }, dataPointer.index === index && dataPointer.page === pageName ? h('.close-20-off-white') : h('.close-20-primary')))
         : '';
 
     return chip(dataPointer.page);

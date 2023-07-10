@@ -42,7 +42,7 @@ export default function noSubPageSelected(model) {
     return h('div.main-content', [
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-baseline',
-                h('h3.p-left-15.text-primary', headerSpecific(model)),
+                h('h3.p-right-15.text-primary', headerSpecific(model)),
                 chips)),
 
         'Please select any of the subpages',

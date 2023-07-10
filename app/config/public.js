@@ -12,6 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
+const detectors = require('./detectors.js');
+
 const matchExcludeType = 'match-exclude-type';
 const fromToType = 'from-to-type';
 
@@ -135,8 +137,14 @@ module.exports = { // Properties that will be provided to frontend in the public
         },
 
     },
+    detectors: detectors,
     themes: {
         ehevi: 'ehevi',
         webui: 'webui',
+    },
+    flagReasonColors: {
+        neutral: '277DA1',
+        bad: '922C40',
+        limitedAcceptance: 'DC9750',
     },
 };

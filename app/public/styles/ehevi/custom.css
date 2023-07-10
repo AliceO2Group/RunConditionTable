@@ -177,20 +177,29 @@
     padding: 20px;
 }
 
-.p-left-15 {
+.p-right-15 {
     padding-right: 15px !important;
 }
 
-.p-left-5 {
-    padding-right: 5px !important;
+.ph-15 {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
 }
 
 .p-top-10 {
     padding-top: 10px !important;
 }
 
+.m-right-15 {
+    margin-right: 15px !important;
+}
+
 .gap-20 {
     gap: 20px;
+}
+
+.ehevi .vertical-middle {
+    vertical-align: middle !important;
 }
 
 .ehevi .text-primary {

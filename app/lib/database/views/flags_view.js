@@ -34,10 +34,10 @@ const flags_view = (query) => {
         qcf.id, 
         qcf.time_start, 
         qcf.time_end, 
-        ftd.name, 
+        ftd.name as flag_reason, 
         qcf.comment,
         r.run_number,
-        ds.name,
+        ds.name as detector,
         array_agg(v.verified_by) as by,
         array_agg(v.verification_time) as ver_time
 

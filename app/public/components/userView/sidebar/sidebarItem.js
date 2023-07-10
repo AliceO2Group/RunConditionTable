@@ -17,19 +17,19 @@ import subPagesCount from './subPagesCount.js';
 
 export default function sidebarItem(model, pageName, label) {
     return h('.flex-wrap', [
-        h('.page-title',
-            { class: model.router.params.page === pageName ? 'selected' : '',
-                onclick: () => model.goToDefaultPageUrl(pageName),
-            },
-            model.router.params.page === pageName
-                ? h('div',
-                    h('.vertical-center',
-                        h('.current-page',
-                            h('.title-text-relative.hidden', label))),
-                    h('.folder-20.vertical-center'),
-                    h('.title-text.vertical-center', label, subPagesCount(model, pageName)))
-                : h('div',
-                    h('.folder-20.vertical-center'),
-                    h('.title-text.vertical-center', label, subPagesCount(model, pageName)))),
+        h('.page-title', {
+            class: model.router.params.page === pageName ? 'selected' : '',
+            onclick: () => model.goToDefaultPageUrl(pageName),
+        },
+        model.router.params.page === pageName
+            ? h('div',
+                h('.vertical-center',
+                    h('.current-page',
+                        h('.title-text-relative.hidden', label))),
+                h('.folder-20.vertical-center'),
+                h('.title-text.vertical-center', label, subPagesCount(model, pageName)))
+            : h('div',
+                h('.folder-20.vertical-center'),
+                h('.title-text.vertical-center', label, subPagesCount(model, pageName)))),
     ]);
 }

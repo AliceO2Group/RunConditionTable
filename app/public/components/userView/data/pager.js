@@ -105,20 +105,12 @@ export default function pager(model, data, pagerOnly = true) {
                 : [
                     h('.flex-wrap.justify-between.items-center',
                         h('.flex-wrap.justify-between.items-center.ph3',
-                            h('.italic', itemsCounter(data)))),
+                            h('.italic', itemsCounter(data))),
 
-                    h('button.btn.icon-only-button.btn-secondary', {
-                        onclick: () => {
-                            const sortingRow = document.getElementById('sortingRow');
-                            if (sortingRow.style.display === 'none') {
-                                sortingRow.style.display = 'table-header-group';
-                            } else {
-                                sortingRow.style.display = 'none';
-                            }
-                        },
-                    }, h('.sort-20')),
-
-                    h('.flex-wrap.justify-between.items-center',
+                        h('button.btn.icon-only-button.m-right-15', {
+                            className: model.sortingRowVisible ? 'btn-primary' : 'btn-secondary',
+                            onclick: () => model.changeSortingRowVisibility(),
+                        }, model.sortingRowVisible ? h('.sorting-20-off-white.abs-center') : h('.sorting-20-primary.abs-center')),
 
                         h('select.select.show-columns', {
                             id: 'columns-options',

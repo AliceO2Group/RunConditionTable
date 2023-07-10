@@ -15,16 +15,18 @@
 import { h } from '/js/src/index.js';
 import dataPanel from '../components/userView/data/dataPanel.js';
 import sidebar from '../components/userView/sidebar/sidebar.js';
+import flagsDataPanel from '../components/userView/data/flagsDataPanel.js';
 
 export default function userPanel(model) {
     const submodel = model.submodels[model.mode];
+    const { page } = submodel.getCurrentDataPointer();
     return h('.flex-column.absolute-fill', [
         h('.flex-grow.flex-row.outline-gray', [
             sidebar(submodel),
             h('section.outline-gray.flex-grow.relative.user-panel-main-content', [
                 h('.scroll-y.absolute-fill',
                     { id: 'user-panel-main-content' },
-                    [dataPanel(submodel)]),
+                    [page === 'flags' ? flagsDataPanel(submodel) : dataPanel(submodel)]),
             ]),
         ]),
     ]);
