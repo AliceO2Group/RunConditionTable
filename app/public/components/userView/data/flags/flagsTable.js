@@ -12,25 +12,19 @@
  * or submit itself to any jurisdiction.
  */
 
-import flagsMockData from './flagsMockData.js';
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 const { pagesNames: PN } = RCT;
 
-export default function flagsTable(model, run) {
-    const data = model.fetchedData[PN.flags];
-    // console.log(data);
+export default function flagsTable(model, run, detector) {
+    const [flagsDataIndex] = Object.keys(model.fetchedData[PN.flags]);
+    const flagsData = model.fetchedData[PN.flags][flagsDataIndex].payload.rows;
 
-    /*
-     * Const [ runData ] = model.fetchedData['runsPerDataPass'][Object]
-     * const [runData] = model.fetchedData['flags']
-     */
-    return 'flags table';
+    if (!Array.isArray(flagsData)) {
+        return '';
+    }
 
-    /*
-     * [Object.keys(model.fetchedData['runsPerPeriod'])[0]].payload.rows;
-     * const data = flagsMockData(runData.time_start, runData.time_end ? runData.time_end : runData.time_start + 50000);
-     */
+    const filteredFlagsData = flagsData.filter((e) => e.detector === detector && e.run_number.toString() === run.toString());
 
     const dateFormatter = (sec) => {
         const cestOffset = 2 * 60 * 60 * 1000;
@@ -67,6 +61,7 @@ export default function flagsTable(model, run) {
             }, [
                 h('thead.header',
                     h('tr',
+                        //FilteredFlagsData.map((item) => Object.keys(item))
                         h('th', 'Start'),
                         h('th', 'End'),
                         h('th', 'Flag'),
@@ -75,6 +70,6 @@ export default function flagsTable(model, run) {
                         h('th', 'Last change'))),
 
                 h('tbody',
-                    data.map((item) => h('tr.track', itemProps(item)))),
+                    filteredFlagsData.map((item) => h('tr.track', itemProps(item)))),
             ])));
 }

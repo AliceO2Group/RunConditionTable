@@ -16,10 +16,11 @@ import { h } from '/js/src/index.js';
 import { reduceSerialIf } from '../../../../utils/utils.js';
 import detectorName from '../flags/detectorName.js';
 
-const detectorIcon = (model, item, n, index) =>
-    h('button.btn.transparent.tooltip.noBorderBottom.pointer', {
+const detectorIcon = (model, item, n, index) => {
+    const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName(n)}&rows-on-site=50&site=1`;
+    return h('button.btn.transparent.tooltip.noBorderBottom.pointer', {
         onclick: () => {
-            model.router.go(`/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName(n)}&rows-on-site=50&site=1`);
+            model.router.go(flagsUrl);
         },
     },
     h('svg', { width: '20px', height: '20px' },
@@ -36,6 +37,7 @@ const detectorIcon = (model, item, n, index) =>
                 fill: '#8CB369',
             })),
     h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
+};
 
 export default function row(
     model, visibleFields, data, item, cellsSpecials, index,

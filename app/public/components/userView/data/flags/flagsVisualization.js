@@ -13,7 +13,6 @@
  */
 
 import flagVisualization from './flagVisualization.js';
-import flagsMockData from './flagsMockData.js';
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 const { pagesNames: PN } = RCT;
@@ -32,20 +31,19 @@ const dateFormatter = (sec) => {
 };
 
 export default function flagsVisualization(model, dataPass, run, detector) {
-    const runData = model.fetchedData[PN.runsPerDataPass][dataPass].payload.rows.find(e => e.run_number.toString() === run.toString());
+    const runData = model.fetchedData[PN.runsPerDataPass][dataPass].payload.rows.find((e) => e.run_number.toString() === run.toString());
     const { time_start, time_end } = runData;
 
     const [flagsDataIndex] = Object.keys(model.fetchedData[PN.flags]);
     const flagsData = model.fetchedData[PN.flags][flagsDataIndex].payload.rows;
 
-    if (!Array.isArray(flagsData)) return '';
+    if (!Array.isArray(flagsData)) {
+        return '';
+    }
 
-    const filteredFlagsData = flagsData.filter(e => e.detector === detector && e.run_number.toString() === run.toString());
-    console.log('filtered flags data');
-    console.log(filteredFlagsData);
+    const filteredFlagsData = flagsData.filter((e) => e.detector === detector && e.run_number.toString() === run.toString());
 
-    const distinctFlagReasons = filterDistinct(flagsData.map((flag) => flag.flag_reason.replace(/\s+/g, '')));
-    console.log(distinctFlagReasons);
+    const distinctFlagReasons = filterDistinct(filteredFlagsData.map((flag) => flag.flag_reason.replace(/\s+/g, '')));
 
     const flagsGroupedByFlagReason = distinctFlagReasons.reduce((prev, curr) => {
         prev[curr] = flagsData.filter((flag) => flag.flag_reason.replace(/\s+/g, '') === curr);

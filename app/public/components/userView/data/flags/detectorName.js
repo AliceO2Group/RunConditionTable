@@ -16,7 +16,7 @@ import { RCT } from '../../../../config.js';
 const { detectors } = RCT;
 
 export default function detectorName(detectorCode) {
-    const [ detectorName ] = detectorCode.split('_');
-    const known = detectors.find(detector => detector === detectorName.toUpperCase());
+    const [detectorName] = detectorCode.split('_');
+    const known = detectors.find((detector) => detector === detectorName.toUpperCase());
     return known ? known : `${detectorName.toUpperCase()}-unknown`;
 }

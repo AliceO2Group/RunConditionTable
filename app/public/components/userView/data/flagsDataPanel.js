@@ -83,7 +83,7 @@ export default function flagsDataPanel(model) {
         // AnyFiltersActive ? activeFilters(model) : '',
 
         flagsVisualization(model, dataPassName, run, detectorName(detector)),
-        flagsTable(model, run),
+        flagsTable(model, run, detectorName(detector)),
         h('.modal', { id: 'pageSettingsModal' },
             h('.modal-content.abs-center.p3', {
                 id: 'pageSettingsModalContent',
