@@ -13,22 +13,24 @@
 
 const assert = require('assert');
 const config = require('../../../app/lib/config/configProvider');
-  
+
 module.exports = () => {
-    describe('Config Provider', () => {        
+    describe('Config Provider', () => {
         it('should return config file', () => {
             assert(config !== null);
         });
 
         it('should handle loading error properly', () => {
-            // todo
+            // Todo
         });
 
         it('should provide jwt configuration', () => {
+            // eslint-disable-next-line no-prototype-builtins
             assert(config.hasOwnProperty('jwt'));
         });
 
         it('should provide http server configuration', () => {
+            // eslint-disable-next-line no-prototype-builtins
             assert(config.hasOwnProperty('http'));
         });
     });

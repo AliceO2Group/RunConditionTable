@@ -18,7 +18,7 @@ const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
 
 // IO
 const readline = require('readline');
-const Utils = require('./lib/Utils.js');
+const Utils = require('./lib/utils');
 const { Console } = require('node:console');
 
 // Services
@@ -28,7 +28,7 @@ const services = require('./lib/alimonitor-services');
 const database = require('./lib/database');
 
 // Server
-const { webUiServer } = require('./server/index.js');
+const { webUiServer } = require('./lib/server');
 
 // Extract important
 const EP = config.public.endpoints;

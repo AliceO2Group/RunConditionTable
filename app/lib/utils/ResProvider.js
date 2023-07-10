@@ -17,13 +17,13 @@ const fs = require('fs');
 const { Log } = require('@aliceo2/web-ui');
 const path = require('path');
 const LogsStacker = require('./LogsStacker.js');
-const Utils = require('./Utils.js');
+const { switchCase, reversePrimitiveObject } = require('./obj-utils.js');
 
 // eslint-disable-next-line prefer-const
 let logger;
 
 const resProviderDefaults = {
-    defaultSecuredDirPath: path.join(__dirname, '..', '..', 'security'),
+    defaultSecuredDirPath: path.join(__dirname, '../../..', 'security'),
 };
 
 class ResProvider {
@@ -49,7 +49,7 @@ class ResProvider {
             } else if (typeof onFailureAction == 'function') {
                 return onFailureAction(res, objDefinition);
             } else if (typeof onFailureAction == 'string') {
-                return Utils.switchCase(onFailureAction, {
+                return switchCase(onFailureAction, {
                     error: ResProvider.onFailureAction_error,
                     warn: ResProvider.onFailureAction_warn,
                     no: () => res,
@@ -76,7 +76,7 @@ class ResProvider {
     }
 
     static nulledGetter(res, objDef) {
-        return Object.entries(res).filter((e) => ! e[1]).map((e) => `${e[0]}{<-${Utils.reversePrimitiveObject(objDef)[e[0]]}}`);
+        return Object.entries(res).filter((e) => ! e[1]).map((e) => `${e[0]}{<-${reversePrimitiveObject(objDef)[e[0]]}}`);
     }
 
     static nulledMessageGetter(res, objDef) {

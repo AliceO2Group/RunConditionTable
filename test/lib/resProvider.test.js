@@ -12,10 +12,10 @@
  */
 
 const assert = require('assert');
-const ResProvider = require('../../app/lib/ResProvider');
- 
+const ResProvider = require('../../app/lib/utils/ResProvider');
+
 module.exports = () => {
-    describe('Res Provider', () => {        
+    describe('Res Provider', () => {
         describe('Sth', () => {
             it('should not throw error providing a passPhrase', () => {
                 assert.doesNotThrow(() => ResProvider.passphraseProvider());

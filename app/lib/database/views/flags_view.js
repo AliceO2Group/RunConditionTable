@@ -34,7 +34,7 @@ const flags_view = (query) => {
         qcf.id, 
         qcf.time_start, 
         qcf.time_end, 
-        ftd.name, 
+        ftd.name as flag_name, 
         qcf.comment,
         r.run_number,
         ds.name,

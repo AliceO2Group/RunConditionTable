@@ -37,7 +37,8 @@ const queryForRunsFields = `
  
 const runs_per_period_view = (query) => `
         SELECT
-            ${queryForRunsFields}
+            ${queryForRunsFields},
+            ${run_detectors_field_in_sql_query}
         FROM runs AS r
         INNER JOIN periods AS p
             ON p.id = r.period_id

@@ -14,7 +14,7 @@
  */
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
-const Utils = require('../Utils.js');
+const Utils = require('../utils');
 const ServicesDataCommons = require('./ServicesDataCommons.js');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 const MonalisaServiceDetails = require('./MonalisaServiceDetails.js');

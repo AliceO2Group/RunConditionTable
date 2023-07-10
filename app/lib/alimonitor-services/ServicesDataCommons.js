@@ -13,24 +13,42 @@
  * or submit itself to any jurisdiction.
  */
 
-const Utils = require('../Utils.js');
+const Utils = require('../utils');
 const { databasePersistance } = require('../config/configProvider.js');
 
-class ServicesDataCommons {
-    /**
-     * Update objectData.beam_type to valid format if mapping is provided with app config
-     * if not there is assumption that in other scenerio name is consistant with foramt '<typeA>-<typeB>'
-     * @param {Object} dataObject o
-     * @returns {Object} dataObject
-     */
-    static mapBeamTypeToCommonFormat(dataObject) {
-        dataObject.beam_type = Utils.switchCase(
-            dataObject.beam_type,
-            databasePersistance.beam_type_mappings,
-            dataObject.beam_type,
-        );
-        return dataObject;
+/**
+ * Update objectData.beam_type to valid format if mapping is provided with app config
+ * if not there is assumption that in other scenerio name is consistant with foramt '<typeA>-<typeB>'
+ * @param {Object} dataObject o
+ * @returns {Object} dataObject
+ */
+function mapBeamTypeToCommonFormat(dataObject) {
+    dataObject.beam_type = Utils.switchCase(
+        dataObject.beam_type,
+        databasePersistance.beam_type_mappings,
+        dataObject.beam_type,
+    );
+    return dataObject;
+}
+
+/**
+ * Extract year from data/simulation pass name
+ * @param {string} name name of pass, like LHC22a_apass1
+ * @returns {Number} year
+ */
+function extractPeriodYear(name) {
+    try {
+        const year = parseInt(name.slice(3, 5), 10);
+        if (isNaN(year)) {
+            return 'NULL';
+        }
+        return year > 50 ? year + 1900 : year + 2000;
+    } catch (e) {
+        return 'NULL';
     }
 }
 
-module.exports = ServicesDataCommons;
+module.exports = {
+    mapBeamTypeToCommonFormat,
+    extractPeriodYear,
+};

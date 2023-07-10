@@ -12,7 +12,8 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const ResProvider = require('../lib/ResProvider.js');
+
+const { ResProvider } = require('../lib/utils');
 
 const services = {
     bookkeeping: {

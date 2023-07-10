@@ -12,33 +12,31 @@
  */
 
 const assert = require('assert');
-const Utils = require('../../app/lib/Utils');
+const Utils = require('../../app/lib/utils');
+const ServicesDataCommons = require('../../app/lib/alimonitor-services/ServicesDataCommons.js');
 
-const arrayEquals = (a, b) => {
-    return Array.isArray(a) &&
+const arrayEquals = (a, b) => Array.isArray(a) &&
         Array.isArray(b) &&
         a.length === b.length &&
         a.every((val, index) => {
             if (Array.isArray(val)) {
-                return arrayEquals(val, b[index])
-            } else return val === b[index];
+                return arrayEquals(val, b[index]);
+            } else {
+                return val === b[index];
+            }
         });
-}
 
 module.exports = () => {
-    describe('Utils', () => {        
+    describe('Utils', () => {
         describe('Filtering objects', () => {
             const objectSample = {
-                field1: "value1",
-                field2: "value2",
-            }
+                field1: 'value1',
+                field2: 'value2',
+            };
             const keptFields = {
-                field1: 2
-            }
-            const expectedRes = {
-                '2': 'value1',
-            }
-            
+                field1: 2,
+            };
+
             it('should do nothing when no keptFields provided', () => {
                 assert(Utils.filterObject(objectSample) === objectSample);
             });
@@ -58,17 +56,16 @@ module.exports = () => {
             const sampleValues3 = [4, 5, 'DEFAULT'];
 
             it('should return the same values when not NaN nor DEFAULT', () => {
-                Utils.parseValuesToSql(sampleValues1).forEach( (obj, index) =>
-                    assert(obj) == sampleValues1[index]
-                )
+                Utils.parseValuesToSql(sampleValues1).forEach((obj, index) =>
+                    assert(obj) == sampleValues1[index]);
             });
 
             it('should parse undefined values as null', () => {
-                assert((Utils.parseValuesToSql(sampleValues2))[2] === null);
+                assert(Utils.parseValuesToSql(sampleValues2)[2] === null);
             });
 
             it('should return wrap DEFAULT in quotes', () => {
-                assert((Utils.parseValuesToSql(sampleValues3))[2] === "DEFAULT");
+                assert(Utils.parseValuesToSql(sampleValues3)[2] === 'DEFAULT');
             });
         });
 
@@ -103,10 +100,10 @@ module.exports = () => {
             const defaultVal = 'default';
             const caseNames = ['a', 'b'];
             const cases = {
-                a: () => {return 'a';},
-                b: () => {return 'b';}
+                a: () => 'a',
+                b: () => 'b',
             };
-            const defaultCase = () => {return defaultVal;};
+            const defaultCase = () => defaultVal;
 
             it('should return correct value for each case', () => {
                 assert(Utils.switchCase(caseNames[0], cases, defaultCase)() === caseNames[0]);
@@ -125,8 +122,8 @@ module.exports = () => {
                 await Utils.delay(delayTime);
                 const end = Date.now();
                 assert(start + delayTime <= end);
-              });
-           });
+            });
+        });
 
         describe('Array to chunks', () => {
             it('Should split an array into chunks', async () => {
@@ -136,16 +133,16 @@ module.exports = () => {
                 const outcome = Utils.arrayToChunks(array, chunkSize);
 
                 assert(arrayEquals(expectedOutcome, outcome));
-              });
-           });
+            });
+        });
 
         describe('Extracting period year', () => {
             it('Should extract period year from period name', () => {
                 const periodNameSamples = ['LHC12c', 'LHC23j', 'LHC00q', 'LHC', 'LHC51', null];
                 const expectedOutcome = [2012, 2023, 2000, 'NULL', 1951, 'NULL'];
-                const outcome = periodNameSamples.map(periodName => Utils.extractPeriodYear(periodName));
+                const outcome = periodNameSamples.map((periodName) => ServicesDataCommons.extractPeriodYear(periodName));
                 assert(arrayEquals(expectedOutcome, outcome));
-            })
-        })
+            });
+        });
     });
 };

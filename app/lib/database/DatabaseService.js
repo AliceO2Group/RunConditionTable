@@ -16,7 +16,7 @@ const { Log } = require('@aliceo2/web-ui');
 const { Client, Pool } = require('pg');
 const QueryBuilder = require('./QueryBuilder.js');
 const config = require('./../config/configProvider.js');
-const Utils = require('../Utils.js')
+const {distinct} = require('../utils')
 
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataRespondFields;
@@ -138,7 +138,7 @@ class DatabaseService {
             }
 
             data[DRF.rows] = rows;
-            data[DRF.fields] = Utils.distinct(fields.map(f => f.name)).map(n => { return { name: n } });
+            data[DRF.fields] = distinct(fields.map(f => f.name)).map(n => { return { name: n } });
 
             res.json({ data: data });
         };
