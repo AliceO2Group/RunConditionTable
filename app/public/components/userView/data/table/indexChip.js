@@ -14,8 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
-
-const { dataReqParams } = RCT;
+const { dataReqParams, pageNames } = RCT;
 
 export default function indexChip(model, index) {
     const dataPointer = model.getCurrentDataPointer();
@@ -23,7 +22,7 @@ export default function indexChip(model, index) {
     const { fields } = data;
     const firstField = fields.find((f) => f !== undefined && f.name);
 
-    const chip = (pageName) => pageName !== 'periods' && model.fetchedData[pageName][index]
+    const chip = (pageName) => pageName !== pageNames.periods && model.fetchedData[pageName][index]
         ? h('.chip.flex-wrap.justify-between.items-center', {
             id: `chip-${pageName}-${index}`,
             class: dataPointer.index === index && dataPointer.page === pageName ? 'primary' : '',

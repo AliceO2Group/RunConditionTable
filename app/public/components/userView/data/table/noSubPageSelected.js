@@ -15,6 +15,7 @@
 import { h } from '/js/src/index.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import indexChip from './indexChip.js';
+import title from './title.js';
 
 export default function noSubPageSelected(model) {
     const dataPointer = model.getCurrentDataPointer();
@@ -24,25 +25,10 @@ export default function noSubPageSelected(model) {
 
     data.rows = data.rows.filter((item) => item.name != 'null');
 
-    const headerSpecific = (model) => {
-        const { page } = model.getCurrentDataPointer();
-        switch (page) {
-            case 'periods': return 'Periods';
-            case 'runsPerPeriod': return 'Runs per period';
-            case 'runsPerDataPass': return 'Runs per data pass';
-            case 'dataPasses': return 'Data passes per period';
-            case 'mc': return 'Monte Carlo';
-            case 'flags': return 'Flags';
-            case 'anchoragePerDatapass': return 'Anchorage per data pass';
-            case 'anchoredPerMC': return 'Anchored per MC';
-            default: return page;
-        }
-    };
-
     return h('div.main-content', [
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-baseline',
-                h('h3.p-right-15.text-primary', headerSpecific(model)),
+                h('h3.p-right-15.text-primary', title(model)),
                 chips)),
 
         'Please select any of the subpages',
