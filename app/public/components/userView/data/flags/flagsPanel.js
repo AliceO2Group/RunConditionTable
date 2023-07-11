@@ -13,17 +13,17 @@
  */
 
 import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
-import filter from './table/filtering/filter.js';
-
+import filter from '../table/filtering/filter.js';
 import downloadCSV from '../../../../utils/csvExport.js';
+import pageSettings from '../pageSettings/pageSettings.js';
+import flagsVisualization from './flagsVisualization.js';
+import flagsTable from './flagsTable.js';
+import flagBreadCrumbs from '../../../common/flagBreadcrumbs.js';
+import detectorName from './detectorName.js';
+import { defaultRunNumbers } from '../../../../utils/defaults.js';
+import noSubPageSelected from '../table/noSubPageSelected.js';
 
-import pageSettings from './pageSettings/pageSettings.js';
-import flagsVisualization from './flags/flagsVisualization.js';
-import flagsTable from './flags/flagsTable.js';
-import flagBreadCrumbs from '../../common/flagBreadcrumbs.js';
-import detectorName from './flags/detectorName.js';
-
-export default function flagsDataPanel(model) {
+export default function flagsPanel(model) {
     const urlParams = model.router.getUrl().searchParams;
 
     const dataPassName = urlParams.get('data_pass_name');
@@ -59,35 +59,37 @@ export default function flagsDataPanel(model) {
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
-    return h('div.main-content', [
-        h('div.flex-wrap.justify-between.items-center',
+    return run > defaultRunNumbers
+        ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
-                flagBreadCrumbs(model, dataPassName, run, detectorName(detector)),
-                h('button.btn.btn-secondary', {
-                    onclick: () => {
-                        document.getElementById('pageSettingsModal').style.display = 'block';
-                        document.addEventListener('click', (event) => {
-                            const modalContent = document.getElementsByClassName('modal-content');
-                            const modal = document.getElementsByClassName('modal');
-                            if (Array.from(modalContent).find((e) => e != event.target)
+                h('div.flex-wrap.justify-between.items-center',
+                    flagBreadCrumbs(model, dataPassName, run, detectorName(detector)),
+                    h('button.btn.btn-secondary', {
+                        onclick: () => {
+                            document.getElementById('pageSettingsModal').style.display = 'block';
+                            document.addEventListener('click', (event) => {
+                                const modalContent = document.getElementsByClassName('modal-content');
+                                const modal = document.getElementsByClassName('modal');
+                                if (Array.from(modalContent).find((e) => e != event.target)
                             && Array.from(modal).find((e) => e == event.target)
                             && document.getElementById('pageSettingsModal')) {
-                                document.getElementById('pageSettingsModal').style.display = 'none';
-                            }
-                        });
-                    },
-                }, h('.settings-20'))),
+                                    document.getElementById('pageSettingsModal').style.display = 'none';
+                                }
+                            });
+                        },
+                    }, h('.settings-20'))),
 
-            h('div', functionalities(model))),
-        model.searchFieldsVisible ? filter(model) : '',
+                h('div', functionalities(model))),
+            model.searchFieldsVisible ? filter(model) : '',
 
-        flagsVisualization(model, dataPassName, run, detectorName(detector)),
-        flagsTable(model, run, detectorName(detector)),
-        h('.modal', { id: 'pageSettingsModal' },
-            h('.modal-content.abs-center.p3', {
-                id: 'pageSettingsModalContent',
-            }, pageSettings(model, () => {
-                document.getElementById('pageSettingsModal').style.display = 'none';
-            }))),
-    ]);
+            flagsVisualization(model, dataPassName, run, detectorName(detector)),
+            flagsTable(model, run, detectorName(detector)),
+            h('.modal', { id: 'pageSettingsModal' },
+                h('.modal-content.abs-center.p3', {
+                    id: 'pageSettingsModalContent',
+                }, pageSettings(model, () => {
+                    document.getElementById('pageSettingsModal').style.display = 'none';
+                }))),
+        ])
+        : noSubPageSelected(model);
 }

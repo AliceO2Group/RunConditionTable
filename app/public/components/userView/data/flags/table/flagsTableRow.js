@@ -13,17 +13,14 @@
  */
 
 import { h } from '/js/src/index.js';
-import { reduceSerialIf } from '../../../../../utils/utils.js';
+import fields from './fields.js';
 
-export default function (
-    model, fields, data, item, cellsSpecials,
+export default function flagsTableRow(
+    model, item, cellsSpecials,
 ) {
-    const rowDivDef = reduceSerialIf(
-        'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
-        [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
-    );
+    const displayedFields = fields.filter((e) => e.display === true);
 
-    const dataCells = fields.map((field) =>
+    const dataCells = displayedFields.map((field) =>
         h(`td.${model.getCurrentDataPointer().page}-${field.name}-cell`,
             item[field.name]
                 ? cellsSpecials[field.name]
@@ -31,15 +28,5 @@ export default function (
                     : item[field.name]
                 : '..'));
 
-    const checkbox = h('td.relative.track',
-        h(`input.abs-center${item.marked ? '.ticked' : ''}`, {
-            type: 'checkbox',
-            checked: item.marked,
-            onclick: () => {
-                model.fetchedData.changeItemStatus(item);
-                model.notify();
-            },
-        }));
-
-    return h(rowDivDef, [checkbox].concat(dataCells));
+    return h('tr.track.row-not-selected', dataCells);
 }

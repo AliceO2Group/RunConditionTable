@@ -21,7 +21,7 @@ const flags_view = (query) => {
     } else if (typeof(rn) === 'string') {
         rn_sql = rn
     } else {
-        throw `run_number seems to be incorrect ${rn}`
+        throw `run_numbers seems to be incorrect ${rn}`
     }
 
     let det_sql = "";

@@ -57,6 +57,8 @@ export default function flagsVisualization(model, dataPass, run, detector) {
                 return colors.limitedAcceptance;
             case 'Notbad':
                 return colors.neutral;
+            case 'CertifiedbyExpert':
+                return colors.neutral;
             case 'UnknownQuality':
                 return colors.neutral;
             default:
@@ -74,7 +76,7 @@ export default function flagsVisualization(model, dataPass, run, detector) {
             h('.flex-wrap.justify-between.items-center.pv1',
                 h('.w-10', ''),
                 h('.w-90.flex-wrap.justify-between.items-center',
-                    h('', dateFormatter(time_start), 'start'),
-                    h('', dateFormatter(time_end), 'end')))),
+                    h('', dateFormatter(time_start), h('.skinny', 'START')),
+                    h('', dateFormatter(time_end), h('.skinny', 'END'))))),
     ];
 }

@@ -37,7 +37,7 @@ export default function sidebar(model) {
                 sidebarItem(model, pagesNames.anchoredPerMC, 'Anchored per MC'),
                 sidebarItem(model, pagesNames.runsPerPeriod, 'Runs per period'),
                 sidebarItem(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
-                sidebarItem(model, pagesNames.flags, 'QA Expert Flagging')),
+                sidebarItem(model, pagesNames.flags, 'QA flags')),
 
             h('.sidebar-section',
                 h('.sidebar-section-title', 'Preferences'),
