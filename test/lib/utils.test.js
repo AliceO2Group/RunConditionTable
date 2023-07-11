@@ -56,16 +56,16 @@ module.exports = () => {
             const sampleValues3 = [4, 5, 'DEFAULT'];
 
             it('should return the same values when not NaN nor DEFAULT', () => {
-                Utils.parseValuesToSql(sampleValues1).forEach((obj, index) =>
+                Utils.adjustValuesToSql(sampleValues1).forEach((obj, index) =>
                     assert(obj) == sampleValues1[index]);
             });
 
             it('should parse undefined values as null', () => {
-                assert(Utils.parseValuesToSql(sampleValues2)[2] === null);
+                assert(Utils.adjustValuesToSql(sampleValues2)[2] === null);
             });
 
             it('should return wrap DEFAULT in quotes', () => {
-                assert(Utils.parseValuesToSql(sampleValues3)[2] === 'DEFAULT');
+                assert(Utils.adjustValuesToSql(sampleValues3)[2] === 'DEFAULT');
             });
         });
 

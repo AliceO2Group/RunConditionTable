@@ -13,7 +13,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const keywords = ['DEFAULT', 'NULL'];
+const sqlkeywords = ['DEFAULT', 'NULL', 'END'];
 
 function adjusetObjValuesToSql(obj) {
     const res = {};
@@ -22,12 +22,12 @@ function adjusetObjValuesToSql(obj) {
         if (v) {
             if (typeof v == 'object') {
                 if (Array.isArray(v)) {
-                    res[k] = `ARRAY[${parseValuesToSql(v).join(',')}]`;
+                    res[k] = `ARRAY[${adjustValuesToSql(v).join(',')}]`;
                 } else {
                     res[k] = adjusetObjValuesToSql(v);
                 }
             } else {
-                res[k] = parseValuesToSql(v);
+                res[k] = adjustValuesToSql(v);
             }
         } else {
             res[k] = null;
@@ -36,16 +36,16 @@ function adjusetObjValuesToSql(obj) {
     return res;
 }
 
-function parseValuesToSql(v) {
+function adjustValuesToSql(v) {
     if (!v) {
         return null;
     }
 
     if (Array.isArray(v)) {
-        return v.map((vv) => parseValuesToSql(vv));
+        return v.map((vv) => adjustValuesToSql(vv));
     }
 
-    if (typeof v == 'string' && !keywords.includes(v.toUpperCase())) {
+    if (typeof v == 'string') {
         if (v.length == 0) {
             return null;
         } else {
@@ -58,7 +58,7 @@ function parseValuesToSql(v) {
 
 function preserveSQLKeywords(words) {
     return words.map((w) => {
-        if (['end'].includes(w)) {
+        if (sqlkeywords.includes(w)) {
             return `"${w}"`;
         } else {
             return w;
@@ -68,12 +68,12 @@ function preserveSQLKeywords(words) {
 
 function simpleBuildInsertQuery(targetTable, valuesObj) {
     return `INSERT INTO ${targetTable}(${preserveSQLKeywords(Object.keys(valuesObj)).join(', ')})
-            VALUES(${parseValuesToSql(Object.values(valuesObj)).join(', ')})`;
+            VALUES(${adjustValuesToSql(Object.values(valuesObj)).join(', ')})`;
 }
 
 module.exports = {
     adjusetObjValuesToSql,
-    parseValuesToSql,
+    adjustValuesToSql,
     preserveSQLKeywords,
     simpleBuildInsertQuery,
 };

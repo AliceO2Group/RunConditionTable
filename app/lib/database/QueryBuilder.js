@@ -32,6 +32,9 @@ pageToViewName[PN.flags] = 'flags_view'
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
 
+
+const filterTypes = ['match', 'exclude', 'from', 'to'];
+
 const ops = {
     NOTLIKE: 'NOT LIKE',
     LIKE: 'LIKE',
@@ -39,14 +42,72 @@ const ops = {
     NOTIN: 'NOT IN',
     FROM: '>=',
     TO: '<=',
+    EQ: '==',
+    NE: '!=',
+    AND: 'AND',
+    OR: 'OR',
 };
 
+const filtersTypesToSqlOperand = {
+    match: 'LIKE',
+    exclude: 'NOT LIKE',
+    from: '>=',
+    to: '<='
+}
+
+const logicalOperandsPerFilters = {
+    match: {
+        string: ops.LIKE,
+        number: ops.IN,
+    },
+    exclude: {
+        string: ops.NOTLIKE,
+        number: ops.NOTIN,
+    },
+    from: ops.FROM,
+    to: ops.TO,
+};
+
+const filtersTypesToSqlValueQuoted = {
+    match: '\'',
+    exclude: '\'',
+    from: '',
+    to: ''
+}
+
+//match take precedens
+const controlForNoArrays = {
+    notarray: {
+        match: {
+            string: [ops.LIKE, ops.OR],
+            number: [ops.EQ ],
+        },
+        exclude: {
+            string: ops.NOTLIKE,
+            number: ops.NE,
+        },
+        from: ops.FROM,
+        to: ops.TO,
+    },
+
+    array: {
+        match: {
+            string: ops.LIKE,
+            number: ops.EQ,
+        },
+        exclude: {
+            string: ops.NOTLIKE,
+            number: ops.NE,
+        },
+        from: ops.FROM,
+        to: ops.TO,
+    },
+}
 
 
 class QueryBuilder {
 
     static filteringPart(params) {
-        const filterTypes = ['match', 'exclude', 'from', 'to'];
         const filtersTypesToParams = {
             match: [],
             exclude: [],
@@ -54,39 +115,15 @@ class QueryBuilder {
             to: []
         }
 
-        const filtersTypesToSqlOperand = {
-            match: 'LIKE',
-            exclude: 'NOT LIKE',
-            from: '>=',
-            to: '<='
-        }
-
-        const logicalOperandsPerFilters = {
-            from: ops.FROM,
-            to: ops.TO,
-            exclude: {
-                string: ops.NOTLIKE,
-                number: ops.NOTIN,
-            },
-            match: {
-                string: ops.LIKE,
-                number: ops.IN,
-            }
-        };
-
-        const filtersTypesToSqlValueQuoted = {
-            match: '\'',
-            exclude: '\'',
-            from: '',
-            to: ''
-        }
-        // assert correctness of previous
         // Mapping search params to categorized { key, value } pairs
         const filterTypesRegex= new RegExp(filterTypes.map((t) => `(.*-${t})`).join('|'));
         const filterParams = Object.entries(params).filter(([k, v]) => k.match(filterTypesRegex));
     
         for (let [filedNameAndFilterType, value] of Object.entries(filterParams)) {
             const [fieldName, filterType] = filedNameAndFilterType.split('-');
+            if (! Array.isArray(value) && /.*,.*/.test(value)) {
+                value = value.split(',').map((s) => s.trim())
+            }
             if (filterType in filtersTypesToParams) {
                 filtersTypesToParams[filterType].push({ fieldName, value })
             } 

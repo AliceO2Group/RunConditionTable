@@ -13,7 +13,17 @@
  * or submit itself to any jurisdiction.
  */
 
-
+function extractPeriodYear(name) {
+    try {
+        const year = parseInt(name.slice(3, 5), 10);
+        if (isNaN(year)) {
+            return 'NULL';
+        }
+        return year > 50 ? year + 1900 : year + 2000;
+    } catch (e) {
+        return 'NULL';
+    }
+}
 
 module.exports = {
     extractPeriodYear,
