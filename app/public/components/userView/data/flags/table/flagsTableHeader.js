@@ -25,7 +25,7 @@ export default function flagsTableHeader(model) {
             }, h('.relative', [
                 headerSpecPresent(model, f) !== nonDisplayable ?
                     h('.inline', getHeaderSpecial(model, f))
-                    : 'aaa',
+                    : '',
             ])),
         ]);
 

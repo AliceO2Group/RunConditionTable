@@ -94,7 +94,7 @@ export default class PrimaryModel extends Observable {
 
     goToDefaultPageUrl(page) {
         if (page === 'flags') {
-            this.router.go(`/?page=${page}&run_numbers=${defaultRunNumbers}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`); //
+            this.router.go(`/?page=${page}&run_numbers=${defaultRunNumbers}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
         } else {
             this.router.go(`/?page=${page}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
         }
