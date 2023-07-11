@@ -21,7 +21,7 @@ const { pagesNames: PN } = RCT;
 
 export default function flagsTable(model, run, detector) {
     const [flagsDataIndex] = Object.keys(model.fetchedData[PN.flags]);
-    const { fields, rows } = model.fetchedData[PN.flags][flagsDataIndex].payload;
+    const { rows } = model.fetchedData[PN.flags][flagsDataIndex].payload;
     const cellsSpecials = pagesCellsSpecials[PN.flags];
 
     if (!Array.isArray(rows)) {
@@ -37,13 +37,12 @@ export default function flagsTable(model, run, detector) {
                     id: 'flags-data-table',
                     className: 'flags-table',
                 }, [
-                    flagsTableHeader(fields, flagsData, model),
+                    flagsTableHeader(flagsData, model),
 
                     h('tbody', { id: 'table-body-flagsData' },
-                        [''].concat(flagsData.map((item) => flagsTableRow(
-                            model, fields, flagsData, item, cellsSpecials,
-                        )))),
-
+                        flagsData.map((item) => flagsTableRow(
+                            model, flagsData, item, cellsSpecials,
+                        ))),
                 ])))
         : '';
 }

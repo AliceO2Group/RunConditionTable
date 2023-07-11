@@ -80,7 +80,6 @@ export default function flagsDataPanel(model) {
 
             h('div', functionalities(model))),
         model.searchFieldsVisible ? filter(model) : '',
-        // AnyFiltersActive ? activeFilters(model) : '',
 
         flagsVisualization(model, dataPassName, run, detectorName(detector)),
         flagsTable(model, run, detectorName(detector)),
