@@ -59,10 +59,6 @@
     align-items: center;
 }
 
-.ehevi .periods-hamburger {
-    padding-left: 25px;
-}
-
 .ehevi .sidebar {
     background-color: var(--primary) !important;
     color: var(--off-white) !important;

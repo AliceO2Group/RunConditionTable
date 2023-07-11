@@ -89,12 +89,12 @@ const mcFields = {
 };
 
 const flagFields = {
-    start: 'Start time',
-    end: 'End time',
-    flag: 'Flag',
+    time_start: 'Start',
+    time_end: 'End',
+    flag_reason: 'Reason',
     comment: 'Comment',
-    production_id: 'Prod. id',
-    name: 'Name',
+    by: 'Verified by',
+    ver_time: 'Verification time',
 };
 
 const headersSpecials = {

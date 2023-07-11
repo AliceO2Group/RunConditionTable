@@ -16,31 +16,31 @@ import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../headersSpecials.js';
 
 export default function tableHeader(visibleFields, data, model) {
+    const columnsHeadersArray = (visibleFields, model) =>
+        visibleFields.map((f) => [
+            h(`th.${model.getCurrentDataPointer().page}-${f.name.includes('detector') ? 'detector' : f.name}-header`, {
+                scope: 'col',
+            }, h('.relative', [
+                headerSpecPresent(model, f) !== nonDisplayable ?
+                    h('.inline', getHeaderSpecial(model, f))
+                    : '',
+            ])),
+        ]);
+
+    const rowsOptions = (model, data) =>
+        h('th', { scope: 'col' },
+            h('.relative',
+                h(`input.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
+                    type: 'checkbox',
+                    onclick: (e) => {
+                        for (const row of data.rows) {
+                            row.marked = e.target.checked;
+                        }
+                        model.notify();
+                    },
+                    checked: data.rows.every((r) => r.marked),
+                })));
+
     return h('thead.header',
-        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, data, model))));
+        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, model))));
 }
-
-const columnsHeadersArray = (visibleFields, data, model) =>
-    visibleFields.map((f) => [
-        h(`th.${model.getCurrentDataPointer().page}-${f.name.includes('detector') ? 'detector' : f.name}-header`, {
-            scope: 'col',
-        }, h('.relative', [
-            headerSpecPresent(model, f) !== nonDisplayable ?
-                h('.inline', getHeaderSpecial(model, f))
-                : '',
-        ])),
-    ]);
-
-const rowsOptions = (model, data) =>
-    h('th', { scope: 'col' },
-        h('.relative',
-            h(`input.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
-                type: 'checkbox',
-                onclick: (e) => {
-                    for (const row of data.rows) {
-                        row.marked = e.target.checked;
-                    }
-                    model.notify();
-                },
-                checked: data.rows.every((r) => r.marked),
-            })));

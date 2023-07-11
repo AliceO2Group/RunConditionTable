@@ -83,14 +83,23 @@ pagesCellsSpecials[PN.dataPasses] = {
     name: (model, item) => [
         h('td', item.name),
         h('td',
-            actionChip(
-                model,
-                'runs',
-                (e) => model.handleClick(e),
-                '',
-                // eslint-disable-next-line max-len
-                `/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`,
-            ),
+            h('button.btn.chip.m1', {
+                onclick: async () => {
+                    const page = model.fetchedData[PN.dataPasses];
+                    const [pIndex] = Object.keys(page);
+                    const { url } = page[pIndex].payload;
+                    const dpSearchParams = `?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
+                    await model.fetchedData.reqForData(true, new URL(url.origin + url.pathname + dpSearchParams));
+
+                    const [dpIndex] = Object.keys(model.fetchedData[PN.runsPerDataPass]);
+                    const runNumbers = model.fetchedData[PN.runsPerDataPass][dpIndex].payload.rows.map((row) => row.run_number);
+
+                    const search = `?page=${PN.flags}&data_pass_name=${item.name}&run_numbers=${runNumbers}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
+                    const flagsUrl = new URL(url.origin + url.pathname + search);
+                    await model.fetchedData.reqForData(true, flagsUrl);
+                    model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`);
+                },
+            }, 'runs'),
             actionChip(
                 model,
                 'anchorage',
@@ -128,13 +137,25 @@ const dateFormatter = (sec) => {
 
 pagesCellsSpecials[PN.runsPerPeriod] = {
     run_number: (model, item) => h('.thick', item.run_number),
-    time_start: (mode, item) => dateFormatter(item.time_start),
-    time_end: (mode, item) => dateFormatter(item.time_end),
-    time_trg_start: (mode, item) => dateFormatter(item.time_trg_start),
-    time_trg_end: (mode, item) => dateFormatter(item.time_trg_end),
+    time_start: (model, item) => dateFormatter(item.time_start),
+    time_end: (model, item) => dateFormatter(item.time_end),
+    time_trg_start: (model, item) => dateFormatter(item.time_trg_start),
+    time_trg_end: (model, item) => dateFormatter(item.time_trg_end),
 };
 
-pagesCellsSpecials[PN.flags] = {};
+pagesCellsSpecials[PN.flags] = {
+    time_start: (model, item) => dateFormatter(item.time_start),
+    time_end: (model, item) => dateFormatter(item.time_end),
+    ver_time: (model, item) => item.ver_time.isEmpty
+        ? 'unverified'
+        : item.ver_time.map((e) => {
+            if (!e) {
+                return 'unverified';
+            }
+            const date = new Date(e);
+            return dateFormatter(date.getTime());
+        }),
+};
 pagesCellsSpecials[PN.runsPerDataPass] = pagesCellsSpecials[PN.runsPerPeriod];
 pagesCellsSpecials[PN.anchoredPerMC] = pagesCellsSpecials[PN.dataPasses];
 pagesCellsSpecials[PN.anchoragePerDatapass] = pagesCellsSpecials[PN.mc];

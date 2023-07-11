@@ -54,7 +54,7 @@ const mcViews = {
     number_of_events: fromToType,
 };
 
-const { roles, flags: flagsTypes } = require('./rct-data');
+const { roles, flags: flagsTypes, detectors } = require('./rct-data');
 
 module.exports = { // Properties that will be provided to frontend in the public folder
     roles,
@@ -137,8 +137,14 @@ module.exports = { // Properties that will be provided to frontend in the public
         },
 
     },
+    detectors: detectors,
     themes: {
         ehevi: 'ehevi',
         webui: 'webui',
+    },
+    flagReasonColors: {
+        neutral: '277DA1',
+        bad: '922C40',
+        limitedAcceptance: 'DC9750',
     },
 };

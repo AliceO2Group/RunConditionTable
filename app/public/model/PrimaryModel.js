@@ -15,7 +15,7 @@
 import { Observable, Loader } from '/js/src/index.js';
 import FetchedDataManager from './data/FetchedDataManager.js';
 import { RCT } from '../config.js';
-import { defaultIndex, defaultIndexString } from '../utils/defaults.js';
+import { defaultIndex, defaultIndexString, defaultRunNumbers } from '../utils/defaults.js';
 const { dataReqParams } = RCT;
 
 export default class PrimaryModel extends Observable {
@@ -30,6 +30,7 @@ export default class PrimaryModel extends Observable {
         this.fetchedData = new FetchedDataManager(this.router, this);
 
         this.searchFieldsVisible = false;
+        this.sortingRowVisible = false;
 
         this.loader = new Loader();
 
@@ -38,6 +39,11 @@ export default class PrimaryModel extends Observable {
 
     changeSearchFieldsVisibility() {
         this.searchFieldsVisible = !this.searchFieldsVisible;
+        this.notify();
+    }
+
+    changeSortingRowVisibility() {
+        this.sortingRowVisible = !this.sortingRowVisible;
         this.notify();
     }
 
@@ -87,7 +93,11 @@ export default class PrimaryModel extends Observable {
     }
 
     goToDefaultPageUrl(page) {
-        this.router.go(`/?page=${page}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
+        if (page === 'flags') {
+            this.router.go(`/?page=${page}&run_numbers=${defaultRunNumbers}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
+        } else {
+            this.router.go(`/?page=${page}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
+        }
     }
 
     getDataPointerFromUrl(url) {

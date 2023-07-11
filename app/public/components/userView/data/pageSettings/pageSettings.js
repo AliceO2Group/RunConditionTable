@@ -81,8 +81,6 @@ export default function pageSettings(model, close) {
             }, [
                 h('option', { value: 0 }, 'Ehevi'),
                 h('option', { value: 1 }, 'WebUI'),
-                h('option', { value: 2 }, 'Alice'),
-                h('option', { value: 3 }, 'Chiara'),
             ], iconChevronBottom())),
 
         h('.flex-wrap.justify-center.items-center',

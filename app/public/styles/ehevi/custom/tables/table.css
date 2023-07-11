@@ -28,37 +28,37 @@
     position: relative !important;
 }
 
-.ehevi .track.row-unselected-color-alpha:hover {
+.ehevi .track.row-not-selected:hover {
     background-color: var(--active-color) !important;
 }
 
-.ehevi .track.row-unselected-color-alpha:hover td {
+.ehevi .track.row-not-selected:hover td {
     background-color: var(--active-color) !important;
 }
 
-.ehevi .track.row-selected-color-alpha:hover {
+.ehevi .track.row-selected:hover {
     background-color: var(--focus-color) !important;
 }
 
-.ehevi .track.row-selected-color-alpha:hover td {
+.ehevi .track.row-selected:hover td {
     background-color: var(--focus-color) !important;
 }
 
-.ehevi table tbody tr.row-selected-color-alpha {
+.ehevi table tbody tr.row-selected {
     background-color: var(--row-selected-color);
 }
 
-.ehevi table tr.track.row-selected-color-alpha:nth-child(odd) td {
+.ehevi table tr.track.row-selected:nth-child(odd) td {
     background-color: #FCCA61;
 }
 
-.ehevi table tr.track.row-selected-color-alpha td .chip{
+.ehevi table tr.track.row-selected td .chip{
     background-color: #FACB80;
     color: #634F40;
     /*#EAE7FA; /* remember this color!*/
 }
 
-.ehevi tbody tr.track.row-unselected-color-alpha:nth-child(odd) td {
+.ehevi tbody tr.track.row-not-selected:nth-child(odd) td {
     background-color: #f1f4fb;
 }
 
@@ -88,7 +88,6 @@
 .ehevi .border-sh {
     background-color: white !important;
     border-radius: 15px !important;
-    /* border-collapse: separate; */
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
@@ -128,8 +127,4 @@
 .ehevi input[type="checkbox"]:checked::before {
     transform: scale(1);
     background-color: var(--color-white);
-}
-
-.ehevi #sortingRow {
-    display: none;
 }
