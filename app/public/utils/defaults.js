@@ -13,4 +13,5 @@
  */
 
 export const defaultIndexString = '_0';
+export const defaultRunNumbers = '-1';
 export const defaultIndex = (_index) => _index ? _index : defaultIndexString;
