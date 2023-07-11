@@ -42,10 +42,14 @@ function filterObject(obj, keptFields, suppressUndefined = false) {
 }
 
 function switchCase(caseName, cases, defaultCaseValue) {
+    if (Array.isArray(caseName)) {
+        return caseName.length > 1 ? switchCase(caseName.slice(1), cases[caseName[0]], defaultCaseValue) :
+            switchCase(caseName[0], cases, defaultCaseValue);
+    }
     return Object.prototype.hasOwnProperty.call(cases, caseName)
         ? cases[caseName]
         // eslint-disable-next-line brace-style
-        : defaultCaseValue ? defaultCaseValue : () => {throw new Error('no case, no default case'); };
+        : defaultCaseValue ? defaultCaseValue : (() => {throw new Error('no case, no default case'); })();
 }
 
 function delay(time) {

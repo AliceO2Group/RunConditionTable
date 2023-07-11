@@ -33,7 +33,7 @@ const healthcheckQueries = {
     },
 };
 
-const suppressHealthcheckLogs = (process.env['RCT_SUPRESS_HEALTHCECK_LOGS']?.toLowerCase() || 'false') == 'true';
+const suppressHealthcheckLogs = (process.env['RCT_SUPRESS_HEALTHCECK_LOGS']?.toLowerCase() || 'true') == 'true';
 
 module.exports = {
     suppressHealthcheckLogs,
