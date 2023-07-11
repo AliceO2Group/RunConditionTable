@@ -19,10 +19,52 @@
 
 .ehevi .flags-table td:first-child,
 .ehevi .flags-table th:first-child {
-    padding-left: 2em;
+    padding-left: 1em;
 }
 
 .ehevi .flags-table td:last-child,
 .ehevi .flags-table th:last-child {
     padding-right: 2em;
+}
+
+/* Time start */
+.ehevi .flags-table .flags-time_start-cell,
+.ehevi .flags-table .flags-time_start-header {
+    min-width: 10em;
+    text-align: left;
+}
+
+/* Time end */
+.ehevi .flags-table .flags-time_end-cell,
+.ehevi .flags-table .flags-time_end-header {
+    min-width: 10em;
+    text-align: left;
+}
+
+/* Reason */
+.ehevi .flags-table .flags-flag_reason-cell,
+.ehevi .flags-table .flags-flag_reason-header {
+    min-width: 10em;
+    text-align: left;
+}
+
+/* Comment */
+.ehevi .flags-table .flags-comment-cell,
+.ehevi .flags-table .flags-comment-header {
+    min-width: 10em;
+    text-align: left;
+}
+
+/* Verified by */
+.ehevi .flags-table .flags-by-cell,
+.ehevi .flags-table .flags-by-header {
+    min-width: 10em;
+    text-align: left;
+}
+
+/* Verification time */
+.ehevi .flags-table .flags-ver_time-cell,
+.ehevi .flags-table .flags-ver_time-header {
+    min-width: 10em;
+    text-align: left;
 }

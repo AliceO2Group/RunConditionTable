@@ -20,7 +20,7 @@ export default function flagsTableHeader(model) {
     const displayedFields = fields.filter((e) => e.display === true);
     const columnsHeadersArray = (fields, model) =>
         fields.map((f) => [
-            h(`th.${model.getCurrentDataPointer().page}-header`, {
+            h(`th.${model.getCurrentDataPointer().page}-${f.name}-header`, {
                 scope: 'col',
             }, h('.relative', [
                 headerSpecPresent(model, f) !== nonDisplayable ?

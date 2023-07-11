@@ -43,7 +43,7 @@ const fields = [
     },
     {
         name: 'by',
-        display: false,
+        display: true,
     },
     {
         name: 'ver_time',

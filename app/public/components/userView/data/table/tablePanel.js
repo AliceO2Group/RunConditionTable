@@ -127,7 +127,7 @@ export default function tablePanel(model) {
 
             data.rows?.length > 0
                 ? visibleFields.length > 0
-                    ? h('.p-top-10', //
+                    ? h('.p-top-10',
                         h('.x-scrollable-table.border-sh',
                             pager(model, data, false),
                             h('table', {
