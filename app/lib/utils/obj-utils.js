@@ -41,15 +41,24 @@ function filterObject(obj, keptFields, suppressUndefined = false) {
     return res;
 }
 
-function switchCase(caseName, cases, defaultCaseValue) {
+/**
+ * Get case (object or function) using cases definition - possibly nested object using caseName(s) - like going down tree decision tree
+ * @param {string} caseName asdf
+ * @param {*} cases -  cases defintion
+ * @param {*} opts - lastfound: true || false, default: any [return when there is not proper path defined by caseName].
+ * 'lastfound' have precedende before default.
+ * @returns {Object} case
+ */
+function switchCase(caseName, cases, opts) {
     if (Array.isArray(caseName)) {
-        return caseName.length > 1 ? switchCase(caseName.slice(1), cases[caseName[0]], defaultCaseValue) :
-            switchCase(caseName[0], cases, defaultCaseValue);
+        return caseName.length > 1 ? switchCase(caseName.slice(1), cases[caseName[0]], opts) :
+            switchCase(caseName[0], cases, opts);
     }
     return Object.prototype.hasOwnProperty.call(cases, caseName)
         ? cases[caseName]
-        // eslint-disable-next-line brace-style
-        : defaultCaseValue ? defaultCaseValue : (() => {throw new Error('no case, no default case'); })();
+        : opts.lastfound ? cases :
+            // eslint-disable-next-line brace-style
+            opts.default ? opts.default : (() => { throw new Error('not last found option, no case, no default case'); })();
 }
 
 function delay(time) {
