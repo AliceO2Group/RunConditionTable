@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../headersSpecials.js';
 import fields from './fields.js';
 
-export default function flagsTableHeader(data, model) {
+export default function flagsTableHeader(model) {
     const displayedFields = fields.filter((e) => e.display === true);
     const columnsHeadersArray = (fields, model) =>
         fields.map((f) => [
@@ -29,20 +29,6 @@ export default function flagsTableHeader(data, model) {
             ])),
         ]);
 
-    const rowsOptions = (model, data) =>
-        h('th', { scope: 'col' },
-            h('.relative',
-                h(`input.abs-center${data.every((r) => r.marked) ? '.ticked' : ''}`, {
-                    type: 'checkbox',
-                    onclick: (e) => {
-                        for (const row of data) {
-                            row.marked = e.target.checked;
-                        }
-                        model.notify();
-                    },
-                    checked: data.every((r) => r.marked),
-                })));
-
     return h('thead.header',
-        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(displayedFields, model))));
+        h('tr', columnsHeadersArray(displayedFields, model)));
 }

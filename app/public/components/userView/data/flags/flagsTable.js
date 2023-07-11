@@ -37,11 +37,11 @@ export default function flagsTable(model, run, detector) {
                     id: 'flags-data-table',
                     className: 'flags-table',
                 }, [
-                    flagsTableHeader(flagsData, model),
+                    flagsTableHeader(model),
 
                     h('tbody', { id: 'table-body-flagsData' },
                         flagsData.map((item) => flagsTableRow(
-                            model, flagsData, item, cellsSpecials,
+                            model, item, cellsSpecials,
                         ))),
                 ])))
         : '';
