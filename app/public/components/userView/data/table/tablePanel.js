@@ -31,6 +31,7 @@ import pageSettings from '../pageSettings/pageSettings.js';
 import indexChip from './indexChip.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import noSubPageSelected from './noSubPageSelected.js';
+import title from './title.js';
 const { pageNames } = RCT;
 
 /**
@@ -55,21 +56,6 @@ export default function tablePanel(model) {
 
     const { fields } = data;
     const visibleFields = fields.filter((f) => f.marked);
-
-    const headerSpecific = (model) => {
-        const { page } = model.getCurrentDataPointer();
-        switch (page) {
-            case 'periods': return 'Periods';
-            case 'runsPerPeriod': return 'Runs per period';
-            case 'runsPerDataPass': return 'Runs per data pass';
-            case 'dataPasses': return 'Data passes per period';
-            case 'mc': return 'Monte Carlo';
-            case 'flags': return 'Flags';
-            case 'anchoragePerDatapass': return 'Anchorage per data pass';
-            case 'anchoredPerMC': return 'Anchored per MC';
-            default: return page;
-        }
-    };
 
     const functionalities = (model) => h('.btn-group',
         h('button.btn.btn-secondary.icon-only-button', {
@@ -104,7 +90,7 @@ export default function tablePanel(model) {
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
-                    h('h3.p-right-15.text-primary', headerSpecific(model)),
+                    title(model),
                     chips,
                     h('button.btn.btn-secondary', {
                         onclick: () => {
