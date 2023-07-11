@@ -55,7 +55,7 @@ module.exports = { // Properties that will be provided to frontend in the public
         fields: 'fields',
     },
 
-    pagesNames: {
+    pageNames: {
         periods: 'periods',
         dataPasses: 'dataPasses',
         mc: 'mc',

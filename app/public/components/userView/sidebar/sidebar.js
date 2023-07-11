@@ -15,7 +15,7 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import sidebarItem from './sidebarItem.js';
-const { pagesNames } = RCT;
+const { pageNames } = RCT;
 
 /**
  * Provides navigation between particular views, is divide to sections,
@@ -30,14 +30,14 @@ export default function sidebar(model) {
         h('.flex-column.gap-20',
             h('.sidebar-section',
                 h('.sidebar-section-title', 'Pages'),
-                sidebarItem(model, pagesNames.periods, 'Periods'),
-                sidebarItem(model, pagesNames.dataPasses, 'Data Passes'),
-                sidebarItem(model, pagesNames.anchoragePerDatapass, 'Anchorage per Data pass'),
-                sidebarItem(model, pagesNames.mc, 'Monte Carlo'),
-                sidebarItem(model, pagesNames.anchoredPerMC, 'Anchored per MC'),
-                sidebarItem(model, pagesNames.runsPerPeriod, 'Runs per period'),
-                sidebarItem(model, pagesNames.runsPerDataPass, 'Runs per Data pass'),
-                sidebarItem(model, pagesNames.flags, 'QA flags')),
+                sidebarItem(model, pageNames.periods, 'Periods'),
+                sidebarItem(model, pageNames.dataPasses, 'Data Passes'),
+                sidebarItem(model, pageNames.anchoragePerDatapass, 'Anchorage per Data pass'),
+                sidebarItem(model, pageNames.mc, 'Monte Carlo'),
+                sidebarItem(model, pageNames.anchoredPerMC, 'Anchored per MC'),
+                sidebarItem(model, pageNames.runsPerPeriod, 'Runs per period'),
+                sidebarItem(model, pageNames.runsPerDataPass, 'Runs per Data pass'),
+                sidebarItem(model, pageNames.flags, 'QA flags')),
 
             h('.sidebar-section',
                 h('.sidebar-section-title', 'Preferences'),

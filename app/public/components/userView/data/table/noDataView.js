@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
-const { pagesNames } = RCT;
+const { pageNames } = RCT;
 
 function useState(defaultValue) {
     let value = defaultValue;
@@ -60,7 +60,7 @@ export default function noDataView(
     }, 'Reload');
     const noDataMessage = h('h3', 'No data found');
     const noDataExplanation = h('h5', `${
-        dataPointer.page === pagesNames.periods
+        dataPointer.page === pageNames.periods
             ? 'Please synchronize with outer services'
             : 'There is no data to be displayed here'
     }`);
@@ -79,7 +79,7 @@ export default function noDataView(
         goBackBtn,
     ]);
 
-    return dataPointer.page === pagesNames.periods
+    return dataPointer.page === pageNames.periods
         ? mode() === modes.requested
             ? 'loading'
             : noPeriodsView

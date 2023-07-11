@@ -31,7 +31,7 @@ import pageSettings from '../pageSettings/pageSettings.js';
 import indexChip from './indexChip.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import noSubPageSelected from './noSubPageSelected.js';
-const { pagesNames } = RCT;
+const { pageNames } = RCT;
 
 /**
  * Creates vnode containing table of fetched data (main content)
@@ -100,7 +100,7 @@ export default function tablePanel(model) {
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
-    return dataPointer.index !== defaultIndexString || dataPointer.page == pagesNames.periods
+    return dataPointer.index !== defaultIndexString || dataPointer.page == pageNames.periods
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
@@ -132,7 +132,7 @@ export default function tablePanel(model) {
                             pager(model, data, false),
                             h('table', {
                                 id: `data-table-${data.url}`,
-                                className: `${[pagesNames.runsPerDataPass, pagesNames.runsPerPeriod].includes(dataPointer.page)
+                                className: `${[pageNames.runsPerDataPass, pageNames.runsPerPeriod].includes(dataPointer.page)
                                     ? 'runs-table'
                                     : `${dataPointer.page}-table`}`,
                             }, [

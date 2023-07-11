@@ -19,7 +19,7 @@ import failureStatusAndReload from './fetchingStates/failure.js';
 import unknownError from './fetchingStates/unknown.js';
 import { RCT } from '../../../config.js';
 import flagsPanel from './flags/flagsPanel.js';
-const { pagesNames } = RCT;
+const { pageNames } = RCT;
 
 /**
  * Create vnode tablePanel if data are fetched otherwise shows spinner
@@ -34,7 +34,7 @@ export default function dataPanel(model) {
     return data ? data.match({
         NotAsked: () => h('', 'not asked'),
         Loading: () => spinnerAndReloadView(model),
-        Success: () => page === pagesNames.flags ? flagsPanel(model) : tablePanel(model),
+        Success: () => page === pageNames.flags ? flagsPanel(model) : tablePanel(model),
         Failure: (status) => failureStatusAndReload(model, status),
     }) : unknownError(model);
 }

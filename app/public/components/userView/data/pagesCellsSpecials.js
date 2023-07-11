@@ -16,7 +16,7 @@ import { RCT } from '../../../config.js';
 import { getReadableFileSizeString } from '../../../utils/utils.js';
 import actionChip from '../../common/actionChip.js';
 const { dataReqParams: DRP } = RCT;
-const { pagesNames: PN } = RCT;
+const { pageNames: PN } = RCT;
 
 /**
  * Configuration what buttons at which cells and which pages are supposed
