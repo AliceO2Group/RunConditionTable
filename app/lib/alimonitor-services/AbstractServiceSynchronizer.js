@@ -17,64 +17,17 @@ const { Client } = require('pg');
 const { SocksProxyAgent } = require('socks-proxy-agent');
 const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
-const ResProvider = require('../ResProvider.js');
-const Utils = require('../Utils.js');
-const JsonsFetcher = require('./JsonsFetcher.js');
+const { ResProvider, makeHttpRequestForJSON, arrayToChunks, applyOptsToObj, throwNotImplemented } = require('../utils');
 const Cacher = require('./Cacher.js');
+const PassCorrectnessMonitor = require('./PassCorrectnessMonitor.js');
 
 const defaultServiceSynchronizerOptions = {
     forceStop: false,
-
     rawCacheUse: true,
     useCacheJsonInsteadIfPresent: false,
     omitWhenCached: false,
-
-    batchedRequestes: true,
     batchSize: 4,
 };
-
-const additionalHttpOpts = {
-    allowRedirects: true, // TODO
-};
-
-class PassCorrectnessMonitor {
-    constructor(logger, errorsLoggingDepth) {
-        this.logger = logger;
-        this.errorsLoggingDepth = errorsLoggingDepth;
-        this.correct = 0;
-        this.incorrect = 0;
-        this.omitted = 0;
-        this.errors = [];
-    }
-
-    handleCorrect() {
-        this.correct++;
-    }
-
-    handleIncorrect(e, data) {
-        this.incorrect++;
-        e.data = data;
-        this.errors.push(e);
-    }
-
-    handleOmitted() {
-        this.omitted++;
-    }
-
-    logResults() {
-        const { correct, incorrect, omitted, errors, errorsLoggingDepth, logger } = this;
-        const dataSize = incorrect + correct + omitted;
-
-        if (incorrect > 0) {
-            const logFunc = Utils.switchCase(errorsLoggingDepth, config.errorsLoggingDepths);
-            errors.forEach((e) => logFunc(logger, e));
-            logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
-        }
-        if (omitted > 0) {
-            logger.info(`omitted data units ${omitted}/${dataSize}`);
-        }
-    }
-}
 
 class AbstractServiceSynchronizer {
     constructor() {
@@ -83,10 +36,13 @@ class AbstractServiceSynchronizer {
 
         this.opts = this.createHttpOpts();
 
-        this.metaStore = {};
+        this.metaStore = { processedCtr: 0 };
+
         this.errorsLoggingDepth = config.defaultErrorsLogginDepth;
-        Utils.applyOptsToObj(this, defaultServiceSynchronizerOptions);
-        Utils.applyOptsToObj(this.opts, additionalHttpOpts);
+        applyOptsToObj(this, defaultServiceSynchronizerOptions);
+        applyOptsToObj(this.opts, {
+            allowRedirects: true,
+        });
     }
 
     createHttpOpts() {
@@ -117,11 +73,11 @@ class AbstractServiceSynchronizer {
         );
 
         const { logsStacker } = pfxWrp;
-        logsStacker.typeLog('info');
+        logsStacker.logType('info');
         if (!pfxWrp.content) {
             if (logsStacker.any('error')) {
-                logsStacker.typeLog('warn');
-                logsStacker.typeLog('error');
+                logsStacker.logType('warn');
+                logsStacker.logType('error');
             }
         }
         const passphrase = ResProvider.passphraseProvider();
@@ -144,7 +100,7 @@ class AbstractServiceSynchronizer {
     }
 
     setLogginLevel(logginLevel) {
-        Utils.throwNotImplemented();
+        throwNotImplemented();
         logginLevel = parseInt(logginLevel, 10);
         if (!logginLevel || logginLevel < 0 || logginLevel > 3) {
             throw new Error('Invalid debug level') ;
@@ -196,11 +152,7 @@ class AbstractServiceSynchronizer {
                     return f;
                 });
 
-            if (this.batchedRequestes) {
-                await this.makeBatchedRequest(data);
-            } else {
-                await this.makeSequentialRequest(data);
-            }
+            await this.makeBatchedRequest(data);
 
             this.monitor.logResults();
         } catch (fatalError) {
@@ -213,21 +165,17 @@ class AbstractServiceSynchronizer {
     }
 
     async makeBatchedRequest(data) {
-        const rowsChunks = Utils.arrayToChunks(data, this.batchSize);
+        const rowsChunks = arrayToChunks(data, this.batchSize);
+        const total = this.metaStore.totalCount || data.length;
         for (const chunk of rowsChunks) {
             const promises = chunk.map((dataUnit) => this.dbAction(this.dbClient, dataUnit)
                 .then(() => this.monitor.handleCorrect())
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 
             await Promise.all(promises);
-        }
-    }
 
-    async makeSequentialRequest(data) {
-        for (const dataUnit of data) {
-            await this.dbAction(this.dbClient, dataUnit)
-                .then(this.monitor.handleCorrect)
-                .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit }));
+            this.metaStore['processedCtr'] += chunk.length;
+            this.logger.info(`progress of ${this.metaStore['processedCtr']} / ${total}`);
         }
     }
 
@@ -242,7 +190,7 @@ class AbstractServiceSynchronizer {
                 Cacher.cache(this.name, endpoint, data);
             }
         };
-        return await JsonsFetcher.makeHttpRequestForJSON(endpoint, this.opts, this.logger, onSucces);
+        return await makeHttpRequestForJSON(endpoint, this.opts, this.logger, onSucces);
     }
 
     async dbConnect() {

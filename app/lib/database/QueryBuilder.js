@@ -31,43 +31,111 @@ pageToViewName[PN.flags] = 'flags_view'
 /**
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
+
+
+const filterTypes = ['match', 'exclude', 'from', 'to'];
+
+const ops = {
+    NOTLIKE: 'NOT LIKE',
+    LIKE: 'LIKE',
+    IN: 'IN',
+    NOTIN: 'NOT IN',
+    FROM: '>=',
+    TO: '<=',
+    EQ: '==',
+    NE: '!=',
+    AND: 'AND',
+    OR: 'OR',
+};
+
+const filtersTypesToSqlOperand = {
+    match: 'LIKE',
+    exclude: 'NOT LIKE',
+    from: '>=',
+    to: '<='
+}
+
+const logicalOperandsPerFilters = {
+    match: {
+        string: ops.LIKE,
+        number: ops.IN,
+    },
+    exclude: {
+        string: ops.NOTLIKE,
+        number: ops.NOTIN,
+    },
+    from: ops.FROM,
+    to: ops.TO,
+};
+
+const filtersTypesToSqlValueQuoted = {
+    match: '\'',
+    exclude: '\'',
+    from: '',
+    to: ''
+}
+
+//match take precedens
+const controlForNoArrays = {
+    notarray: {
+        match: {
+            string: [ops.LIKE, ops.OR],
+            number: [ops.EQ, ops.OR],
+        },
+        exclude: {
+            string: [ops.NOTLIKE, ops.AND],
+            number: [ops.NE, ops.AND],
+        },
+        from: [ops.FROM, ops.AND],
+        to: [ops.TO, ops.AND],
+    },
+
+    array: {
+        match: {
+            string: ops.LIKE,
+            number: ops.EQ,
+        },
+        exclude: {
+            string: ops.NOTLIKE,
+            number: ops.NE,
+        },
+        from: ops.FROM,
+        to: ops.TO,
+    },
+}
+
+
 class QueryBuilder {
 
     static filteringPart(params) {
-        const filterTypes = ['match', 'exclude', 'from', 'to'];
         const filtersTypesToParams = {
             match: [],
             exclude: [],
             from: [],
             to: []
         }
-        const filtersTypesToSqlOperand = {
-            match: 'LIKE',
-            exclude: 'NOT LIKE',
-            from: '>=',
-            to: '<='
-        }
-        const filtersTypesToSqlValueQuoted = {
-            match: '\'',
-            exclude: '\'',
-            from: '',
-            to: ''
-        }
-        // assert correctness of previous
+
         // Mapping search params to categorized { key, value } pairs
         const filterTypesRegex= new RegExp(filterTypes.map((t) => `(.*-${t})`).join('|'));
         const filterParams = Object.entries(params).filter(([k, v]) => k.match(filterTypesRegex));
     
-        for (let [filedNameAndFilterType, value] of Object.entries(params)) {
+        for (let [filedNameAndFilterType, value] of Object.entries(filterParams)) {
             const [fieldName, filterType] = filedNameAndFilterType.split('-');
-            if (Array.isArray(value)) {
-                value = value[0];
-                // TODO
+            if (! Array.isArray(value) && /.*,.*/.test(value)) {
+                value = value.split(',').map((s) => s.trim())
             }
             if (filterType in filtersTypesToParams) {
                 filtersTypesToParams[filterType].push({ fieldName, value })
             } 
         }
+
+        // console.log(filtersTypesToParams)
+
+        // Object.entries(filtersTypesToParams).map(([t, pli]) => {
+        //     pli.map(([fN, fv]) => {
+        //         if (t 
+        //     })
+        // })
         
         // Joining previous to sql clause
         const sqlWhereClause = Object.keys(filtersTypesToParams)
@@ -75,7 +143,7 @@ class QueryBuilder {
                 const qt = filtersTypesToSqlValueQuoted[t];
                 const operand = filtersTypesToSqlOperand[t];
                 return filtersTypesToParams[t]
-                    .map(({ queryParam, value }) => `"${queryParam}" ${operand} ${qt}${value}${qt}`)
+                    .map(({ fieldName, value }) => `"${fieldName}" ${operand} ${qt}${value}${qt}`)
                     .join("AND");})
             .filter((clause) => clause?.length > 0)
             .join("AND");
@@ -85,7 +153,9 @@ class QueryBuilder {
     }
 
     static buildSelect(params) {
-        
+        // console.log(params)
+        delete params.aaa;
+
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
 
@@ -106,13 +176,15 @@ class QueryBuilder {
         const viewName = pageToViewName[params.page]
         const viewGen = views[viewName]
 
-        return `WITH ${viewName} AS (
+        const a = `WITH ${viewName} AS (
                     ${viewGen(params)})
                 SELECT *
                 FROM ${viewName}
                 ${QueryBuilder.filteringPart(params)}
                 ${orderingPart(params)}
                 ${dataSubsetQueryPart(params)};`;
+        // console.log(a);
+        return a;
     }
 
     static buildInsertOrUpdate(params) {

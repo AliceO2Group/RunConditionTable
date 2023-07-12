@@ -16,7 +16,7 @@ const { Log } = require('@aliceo2/web-ui');
 const { Client, Pool } = require('pg');
 const QueryBuilder = require('./QueryBuilder.js');
 const config = require('./../config/configProvider.js');
-const Utils = require('../Utils.js')
+const {distinct} = require('../utils')
 
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataRespondFields;
@@ -138,7 +138,7 @@ class DatabaseService {
             }
 
             data[DRF.rows] = rows;
-            data[DRF.fields] = Utils.distinct(fields.map(f => f.name)).map(n => { return { name: n } });
+            data[DRF.fields] = distinct(fields.map(f => f.name)).map(n => { return { name: n } });
 
             res.json({ data: data });
         };
@@ -216,10 +216,10 @@ class DatabaseService {
     }
 
     async healthcheck() {
-        for (const [d, def] of Object.entries(config.databasePersistance.healthcheckQueries)) {
+        for (const [d, def] of Object.entries(config.rctData.healthcheckQueries)) {
             this.logger.info(`healthcheck for ${def.description}`);
             for (const q of def.query) {
-                const logger = config.databasePersistance.suppressHealthcheckLogs ? null : (e) => this.logger.error(e.stack)
+                const logger = config.rctData.suppressHealthcheckLogs ? null : (e) => this.logger.error(e.stack)
                 await this.pgExec(q, logger, null, logger)
             }
         }

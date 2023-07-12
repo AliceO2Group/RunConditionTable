@@ -13,9 +13,9 @@
 
 const assert = require('assert');
 const { buildPublicConfig } = require('../../../app/lib/config/publicConfigProvider');
- 
+
 module.exports = () => {
-    describe('Public Config Provider', () => {        
+    describe('Public Config Provider', () => {
         describe('Filtering objects', () => {
             it('should provide public config', () => {
                 assert.doesNotThrow(() => buildPublicConfig());

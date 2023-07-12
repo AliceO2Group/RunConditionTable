@@ -36,7 +36,7 @@ class LogsStacker {
         this.messages[type].forEach((m) => func(type, m));
     }
 
-    typeLog(type) {
+    logType(type) {
         if (this.messages[type]) {
             for (const m of this.messages[type]) {
                 this.logger[type](m);

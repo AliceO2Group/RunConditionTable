@@ -14,7 +14,7 @@
  */
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
-const Utils = require('../Utils.js');
+const Utils = require('../utils');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 
 class MonalisaServiceMCDetails extends AbstractServiceSynchronizer {

@@ -14,7 +14,7 @@
  */
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
-const Utils = require('../Utils.js');
+const Utils = require('../utils');
 const ServicesDataCommons = require('./ServicesDataCommons.js');
 const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
 
@@ -114,7 +114,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
 
     async dbAction(dbClient, d) {
         const { period } = d;
-        const year = Utils.extractPeriodYear(period);
+        const year = ServicesDataCommons.extractPeriodYear(period);
         d = Utils.adjusetObjValuesToSql(d);
 
         const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';

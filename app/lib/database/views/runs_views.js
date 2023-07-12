@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
  const config = require('../../config/configProvider.js');
- const run_detectors_field_in_sql_query = config.databasePersistance.detectors
+ const run_detectors_field_in_sql_query = config.rctData.detectors
      .map(d => `(SELECT get_run_det_data(r.run_number, '${d.toUpperCase()}')) as ${d.toUpperCase()}_detector`)
      .join(',\n')
  
@@ -37,7 +37,8 @@ const queryForRunsFields = `
  
 const runs_per_period_view = (query) => `
         SELECT
-            ${queryForRunsFields}
+            ${queryForRunsFields},
+            ${run_detectors_field_in_sql_query}
         FROM runs AS r
         INNER JOIN periods AS p
             ON p.id = r.period_id

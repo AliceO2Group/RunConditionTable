@@ -11,7 +11,7 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const ResProvider = require('../lib/ResProvider.js');
+const { ResProvider } = require('../lib/utils');
 
 module.exports = Object.freeze({
     // Web-Ui config
@@ -23,7 +23,7 @@ module.exports = Object.freeze({
     winston: ResProvider.winston(),
     database: ResProvider.database(),
     syncTaskAtStart: ResProvider.envOrDef('RCT_SYNC_TASK_AT_START', false, Boolean),
-    databasePersistance: require('./databasePersistance.js'),
+    rctData: require('./rct-data'),
     public: require('./public.js'),
 
     // External services config

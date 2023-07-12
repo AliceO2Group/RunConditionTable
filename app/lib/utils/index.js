@@ -11,10 +11,16 @@
  * or submit itself to any jurisdiction.
  */
 
-const PublicConfigProviderSuite = require('./publicConfigProvider.test');
-const ConfigProviderSuite = require('./configProvider.test');
+const httpUtils = require('./http-utils.js');
+const LogsStacker = require('./LogsStacker.js');
+const objUtils = require('./obj-utils.js');
+const ResProvider = require('./ResProvider.js');
+const sqlUtils = require('./sql-utils.js');
 
-module.exports = () => {
-    describe('Config Provider Suite', ConfigProviderSuite);
-    describe('Public Config Provider', PublicConfigProviderSuite);
+module.exports = {
+    ResProvider,
+    LogsStacker,
+    ...sqlUtils,
+    ...httpUtils,
+    ...objUtils,
 };
