@@ -12,51 +12,17 @@
  * or submit itself to any jurisdiction.
  */
 
-const matchExcludeType = 'match-exclude-type';
-const fromToType = 'from-to-type';
-
-const runsViewsFilteringTypes = {
-    name: matchExcludeType,
-    run_number: fromToType,
-    time_start: fromToType,
-    time_end: fromToType,
-    time_trg_start: fromToType,
-    time_trg_end: fromToType,
-    l3_current: fromToType,
-    dipole_current: fromToType,
-    energy_per_beam: fromToType,
-    ir: fromToType,
-    filling_scheme: fromToType,
-    triggers_conf: matchExcludeType,
-    fill_number: fromToType,
-    run_type: matchExcludeType,
-    mu: matchExcludeType,
-    center_of_mass_energy: fromToType,
-};
-
-const dataPassesViews = {
-    name: matchExcludeType,
-    description: matchExcludeType,
-    pass_type: matchExcludeType,
-    jira: matchExcludeType,
-    ml: matchExcludeType,
-    number_of_events: fromToType,
-    software_version: matchExcludeType,
-    size: fromToType,
-};
-
-const mcViews = {
-    name: matchExcludeType,
-    description: matchExcludeType,
-    jira: matchExcludeType,
-    ml: matchExcludeType,
-    pwg: matchExcludeType,
-    number_of_events: fromToType,
-};
+const matchExcludeType = 'matchexclude';
+const fromToType = 'fromto';
 
 const { roles, flags: flagsTypes, detectors } = require('./rct-data');
 
 module.exports = { // Properties that will be provided to frontend in the public folder
+    filterTypes: {
+        matchExcludeType,
+        fromToType,
+    },
+
     roles,
     flagsTypes,
     endpoints: {
@@ -107,36 +73,6 @@ module.exports = { // Properties that will be provided to frontend in the public
         verification_insert: 'verification_insert',
     },
 
-    filteringParams: {
-        types: {
-            matchExcludeType: matchExcludeType,
-            fromToType: fromToType,
-        },
-        pages: {
-            periods: {
-                name: matchExcludeType,
-                year: fromToType,
-                beam: matchExcludeType,
-                energy: fromToType,
-            },
-            runsPerPeriod: runsViewsFilteringTypes,
-            mc: mcViews,
-            anchoredPerMC: dataPassesViews,
-            anchoragePerDatapass: mcViews,
-            dataPasses: dataPassesViews,
-            runsPerDataPass: runsViewsFilteringTypes,
-
-            flags: {
-                start: fromToType,
-                end: fromToType,
-                flag: matchExcludeType,
-                comment: matchExcludeType,
-                production_id: fromToType,
-                name: matchExcludeType,
-            },
-        },
-
-    },
     detectors: detectors,
     themes: {
         ehevi: 'ehevi',

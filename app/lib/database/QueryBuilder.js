@@ -80,14 +80,14 @@ const controlForNoArrays = {
     notarray: {
         match: {
             string: [ops.LIKE, ops.OR],
-            number: [ops.EQ ],
+            number: [ops.EQ, ops.OR],
         },
         exclude: {
-            string: ops.NOTLIKE,
-            number: ops.NE,
+            string: [ops.NOTLIKE, ops.AND],
+            number: [ops.NE, ops.AND],
         },
-        from: ops.FROM,
-        to: ops.TO,
+        from: [ops.FROM, ops.AND],
+        to: [ops.TO, ops.AND],
     },
 
     array: {
