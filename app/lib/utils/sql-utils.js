@@ -13,7 +13,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const sqlkeywords = ['DEFAULT', 'NULL', 'END'];
+const sqlValueKeywords = ['DEFAULT', 'NULL'];
 
 function adjusetObjValuesToSql(obj) {
     const res = {};
@@ -48,17 +48,16 @@ function adjustValuesToSql(v) {
     if (typeof v == 'string') {
         if (v.length == 0) {
             return null;
-        } else {
+        } else if (! sqlValueKeywords.includes(v?.trim().toUpperCase())) {
             return `'${v}'`;
         }
-    } else {
-        return v;
     }
+    return v;
 }
 
 function preserveSQLKeywords(words) {
     return words.map((w) => {
-        if (sqlkeywords.includes(w)) {
+        if (['end'].includes(w)) {
             return `"${w}"`;
         } else {
             return w;

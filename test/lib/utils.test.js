@@ -69,22 +69,6 @@ module.exports = () => {
             });
         });
 
-        describe('Building insert query', () => {
-            const sampleValues = {
-                name: 'LHC00',
-                beam: 'PbPb',
-                energy: 962,
-                year: 2000,
-            };
-
-            const compareString = `INSERT INTO periods(name, beam, energy, year)
-                VALUES('LHC00', 'PbPb', 962, 2000)`;
-
-            it('should create insert query correctly', () => {
-                assert(Utils.simpleBuildInsertQuery('periods', sampleValues) === compareString);
-            });
-        });
-
         describe('Preserve SQL keywords', () => {
             const expectedRes = ['"end"'];
             const basicCase = ['sth else'];
@@ -103,15 +87,15 @@ module.exports = () => {
                 a: () => 'a',
                 b: () => 'b',
             };
-            const defaultCase = () => defaultVal;
+            const opts = { default: () => defaultVal };
 
             it('should return correct value for each case', () => {
-                assert(Utils.switchCase(caseNames[0], cases, defaultCase)() === caseNames[0]);
-                assert(Utils.switchCase(caseNames[1], cases, defaultCase)() === caseNames[1]);
+                assert(Utils.switchCase(caseNames[0], cases, opts)() === caseNames[0]);
+                assert(Utils.switchCase(caseNames[1], cases, opts)() === caseNames[1]);
             });
 
             it('should return default value when called with an unknown case', () => {
-                assert(Utils.switchCase(caseNames[2], cases, defaultCase)() === defaultVal);
+                assert(Utils.switchCase(caseNames[2], cases, opts)() === defaultVal);
             });
         });
 

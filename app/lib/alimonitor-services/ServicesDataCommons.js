@@ -26,7 +26,7 @@ function mapBeamTypeToCommonFormat(dataObject) {
     dataObject.beam_type = Utils.switchCase(
         dataObject.beam_type,
         rctData.beamTypesMappings,
-        dataObject.beam_type,
+        { default: dataObject.beam_type },
     );
     return dataObject;
 }
