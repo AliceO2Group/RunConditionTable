@@ -16,7 +16,7 @@ const config = require('../config/configProvider.js');
 const views = require('./views');
 const procedures = require('./procedures')
 
-const { pagesNames: PN, procedures: PC } = config.public;
+const { pageNames: PN, procedures: PC } = config.public;
 const DRP = config.public.dataReqParams;
 
 const pageToViewName = {};

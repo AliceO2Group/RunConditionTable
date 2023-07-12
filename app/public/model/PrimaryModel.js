@@ -17,6 +17,7 @@ import FetchedDataManager from './data/FetchedDataManager.js';
 import { RCT } from '../config.js';
 import { defaultIndex, defaultIndexString, defaultRunNumbers } from '../utils/defaults.js';
 const { dataReqParams } = RCT;
+const { pageNames } = RCT;
 
 export default class PrimaryModel extends Observable {
     constructor(parent) {
@@ -52,7 +53,7 @@ export default class PrimaryModel extends Observable {
         switch (url.pathname) {
             case '/':
                 if (! this.router.params['page']) {
-                    this.router.go(`/?page=periods&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`);
+                    this.router.go(`/?page=${pageNames.periods}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`);
                 } else {
                     this.fetchedData.reqForData()
                         .then(() => {})
@@ -93,11 +94,10 @@ export default class PrimaryModel extends Observable {
     }
 
     goToDefaultPageUrl(page) {
-        if (page === 'flags') {
-            this.router.go(`/?page=${page}&run_numbers=${defaultRunNumbers}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
-        } else {
-            this.router.go(`/?page=${page}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`);
-        }
+        const url = page === pageNames.flags
+            ? `/?page=${page}&run_numbers=${defaultRunNumbers}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`
+            : `/?page=${page}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
+        this.router.go(url);
     }
 
     getDataPointerFromUrl(url) {

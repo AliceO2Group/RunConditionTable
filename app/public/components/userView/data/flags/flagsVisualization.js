@@ -15,7 +15,7 @@
 import flagVisualization from './flagVisualization.js';
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
-const { pagesNames: PN } = RCT;
+const { pageNames: PN } = RCT;
 
 function filterDistinct(a) {
     return a.filter((value, index, array) => array.indexOf(value) === index);

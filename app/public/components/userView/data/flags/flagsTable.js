@@ -17,7 +17,7 @@ import { RCT } from '../../../../config.js';
 import flagsTableHeader from './table/flagsTableHeader.js';
 import flagsTableRow from './table/flagsTableRow.js';
 import pagesCellsSpecials from '../pagesCellsSpecials.js';
-const { pagesNames: PN } = RCT;
+const { pageNames: PN } = RCT;
 
 export default function flagsTable(model, run, detector) {
     const [flagsDataIndex] = Object.keys(model.fetchedData[PN.flags]);

@@ -14,31 +14,29 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
-
-const { dataReqParams } = RCT;
+const { dataReqParams, pageNames } = RCT;
 
 export default function indexChip(model, index) {
     const dataPointer = model.getCurrentDataPointer();
+    const { page } = dataPointer;
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
     const { fields } = data;
     const firstField = fields.find((f) => f !== undefined && f.name);
+    const targetUrl = `/?page=${page}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`;
 
-    const chip = (pageName) => pageName !== 'periods' && model.fetchedData[pageName][index]
+    return page !== pageNames.periods && model.fetchedData[page][index]
         ? h('.chip.flex-wrap.justify-between.items-center', {
-            id: `chip-${pageName}-${index}`,
-            class: dataPointer.index === index && dataPointer.page === pageName ? 'primary' : '',
+            id: `chip-${page}-${index}`,
+            class: dataPointer.index === index && dataPointer.page === page ? 'primary' : '',
         },
         h('button.btn.transparent', { onclick: () => {
-            // eslint-disable-next-line max-len
-            model.router.go(`/?page=${pageName}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`);
+            model.router.go(targetUrl);
         } }, index),
         h('button.btn.icon-only-button.transparent', {
             onclick: () => {
-                model.removeSubPage(pageName, index);
+                model.removeSubPage(page, index);
                 model.notify();
             },
-        }, dataPointer.index === index && dataPointer.page === pageName ? h('.close-20-off-white') : h('.close-20-primary')))
+        }, dataPointer.index === index && dataPointer.page === page ? h('.close-20-off-white') : h('.close-20-primary')))
         : '';
-
-    return chip(dataPointer.page);
 }

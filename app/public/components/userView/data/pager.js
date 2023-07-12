@@ -13,61 +13,37 @@
  */
 
 import viewButton from '../../common/viewButton.js';
-import { range, replaceUrlParams } from '../../../utils/utils.js';
-import { h, iconMediaSkipBackward, iconCaretLeft, iconChevronBottom, iconCaretRight, iconMediaSkipForward } from '/js/src/index.js';
-import { RCT } from '../../../config.js';
+import { replaceUrlParams } from '../../../utils/utils.js';
+import { h, iconChevronBottom } from '/js/src/index.js';
 import itemsCounter from './table/items-counter.js';
+import { RCT } from '../../../config.js';
 
-const siteParamName = RCT.dataReqParams.site;
-const visibleNeighbourButtonsRange = 2;
-const maxVisibleButtons = 10;
+const { site } = RCT.dataReqParams;
 
 export default function pager(model, data, pagerOnly = true) {
-    const mapArrayToButtons = (arr) => arr.map((i) => {
-        const site = i + 1;
-        const url = replaceUrlParams(data.url, [[siteParamName, site]]);
+    const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
+    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
 
+    const pageButton = (targetSite) => {
+        const url = replaceUrlParams(data.url, [[site, targetSite]]);
         return viewButton(
             model,
-            site,
-            () => model.fetchedData.changePage(site),
+            targetSite,
+            () => model.fetchedData.changePage(targetSite),
             '',
             url.pathname + url.search,
-            `.btn.btn-secondary${currentSite.toString() === site.toString() ? '.selected' : ''}`,
+            `.btn${targetSite === currentSite ? '.btn-primary' : '.btn-secondary'}`,
             '',
             true,
         );
-    });
+    };
 
-    const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
-    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
-    const currentSiteIdx = currentSite - 1;
+    const siteChangingController = (targetSite, content) => h('a.btn.btn-secondary.site-changing-controller', {
+        onclick: () => model.fetchedData.changePage(targetSite),
+    }, content);
 
-    const middleButtonsR = range(
-        Math.max(0, currentSiteIdx - visibleNeighbourButtonsRange),
-        Math.min(sitesNumber, currentSiteIdx + visibleNeighbourButtonsRange + 1),
-    );
-
-    const leftButtonsR = range(
-        0,
-        Math.min(
-            middleButtonsR[0],
-            Math.floor((maxVisibleButtons - (2 * visibleNeighbourButtonsRange + 1)) / 2),
-        ),
-    );
-
-    const rightButtonsR = range(
-        Math.max(
-            middleButtonsR[middleButtonsR.length - 1] + 1,
-            sitesNumber - Math.floor((maxVisibleButtons - (2 * visibleNeighbourButtonsRange + 1)) / 2),
-        ),
-        sitesNumber,
-    );
-
-    const leftThreeDotsPresent = !(leftButtonsR[leftButtonsR.length - 1] === middleButtonsR[0] - 1 || leftButtonsR.length === 0);
-    const rightThreeDotsPresent = !(rightButtonsR[0] === middleButtonsR[middleButtonsR.length - 1] + 1 || rightButtonsR.length === 0);
-
-    const siteChangingController = (onclickF, label) => h('a.site-changing-controller', { onclick: onclickF }, label);
+    const moreSitesLeft = currentSite > 2;
+    const moreSitesRight = currentSite < sitesNumber - 1;
 
     function handleOptionChange() {
         const columnsOptionsSelect = document.getElementById('columns-options');
@@ -125,42 +101,46 @@ export default function pager(model, data, pagerOnly = true) {
                 ],
 
             h('.flex.pager-buttons',
-                // Move to first site
-                currentSite > 1 ? siteChangingController(() => model.fetchedData.changePage(1), iconMediaSkipBackward()) : ' ',
-                // Move to middle of sites range [first, current]
-                currentSite > 3
-                    ? siteChangingController(() => model.fetchedData.changePage(Math.floor(currentSite / 2)), iconChevronBottom())
-                    : ' ',
+                // Move to the first site
+                currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
                 // Move one site back
-                currentSite > 1 ? siteChangingController(() => model.fetchedData.changePage(currentSite - 1), iconCaretLeft()) : ' ',
+                currentSite > 1 ? siteChangingController(currentSite - 1, h('.back-15-primary')) : ' ',
 
-                mapArrayToButtons(leftButtonsR),
-                leftThreeDotsPresent ? h('.ellipsis-20') : '',
-                mapArrayToButtons(middleButtonsR),
-                rightThreeDotsPresent ? '...' : '',
-                mapArrayToButtons(rightButtonsR),
+                // Move to the middle of sites range [first, current]
+                moreSitesLeft
+                    ? siteChangingController(
+                        Math.floor(currentSite / 2),
+                        h('.more-15-primary'),
+                    )
+                    : '',
 
-                // Analogically as above
+                currentSite > 1 ? pageButton(currentSite - 1) : '',
+                pageButton(currentSite),
+                currentSite < sitesNumber ? pageButton(currentSite + 1) : '',
+
+                // Move to the middle of sites range [current, last]
+                moreSitesRight
+                    ? siteChangingController(
+                        currentSite + Math.floor((sitesNumber - currentSite) / 2),
+                        h('.more-15-primary'),
+                    )
+                    : '',
+
+                // Move one site forward
                 currentSite < sitesNumber
                     ? siteChangingController(
-                        () => model.fetchedData.changePage(currentSite + 1),
-                        iconCaretRight(),
+                        currentSite + 1,
+                        h('.forward-15-primary'),
                     )
-                    : ' ',
+                    : '',
 
-                currentSite < sitesNumber - 2
-                    ? siteChangingController(
-                        () => model.fetchedData.changePage(currentSite + Math.floor((sitesNumber - currentSite) / 2)),
-                        iconChevronBottom(),
-                    )
-                    : ' ',
-
+                // Move to the last site
                 currentSite < sitesNumber
                     ? siteChangingController(
-                        () => model.fetchedData.changePage(sitesNumber),
-                        iconMediaSkipForward(),
+                        sitesNumber,
+                        h('.double-right-15-primary'),
                     )
-                    : ' '),
+                    : ''),
         ]),
     ];
 }

@@ -18,7 +18,7 @@ import FetchedData from './FetchedData.js';
 import { replaceUrlParams } from '../../../utils/utils.js';
 import { RCT } from '../../../config.js';
 const { dataReqParams } = RCT;
-const { pagesNames } = RCT;
+const { pageNames } = RCT;
 
 /**
  * Object of this class provide organization of many FetchedData objects,
@@ -31,8 +31,8 @@ export default class FetchedDataManager {
         this.router = router;
         this.loader = new Loader();
 
-        for (const n in pagesNames) {
-            if (Object.prototype.hasOwnProperty.call(pagesNames, n)) {
+        for (const n in pageNames) {
+            if (Object.prototype.hasOwnProperty.call(pageNames, n)) {
                 this[n] = {};
             }
         }
@@ -150,8 +150,8 @@ export default class FetchedDataManager {
     }
 
     clear() {
-        for (const n in pagesNames) {
-            if (Object.prototype.hasOwnProperty.call(pagesNames, n)) {
+        for (const n in pageNames) {
+            if (Object.prototype.hasOwnProperty.call(pageNames, n)) {
                 this[n] = {};
             }
         }
