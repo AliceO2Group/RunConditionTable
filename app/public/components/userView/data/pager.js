@@ -15,33 +15,35 @@
 import viewButton from '../../common/viewButton.js';
 import { replaceUrlParams } from '../../../utils/utils.js';
 import { h, iconChevronBottom } from '/js/src/index.js';
-import { RCT } from '../../../config.js';
 import itemsCounter from './table/items-counter.js';
+import { RCT } from '../../../config.js';
 
-const siteParamName = RCT.dataReqParams.site;
+const { site } = RCT.dataReqParams;
 
 export default function pager(model, data, pagerOnly = true) {
     const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
-    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
+    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
 
-    const pageButton = (targetPage) => {
-        const url = replaceUrlParams(data.url, [[siteParamName, targetPage]]);
+    const pageButton = (targetSite) => {
+        const url = replaceUrlParams(data.url, [[site, targetSite]]);
         return viewButton(
             model,
-            targetPage,
-            () => model.fetchedData.changePage(targetPage),
+            targetSite,
+            () => model.fetchedData.changePage(targetSite),
             '',
             url.pathname + url.search,
-            `.btn${targetPage === currentSite ? '.btn-primary' : '.btn-secondary'}`,
+            `.btn${targetSite === currentSite ? '.btn-primary' : '.btn-secondary'}`,
             '',
             true,
         );
     };
 
-    const moreLeft = currentSite > 2;
-    const moreRight = currentSite < sitesNumber - 1;
+    const siteChangingController = (targetSite, content) => h('a.btn.btn-secondary.site-changing-controller', {
+        onclick: () => model.fetchedData.changePage(targetSite),
+    }, content);
 
-    const siteChangingController = (onclickF, label) => h('a.btn.btn-secondary.site-changing-controller', { onclick: onclickF }, label);
+    const moreSitesLeft = currentSite > 2;
+    const moreSitesRight = currentSite < sitesNumber - 1;
 
     function handleOptionChange() {
         const columnsOptionsSelect = document.getElementById('columns-options');
@@ -99,15 +101,15 @@ export default function pager(model, data, pagerOnly = true) {
                 ],
 
             h('.flex.pager-buttons',
-                // Move to first site
-                currentSite > 1 ? siteChangingController(() => model.fetchedData.changePage(1), h('.double-left-15-primary')) : ' ',
+                // Move to the first site
+                currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
                 // Move one site back
-                currentSite > 1 ? siteChangingController(() => model.fetchedData.changePage(currentSite - 1), h('.back-15-primary')) : ' ',
+                currentSite > 1 ? siteChangingController(currentSite - 1, h('.back-15-primary')) : ' ',
 
                 // Move to the middle of sites range [first, current]
-                moreLeft
+                moreSitesLeft
                     ? siteChangingController(
-                        () => model.fetchedData.changePage(Math.floor(currentSite / 2)),
+                        Math.floor(currentSite / 2),
                         h('.more-15-primary'),
                     )
                     : '',
@@ -117,24 +119,25 @@ export default function pager(model, data, pagerOnly = true) {
                 currentSite < sitesNumber ? pageButton(currentSite + 1) : '',
 
                 // Move to the middle of sites range [current, last]
-                moreRight
+                moreSitesRight
                     ? siteChangingController(
-                        () => model.fetchedData.changePage(currentSite + Math.floor((sitesNumber - currentSite) / 2)),
+                        currentSite + Math.floor((sitesNumber - currentSite) / 2),
                         h('.more-15-primary'),
                     )
                     : '',
 
-                // Analogically as above
+                // Move one site forward
                 currentSite < sitesNumber
                     ? siteChangingController(
-                        () => model.fetchedData.changePage(currentSite + 1),
+                        currentSite + 1,
                         h('.forward-15-primary'),
                     )
                     : '',
 
+                // Move to the last site
                 currentSite < sitesNumber
                     ? siteChangingController(
-                        () => model.fetchedData.changePage(sitesNumber),
+                        sitesNumber,
                         h('.double-right-15-primary'),
                     )
                     : ''),
