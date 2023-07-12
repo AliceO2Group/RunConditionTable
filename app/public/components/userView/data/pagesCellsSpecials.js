@@ -46,7 +46,7 @@ const pagesCellsSpecials = {};
 
 pagesCellsSpecials[PN.periods] = {
     name: (model, item) => [
-        h('td', item.name),
+        h('td.text-ellipsis', item.name),
         h('td',
             actionChip(
                 model,
@@ -81,7 +81,7 @@ pagesCellsSpecials[PN.periods] = {
 
 pagesCellsSpecials[PN.dataPasses] = {
     name: (model, item) => [
-        h('td', item.name),
+        h('td.text-ellipsis', item.name),
         h('td',
             h('button.btn.chip.m1', {
                 onclick: async () => {
@@ -113,7 +113,7 @@ pagesCellsSpecials[PN.dataPasses] = {
 };
 pagesCellsSpecials[PN.mc] = {
     name: (model, item) => [
-        h('td', item.name),
+        h('td.text-ellipsis', item.name),
         h('td',
             actionChip(
                 model,
