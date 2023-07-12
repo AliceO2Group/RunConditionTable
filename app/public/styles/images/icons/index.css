@@ -53,6 +53,38 @@
 }
 
 /**
+ * 15px
+ */
+
+.forward-15-primary {
+    background-image: url('/styles/images/icons/15/primary/Forward.svg');
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+}
+
+.back-15-primary {
+    background-image: url('/styles/images/icons/15/primary/Back.svg');
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+}
+
+.double-right-15-primary {
+    background-image: url('/styles/images/icons/15/primary/Double\ Right.svg');
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+}
+
+.double-left-15-primary {
+    background-image: url('/styles/images/icons/15/primary/Double\ Left.svg');
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+}
+
+/**
  * 20px
  */
 

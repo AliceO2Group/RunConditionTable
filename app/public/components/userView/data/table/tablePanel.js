@@ -45,6 +45,8 @@ export default function tablePanel(model) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
     const page = model.fetchedData[dataPointer.page];
+    console.log(page);
+    console.log(model.getSubPages(dataPointer.page));
     const { url } = page[dataPointer.index].payload;
 
     const anyFiltersActive = url.href.includes('match') || url.href.includes('exclude') || url.href.includes('from') || url.href.includes('to');

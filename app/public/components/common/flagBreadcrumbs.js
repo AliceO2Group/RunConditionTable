@@ -14,10 +14,11 @@
 
 import { h } from '/js/src/index.js';
 import flagsIndexChip from '../userView/data/table/flagsIndexChip.js';
+import title from '../userView/data/table/title.js';
 
 export default function flagBreadCrumbs(model, dataPass, run, detector) {
     return [
-        h('h3.p-right-15.text-primary', 'Flags'),
+        title(model),
         h('.forward-20'),
         h('h3.ph-15.text-primary', dataPass),
         h('.forward-20'),
