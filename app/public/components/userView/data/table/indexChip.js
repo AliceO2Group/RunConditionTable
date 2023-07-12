@@ -24,7 +24,7 @@ export default function indexChip(model, index) {
     const firstField = fields.find((f) => f !== undefined && f.name);
     const targetUrl = `/?page=${page}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`;
 
-    return (page) => page !== pageNames.periods && model.fetchedData[page][index]
+    return page !== pageNames.periods && model.fetchedData[page][index]
         ? h('.chip.flex-wrap.justify-between.items-center', {
             id: `chip-${page}-${index}`,
             class: dataPointer.index === index && dataPointer.page === page ? 'primary' : '',
