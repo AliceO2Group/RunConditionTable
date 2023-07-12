@@ -84,6 +84,13 @@
     display: inline-block;
 }
 
+.more-15-primary {
+    background-image: url('/styles/images/icons/15/primary/More.svg');
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+}
+
 /**
  * 20px
  */
@@ -142,13 +149,6 @@
     width: 20px;
     height: 20px;
     scale: 0.5;
-}
-
-.ellipsis-20 {
-    background-image: url('/styles/images/icons/20/Ellipsis.svg');
-    width: 20px;
-    height: 20px;
-    display: inline-block;
 }
 
 .folder-20 {

@@ -13,7 +13,7 @@
  */
 
 import viewButton from '../../common/viewButton.js';
-import { range, replaceUrlParams } from '../../../utils/utils.js';
+import { replaceUrlParams } from '../../../utils/utils.js';
 import { h, iconChevronBottom } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import itemsCounter from './table/items-counter.js';
@@ -23,7 +23,6 @@ const siteParamName = RCT.dataReqParams.site;
 export default function pager(model, data, pagerOnly = true) {
     const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
-    const currentSiteIdx = currentSite - 1;
 
     const pageButton = (targetPage) => {
         const url = replaceUrlParams(data.url, [[siteParamName, targetPage]]);
@@ -109,7 +108,7 @@ export default function pager(model, data, pagerOnly = true) {
                 moreLeft
                     ? siteChangingController(
                         () => model.fetchedData.changePage(Math.floor(currentSite / 2)),
-                        h('.ellipsis-20'),
+                        h('.more-15-primary'),
                     )
                     : '',
 
@@ -121,7 +120,7 @@ export default function pager(model, data, pagerOnly = true) {
                 moreRight
                     ? siteChangingController(
                         () => model.fetchedData.changePage(currentSite + Math.floor((sitesNumber - currentSite) / 2)),
-                        h('.ellipsis-20'),
+                        h('.more-15-primary'),
                     )
                     : '',
 
