@@ -432,6 +432,18 @@ CREATE TABLE public.particle_phys_data (
 ALTER TABLE public.particle_phys_data OWNER TO postgres;
 -- ddl-end --
 
+-- object: public.meta | type: TABLE --
+-- DROP TABLE IF EXISTS public.meta CASCADE;
+CREATE TABLE public.meta (
+	name varchar NOT NULL,
+	val varchar NOT NULL,
+	"updatedAt" timestamp NOT NULL,
+	CONSTRAINT name_pk PRIMARY KEY (name)
+);
+-- ddl-end --
+ALTER TABLE public.meta OWNER TO postgres;
+-- ddl-end --
+
 -- object: period_id_fk | type: CONSTRAINT --
 -- ALTER TABLE public.data_passes DROP CONSTRAINT IF EXISTS period_id_fk CASCADE;
 ALTER TABLE public.data_passes ADD CONSTRAINT period_id_fk FOREIGN KEY (period_id)

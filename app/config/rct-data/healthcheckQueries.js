@@ -17,20 +17,29 @@ const flags = require('./flags.json');
 const physicalParticlesData = require('./physicalParticlesData.js');
 
 const healthcheckQueries = {
-    detectors: {
-        description: 'detectors dict insert',
-        query: detectors.map((d) => `INSERT INTO detectors_subsystems("id", "name") VALUES (DEFAULT, '${d}');`),
-    },
-    particle: {
-        description: 'particles dict insert',
-        query: Object.entries(physicalParticlesData).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "A", "Z")
+    insert: {
+        detectors: {
+            description: 'Detectors dict insert',
+            query: detectors.map((d) => `INSERT INTO detectors_subsystems("id", "name") VALUES (DEFAULT, '${d}');`),
+        },
+        particle: {
+            description: 'Particles dict insert',
+            query: Object.entries(physicalParticlesData).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "A", "Z")
                 VALUES (DEFAULT, '${name}', '${d.full_name}', ${d.A}, ${d.Z});`),
-    },
-    flags: {
-        description: 'flags types dict insert',
-        query: flags.map((f) => `INSERT INTO flags_types_dictionary("id", "name", "method", "bad", "obsolate")
+        },
+        flags: {
+            description: 'Flags types dict insert',
+            query: flags.map((f) => `INSERT INTO flags_types_dictionary("id", "name", "method", "bad", "obsolate")
                 VALUES (${f.id}, '${f.name}', '${f.method}', ${f.bad}::bool, ${f.obsolete}::bool);`),
+        },
     },
+
+    read: {
+        lastUpdate: {
+            description: 'Check time of last update',
+            query: 'SELECT val'
+        }
+    }
 };
 
 const suppressHealthcheckLogs = (process.env['RCT_SUPRESS_HEALTHCECK_LOGS']?.toLowerCase() || 'true') == 'true';

@@ -209,15 +209,15 @@ class DatabaseService {
         this.adminClient.on('error', (e) => this.logger.error(e));
 
         await this.adminClient.connect()
-            .then(() => this.healthcheck())
+            .then(() => this.healthcheckInsertData())
             .catch((e) => {
                 this.logger.error(`error when trying to establish admin connection with ${config.database.host}::\n ${e.stack}`);
             });
     }
 
-    async healthcheck() {
-        for (const [d, def] of Object.entries(config.rctData.healthcheckQueries)) {
-            this.logger.info(`healthcheck for ${def.description}`);
+    async healthcheckInsertData() {
+        for (const [d, def] of Object.entries(config.rctData.healthcheckQueries.insert)) {
+            this.logger.info(`healthcheck : ${def.description}`);
             for (const q of def.query) {
                 const logger = config.rctData.suppressHealthcheckLogs ? null : (e) => this.logger.error(e.stack)
                 await this.pgExec(q, logger, null, logger)

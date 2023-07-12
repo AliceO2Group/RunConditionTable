@@ -83,7 +83,7 @@ class RunConditionTableApplication {
             };
             Utils.switchCase(cmdAndArgs[0], {
                 '': () => {},
-                hc: () => this.databaseService.healthcheck(),
+                hc: () => this.databaseService.healthcheckInsertData(),
                 users: () => {
                     this.con.log(this.databaseService.loggedUsers);
                 },
@@ -149,8 +149,7 @@ class RunConditionTableApplication {
     }
 
     async setSyncAllTask() {
-        this.syncAll();
-        this.syncAllTask = setInterval(this.syncAll, 24 * 60 * 60 * 1000); // Ones per day
+        this.syncAllTask = setInterval(this.syncAll.bind(this), 24 * 60 * 60 * 1000); // Ones per day
     }
 
     async clearSyncAllTask() {
