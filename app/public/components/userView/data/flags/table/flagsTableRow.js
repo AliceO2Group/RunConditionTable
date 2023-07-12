@@ -21,7 +21,7 @@ export default function flagsTableRow(
     const displayedFields = fields.filter((e) => e.display === true);
 
     const dataCells = displayedFields.map((field) =>
-        h(`td.${model.getCurrentDataPointer().page}-${field.name}-cell`,
+        h(`td.${model.getCurrentDataPointer().page}-${field.name}-cell.text-ellipsis`,
             item[field.name]
                 ? cellsSpecials[field.name]
                     ? cellsSpecials[field.name](model, item)
