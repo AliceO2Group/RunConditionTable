@@ -39,10 +39,6 @@ export default function pager(model, data, pagerOnly = true) {
         );
     };
 
-    console.log(currentSite);
-    console.log(currentSiteIdx);
-    console.log(sitesNumber);
-
     const moreLeft = currentSite > 2;
     const moreRight = currentSite < sitesNumber - 1;
 
