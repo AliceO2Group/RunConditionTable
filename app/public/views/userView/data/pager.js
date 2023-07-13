@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import viewButton from '../../common/viewButton.js';
+import viewButton from '../../../components/common/viewButton.js';
 import { replaceUrlParams } from '../../../utils/utils.js';
 import { h, iconChevronBottom } from '/js/src/index.js';
 import itemsCounter from './table/items-counter.js';

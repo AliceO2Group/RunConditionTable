@@ -13,8 +13,8 @@
  */
 
 import { h } from '/js/src/index.js';
-import dataPanel from '../components/userView/data/dataPanel.js';
-import sidebar from '../components/userView/sidebar/sidebar.js';
+import dataPanel from './userView/data/dataPanel.js';
+import sidebar from '../components/sidebar/sidebar.js';
 
 export default function userPanel(model) {
     const submodel = model.submodels[model.mode];

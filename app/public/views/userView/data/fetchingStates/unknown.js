@@ -13,9 +13,9 @@
  */
 
 import { h } from '/js/src/index.js';
-import viewButton from '../../../common/viewButton.js';
+import viewButton from '../../../../components/common/viewButton.js';
 
-export default function failureStatusAndReload(model, status) {
+export default function unknownError(model) {
     const reloadBtn = viewButton(
         model,
         'Reload',
@@ -24,11 +24,11 @@ export default function failureStatusAndReload(model, status) {
         undefined,
         '.btn-primary.m3',
     );
-    const loadingMessage = h('h3', 'Failed to load data');
-    const explanation = h('h5', `The services are unavailable (status: ${status ? status : 'unknown'})`);
+    const loadingMessage = h('h3', 'Unknown error');
+    const explanation = h('h5', 'Request could not be handled properly');
 
     return h('.loginDiv.top-100', [
-        h('.no-network-90'),
+        h('.unexpected-90'),
         loadingMessage,
         explanation,
         reloadBtn,

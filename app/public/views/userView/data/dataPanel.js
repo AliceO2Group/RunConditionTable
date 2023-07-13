@@ -18,7 +18,7 @@ import spinnerAndReloadView from './fetchingStates/loading.js';
 import failureStatusAndReload from './fetchingStates/failure.js';
 import unknownError from './fetchingStates/unknown.js';
 import { RCT } from '../../../config.js';
-import flagsPanel from './flags/flagsPanel.js';
+import flagsPanel from '../../flags/flagsPanel.js';
 const { pageNames } = RCT;
 
 /**

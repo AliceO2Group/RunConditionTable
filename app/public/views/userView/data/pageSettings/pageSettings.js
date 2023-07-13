@@ -13,7 +13,7 @@
  */
 
 import { h, iconChevronBottom } from '/js/src/index.js';
-import quantityInput from '../../../common/quantityInput.js';
+import quantityInput from '../../../../components/common/quantityInput.js';
 import { RCT } from '../../../../config.js';
 
 export default function pageSettings(model, close) {

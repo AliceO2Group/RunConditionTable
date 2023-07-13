@@ -13,15 +13,15 @@
  */
 
 import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
-import filter from '../table/filtering/filter.js';
+import filter from '../userView/data/table/filtering/filter.js';
 import downloadCSV from '../../../../utils/csvExport.js';
-import pageSettings from '../pageSettings/pageSettings.js';
+import pageSettings from '../userView/data/pageSettings/pageSettings.js';
 import flagsVisualization from './flagsVisualization.js';
 import flagsTable from './flagsTable.js';
-import flagBreadCrumbs from '../../../common/flagBreadcrumbs.js';
+import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
 import detectorName from './detectorName.js';
 import { defaultRunNumbers } from '../../../../utils/defaults.js';
-import noSubPageSelected from '../table/noSubPageSelected.js';
+import noSubPageSelected from '../userView/data/table/noSubPageSelected.js';
 
 export default function flagsPanel(model) {
     const urlParams = model.router.getUrl().searchParams;

@@ -13,8 +13,8 @@
  */
 
 import { h } from '/js/src/index.js';
-import flagsIndexChip from '../userView/data/table/flagsIndexChip.js';
-import title from '../userView/data/table/title.js';
+import flagsIndexChip from './flagsIndexChip.js';
+import title from '../../views/userView/data/table/title.js';
 
 export default function flagBreadCrumbs(model, dataPass, run, detector) {
     return [

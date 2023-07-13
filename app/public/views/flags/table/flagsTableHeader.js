@@ -13,7 +13,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../headersSpecials.js';
+import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../userView/data/headersSpecials.js';
 import fields from './fields.js';
 
 export default function flagsTableHeader(model) {

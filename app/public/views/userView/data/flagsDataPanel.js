@@ -18,9 +18,9 @@ import filter from './table/filtering/filter.js';
 import downloadCSV from '../../../../utils/csvExport.js';
 
 import pageSettings from './pageSettings/pageSettings.js';
-import flagsVisualization from './flags/flagsVisualization.js';
-import flagsTable from './flags/flagsTable.js';
-import flagBreadCrumbs from '../../common/flagBreadcrumbs.js';
+import flagsVisualization from '../../flags/flagsVisualization.js';
+import flagsTable from '../../flags/flagsTable.js';
+import flagBreadCrumbs from '../../../components/common/flagBreadcrumbs.js';
 import detectorName from './flags/detectorName.js';
 
 export default function flagsDataPanel(model) {

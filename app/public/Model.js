@@ -16,6 +16,7 @@ import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.j
 import PrimaryModel from './model/PrimaryModel.js';
 import ServiceUnavailableModel from './model/ServiceUnavailableModel.js';
 import { RCT } from './config.js';
+import FlagsModel from './views/pages/flags/Flags.js';
 const { roles } = RCT;
 
 export default class Model extends Observable {
@@ -34,6 +35,9 @@ export default class Model extends Observable {
 
         this.mode = null;
         this.submodels = {};
+
+        this.flags = new FlagsModel(this);
+        this.flags.bubbleTo(this);
 
         this.logginEndpoint = '/api/login/';
         this.login('physicist');

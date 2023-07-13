@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { reduceSerialIf } from '../../../../utils/utils.js';
-import detectorName from '../flags/detectorName.js';
+import detectorName from '../../../flags/detectorName.js';
 
 const detectorIcon = (model, item, n, index) => {
     const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName(n)}&rows-on-site=50&site=1`;

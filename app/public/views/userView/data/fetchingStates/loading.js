@@ -13,8 +13,8 @@
  */
 
 import { h } from '/js/src/index.js';
-import viewButton from '../../../common/viewButton.js';
-import spinner from '../../../common/spinner.js';
+import viewButton from '../../../../components/common/viewButton.js';
+import spinner from '../../../../components/common/spinner.js';
 
 const pos = { x: 0, y: 0 };
 
