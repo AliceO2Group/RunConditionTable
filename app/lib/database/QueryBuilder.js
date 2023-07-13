@@ -44,6 +44,61 @@ const ops = {
     TO: '<=',
 };
 
+const filtersTypesToSqlOperand = {
+    match: 'LIKE',
+    exclude: 'NOT LIKE',
+    from: '>=',
+    to: '<='
+}
+
+const logicalOperandsPerFilters = {
+    match: {
+        string: ops.LIKE,
+        number: ops.IN,
+    },
+    exclude: {
+        string: ops.NOTLIKE,
+        number: ops.NOTIN,
+    },
+    from: ops.FROM,
+    to: ops.TO,
+};
+
+const filtersTypesToSqlValueQuoted = {
+    match: '\'',
+    exclude: '\'',
+    from: '',
+    to: ''
+}
+
+//match take precedens
+const controlForNoArrays = {
+    notarray: {
+        match: {
+            string: [ops.LIKE, ops.OR],
+            number: [ops.EQ, ops.OR],
+        },
+        exclude: {
+            string: [ops.NOTLIKE, ops.AND],
+            number: [ops.NE, ops.AND],
+        },
+        from: [ops.FROM, ops.AND],
+        to: [ops.TO, ops.AND],
+    },
+
+    array: {
+        match: {
+            string: ops.LIKE,
+            number: ops.EQ,
+        },
+        exclude: {
+            string: ops.NOTLIKE,
+            number: ops.NE,
+        },
+        from: ops.FROM,
+        to: ops.TO,
+    },
+}
 
 
 class QueryBuilder {
@@ -62,19 +117,6 @@ class QueryBuilder {
             from: '>=',
             to: '<='
         }
-
-        const logicalOperandsPerFilters = {
-            from: ops.FROM,
-            to: ops.TO,
-            exclude: {
-                string: ops.NOTLIKE,
-                number: ops.NOTIN,
-            },
-            match: {
-                string: ops.LIKE,
-                number: ops.IN,
-            }
-        };
 
         const filtersTypesToSqlValueQuoted = {
             match: '\'',

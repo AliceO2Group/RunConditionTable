@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
@@ -17,12 +18,16 @@ import { getFieldName } from '../../headersSpecials.js';
 import { RCT } from '../../../../../config.js';
 const { filterTypes } = RCT;
 
+const N = {
+
+};
+
 export default function filter(model) {
     const data = model.getCurrentData();
     const { fields } = data;
 
     function onFilteringTypeChange() {
-        const filteringTypeSelect = document.getElementById('showOptionsType');
+        const filteringTypeSelect = document.getElementById('filters-opts-select');
         const selectedValue = filteringTypeSelect.options[filteringTypeSelect.selectedIndex].value;
         const types = selectedValue.split('-');
 
@@ -100,7 +105,7 @@ export default function filter(model) {
                 ], h('.close-10')),
 
                 h('select.select.filter-select', {
-                    id: 'showOptionsType',
+                    id: 'filters-opts-select',
                     name: 'showOptions',
                     onchange: () => onFilteringTypeChange(),
                 }, [
@@ -113,7 +118,7 @@ export default function filter(model) {
                     h('input.form-control.relative', {
                         style: 'width:120px',
                         type: 'text',
-                        value: document.getElementById('showOptionsType')?.options[Selection.selectedIndex]?.value,
+                        value: document.getElementById('filters-opts-select')?.options[Selection.selectedIndex]?.value,
                         disabled: false,
                         id: 'left-filter-input',
                         required: true,
