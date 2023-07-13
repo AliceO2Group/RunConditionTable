@@ -48,8 +48,8 @@
     text-align: left;
 }
 
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-name-cell :first-child {
-    margin-left: 120px;
+.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-name-cell td:first-child {
+    min-width: 10em !important;
 }
 
 /* Description */
