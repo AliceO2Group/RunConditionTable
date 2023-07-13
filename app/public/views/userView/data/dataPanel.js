@@ -27,14 +27,14 @@ const { pageNames } = RCT;
  * @returns {*}
  */
 
-export default function dataPanel(model, detectors, flags) {
+export default function dataPanel(model, runs, detectors, flags) {
     const { page, index } = model.getCurrentDataPointer();
     const data = model.fetchedData[page][index];
 
     return data ? data.match({
         NotAsked: () => h('', 'not asked'),
         Loading: () => spinnerAndReloadView(model),
-        Success: () => page === pageNames.flags ? flagsPanel(model, detectors, flags) : tablePanel(model, detectors),
+        Success: () => page === pageNames.flags ? flagsPanel(model, runs, detectors, flags) : tablePanel(model, detectors),
         Failure: (status) => failureStatusAndReload(model, status),
     }) : unknownError(model);
 }

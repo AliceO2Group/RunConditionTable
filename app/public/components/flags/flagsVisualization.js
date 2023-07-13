@@ -13,9 +13,9 @@
  */
 
 import { h } from '/js/src/index.js';
-import flagVisualization from '../../../components/flags/flagVisualization.js';
+import flagVisualization from './flagVisualization.js';
 import { RCT } from '../../../../config.js';
-const { pageNames: PN } = RCT;
+const { flagReasonColors } = RCT;
 
 function filterDistinct(a) {
     return a.filter((value, index, array) => array.indexOf(value) === index);
@@ -30,8 +30,7 @@ const dateFormatter = (sec) => {
     return h('', h('.skinny', dateString), timeString);
 };
 
-export default function flagsVisualization(model, dataPass, run, flagsData) {
-    const runData = model.fetchedData[PN.runsPerDataPass][dataPass].payload.rows.find((e) => e.run_number.toString() === run.toString());
+export default function flagsVisualization(runData, flagsData) {
     const { time_start, time_end } = runData;
 
     const distinctFlagReasons = filterDistinct(flagsData.map((flag) => flag.flag_reason.replace(/\s+/g, '')));
@@ -42,18 +41,17 @@ export default function flagsVisualization(model, dataPass, run, flagsData) {
     }, {});
 
     const flagColor = (flagReason) => {
-        const colors = RCT.flagReasonColors;
         switch (flagReason) {
             case 'LimitedAcceptance':
-                return colors.limitedAcceptance;
+                return flagReasonColors.limitedAcceptance;
             case 'Notbad':
-                return colors.neutral;
+                return flagReasonColors.neutral;
             case 'CertifiedbyExpert':
-                return colors.neutral;
+                return flagReasonColors.neutral;
             case 'UnknownQuality':
-                return colors.neutral;
+                return flagReasonColors.neutral;
             default:
-                return colors.bad;
+                return flagReasonColors.bad;
         }
     };
 

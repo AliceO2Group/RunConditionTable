@@ -24,7 +24,7 @@ export default function userPanel(model) {
             h('section.outline-gray.flex-grow.relative.user-panel-main-content', [
                 h('.scroll-y.absolute-fill',
                     { id: 'user-panel-main-content' },
-                    dataPanel(submodel, model.detectors, model.flags)),
+                    dataPanel(submodel, model.runs, model.detectors, model.flags)),
             ]),
         ]),
     ]);

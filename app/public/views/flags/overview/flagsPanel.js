@@ -16,13 +16,13 @@ import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src
 import filter from '../../userView/data/table/filtering/filter.js';
 import downloadCSV from '../../../../utils/csvExport.js';
 import pageSettings from '../../userView/data/pageSettings/pageSettings.js';
-import flagsVisualization from '../visualization/flagsVisualization.js';
+import flagsVisualization from '../../../components/flags/flagsVisualization.js';
 import flagsTable from './flagsTable.js';
 import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
 import { defaultRunNumbers } from '../../../../utils/defaults.js';
 import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
 
-export default function flagsPanel(model, detectors, flags) {
+export default function flagsPanel(model, runs, detectors, flags) {
     const urlParams = model.router.getUrl().searchParams;
 
     const dataPassName = urlParams.get('data_pass_name');
@@ -31,6 +31,7 @@ export default function flagsPanel(model, detectors, flags) {
 
     const detectorName = detectors.getDetectorName(detector);
     const flagsData = flags.getFlags(run, detectorName);
+    const runData = runs.getRun(dataPassName, run);
 
     const functionalities = (model) => h('.btn-group',
         h('button.btn.btn-secondary.icon-only-button', {
@@ -84,7 +85,7 @@ export default function flagsPanel(model, detectors, flags) {
                 h('div', functionalities(model))),
             model.searchFieldsVisible ? filter(model) : '',
 
-            flagsVisualization(model, dataPassName, run, flagsData),
+            flagsVisualization(runData, flagsData),
             flagsTable(model, flagsData),
             h('.modal', { id: 'pageSettingsModal' },
                 h('.modal-content.abs-center.p3', {
