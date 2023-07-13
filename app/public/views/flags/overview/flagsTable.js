@@ -19,10 +19,8 @@ import flagsTableRow from '../table/flagsTableRow.js';
 import pagesCellsSpecials from '../../userView/data/pagesCellsSpecials.js';
 const { pageNames: PN } = RCT;
 
-export default function flagsTable(model, run, detector, flags) {
+export default function flagsTable(model, flagsData) {
     const cellsSpecials = pagesCellsSpecials[PN.flags];
-
-    const flagsData = flags.getFlags(run, detector);
 
     return flagsData.length > 0
         ? h('.p-top-10',

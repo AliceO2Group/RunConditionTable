@@ -30,11 +30,9 @@ const dateFormatter = (sec) => {
     return h('', h('.skinny', dateString), timeString);
 };
 
-export default function flagsVisualization(model, dataPass, run, detector, flags) {
+export default function flagsVisualization(model, dataPass, run, flagsData) {
     const runData = model.fetchedData[PN.runsPerDataPass][dataPass].payload.rows.find((e) => e.run_number.toString() === run.toString());
     const { time_start, time_end } = runData;
-
-    const flagsData = flags.getFlags(run, detector);
 
     const distinctFlagReasons = filterDistinct(flagsData.map((flag) => flag.flag_reason.replace(/\s+/g, '')));
 

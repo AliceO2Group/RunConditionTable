@@ -30,6 +30,7 @@ export default function flagsPanel(model, detectors, flags) {
     const detector = urlParams.get('detector');
 
     const detectorName = detectors.getDetectorName(detector);
+    const flagsData = flags.getFlags(run, detectorName);
 
     const functionalities = (model) => h('.btn-group',
         h('button.btn.btn-secondary.icon-only-button', {
@@ -83,8 +84,8 @@ export default function flagsPanel(model, detectors, flags) {
                 h('div', functionalities(model))),
             model.searchFieldsVisible ? filter(model) : '',
 
-            flagsVisualization(model, dataPassName, run, detectorName, flags),
-            flagsTable(model, run, detectorName, flags),
+            flagsVisualization(model, dataPassName, run, flagsData),
+            flagsTable(model, flagsData),
             h('.modal', { id: 'pageSettingsModal' },
                 h('.modal-content.abs-center.p3', {
                     id: 'pageSettingsModalContent',
