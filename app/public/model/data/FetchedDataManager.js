@@ -31,6 +31,8 @@ export default class FetchedDataManager {
         this.router = router;
         this.loader = new Loader();
 
+        this.rowsOnSite = 50;
+
         for (const n in pageNames) {
             if (Object.prototype.hasOwnProperty.call(pageNames, n)) {
                 this[n] = {};
