@@ -18,18 +18,14 @@ import { getFieldName } from '../../headersSpecials.js';
 import { RCT } from '../../../../../config.js';
 const { filterTypes } = RCT;
 
-const N = {
-
-};
-
 export default function filter(model) {
     const data = model.getCurrentData();
     const { fields } = data;
 
     function onFilteringTypeChange() {
         const filteringTypeSelect = document.getElementById('filters-opts-select');
-        const selectedValue = filteringTypeSelect.options[filteringTypeSelect.selectedIndex].value;
-        const types = selectedValue.split('-');
+        const selectedType = filteringTypeSelect.options[filteringTypeSelect.selectedIndex].value;
+        const types = selectedType == filterTypes.between ? ['from', 'to'] : [filterTypes.match, filterTypes.exclude];
 
         const leftFilterPlaceholder = document.getElementById('left-filter-placeholder');
         const rightFilterPlaceholder = document.getElementById('right-filter-placeholder');
@@ -37,6 +33,9 @@ export default function filter(model) {
     }
 
     function onFilterSubmit() {
+        const filteringTypeSelect = document.getElementById('filters-opts-select');
+        const selectedType = filteringTypeSelect.options[filteringTypeSelect.selectedIndex].value;
+
         const fieldNameSelect = document.getElementById('show-options-field');
         const fieldNameValue = fieldNameSelect.options[fieldNameSelect.selectedIndex].value;
 
@@ -58,26 +57,15 @@ export default function filter(model) {
         });
 
         let filterPhrase = '';
-        if (leftFilterType === filterTypes.from && rightFilterType === filterTypes.to) {
-            const fromToFilterType = `${filterTypes.from}_${filterTypes.to}`;
+        if (selectedType == filterTypes.between) {
             // eslint-disable-next-line max-len
-            filterPhrase += `&${encodeURI(fieldNameValue)}-${encodeURI(fromToFilterType)}=${encodeURI(leftFilterInput)},${encodeURI(rightFilterInput)}`;
+            filterPhrase += `&${encodeURI(fieldNameValue)}-${encodeURI(filterTypes.between)}=${encodeURI(leftFilterInput)},${encodeURI(rightFilterInput)}`;
         } else {
+            // So Match or Exclude filtering type
             // eslint-disable-next-line max-len
             filterPhrase += leftFilterInput ? `&${encodeURI(fieldNameValue)}-${encodeURI(leftFilterType)}=${encodeURI(leftFilterInput)}` : '';
             filterPhrase += rightFilterInput ? `&${encodeURI(fieldNameValue)}-${encodeURI(rightFilterType)}=${encodeURI(rightFilterInput)}` : '';
         }
-
-        /*
-         * Let matchFromPhrase = '';
-         * let excludeToPhrase = '';
-         * if (rightFilterInput) {
-         *     matchFromPhrase = `${encodeURI(fieldNameValue)}-${encodeURI(rightFilterType)}=${encodeURI(rightFilterInput)}`;
-         * }
-         * if (leftFilterInput) {
-         *     excludeToPhrase = `${encodeURI(fieldNameValue)}-${encodeURI(leftFilterType)}=${encodeURI(leftFilterInput)}`;
-         * }
-         */
 
         const url = model.router.getUrl();
         const newUrl = new URL(`${url.href}${filterPhrase}`);
@@ -86,6 +74,8 @@ export default function filter(model) {
 
         model.router.go(newUrl);
     }
+
+    const aggMatchExcludeTypes = `${filterTypes.match}-${filterTypes.exclude}`;
 
     return h('.font-size-small', [
         h('div.flex-wrap.justify-between.items-center',
@@ -110,8 +100,8 @@ export default function filter(model) {
                     onchange: () => onFilteringTypeChange(),
                 }, [
                     h('option', { value: '', selected: true, disabled: true, hidden: true }, 'Filtering type'),
-                    h('option', { value: 'match-exclude' }, 'match-exclude'),
-                    h('option', { value: 'from-to' }, 'from-to'),
+                    h('option', { value: aggMatchExcludeTypes }, aggMatchExcludeTypes),
+                    h('option', { value: filterTypes.between }, filterTypes.between),
                 ], h('.close-10')),
 
                 h('.text-field',

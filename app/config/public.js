@@ -18,8 +18,7 @@ module.exports = { // Properties that will be provided to frontend in the public
     filterTypes: {
         match: 'match',
         exclude: 'exclude',
-        from: 'from',
-        to: 'to',
+        between: 'between',
     },
 
     roles,
