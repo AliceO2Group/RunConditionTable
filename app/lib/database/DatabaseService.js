@@ -111,6 +111,26 @@ class DatabaseService {
 
     }
 
+    async pgExecv2(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler) {
+        const cl = await this.pool.connect()
+        client.query(query)
+            .then((dbRes) => {
+                if (dbResponseHandler) {
+                    dbResponseHandler(dbRes);
+                }
+            })
+            .catch((e) => {
+                if (dbResErrorHandler) {
+                    dbResErrorHandler(e);
+                } else {
+                    throw e;
+                }
+            });
+            release();
+        }
+
+    }
+
     async pgExecFetchData(req, res) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token];
         if (!userData) {

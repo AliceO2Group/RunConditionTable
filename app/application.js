@@ -66,21 +66,8 @@ class RunConditionTableApplication {
     devCli(line) {
         try {
             const cmdAndArgs = line.trim().split(/ +/).map((s) => s.trim());
-            const dbAdminExec = (args) => {
-                this.databaseService.adminClient
-                    .query(args.join(' '))
-                    .then(this.con.log)
-                    .catch((e) => {
-                        this.con.log(e);
-                    });
-            };
-            const shExec = (args) => {
-                Utils.exec(args)
-                    .then(this.con.log)
-                    .catch((e) => {
-                        this.con.log(e);
-                    });
-            };
+            const dbAdminExec = (args) => this.databaseService.pgExec(args.join(' '), this.con.log, this.con.log);
+
             Utils.switchCase(cmdAndArgs[0], {
                 '': () => {},
                 hc: () => this.databaseService.healthcheckInsertData(),
@@ -94,7 +81,6 @@ class RunConditionTableApplication {
                     dbAdminExec(['select now();']);
                 },
                 psql: dbAdminExec,
-                sh: shExec,
                 bk: (args) => this.servCLI(this.services.bookkeepingService, args),
                 ml: (args) => this.servCLI(this.services.monalisaService, args),
                 mc: (args) => this.servCLI(this.services.monalisaServiceMC, args),
@@ -149,8 +135,8 @@ class RunConditionTableApplication {
     }
 
     async setSyncAllTask() {
-        const syncPeriod = 12 * 60 * 60 * 1000; // Ones per day
-        
+        const syncPeriod = 12 * 60 * 60 * 1000; // Twice per day
+        this.databaseService.pgExec
         this.syncAllTask = setInterval(this.syncAll.bind(this), syncPeriod);
     }
 
