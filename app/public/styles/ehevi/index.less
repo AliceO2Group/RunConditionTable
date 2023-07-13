@@ -12,11 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-@import (less) "./custom.css";
 @import (less) "./custom/canvas/canvas.css";
 @import (less) "./custom/components/button.css";
 @import (less) "./custom/components/chip.css";
-@import (less) "./custom/components/modal.css";
 @import (less) "./custom/components/pager.css";
 @import (less) "./custom/components/quantity-input.css";
 @import (less) "./custom/components/sidebar.css";
@@ -33,6 +31,36 @@
 @import (less) "./custom/tables/runs.css";
 @import (less) "./custom/tables/table.css";
 @import (less) "./icons/icons.css";
+
+:root {
+    /* Color palette */
+    --active-color: #F9EAC2;
+    --dark-blue: #1D3557;
+    --secondary-color: #577590;
+    --highlight-blue: #D7EDFC;
+    --blue: #1e90ff;
+
+    --white: #ffffff;
+    --off-white: #fdfbf9;
+    --yellow: #F9EAC2;
+    --orange: #E9C46A;
+    --selection-color: #e2eafc;
+    --primary: #324376;
+    --primary-hover: #586BA4;
+}
+
+.ehevi .user-panel-main-content {
+    background-color: var(--off-white);
+    padding-top: 0px !important;
+}
+
+.ehevi .vertical-middle {
+    vertical-align: middle !important;
+}
+
+.ehevi .text-primary {
+    color: var(--primary);
+}
 
 .loginDiv {
     .flex-column;

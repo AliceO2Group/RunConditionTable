@@ -16,16 +16,19 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../../../config.js';
 
 const { dataReqParams } = RCT;
+const { defaultDataReqParams } = RCT;
 
 export default function activeFilters(model) {
     const data = model.getCurrentData();
     const dataPointer = model.getCurrentDataPointer();
     const { fields } = data;
+    const baseUrl = `/?page=${dataPointer.page}&index=${dataPointer.index}`;
+    const defaultUrlParams = `${dataReqParams.rowsOnSite}=${defaultDataReqParams.rowsOnSite}&${dataReqParams.site}=${defaultDataReqParams.site}`;
 
     function onClear() {
         const firstField = fields.find((f) => f !== undefined && f.name);
-        // eslint-disable-next-line max-len
-        model.router.go(`/?page=${dataPointer.page}&index=${dataPointer.index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`);
+        const clearUrl = `${baseUrl}&${defaultUrlParams}&sorting=-${firstField.name}`;
+        model.router.go(clearUrl);
     }
 
     return [

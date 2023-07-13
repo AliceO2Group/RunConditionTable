@@ -18,7 +18,7 @@ import detectorName from '../flags/detectorName.js';
 
 const detectorIcon = (model, item, n, index) => {
     const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName(n)}&rows-on-site=50&site=1`;
-    return h('button.btn.transparent.tooltip.noBorderBottom.pointer', {
+    return h('button.btn.transparent.tooltip.no-border-bottom.pointer', {
         onclick: () => {
             model.router.go(flagsUrl);
         },

@@ -49,6 +49,11 @@ module.exports = { // Properties that will be provided to frontend in the public
         rowsOnSite: 'rows-on-site',
     },
 
+    defaultDataReqParams: {
+        site: 1,
+        rowsOnSite: 50,
+    },
+
     dataRespondFields: {
         totalRowsCount: 'totalRowsCount',
         rows: 'rows',

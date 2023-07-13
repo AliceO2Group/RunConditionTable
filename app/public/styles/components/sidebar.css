@@ -12,8 +12,16 @@
  * or submit itself to any jurisdiction.
  */
 
-@import (less) "./webui.less";
-@import (less) "./images/index.less";
-@import (less) "./custom.less";
-@import (less) "./components/index.less";
-@import (less) "./ehevi/index.less";
+.page-title {
+    display: block;
+    position: relative;
+    height: 35px;
+    width: 100%;
+}
+
+.title-text-relative {
+    position: relative;
+    top: -20px;
+    padding: 0;
+    margin: 0;
+}
