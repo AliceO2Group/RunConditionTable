@@ -13,22 +13,23 @@
  */
 
 import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
-import filter from '../userView/data/table/filtering/filter.js';
+import filter from '../../userView/data/table/filtering/filter.js';
 import downloadCSV from '../../../../utils/csvExport.js';
-import pageSettings from '../userView/data/pageSettings/pageSettings.js';
-import flagsVisualization from './flagsVisualization.js';
+import pageSettings from '../../userView/data/pageSettings/pageSettings.js';
+import flagsVisualization from '../visualization/flagsVisualization.js';
 import flagsTable from './flagsTable.js';
 import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
-import detectorName from './detectorName.js';
 import { defaultRunNumbers } from '../../../../utils/defaults.js';
-import noSubPageSelected from '../userView/data/table/noSubPageSelected.js';
+import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
 
-export default function flagsPanel(model) {
+export default function flagsPanel(model, detectors) {
     const urlParams = model.router.getUrl().searchParams;
 
     const dataPassName = urlParams.get('data_pass_name');
     const run = urlParams.get('run_numbers');
     const detector = urlParams.get('detector');
+
+    const detectorName = detectors.getDetectorName(detector);
 
     const functionalities = (model) => h('.btn-group',
         h('button.btn.btn-secondary.icon-only-button', {
@@ -63,7 +64,7 @@ export default function flagsPanel(model) {
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
-                    flagBreadCrumbs(model, dataPassName, run, detectorName(detector)),
+                    flagBreadCrumbs(model, dataPassName, run, detectorName),
                     h('button.btn.btn-secondary', {
                         onclick: () => {
                             document.getElementById('pageSettingsModal').style.display = 'block';
@@ -82,8 +83,8 @@ export default function flagsPanel(model) {
                 h('div', functionalities(model))),
             model.searchFieldsVisible ? filter(model) : '',
 
-            flagsVisualization(model, dataPassName, run, detectorName(detector)),
-            flagsTable(model, run, detectorName(detector)),
+            flagsVisualization(model, dataPassName, run, detectorName),
+            flagsTable(model, run, detectorName),
             h('.modal', { id: 'pageSettingsModal' },
                 h('.modal-content.abs-center.p3', {
                     id: 'pageSettingsModalContent',

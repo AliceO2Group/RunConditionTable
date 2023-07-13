@@ -14,9 +14,9 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
-import flagsTableHeader from './table/flagsTableHeader.js';
-import flagsTableRow from './table/flagsTableRow.js';
-import pagesCellsSpecials from '../userView/data/pagesCellsSpecials.js';
+import flagsTableHeader from '../table/flagsTableHeader.js';
+import flagsTableRow from '../table/flagsTableRow.js';
+import pagesCellsSpecials from '../../userView/data/pagesCellsSpecials.js';
 const { pageNames: PN } = RCT;
 
 export default function flagsTable(model, run, detector) {

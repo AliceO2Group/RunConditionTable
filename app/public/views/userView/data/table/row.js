@@ -14,33 +14,10 @@
 
 import { h } from '/js/src/index.js';
 import { reduceSerialIf } from '../../../../utils/utils.js';
-import detectorName from '../../../flags/detectorName.js';
-
-const detectorIcon = (model, item, n, index) => {
-    const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName(n)}&rows-on-site=50&site=1`;
-    return h('button.btn.transparent.tooltip.no-border-bottom.pointer', {
-        onclick: () => {
-            model.router.go(flagsUrl);
-        },
-    },
-    h('svg', { width: '20px', height: '20px' },
-        h('circle',
-            {
-                cx: '50%',
-                cy: '50%',
-                r: '8px', //
-
-                /*
-                 *Stroke: '#F7B538', strokes for the limited acceptance flags only
-                 *'stroke-width': '3',
-                 */
-                fill: '#8CB369',
-            })),
-    h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
-};
+import detectorIcon from '../../../../components/detectors/detectorIcon.js';
 
 export default function row(
-    model, visibleFields, data, item, cellsSpecials, index,
+    model, visibleFields, data, item, cellsSpecials, index, detectors,
 ) {
     const rowDivDef = reduceSerialIf(
         'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
@@ -53,7 +30,7 @@ export default function row(
                 ? cellsSpecials[field.name]
                     ? cellsSpecials[field.name](model, item)
                     : /.*_detector/.test(field.name)
-                        ? detectorIcon(model, item, field.name, index)
+                        ? detectorIcon(model, item, field.name, index, detectors.getDetectorName(field.name))
                         : item[field.name]
                 : '..'));
 

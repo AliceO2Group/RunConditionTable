@@ -18,7 +18,7 @@ import spinnerAndReloadView from './fetchingStates/loading.js';
 import failureStatusAndReload from './fetchingStates/failure.js';
 import unknownError from './fetchingStates/unknown.js';
 import { RCT } from '../../../config.js';
-import flagsPanel from '../../flags/flagsPanel.js';
+import flagsPanel from '../../flags/overview/flagsPanel.js';
 const { pageNames } = RCT;
 
 /**
@@ -27,14 +27,14 @@ const { pageNames } = RCT;
  * @returns {*}
  */
 
-export default function dataPanel(model) {
+export default function dataPanel(model, detectors) {
     const { page, index } = model.getCurrentDataPointer();
     const data = model.fetchedData[page][index];
 
     return data ? data.match({
         NotAsked: () => h('', 'not asked'),
         Loading: () => spinnerAndReloadView(model),
-        Success: () => page === pageNames.flags ? flagsPanel(model) : tablePanel(model),
+        Success: () => page === pageNames.flags ? flagsPanel(model, detectors) : tablePanel(model, detectors),
         Failure: (status) => failureStatusAndReload(model, status),
     }) : unknownError(model);
 }

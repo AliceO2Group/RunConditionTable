@@ -12,13 +12,15 @@
  */
 
 import { Observable, RemoteData } from '/js/src/index.js';
+import { RCT } from '../../config.js';
+const { detectors } = RCT;
 
 /**
- * Model representing handlers for the flags page
+ * Model representing handlers for the detectors page
  *
  * @implements {OverviewModel}
  */
-export default class FlagsModel extends Observable {
+export default class Detectors extends Observable {
     /**
      * The constructor of the Overview model object
      *
@@ -27,14 +29,16 @@ export default class FlagsModel extends Observable {
     constructor(model) {
         super();
         this.model = model;
-        this._flags = RemoteData.NotAsked();
+        this._detectors = RemoteData.NotAsked();
     }
 
-    async fetchAllFlags() {
-        this.notify();
+    getDetectors() {
+        return this._detectors;
     }
 
-    getFlags() {
-        return this._flags;
+    getDetectorName(detectorCode) {
+        const [detectorName] = detectorCode.split('_');
+        const known = detectors.find((detector) => detector === detectorName.toUpperCase());
+        return known ? known : `${detectorName.toUpperCase()}-unknown`;
     }
 }
