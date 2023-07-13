@@ -22,7 +22,7 @@ import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
 import { defaultRunNumbers } from '../../../../utils/defaults.js';
 import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
 
-export default function flagsPanel(model, detectors) {
+export default function flagsPanel(model, detectors, flags) {
     const urlParams = model.router.getUrl().searchParams;
 
     const dataPassName = urlParams.get('data_pass_name');
@@ -83,7 +83,7 @@ export default function flagsPanel(model, detectors) {
                 h('div', functionalities(model))),
             model.searchFieldsVisible ? filter(model) : '',
 
-            flagsVisualization(model, dataPassName, run, detectorName),
+            flagsVisualization(model, dataPassName, run, detectorName, flags),
             flagsTable(model, run, detectorName),
             h('.modal', { id: 'pageSettingsModal' },
                 h('.modal-content.abs-center.p3', {

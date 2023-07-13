@@ -37,6 +37,9 @@ export default class Detectors extends Observable {
     }
 
     getDetectorName(detectorCode) {
+        if (!detectorCode) {
+            return 'no detector code';
+        }
         const [detectorName] = detectorCode.split('_');
         const known = detectors.find((detector) => detector === detectorName.toUpperCase());
         return known ? known : `${detectorName.toUpperCase()}-unknown`;

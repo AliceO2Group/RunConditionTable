@@ -12,6 +12,8 @@
  */
 
 import { Observable, RemoteData } from '/js/src/index.js';
+import { RCT } from '../../config.js';
+const { pageNames: PN } = RCT;
 
 /**
  * Model representing handlers for the flags page
@@ -32,6 +34,12 @@ export default class Flags extends Observable {
 
     async fetchAllFlags() {
         this.notify();
+    }
+
+    getAllFlags() {
+        const submodel = this.model.submodels[this.model.mode];
+        const [flagsDataIndex] = Object.keys(submodel.fetchedData[PN.flags]);
+        return submodel.fetchedData[PN.flags][flagsDataIndex].payload.rows;
     }
 
     getFlags() {

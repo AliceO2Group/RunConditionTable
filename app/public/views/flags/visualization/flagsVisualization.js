@@ -30,12 +30,11 @@ const dateFormatter = (sec) => {
     return h('', h('.skinny', dateString), timeString);
 };
 
-export default function flagsVisualization(model, dataPass, run, detector) {
+export default function flagsVisualization(model, dataPass, run, detector, flags) {
     const runData = model.fetchedData[PN.runsPerDataPass][dataPass].payload.rows.find((e) => e.run_number.toString() === run.toString());
     const { time_start, time_end } = runData;
 
-    const [flagsDataIndex] = Object.keys(model.fetchedData[PN.flags]);
-    const flagsData = model.fetchedData[PN.flags][flagsDataIndex].payload.rows;
+    const flagsData = flags.getAllFlags();
 
     if (!Array.isArray(flagsData)) {
         return '';
