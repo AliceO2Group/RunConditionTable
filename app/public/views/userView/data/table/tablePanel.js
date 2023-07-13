@@ -41,7 +41,7 @@ const { pageNames } = RCT;
  * @returns {*}
  */
 
-export default function tablePanel(model, detectors) {
+export default function tablePanel(model, runs, detectors) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
     const page = model.fetchedData[dataPointer.page];
@@ -124,7 +124,7 @@ export default function tablePanel(model, detectors) {
                             }, [
                                 tableHeader(visibleFields, data, model),
                                 model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page, dataPointer.index, detectors),
+                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page, dataPointer.index, runs, detectors),
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
@@ -140,11 +140,11 @@ export default function tablePanel(model, detectors) {
 }
 
 function tableBody(
-    model, visibleFields, data, cellsSpecials, page, index, detectors,
+    model, visibleFields, data, cellsSpecials, page, index, runs, detectors,
 ) {
     return h('tbody', { id: `table-body-${data.url}` },
         [postingDataConfig[page] ? postForm(model, data) : '']
             .concat(data.rows.map((item) => row(
-                model, visibleFields, data, item, cellsSpecials, index, detectors,
+                model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
             ))));
 }

@@ -14,6 +14,7 @@
 import { Observable, RemoteData } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 const { pageNames: PN } = RCT;
+const { dataReqParams: DRP } = RCT;
 
 /**
  * Model representing handlers for the runs page
@@ -29,7 +30,22 @@ export default class Runs extends Observable {
     constructor(model) {
         super();
         this.model = model;
-        this._flags = RemoteData.NotAsked();
+        this._runsPerPeriod = RemoteData.NotAsked();
+        this._runsPerDataPass = RemoteData.NotAsked();
+        this._runs = RemoteData.NotAsked();
+    }
+
+    async fetchRunsPerDataPass(dataPass) {
+        const submodel = this.model.submodels[this.model.mode];
+        this._runsPerDataPass = RemoteData.NotAsked();
+        const page = submodel.fetchedData[PN.dataPasses];
+        const [pIndex] = Object.keys(page);
+        const { url } = page[pIndex].payload;
+        const dpSearchParams = `?page=${PN.runsPerDataPass}&index=${dataPass}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
+        await submodel.fetchedData.reqForData(true, new URL(url.origin + url.pathname + dpSearchParams));
+
+        const runNumbers = submodel.fetchedData[PN.runsPerDataPass][dataPass].payload.rows.map((row) => row.run_number);
+        await this.fetchFlagsSummary(dataPass, runNumbers);
     }
 
     getRunsPerDataPass(dataPass) {
@@ -39,5 +55,13 @@ export default class Runs extends Observable {
     getRun(dataPass, runNumber) {
         const runsPerDataPass = this.getRunsPerDataPass(dataPass);
         return runsPerDataPass.find((run) => run.run_number.toString() === runNumber.toString());
+    }
+
+    async fetchFlagsSummary(dataPass, runNumbers) {
+        const submodel = this.model.submodels[this.model.mode];
+        const url = submodel.router.getUrl();
+        const search = `?page=${PN.flags}&data_pass_name=${dataPass}&run_numbers=${runNumbers}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
+        const flagsUrl = new URL(url.origin + url.pathname + search);
+        await submodel.fetchedData.reqForData(true, flagsUrl);
     }
 }

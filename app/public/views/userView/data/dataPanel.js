@@ -34,7 +34,7 @@ export default function dataPanel(model, runs, detectors, flags) {
     return data ? data.match({
         NotAsked: () => h('', 'not asked'),
         Loading: () => spinnerAndReloadView(model),
-        Success: () => page === pageNames.flags ? flagsPanel(model, runs, detectors, flags) : tablePanel(model, detectors),
+        Success: () => page === pageNames.flags ? flagsPanel(model, runs, detectors, flags) : tablePanel(model, runs, detectors),
         Failure: (status) => failureStatusAndReload(model, status),
     }) : unknownError(model);
 }
