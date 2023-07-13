@@ -14,7 +14,7 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { getReadableFileSizeString } from '../../../utils/utils.js';
-import actionChip from '../../../components/common/actionChip.js';
+import actionChip from '../../../components/chips/actionChip.js';
 const { dataReqParams: DRP } = RCT;
 const { pageNames: PN } = RCT;
 

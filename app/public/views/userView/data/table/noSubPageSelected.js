@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
-import indexChip from './indexChip.js';
+import indexChip from '../../../../components/chips/indexChip.js';
 import title from './title.js';
 
 export default function noSubPageSelected(model) {

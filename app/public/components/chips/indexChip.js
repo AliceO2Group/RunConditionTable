@@ -13,7 +13,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../../../config.js';
+import { RCT } from '../../config.js';
 const { dataReqParams, pageNames } = RCT;
 
 export default function indexChip(model, index) {

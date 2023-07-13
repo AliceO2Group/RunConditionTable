@@ -17,7 +17,7 @@ import downloadCSV from '../../../../utils/csvExport.js';
 import tableHeader from './header.js';
 import row from './row.js';
 import pagesCellsSpecials from '../pagesCellsSpecials.js';
-import pager from '../pager.js';
+import pager from '../../../../components/table/pager.js';
 
 import postingDataConfig from '../posting/postingDataConfig.js';
 import { postForm } from '../posting/postForm.js';
@@ -28,7 +28,7 @@ import noDataView from './noDataView.js';
 import { RCT } from '../../../../config.js';
 import sortingRow from './sortingRow.js';
 import pageSettings from '../pageSettings/pageSettings.js';
-import indexChip from './indexChip.js';
+import indexChip from '../../../../components/chips/indexChip.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import noSubPageSelected from './noSubPageSelected.js';
 import title from './title.js';
