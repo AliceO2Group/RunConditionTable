@@ -43,7 +43,6 @@ const ops = {
     BETWEEN: 'BETWEEN',
 };
 
-//match take precedens
 const filtersControlTree = {
     notarray: {
         match: {
@@ -74,6 +73,9 @@ const filtersControlTree = {
 }
 
 const handleBetween = (fieldName, pairsLi) => {
+    if (! Array.isArray(pairsLi)) {
+        pairsLi = [pairsLi]
+    }
     return pairsLi.map((p) => {
         const value = p.split(',');
         const [left, right] = adjustValuesToSql(value);
@@ -105,13 +107,6 @@ const handleLike = (fieldName, values, like) => {
     }
 }
 
-// http://localhost:8081/?page=periods&rows-on-site=50&site=1&sorting=-name&year-between=2019,2022
-// http://localhost:8081/?page=periods&rows-on-site=50&site=1&sorting=-name&year-between=2019,2022&year-between=1,2&name-match=LHC22,LHC23&name-match=LHC22%&year-exclude=2023&year-exclude=2024&run_number-match=1,2,3,4&name-exclude=LHC22%,LHC25%
-// {
-//     year: [ 'between', [ '2019,2022', '1,2' ] ],
-//     name: [ 'match', [ 'LHC22,LHC23', 'LHC123' ] ]
-//   }
-  
 class QueryBuilder {
 
     static filteringPart(params) {
@@ -121,7 +116,6 @@ class QueryBuilder {
             between: []
         }
 
-        // assert correctness of previous
         // Mapping search params to categorized { key, value } pairs
         const filterTypesRegex= new RegExp(Object.keys(filterTypes).map((t) => `(.*-${t})`).join('|'));
         const filterParams = Object.entries(params)
@@ -130,103 +124,27 @@ class QueryBuilder {
         const fields2Filters = {};
         filterParams.forEach((l) => fields2Filters[l[0]] = [])
         filterParams.forEach((l) => fields2Filters[l[0]].push(l.slice(1)))
-
-    
-        // console.log(fields2Filters);
-
-
+        
         const cll = Object.entries(fields2Filters).map(([fieldName, clauses]) => {
-            return clauses.map((cl) => {
+            return  Object.fromEntries(clauses.map((cl) => {
                 const [filterType, values] = cl;
-                console.log(fieldName, filterType, values)
-                switch (filterType) {
-                    case 'between':
-                        return handleBetween(fieldName, values);
-                    case 'match': 
-                        return handleLike(fieldName, values, true);
-                    case 'exclude':
-                        return handleLike(fieldName, values, false);
-                    default:
-                        return "";
+                console.log(filterType, values)
+                const cases = {
+                    'between': () => handleBetween(fieldName, values),
+                    'match': () => handleLike(fieldName, values, true),
+                    'exclude': () => handleLike(fieldName, values, false),
                 }
-            })
+                return[filterType, switchCase(filterType, cases, { default: () => '' })()];
+            }))
 
         })
 
-        console.log(cll);
+        const sqlWhereClause = cll.map((cl) => { // for each field
+            const mbpart = [cl.match, cl.between].filter((v) => v).join(' OR \n');
+            const expart = cl.exclude ? ' AND ' + cl.exclude : ''
+            return `${mbpart ? '(' + mbpart + ')' : ''} ${expart}`;
+        }).join(' AND \n');
 
-
-
-        for (let [filedNameAndFilterType, values] of filterParams) {
-            // const [fieldName, filterType] = filedNameAndFilterType.split('-');
-
-            // if (filterType == filterTypes.between) {
-
-            // }
-
-            // if (values.includes(',')) {
-            //     values = values.split(',').map((v) => v.trim());
-            // }
-            // let isArr = Array.isArray(values);
-            // let valueType;
-            // if (isArr) {
-            //     if (values.every((v) => isNaN(v))) {
-            //         // assuume that it is for patterns and join to one big pattern
-            //         values = values.join('|');
-            //         valueType = 'string';
-            //         isArr = false;
-            //     } else if (values.every((v) => !isNaN(v))) {
-            //         values = values.map((v) => Number(v));
-            //         valueType = 'number';
-            //     } else {
-            //         filterType = '_';
-            //         this.logger.warn(`incorrect request param ${filedNameAndFilterType} :: ${values}`);
-            //     }
-            // }
-            // console.log(filedNameAndFilterType, value)
-            
-        
-            // if (filterType in filtersTypesToParams) {
-            //     filtersTypesToParams[filterType].push({ fieldName, value: values, isArr, valueType })
-            // } 
-        }
-
-        // console.log(filtersTypesToParams)
-        // console.log("===================")
-
-        // const asdf = Object.entries(filtersTypesToParams).map(([t, pli]) => {
-        //     return [t, pli.map(({fieldName, value, isArr, valueType}) => {
-        //         console.log([t, fieldName, value, isArr, valueType])
-        //         if (t == filterTypes.between) {
-        //             const [left, right] = adjustValuesToSql(value);
-        //             if (left && right) {
-        //                 return `OR ${fieldName} BETWEEN ${left} AND ${right}`;
-        //             } else if (left) {
-        //                 return `OR ${fieldName} >= ${left}`;
-        //             } else if (right) {
-        //                 return `OR ${fieldName} <= ${right}`;
-        //             }
-        //         } else {
-        //             const isarrstr = isArr ? 'array' : 'notarray';
-        //             const [wop, lop] = switchCase([isarrstr, t, valueType], filtersControlTree)
-        //             return `${lop} ${fieldName} ${wop} ${value}`;
-        //         }
-        //     })]
-        // })
-        // console.log(asdf)
-        
-        // Joining previous to sql clause
-        // const sqlWhereClause = Object.keys(filtersTypesToParams)
-        //     .map((t) => {
-        //         const qt = filtersTypesToSqlValueQuoted[t];
-        //         const operand = filtersTypesToSqlOperand[t];
-        //         return filtersTypesToParams[t]
-        //             .map(({ fieldName, value, isArr, type }) => `"${fieldName}" ${operand} ${qt}${value}${qt}`)
-        //             .join("AND");})
-        //     .filter((clause) => clause?.length > 0)
-        //     .join("AND");
-
-        return "";
         return sqlWhereClause?.length > 0 ? `WHERE ${sqlWhereClause}` : '';
     }
 
@@ -259,7 +177,6 @@ class QueryBuilder {
                 ${QueryBuilder.filteringPart(params)}
                 ${orderingPart(params)}
                 ${dataSubsetQueryPart(params)};`;
-        // console.log(a);
         return a;
     }
 
