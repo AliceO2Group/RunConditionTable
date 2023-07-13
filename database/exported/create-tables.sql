@@ -437,7 +437,7 @@ ALTER TABLE public.particle_phys_data OWNER TO postgres;
 CREATE TABLE public.meta (
 	name varchar NOT NULL,
 	val varchar NOT NULL,
-	"updatedAt" timestamp NOT NULL,
+	"updatedAt" timestamp with time zone NOT NULL,
 	CONSTRAINT name_pk PRIMARY KEY (name)
 );
 -- ddl-end --

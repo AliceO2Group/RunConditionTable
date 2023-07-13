@@ -216,7 +216,7 @@ class DatabaseService {
     }
 
     async healthcheckInsertData() {
-        for (const [d, def] of Object.entries(config.rctData.healthcheckQueries.insert)) {
+        for (const [d, def] of Object.entries(config.rctData.healthcheckQueries.checkStaticData)) {
             this.logger.info(`healthcheck : ${def.description}`);
             for (const q of def.query) {
                 const logger = config.rctData.suppressHealthcheckLogs ? null : (e) => this.logger.error(e.stack)
