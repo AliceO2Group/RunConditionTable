@@ -35,7 +35,7 @@ export default function flagsTable(model, run, detector, flags) {
 
                     h('tbody', { id: 'table-body-flagsData' },
                         flagsData.map((item) => flagsTableRow(
-                            model, item, cellsSpecials,
+                            PN.flags, item, cellsSpecials,
                         ))),
                 ])))
         : '';

@@ -144,9 +144,9 @@ pagesCellsSpecials[PN.runsPerPeriod] = {
 };
 
 pagesCellsSpecials[PN.flags] = {
-    time_start: (model, item) => dateFormatter(item.time_start),
-    time_end: (model, item) => dateFormatter(item.time_end),
-    ver_time: (model, item) => item.ver_time.isEmpty
+    time_start: (item) => dateFormatter(item.time_start),
+    time_end: (item) => dateFormatter(item.time_end),
+    ver_time: (item) => item.ver_time.isEmpty
         ? 'unverified'
         : item.ver_time.map((e) => {
             if (!e) {
@@ -156,6 +156,7 @@ pagesCellsSpecials[PN.flags] = {
             return dateFormatter(date.getTime());
         }),
 };
+
 pagesCellsSpecials[PN.runsPerDataPass] = pagesCellsSpecials[PN.runsPerPeriod];
 pagesCellsSpecials[PN.anchoredPerMC] = pagesCellsSpecials[PN.dataPasses];
 pagesCellsSpecials[PN.anchoragePerDatapass] = pagesCellsSpecials[PN.mc];

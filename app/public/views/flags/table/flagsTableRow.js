@@ -16,17 +16,17 @@ import { h } from '/js/src/index.js';
 import fields from './fields.js';
 
 export default function flagsTableRow(
-    model, item, cellsSpecials,
+    page, item, cellsSpecials,
 ) {
     const displayedFields = fields.filter((e) => e.display === true);
 
     const dataCells = displayedFields.map((field) =>
-        h(`td.${model.getCurrentDataPointer().page}-${field.name}-cell.text-ellipsis`,
+        h(`td.${page}-${field.name}-cell.text-ellipsis`,
             item[field.name]
                 ? cellsSpecials[field.name]
-                    ? cellsSpecials[field.name](model, item)
+                    ? cellsSpecials[field.name](item)
                     : item[field.name]
-                : '..'));
+                : ''));
 
     return h('tr.track.row-not-selected', dataCells);
 }
