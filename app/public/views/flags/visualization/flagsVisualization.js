@@ -12,8 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
-import flagVisualization from './flagVisualization.js';
 import { h } from '/js/src/index.js';
+import flagVisualization from '../../../components/flags/flagVisualization.js';
 import { RCT } from '../../../../config.js';
 const { pageNames: PN } = RCT;
 
