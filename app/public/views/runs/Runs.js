@@ -33,8 +33,17 @@ export default class Runs extends Observable {
         this._runsPerPeriod = RemoteData.NotAsked();
         this._runsPerDataPass = RemoteData.NotAsked();
         this._runs = RemoteData.NotAsked();
+        this._flagsSummary = RemoteData.NotAsked();
     }
 
+    async fetchFlagsSummary(dataPass, runNumbers) {
+        const submodel = this.model.submodels[this.model.mode];
+        const url = submodel.router.getUrl();
+        const search = `?page=${PN.flags}&data_pass_name=${dataPass}&run_numbers=${runNumbers}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
+        const flagsUrl = new URL(url.origin + url.pathname + search);
+        await submodel.fetchedData.reqForData(true, flagsUrl);
+    }
+    
     async fetchRunsPerDataPass(dataPass) {
         const submodel = this.model.submodels[this.model.mode];
         this._runsPerDataPass = RemoteData.NotAsked();
@@ -55,13 +64,5 @@ export default class Runs extends Observable {
     getRun(dataPass, runNumber) {
         const runsPerDataPass = this.getRunsPerDataPass(dataPass);
         return runsPerDataPass.find((run) => run.run_number.toString() === runNumber.toString());
-    }
-
-    async fetchFlagsSummary(dataPass, runNumbers) {
-        const submodel = this.model.submodels[this.model.mode];
-        const url = submodel.router.getUrl();
-        const search = `?page=${PN.flags}&data_pass_name=${dataPass}&run_numbers=${runNumbers}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
-        const flagsUrl = new URL(url.origin + url.pathname + search);
-        await submodel.fetchedData.reqForData(true, flagsUrl);
     }
 }
