@@ -19,16 +19,10 @@ import flagsTableRow from '../table/flagsTableRow.js';
 import pagesCellsSpecials from '../../userView/data/pagesCellsSpecials.js';
 const { pageNames: PN } = RCT;
 
-export default function flagsTable(model, run, detector) {
-    const [flagsDataIndex] = Object.keys(model.fetchedData[PN.flags]);
-    const { rows } = model.fetchedData[PN.flags][flagsDataIndex].payload;
+export default function flagsTable(model, run, detector, flags) {
     const cellsSpecials = pagesCellsSpecials[PN.flags];
 
-    if (!Array.isArray(rows)) {
-        return '';
-    }
-
-    const flagsData = rows.filter((e) => e.detector === detector && e.run_number.toString() === run.toString());
+    const flagsData = flags.getFlags(run, detector);
 
     return flagsData.length > 0
         ? h('.p-top-10',

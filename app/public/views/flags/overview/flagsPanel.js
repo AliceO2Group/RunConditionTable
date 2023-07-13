@@ -84,7 +84,7 @@ export default function flagsPanel(model, detectors, flags) {
             model.searchFieldsVisible ? filter(model) : '',
 
             flagsVisualization(model, dataPassName, run, detectorName, flags),
-            flagsTable(model, run, detectorName),
+            flagsTable(model, run, detectorName, flags),
             h('.modal', { id: 'pageSettingsModal' },
                 h('.modal-content.abs-center.p3', {
                     id: 'pageSettingsModalContent',

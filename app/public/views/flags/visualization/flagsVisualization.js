@@ -34,15 +34,9 @@ export default function flagsVisualization(model, dataPass, run, detector, flags
     const runData = model.fetchedData[PN.runsPerDataPass][dataPass].payload.rows.find((e) => e.run_number.toString() === run.toString());
     const { time_start, time_end } = runData;
 
-    const flagsData = flags.getAllFlags();
+    const flagsData = flags.getFlags(run, detector);
 
-    if (!Array.isArray(flagsData)) {
-        return '';
-    }
-
-    const filteredFlagsData = flagsData.filter((e) => e.detector === detector && e.run_number.toString() === run.toString());
-
-    const distinctFlagReasons = filterDistinct(filteredFlagsData.map((flag) => flag.flag_reason.replace(/\s+/g, '')));
+    const distinctFlagReasons = filterDistinct(flagsData.map((flag) => flag.flag_reason.replace(/\s+/g, '')));
 
     const flagsGroupedByFlagReason = distinctFlagReasons.reduce((prev, curr) => {
         prev[curr] = flagsData.filter((flag) => flag.flag_reason.replace(/\s+/g, '') === curr);

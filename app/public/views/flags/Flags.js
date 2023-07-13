@@ -32,9 +32,11 @@ export default class Flags extends Observable {
         this._flags = RemoteData.NotAsked();
     }
 
-    async fetchAllFlags() {
-        this.notify();
-    }
+    /*
+     *Async fetchAllFlags() {
+     *    this.notify();
+     *}
+     */
 
     getAllFlags() {
         const submodel = this.model.submodels[this.model.mode];
@@ -42,7 +44,15 @@ export default class Flags extends Observable {
         return submodel.fetchedData[PN.flags][flagsDataIndex].payload.rows;
     }
 
-    getFlags() {
-        return this._flags;
+    /*
+     *GetFlags() {
+     *    return this._flags;
+     *}
+     */
+
+    getFlags(runNumber, detector) {
+        const allFlags = this.getAllFlags();
+        const flags = Array.isArray(allFlags) ? allFlags : [];
+        return flags.filter((e) => e.detector === detector && e.run_number.toString() === runNumber.toString());
     }
 }
