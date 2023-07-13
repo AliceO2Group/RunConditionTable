@@ -102,6 +102,8 @@ class DatabaseService {
             .catch((e) => {
                 if (dbResErrorHandler) {
                     dbResErrorHandler(e);
+                } else {
+                    throw e;
                 }
             });
             release();
@@ -184,10 +186,6 @@ class DatabaseService {
         }
     }
 
-    async pgExecDataInsert(req, res) {
-        this.responseWithStatus(res, 400, 'NOT IMPLEMENTED');
-    }
-
     async getDate(req, res) {
         await this.pgExecFetchData(req, res, 'SELECT NOW();');
     }
@@ -204,22 +202,11 @@ class DatabaseService {
         return Promise.all(promises.concat([this.adminClient.end()]));
     }
 
-    async setAdminConnection() {
-        this.adminClient = new Client(config.database);
-        this.adminClient.on('error', (e) => this.logger.error(e));
-
-        await this.adminClient.connect()
-            .then(() => this.healthcheckInsertData())
-            .catch((e) => {
-                this.logger.error(`error when trying to establish admin connection with ${config.database.host}::\n ${e.stack}`);
-            });
-    }
-
     async healthcheckInsertData() {
         for (const [d, def] of Object.entries(config.rctData.healthcheckQueries.checkStaticData)) {
             this.logger.info(`healthcheck : ${def.description}`);
             for (const q of def.query) {
-                const logger = config.rctData.suppressHealthcheckLogs ? null : (e) => this.logger.error(e.stack)
+                const logger = config.rctData.suppressHealthcheckLogs ? () => null : (e) => this.logger.error(e.stack)
                 await this.pgExec(q, logger, null, logger)
             }
         }

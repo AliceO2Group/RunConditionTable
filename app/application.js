@@ -149,7 +149,9 @@ class RunConditionTableApplication {
     }
 
     async setSyncAllTask() {
-        this.syncAllTask = setInterval(this.syncAll.bind(this), 24 * 60 * 60 * 1000); // Ones per day
+        const syncPeriod = 12 * 60 * 60 * 1000; // Ones per day
+        
+        this.syncAllTask = setInterval(this.syncAll.bind(this), syncPeriod);
     }
 
     async clearSyncAllTask() {
@@ -179,7 +181,7 @@ class RunConditionTableApplication {
 
     async connectServices() {
         const errors = [];
-        await this.databaseService.setAdminConnection()
+        await this.databaseService.healthcheckInsertData()
             .catch((e) => errors.push(e));
         await Promise.all(
             Object.values(this.services)

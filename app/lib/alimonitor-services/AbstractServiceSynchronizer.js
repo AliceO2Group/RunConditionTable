@@ -168,6 +168,9 @@ class AbstractServiceSynchronizer {
         const rowsChunks = arrayToChunks(data, this.batchSize);
         const total = this.metaStore.totalCount || data.length;
         for (const chunk of rowsChunks) {
+            if (this.forceStop) {
+                return;
+            }
             const promises = chunk.map((dataUnit) => this.dbAction(this.dbClient, dataUnit)
                 .then(() => this.monitor.handleCorrect())
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
@@ -210,12 +213,21 @@ class AbstractServiceSynchronizer {
         if (this.isConnected()) {
             this.forceStop = false;
             await this.sync()
+                .then(() => {
+                    if (this.forceStop) {
+                        this.logger.info(`${this.name} forced to stop`);
+                    }
+                })
                 .catch((e) => {
                     this.logger.error(e.stack);
                 });
         } else {
             this.logger.error('Cannot start the sync task becuse the database is not connected, check the configuration or database state');
         }
+    }
+
+    async clearSyncTask() {
+        this.forceStop = true;
     }
 
     async close() {
