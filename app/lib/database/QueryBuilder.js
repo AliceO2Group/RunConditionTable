@@ -32,12 +32,9 @@ pageToViewName[PN.flags] = 'flags_view'
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
 
-<<<<<<< Updated upstream
 
 const filterTypes = ['match', 'exclude', 'from', 'to'];
 
-=======
->>>>>>> Stashed changes
 const ops = {
     NOTLIKE: 'NOT LIKE',
     LIKE: 'LIKE',
@@ -45,72 +42,8 @@ const ops = {
     NOTIN: 'NOT IN',
     FROM: '>=',
     TO: '<=',
-<<<<<<< Updated upstream
-    EQ: '==',
-    NE: '!=',
-    AND: 'AND',
-    OR: 'OR',
 };
 
-const filtersTypesToSqlOperand = {
-    match: 'LIKE',
-    exclude: 'NOT LIKE',
-    from: '>=',
-    to: '<='
-}
-
-const logicalOperandsPerFilters = {
-    match: {
-        string: ops.LIKE,
-        number: ops.IN,
-    },
-    exclude: {
-        string: ops.NOTLIKE,
-        number: ops.NOTIN,
-    },
-    from: ops.FROM,
-    to: ops.TO,
-};
-
-const filtersTypesToSqlValueQuoted = {
-    match: '\'',
-    exclude: '\'',
-    from: '',
-    to: ''
-}
-
-//match take precedens
-const controlForNoArrays = {
-    notarray: {
-        match: {
-            string: [ops.LIKE, ops.OR],
-            number: [ops.EQ, ops.OR],
-        },
-        exclude: {
-            string: [ops.NOTLIKE, ops.AND],
-            number: [ops.NE, ops.AND],
-        },
-        from: [ops.FROM, ops.AND],
-        to: [ops.TO, ops.AND],
-    },
-
-    array: {
-        match: {
-            string: ops.LIKE,
-            number: ops.EQ,
-        },
-        exclude: {
-            string: ops.NOTLIKE,
-            number: ops.NE,
-        },
-        from: ops.FROM,
-        to: ops.TO,
-    },
-}
-=======
-};
-
->>>>>>> Stashed changes
 
 
 class QueryBuilder {
@@ -123,8 +56,6 @@ class QueryBuilder {
             to: []
         }
 
-<<<<<<< Updated upstream
-=======
         const filtersTypesToSqlOperand = {
             match: 'LIKE',
             exclude: 'NOT LIKE',
@@ -152,19 +83,12 @@ class QueryBuilder {
             to: ''
         }
         // assert correctness of previous
->>>>>>> Stashed changes
         // Mapping search params to categorized { key, value } pairs
         const filterTypesRegex= new RegExp(filterTypes.map((t) => `(.*-${t})`).join('|'));
         const filterParams = Object.entries(params).filter(([k, v]) => k.match(filterTypesRegex));
     
         for (let [filedNameAndFilterType, value] of Object.entries(filterParams)) {
             const [fieldName, filterType] = filedNameAndFilterType.split('-');
-<<<<<<< Updated upstream
-            if (! Array.isArray(value) && /.*,.*/.test(value)) {
-                value = value.split(',').map((s) => s.trim())
-            }
-=======
->>>>>>> Stashed changes
             if (filterType in filtersTypesToParams) {
                 filtersTypesToParams[filterType].push({ fieldName, value })
             } 
@@ -172,7 +96,6 @@ class QueryBuilder {
 
         // console.log(filtersTypesToParams)
 
-<<<<<<< Updated upstream
         // Object.entries(filtersTypesToParams).map(([t, pli]) => {
         //     pli.map(([fN, fv]) => {
         //         if (t 
@@ -189,36 +112,12 @@ class QueryBuilder {
                     .join("AND");})
             .filter((clause) => clause?.length > 0)
             .join("AND");
-=======
-        Object.entries(filtersTypesToParams).map(([t, pli]) => {
-            pli.map(([fN, fv]) => {
-                if (t 
-            })
-        })
-        
-        // Joining previous to sql clause
-        // const sqlWhereClause = Object.keys(filtersTypesToParams)
-        //     .map((t) => {
-        //         const qt = filtersTypesToSqlValueQuoted[t];
-        //         const operand = filtersTypesToSqlOperand[t];
-        //         return filtersTypesToParams[t]
-        //             .map(({ fieldName, value }) => `"${fieldName}" ${operand} ${qt}${value}${qt}`)
-        //             .join("AND");})
-        //     .filter((clause) => clause?.length > 0)
-        //     .join("AND");
->>>>>>> Stashed changes
 
  
         return sqlWhereClause?.length > 0 ? `WHERE ${sqlWhereClause}` : '';
     }
 
     static buildSelect(params) {
-<<<<<<< Updated upstream
-        // console.log(params)
-=======
-        console.log(params)
->>>>>>> Stashed changes
-        delete params.aaa;
 
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;

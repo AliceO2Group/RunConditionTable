@@ -14,6 +14,8 @@
 
 import { h } from '/js/src/index.js';
 import { getFieldName } from '../../headersSpecials.js';
+import { RCT } from '../../../../../config.js';
+const { filterTypes } = RCT;
 
 export default function filter(model) {
     const data = model.getCurrentData();
@@ -24,48 +26,60 @@ export default function filter(model) {
         const selectedValue = filteringTypeSelect.options[filteringTypeSelect.selectedIndex].value;
         const types = selectedValue.split('-');
 
-        const matchFromPlaceholder = document.getElementById('match-from-placeholder');
-        const excludeToPlaceholder = document.getElementById('exclude-to-placeholder');
-        [matchFromPlaceholder.innerHTML, excludeToPlaceholder.innerHTML] = types;
+        const leftFilterPlaceholder = document.getElementById('left-filter-placeholder');
+        const rightFilterPlaceholder = document.getElementById('right-filter-placeholder');
+        [leftFilterPlaceholder.innerHTML, rightFilterPlaceholder.innerHTML] = types;
     }
 
     function onFilterSubmit() {
-        const fieldNameSelect = document.getElementById('showOptionsField');
+        const fieldNameSelect = document.getElementById('show-options-field');
         const fieldNameValue = fieldNameSelect.options[fieldNameSelect.selectedIndex].value;
 
-        const matchFromType = document.getElementById('match-from-placeholder').innerHTML;
-        const excludeToType = document.getElementById('exclude-to-placeholder').innerHTML;
+        const leftFilterType = document.getElementById('left-filter-placeholder').innerHTML;
+        const rightFilterType = document.getElementById('right-filter-placeholder').innerHTML;
 
-        const matchFromInput = document.getElementById('match-from-input').value;
-        const excludeToInput = document.getElementById('exclude-to-input').value;
+        const leftFilterInput = document.getElementById('left-filter-input').value;
+        const rightFilterInput = document.getElementById('right-filter-input').value;
 
         // eslint-disable-next-line no-console
-        console.log(fieldNameValue);
-        // eslint-disable-next-line no-console
-        console.log(matchFromType);
-        // eslint-disable-next-line no-console
-        console.log(matchFromInput);
-        // eslint-disable-next-line no-console
-        console.log(excludeToInput);
+        console.log({
+            fieldNameValue,
 
-        let matchFromPhrase = '';
-        let excludeToPhrase = '';
-        if (matchFromInput) {
-            matchFromPhrase = `${encodeURI(fieldNameValue)}-${encodeURI(matchFromType)}=${encodeURI(matchFromInput)}`;
+            rightFilterType,
+            rightFilterInput,
+
+            leftFilterType,
+            leftFilterInput,
+        });
+
+        let filterPhrase = '';
+        if (leftFilterType === filterTypes.from && rightFilterType === filterTypes.to) {
+            const fromToFilterType = `${filterTypes.from}_${filterTypes.to}`;
+            // eslint-disable-next-line max-len
+            filterPhrase += `&${encodeURI(fieldNameValue)}-${encodeURI(fromToFilterType)}=${encodeURI(leftFilterInput)},${encodeURI(rightFilterInput)}`;
+        } else {
+            // eslint-disable-next-line max-len
+            filterPhrase += leftFilterInput ? `&${encodeURI(fieldNameValue)}-${encodeURI(leftFilterType)}=${encodeURI(leftFilterInput)}` : '';
+            filterPhrase += rightFilterInput ? `&${encodeURI(fieldNameValue)}-${encodeURI(rightFilterType)}=${encodeURI(rightFilterInput)}` : '';
         }
-        if (excludeToInput) {
-            excludeToPhrase = `${encodeURI(fieldNameValue)}-${encodeURI(excludeToType)}=${encodeURI(excludeToInput)}`;
-        }
+
+        /*
+         * Let matchFromPhrase = '';
+         * let excludeToPhrase = '';
+         * if (rightFilterInput) {
+         *     matchFromPhrase = `${encodeURI(fieldNameValue)}-${encodeURI(rightFilterType)}=${encodeURI(rightFilterInput)}`;
+         * }
+         * if (leftFilterInput) {
+         *     excludeToPhrase = `${encodeURI(fieldNameValue)}-${encodeURI(leftFilterType)}=${encodeURI(leftFilterInput)}`;
+         * }
+         */
 
         const url = model.router.getUrl();
-        const newUrl = new URL(`${url.href}`
-            + `${matchFromPhrase ? `&${matchFromPhrase}` : ''}`
-            + `${excludeToPhrase ? `&${excludeToPhrase}` : ''}`);
-
+        const newUrl = new URL(`${url.href}${filterPhrase}`);
         // eslint-disable-next-line no-console
         console.log(newUrl);
 
-        // Model.router.go(newUrl);
+        model.router.go(newUrl);
     }
 
     return h('.font-size-small', [
@@ -78,7 +92,7 @@ export default function filter(model) {
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-center',
                 h('select.select.filter-select', {
-                    id: 'showOptionsField',
+                    id: 'show-options-field',
                     name: 'showOptions' }, [
                     h('option', { value: '', selected: true, disabled: true, hidden: true }, 'Field'),
                     fields.filter((field) => getFieldName(model, field))
@@ -101,11 +115,11 @@ export default function filter(model) {
                         type: 'text',
                         value: document.getElementById('showOptionsType')?.options[Selection.selectedIndex]?.value,
                         disabled: false,
-                        id: 'match-from-input',
+                        id: 'left-filter-input',
                         required: true,
                         // TODO: pattern
                     }),
-                    h('span.placeholder', { id: 'match-from-placeholder' }, 'match/from')),
+                    h('span.placeholder', { id: 'left-filter-placeholder' }, 'match/from')),
 
                 h('.text-field',
                     h('input.form-control.relative', {
@@ -113,11 +127,11 @@ export default function filter(model) {
                         type: 'text',
                         value: '',
                         disabled: false,
-                        id: 'exclude-to-input',
+                        id: 'right-filter-input',
                         required: true,
                         // TODO: pattern
                     }),
-                    h('span.placeholder', { id: 'exclude-to-placeholder' }, 'to/exclude')),
+                    h('span.placeholder', { id: 'right-filter-placeholder' }, 'to/exclude')),
 
                 h('button.btn.btn-primary', {
                     onclick: () => onFilterSubmit(),
