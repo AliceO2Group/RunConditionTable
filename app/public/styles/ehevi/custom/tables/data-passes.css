@@ -48,8 +48,8 @@
     text-align: left;
 }
 
-.ehevi .dataPasses-table .dataPasses-name-cell :first-child {
-    margin-left: 190px;
+.ehevi .dataPasses-table .dataPasses-name-cell td:first-child {
+    min-width: 20em !important;
 }
 
 /* Description */

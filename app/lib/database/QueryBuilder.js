@@ -15,8 +15,9 @@
 const config = require('../config/configProvider.js');
 const views = require('./views');
 const procedures = require('./procedures')
+const { adjustValuesToSql, switchCase } = require('../utils');
 
-const { pagesNames: PN, procedures: PC } = config.public;
+const { pageNames: PN, procedures: PC, filterTypes } = config.public;
 const DRP = config.public.dataReqParams;
 
 const pageToViewName = {};
@@ -32,78 +33,40 @@ pageToViewName[PN.flags] = 'flags_view'
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
 
-
-const filterTypes = ['match', 'exclude', 'from', 'to'];
-
-const ops = {
-    NOTLIKE: 'NOT LIKE',
-    LIKE: 'LIKE',
-    IN: 'IN',
-    NOTIN: 'NOT IN',
-    FROM: '>=',
-    TO: '<=',
-    EQ: '==',
-    NE: '!=',
-    AND: 'AND',
-    OR: 'OR',
-};
-
-const filtersTypesToSqlOperand = {
-    match: 'LIKE',
-    exclude: 'NOT LIKE',
-    from: '>=',
-    to: '<='
+const handleBetween = (fieldName, pairsList) => {
+    if (! Array.isArray(pairsList)) {
+        pairsList = [pairsList]
+    }
+    return pairsList.map((p) => {
+        const value = p.split(',');
+        const [left, right] = adjustValuesToSql(value);
+        if (value[0] && value[1]) {
+            return `${fieldName} BETWEEN ${left} AND ${right}`;
+        } else if (value[0]) {
+            return `${fieldName} >= ${left}`;
+        } else if (value[1]) {
+            return `${fieldName} <= ${right}`;
+        }
+    }).join(' OR ');
 }
 
-const logicalOperandsPerFilters = {
-    match: {
-        string: ops.LIKE,
-        number: ops.IN,
-    },
-    exclude: {
-        string: ops.NOTLIKE,
-        number: ops.NOTIN,
-    },
-    from: ops.FROM,
-    to: ops.TO,
-};
+const handleLike = (fieldName, values, like) => {
+    if (! Array.isArray(values)) {
+        values = [values]
+    }
+    values = values.map((subv) => subv.split(',').map((v) => v.trim()).filter((v) => v)).flat()
 
-const filtersTypesToSqlValueQuoted = {
-    match: '\'',
-    exclude: '\'',
-    from: '',
-    to: ''
+    const notS = ! like ? 'NOT' : '';
+    if (values.every((v) => isNaN(v))) {
+        // assume that it is for patterns
+        const valuesPattern = values.join('|');
+        return `${fieldName} ${notS} SIMILAR TO '${valuesPattern}'`;
+    } else if (values.every((v) => ! isNaN(v))) {
+        // assumes that it is for numbers with 'in' clause
+        const valuesList = values.join(',');
+        return `${fieldName} ${notS} IN (${valuesList})`;
+    }
 }
-
-//match take precedens
-const controlForNoArrays = {
-    notarray: {
-        match: {
-            string: [ops.LIKE, ops.OR],
-            number: [ops.EQ, ops.OR],
-        },
-        exclude: {
-            string: [ops.NOTLIKE, ops.AND],
-            number: [ops.NE, ops.AND],
-        },
-        from: [ops.FROM, ops.AND],
-        to: [ops.TO, ops.AND],
-    },
-
-    array: {
-        match: {
-            string: ops.LIKE,
-            number: ops.EQ,
-        },
-        exclude: {
-            string: ops.NOTLIKE,
-            number: ops.NE,
-        },
-        from: ops.FROM,
-        to: ops.TO,
-    },
-}
-
 
 class QueryBuilder {
 
@@ -111,50 +74,42 @@ class QueryBuilder {
         const filtersTypesToParams = {
             match: [],
             exclude: [],
-            from: [],
-            to: []
+            between: []
         }
 
         // Mapping search params to categorized { key, value } pairs
-        const filterTypesRegex= new RegExp(filterTypes.map((t) => `(.*-${t})`).join('|'));
-        const filterParams = Object.entries(params).filter(([k, v]) => k.match(filterTypesRegex));
-    
-        for (let [filedNameAndFilterType, value] of Object.entries(filterParams)) {
-            const [fieldName, filterType] = filedNameAndFilterType.split('-');
-            if (! Array.isArray(value) && /.*,.*/.test(value)) {
-                value = value.split(',').map((s) => s.trim())
-            }
-            if (filterType in filtersTypesToParams) {
-                filtersTypesToParams[filterType].push({ fieldName, value })
-            } 
-        }
-
-        // console.log(filtersTypesToParams)
-
-        // Object.entries(filtersTypesToParams).map(([t, pli]) => {
-        //     pli.map(([fN, fv]) => {
-        //         if (t 
-        //     })
-        // })
+        const filterTypesRegex= new RegExp(Object.keys(filterTypes).map((t) => `(.*-${t})`).join('|'));
+        const filterParams = Object.entries(params)
+            .filter(([k, v]) => k.match(filterTypesRegex))
+            .map(([k, v]) => [...k.split('-'), v]);
+        const fields2Filters = {};
+        filterParams.forEach((l) => fields2Filters[l[0]] = [])
+        filterParams.forEach((l) => fields2Filters[l[0]].push(l.slice(1)))
         
-        // Joining previous to sql clause
-        const sqlWhereClause = Object.keys(filtersTypesToParams)
-            .map((t) => {
-                const qt = filtersTypesToSqlValueQuoted[t];
-                const operand = filtersTypesToSqlOperand[t];
-                return filtersTypesToParams[t]
-                    .map(({ fieldName, value }) => `"${fieldName}" ${operand} ${qt}${value}${qt}`)
-                    .join("AND");})
-            .filter((clause) => clause?.length > 0)
-            .join("AND");
+        const cll = Object.entries(fields2Filters).map(([fieldName, clauses]) => {
+            return  Object.fromEntries(clauses.map((cl) => {
+                const [filterType, values] = cl;
+                console.log(filterType, values)
+                const cases = {
+                    'between': () => handleBetween(fieldName, values),
+                    'match': () => handleLike(fieldName, values, true),
+                    'exclude': () => handleLike(fieldName, values, false),
+                }
+                return[filterType, switchCase(filterType, cases, { default: () => '' })()];
+            }))
 
- 
+        })
+
+        const sqlWhereClause = cll.map((cl) => { // for each field
+            const mbpart = [cl.match, cl.between].filter((v) => v).join(' OR \n');
+            const expart = cl.exclude ? ' AND ' + cl.exclude : ''
+            return `${mbpart ? '(' + mbpart + ')' : ''} ${expart}`;
+        }).join(' AND \n');
+
         return sqlWhereClause?.length > 0 ? `WHERE ${sqlWhereClause}` : '';
     }
 
     static buildSelect(params) {
-        // console.log(params)
-        delete params.aaa;
 
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
@@ -183,7 +138,6 @@ class QueryBuilder {
                 ${QueryBuilder.filteringPart(params)}
                 ${orderingPart(params)}
                 ${dataSubsetQueryPart(params)};`;
-        // console.log(a);
         return a;
     }
 

@@ -48,8 +48,8 @@
     text-align: left;
 }
 
-.ehevi .periods-table .periods-name-cell :first-child {
-    margin-left: 80px;
+.ehevi .periods-table .periods-name-cell td:first-child {
+    min-width: 7em !important;
 }
 
 /* Years */

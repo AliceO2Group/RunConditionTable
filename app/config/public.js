@@ -12,15 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
-const matchExcludeType = 'matchexclude';
-const fromToType = 'fromto';
-
 const { roles, flags: flagsTypes, detectors } = require('./rct-data');
 
 module.exports = { // Properties that will be provided to frontend in the public folder
     filterTypes: {
-        matchExcludeType,
-        fromToType,
+        match: 'match',
+        exclude: 'exclude',
+        between: 'between',
     },
 
     roles,
@@ -49,13 +47,18 @@ module.exports = { // Properties that will be provided to frontend in the public
         rowsOnSite: 'rows-on-site',
     },
 
+    defaultDataReqParams: {
+        site: 1,
+        rowsOnSite: 50,
+    },
+
     dataRespondFields: {
         totalRowsCount: 'totalRowsCount',
         rows: 'rows',
         fields: 'fields',
     },
 
-    pagesNames: {
+    pageNames: {
         periods: 'periods',
         dataPasses: 'dataPasses',
         mc: 'mc',

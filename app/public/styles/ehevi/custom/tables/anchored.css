@@ -48,8 +48,8 @@
     text-align: left;
 }
 
-.ehevi .anchoredPerMC-table .anchoredPerMC-name-cell :first-child {
-    margin-left: 120px;
+.ehevi .anchoredPerMC-table .anchoredPerMC-name-cell td:first-child {
+    min-width: 20em !important;
 }
 
 /* Description */

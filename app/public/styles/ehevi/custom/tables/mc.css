@@ -48,8 +48,8 @@
     text-align: left;
 }
 
-.ehevi .mc-table .mc-name-cell :first-child {
-    margin-left: 80px;
+.ehevi .mc-table .mc-name-cell td:first-child {
+    min-width: 10em !important;
 }
 
 /* Description */

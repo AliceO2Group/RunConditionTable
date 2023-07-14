@@ -12,8 +12,18 @@
  * or submit itself to any jurisdiction.
  */
 
-@import (less) "./webui.less";
-@import (less) "./images/index.less";
-@import (less) "./custom.less";
-@import (less) "./components/index.less";
-@import (less) "./ehevi/index.less";
+import { h } from '/js/src/index.js';
+import flagsIndexChip from './flagsIndexChip.js';
+import title from '../../views/userView/data/table/title.js';
+
+export default function flagBreadCrumbs(model, dataPass, run, detector) {
+    return [
+        title(model),
+        h('.forward-20'),
+        h('h3.ph-15.text-primary', dataPass),
+        h('.forward-20'),
+        flagsIndexChip(model, 'run', run),
+        h('.forward-20'),
+        h('h3.ph-15.text-primary', detector),
+    ];
+}
