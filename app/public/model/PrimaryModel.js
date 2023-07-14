@@ -75,9 +75,7 @@ export default class PrimaryModel extends Observable {
             case pageNames.flags: {
                 const dataPassName = this.router.params['data_pass_name'];
                 if (dataPassName) {
-                    await this.parent.runs.fetchRunsPerDataPass(dataPassName).then(() => {}).catch((e) => {
-                        alert(e);
-                    });
+                    await this.parent.runs.fetchRunsPerDataPass(dataPassName).then(() => {}).catch(() => {});
 
                     const dpSearchParams = `?page=${pageNames.runsPerDataPass}&index=${dataPassName}`;
                     const siteReqParams = `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
