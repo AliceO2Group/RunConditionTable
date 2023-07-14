@@ -17,7 +17,7 @@ const config = require('./lib/config/configProvider.js');
 const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
 
 // Services
-
+const alimonitorServices = require('./lib/alimonitor-services');
 // Database
 const database = require('./lib/database');
 
@@ -27,6 +27,11 @@ const { webUiServer } = require('./lib/server');
 // Extract important
 const EP = config.public.endpoints;
 Log.configure(config);
+
+// IO
+const readline = require('readline');
+const Utils = require('./lib/utils');
+const { Console } = require('node:console');
 
 /**
  * RunConditionTable application
@@ -39,6 +44,7 @@ class RunConditionTableApplication {
 
         this.webUiServer = webUiServer;
         this.databaseService = database.databaseService;
+        this.syncManager = alimonitorServices.syncManager;
         this.defineEndpoints();
 
         buildPublicConfig(config);
@@ -54,7 +60,7 @@ class RunConditionTableApplication {
         httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res));
         httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res));
         httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
-        httpServer.get(EP.sync, async (_req, _res) => this.syncAll());
+        httpServer.get(EP.sync, async (_req, _res) => this.syncManager.syncAll());
     }
 
     async restart() {
@@ -106,6 +112,45 @@ class RunConditionTableApplication {
 
     get httpServer() {
         return this.webUiServer.httpServer;
+    }
+
+    buildCli() {
+        this.rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+            terminal: true,
+            prompt: '==> ',
+        });
+        this.rl.on('line', (line) => this.devCli(line));
+        this.con = new Console({ stdout: process.stdout, stderr: process.stderr });
+    }
+
+    devCli(line) {
+        try {
+            const cmdAndArgs = line.trim().split(/ +/).map((s) => s.trim());
+            Utils.switchCase(cmdAndArgs[0], {
+                '': () => {},
+                users: () => {
+                    this.con.log(this.databaseService.loggedUsers);
+                },
+                sync: () => this.syncManager.syncAll(),
+                app: (args) => this.applicationCli(args),
+            }, this.incorrectCommand())(cmdAndArgs.slice(1));
+            this.rl.prompt();
+        } catch (error) {
+            this.con.error(error.message);
+        }
+    }
+
+    applicationCli(args) {
+        Utils.switchCase(args[0], {
+            stop: () => this.stop(),
+            run: () => this.run(),
+        }, this.incorrectCommand())();
+    }
+
+    incorrectCommand() {
+        return () => this.con.log('incorrect command');
     }
 }
 

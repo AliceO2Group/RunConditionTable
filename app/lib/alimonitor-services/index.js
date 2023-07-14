@@ -12,3 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
+const syncManager = require('./SyncManager');
+
+module.exports = {
+    syncManager,
+};

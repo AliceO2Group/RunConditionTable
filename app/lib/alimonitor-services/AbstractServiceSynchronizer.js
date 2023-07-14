@@ -203,12 +203,12 @@ class AbstractServiceSynchronizer {
         this.dbClient.on('error', (e) => this.logger.error(e));
 
         return await this.dbClient.connect()
-            .then(() => this.logger.info('database connection established'));
+            .catch((e) => this.logger.error(e));
     }
 
     async dbDisconnect() {
         return await this.dbClient.end()
-            .then(() => this.logger.info('database connection ended'));
+            .catch((e) => this.logger.error(e));
     }
 
     async setSyncTask() {
