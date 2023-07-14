@@ -89,10 +89,6 @@ class SyncManager {
         await this.databaseService
             .pgExec(config.rctData.healthcheckQueries.meta.setLastSyncInProgress.query);
     }
-
-    async clearSyncAllTask() {
-        clearInterval(this.syncAllTask);
-    }
 }
 
 module.exports = new SyncManager();

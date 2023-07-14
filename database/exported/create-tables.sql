@@ -156,9 +156,9 @@ CREATE SEQUENCE public.flags_types_dictionary_id_seq
 ALTER SEQUENCE public.flags_types_dictionary_id_seq OWNER TO postgres;
 -- ddl-end --
 
--- object: public.flags_types_dictionary | type: TABLE --
--- DROP TABLE IF EXISTS public.flags_types_dictionary CASCADE;
-CREATE TABLE public.flags_types_dictionary (
+-- object: public.flag_types_dictionary | type: TABLE --
+-- DROP TABLE IF EXISTS public.flag_types_dictionary CASCADE;
+CREATE TABLE public.flag_types_dictionary (
 	id integer NOT NULL,
 	name varchar NOT NULL,
 	method varchar NOT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE public.flags_types_dictionary (
 	CONSTRAINT ftp_name_unique UNIQUE (name)
 );
 -- ddl-end --
-ALTER TABLE public.flags_types_dictionary OWNER TO postgres;
+ALTER TABLE public.flag_types_dictionary OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.pass_types_id_seq | type: SEQUENCE --
@@ -475,7 +475,7 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- object: flag_type_fk | type: CONSTRAINT --
 -- ALTER TABLE public.quality_control_flags DROP CONSTRAINT IF EXISTS flag_type_fk CASCADE;
 ALTER TABLE public.quality_control_flags ADD CONSTRAINT flag_type_fk FOREIGN KEY (flag_type_id)
-REFERENCES public.flags_types_dictionary (id) MATCH SIMPLE
+REFERENCES public.flag_types_dictionary (id) MATCH SIMPLE
 ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
@@ -630,15 +630,15 @@ GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
    TO "rct-user";
 -- ddl-end --
 
--- object: "grant_rawdDxt_83541d8bbc" | type: PERMISSION --
+-- object: "grant_rawdDxt_440311e26a" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
-   ON TABLE public.flags_types_dictionary
+   ON TABLE public.flag_types_dictionary
    TO postgres;
 -- ddl-end --
 
--- object: "grant_rawdDxt_64d10fc454" | type: PERMISSION --
+-- object: "grant_rawdDxt_3879d7d743" | type: PERMISSION --
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER
-   ON TABLE public.flags_types_dictionary
+   ON TABLE public.flag_types_dictionary
    TO "rct-user";
 -- ddl-end --
 

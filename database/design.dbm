@@ -182,7 +182,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </sequence>
 
-<table name="flags_types_dictionary" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+<table name="flag_types_dictionary" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
@@ -202,10 +202,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="obsolate" not-null="true">
 		<type name="bool" length="0"/>
 	</column>
-	<constraint name="flags_types_dictionary_pkey" type="pk-constr" table="public.flags_types_dictionary">
+	<constraint name="flags_types_dictionary_pkey" type="pk-constr" table="public.flag_types_dictionary">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<constraint name="ftp_name_unique" type="uq-constr" table="public.flags_types_dictionary">
+	<constraint name="ftp_name_unique" type="uq-constr" table="public.flag_types_dictionary">
 		<columns names="name" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -585,7 +585,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="flag_type_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.flags_types_dictionary" table="public.quality_control_flags">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.flag_types_dictionary" table="public.quality_control_flags">
 	<columns names="flag_type_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -690,7 +690,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_quality_control_flags_flags_types_dictionary" type="relfk" layers="0"
 	 src-table="public.quality_control_flags"
-	 dst-table="public.flags_types_dictionary" reference-fk="flag_type_fk"
+	 dst-table="public.flag_types_dictionary" reference-fk="flag_type_fk"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_runs_detectors_runs" type="relfk" layers="0"
@@ -808,12 +808,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>
 <permission>
-	<object name="public.flags_types_dictionary" type="table"/>
+	<object name="public.flag_types_dictionary" type="table"/>
 	<roles names="postgres"/>
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>
 <permission>
-	<object name="public.flags_types_dictionary" type="table"/>
+	<object name="public.flag_types_dictionary" type="table"/>
 	<roles names="&quot;rct-user&quot;"/>
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>

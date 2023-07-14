@@ -27,8 +27,8 @@ const checkStaticData = {
             VALUES (DEFAULT, '${name}', '${d.full_name}', ${d.A}, ${d.Z});`),
     },
     flags: {
-        description: 'Flags types dict insert',
-        query: flags.map((f) => `INSERT INTO flags_types_dictionary("id", "name", "method", "bad", "obsolate")
+        description: 'Flag types dict insert',
+        query: flags.map((f) => `INSERT INTO flag_types_dictionary("id", "name", "method", "bad", "obsolate")
             VALUES (${f.id}, '${f.name}', '${f.method}', ${f.bad}::bool, ${f.obsolete}::bool);`),
     },
 };
