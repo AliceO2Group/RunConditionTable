@@ -18,6 +18,7 @@ import ServiceUnavailableModel from './model/ServiceUnavailableModel.js';
 import { RCT } from './config.js';
 import Flags from './views/flags/Flags.js';
 import Detectors from './views/detectors/Detectors.js';
+import Runs from './views/runs/Runs.js';
 const { roles } = RCT;
 
 export default class Model extends Observable {
@@ -36,6 +37,9 @@ export default class Model extends Observable {
 
         this.mode = null;
         this.submodels = {};
+
+        this.runs = new Runs(this);
+        this.runs.bubbleTo(this);
 
         this.flags = new Flags(this);
         this.flags.bubbleTo(this);

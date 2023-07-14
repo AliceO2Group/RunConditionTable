@@ -80,23 +80,12 @@ pagesCellsSpecials[PN.periods] = {
 };
 
 pagesCellsSpecials[PN.dataPasses] = {
-    name: (model, item) => [
+    name: (model, runs, item) => [
         h('td.text-ellipsis', item.name),
         h('td',
             h('button.btn.chip.m1', {
                 onclick: async () => {
-                    const page = model.fetchedData[PN.dataPasses];
-                    const [pIndex] = Object.keys(page);
-                    const { url } = page[pIndex].payload;
-                    const dpSearchParams = `?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
-                    await model.fetchedData.reqForData(true, new URL(url.origin + url.pathname + dpSearchParams));
-
-                    const [dpIndex] = Object.keys(model.fetchedData[PN.runsPerDataPass]);
-                    const runNumbers = model.fetchedData[PN.runsPerDataPass][dpIndex].payload.rows.map((row) => row.run_number);
-
-                    const search = `?page=${PN.flags}&data_pass_name=${item.name}&run_numbers=${runNumbers}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
-                    const flagsUrl = new URL(url.origin + url.pathname + search);
-                    await model.fetchedData.reqForData(true, flagsUrl);
+                    await runs.fetchRunsPerDataPass(item.name);
                     model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`);
                 },
             }, 'runs'),
@@ -109,7 +98,7 @@ pagesCellsSpecials[PN.dataPasses] = {
                 `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
             )),
     ],
-    size: (model, item) => getReadableFileSizeString(Number(item.size)),
+    size: (model, runs, item) => getReadableFileSizeString(Number(item.size)),
 };
 pagesCellsSpecials[PN.mc] = {
     name: (model, item) => [

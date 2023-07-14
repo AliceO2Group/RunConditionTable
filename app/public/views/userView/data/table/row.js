@@ -17,18 +17,21 @@ import { reduceSerialIf } from '../../../../utils/utils.js';
 import detectorIcon from '../../../../components/detectors/detectorIcon.js';
 
 export default function row(
-    model, visibleFields, data, item, cellsSpecials, index, detectors,
+    model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
 ) {
+    const pageName = model.getCurrentDataPointer().page;
     const rowDivDef = reduceSerialIf(
         'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 
     const dataCells = visibleFields.map((field) =>
-        h(`td.${model.getCurrentDataPointer().page}-${field.name.includes('detector') ? 'detector' : field.name}-cell.text-ellipsis`,
+        h(`td.${pageName}-${field.name.includes('detector') ? 'detector' : field.name}-cell.text-ellipsis`,
             item[field.name]
                 ? cellsSpecials[field.name]
-                    ? cellsSpecials[field.name](model, item)
+                    ? pageName === 'dataPasses'
+                        ? cellsSpecials[field.name](model, runs, item)
+                        : cellsSpecials[field.name](model, item)
                     : /.*_detector/.test(field.name)
                         ? detectorIcon(model, item, field.name, index, detectors.getDetectorName(field.name))
                         : item[field.name]
