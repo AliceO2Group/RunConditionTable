@@ -6,4 +6,5 @@ if ! git diff --cached --quiet -- "$DESIGN_PATH"; then
         exit 1;
     fi
     echo db:scheme changed
+    git add database/exported
 fi

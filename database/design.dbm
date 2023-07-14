@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="0,183" last-zoom="1" max-obj-count="31"
+<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="0,306" last-zoom="1" max-obj-count="31"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -25,8 +25,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </schema>
 
 <tag name="primary_data_layer">
-	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
-	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
+	<style id="table-body" colors="#474f56,#596269,#808080"/>
+	<style id="table-ext-body" colors="#474f56,#596269,#808080"/>
 	<style id="table-name" colors="#000000"/>
 	<style id="table-schema-name" colors="#000000"/>
 	<style id="table-title" colors="#ff0004,#4aa5ff,#20486f"/>
@@ -34,8 +34,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<style id="table-toggler-btns" colors="#000000,#000000,#000000"/>
 </tag>
 <tag name="second_layer_data">
-	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
-	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
+	<style id="table-body" colors="#596269,#474f56,#808080"/>
+	<style id="table-ext-body" colors="#596269,#474f56,#808080"/>
 	<style id="table-name" colors="#000000"/>
 	<style id="table-schema-name" colors="#000000"/>
 	<style id="table-title" colors="#72ff07,#4aa5ff,#20486f"/>
@@ -43,8 +43,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<style id="table-toggler-btns" colors="#000000,#000000,#000000"/>
 </tag>
 <tag name="dictionaries_layer">
-	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
-	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
+	<style id="table-body" colors="#596269,#474f56,#808080"/>
+	<style id="table-ext-body" colors="#596269,#474f56,#808080"/>
 	<style id="table-name" colors="#000000"/>
 	<style id="table-schema-name" colors="#000000"/>
 	<style id="table-title" colors="#ffe30a,#4aa5ff,#20486f"/>
@@ -52,8 +52,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<style id="table-toggler-btns" colors="#000000,#000000,#000000"/>
 </tag>
 <tag name="consistency_data_layer">
-	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
-	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
+	<style id="table-body" colors="#596269,#474f56,#808080"/>
+	<style id="table-ext-body" colors="#596269,#474f56,#808080"/>
 	<style id="table-name" colors="#000000"/>
 	<style id="table-schema-name" colors="#000000"/>
 	<style id="table-title" colors="#c7d3ff,#4aa5ff,#20486f"/>
