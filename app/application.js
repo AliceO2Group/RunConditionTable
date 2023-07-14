@@ -88,8 +88,7 @@ class RunConditionTableApplication {
             } catch (error) {
                 this.logger.error(`Error while stopping RCT app: ${error}`);
             }
-            await this.clearSyncAllTask();
-            await this.disconnectServices();
+            await this.syncManager.clearSyncAllTask();
             this.rl.close();
 
             this.logger.info('RCT app stopped');

@@ -65,6 +65,10 @@ class SyncManager {
         }, firstSyncDelay);
     }
 
+    async clearSyncAllTask() {
+        clearInterval(this.syncAllTask);
+    }
+
     async getLastSyncMetadata() {
         return (await this.databaseService
             .pgExec(config.rctData.healthcheckQueries.meta.readLastSync.query))
