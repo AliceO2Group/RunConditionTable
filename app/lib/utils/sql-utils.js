@@ -48,7 +48,7 @@ function adjustValuesToSql(v) {
     if (typeof v == 'string') {
         if (v.length == 0) {
             return null;
-        } else if (! sqlValueKeywords.includes(v?.trim().toUpperCase())) {
+        } else if (! sqlValueKeywords.includes(v?.trim().toUpperCase()) && isNaN(v)) {
             return `'${v}'`;
         }
     }

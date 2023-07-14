@@ -12,15 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
-const matchExcludeType = 'matchexclude';
-const fromToType = 'fromto';
-
 const { roles, flags: flagsTypes, detectors } = require('./rct-data');
 
 module.exports = { // Properties that will be provided to frontend in the public folder
     filterTypes: {
-        matchExcludeType,
-        fromToType,
+        match: 'match',
+        exclude: 'exclude',
+        between: 'between',
     },
 
     roles,
