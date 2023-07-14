@@ -140,7 +140,6 @@ class RunConditionTableApplication {
             this.logger.error(`Error while starting RCT app: ${error}`);
             await this.stop();
         }
-        // await this.connectServices();
         this.logger.info('RCT app started');
     }
 

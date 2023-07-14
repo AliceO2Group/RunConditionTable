@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 const { Log } = require('@aliceo2/web-ui');
-const { databaseService } = require('../lib/database');
+const { databaseService } = require('../database');
 const config = require('../../config');
 
 const monalisaService = require('./MonalisaService');
@@ -44,9 +44,25 @@ class SyncManager {
     }
 
     async setSyncAllTask() {
-        const syncPeriod = 12 * 60 * 60 * 1000; // Twice per day
-        this.databaseService.pgExec(config.rctData.healthcheckQueries.meta.readLastSync);
-        this.syncAllTask = setInterval(this.syncAll.bind(this), syncPeriod);
+        const syncPeriod = 12 * 60 * 60 * 1000; // Twice per day [ms]
+        const last_sync = this.getLastSyncMetadata();
+        const firstSyncDelay = last_sync.val === 'ok' ?
+            syncPeriod - (Date.now() - (last_sync.updatedAt || 0) * 1000)
+            : 1000;// Gives server 1 sec before sync task starts;
+
+        setTimeout(() => {
+            this.syncAll();
+        }, firstSyncDelay);
+
+        setTimeout(() => {
+            this.syncAllTask = setInterval(this.syncAll.bind(this), syncPeriod);
+        }, firstSyncDelay);
+    }
+
+    async getLastSyncMetadata() {
+        return (await this.databaseService
+            .pgExec(config.rctData.healthcheckQueries.meta.readLastSync.query))
+            .rows[0];
     }
 
     async clearSyncAllTask() {
@@ -54,4 +70,4 @@ class SyncManager {
     }
 }
 
-module.exports = SyncManager();
+module.exports = new SyncManager();

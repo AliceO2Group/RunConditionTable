@@ -215,20 +215,16 @@ class AbstractServiceSynchronizer {
     }
 
     async setSyncTask() {
-        if (this.isConnected()) {
-            this.forceStop = false;
-            await this.sync()
-                .then(() => {
-                    if (this.forceStop) {
-                        this.logger.info(`${this.name} forced to stop`);
-                    }
-                })
-                .catch((e) => {
-                    this.logger.error(e.stack);
-                });
-        } else {
-            this.logger.error('Cannot start the sync task becuse the database is not connected, check the configuration or database state');
-        }
+        this.forceStop = false;
+        await this.sync()
+            .then(() => {
+                if (this.forceStop) {
+                    this.logger.info(`${this.name} forced to stop`);
+                }
+            })
+            .catch((e) => {
+                this.logger.error(e.stack);
+            });
     }
 
     async clearSyncTask() {
