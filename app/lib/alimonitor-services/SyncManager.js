@@ -38,9 +38,15 @@ class SyncManager {
     }
 
     async syncAll() {
-        await this.services.bookkeepingService.setSyncTask();
-        await this.services.monalisaService.setSyncTask();
-        await this.services.monalisaServiceMC.setSyncTask();
+        try {
+            await this.setInDBSyncInProgress();
+            await this.services.bookkeepingService.setSyncTask();
+            await this.services.monalisaService.setSyncTask();
+            await this.services.monalisaServiceMC.setSyncTask();
+            await this.setInDBSyncOk();
+        } catch {
+            await this.setInDBSyncFailure();
+        }
     }
 
     async setSyncAllTask() {
@@ -63,6 +69,21 @@ class SyncManager {
         return (await this.databaseService
             .pgExec(config.rctData.healthcheckQueries.meta.readLastSync.query))
             .rows[0];
+    }
+
+    async setInDBSyncOk() {
+        await this.databaseService
+            .pgExec(config.rctData.healthcheckQueries.meta.setLastSyncOK.query);
+    }
+
+    async setInDBSyncFailure() {
+        await this.databaseService
+            .pgExec(config.rctData.healthcheckQueries.meta.setLastSyncFailed.query);
+    }
+
+    async setInDBSyncInProgress() {
+        await this.databaseService
+            .pgExec(config.rctData.healthcheckQueries.meta.setLastSyncInProgress.query);
     }
 
     async clearSyncAllTask() {

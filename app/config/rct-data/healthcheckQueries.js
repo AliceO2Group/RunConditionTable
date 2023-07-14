@@ -40,7 +40,7 @@ const metaObj = {
 };
 
 const queryForName = (name) => `SELECT name, val, extract(epoch from "updatedAt") as "udatedAt" FROM meta WHERE name = '${name}'`;
-const updateForName = (name, val) => `INSERT INTO meta (name, val, "updatedAt") values (${name}, ${val}, now()) 
+const updateForName = (name, val) => `INSERT INTO meta (name, val, "updatedAt") values ('${name}', '${val}', now()) 
                                         ON conflict (name) do update set val = EXCLUDED.val, "updatedAt" = now();`;
 
 const meta = {
@@ -50,13 +50,17 @@ const meta = {
         description: 'Check time of last update',
         query: queryForName(metaObj.lastSync.name),
     },
-    startLastSync: {
+    setLastSyncInProgress: {
         description: 'Store info in DB that sync is in progress',
         query: updateForName(metaObj.lastSync.name, 'in_progress'),
     },
-    doneLastSync: {
+    setLastSyncOK: {
         description: 'Store info in DB that sync is done',
-        query: updateForName(metaObj.lastSync.name, 'done'),
+        query: updateForName(metaObj.lastSync.name, 'ok'),
+    },
+    setLastSyncFailed: {
+        description: 'Store info in DB that sync is done',
+        query: updateForName(metaObj.lastSync.name, 'failed'),
     },
 };
 
