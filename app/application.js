@@ -22,7 +22,7 @@ const Utils = require('./lib/utils');
 const { Console } = require('node:console');
 
 // Services
-const services = require('./lib/alimonitor-services');
+// TODO
 
 // Database
 const database = require('./lib/database');
@@ -45,7 +45,6 @@ class RunConditionTableApplication {
 
         this.webUiServer = webUiServer;
         this.databaseService = database.databaseService;
-        this.services = services;
         this.defineEndpoints();
 
         buildPublicConfig(config);
@@ -128,22 +127,6 @@ class RunConditionTableApplication {
         httpServer.get(EP.sync, async (_req, _res) => this.syncAll());
     }
 
-    async syncAll() {
-        await this.services.bookkeepingService.setSyncTask();
-        await this.services.monalisaService.setSyncTask();
-        await this.services.monalisaServiceMC.setSyncTask();
-    }
-
-    async setSyncAllTask() {
-        const syncPeriod = 12 * 60 * 60 * 1000; // Twice per day
-        this.databaseService.pgExec
-        this.syncAllTask = setInterval(this.syncAll.bind(this), syncPeriod);
-    }
-
-    async clearSyncAllTask() {
-        clearInterval(this.setSyncAllTask);
-    }
-
     async restart() {
         await this.stop();
         await this.run();
@@ -157,25 +140,8 @@ class RunConditionTableApplication {
             this.logger.error(`Error while starting RCT app: ${error}`);
             await this.stop();
         }
-
-        await this.connectServices();
-        if (config.syncTaskAtStart) {
-            this.setSyncAllTask();
-        }
+        // await this.connectServices();
         this.logger.info('RCT app started');
-    }
-
-    async connectServices() {
-        const errors = [];
-        await this.databaseService.healthcheckInsertData()
-            .catch((e) => errors.push(e));
-        await Promise.all(
-            Object.values(this.services)
-                .map((serv) => serv.dbConnect()),
-        ).catch((e) => errors.push(e));
-        if (errors.length > 0) {
-            this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
-        }
     }
 
     async stop() {
@@ -187,26 +153,13 @@ class RunConditionTableApplication {
             } catch (error) {
                 this.logger.error(`Error while stopping RCT app: ${error}`);
             }
-            await this.disconnectServices();
             await this.clearSyncAllTask();
+            await this.disconnectServices();
             this.rl.close();
 
             this.logger.info('RCT app stopped');
         } else {
             this.logger.info('Stopping already...');
-        }
-    }
-
-    async disconnectServices() {
-        const errors = [];
-        await this.databaseService.disconnect()
-            .catch((e) => errors.push(e));
-        await Promise.all(
-            Object.values(this.services)
-                .map((serv) => serv.close()),
-        ).catch((e) => errors.push(e));
-        if (errors.length > 0) {
-            this.logger.error(`Error while stopping services: ${errors.map((e) => e.message).join(', ')}`);
         }
     }
 
