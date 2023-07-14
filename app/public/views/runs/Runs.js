@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { Observable, RemoteData } from '/js/src/index.js';
+import { Observable } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 const { pageNames: PN } = RCT;
 const { dataReqParams: DRP } = RCT;
@@ -42,7 +42,6 @@ export default class Runs extends Observable {
 
     async fetchRunsPerDataPass(dataPass) {
         const submodel = this.model.submodels[this.model.mode];
-        this._runsPerDataPass = RemoteData.NotAsked();
         const page = submodel.fetchedData[PN.dataPasses];
         const [pIndex] = Object.keys(page);
         const { url } = page[pIndex].payload;
