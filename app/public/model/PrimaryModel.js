@@ -50,12 +50,13 @@ export default class PrimaryModel extends Observable {
 
     async handleLocationChange() {
         const url = this.router.getUrl();
+        const { page } = this.router.params;
         switch (url.pathname) {
             case '/': {
-                const { page } = this.router.params;
                 if (! page) {
                     this.router.go(`/?page=${pageNames.periods}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`);
                 } else {
+                    await this.pageNavigation(url, page);
                     this.fetchedData.reqForData()
                         .then(() => {})
                         .catch(() => {});
@@ -67,52 +68,34 @@ export default class PrimaryModel extends Observable {
             default:
                 break;
         }
+    }
 
-        /*
-         *
-         *Switch (url.pathname) {
-         *    case '/':
-         *        const page = this.router.params['page'];
-         *        if (! page) {
-         *            this.router.go(`/?page=${pageNames.periods}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`);
-         *        } else {
-         *            switch (page) {
-         *                case pageNames.flags:
-         *                    const dataPassName = this.router.params['data_pass_name'];
-         *                    console.log(dataPassName);
-         *                    if (dataPassName) {
-         *                        /*
-         *                        console.log(dataPassName);
-         *                        await this.parent.runs.fetchRunsPerDataPass(dataPassName).then(() => {}).catch((e) => {console.log(e)});
-         *                        console.log(this.fetchedData);
-         *                        // console.log(this.fetchedData);
-         *
-         *                        const dpSearchParams = `?page=${pageNames.runsPerDataPass}&index=${dataPassName}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
-         *                        const dpUrl = new URL(url.origin + url.pathname + dpSearchParams);
-         *                        this.fetchedData.reqForData(true, dpUrl).then(() => {
-         *                            const runNumbers = this.fetchedData[pageNames.runsPerDataPass][dataPassName].payload.rows.map((row) => row.run_number);
-         *                            this.parent.runs.fetchFlagsSummary(dataPassName, runNumbers).then(() => {
-         *                                this.fetchedData.reqForData();
-         *                            }).catch(() => {});
-         *                        });
-         *
-         *                    } else this.goToDefaultPageUrl(pageNames.flags);
-         *                    break;
-         *                default:
-         *                    this.fetchedData.reqForData()
-         *                        .then(() => {})
-         *                        .catch(() => {});
-         *                    break;
-         *            }
-         *        }
-         *        break;
-         *    case '/admin/':
-         *        throw 'TODO';
-         *    default:
-         *        break;
-         *}
-         *
-         */
+    async pageNavigation(url, page) {
+        switch (page) {
+            case pageNames.flags: {
+                const dataPassName = this.router.params['data_pass_name'];
+                if (dataPassName) {
+                    await this.parent.runs.fetchRunsPerDataPass(dataPassName).then(() => {}).catch((e) => {console.log(e)});
+
+                    const dpSearchParams = `?page=${pageNames.runsPerDataPass}&index=${dataPassName}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
+                    const dpUrl = new URL(url.origin + url.pathname + dpSearchParams);
+                    this.fetchedData.reqForData(true, dpUrl).then(() => {
+                    const runNumbers = this.fetchedData[pageNames.runsPerDataPass][dataPassName].payload.rows.map((row) => row.run_number);
+                    this.parent.runs.fetchFlagsSummary(dataPassName, runNumbers).then(() => {
+                    this.fetchedData.reqForData();
+                    }).catch(() => {});
+                });
+            
+                } else this.goToDefaultPageUrl(pageNames.flags);
+                break;
+            }
+            default: {
+                this.fetchedData.reqForData()
+                .then(() => {})
+                .catch(() => {});
+                break;
+            }
+        }
     }
 
     async logout() {
