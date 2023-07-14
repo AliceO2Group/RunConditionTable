@@ -44,6 +44,7 @@ class RunConditionTableApplication {
 
         this.webUiServer = webUiServer;
         this.databaseService = database.databaseService;
+        this.databaseService.healthcheckInsertData();
         this.syncManager = alimonitorServices.syncManager;
         this.defineEndpoints();
 
