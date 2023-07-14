@@ -16,21 +16,57 @@ const detectors = require('./detectors.js').sort();
 const flags = require('./flags.json');
 const physicalParticlesData = require('./physicalParticlesData.js');
 
-const healthcheckQueries = {
+const checkStaticData = {
     detectors: {
-        description: 'detectors dict insert',
+        description: 'Detectors dict insert',
         query: detectors.map((d) => `INSERT INTO detectors_subsystems("id", "name") VALUES (DEFAULT, '${d}');`),
     },
     particle: {
-        description: 'particles dict insert',
+        description: 'Particles dict insert',
         query: Object.entries(physicalParticlesData).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "A", "Z")
-                VALUES (DEFAULT, '${name}', '${d.full_name}', ${d.A}, ${d.Z});`),
+            VALUES (DEFAULT, '${name}', '${d.full_name}', ${d.A}, ${d.Z});`),
     },
     flags: {
-        description: 'flags types dict insert',
-        query: flags.map((f) => `INSERT INTO flags_types_dictionary("id", "name", "method", "bad", "obsolate")
-                VALUES (${f.id}, '${f.name}', '${f.method}', ${f.bad}::bool, ${f.obsolete}::bool);`),
+        description: 'Flag types dict insert',
+        query: flags.map((f) => `INSERT INTO flag_types_dictionary("id", "name", "method", "bad", "obsolate")
+            VALUES (${f.id}, '${f.name}', '${f.method}', ${f.bad}::bool, ${f.obsolete}::bool);`),
     },
+};
+
+const metaObj = {
+    lastSync: {
+        name: 'last_sync',
+    },
+};
+
+const queryForName = (name) => `SELECT name, val, extract(epoch from "updatedAt") as "udatedAt" FROM meta WHERE name = '${name}'`;
+const updateForName = (name, val) => `INSERT INTO meta (name, val, "updatedAt") values ('${name}', '${val}', now()) 
+                                        ON conflict (name) do update set val = EXCLUDED.val, "updatedAt" = now();`;
+
+const meta = {
+    objects: metaObj,
+
+    readLastSync: {
+        description: 'Check time of last update',
+        query: queryForName(metaObj.lastSync.name),
+    },
+    setLastSyncInProgress: {
+        description: 'Store info in DB that sync is in progress',
+        query: updateForName(metaObj.lastSync.name, 'in_progress'),
+    },
+    setLastSyncOK: {
+        description: 'Store info in DB that sync is done',
+        query: updateForName(metaObj.lastSync.name, 'ok'),
+    },
+    setLastSyncFailed: {
+        description: 'Store info in DB that sync is done',
+        query: updateForName(metaObj.lastSync.name, 'failed'),
+    },
+};
+
+const healthcheckQueries = {
+    checkStaticData,
+    meta,
 };
 
 const suppressHealthcheckLogs = (process.env['RCT_SUPRESS_HEALTHCECK_LOGS']?.toLowerCase() || 'true') == 'true';

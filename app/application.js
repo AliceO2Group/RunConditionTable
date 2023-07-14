@@ -16,14 +16,8 @@ const { Log } = require('@aliceo2/web-ui');
 const config = require('./lib/config/configProvider.js');
 const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
 
-// IO
-const readline = require('readline');
-const Utils = require('./lib/utils');
-const { Console } = require('node:console');
-
 // Services
-const services = require('./lib/alimonitor-services');
-
+const alimonitorServices = require('./lib/alimonitor-services');
 // Database
 const database = require('./lib/database');
 
@@ -33,6 +27,11 @@ const { webUiServer } = require('./lib/server');
 // Extract important
 const EP = config.public.endpoints;
 Log.configure(config);
+
+// IO
+const readline = require('readline');
+const Utils = require('./lib/utils');
+const { Console } = require('node:console');
 
 /**
  * RunConditionTable application
@@ -45,89 +44,12 @@ class RunConditionTableApplication {
 
         this.webUiServer = webUiServer;
         this.databaseService = database.databaseService;
-        this.services = services;
+        this.databaseService.healthcheckInsertData();
+        this.syncManager = alimonitorServices.syncManager;
         this.defineEndpoints();
 
         buildPublicConfig(config);
         this.buildCli();
-    }
-
-    buildCli() {
-        this.rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-            terminal: true,
-            prompt: '==> ',
-        });
-        this.rl.on('line', (line) => this.devCli(line));
-        this.con = new Console({ stdout: process.stdout, stderr: process.stderr });
-    }
-
-    devCli(line) {
-        try {
-            const cmdAndArgs = line.trim().split(/ +/).map((s) => s.trim());
-            const dbAdminExec = (args) => {
-                this.databaseService.adminClient
-                    .query(args.join(' '))
-                    .then(this.con.log)
-                    .catch((e) => {
-                        this.con.log(e);
-                    });
-            };
-            const shExec = (args) => {
-                Utils.exec(args)
-                    .then(this.con.log)
-                    .catch((e) => {
-                        this.con.log(e);
-                    });
-            };
-            Utils.switchCase(cmdAndArgs[0], {
-                '': () => {},
-                hc: () => this.databaseService.healthcheck(),
-                users: () => {
-                    this.con.log(this.databaseService.loggedUsers);
-                },
-                pool: () => {
-                    this.con.log(this.databaseService.pool);
-                },
-                now: () => {
-                    dbAdminExec(['select now();']);
-                },
-                psql: dbAdminExec,
-                sh: shExec,
-                bk: (args) => this.servCLI(this.services.bookkeepingService, args),
-                ml: (args) => this.servCLI(this.services.monalisaService, args),
-                mc: (args) => this.servCLI(this.services.monalisaServiceMC, args),
-                sync: () => this.syncAll(),
-                connServ: async () => {
-                    await this.connectServices();
-                },
-                app: (args) => this.applicationCli(args),
-            }, this.incorrectCommand())(cmdAndArgs.slice(1));
-            this.rl.prompt();
-        } catch (error) {
-            this.con.error(error.message);
-        }
-    }
-
-    applicationCli(args) {
-        Utils.switchCase(args[0], {
-            stop: () => this.stop(),
-            run: () => this.run(),
-        }, this.incorrectCommand())();
-    }
-
-    servCLI(serv, args) {
-        Utils.switchCase(args[0], {
-            state: () => this.con.log(args[1] ? serv?.[args[1]] : serv),
-            stop: () => serv.clearSyncTask(),
-            start: () => serv.setSyncTask(),
-            logdepth: () => serv.setLogginLevel(args[1]),
-        }, this.incorrectCommand())();
-    }
-
-    incorrectCommand() {
-        return () => this.con.log('incorrect command');
     }
 
     defineEndpoints() {
@@ -139,22 +61,7 @@ class RunConditionTableApplication {
         httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res));
         httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res));
         httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
-        httpServer.get(EP.sync, async (_req, _res) => this.syncAll());
-    }
-
-    async syncAll() {
-        await this.services.bookkeepingService.setSyncTask();
-        await this.services.monalisaService.setSyncTask();
-        await this.services.monalisaServiceMC.setSyncTask();
-    }
-
-    async setSyncAllTask() {
-        this.syncAll();
-        this.syncAllTask = setInterval(this.syncAll, 24 * 60 * 60 * 1000); // Ones per day
-    }
-
-    async clearSyncAllTask() {
-        clearInterval(this.setSyncAllTask);
+        httpServer.get(EP.sync, async (_req, _res) => this.syncManager.syncAll());
     }
 
     async restart() {
@@ -170,25 +77,7 @@ class RunConditionTableApplication {
             this.logger.error(`Error while starting RCT app: ${error}`);
             await this.stop();
         }
-
-        await this.connectServices();
-        if (config.syncTaskAtStart) {
-            this.setSyncAllTask();
-        }
         this.logger.info('RCT app started');
-    }
-
-    async connectServices() {
-        const errors = [];
-        await this.databaseService.setAdminConnection()
-            .catch((e) => errors.push(e));
-        await Promise.all(
-            Object.values(this.services)
-                .map((serv) => serv.dbConnect()),
-        ).catch((e) => errors.push(e));
-        if (errors.length > 0) {
-            this.logger.error(`Error while starting services: ${errors.map((e) => e.message).join(', ')}`);
-        }
     }
 
     async stop() {
@@ -200,26 +89,12 @@ class RunConditionTableApplication {
             } catch (error) {
                 this.logger.error(`Error while stopping RCT app: ${error}`);
             }
-            await this.disconnectServices();
-            await this.clearSyncAllTask();
+            await this.syncManager.clearSyncAllTask();
             this.rl.close();
 
             this.logger.info('RCT app stopped');
         } else {
             this.logger.info('Stopping already...');
-        }
-    }
-
-    async disconnectServices() {
-        const errors = [];
-        await this.databaseService.disconnect()
-            .catch((e) => errors.push(e));
-        await Promise.all(
-            Object.values(this.services)
-                .map((serv) => serv.close()),
-        ).catch((e) => errors.push(e));
-        if (errors.length > 0) {
-            this.logger.error(`Error while stopping services: ${errors.map((e) => e.message).join(', ')}`);
         }
     }
 
@@ -237,6 +112,45 @@ class RunConditionTableApplication {
 
     get httpServer() {
         return this.webUiServer.httpServer;
+    }
+
+    buildCli() {
+        this.rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+            terminal: true,
+            prompt: '==> ',
+        });
+        this.rl.on('line', (line) => this.devCli(line));
+        this.con = new Console({ stdout: process.stdout, stderr: process.stderr });
+    }
+
+    devCli(line) {
+        try {
+            const cmdAndArgs = line.trim().split(/ +/).map((s) => s.trim());
+            Utils.switchCase(cmdAndArgs[0], {
+                '': () => {},
+                users: () => {
+                    this.con.log(this.databaseService.loggedUsers);
+                },
+                sync: () => this.syncManager.syncAll(),
+                app: (args) => this.applicationCli(args),
+            }, this.incorrectCommand())(cmdAndArgs.slice(1));
+            this.rl.prompt();
+        } catch (error) {
+            this.con.error(error.message);
+        }
+    }
+
+    applicationCli(args) {
+        Utils.switchCase(args[0], {
+            stop: () => this.stop(),
+            run: () => this.run(),
+        }, this.incorrectCommand())();
+    }
+
+    incorrectCommand() {
+        return () => this.con.log('incorrect command');
     }
 }
 

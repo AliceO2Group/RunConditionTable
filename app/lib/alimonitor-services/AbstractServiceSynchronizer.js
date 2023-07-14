@@ -134,7 +134,10 @@ class AbstractServiceSynchronizer {
             this.logger.info(`omitting cached json at :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return;
         }
+
         try {
+            await this.dbConnect();
+
             this.dbAction = dbAction; //TODO
             this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
 
@@ -157,10 +160,9 @@ class AbstractServiceSynchronizer {
             this.monitor.logResults();
         } catch (fatalError) {
             this.logger.error(fatalError.stack);
-            if (/ECONNREFUSED|ENOTFOUND|ECONNRESET|ETIMEDOUT|ECONNABORTED|EHOSTUNREACH|EAI_AGAIN/.test(fatalError.name + fatalError.message)) {
-                this.forceStop = true;
-                this.logger.error(`terminated due to fatal error ${fatalError.name} for endpoint: ${endpoint}`);
-            }
+            throw fatalError;
+        } finally {
+            await this.dbDisconnect();
         }
     }
 
@@ -168,6 +170,9 @@ class AbstractServiceSynchronizer {
         const rowsChunks = arrayToChunks(data, this.batchSize);
         const total = this.metaStore.totalCount || data.length;
         for (const chunk of rowsChunks) {
+            if (this.forceStop) {
+                return;
+            }
             const promises = chunk.map((dataUnit) => this.dbAction(this.dbClient, dataUnit)
                 .then(() => this.monitor.handleCorrect())
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
@@ -198,39 +203,30 @@ class AbstractServiceSynchronizer {
         this.dbClient.on('error', (e) => this.logger.error(e));
 
         return await this.dbClient.connect()
-            .then(() => this.logger.info('database connection established'));
+            .catch((e) => this.logger.error(e));
     }
 
     async dbDisconnect() {
         return await this.dbClient.end()
-            .then(() => this.logger.info('database connection ended'));
+            .catch((e) => this.logger.error(e));
     }
 
     async setSyncTask() {
-        if (this.isConnected()) {
-            this.forceStop = false;
-            await this.sync()
-                .catch((e) => {
-                    this.logger.error(e.stack);
-                });
-        } else {
-            this.logger.error('Cannot start the sync task becuse the database is not connected, check the configuration or database state');
-        }
+        this.forceStop = false;
+        await this.sync()
+            .then(() => {
+                if (this.forceStop) {
+                    this.logger.info(`${this.name} forced to stop`);
+                }
+            });
     }
 
-    async close() {
-        this.forecStop = true;
-        await this.dbDisconnect();
+    async clearSyncTask() {
+        this.forceStop = true;
     }
 
     isConnected() {
         return this.dbClient?._connected;
-    }
-
-    async restart() {
-        this.opts = this.createHttpOpts();
-        await this.close();
-        await this.dbConnect();
     }
 }
 

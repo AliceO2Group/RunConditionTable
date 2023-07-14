@@ -23,7 +23,7 @@ module.exports = () => {
             it('should connect to the database successfully', () => {
                 assert.doesNotThrow(async () => {
                     await databaseService.getDate();
-                    await databaseService.healthcheck();
+                    await databaseService.healthcheckInsertData();
                 });
             });
         });

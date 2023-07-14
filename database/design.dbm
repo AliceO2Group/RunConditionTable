@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="803,636" last-zoom="1" max-obj-count="31"
+<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="0,306" last-zoom="1" max-obj-count="31"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -25,8 +25,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </schema>
 
 <tag name="primary_data_layer">
-	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
-	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
+	<style id="table-body" colors="#474f56,#596269,#808080"/>
+	<style id="table-ext-body" colors="#474f56,#596269,#808080"/>
 	<style id="table-name" colors="#000000"/>
 	<style id="table-schema-name" colors="#000000"/>
 	<style id="table-title" colors="#ff0004,#4aa5ff,#20486f"/>
@@ -34,8 +34,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<style id="table-toggler-btns" colors="#000000,#000000,#000000"/>
 </tag>
 <tag name="second_layer_data">
-	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
-	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
+	<style id="table-body" colors="#596269,#474f56,#808080"/>
+	<style id="table-ext-body" colors="#596269,#474f56,#808080"/>
 	<style id="table-name" colors="#000000"/>
 	<style id="table-schema-name" colors="#000000"/>
 	<style id="table-title" colors="#72ff07,#4aa5ff,#20486f"/>
@@ -43,8 +43,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<style id="table-toggler-btns" colors="#000000,#000000,#000000"/>
 </tag>
 <tag name="dictionaries_layer">
-	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
-	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
+	<style id="table-body" colors="#596269,#474f56,#808080"/>
+	<style id="table-ext-body" colors="#596269,#474f56,#808080"/>
 	<style id="table-name" colors="#000000"/>
 	<style id="table-schema-name" colors="#000000"/>
 	<style id="table-title" colors="#ffe30a,#4aa5ff,#20486f"/>
@@ -52,8 +52,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<style id="table-toggler-btns" colors="#000000,#000000,#000000"/>
 </tag>
 <tag name="consistency_data_layer">
-	<style id="table-body" colors="#fcfcfc,#fcfcfc,#808080"/>
-	<style id="table-ext-body" colors="#fcfcfc,#fcfcfc,#808080"/>
+	<style id="table-body" colors="#596269,#474f56,#808080"/>
+	<style id="table-ext-body" colors="#596269,#474f56,#808080"/>
 	<style id="table-name" colors="#000000"/>
 	<style id="table-schema-name" colors="#000000"/>
 	<style id="table-title" colors="#c7d3ff,#4aa5ff,#20486f"/>
@@ -69,7 +69,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="480" y="1200"/>
+	<position x="680" y="200"/>
 	<column name="id" not-null="true" sequence="public.beams_dictionary_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -90,7 +90,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="460" y="520"/>
+	<position x="160" y="380"/>
 	<column name="id" not-null="true" sequence="public.data_passes_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -138,7 +138,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="860" y="500"/>
+	<position x="660" y="680"/>
 	<column name="run_number" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -162,7 +162,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="1320" y="1260"/>
+	<position x="880" y="1320"/>
 	<column name="id" not-null="true" sequence="public.detectors_subsystems_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -182,11 +182,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </sequence>
 
-<table name="flags_types_dictionary" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+<table name="flag_types_dictionary" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="dictionaries_layer"/>
-	<position x="560" y="1560"/>
+	<position x="100" y="1300"/>
 	<column name="id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -202,10 +202,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="obsolate" not-null="true">
 		<type name="bool" length="0"/>
 	</column>
-	<constraint name="flags_types_dictionary_pkey" type="pk-constr" table="public.flags_types_dictionary">
+	<constraint name="flags_types_dictionary_pkey" type="pk-constr" table="public.flag_types_dictionary">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
-	<constraint name="ftp_name_unique" type="uq-constr" table="public.flags_types_dictionary">
+	<constraint name="ftp_name_unique" type="uq-constr" table="public.flag_types_dictionary">
 		<columns names="name" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -224,7 +224,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="460" y="920"/>
+	<position x="720" y="380"/>
 	<column name="id" not-null="true" sequence="public.periods_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -254,7 +254,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="880" y="1300"/>
+	<position x="440" y="920"/>
 	<column name="id" not-null="true" sequence="public.quality_control_flags_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -310,7 +310,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1340" y="1000"/>
+	<position x="1340" y="1260"/>
 	<column name="detector_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -329,7 +329,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="920" y="840"/>
+	<position x="1020" y="860"/>
 	<column name="run_number" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -384,7 +384,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="500" y="180"/>
+	<position x="160" y="100"/>
 	<column name="data_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -408,7 +408,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="1320" y="160"/>
+	<position x="1260" y="60"/>
 	<column name="id" not-null="true" sequence="public.simulation_passes_id_seq">
 		<type name="integer" length="0"/>
 	</column>
@@ -450,7 +450,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1380" y="740"/>
+	<position x="1340" y="640"/>
 	<column name="simulation_pass_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -472,7 +472,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="consistency_data_layer"/>
-	<position x="1220" y="500"/>
+	<position x="1140" y="400"/>
 	<column name="period_id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -491,7 +491,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="public"/>
 	<role name="postgres"/>
 	<tag name="primary_data_layer"/>
-	<position x="1360" y="1480"/>
+	<position x="460" y="1320"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -512,7 +512,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="particle_phys_data" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="480" y="1340"/>
+	<position x="120" y="760"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -542,6 +542,24 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<table name="meta" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="120" y="980"/>
+	<column name="name" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="val" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="updatedAt" not-null="true">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<constraint name="name_pk" type="pk-constr" table="public.meta">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
 <constraint name="period_id_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.periods" table="public.data_passes">
 	<columns names="period_id" ref-type="src-columns"/>
@@ -567,7 +585,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="flag_type_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.flags_types_dictionary" table="public.quality_control_flags">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.flag_types_dictionary" table="public.quality_control_flags">
 	<columns names="flag_type_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -672,7 +690,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_quality_control_flags_flags_types_dictionary" type="relfk" layers="0"
 	 src-table="public.quality_control_flags"
-	 dst-table="public.flags_types_dictionary" reference-fk="flag_type_fk"
+	 dst-table="public.flag_types_dictionary" reference-fk="flag_type_fk"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_runs_detectors_runs" type="relfk" layers="0"
@@ -790,12 +808,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>
 <permission>
-	<object name="public.flags_types_dictionary" type="table"/>
+	<object name="public.flag_types_dictionary" type="table"/>
 	<roles names="postgres"/>
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>
 <permission>
-	<object name="public.flags_types_dictionary" type="table"/>
+	<object name="public.flag_types_dictionary" type="table"/>
 	<roles names="&quot;rct-user&quot;"/>
 	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
 </permission>

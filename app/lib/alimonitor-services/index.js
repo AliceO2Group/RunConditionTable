@@ -12,17 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const monalisaService = require('./MonalisaService');
-const monalisaServiceMC = require('./MonalisaServiceMC');
-const bookkeepingService = require('./BookkeepingService');
-
-const { monalisaServiceDetails } = monalisaService;
-const { monalisaServiceMCDetails } = monalisaServiceMC;
+const syncManager = require('./SyncManager');
 
 module.exports = {
-    bookkeepingService,
-    monalisaService,
-    monalisaServiceDetails,
-    monalisaServiceMC,
-    monalisaServiceMCDetails,
+    syncManager,
 };
