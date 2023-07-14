@@ -13,19 +13,24 @@
  */
 
 import { h } from '/js/src/index.js';
-import dataPanel from './userView/data/dataPanel.js';
-import sidebar from '../components/sidebar/sidebar.js';
+import viewButton from '../../../../components/common/viewButton.js';
 
-export default function userPanel(model) {
-    const submodel = model.submodels[model.mode];
-    return h('.flex-column.absolute-fill', [
-        h('.flex-grow.flex-row.outline-gray', [
-            sidebar(submodel),
-            h('section.outline-gray.flex-grow.relative.user-panel-main-content', [
-                h('.scroll-y.absolute-fill',
-                    { id: 'user-panel-main-content' },
-                    dataPanel(submodel, model.detectors, model.flags)),
-            ]),
-        ]),
+export default function failureStatusAndReload(model, status) {
+    const reloadBtn = viewButton(
+        model,
+        'Reload',
+        () => model.fetchedData.reqForData(true),
+        '',
+        undefined,
+        '.btn-primary.m3',
+    );
+    const loadingMessage = h('h3', 'Failed to load data');
+    const explanation = h('h5', `The services are unavailable (status: ${status ? status : 'unknown'})`);
+
+    return h('.loginDiv.top-100', [
+        h('.no-network-90'),
+        loadingMessage,
+        explanation,
+        reloadBtn,
     ]);
 }
