@@ -12,7 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 const { Log } = require('@aliceo2/web-ui');
-const database = require('../lib/database');
+const { databaseService } = require('../lib/database');
+const config = require('../../config');
 
 const monalisaService = require('./MonalisaService');
 const monalisaServiceMC = require('./MonalisaServiceMC');
@@ -33,7 +34,7 @@ class SyncManager {
     constructor() {
         this.logger = new Log(SyncManager.name);
         this.services = services;
-        this.databaseService = database;
+        this.databaseService = databaseService;
     }
 
     async connect() {
@@ -60,7 +61,7 @@ class SyncManager {
 
     async setSyncAllTask() {
         const syncPeriod = 12 * 60 * 60 * 1000; // Twice per day
-        this.databaseService.pgExec()
+        this.databaseService.pgExec(config.rctData.healthcheckQueries.meta.readLastSync)
         this.syncAllTask = setInterval(this.syncAll.bind(this), syncPeriod);
     }
 

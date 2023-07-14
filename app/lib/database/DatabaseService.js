@@ -34,7 +34,6 @@ class DatabaseService {
 
         this.logger = new Log(DatabaseService.name);
         this.buildPool();
-        this.healthcheckInsertData()
     }
 
     buildPool() {
@@ -86,19 +85,21 @@ class DatabaseService {
     }
 
     async pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler) {
-        this.pool.connect((connectErr, client, release) => {
-        if (connectErr) {
+        const client = await this.pool.connect().catch((e) => {
             if (connectErrorHandler) {
-                connectErrorHandler(connectErr);
+                connectErrorHandler(e);
+            } else {
+                throw e;
             }
-            return;
-        }
+        })
 
-        client.query(query)
+        return await client.query(query)
             .then((dbRes) => {
                 if (dbResponseHandler) {
                     dbResponseHandler(dbRes);
                 }
+                client.release();
+                return dbRes
             })
             .catch((e) => {
                 if (dbResErrorHandler) {
@@ -106,10 +107,8 @@ class DatabaseService {
                 } else {
                     throw e;
                 }
+                client.release();
             });
-            release();
-        })
-
     }
 
     async pgExecFetchData(req, res) {
