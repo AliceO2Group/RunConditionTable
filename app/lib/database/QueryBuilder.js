@@ -33,50 +33,11 @@ pageToViewName[PN.flags] = 'flags_view'
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
 
-const ops = {
-    NOTLIKE: 'NOT LIKE',
-    LIKE: 'LIKE',
-    IN: 'IN',
-    NOTIN: 'NOT IN',
-    FROM: '>=',
-    TO: '<=',
-    BETWEEN: 'BETWEEN',
-};
-
-const filtersControlTree = {
-    notarray: {
-        match: {
-            string: [ops.LIKE, ops.OR],
-            number: [ops.EQ, ops.OR],
-        },
-        exclude: {
-            string: [ops.NOTLIKE, ops.AND],
-            number: [ops.NE, ops.AND],
-        },
-        // from: [ops.FROM, ops.OR],
-        // to: [ops.TO, ops.OR],
-        between: [ops.BETWEEN, ops.OR],
-    },
-
-    array: {
-        match: {
-            string: [ops.LIKE, ops.OR],
-            number: [ops.IN, ops.OR],
-        },
-        exclude: {
-            string: [ops.NOTLIKE, ops.AND],
-            number: [ops.NOTIN, ops.AND],
-        },
-        // from: [ops.FROM, ops.OR],
-        // to: [ops.TO, ops.OR],
-    },
-}
-
-const handleBetween = (fieldName, pairsLi) => {
-    if (! Array.isArray(pairsLi)) {
-        pairsLi = [pairsLi]
+const handleBetween = (fieldName, pairsList) => {
+    if (! Array.isArray(pairsList)) {
+        pairsList = [pairsList]
     }
-    return pairsLi.map((p) => {
+    return pairsList.map((p) => {
         const value = p.split(',');
         const [left, right] = adjustValuesToSql(value);
         if (value[0] && value[1]) {

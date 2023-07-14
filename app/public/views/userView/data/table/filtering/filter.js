@@ -75,7 +75,7 @@ export default function filter(model) {
         model.router.go(newUrl);
     }
 
-    const aggMatchExcludeTypes = `${filterTypes.match}-${filterTypes.exclude}`;
+    const aggregatedFiltersTypes = `${filterTypes.match}-${filterTypes.exclude}`;
 
     return h('.font-size-small', [
         h('div.flex-wrap.justify-between.items-center',
@@ -100,7 +100,7 @@ export default function filter(model) {
                     onchange: () => onFilteringTypeChange(),
                 }, [
                     h('option', { value: '', selected: true, disabled: true, hidden: true }, 'Filtering type'),
-                    h('option', { value: aggMatchExcludeTypes }, aggMatchExcludeTypes),
+                    h('option', { value: aggregatedFiltersTypes }, aggregatedFiltersTypes),
                     h('option', { value: filterTypes.between }, filterTypes.between),
                 ], h('.close-10')),
 
