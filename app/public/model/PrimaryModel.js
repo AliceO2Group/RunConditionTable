@@ -75,24 +75,28 @@ export default class PrimaryModel extends Observable {
             case pageNames.flags: {
                 const dataPassName = this.router.params['data_pass_name'];
                 if (dataPassName) {
-                    await this.parent.runs.fetchRunsPerDataPass(dataPassName).then(() => {}).catch((e) => {console.log(e)});
+                    await this.parent.runs.fetchRunsPerDataPass(dataPassName).then(() => {}).catch((e) => {
+                        alert(e);
+                    });
 
-                    const dpSearchParams = `?page=${pageNames.runsPerDataPass}&index=${dataPassName}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
-                    const dpUrl = new URL(url.origin + url.pathname + dpSearchParams);
+                    const dpSearchParams = `?page=${pageNames.runsPerDataPass}&index=${dataPassName}`;
+                    const siteReqParams = `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
+                    const dpUrl = new URL(url.origin + url.pathname + dpSearchParams + siteReqParams);
                     this.fetchedData.reqForData(true, dpUrl).then(() => {
-                    const runNumbers = this.fetchedData[pageNames.runsPerDataPass][dataPassName].payload.rows.map((row) => row.run_number);
-                    this.parent.runs.fetchFlagsSummary(dataPassName, runNumbers).then(() => {
-                    this.fetchedData.reqForData();
-                    }).catch(() => {});
-                });
-            
-                } else this.goToDefaultPageUrl(pageNames.flags);
+                        const runNumbers = this.fetchedData[pageNames.runsPerDataPass][dataPassName].payload.rows.map((row) => row.run_number);
+                        this.parent.runs.fetchFlagsSummary(dataPassName, runNumbers).then(() => {
+                            this.fetchedData.reqForData();
+                        }).catch(() => {});
+                    });
+                } else {
+                    this.goToDefaultPageUrl(pageNames.flags);
+                }
                 break;
             }
             default: {
                 this.fetchedData.reqForData()
-                .then(() => {})
-                .catch(() => {});
+                    .then(() => {})
+                    .catch(() => {});
                 break;
             }
         }
