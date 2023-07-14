@@ -65,19 +65,6 @@ export default class PrimaryModel extends Observable {
             default:
                 break;
         }
-
-        /*
-         *Switch (this.router.params.page) {
-         *    case 'flags':
-         *        if (! this.router.params['data_pass_name']) {
-         * const url = `/?page=${pageNames.flags}&run_numbers=-1&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`;
-         * this.router.go(url);
-         *        }
-         *        break;
-         *    default:
-         *        console.log('default');
-         *}
-         */
     }
 
     async logout() {
