@@ -16,13 +16,7 @@ const { Log } = require('@aliceo2/web-ui');
 const config = require('./lib/config/configProvider.js');
 const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
 
-// IO
-const readline = require('readline');
-const Utils = require('./lib/utils');
-const { Console } = require('node:console');
-
 // Services
-// TODO
 
 // Database
 const database = require('./lib/database');
@@ -49,70 +43,6 @@ class RunConditionTableApplication {
 
         buildPublicConfig(config);
         this.buildCli();
-    }
-
-    buildCli() {
-        this.rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-            terminal: true,
-            prompt: '==> ',
-        });
-        this.rl.on('line', (line) => this.devCli(line));
-        this.con = new Console({ stdout: process.stdout, stderr: process.stderr });
-    }
-
-    devCli(line) {
-        try {
-            const cmdAndArgs = line.trim().split(/ +/).map((s) => s.trim());
-            const dbAdminExec = (args) => this.databaseService.pgExec(args.join(' '), this.con.log, this.con.log);
-
-            Utils.switchCase(cmdAndArgs[0], {
-                '': () => {},
-                hc: () => this.databaseService.healthcheckInsertData(),
-                users: () => {
-                    this.con.log(this.databaseService.loggedUsers);
-                },
-                pool: () => {
-                    this.con.log(this.databaseService.pool);
-                },
-                now: () => {
-                    dbAdminExec(['select now();']);
-                },
-                psql: dbAdminExec,
-                bk: (args) => this.servCLI(this.services.bookkeepingService, args),
-                ml: (args) => this.servCLI(this.services.monalisaService, args),
-                mc: (args) => this.servCLI(this.services.monalisaServiceMC, args),
-                sync: () => this.syncAll(),
-                connServ: async () => {
-                    await this.connectServices();
-                },
-                app: (args) => this.applicationCli(args),
-            }, this.incorrectCommand())(cmdAndArgs.slice(1));
-            this.rl.prompt();
-        } catch (error) {
-            this.con.error(error.message);
-        }
-    }
-
-    applicationCli(args) {
-        Utils.switchCase(args[0], {
-            stop: () => this.stop(),
-            run: () => this.run(),
-        }, this.incorrectCommand())();
-    }
-
-    servCLI(serv, args) {
-        Utils.switchCase(args[0], {
-            state: () => this.con.log(args[1] ? serv?.[args[1]] : serv),
-            stop: () => serv.clearSyncTask(),
-            start: () => serv.setSyncTask(),
-            logdepth: () => serv.setLogginLevel(args[1]),
-        }, this.incorrectCommand())();
-    }
-
-    incorrectCommand() {
-        return () => this.con.log('incorrect command');
     }
 
     defineEndpoints() {

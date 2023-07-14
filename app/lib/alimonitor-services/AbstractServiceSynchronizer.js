@@ -160,10 +160,6 @@ class AbstractServiceSynchronizer {
             this.monitor.logResults();
         } catch (fatalError) {
             this.logger.error(fatalError.stack);
-            // if (/ECONNREFUSED|ENOTFOUND|ECONNRESET|ETIMEDOUT|ECONNABORTED|EHOSTUNREACH|EAI_AGAIN/.test(fatalError.name + fatalError.message)) {
-            //     this.forceStop = true;
-            //     this.logger.error(`terminated due to fatal error ${fatalError.name} for endpoint: ${endpoint}`);
-            // }
             throw fatalError;
         } finally {
             await this.dbDisconnect();
