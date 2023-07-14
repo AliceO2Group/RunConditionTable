@@ -62,7 +62,7 @@ export default function flagsPanel(model, runs, detectors, flags) {
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
-    return run > defaultRunNumbers
+    return run > defaultRunNumbers && runData
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',

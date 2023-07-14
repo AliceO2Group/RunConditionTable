@@ -30,10 +30,6 @@ export default class Runs extends Observable {
     constructor(model) {
         super();
         this.model = model;
-        this._runsPerPeriod = RemoteData.NotAsked();
-        this._runsPerDataPass = RemoteData.NotAsked();
-        this._runs = RemoteData.NotAsked();
-        this._flagsSummary = RemoteData.NotAsked();
     }
 
     async fetchFlagsSummary(dataPass, runNumbers) {
@@ -43,7 +39,7 @@ export default class Runs extends Observable {
         const flagsUrl = new URL(url.origin + url.pathname + search);
         await submodel.fetchedData.reqForData(true, flagsUrl);
     }
-    
+
     async fetchRunsPerDataPass(dataPass) {
         const submodel = this.model.submodels[this.model.mode];
         this._runsPerDataPass = RemoteData.NotAsked();
