@@ -134,7 +134,10 @@ class AbstractServiceSynchronizer {
             this.logger.info(`omitting cached json at :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return;
         }
+
         try {
+            await this.dbConnect();
+
             this.dbAction = dbAction; //TODO
             this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
 
@@ -161,6 +164,8 @@ class AbstractServiceSynchronizer {
                 this.forceStop = true;
                 this.logger.error(`terminated due to fatal error ${fatalError.name} for endpoint: ${endpoint}`);
             }
+        } finally {
+            await this.dbDisconnect();
         }
     }
 
@@ -230,19 +235,8 @@ class AbstractServiceSynchronizer {
         this.forceStop = true;
     }
 
-    async close() {
-        this.forecStop = true;
-        await this.dbDisconnect();
-    }
-
     isConnected() {
         return this.dbClient?._connected;
-    }
-
-    async restart() {
-        this.opts = this.createHttpOpts();
-        await this.close();
-        await this.dbConnect();
     }
 }
 

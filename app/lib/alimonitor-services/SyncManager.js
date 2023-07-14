@@ -37,22 +37,6 @@ class SyncManager {
         this.databaseService = databaseService;
     }
 
-    async connect() {
-        const errors = [];
-        await Promise.all(
-            Object.values(this.services)
-                .map((serv) => serv.dbConnect()),
-        ).catch((e) => errors.push(e));
-    }
-
-    async disconnect() {
-        const errors = [];
-        await Promise.all(
-            Object.values(this.services)
-                .map((serv) => serv.close()),
-        ).catch((e) => errors.push(e));
-    }
-
     async syncAll() {
         await this.services.bookkeepingService.setSyncTask();
         await this.services.monalisaService.setSyncTask();
@@ -61,7 +45,7 @@ class SyncManager {
 
     async setSyncAllTask() {
         const syncPeriod = 12 * 60 * 60 * 1000; // Twice per day
-        this.databaseService.pgExec(config.rctData.healthcheckQueries.meta.readLastSync)
+        this.databaseService.pgExec(config.rctData.healthcheckQueries.meta.readLastSync);
         this.syncAllTask = setInterval(this.syncAll.bind(this), syncPeriod);
     }
 
