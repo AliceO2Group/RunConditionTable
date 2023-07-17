@@ -1,0 +1,47 @@
+/**
+ * @license
+ * Copyright CERN and copyright holders of ALICE O2. This software is
+ * distributed under the terms of the GNU General Public License v3 (GPL
+ * Version 3), copied verbatim in the file "COPYING".
+ *
+ * See http://alice-o2.web.cern.ch/license for full licensing information.
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
+
+const Sequelize = require('sequelize');
+
+const Run = require('./Run.js');
+const Period = require('./Period.js');
+const DataPass = require('./DataPass.js');
+const FlagType = require('./FlagType.js');
+const DetectorSubsystem = require('./DetectorSubsystem.js');
+const Meta = require('./Meta.js');
+const PhysParticleData = require('./PhysParticleData.js');
+const QulaityControlFlag = require('./QulaityControlFlag.js');
+const SimulationPass = require('./SimulationPass.js');
+const Verification = require('./Verification.js');
+
+
+module.exports = (sequelize) => {
+    let models = {
+        Period,
+        Run,
+        DataPass,
+        FlagType,
+        DetectorSubsystem,
+        Meta,
+        PhysParticleData,
+        QulaityControlFlag,
+        SimulationPass,
+        Verification,
+    };
+    models = Object.entries(models)
+                .map(([modelName, model]) => [modelName, model(sequelize)]) // instantiate models
+                .forEach(([_, mInstance]) => mInstance.associate?.(sequelize));
+    models = Object.fromEntries(models);
+
+    return models;
+};
