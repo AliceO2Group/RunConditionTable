@@ -36,7 +36,7 @@ module.exports = (sequelize) => {
         QualityControlFlag.belongsTo(models.DataPass);
         QualityControlFlag.belongsTo(models.Run);
         QualityControlFlag.belongsTo(models.FlagType);
-        QualityControlFlag.belongsTo(models.Verification);
+        QualityControlFlag.hasMany(models.Verification);
         QualityControlFlag.belongsTo(models.DetectorSubsystem);
     }
 
