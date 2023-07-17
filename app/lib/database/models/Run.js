@@ -129,7 +129,6 @@ module.exports = (sequelize) => {
         });
         Run.belongsToMany(models.DataPasses, {
             through: 'DataPass_Runs',
-            foreignKey: 'runNumber',
         });
         Run.belongsToMany(models.SimulationPasses, {
             through: 'SimulationPass_Runs',

@@ -19,9 +19,35 @@ module.exports = (sequelize) => {
             type: Sequelize.STRING,
             unique: true,
         },
+        description: {
+            type: Sequelize.TEXT, // fNlikeInSrc
+        },
+        reconstructedEvents: {
+            type: Sequelize.INTEGER,
+        },
+        outputSize: {
+            type: Sequelize.REAL,
+        },
+        lastRun: {
+            type: Sequelize.INTEGER,
+        },
+
+        // TODO
+        // - jira, ml, soft_version
+
 
     });
     DataPass.associate = (models) => {
+        DataPass.belongsTo(models.Period);
+        DataPass.belongsToMany(models.Run, {
+            through: 'DataPass_Runs',
+        });
+        DataPass.belongsToMany(models.SimulationPass, {
+            through: 'AnchoredPasses',
+        });
+        DataPass.hasMany(models.QualityControlFlag);
+
+
     };
 
     return DataPass;
