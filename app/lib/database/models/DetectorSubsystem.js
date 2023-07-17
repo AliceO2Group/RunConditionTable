@@ -28,5 +28,6 @@ module.exports = (sequelize) => {
             through: 'Run_DetectorSubsystems',
         });
     };
+    
     return DetectorSubsystem;
 }

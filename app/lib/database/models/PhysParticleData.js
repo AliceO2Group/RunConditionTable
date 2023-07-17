@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
             allowNull: false,
             unique: true,
         },
-    });
+    }, { timestamp: false });
 
     return PhysParticlesData;
 };

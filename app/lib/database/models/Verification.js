@@ -17,6 +17,7 @@ module.exports = (sequelize) => {
     const Verification = sequelize.define('Verification', {
         verifiedBy: {
             type: Sequelize.STRING,
+            allowNull: false,
         },
     });
 

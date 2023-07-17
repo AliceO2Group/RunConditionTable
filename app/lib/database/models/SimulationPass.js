@@ -41,7 +41,7 @@ module.exports = (sequelize) => {
 
         // TODO
         // -- ML
-    });
+    }, { timestamp: false });
 
     SimulationPass.associate = (models) => {
         SimulationPass.belongsToMany(models.Run, {

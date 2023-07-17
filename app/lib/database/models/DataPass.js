@@ -46,8 +46,6 @@ module.exports = (sequelize) => {
             through: 'AnchoredPasses',
         });
         DataPass.hasMany(models.QualityControlFlag);
-
-
     };
 
     return DataPass;

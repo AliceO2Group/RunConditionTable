@@ -34,7 +34,7 @@ module.exports = (sequelize) => {
             type: Sequelize.BOOLEAN,
             allowNull: false,
         },
-    });
+    }, { timestamp: false });
 
     FlagType.associate = (models) => {
         FlagType.hasMany(models.QualityControlFlag);

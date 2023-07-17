@@ -21,15 +21,19 @@ module.exports = (sequelize) => {
         },
         timeO2Start: {
             type: Sequelize.DATE,
+            allowNull: false,
         },
         timeO2End: {
             type: Sequelize.DATE,
+            allowNull: false,
         },
         timeTrgStart: {
             type: Sequelize.DATE,
+            allowNull: false,
         },
         timeTrgEnd: {
             type: Sequelize.DATE,
+            allowNull: false,
         },
         startTime: {
             type: Sequelize.VIRTUAL,
@@ -120,7 +124,7 @@ module.exports = (sequelize) => {
         // lhcPeriod
         // pdpBeamType
 
-    });
+    }, { timestamp: false });
     Run.associate = (models) => {
         Run.belongsTo(models.Period);
         Run.belongsToMany(models.DetectorSubsystem, {
@@ -133,7 +137,7 @@ module.exports = (sequelize) => {
             through: 'SimulationPass_Runs',
             foreignKey: 'runNumber',
         });
-        Run.hasMany(models.QualityControlFlag)
+        Run.hasMany(models.QualityControlFlag);
     };
 
     return Run;

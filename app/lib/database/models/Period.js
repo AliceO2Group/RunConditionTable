@@ -29,8 +29,9 @@ module.exports = (sequelize) => {
         },
         beamType: {
             type: Sequelize.STRING,
+            allowNull: false,
         }
-    })
+    }, { timestamp: false });
 
     Period.associate = (models) => {
         Period.hasMany(models.Run);
@@ -38,7 +39,7 @@ module.exports = (sequelize) => {
         Period.belongsToMany(models.SimulationPass, {
             through: 'AnchoredPeriod',
         });
-        
-    }
+    };
+    
     return Period;
 };
