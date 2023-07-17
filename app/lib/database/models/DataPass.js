@@ -14,7 +14,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const DataPass = sqi.define('DataPass', {
+    const DataPass = sequelize.define('DataPass', {
         name: {
             type: Sequelize.STRING,
             unique: true,

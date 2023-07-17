@@ -14,7 +14,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const Run = sqi.define('Run', {
+    const Run = sequelize.define('Run', {
         runNumber: {
             type: Sequelize.INTEGER,
             primaryKey: true,
