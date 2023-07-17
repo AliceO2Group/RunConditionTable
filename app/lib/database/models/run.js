@@ -125,15 +125,15 @@ module.exports = (sequelize) => {
     Run.associate = (models) => {
         Run.belongsTo(models.Period);
         Run.belongsToMany(models.Detector, {
-            through: 'Runs_Detectors',
+            through: 'Run_Detectors',
             foreignKey: 'runNumber',
         });
         Run.belongsToMany(models.DataPasses, {
-            through: 'DataPasses_Runs',
+            through: 'DataPass_Runs',
             foreignKey: 'runNumber',
         });
         Run.belongsToMany(models.SimulationPasses, {
-            through: 'SimulationPasses_Runs',
+            through: 'SimulationPass_Runs',
             foreignKey: 'runNumber',
         });
         Run.hasMany(models.QualityControlFlags)
