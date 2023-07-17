@@ -26,11 +26,13 @@ module.exports = (sequelize) => {
                 const name = this.getDataValue('name');
                 return extractPeriodYear(name);
             }
+        },
+        beamType: {
+            type: Sequelize.STRING,
         }
     })
 
     Period.associate = (models) => {
-        Period.belongsTo(models.BeamType);
         Period.hasMany(models.Run);
         Period.hasMany(models.DataPass);
         Period.belongsToMany(models.SimulationPass, {
