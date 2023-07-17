@@ -48,7 +48,7 @@ module.exports = (sequelize) => {
             through: 'SimulationPass_Runs',
         });
         SimulationPass.belongsToMany(models.DataPass, {
-            through: 'DataPass_Runs',
+            through: 'AnchoredPasses',
         });
         SimulationPass.belongsToMany(models.Period, {
             through: 'AnchoredPeriod',

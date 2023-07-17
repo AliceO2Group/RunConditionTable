@@ -1,14 +1,14 @@
 
 DB_N=testsequelize;
+    PSQLCMD="psql -h o2-rct_database -U postgres -d $DB_N "
 
 if [ "$1" = '-d' ]; then
     echo "DB recreation"
     export PGPASSWORD=postgres;
     psql -h o2-rct_database -U postgres -c "create database $DB_N";
-
-    PSQLCMD="psql -h o2-rct_database -U postgres -d $DB_N "
-    $PSQLCMD -c "drop schema if exists public; create schema public";
 fi
+
+$PSQLCMD -c "drop schema if exists public cascade; create schema public";
 
 
 NODESCRIPT="
