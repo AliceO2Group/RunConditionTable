@@ -9,6 +9,8 @@ FROM node:18.16.0-buster as base
 
 
 FROM base as development
+    RUN apt update -y && apt install -y \
+        postgresql-client
 
     CMD [ "./scripts/check-host-and-exec.sh", "o2-rct_database", "5432", "10", "--", "npm", "run", "start:dev" ]
 

@@ -44,7 +44,7 @@
     "app:pattach": "docker exec -it o2-rct_application bash",
     "db-ip": "echo $(docker inspect o2-rct_database -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')",
     "db:check": "./rctmake prune,db,build,follow -t dev -S o2-rct_database ",
-    "db:attach": "docker exec -it o2-rct_database psql -U postgres -d \"rct-db\"",
+    "db:attach": "if [ \"$RUNNING_ENV\" != 'DOCKER' ]; then docker exec -it o2-rct_database psql -U postgres -d \"rct-db\"; else export PGPASSWORD=postgres; psql -h o2-rct_database -U postgres -d \"rct-db\"; fi;",
     "db:pattach": "docker exec -it o2-rct_database /bin/bash",
     "db:clean": "./rctmake db:clean",
     "dump:make": "./rctmake dump:make -F ",
