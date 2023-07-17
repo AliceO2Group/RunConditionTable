@@ -15,7 +15,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const FlagType = sequelize.define('FalgType', {
+    const FlagType = sequelize.define('FlagType', {
         name: {
             type: Sequelize.STRING,
             unique: true,

@@ -39,9 +39,9 @@ module.exports = (sequelize) => {
         Verification,
     };
     models = Object.entries(models)
-                .map(([modelName, model]) => [modelName, model(sequelize)]) // instantiate models
-                .forEach(([_, mInstance]) => mInstance.associate?.(sequelize));
+                .map(([modelName, model]) => [modelName, model(sequelize)]); // instantiate models
+    models.forEach(([_, mInstance]) => mInstance.associate?.(sequelize.models)); // associate models
     models = Object.fromEntries(models);
-
+    
     return models;
 };

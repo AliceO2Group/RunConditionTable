@@ -126,14 +126,14 @@ module.exports = (sequelize) => {
         Run.belongsToMany(models.DetectorSubsystem, {
             through: 'Run_DetectorSubsystems',
         });
-        Run.belongsToMany(models.DataPasses, {
+        Run.belongsToMany(models.DataPass, {
             through: 'DataPass_Runs',
         });
-        Run.belongsToMany(models.SimulationPasses, {
+        Run.belongsToMany(models.SimulationPass, {
             through: 'SimulationPass_Runs',
             foreignKey: 'runNumber',
         });
-        Run.hasMany(models.QualityControlFlags)
+        Run.hasMany(models.QualityControlFlag)
     };
 
     return Run;

@@ -1,8 +1,9 @@
 
+DB_N=testsequelize;
+
 if [ "$1" = '-d' ]; then
     echo "DB recreation"
     export PGPASSWORD=postgres;
-    DB_N=testsequelize
     psql -h o2-rct_database -U postgres -c "create database $DB_N";
 
     PSQLCMD="psql -h o2-rct_database -U postgres -d $DB_N "
