@@ -12,7 +12,6 @@
  */
 
 const Sequelize = require('sequelize');
-const { RUN_QUALITIES, RunQualities } = require('../../domain/enums/RunQualities.js');
 
 module.exports = (sequelize) => {
     const Run = sqi.define('Run', {
@@ -120,8 +119,8 @@ module.exports = (sequelize) => {
 
         // lhcPeriod
         // pdpBeamType
-    });
 
+    });
     Run.associate = (models) => {
         Run.belongsTo(models.Period);
         Run.belongsToMany(models.Detector, {
