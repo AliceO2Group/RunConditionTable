@@ -20,7 +20,7 @@ const FlagType = require('./FlagType.js');
 const DetectorSubsystem = require('./DetectorSubsystem.js');
 const Meta = require('./Meta.js');
 const PhysParticleData = require('./PhysParticleData.js');
-const QulaityControlFlag = require('./QulaityControlFlag.js');
+const QualityControlFlag = require('./QualityControlFlag.js');
 const SimulationPass = require('./SimulationPass.js');
 const Verification = require('./Verification.js');
 
@@ -34,7 +34,7 @@ module.exports = (sequelize) => {
         DetectorSubsystem,
         Meta,
         PhysParticleData,
-        QulaityControlFlag,
+        QualityControlFlag,
         SimulationPass,
         Verification,
     };

@@ -13,7 +13,9 @@
  */
 
 const databaseService = require('./DatabaseService');
+const models = require('./models');
 
 module.exports = {
-    databaseService
+    databaseService,
+    models,
 }
