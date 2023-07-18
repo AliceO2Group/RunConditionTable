@@ -12,25 +12,28 @@
  */
 
 const Sequelize = require('sequelize');
-const { RUN_QUALITIES, RunQualities } = require('../../domain/enums/RunQualities.js');
 
 module.exports = (sequelize) => {
-    const Run = sqi.define('Run', {
+    const Run = sequelize.define('Run', {
         runNumber: {
             type: Sequelize.INTEGER,
             primaryKey: true,
         },
         timeO2Start: {
             type: Sequelize.DATE,
+            allowNull: false,
         },
         timeO2End: {
             type: Sequelize.DATE,
+            allowNull: false,
         },
         timeTrgStart: {
             type: Sequelize.DATE,
+            allowNull: false,
         },
         timeTrgEnd: {
             type: Sequelize.DATE,
+            allowNull: false,
         },
         startTime: {
             type: Sequelize.VIRTUAL,
@@ -120,23 +123,13 @@ module.exports = (sequelize) => {
 
         // lhcPeriod
         // pdpBeamType
-    });
 
+    }, { timestamp: false });
     Run.associate = (models) => {
         Run.belongsTo(models.Period);
-        Run.belongsToMany(models.Detector, {
-            through: 'Runs_Detectors',
-            foreignKey: 'runNumber',
+        Run.belongsToMany(models.DetectorSubsystem, {
+            through: 'Run_DetectorSubsystems',
         });
-        Run.belongsToMany(models.DataPasses, {
-            through: 'DataPasses_Runs',
-            foreignKey: 'runNumber',
-        });
-        Run.belongsToMany(models.SimulationPasses, {
-            through: 'SimulationPasses_Runs',
-            foreignKey: 'runNumber',
-        });
-        Run.hasMany(models.QualityControlFlags)
     };
 
     return Run;
