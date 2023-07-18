@@ -14,8 +14,10 @@
 
 const databaseService = require('./DatabaseService');
 const models = require('./models');
+const databaseManager = require('./DatabaseManager.js');
 
 module.exports = {
     databaseService,
     models,
+    databaseManager,
 }

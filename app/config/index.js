@@ -21,7 +21,7 @@ module.exports = Object.freeze({
 
     // App config
     winston: ResProvider.winston(),
-    database: ResProvider.database(),
+    database: { ...ResProvider.database(), dialect: 'postgres', schema: 'sequelize' },
     syncTaskAtStart: ResProvider.envOrDef('RCT_SYNC_TASK_AT_START', false, Boolean),
     rctData: require('./rct-data'),
     public: require('./public.js'),
