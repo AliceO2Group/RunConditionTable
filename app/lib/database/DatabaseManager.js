@@ -62,7 +62,7 @@ class DatabaseManager {
      * @returns {Promise} resolves once the connection has been done
      */
     async connect() {
-        this.logger.debug('Starting bookkeeping database connection');
+        this.logger.debug('Starting RunConditionTable database connection');
         const retryThrottle = 5000;
 
         let success = false;
@@ -74,12 +74,12 @@ class DatabaseManager {
             authenticationPromise.catch((error) => {
                 const retryIn = attemptTime + retryThrottle - Date.now();
                 if (!failedOnce) {
-                    this.logger.error(`Error while starting bookkeeping database connection: ${error}`);
+                    this.logger.error(`Error while starting RunConditionTable database connection: ${error}`);
                     failedOnce = true;
                 }
 
                 if (retryIn > 0) {
-                    this.logger.debug(`New bookkeeping database connection attempt in ${retryIn} ms`);
+                    this.logger.debug(`New RunConditionTable database connection attempt in ${retryIn} ms`);
                 }
             });
 
@@ -92,7 +92,7 @@ class DatabaseManager {
                 }
             });
         }
-        this.logger.debug('Bookkeeping database connected');
+        this.logger.debug('RunConditionTable database connected');
     }
 
     /**
