@@ -21,19 +21,15 @@ module.exports = (sequelize) => {
         },
         timeO2Start: {
             type: Sequelize.DATE,
-            allowNull: false,
         },
         timeO2End: {
             type: Sequelize.DATE,
-            allowNull: false,
         },
         timeTrgStart: {
             type: Sequelize.DATE,
-            allowNull: false,
         },
         timeTrgEnd: {
             type: Sequelize.DATE,
-            allowNull: false,
         },
         startTime: {
             type: Sequelize.VIRTUAL,
@@ -95,7 +91,7 @@ module.exports = (sequelize) => {
                     } else if (polFN == 'POSITIVE') {
                         return valFN;
                     } else {
-                        throw `incorrect polarity type: '${polFN}' for run: ${run.run_number}`;
+                        throw `incorrect polarity type: '${polFN}' for run: ${this.getDataValue('runNumber')}`;
                     }
                 } else {
                     return null;
@@ -113,7 +109,7 @@ module.exports = (sequelize) => {
                     } else if (polFN == 'POSITIVE') {
                         return valFN;
                     } else {
-                        throw `incorrect polarity type: '${polFN}' for run: ${run.run_number}`;
+                        throw `incorrect polarity type: '${polFN}' for run: ${this.getDataValue('runNumber')}`;
                     }
                 } else {
                     return null;
@@ -126,10 +122,10 @@ module.exports = (sequelize) => {
 
     }, { timestamp: false });
     Run.associate = (models) => {
-        Run.belongsTo(models.Period);
-        Run.belongsToMany(models.DetectorSubsystem, {
-            through: 'Run_DetectorSubsystems',
-        });
+        // Run.belongsTo(models.Period);
+        // Run.belongsToMany(models.DetectorSubsystem, {
+        //     through: 'Run_DetectorSubsystems',
+        // });
     };
 
     return Run;
