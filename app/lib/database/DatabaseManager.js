@@ -20,12 +20,9 @@ const config = require('../../config');
  * Sequelize implementation of the Database.
  */
 class DatabaseManager {
-    /**
-     * Creates a new `Sequelize Database` instance.
-     */
     constructor() {
         this.logger = new Log(DatabaseManager.name);
-        this.schema = 'sequelize';
+        this.schema = 'public';
 
         this.sequelize = new Sequelize({
             ...config.database,
@@ -41,9 +38,6 @@ class DatabaseManager {
         this._models = models(this.sequelize);
     }
 
-    /**
-     * Returns all available models.
-     */
     get models() {
         return this._models;
     }
@@ -144,7 +138,6 @@ class DatabaseManager {
         this.logger.warn('Models sync!');
 
         try {
-            await this.sequelize.createSchema(this.schema, { ifNotExists: true });
             await this.sequelize.sync();
         } catch (error) {
             this.logger.error(`Error while performing models sync: ${error}`);

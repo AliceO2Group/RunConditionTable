@@ -14,22 +14,27 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const Run = sequelize.define('Run', {
+    const Run = sequelize.define('run', {
         runNumber: {
             type: Sequelize.INTEGER,
             primaryKey: true,
+            field: 'run_number',
         },
         timeO2Start: {
             type: Sequelize.DATE,
+            field: 'time_start',
         },
         timeO2End: {
             type: Sequelize.DATE,
+            field: 'time_end',
         },
         timeTrgStart: {
             type: Sequelize.DATE,
+            field: 'time_trg_start',
         },
         timeTrgEnd: {
             type: Sequelize.DATE,
+            field: 'time_trg_end',
         },
         startTime: {
             type: Sequelize.VIRTUAL,
@@ -64,63 +69,21 @@ module.exports = (sequelize) => {
         },
         lhcBeamEnergy: {
             type: Sequelize.FLOAT,
-        },
-        lhcBeamMode: {
-            type: Sequelize.CHAR(32),
-        },
-        aliceL3Current: {
-            type: Sequelize.FLOAT,
-        },
-        aliceDipoleCurrent: {
-            type: Sequelize.FLOAT,
-        },
-        aliceL3Polarity: {
-            type: Sequelize.CHAR(32),
-        },
-        aliceDipolePolarity: {
-            type: Sequelize.CHAR(32),
+            field: 'energy_per_beam',
         },
         l3CurrentVal: {
-            type: Sequelize.VIRTUAL,
-            get() {
-                const valFN = this.getDataValue('aliceL3Current');
-                const polFN = this.getDataValue('aliceL3Polarity');
-                if (valFN && polFN) {
-                    if (polFN == 'NEGATIVE') {
-                        return - valFN;
-                    } else if (polFN == 'POSITIVE') {
-                        return valFN;
-                    } else {
-                        throw `incorrect polarity type: '${polFN}' for run: ${this.getDataValue('runNumber')}`;
-                    }
-                } else {
-                    return null;
-                }
-            }
+            type: Sequelize.FLOAT,
+            field: 'l3_current',
         },
         dipoleCurrentVal: {
-            type: Sequelize.VIRTUAL,
-            get() {
-                const valFN = this.getDataValue('aliceDipoleCurrent');
-                const polFN = this.getDataValue('aliceDipolePolarity');
-                if (valFN && polFN) {
-                    if (polFN == 'NEGATIVE') {
-                        return - valFN;
-                    } else if (polFN == 'POSITIVE') {
-                        return valFN;
-                    } else {
-                        throw `incorrect polarity type: '${polFN}' for run: ${this.getDataValue('runNumber')}`;
-                    }
-                } else {
-                    return null;
-                }
-            }
+            type: Sequelize.FLOAT,
+            field: 'dipole_current',
         },
 
         // lhcPeriod
         // pdpBeamType
 
-    }, { timestamp: false });
+    }, { timestamps: false });
     Run.associate = (models) => {
         // Run.belongsTo(models.Period);
         // Run.belongsToMany(models.DetectorSubsystem, {
