@@ -13,7 +13,7 @@
 
 const { databaseManager: { repositories: { Run } } } = require('../../database');
 
-const listRuns = async () => Run.findAll();
+const listRuns = async (req, res) => Run.findAll();
 
 module.exports = {
     listRuns,

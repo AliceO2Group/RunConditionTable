@@ -18,19 +18,28 @@ const routes = [run];
 function buildRoute(controllerTree) {
     const stack = [];
     const traversControllerTree = (cTree, path, args) => {
-        cTree.children?.forEach((ch) => traversControllerTree(ch, path, { ...args, ...ch.args }));
+        cTree.children?.forEach((ch) => traversControllerTree(ch, ch.path ? path + ch.path : path, { ...args, ...ch.args }));
+
+        const { method, controller } = cTree;
         if (cTree.method && cTree.controller) {
-            if (process.env.NODE_ENV === 'test') {
+            if (process.env.ENV_MODE === 'test') {
                 args.public = true;
             }
-            stack.push([cTree.method, path, cTree.controller, args]);
+            stack.push({ method, path, controller, args });
+        } else if (method && ! controller || ! method && controller) {
+            throw `Routers incorrect configuration for ${path}, [method: '${method}'], [controller: '${controller}']`;
         }
     };
     traversControllerTree(controllerTree, controllerTree.path, controllerTree.args);
     return stack;
 }
 
+const parseRoutes = () => routes.map(buildRoute).flat();
+const bindHttp = (httpServer) => parseRoutes().forEach((route) => {
+    httpServer[route.method](route.path, route.controller, route.args);
+});
+
 module.exports = {
-    routes,
-    creator: () => routes.map(buildRoute).flat(),
+    bindHttp,
+    parse: parseRoutes,
 };
