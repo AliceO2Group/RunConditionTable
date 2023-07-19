@@ -19,22 +19,19 @@ const { dataReqParams } = RCT;
 const { defaultDataReqParams } = RCT;
 
 export default function activeFilters(model, url) {
+    console.log(RCT.filterTypes);
     const data = model.getCurrentData();
     const dataPointer = model.getCurrentDataPointer();
     const { fields } = data;
     const baseUrl = `/?page=${dataPointer.page}&index=${dataPointer.index}`;
     const defaultUrlParams = `${dataReqParams.rowsOnSite}=${defaultDataReqParams.rowsOnSite}&${dataReqParams.site}=${defaultDataReqParams.site}`;
-    const processedUrl = url.href.split('&').filter((item) => item.includes('match') || item.includes('exclude') || item.includes('between'));
+    const filters = url.href.split('&').filter((item) => item.includes('match') || item.includes('exclude') || item.includes('between')).map((item) => ({
+        field: item.split('-')[0],
+        type: item.split('=')[0].split('-')[1],
+        search: decodeURIComponent(item.split('=')[1]),
+    }));
 
-    const activeFields = processedUrl.map((item) => {
-        return {
-            field: item.split('-')[0],
-            type: item.split('=')[0].split('-')[1],
-            filter: decodeURIComponent(item.split('=')[1])
-        }
-    });
-
-    console.log(activeFields);
+    console.log(filters);
 
     function onClear() {
         const firstField = fields.find((f) => f !== undefined && f.name);
@@ -49,12 +46,13 @@ export default function activeFilters(model, url) {
                 h('button.btn.btn-secondary.font-size-small', {
                     onclick: () => onClear(),
                 }, 'Clear all'))),
-            h('.flex-wrap.items-center.chips',
-                activeFields.map((field) => [
-                    h('div.chip.filter-chip.inline',
-                    h('.filter-field.inline', field.field),
-                    h('.filter-type.inline', field.type),
-                    h('.filter-input.inline', field.filter),
-                    h('.close-10'))
-    ]))];
+        h('.flex-wrap.items-center.chips',
+            filters.map((filter) => [
+                h('div.chip.filter-chip.inline',
+                    h('.filter-field.inline', filter.field),
+                    h('.filter-type.inline', filter.type),
+                    h('.filter-input.inline', filter.search),
+                    h('.close-10')),
+            ])),
+    ];
 }
