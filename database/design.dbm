@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="0,306" last-zoom="1" max-obj-count="31"
+<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="0,292" last-zoom="1" max-obj-count="31"
 	 default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -176,11 +176,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<columns names="name" ref-type="src-columns"/>
 	</constraint>
 </table>
-
-<sequence name="flags_types_dictionary_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
-	<schema name="public"/>
-	<role name="postgres"/>
-</sequence>
 
 <table name="flag_types_dictionary" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="public"/>

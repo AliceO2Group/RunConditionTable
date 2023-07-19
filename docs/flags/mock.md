@@ -59,7 +59,7 @@ VALUES
         ON qcf.run_number = r.run_number
     INNER JOIN detectors_subsystems AS ds
         ON ds.id = qcf.detector_id
-    INNER JOIN flags_types_dictionary as ftd
+    INNER JOIN flag_types_dictionary as ftd
         ON ftd.id = qcf.flag_type_id
     LEFT OUTER JOIN verifications as v
         ON qcf.id = v.qcf_id

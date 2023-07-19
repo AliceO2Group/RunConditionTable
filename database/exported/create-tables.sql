@@ -141,21 +141,6 @@ CREATE TABLE public.detectors_subsystems (
 ALTER TABLE public.detectors_subsystems OWNER TO postgres;
 -- ddl-end --
 
--- object: public.flags_types_dictionary_id_seq | type: SEQUENCE --
--- DROP SEQUENCE IF EXISTS public.flags_types_dictionary_id_seq CASCADE;
-CREATE SEQUENCE public.flags_types_dictionary_id_seq
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 1
-	NO CYCLE
-	OWNED BY NONE;
-
--- ddl-end --
-ALTER SEQUENCE public.flags_types_dictionary_id_seq OWNER TO postgres;
--- ddl-end --
-
 -- object: public.flag_types_dictionary | type: TABLE --
 -- DROP TABLE IF EXISTS public.flag_types_dictionary CASCADE;
 CREATE TABLE public.flag_types_dictionary (
