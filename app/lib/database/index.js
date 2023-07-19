@@ -13,7 +13,9 @@
  */
 
 const databaseService = require('./DatabaseService');
-
+const QueryBuilder = require('./QueryBuilder')
 module.exports = {
-    databaseService
-}
+    databaseService,
+    QueryBuilder,
+};
+

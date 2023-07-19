@@ -38,13 +38,16 @@ const handleBetween = (fieldName, pairsList) => {
         pairsList = [pairsList]
     }
     return pairsList.map((p) => {
-        const value = p.split(',');
-        const [left, right] = adjustValuesToSql(value);
-        if (value[0] && value[1]) {
+        const range = p.split(',');
+        if (range.length !== 2) {
+            throw 'between clause is incorrectly formatted';
+        }
+        const [left, right] = adjustValuesToSql(range);
+        if (range[0] && range[1]) {
             return `${fieldName} BETWEEN ${left} AND ${right}`;
-        } else if (value[0]) {
+        } else if (range[0]) {
             return `${fieldName} >= ${left}`;
-        } else if (value[1]) {
+        } else if (range[1]) {
             return `${fieldName} <= ${right}`;
         }
     }).join(' OR ');
@@ -129,14 +132,13 @@ class QueryBuilder {
         const viewName = pageToViewName[params.page]
         const viewGen = views[viewName]
 
-        const a = `WITH ${viewName} AS (
+        return `WITH ${viewName} AS (
                     ${viewGen(params)})
                 SELECT *
                 FROM ${viewName}
                 ${QueryBuilder.filteringPart(params)}
                 ${orderingPart(params)}
                 ${dataSubsetQueryPart(params)};`;
-        return a;
     }
 
     static buildInsertOrUpdate(params) {

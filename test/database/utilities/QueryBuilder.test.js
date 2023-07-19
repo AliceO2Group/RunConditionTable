@@ -14,6 +14,10 @@
 const QueryBuilder = require('../../../app/lib/database/QueryBuilder');
 const views = require('../../../app/lib/database/views');
 const expect = require('chai').expect;
+const database = require('../../../app/lib/database');
+const { assert } = require('chai');
+const { databaseService } = database;
+
 
 module.exports = () => {
     describe('DatabaseSuite', () => {
@@ -34,6 +38,84 @@ module.exports = () => {
                 expect(result).to.not.be.null;
                 expect(result).to.not.be.equal(expectedOutcome);
             });
+
+            it('check query syntax for filtering params for periods view - 1', async () => {
+
+                const filteringParams = {
+                    page: 'periods',
+                    'rows-on-site': '50',
+                    site: '1',
+                    sorting: '-name',
+                    'name-match': ['%c%,%a', '%C%C'],
+                    'beam-match': 'p-p',
+                };
+
+                assert.doesNotThrow( async () => {
+                    const q = QueryBuilder.buildSelect(filteringParams);
+                    await databaseService.pgExec(q);
+                });
+                
+            });
+
+            it('check query syntax for filtering params for periods view - 2', async () => {
+
+                const filteringParams = {
+                    page: 'periods',
+                    'rows-on-site': '2',
+                    site: '2',
+                    sorting: '-name',
+                    'name-match': '%c%',
+                    'beam-match': 'p-p,Pb-Pb',
+                    'year-exclude': ['2024', '2025,1999'],
+                    'year-between': ['2022,', '2222,2555', ',2055']
+                };
+
+                assert.doesNotThrow( async () => {
+                    const q = QueryBuilder.buildSelect(filteringParams);
+                    await databaseService.pgExec(q);
+                });
+            });
+
+
+            it('check query syntax for filtering params for periods view - 3 (strangely formatted params)', async () => {
+
+                const filteringParams = {
+                    page: 'periods',
+                    'rows-on-site': '2',
+                    site: '2',
+                    sorting: '-name',
+                    'name-match': '%c%',
+                    'name-exclude': ['%cccASDF%,', '%asdf,,,%asdf'],
+                    'beam-match': 'p-p,Pb-Pb',
+                    'year-exclude': ['2024', '2025'],
+                    'year-between': ['2022,', ',2555']
+
+                };
+
+                assert.doesNotThrow( async () => {
+                    const q = QueryBuilder.buildSelect(filteringParams);
+                    await databaseService.pgExec(q);
+                });
+            });
+
+            it('check INCORRECT between clause in filtering params for periods view - 4', async () => {
+
+                const filteringParams = {
+                    page: 'periods',
+                    'rows-on-site': '2',
+                    site: '2',
+                    sorting: '-name',
+                    'year-between': [',,2022,'],
+                };
+
+                assert.throws(() => {
+                    const q = QueryBuilder.buildSelect(filteringParams);
+                });
+            });
+
+
+
         });
     });
 };
+
