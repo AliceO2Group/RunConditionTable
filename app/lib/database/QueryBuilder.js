@@ -89,7 +89,6 @@ class QueryBuilder {
         const cll = Object.entries(fields2Filters).map(([fieldName, clauses]) => {
             return  Object.fromEntries(clauses.map((cl) => {
                 const [filterType, values] = cl;
-                console.log(filterType, values)
                 const cases = {
                     'between': () => handleBetween(fieldName, values),
                     'match': () => handleLike(fieldName, values, true),
@@ -101,16 +100,15 @@ class QueryBuilder {
         })
 
         const sqlWhereClause = cll.map((cl) => { // for each field
-            const mbpart = [cl.match, cl.between].filter((v) => v).join(' OR \n');
-            const expart = cl.exclude ? ' AND ' + cl.exclude : ''
-            return `${mbpart ? '(' + mbpart + ')' : ''} ${expart}`;
+            let mbpart = [cl.match, cl.between].filter((v) => v?.trim()).join(' OR \n');
+            mbpart = mbpart ? '(' + mbpart + ')' : '';
+            return [mbpart, cl.exclude].filter((c) => c).join(' AND ');
         }).join(' AND \n');
 
         return sqlWhereClause?.length > 0 ? `WHERE ${sqlWhereClause}` : '';
     }
 
     static buildSelect(params) {
-
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
 
