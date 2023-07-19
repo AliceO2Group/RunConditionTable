@@ -15,6 +15,7 @@ const { Sequelize } = require('sequelize');
 const models = require('./models');
 const { Log } = require('@aliceo2/web-ui')
 const config = require('../../config');
+const utilitiesCreator = require('./utilities');
 
 /**
  * Sequelize implementation of the Database.
@@ -35,19 +36,21 @@ class DatabaseManager {
             },
         });
 
+        this._utitlities = utilitiesCreator(this.sequelize);
         this._models = models(this.sequelize);
+    }
+
+    get utitlities() {
+        return this._utitlities;
     }
 
     get models() {
         return this._models;
     }
 
-    /**
-     * Returns all available repositories.
-     */
-    // get repositories() {
-    //     return require('./repositories');
-    // }
+    get repositories() {
+        return require('./repositories');
+    }
 
     /**
      * Performs connection to the database, and retry until success
