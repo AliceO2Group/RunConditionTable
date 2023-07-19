@@ -32,6 +32,13 @@ export default function filter(model) {
         [leftFilterPlaceholder.innerHTML, rightFilterPlaceholder.innerHTML] = types;
     }
 
+    function clearUserInput() {
+        document.getElementById('show-options-field').value = '';
+        document.getElementById('filters-opts-select').value = '';
+        document.getElementById('left-filter-input').value = '';
+        document.getElementById('right-filter-input').value = '';
+    }
+
     function onFilterSubmit() {
         const filteringTypeSelect = document.getElementById('filters-opts-select');
         const selectedType = filteringTypeSelect.options[filteringTypeSelect.selectedIndex].value;
@@ -68,10 +75,10 @@ export default function filter(model) {
         }
 
         const url = model.router.getUrl();
-        const newUrl = new URL(`${url.href}${filterPhrase}`);
-        // eslint-disable-next-line no-console
-        console.log(newUrl);
+        const newUrl = new URL(`${url.href}${url.href.includes(filterPhrase) ? '' : filterPhrase}`);
 
+        clearUserInput();
+        // FieldNameSelect
         model.router.go(newUrl);
     }
 
