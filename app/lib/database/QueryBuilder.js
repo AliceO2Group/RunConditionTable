@@ -112,7 +112,6 @@ class QueryBuilder {
     }
 
     static buildSelect(params) {
-        console.log(params);
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
 
@@ -133,14 +132,13 @@ class QueryBuilder {
         const viewName = pageToViewName[params.page]
         const viewGen = views[viewName]
 
-        const a = `WITH ${viewName} AS (
+        return `WITH ${viewName} AS (
                     ${viewGen(params)})
                 SELECT *
                 FROM ${viewName}
                 ${QueryBuilder.filteringPart(params)}
                 ${orderingPart(params)}
                 ${dataSubsetQueryPart(params)};`;
-        return a;
     }
 
     static buildInsertOrUpdate(params) {
