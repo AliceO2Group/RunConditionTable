@@ -12,5 +12,5 @@
  */
 
 module.exports = {
-    Run: require('./run.controller.js'),
+    RunController: require('./run.controller.js'),
 };

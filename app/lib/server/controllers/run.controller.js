@@ -11,6 +11,10 @@
  * or submit itself to any jurisdiction.
  */
 
-module.exports = {
+const { databaseManager: { reposotories: { Run } } } = require('../../database');
 
+const listRuns = async () => Run.findAll();
+
+module.exports = {
+    listRuns,
 };

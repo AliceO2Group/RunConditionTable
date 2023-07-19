@@ -11,6 +11,25 @@
  * or submit itself to any jurisdiction.
  */
 
-module.exports = {
+const { RunController } = require('../controllers');
 
+module.exports = {
+    path: '/runs',
+    args: { public: true },
+    children: [
+        {
+            method: 'get',
+            controller: RunController.listRuns,
+        },
+        {
+            path: ':runNumber',
+            method: 'get',
+            controller: RunController.getRun,
+        },
+        {
+            path: '/perPeriod/:period',
+            method: 'get',
+            controller: RunController.getRunsPerPeriod,
+        },
+    ],
 };
