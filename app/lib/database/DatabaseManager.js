@@ -12,9 +12,9 @@
  */
 
 const { Sequelize } = require('sequelize');
-const models = require('./models');
 const { Log } = require('@aliceo2/web-ui')
 const config = require('../../config');
+const modelsCreator = require('./models');
 const utilitiesCreator = require('./utilities');
 
 /**
@@ -37,7 +37,7 @@ class DatabaseManager {
         });
 
         this._utitlities = utilitiesCreator(this.sequelize);
-        this._models = models(this.sequelize);
+        this._models = modelsCreator(this.sequelize);
     }
 
     get utitlities() {
@@ -137,7 +137,11 @@ class DatabaseManager {
         this.logger.info('Dropped all tables!');
     }
 
-    async sequelizeSync() {
+    /**
+     * 
+     * @returns Invoke sequelize.sync()
+     */
+    async sync() {
         this.logger.warn('Models sync!');
 
         try {
