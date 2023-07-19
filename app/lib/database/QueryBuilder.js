@@ -38,13 +38,16 @@ const handleBetween = (fieldName, pairsList) => {
         pairsList = [pairsList]
     }
     return pairsList.map((p) => {
-        const value = p.split(',');
-        const [left, right] = adjustValuesToSql(value);
-        if (value[0] && value[1]) {
+        const range = p.split(',');
+        if (range.length !== 2) {
+            throw 'between clause is incorrectly formatted';
+        }
+        const [left, right] = adjustValuesToSql(range);
+        if (range[0] && range[1]) {
             return `${fieldName} BETWEEN ${left} AND ${right}`;
-        } else if (value[0]) {
+        } else if (range[0]) {
             return `${fieldName} >= ${left}`;
-        } else if (value[1]) {
+        } else if (range[1]) {
             return `${fieldName} <= ${right}`;
         }
     }).join(' OR ');
@@ -109,6 +112,7 @@ class QueryBuilder {
     }
 
     static buildSelect(params) {
+        console.log(params);
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
 
