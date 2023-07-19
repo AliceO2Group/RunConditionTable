@@ -21,7 +21,7 @@ const flag_insert = (query) => `
     BEGIN
         select id into pass_id from data_passes where name = '${query.data_pass_name}';
         select id into det_id from detectors_subsystems where name = '${query.detector}';
-        select id into flag_id from flags_types_dictionary where name = '${query.flag_type}';
+        select id into flag_id from flag_types_dictionary where name = '${query.flag_type}';
 
         INSERT INTO quality_control_flags (data_pass_id, run_number, detector_id, flag_type_id, 
             time_start, time_end, comment, added_by, addition_time, last_modified_by, last_modification_time)
