@@ -15,8 +15,7 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../../config.js';
 
-const { dataReqParams } = RCT;
-const { defaultDataReqParams } = RCT;
+const { dataReqParams, defaultDataReqParams, filterTypes } = RCT;
 
 export default function activeFilters(model, url) {
     const data = model.getCurrentData();
@@ -25,7 +24,7 @@ export default function activeFilters(model, url) {
     const baseUrl = `/?page=${dataPointer.page}&index=${dataPointer.index}`;
     const defaultUrlParams = `${dataReqParams.rowsOnSite}=${defaultDataReqParams.rowsOnSite}&${dataReqParams.site}=${defaultDataReqParams.site}`;
 
-    const isFilterExpression = (item) => Object.values(RCT.filterTypes).reduce((acc, curr) => acc || item.includes(curr), false);
+    const isFilterExpression = (item) => Object.values(filterTypes).reduce((acc, curr) => acc || item.includes(curr), false);
 
     const filterField = (filterString) => filterString.split('-')[0];
     const filterType = (filterString) => filterString.split('=')[0].split('-')[1];
@@ -44,7 +43,11 @@ export default function activeFilters(model, url) {
     }
 
     function onClearFilter(filter) {
-        const newUrl = url.href.replace(`&${url.href.split('&').filter((item) => isFilterExpression(item)).filter((item) => filterField(item) === filter.field && filterType(item) === filter.type && filterSearch(item) === filter.search)}`, '');
+        const filterExpressions = url.href.split('&').filter((item) => isFilterExpression(item));
+        const newUrl = url.href.replace(`&${filterExpressions.filter((item) =>
+            filterField(item) === filter.field &&
+            filterType(item) === filter.type &&
+            filterSearch(item) === filter.search)}`, '');
         model.router.go(newUrl);
     }
 
