@@ -36,12 +36,12 @@ class DatabaseManager {
             },
         });
 
-        this._utitlities = utilitiesCreator(this.sequelize);
+        this._utilities = utilitiesCreator(this.sequelize);
         this._models = modelsCreator(this.sequelize);
     }
 
-    get utitlities() {
-        return this._utitlities;
+    get utilities() {
+        return this._utilities;
     }
 
     get models() {
@@ -49,7 +49,7 @@ class DatabaseManager {
     }
 
     get repositories() {
-        return require('./repositories');
+        return require('./repositories')(this.sequelize);
     }
 
     /**

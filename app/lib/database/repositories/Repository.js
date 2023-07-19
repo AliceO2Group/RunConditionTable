@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { utilities: { QueryBuilder } } = require('../');
+const { databaseManager: { utilities: { QueryBuilder } } } = require('../');
 
 /**
  * Sequelize implementation of the Repository.
