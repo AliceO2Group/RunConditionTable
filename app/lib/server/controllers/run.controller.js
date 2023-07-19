@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { databaseManager: { reposotories: { Run } } } = require('../../database');
+const { databaseManager: { repositories: { Run } } } = require('../../database');
 
 const listRuns = async () => Run.findAll();
 
