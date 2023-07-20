@@ -12,12 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 const viewTypes = require('./viewTypes.js');
-const { periodFieldNames, runFieldNames, dataPassFieldNames } = require('./viewFieldNames');
+const { periodFieldNames, runFieldNames, dataPassFieldNames, mcFieldNames } = require('./viewFieldNames');
 
 const fieldNames = {};
 
 fieldNames[viewTypes.periods] = periodFieldNames;
 fieldNames[viewTypes.runs] = runFieldNames;
 fieldNames[viewTypes.dataPasses] = dataPassFieldNames;
+fieldNames[viewTypes.mc] = mcFieldNames;
 
 module.exports = fieldNames;

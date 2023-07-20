@@ -15,9 +15,11 @@
 const periodFieldNames = require('./periodFieldNames.js');
 const runFieldNames = require('./runFieldNames.js');
 const dataPassFieldNames = require('./dataPassFieldNames.js');
+const mcFieldNames = require('./mcFieldNames.js');
 
 module.exports = {
     periodFieldNames,
     runFieldNames,
     dataPassFieldNames,
+    mcFieldNames,
 };

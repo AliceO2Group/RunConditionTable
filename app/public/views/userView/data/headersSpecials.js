@@ -78,14 +78,15 @@ const headersSpecials = {
 
 const runFieldNames = Object.keys(fN.runs).reduce((acc, field) => ({ ...acc, [field]: fN.runs[field].fieldName }), {});
 const dpFieldNames = Object.keys(fN.dataPasses).reduce((acc, field) => ({ ...acc, [field]: fN.dataPasses[field].fieldName }), {});
+const mcFieldNames = Object.keys(fN.mc).reduce((acc, field) => ({ ...acc, [field]: fN.mc[field].fieldName }), {});
 
 const fieldNames = {
     periods: periodFields,
     runsPerPeriod: runFieldNames,
-    mc: mcFields,
+    mc: mcFieldNames,
     dataPasses: dpFieldNames,
     anchoredPerMC: dpFieldNames,
-    anchoragePerDatapass: mcFields,
+    anchoragePerDatapass: mcFieldNames,
     runsPerDataPass: runFieldNames,
     flags: flagFields,
 };
