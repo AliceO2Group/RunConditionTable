@@ -11,9 +11,9 @@
  * or submit itself to any jurisdiction.
  */
 
-const { databaseManager: { repositories: { Run } } } = require('../../database');
+const { databaseManager: { repositories: { RunRepository } } } = require('../../database');
 
-const listRuns = async (req, res) => res.json(await Run.findAll()); // TODO DTO
+const listRuns = async (req, res) => res.json(await RunRepository.findAll()); // TODO DTO
 
 module.exports = {
     listRuns,
