@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../../config.js';
-import FilterInputValidation from '../../../../../utils/FilterInputValidation.js';
+import { sqlWildCard } from '../../../../../utils/filtering/filterUtils.js';
 
 const { dataReqParams, defaultDataReqParams, filterTypes } = RCT;
 
@@ -33,8 +33,8 @@ export default function activeFilters(model, url) {
         const rawSearch = decodeURIComponent(filterString.split('=')[1]);
         const type = filterType(filterString);
         if ((type === filterTypes.exclude || type === filterTypes.match) &&
-            rawSearch.charAt() === FilterInputValidation.sqlWildCard() &&
-            rawSearch.charAt(rawSearch.length - 1) === FilterInputValidation.sqlWildCard()) {
+            rawSearch.charAt() === sqlWildCard &&
+            rawSearch.charAt(rawSearch.length - 1) === sqlWildCard) {
             return rawSearch.slice(1, -1);
         }
         return rawSearch;
