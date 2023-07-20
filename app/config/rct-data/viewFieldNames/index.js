@@ -15,5 +15,5 @@
 const periodFieldNames = require('./periodFieldNames.js');
 
 module.exports = {
-    periodFieldNames
+    periodFieldNames,
 };

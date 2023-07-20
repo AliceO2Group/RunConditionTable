@@ -15,21 +15,21 @@ const { filterInputTypes } = require('../filterTypes.js');
 
 const periodFieldNames = {
     name: {
-        fieldName: "Name",
+        fieldName: 'Name',
         filterInput: filterInputTypes.text,
     },
     year: {
-        fieldName: "Year",
+        fieldName: 'Year',
         filterInput: filterInputTypes.number,
     },
     beam: {
-        fieldName: "Beam",
-        filterInput: filterInputTypes.text
+        fieldName: 'Beam',
+        filterInput: filterInputTypes.text,
     },
     energy: {
-        fieldName: "Mean energy [GeV]",
+        fieldName: 'Mean energy [GeV]',
         filterInput: filterInputTypes.number,
-    }
-}
+    },
+};
 
 module.exports = periodFieldNames;

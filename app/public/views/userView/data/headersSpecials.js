@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 const { fieldNames: fN } = RCT;
 
-const periodFields = Object.keys(fN.periods).reduce((acc, field) => ({ ...acc, [field]: fN.periods[field].fieldName} ), {});
+const periodFields = Object.keys(fN.periods).reduce((acc, field) => ({ ...acc, [field]: fN.periods[field].fieldName }), {});
 
 const runFields = {
     name: 'Name',
@@ -36,7 +36,7 @@ const runFields = {
     dipole_current: 'Dipole [A]',
 };
 
-const runFieldNames = Object.keys(fN.runs).reduce((acc, field) => ({ ...acc, [field]: fN.runs[field].fieldName} ), {});
+const runFieldNames = Object.keys(fN.runs).reduce((acc, field) => ({ ...acc, [field]: fN.runs[field].fieldName }), {});
 
 const dpFields = {
     name: 'Name',
