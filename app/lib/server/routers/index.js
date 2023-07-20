@@ -51,6 +51,11 @@ function buildRoute(controllerTree) {
 const routes = routeTrees.map(buildRoute).flat();
 docsRouter.routesAbstractionController.provideRoutesForApiDocs(routes);
 
+/**
+ * Take WebUi http server and bind all endpoints
+ * @param {HttpServer} httpServer server
+ * @return {undefined}
+ */
 const bindApiEndpoints = (httpServer) => routes.forEach((route) => {
     if (route.args) {
         httpServer[route.method](route.path, route.controller, route.args);
