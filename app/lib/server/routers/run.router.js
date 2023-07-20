@@ -20,7 +20,7 @@ module.exports = {
         {
             method: 'get',
             controller: RunController.listRuns,
-            description: 'List all runs in present in DB',
+            description: 'List all runs which are present in DB',
         },
     ],
 };

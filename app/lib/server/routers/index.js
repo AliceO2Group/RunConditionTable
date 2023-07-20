@@ -29,7 +29,7 @@ function buildRoute(controllerTree) {
 
         const { method, controller, description } = cTree;
         if (cTree.method && cTree.controller) {
-            if (process.env.ENV_MODE === 'test') {
+            if (process.env.ENV_MODE === 'test' || process.env.ENV_MODE === 'dev') {
                 args.public = true;
             }
             stack.push({ method, path, controller, args, description });
@@ -43,13 +43,23 @@ function buildRoute(controllerTree) {
 
 const routes = routeTrees.map(buildRoute).flat();
 const getApiDocsAsJson = () => routes.map(({ method, path, description }) => ({ method, path, description }));
+routes.push({ // Add one endpoint for listint docs
+    path: '/docs',
+    method: 'get',
+    args: { public: true },
+    controller: (req, res) => res.json(getApiDocsAsJson()),
+    description: 'Return api docs',
+});
 
-const bindHttp = (httpServer) => routes.forEach((route) => {
-    httpServer[route.method](route.path, route.controller, route.args);
+const bindApiEndpoints = (httpServer) => routes.forEach((route) => {
+    if (route.args) {
+        httpServer[route.method](route.path, route.controller, route.args);
+    } else {
+        httpServer[route.method](route.path, route.controller);
+    }
 });
 
 module.exports = {
-    bindHttp,
+    bindApiEndpoints,
     routes,
-    docs: getApiDocsAsJson,
 };

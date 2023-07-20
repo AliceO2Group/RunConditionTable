@@ -15,6 +15,7 @@ const { HttpServer } = require('@aliceo2/web-ui');
 const AuthControlManager = require('./AuthControlManager.js');
 const path = require('path');
 const config = require('../config/configProvider.js');
+const { bindApiEndpoints } = require('./routers');
 
 const EP = config.public.endpoints;
 
@@ -29,6 +30,7 @@ class WebUiServer {
         this.httpServer = new HttpServer(config.http, config.jwt, config.openId ? config.openId : null);
         this.defineStaticRoutes();
         this.buildAuthControl();
+        bindApiEndpoints(this.httpServer);
     }
 
     /**
