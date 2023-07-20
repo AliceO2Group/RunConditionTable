@@ -79,17 +79,7 @@ module.exports = (sequelize) => {
             type: Sequelize.FLOAT,
             field: 'dipole_current',
         },
-
-        // lhcPeriod
-        // pdpBeamType
-
     }, { timestamps: false });
-    Run.associate = (models) => {
-        // Run.belongsTo(models.Period);
-        // Run.belongsToMany(models.DetectorSubsystem, {
-        //     through: 'Run_DetectorSubsystems',
-        // });
-    };
-
+    
     return Run;
 };
