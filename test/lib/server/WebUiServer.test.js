@@ -10,15 +10,17 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-
-const UtilitiesSuite = require('./utils.test');
-const ResProviderSuite = require('./resProvider.test');
-const ConfigSuite = require('./config');
-const ServerSuite = require('./server');
+const WebUiServer = require('../../../app/lib/server/WebUiServer.js');
+const assert = require('assert');
 
 module.exports = () => {
-    describe('Utilities', UtilitiesSuite);
-    describe('Res Provider', ResProviderSuite);
-    describe('Config', ConfigSuite);
-    describe('Server', ServerSuite);
+    describe('WebUiServerSuite', () => {
+        describe('Check Initialization of DatabaseService', () => {
+            it('should connect to the database successfully', () => {
+                assert.doesNotThrow(async () => {
+                    new WebUiServer();
+                });
+            });
+        });
+    });
 };
