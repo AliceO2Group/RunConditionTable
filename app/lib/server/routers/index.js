@@ -28,23 +28,24 @@ const checkPath = (path) => {
 };
 
 function buildRoute(controllerTree) {
-    const stack = [];
-    const traversControllerTree = (cTree, path, args) => {
-        cTree.children?.forEach((ch) => traversControllerTree(ch, ch.path ? path + checkPath(ch.path) : path, { ...args, ...ch.args }));
+    const routesStack = [];
+    const parseControllerTree = (constrollerSubtree, path, args) => {
+        constrollerSubtree.children
+            ?.forEach((ch) => parseControllerTree(ch, ch.path ? path + checkPath(ch.path) : path, { ...args, ...ch.args }));
 
-        const { method, controller, description } = cTree;
-        if (cTree.method && cTree.controller) {
+        const { method, controller, description } = constrollerSubtree;
+        if (constrollerSubtree.method && constrollerSubtree.controller) {
             if (process.env.ENV_MODE === 'test' || process.env.ENV_MODE === 'dev') {
                 args.public = true;
             }
-            stack.push({ method, path, controller, args, description });
+            routesStack.push({ method, path, controller, args, description });
         } else if (method && ! controller || ! method && controller) {
             throw `Routers incorrect configuration for ${path}, [method: '${method}'], [controller: '${controller}']`;
         }
     };
-    traversControllerTree(controllerTree, controllerTree.path, controllerTree.args);
+    parseControllerTree(controllerTree, controllerTree.path, controllerTree.args);
 
-    return stack;
+    return routesStack;
 }
 
 const routes = routeTrees.map(buildRoute).flat();
