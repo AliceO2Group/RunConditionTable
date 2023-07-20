@@ -44,12 +44,15 @@ const runFieldNames = {
     },
     ir: {
         fieldName: 'IR [Hz]',
+        filterInput: filterInputTypes.number,
     },
     filling_scheme: {
         fieldName: 'Filling scheme',
+        filterInput: filterInputTypes.text,
     },
     triggers_conf: {
         fieldName: 'Triggers configuration',
+        filterInput: filterInputTypes.text,
     },
     fill_number: {
         fieldName: 'Fill number',
@@ -57,6 +60,7 @@ const runFieldNames = {
     },
     run_type: {
         fieldName: 'Run type',
+        filterInput: filterInputTypes.text,
     },
     mu: {
         fieldName: '\u03BC',
