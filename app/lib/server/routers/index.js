@@ -12,8 +12,13 @@
  */
 
 const run = require('./run.router.js');
+const metaRouter = require('./meta.router.js');
 
-const routeTrees = [run];
+const routeTrees = [
+    run,
+    metaRouter,
+];
+
 const checkPath = (path) => {
     if (! /^(\/((:[^/: ]+)|([^/: ])+))+$/.test(path)) { // Constraints for endpoint defintions
         throw `Incorrecctly formatted path <${path}>`;
@@ -42,14 +47,7 @@ function buildRoute(controllerTree) {
 }
 
 const routes = routeTrees.map(buildRoute).flat();
-const getApiDocsAsJson = () => routes.map(({ method, path, description }) => ({ method, path, description }));
-routes.push({ // Add one endpoint for listint docs
-    path: '/docs',
-    method: 'get',
-    args: { public: true },
-    controller: (req, res) => res.json(getApiDocsAsJson()),
-    description: 'Return api docs',
-});
+metaRouter.routesManagementHelper.provideRoutes(routes);
 
 const bindApiEndpoints = (httpServer) => routes.forEach((route) => {
     if (route.args) {
