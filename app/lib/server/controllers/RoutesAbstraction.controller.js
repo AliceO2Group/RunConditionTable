@@ -13,7 +13,10 @@
 
 const getApiDocsAsJson = (routes) => routes.map(({ method, path, description }) => ({ method, path, description }));
 
-class RoutesAbstration {
+/**
+ * C
+ */
+class RoutesAbstraction {
     constructor() {
         this.apiDocsJson = null;
     }
@@ -27,4 +30,4 @@ class RoutesAbstration {
     }
 }
 
-module.exports = new RoutesAbstration();
+module.exports = new RoutesAbstraction();
