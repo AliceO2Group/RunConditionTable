@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 import { RCT } from '../../config.js';
-const { filterTypes, fieldNames } = RCT;
+const { filterTypes, fieldNames, filterInputTypes } = RCT;
 const sqlWildCard = '%';
 
 export const filterField = (filterString) => filterString.split('-')[0];
@@ -33,7 +33,7 @@ export const filterSearch = (filterString) => {
 export const isFilterExpression = (item) => Object.values(filterTypes).reduce((acc, curr) => acc || item.includes(curr), false);
 
 export const wrappedUserInput = (input, field, page) => {
-    const wrap = fieldNames[page][field].filterInput === 'text' ? '%' : '';
+    const wrap = fieldNames[page][field].filterInput === filterInputTypes.text ? sqlWildCard : '';
     return `${wrap}${input}${wrap}`;
 };
 
