@@ -21,3 +21,10 @@ export function replaceUrlParams(url, entries) {
     const search = `?${Object.entries(currentParams).map(([k, v]) => `${k}=${v}`).join('&')}`;
     return new URL(url.origin + url.pathname + search);
 }
+
+export function urlSearchToParamsObject(search) {
+    if (search[0] !== '?') {
+        throw 'incorrect argument';
+    }
+    return Object.fromEntries(search.slice(2).split('&').map((ent) => ent.split('=')));
+}
