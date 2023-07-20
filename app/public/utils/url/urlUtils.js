@@ -11,29 +11,13 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-import { RCT } from "../../config";
-const { filterTypes } = RCT;
-const sqlWildCard = '%';
 
-export const filterField = (filterString) => filterString.split('-')[0];
-
-export const filterType = (filterString) => filterString.split('=')[0].split('-')[1];
-
-export const filterSearch = (filterString) => {
-    const rawSearch = decodeURIComponent(filterString.split('=')[1]);
-    const type = filterType(filterString);
-    if ((type === filterTypes.exclude || type === filterTypes.match) &&
-        rawSearch.charAt() === sqlWildCard &&
-        rawSearch.charAt(rawSearch.length - 1) === sqlWildCard) {
-        return rawSearch.slice(1, -1);
+export function replaceUrlParams(url, entries) {
+    const currentParams = Object.fromEntries(url.searchParams.entries());
+    for (const [k, v] of entries) {
+        currentParams[k] = v;
     }
-    return rawSearch;
-};
 
-export const isFilterExpression = (item) => Object.values(filterTypes).reduce((acc, curr) => acc || item.includes(curr), false);
-
-export const filtersFromUrl = (url) => url.href.split('&').filter((item) => isFilterExpression(item)).map((item) => ({
-    field: filterField(item),
-    type: filterType(item),
-    search: filterSearch(item),
-}));
+    const search = `?${Object.entries(currentParams).map(([k, v]) => `${k}=${v}`).join('&')}`;
+    return new URL(url.origin + url.pathname + search);
+}

@@ -12,9 +12,8 @@
  */
 
 const req = require('esm')(module)
-const { filterField } = req('../../../app/public/utils/filtering/filterUtils');
 const assert = require('assert');
-const { filterType } = require('../../../app/public/utils/filtering/filterUtils');
+const { filterField, filterType, filterSearch } = require('../../../app/public/utils/filtering/filterUtils');
 
 module.exports = () => {
     const filterString='name-match=%LHC%';
@@ -26,7 +25,6 @@ module.exports = () => {
     });
 
     describe('Filter type', () => {
-        const filterString='name-match=%LHC%';
         it('should return correct value', () => {
             assert(filterType(filterString) === "match");
         });

@@ -15,7 +15,7 @@
 import { RemoteData, Loader } from '/js/src/index.js';
 
 import FetchedData from './FetchedData.js';
-import { replaceUrlParams } from '../../../utils/utils.js';
+import { replaceUrlParams } from '../../utils/url/urlUtils.js';
 import { RCT } from '../../../config.js';
 const { dataReqParams } = RCT;
 const { pageNames } = RCT;

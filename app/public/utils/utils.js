@@ -20,16 +20,6 @@ export const reduceSerialIf = (
         .reduce((acc, ent) =>
             accFunction(acc, ent[1] ? ent[0][0] : ent[0][1]), initValue);
 
-export function replaceUrlParams(url, entries) {
-    const currentParams = Object.fromEntries(url.searchParams.entries());
-    for (const [k, v] of entries) {
-        currentParams[k] = v;
-    }
-
-    const search = `?${Object.entries(currentParams).map(([k, v]) => `${k}=${v}`).join('&')}`;
-    return new URL(url.origin + url.pathname + search);
-}
-
 export function range(from, to) {
     return Array.from({ length: to - from }, (v, k) => k + from);
 }

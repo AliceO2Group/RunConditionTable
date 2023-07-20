@@ -13,7 +13,7 @@
  */
 
 import viewButton from '../common/viewButton.js';
-import { replaceUrlParams } from '../../utils/utils.js';
+import { replaceUrlParams } from '../../utils/url/urlUtils.js';
 import { h, iconChevronBottom } from '/js/src/index.js';
 import itemsCounter from '../../views/userView/data/table/items-counter.js';
 import { RCT } from '../../config.js';
