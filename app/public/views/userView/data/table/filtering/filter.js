@@ -63,7 +63,7 @@ export default function filter(model) {
         } else {
             const matchPhrase = leftFilterInput ? `${fieldNameValue}-${leftFilterType}=%${leftFilterInput}%` : '';
             const matchFilterPhrase = `&${encodeURI(matchPhrase)}`;
-            console.log(filterPhrase);
+
             if (! url.href.includes(matchFilterPhrase)) {
                 filterPhrase += matchFilterPhrase;
             }

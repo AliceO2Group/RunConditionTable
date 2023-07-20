@@ -32,6 +32,10 @@ export const filterSearch = (filterString) => {
 
 export const isFilterExpression = (item) => Object.values(filterTypes).reduce((acc, curr) => acc || item.includes(curr), false);
 
+export const anyFiltersActive = (url) => url.href.includes(filterTypes.match) ||
+        url.href.includes(filterTypes.exclude) ||
+        url.href.includes(filterTypes.between);
+
 export const filtersFromUrl = (url) => url.href.split('&').filter((item) => isFilterExpression(item)).map((item) => ({
     field: filterField(item),
     type: filterType(item),
