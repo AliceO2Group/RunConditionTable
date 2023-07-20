@@ -129,7 +129,7 @@ export default function tablePanel(model, runs, detectors) {
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
-                : noDataView(model, dataPointer, anyFiltersActive),
+                : noDataView(model, dataPointer, anyFiltersActive(url)),
             h('.modal', { id: 'pageSettingsModal' },
                 h('.modal-content.abs-center.p3', {
                     id: 'pageSettingsModalContent',
