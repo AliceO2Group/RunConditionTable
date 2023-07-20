@@ -13,19 +13,26 @@
 
 const run = require('./run.router.js');
 
-const routes = [run];
+const routeTrees = [run];
+const checkPath = (path) => {
+    if (! /^(\/((:[^/: ]+)|([^/: ])+))+$/.test(path)) { // Constraints for endpoint defintions
+        throw `Incorrecctly formatted path <${path}>`;
+    } else {
+        return path;
+    }
+};
 
 function buildRoute(controllerTree) {
     const stack = [];
     const traversControllerTree = (cTree, path, args) => {
-        cTree.children?.forEach((ch) => traversControllerTree(ch, ch.path ? path + ch.path : path, { ...args, ...ch.args }));
+        cTree.children?.forEach((ch) => traversControllerTree(ch, ch.path ? path + checkPath(ch.path) : path, { ...args, ...ch.args }));
 
-        const { method, controller } = cTree;
+        const { method, controller, description } = cTree;
         if (cTree.method && cTree.controller) {
             if (process.env.ENV_MODE === 'test') {
                 args.public = true;
             }
-            stack.push({ method, path, controller, args });
+            stack.push({ method, path, controller, args, description });
         } else if (method && ! controller || ! method && controller) {
             throw `Routers incorrect configuration for ${path}, [method: '${method}'], [controller: '${controller}']`;
         }
@@ -34,12 +41,15 @@ function buildRoute(controllerTree) {
     return stack;
 }
 
-const parseRoutes = () => routes.map(buildRoute).flat();
-const bindHttp = (httpServer) => parseRoutes().forEach((route) => {
+const routes = routeTrees.map(buildRoute).flat();
+const getApiDocsAsJson = () => routes.map(({ method, path, description }) => ({ method, path, description }));
+
+const bindHttp = (httpServer) => routes.forEach((route) => {
     httpServer[route.method](route.path, route.controller, route.args);
 });
 
 module.exports = {
     bindHttp,
-    parse: parseRoutes,
+    routes,
+    docs: getApiDocsAsJson,
 };
