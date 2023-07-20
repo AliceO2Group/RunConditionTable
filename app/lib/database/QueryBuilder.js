@@ -38,13 +38,16 @@ const handleBetween = (fieldName, pairsList) => {
         pairsList = [pairsList]
     }
     return pairsList.map((p) => {
-        const value = p.split(',');
-        const [left, right] = adjustValuesToSql(value);
-        if (value[0] && value[1]) {
+        const range = p.split(',');
+        if (range.length !== 2) {
+            throw 'between clause is incorrectly formatted';
+        }
+        const [left, right] = adjustValuesToSql(range);
+        if (range[0] && range[1]) {
             return `${fieldName} BETWEEN ${left} AND ${right}`;
-        } else if (value[0]) {
+        } else if (range[0]) {
             return `${fieldName} >= ${left}`;
-        } else if (value[1]) {
+        } else if (range[1]) {
             return `${fieldName} <= ${right}`;
         }
     }).join(' OR ');
@@ -89,7 +92,6 @@ class QueryBuilder {
         const cll = Object.entries(fields2Filters).map(([fieldName, clauses]) => {
             return  Object.fromEntries(clauses.map((cl) => {
                 const [filterType, values] = cl;
-                console.log(filterType, values)
                 const cases = {
                     'between': () => handleBetween(fieldName, values),
                     'match': () => handleLike(fieldName, values, true),
@@ -101,16 +103,15 @@ class QueryBuilder {
         })
 
         const sqlWhereClause = cll.map((cl) => { // for each field
-            const mbpart = [cl.match, cl.between].filter((v) => v).join(' OR \n');
-            const expart = cl.exclude ? ' AND ' + cl.exclude : ''
-            return `${mbpart ? '(' + mbpart + ')' : ''} ${expart}`;
+            let mbpart = [cl.match, cl.between].filter((v) => v?.trim()).join(' OR \n');
+            mbpart = mbpart ? '(' + mbpart + ')' : '';
+            return [mbpart, cl.exclude].filter((c) => c).join(' AND ');
         }).join(' AND \n');
 
         return sqlWhereClause?.length > 0 ? `WHERE ${sqlWhereClause}` : '';
     }
 
     static buildSelect(params) {
-
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
             `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
 
@@ -131,14 +132,13 @@ class QueryBuilder {
         const viewName = pageToViewName[params.page]
         const viewGen = views[viewName]
 
-        const a = `WITH ${viewName} AS (
+        return `WITH ${viewName} AS (
                     ${viewGen(params)})
                 SELECT *
                 FROM ${viewName}
                 ${QueryBuilder.filteringPart(params)}
                 ${orderingPart(params)}
                 ${dataSubsetQueryPart(params)};`;
-        return a;
     }
 
     static buildInsertOrUpdate(params) {
