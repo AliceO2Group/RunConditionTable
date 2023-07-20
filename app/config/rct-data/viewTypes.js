@@ -11,6 +11,7 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+const pageNames = require('./pageNames.js');
 
 const viewTypes = {
     periods: 'periods',
@@ -20,4 +21,12 @@ const viewTypes = {
     flags: 'flags',
 };
 
-module.exports = viewTypes;
+const pagesViewGroups = {
+    periods: [pageNames.periods],
+    runs: [pageNames.runsPerDataPass, pageNames.runsPerPeriod],
+    dataPasses: [pageNames.anchoredPerMC, pageNames.dataPasses],
+    mc: [pageNames.mc, pageNames.anchoragePerDatapass],
+    flags: [pageNames.flags],
+};
+
+module.exports = { viewTypes, pagesViewGroups };

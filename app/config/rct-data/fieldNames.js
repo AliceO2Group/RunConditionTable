@@ -11,7 +11,7 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const viewTypes = require('./viewTypes.js');
+const { viewTypes } = require('./viewTypes.js');
 const { periodFieldNames, runFieldNames, dataPassFieldNames, mcFieldNames } = require('./viewFieldNames');
 
 const fieldNames = {};
