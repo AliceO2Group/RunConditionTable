@@ -16,12 +16,15 @@
 import { h } from '/js/src/index.js';
 import { getFieldName } from '../../headersSpecials.js';
 import { RCT } from '../../../../../config.js';
+import FilterInputValidation from '../../../../../utils/FilterInputValidation.js';
 const { filterTypes } = RCT;
 
 export default function filter(model) {
     const data = model.getCurrentData();
     const { fields } = data;
     const url = model.router.getUrl();
+    const sqlWildCard = FilterInputValidation.sqlWildCard();
+    console.log(sqlWildCard);
 
     function onFilteringTypeChange() {
         const filteringTypeSelect = document.getElementById('filters-opts-select');

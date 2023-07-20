@@ -14,6 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../../config.js';
+import FilterInputValidation from '../../../../../utils/FilterInputValidation.js';
 
 const { dataReqParams, defaultDataReqParams, filterTypes } = RCT;
 
@@ -28,7 +29,16 @@ export default function activeFilters(model, url) {
 
     const filterField = (filterString) => filterString.split('-')[0];
     const filterType = (filterString) => filterString.split('=')[0].split('-')[1];
-    const filterSearch = (filterString) => decodeURIComponent(filterString.split('=')[1]);
+    const filterSearch = (filterString) => {
+        const rawSearch = decodeURIComponent(filterString.split('=')[1]);
+        const type = filterType(filterString);
+        if ((type === filterTypes.exclude || type === filterTypes.match) &&
+            rawSearch.charAt() === FilterInputValidation.sqlWildCard() &&
+            rawSearch.charAt(rawSearch.length - 1) === FilterInputValidation.sqlWildCard()) {
+            return rawSearch.slice(1, -1);
+        }
+        return rawSearch;
+    };
 
     const filters = url.href.split('&').filter((item) => isFilterExpression(item)).map((item) => ({
         field: filterField(item),
