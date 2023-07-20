@@ -13,7 +13,7 @@
 
 const req = require('esm')(module)
 const assert = require('assert');
-const { filterField, filterType, filterSearch } = require('../../../app/public/utils/filtering/filterUtils');
+const { filterField, filterType } = require('../../../app/public/utils/filtering/filterUtils');
 
 module.exports = () => {
     const filterString='name-match=%LHC%';
