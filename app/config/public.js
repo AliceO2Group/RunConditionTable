@@ -12,14 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
-const { roles, flags: flagsTypes, detectors } = require('./rct-data');
+const { roles, flags: flagsTypes, detectors, pageNames, filterTypes, filterInput } = require('./rct-data');
 
 module.exports = { // Properties that will be provided to frontend in the public folder
-    filterTypes: {
-        match: 'match',
-        exclude: 'exclude',
-        between: 'between',
-    },
+    filterTypes: filterTypes,
+    filterInput: filterInput,
 
     roles,
     flagsTypes,
@@ -58,16 +55,7 @@ module.exports = { // Properties that will be provided to frontend in the public
         fields: 'fields',
     },
 
-    pageNames: {
-        periods: 'periods',
-        dataPasses: 'dataPasses',
-        mc: 'mc',
-        anchoredPerMC: 'anchoredPerMC',
-        anchoragePerDatapass: 'anchoragePerDatapass',
-        runsPerPeriod: 'runsPerPeriod',
-        runsPerDataPass: 'runsPerDataPass',
-        flags: 'flags',
-    },
+    pageNames: pageNames,
 
     operationsNames: {
         flag_insert: 'flags_insert',

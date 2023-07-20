@@ -11,21 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
-import { RCT } from '../config.js';
-
-/*
- *Const { pageNames: PN } = RCT;
- *const { dataReqParams: DRP } = RCT;
- *
- */
-
 export default class FilterInputValidation {
     static sqlWildCard() {
         return '%';
-    }
-
-    static isValid(inputId, fieldId) {
-        console.log(inputId, fieldId);
-        return false;
     }
 }
