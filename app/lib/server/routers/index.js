@@ -11,12 +11,12 @@
  * or submit itself to any jurisdiction.
  */
 
-const run = require('./run.router.js');
-const metaRouter = require('./meta.router.js');
+const runRouter = require('./run.router.js');
+const docsRouter = require('./docs.router.js');
 
 const routeTrees = [
-    run,
-    metaRouter,
+    docsRouter,
+    runRouter,
 ];
 
 const checkPath = (path) => {
@@ -43,11 +43,12 @@ function buildRoute(controllerTree) {
         }
     };
     traversControllerTree(controllerTree, controllerTree.path, controllerTree.args);
+
     return stack;
 }
 
 const routes = routeTrees.map(buildRoute).flat();
-metaRouter.routesAbstration.provideRoutes(routes);
+docsRouter.routesAbstractionController.provideRoutesForApiDocs(routes);
 
 const bindApiEndpoints = (httpServer) => routes.forEach((route) => {
     if (route.args) {
