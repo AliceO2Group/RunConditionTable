@@ -12,62 +12,12 @@
  * or submit itself to any jurisdiction.
  */
 const viewTypes = require('./viewTypes.js');
-const { filterInputTypes } = require('./filterTypes.js');
-const { periodFieldNames } = require('./viewFieldNames');
+const { periodFieldNames, runFieldNames, dataPassFieldNames } = require('./viewFieldNames');
 
 const fieldNames = {};
 
-const runFields = {
-    name: {
-        fieldName: 'Name',
-        filterInput: filterInputTypes.text,
-    },
-    run_number: {
-        fieldName: 'Run',
-        filterInput: filterInputTypes.number,
-    },
-    time_start: {
-        fieldName: 'Start time',
-    },
-    time_end: {
-        fieldName: 'End time',
-    },
-    time_trg_start: {
-        fieldName: 'Trigger start',
-    },
-    time_trg_end: {
-        fieldName: 'Trigger end',
-    },
-    center_of_mass_energy: {
-        fieldName: 'Center of mass energy',
-    },
-    ir: {
-        fieldName: 'IR [Hz]',
-    },
-    filling_scheme: {
-        fieldName: 'Filling scheme',
-    },
-    triggers_conf: {
-        fieldName: 'Triggers configuration',
-    },
-    fill_number: {
-        fieldName: 'Fill number',
-    },
-    run_type: {
-        fieldName: 'Run type',
-    },
-    mu: {
-        fieldName: '\u03BC',
-    },
-    l3_current: {
-        fieldName: 'L3 current [A]',
-    },
-    dipole_current: {
-        fieldName: 'Dipole current [A]',
-    },
-};
-
 fieldNames[viewTypes.periods] = periodFieldNames;
-fieldNames[viewTypes.runs] = runFields;
+fieldNames[viewTypes.runs] = runFieldNames;
+fieldNames[viewTypes.dataPasses] = dataPassFieldNames;
 
 module.exports = fieldNames;

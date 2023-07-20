@@ -21,6 +21,7 @@ const filterTypes = {
 const filterInputTypes = {
     number: 'number',
     text: 'text',
+    date: 'date',
 };
 
 module.exports = { filterTypes, filterInputTypes };

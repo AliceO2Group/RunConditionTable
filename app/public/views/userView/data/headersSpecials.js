@@ -36,8 +36,6 @@ const runFields = {
     dipole_current: 'Dipole [A]',
 };
 
-const runFieldNames = Object.keys(fN.runs).reduce((acc, field) => ({ ...acc, [field]: fN.runs[field].fieldName }), {});
-
 const dpFields = {
     name: 'Name',
     description: 'Description',
@@ -46,17 +44,6 @@ const dpFields = {
     ml: 'ML',
     number_of_events: 'Events',
     software_version: 'Soft. version',
-    size: 'Size',
-};
-
-const dpFieldNames = {
-    name: 'Name',
-    description: 'Description',
-    pass_type: 'Type',
-    jira: 'Jira',
-    ml: 'ML',
-    number_of_events: 'Events',
-    software_version: 'Software version',
     size: 'Size',
 };
 
@@ -88,6 +75,9 @@ const headersSpecials = {
     runsPerDataPass: runFields,
     flags: flagFields,
 };
+
+const runFieldNames = Object.keys(fN.runs).reduce((acc, field) => ({ ...acc, [field]: fN.runs[field].fieldName }), {});
+const dpFieldNames = Object.keys(fN.dataPasses).reduce((acc, field) => ({ ...acc, [field]: fN.dataPasses[field].fieldName }), {});
 
 const fieldNames = {
     periods: periodFields,
