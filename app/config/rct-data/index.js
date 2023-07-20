@@ -13,7 +13,7 @@
  */
 
 const pageNames = require('./pageNames.js');
-const { filterTypes, filterInput } = require('./filterTypes.js');
+const { filterTypes, filterInputTypes } = require('./filterTypes.js');
 const detectors = require('./detectors.js').sort();
 const flags = require('./flags.json');
 const roles = require('./roles.js');
@@ -24,7 +24,7 @@ const healthcheckQueries = require('./healthcheckQueries.js');
 module.exports = {
     pageNames,
     filterTypes,
-    filterInput,
+    filterInputTypes,
     detectors,
     roles,
     flags,

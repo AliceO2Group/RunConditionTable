@@ -18,9 +18,9 @@ const filterTypes = {
     between: 'between',
 };
 
-const filterInput = {
+const filterInputTypes = {
     number: 'number',
-    string: 'string',
+    text: 'text',
 };
 
-module.exports = { filterTypes, filterInput };
+module.exports = { filterTypes, filterInputTypes };
