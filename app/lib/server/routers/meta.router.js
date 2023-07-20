@@ -11,13 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
-const routesManagementHelper = require('./RoutesManagementHelper.js');
+const routesAbstration = require('../controllers/RoutesAbstraction.controller.js');
 
 module.exports = {
-    routesManagementHelper,
+    routesAbstration,
     path: '/docs',
     method: 'get',
     args: { public: true },
-    controller: routesManagementHelper.getDocs.bind(routesManagementHelper),
+    controller: routesAbstration.getDocs.bind(routesAbstration),
     description: 'Return api docs',
 };

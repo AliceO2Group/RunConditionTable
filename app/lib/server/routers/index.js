@@ -47,7 +47,7 @@ function buildRoute(controllerTree) {
 }
 
 const routes = routeTrees.map(buildRoute).flat();
-metaRouter.routesManagementHelper.provideRoutes(routes);
+metaRouter.routesAbstration.provideRoutes(routes);
 
 const bindApiEndpoints = (httpServer) => routes.forEach((route) => {
     if (route.args) {

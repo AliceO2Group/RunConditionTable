@@ -13,7 +13,7 @@
 
 const getApiDocsAsJson = (routes) => routes.map(({ method, path, description }) => ({ method, path, description }));
 
-class RoutesManagementHelper {
+class RoutesAbstration {
     constructor() {
         this.apiDocsJson = null;
     }
@@ -27,4 +27,4 @@ class RoutesManagementHelper {
     }
 }
 
-module.exports = new RoutesManagementHelper();
+module.exports = new RoutesAbstration();
