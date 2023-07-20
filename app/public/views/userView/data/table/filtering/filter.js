@@ -21,6 +21,7 @@ const { filterTypes } = RCT;
 export default function filter(model) {
     const data = model.getCurrentData();
     const { fields } = data;
+    const url = model.router.getUrl();
 
     function onFilteringTypeChange() {
         const filteringTypeSelect = document.getElementById('filters-opts-select');
@@ -30,6 +31,13 @@ export default function filter(model) {
         const leftFilterPlaceholder = document.getElementById('left-filter-placeholder');
         const rightFilterPlaceholder = document.getElementById('right-filter-placeholder');
         [leftFilterPlaceholder.innerHTML, rightFilterPlaceholder.innerHTML] = types;
+    }
+
+    function clearUserInput() {
+        document.getElementById('show-options-field').value = '';
+        document.getElementById('filters-opts-select').value = '';
+        document.getElementById('left-filter-input').value = '';
+        document.getElementById('right-filter-input').value = '';
     }
 
     function onFilterSubmit() {
@@ -45,33 +53,31 @@ export default function filter(model) {
         const leftFilterInput = document.getElementById('left-filter-input').value;
         const rightFilterInput = document.getElementById('right-filter-input').value;
 
-        // eslint-disable-next-line no-console
-        console.log({
-            fieldNameValue,
-
-            rightFilterType,
-            rightFilterInput,
-
-            leftFilterType,
-            leftFilterInput,
-        });
-
         let filterPhrase = '';
         if (selectedType == filterTypes.between) {
-            // eslint-disable-next-line max-len
-            filterPhrase += `&${encodeURI(fieldNameValue)}-${encodeURI(filterTypes.between)}=${encodeURI(leftFilterInput)},${encodeURI(rightFilterInput)}`;
+            const betweenPhrase = `${fieldNameValue}-${selectedType}=${leftFilterInput},${rightFilterInput}`;
+            const betweenFilterPhrase = `&${encodeURI(betweenPhrase)}`;
+            if (! url.href.includes(betweenFilterPhrase)) {
+                filterPhrase += betweenFilterPhrase;
+            }
         } else {
-            // So Match or Exclude filtering type
-            // eslint-disable-next-line max-len
-            filterPhrase += leftFilterInput ? `&${encodeURI(fieldNameValue)}-${encodeURI(leftFilterType)}=${encodeURI(leftFilterInput)}` : '';
-            filterPhrase += rightFilterInput ? `&${encodeURI(fieldNameValue)}-${encodeURI(rightFilterType)}=${encodeURI(rightFilterInput)}` : '';
+            const matchPhrase = leftFilterInput ? `${fieldNameValue}-${leftFilterType}=%${leftFilterInput}%` : '';
+            const matchFilterPhrase = `&${encodeURI(matchPhrase)}`;
+            console.log(filterPhrase);
+            if (! url.href.includes(matchFilterPhrase)) {
+                filterPhrase += matchFilterPhrase;
+            }
+
+            const excludePhrase = rightFilterInput ? `${fieldNameValue}-${rightFilterType}=%${rightFilterInput}%` : '';
+            const excludeFilterPhrase = `&${encodeURI(excludePhrase)}`;
+            if (! url.href.includes(excludeFilterPhrase)) {
+                filterPhrase += excludeFilterPhrase;
+            }
         }
 
-        const url = model.router.getUrl();
         const newUrl = new URL(`${url.href}${filterPhrase}`);
-        // eslint-disable-next-line no-console
-        console.log(newUrl);
 
+        clearUserInput();
         model.router.go(newUrl);
     }
 

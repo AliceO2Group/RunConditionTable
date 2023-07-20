@@ -12,6 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
+const pageNames = require('./pageNames.js');
+const { filterTypes, filterInput } = require('./filterTypes.js');
 const detectors = require('./detectors.js').sort();
 const flags = require('./flags.json');
 const roles = require('./roles.js');
@@ -20,6 +22,9 @@ const beamTypesMappings = require('./beamTypesMappings.js');
 const healthcheckQueries = require('./healthcheckQueries.js');
 
 module.exports = {
+    pageNames,
+    filterTypes,
+    filterInput,
     detectors,
     roles,
     flags,

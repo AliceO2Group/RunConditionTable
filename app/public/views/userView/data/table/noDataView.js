@@ -35,34 +35,37 @@ const modes = {
     waiting: 1,
 };
 
-export default function noDataView(
-    model, dataPointer,
-) {
+export default function noDataView(model, dataPointer, anyFiltersActive) {
     const [mode, setMode] = useState(modes.waiting);
+
     const goBackBtn = h('button.btn.btn-primary.m3', {
         onclick: () => model.removeCurrentData(),
     }, 'Go back');
+
     const reloadBtn = h('button.btn.btn-primary.m3', {
         onclick: async () => {
             if (mode() === modes.waiting) {
                 await model.sync();
-
-                /*
-                 * Await model.fetchedData.reqForData(true);
-                 * model.notify();
-                 * document.location.reload(true);
-                 */
             } else {
                 model.fetchedData.reqForData(true);
             }
             setMode(modes.requested);
         },
     }, 'Reload');
-    const noDataMessage = h('h3', 'No data found');
+
+    const clearFiltersBtn = h('button.btn.btn-secondary.m3', {
+        onclick: () => {
+            model.goToDefaultPageUrl(dataPointer.page);
+        },
+    }, 'Clear filters');
+
+    const noDataMessage = h('h3', 'Nothing found');
     const noDataExplanation = h('h5', `${
-        dataPointer.page === pageNames.periods
-            ? 'Please synchronize with outer services'
-            : 'There is no data to be displayed here'
+        anyFiltersActive
+            ? 'There is no data that matches your request'
+            : dataPointer.page === pageNames.periods
+                ? 'Please synchronize with outer services'
+                : 'There is no data to be displayed here'
     }`);
 
     const noPeriodsView = h('.loginDiv.top-100', [
@@ -79,9 +82,20 @@ export default function noDataView(
         goBackBtn,
     ]);
 
-    return dataPointer.page === pageNames.periods
-        ? mode() === modes.requested
-            ? 'loading'
-            : noPeriodsView
-        : noDataView;
+    const noMatchingDataView = h('.loginDiv.top-100', [
+        h('.nothing-found-90'),
+        noDataMessage,
+        noDataExplanation,
+        h('.flex-row',
+            clearFiltersBtn,
+            goBackBtn),
+    ]);
+
+    return anyFiltersActive
+        ? noMatchingDataView
+        : dataPointer.page === pageNames.periods
+            ? mode() === modes.requested
+                ? 'loading'
+                : noPeriodsView
+            : noDataView;
 }

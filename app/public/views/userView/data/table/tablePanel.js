@@ -47,7 +47,7 @@ export default function tablePanel(model, runs, detectors) {
     const page = model.fetchedData[dataPointer.page];
     const { url } = page[dataPointer.index].payload;
 
-    const anyFiltersActive = url.href.includes('match') || url.href.includes('exclude') || url.href.includes('from') || url.href.includes('to');
+    const anyFiltersActive = url.href.includes('match') || url.href.includes('exclude') || url.href.includes('between');
     const chips = model.getSubPages(dataPointer.page).filter((index) => index !== defaultIndexString).map((index) => indexChip(model, index));
 
     data.rows = data.rows.filter((item) => item.name != 'null');
@@ -109,7 +109,7 @@ export default function tablePanel(model, runs, detectors) {
 
                 h('div', functionalities(model))),
             model.searchFieldsVisible ? filter(model) : '',
-            anyFiltersActive ? activeFilters(model) : '',
+            anyFiltersActive ? activeFilters(model, url) : '',
 
             data.rows?.length > 0
                 ? visibleFields.length > 0
@@ -128,7 +128,7 @@ export default function tablePanel(model, runs, detectors) {
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
-                : noDataView(model, dataPointer),
+                : noDataView(model, dataPointer, anyFiltersActive),
             h('.modal', { id: 'pageSettingsModal' },
                 h('.modal-content.abs-center.p3', {
                     id: 'pageSettingsModalContent',
