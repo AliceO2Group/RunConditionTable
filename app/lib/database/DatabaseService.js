@@ -13,8 +13,8 @@
  */
 
 const { Log } = require('@aliceo2/web-ui');
-const { Client, Pool } = require('pg');
-const QueryBuilder = require('./QueryBuilder.js');
+const { Pool } = require('pg');
+const { PGQueryBuilder } = require('./utilities');
 const config = require('./../config/configProvider.js');
 const {distinct} = require('../utils')
 
@@ -151,7 +151,7 @@ class DatabaseService {
         }
 
         try {
-            const query = QueryBuilder.buildSelect(params);
+            const query = PGQueryBuilder.buildSelect(params);
             await this.pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler);
         } catch (e) {
             this.logger.error(e.stack)
@@ -176,7 +176,7 @@ class DatabaseService {
         
         try {
             await this.pgExec(
-                QueryBuilder.buildInsert(params), 
+                PGQueryBuilder.buildInsert(params), 
                 connectErrorHandler, 
                 dbResponseHandler, 
                 dbResErrorHandler);

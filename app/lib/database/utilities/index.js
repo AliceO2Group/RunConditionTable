@@ -11,8 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const QueryBuilder = require('./QueryBuilder');
+const PGQueryBuilder = require('./PGQueryBuilder');
 
-module.exports = (sequelize) => ({
-    QueryBuilder: QueryBuilder(sequelize),
-});
+module.exports = {
+    PGQueryBuilder,
+};

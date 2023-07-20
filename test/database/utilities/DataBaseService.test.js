@@ -12,8 +12,6 @@
  */
 const database = require('../../../app/lib/database');
 const assert = require('assert');
-const sinon = require('sinon');
-const { expect } = require('chai');
 
 const { databaseService } = database;
 

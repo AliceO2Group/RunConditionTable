@@ -15,7 +15,6 @@ const { Sequelize } = require('sequelize');
 const { Log } = require('@aliceo2/web-ui')
 const config = require('../../config');
 const modelsCreator = require('./models');
-const utilitiesCreator = require('./utilities');
 
 /**
  * Sequelize implementation of the Database.
@@ -36,13 +35,9 @@ class DatabaseManager {
             },
         });
 
-        this._utilities = utilitiesCreator(this.sequelize);
         this._models = modelsCreator(this.sequelize);
     }
 
-    get utilities() {
-        return this._utilities;
-    }
 
     get models() {
         return this._models;
