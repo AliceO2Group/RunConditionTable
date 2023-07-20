@@ -11,28 +11,63 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const pageNames = require('./pageNames.js');
+const viewTypes = require('./viewTypes.js');
 const { filterInputTypes } = require('./filterTypes.js');
+const { periodFieldNames } = require('./viewFieldNames');
 
-const fieldNames = {}
+const fieldNames = {};
 
-fieldNames[pageNames.periods] = {
+const runFields = {
     name: {
-        fieldName: "Name",
+        fieldName: 'Name',
         filterInput: filterInputTypes.text,
     },
-    year: {
-        fieldName: "Year",
+    run_number: {
+        fieldName: 'Run',
         filterInput: filterInputTypes.number,
     },
-    beam: {
-        fieldName: "Beam",
-        filterInput: filterInputTypes.text
+    time_start: {
+        fieldName: 'Start time',
     },
-    energy: {
-        fieldName: "Mean energy [GeV]",
-        filterInput: filterInputTypes.number,
-    }
+    time_end: {
+        fieldName: 'End time'
+    },
+    time_trg_start: {
+        fieldName: 'Trigger start'
+    },
+    time_trg_end: {
+        fieldName: 'Trigger end'
+    },
+    center_of_mass_energy: {
+        fieldName: 'Center of mass energy'
+    },
+    ir: {
+        fieldName: 'IR [Hz]'
+    },
+    filling_scheme: {
+        fieldName: 'Filling scheme'
+    },
+    triggers_conf: {
+        fieldName: 'Triggers configuration'
+    },
+    fill_number: {
+        fieldName: 'Fill number'
+    },
+    run_type: {
+        fieldName: 'Run type'
+    },
+    mu: {
+        fieldName: '\u03BC'
+    },
+    l3_current: {
+        fieldName: 'L3 current [A]'
+    },
+    dipole_current: {
+        fieldName: 'Dipole current [A]'
+    },
 }
+
+fieldNames[viewTypes.periods] = periodFieldNames;
+fieldNames[viewTypes.runs] = runFields;
 
 module.exports = fieldNames;

@@ -13,13 +13,10 @@
  */
 
 import { h } from '/js/src/index.js';
+import { RCT } from '../../../config.js';
+const { fieldNames: fN } = RCT;
 
-const periodFields = {
-    name: 'Name',
-    year: 'Year',
-    beam: 'Beam type',
-    energy: 'Mean energy [GeV]',
-};
+const periodFields = Object.keys(fN.periods).reduce((acc, field) => ({ ...acc, [field]: fN.periods[field].fieldName} ), {});
 
 const runFields = {
     name: 'Name',
@@ -39,23 +36,7 @@ const runFields = {
     dipole_current: 'Dipole [A]',
 };
 
-const runFieldNames = {
-    name: 'Name',
-    run_number: 'Run',
-    time_start: 'Start time',
-    time_end: 'End time',
-    time_trg_start: 'Trigger start',
-    time_trg_end: 'Trigger end',
-    center_of_mass_energy: 'Center of mass energy',
-    ir: 'IR [Hz]',
-    filling_scheme: 'Filling scheme',
-    triggers_conf: 'Triggers configuration',
-    fill_number: 'Fill number',
-    run_type: 'Run type',
-    mu: '\u03BC',
-    l3_current: 'L3 current [A]',
-    dipole_current: 'Dipole current [A]',
-};
+const runFieldNames = Object.keys(fN.runs).reduce((acc, field) => ({ ...acc, [field]: fN.runs[field].fieldName} ), {});
 
 const dpFields = {
     name: 'Name',
