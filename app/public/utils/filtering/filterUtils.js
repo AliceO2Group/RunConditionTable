@@ -32,10 +32,8 @@ export const filterSearch = (filterString) => {
 
 export const isFilterExpression = (item) => Object.values(filterTypes).reduce((acc, curr) => acc || item.includes(curr), false);
 
-export const isInputTypeText = (field, page) => fieldNames[page][field]?.filterInput === 'text';
-
 export const wrappedUserInput = (input, field, page) => {
-    const wrap = isInputTypeText(field, page) ? '%' : '';
+    const wrap = fieldNames[page][field].filterInput === 'text' ? '%' : '';
     return `${wrap}${input}${wrap}`;
 };
 
