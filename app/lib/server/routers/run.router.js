@@ -19,7 +19,7 @@ module.exports = {
     children: [
         {
             method: 'get',
-            controller: RunController.listRuns,
+            controller: RunController.listRunsHandler,
             description: 'List all runs which are present in DB',
         },
     ],

@@ -17,11 +17,11 @@ const { databaseManager: { repositories: { RunRepository } } } = require('../../
  * List All runs in db
  */
 
-const listRuns = async (req, res, next) => {
+const listRunsHandler = async (req, res, next) => {
     const result = await RunRepository.findAll();
     res.json(result);
 }; // TODO DTO
 
 module.exports = {
-    listRuns,
+    listRunsHandler,
 };
