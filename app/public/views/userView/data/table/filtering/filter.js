@@ -16,9 +16,12 @@
 import { h } from '/js/src/index.js';
 import { getFieldName } from '../../headersSpecials.js';
 import { RCT } from '../../../../../config.js';
+import { wrappedUserInput } from '../../../../../utils/filtering/filterUtils.js';
 const { filterTypes } = RCT;
 
 export default function filter(model) {
+    const dataPointer = model.getCurrentDataPointer();
+    const { page } = dataPointer;
     const data = model.getCurrentData();
     const { fields } = data;
     const url = model.router.getUrl();
@@ -61,15 +64,18 @@ export default function filter(model) {
                 filterPhrase += betweenFilterPhrase;
             }
         } else {
-            const matchPhrase = leftFilterInput ? `${fieldNameValue}-${leftFilterType}=%${leftFilterInput}%` : '';
+            const wrappedLeftInput = wrappedUserInput(leftFilterInput, fieldNameValue, page);
+            const matchPhrase = leftFilterInput ? `${fieldNameValue}-${leftFilterType}=${wrappedLeftInput}` : '';
             const matchFilterPhrase = `&${encodeURI(matchPhrase)}`;
-            console.log(filterPhrase);
+
+            const wrappedRightInput = wrappedUserInput(rightFilterInput, fieldNameValue, page);
+            const excludePhrase = rightFilterInput ? `${fieldNameValue}-${rightFilterType}=${wrappedRightInput}` : '';
+            const excludeFilterPhrase = `&${encodeURI(excludePhrase)}`;
+
             if (! url.href.includes(matchFilterPhrase)) {
                 filterPhrase += matchFilterPhrase;
             }
 
-            const excludePhrase = rightFilterInput ? `${fieldNameValue}-${rightFilterType}=%${rightFilterInput}%` : '';
-            const excludeFilterPhrase = `&${encodeURI(excludePhrase)}`;
             if (! url.href.includes(excludeFilterPhrase)) {
                 filterPhrase += excludeFilterPhrase;
             }

@@ -14,9 +14,9 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../../../config.js';
-import { sqlWildCard } from '../../../../../utils/filtering/filterUtils.js';
+import { filterField, filterType, filterSearch, isFilterExpression, filtersFromUrl } from '../../../../../utils/filtering/filterUtils.js';
 
-const { dataReqParams, defaultDataReqParams, filterTypes } = RCT;
+const { dataReqParams, defaultDataReqParams } = RCT;
 
 export default function activeFilters(model, url) {
     const data = model.getCurrentData();
@@ -24,27 +24,6 @@ export default function activeFilters(model, url) {
     const { fields } = data;
     const baseUrl = `/?page=${dataPointer.page}&index=${dataPointer.index}`;
     const defaultUrlParams = `${dataReqParams.rowsOnSite}=${defaultDataReqParams.rowsOnSite}&${dataReqParams.site}=${defaultDataReqParams.site}`;
-
-    const isFilterExpression = (item) => Object.values(filterTypes).reduce((acc, curr) => acc || item.includes(curr), false);
-
-    const filterField = (filterString) => filterString.split('-')[0];
-    const filterType = (filterString) => filterString.split('=')[0].split('-')[1];
-    const filterSearch = (filterString) => {
-        const rawSearch = decodeURIComponent(filterString.split('=')[1]);
-        const type = filterType(filterString);
-        if ((type === filterTypes.exclude || type === filterTypes.match) &&
-            rawSearch.charAt() === sqlWildCard &&
-            rawSearch.charAt(rawSearch.length - 1) === sqlWildCard) {
-            return rawSearch.slice(1, -1);
-        }
-        return rawSearch;
-    };
-
-    const filters = url.href.split('&').filter((item) => isFilterExpression(item)).map((item) => ({
-        field: filterField(item),
-        type: filterType(item),
-        search: filterSearch(item),
-    }));
 
     function onClearAll() {
         const firstField = fields.find((f) => f !== undefined && f.name);
@@ -69,7 +48,7 @@ export default function activeFilters(model, url) {
                     onclick: () => onClearAll(),
                 }, 'Clear all'))),
         h('.flex-wrap.items-center.chips',
-            filters.map((filter) => [
+            filtersFromUrl(url).map((filter) => [
                 h('div.chip.filter-chip.inline',
                     h('.filter-field.inline', filter.field),
                     h('.filter-type.inline', filter.type),

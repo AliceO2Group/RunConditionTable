@@ -13,7 +13,9 @@
  */
 
 const pageNames = require('./pageNames.js');
-const { filterTypes, filterInput } = require('./filterTypes.js');
+const { viewTypes, pagesViewGroups } = require('./viewTypes.js');
+const fieldNames = require('./fieldNames.js');
+const { filterTypes, filterInputTypes } = require('./filterTypes.js');
 const detectors = require('./detectors.js').sort();
 const flags = require('./flags.json');
 const roles = require('./roles.js');
@@ -23,8 +25,11 @@ const healthcheckQueries = require('./healthcheckQueries.js');
 
 module.exports = {
     pageNames,
+    viewTypes,
+    pagesViewGroups,
+    fieldNames,
     filterTypes,
-    filterInput,
+    filterInputTypes,
     detectors,
     roles,
     flags,

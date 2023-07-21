@@ -12,16 +12,19 @@
  * or submit itself to any jurisdiction.
  */
 
-const filterTypes = {
-    match: 'match',
-    exclude: 'exclude',
-    between: 'between',
-};
+export function replaceUrlParams(url, entries) {
+    const currentParams = Object.fromEntries(url.searchParams.entries());
+    for (const [k, v] of entries) {
+        currentParams[k] = v;
+    }
 
-const filterInputTypes = {
-    number: 'number',
-    text: 'text',
-    date: 'date',
-};
+    const search = `?${Object.entries(currentParams).map(([k, v]) => `${k}=${v}`).join('&')}`;
+    return new URL(url.origin + url.pathname + search);
+}
 
-module.exports = { filterTypes, filterInputTypes };
+export function urlSearchToParamsObject(search) {
+    if (search[0] !== '?') {
+        throw 'incorrect argument';
+    }
+    return Object.fromEntries(search.slice(2).split('&').map((ent) => ent.split('=')));
+}

@@ -12,7 +12,11 @@
  */
 
 const CSVExportSuite = require('./csvExport.test');
+const filterUtilsSuite = require('./filterUtils.test');
+const urlUtilsSuite = require('./urlUtils.test');
 
 module.exports = () => {
     describe('CSV Export', CSVExportSuite);
+    describe('Filter utils', filterUtilsSuite);
+    describe('URL utils', urlUtilsSuite);
 };

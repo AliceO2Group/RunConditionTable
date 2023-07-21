@@ -11,5 +11,38 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+import { RCT } from '../../config.js';
+const { filterTypes, fieldNames, filterInputTypes } = RCT;
+const sqlWildCard = '%';
 
-export const sqlWildCard = '%';
+export const filterField = (filterString) => filterString.split('-')[0];
+
+export const filterType = (filterString) => filterString.split('=')[0].split('-')[1];
+
+export const filterSearch = (filterString) => {
+    const rawSearch = decodeURIComponent(filterString.split('=')[1]);
+    const type = filterType(filterString);
+    if ((type === filterTypes.exclude || type === filterTypes.match) &&
+        rawSearch.charAt() === sqlWildCard &&
+        rawSearch.charAt(rawSearch.length - 1) === sqlWildCard) {
+        return rawSearch.slice(1, -1);
+    }
+    return rawSearch;
+};
+
+export const isFilterExpression = (item) => Object.values(filterTypes).reduce((acc, curr) => acc || item.includes(curr), false);
+
+export const wrappedUserInput = (input, field, page) => {
+    const wrap = fieldNames[page][field].filterInput === filterInputTypes.text ? sqlWildCard : '';
+    return `${wrap}${input}${wrap}`;
+};
+
+export const anyFiltersActive = (url) => url.href.includes(filterTypes.match) ||
+        url.href.includes(filterTypes.exclude) ||
+        url.href.includes(filterTypes.between);
+
+export const filtersFromUrl = (url) => url.href.split('&').filter((item) => isFilterExpression(item)).map((item) => ({
+    field: filterField(item),
+    type: filterType(item),
+    search: filterSearch(item),
+}));

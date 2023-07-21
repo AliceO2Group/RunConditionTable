@@ -12,16 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-const filterTypes = {
-    match: 'match',
-    exclude: 'exclude',
-    between: 'between',
-};
+const periodFieldNames = require('./periodFieldNames.js');
+const runFieldNames = require('./runFieldNames.js');
+const dataPassFieldNames = require('./dataPassFieldNames.js');
+const mcFieldNames = require('./mcFieldNames.js');
 
-const filterInputTypes = {
-    number: 'number',
-    text: 'text',
-    date: 'date',
+module.exports = {
+    periodFieldNames,
+    runFieldNames,
+    dataPassFieldNames,
+    mcFieldNames,
 };
-
-module.exports = { filterTypes, filterInputTypes };

@@ -11,17 +11,14 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+const { viewTypes } = require('./viewTypes.js');
+const { periodFieldNames, runFieldNames, dataPassFieldNames, mcFieldNames } = require('./viewFieldNames');
 
-const filterTypes = {
-    match: 'match',
-    exclude: 'exclude',
-    between: 'between',
-};
+const fieldNames = {};
 
-const filterInputTypes = {
-    number: 'number',
-    text: 'text',
-    date: 'date',
-};
+fieldNames[viewTypes.periods] = periodFieldNames;
+fieldNames[viewTypes.runs] = runFieldNames;
+fieldNames[viewTypes.dataPasses] = dataPassFieldNames;
+fieldNames[viewTypes.mc] = mcFieldNames;
 
-module.exports = { filterTypes, filterInputTypes };
+module.exports = fieldNames;

@@ -11,17 +11,25 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+const { filterInputTypes } = require('../filterTypes.js');
 
-const filterTypes = {
-    match: 'match',
-    exclude: 'exclude',
-    between: 'between',
+const periodFieldNames = {
+    name: {
+        fieldName: 'Name',
+        filterInput: filterInputTypes.text,
+    },
+    year: {
+        fieldName: 'Year',
+        filterInput: filterInputTypes.number,
+    },
+    beam: {
+        fieldName: 'Beam',
+        filterInput: filterInputTypes.text,
+    },
+    energy: {
+        fieldName: 'Mean energy [GeV]',
+        filterInput: filterInputTypes.number,
+    },
 };
 
-const filterInputTypes = {
-    number: 'number',
-    text: 'text',
-    date: 'date',
-};
-
-module.exports = { filterTypes, filterInputTypes };
+module.exports = periodFieldNames;

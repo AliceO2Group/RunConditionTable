@@ -11,17 +11,22 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+const pageNames = require('./pageNames.js');
 
-const filterTypes = {
-    match: 'match',
-    exclude: 'exclude',
-    between: 'between',
+const viewTypes = {
+    periods: 'periods',
+    runs: 'runs',
+    dataPasses: 'dataPasses',
+    mc: 'mc',
+    flags: 'flags',
 };
 
-const filterInputTypes = {
-    number: 'number',
-    text: 'text',
-    date: 'date',
+const pagesViewGroups = {
+    periods: [pageNames.periods],
+    runs: [pageNames.runsPerDataPass, pageNames.runsPerPeriod],
+    dataPasses: [pageNames.anchoredPerMC, pageNames.dataPasses],
+    mc: [pageNames.mc, pageNames.anchoragePerDatapass],
+    flags: [pageNames.flags],
 };
 
-module.exports = { filterTypes, filterInputTypes };
+module.exports = { viewTypes, pagesViewGroups };
