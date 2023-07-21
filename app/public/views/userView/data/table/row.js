@@ -33,7 +33,7 @@ export default function row(
                         ? cellsSpecials[field.name](model, runs, item)
                         : cellsSpecials[field.name](model, item)
                     : /.*_detector/.test(field.name)
-                        ? detectorIcon(model, item, field.name, index, detectors.getDetectorName(field.name))
+                        ? h('', detectorIcon(model, item, index, detectors.getDetectorName(field.name)))
                         : item[field.name]
                 : '..'));
 

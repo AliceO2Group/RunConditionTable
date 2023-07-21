@@ -24,6 +24,12 @@ import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src
 
 import { RCT } from '../../../../config.js';
 import pageSettings from '../../../userView/data/pageSettings/pageSettings.js';
+import downloadCSV from '../../../../utils/csvExport.js';
+import filter from '../../../userView/data/table/filtering/filter.js';
+import activeFilters from '../../../userView/data/table/filtering/activeFilters.js';
+import sortingRow from '../../../userView/data/table/sortingRow.js';
+import noDataView from '../../../userView/data/table/noDataView.js';
+import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
 const { pageNames } = RCT;
 
 export default function content(model, runs, detectors) {
@@ -128,6 +134,6 @@ function tableBody(
 ) {
     return h('tbody', { id: `table-body-${data.url}` },
         data.rows.map((item) => row(
-            model, visibleFields, data, item, cellsSpecials, index, runs, detectors, 'qcTypeSelectionModal',
+            model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
         )));
 }

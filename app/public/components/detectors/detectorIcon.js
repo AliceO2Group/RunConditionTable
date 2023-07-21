@@ -15,15 +15,17 @@
 import qcTypeSelection from '../../views/runs/runsPerDataPass/overview/qcTypeSelection.js';
 import { h } from '/js/src/index.js';
 
-export default function detectorIcon(model, item, n, index, detectorName) {
+export default function detectorIcon(model, item, index, detectorName) {
+    const runDetectorId = `${item}-${index}-${detectorName}`;
     return [
         h('.modal', { id: 'qcTypeSelectionModal' },
             h('.modal-content.abs-center.p3', {
                 id: 'qcTypeSelectionModalContent',
             }, qcTypeSelection(model, () => {
                 document.getElementById('qcTypeSelectionModal').style.display = 'none';
-            }, item, index, detectorName))),
-        h('button.btn.transparent.tooltip.no-border-bottom.pointer', {
+            }, item, index, detectorName, runDetectorId))),
+        h('button.btn.no-border-bottom.pointer.run-quality.good', {
+            id: runDetectorId,
             onclick: () => {
                 document.getElementById('qcTypeSelectionModal').style.display = 'block';
                 document.addEventListener('click', (event) => {
@@ -36,19 +38,6 @@ export default function detectorIcon(model, item, n, index, detectorName) {
                     }
                 });
             } },
-        h('svg', { width: '20px', height: '20px' },
-            h('circle',
-                {
-                    cx: '50%',
-                    cy: '50%',
-                    r: '8px', //
-
-                    /*
-                     *Stroke: '#F7B538', strokes for the limited acceptance flags only
-                     *'stroke-width': '3',
-                     */
-                    fill: '#8CB369',
-                })),
-        h('span.detector-tooltip-field', `run_det_id: ${item[n]}`)),
+        h('', 'good')),
     ];
 }

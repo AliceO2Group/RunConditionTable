@@ -12,22 +12,60 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
+import { h, iconChevronBottom } from '/js/src/index.js';
 
-export default function qcTypeSelection(model, close, item, index, detectorName) {
-    const title = h('h3', 'Quality Control type');
+export default function qcTypeSelection(model, close, item, index, detectorName, runDetectorId) {
+    const title = h('h3', 'Run quality');
     const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName}&rows-on-site=50&site=1`;
+    const runQualitySelectId = 'run-quality-select';
+
+    function handleRunQualityChange() {
+        const documentBody = document.getElementById(runDetectorId);
+        const themesSelection = document.getElementById(runQualitySelectId);
+        const selectedTheme = themesSelection.options[themesSelection.selectedIndex].value;
+        switch (selectedTheme) {
+            case '0':
+                /* Ehevi */
+                if (documentBody.classList.contains('bad')) {
+                    documentBody.classList.remove('bad');
+                    documentBody.classList.add('good');
+                    documentBody.innerHTML = 'good';
+                }
+                break;
+            case '1':
+                /* WebUI */
+                if (documentBody.classList.contains('good')) {
+                    documentBody.classList.remove('good');
+                    documentBody.classList.add('bad');
+                    documentBody.innerHTML = 'bad';
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     return h('', [
-        h('.flex.bottom-20.justify-center.items-center',
-            h('.settings-40'),
+        h('.flex.bottom-20.items-center',
             h('.inline.top-15.left-10',
                 title)),
 
-        h('.flex-wrap.justify-center.items-center',
-            h('button.btn.btn-primary.m1', {
-                onclick: () => model.router.go(flagsUrl),
-            }, 'Run based')),
+        item.run_number,
+        '..',
+        index,
+        '..',
+        detectorName,
+
+        h('.flex-wrap.justify-between.items-center',
+            h('', 'Run quality'),
+            h('select.select.color-theme', {
+                id: runQualitySelectId,
+                name: runQualitySelectId,
+                onchange: () => handleRunQualityChange(),
+            }, [
+                h('option', { value: 0 }, 'good'),
+                h('option', { value: 1 }, 'bad'),
+            ], iconChevronBottom())),
 
         h('.flex-wrap.justify-center.items-center',
             h('button.btn.btn-primary.m1', {
