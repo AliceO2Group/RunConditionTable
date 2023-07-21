@@ -12,7 +12,9 @@
  */
 
 const WebUiServerSuite = require('./WebUiServer.test');
+const RoutesSuite = require('./routes.test');
 
 module.exports = () => {
+    describe('Routes', RoutesSuite);
     describe('WebUiServer', WebUiServerSuite);
 };

@@ -18,6 +18,6 @@ module.exports = {
     path: '/docs',
     method: 'get',
     args: { public: true },
-    controller: routesAbstractionController.getDocs.bind(routesAbstractionController),
+    controller: routesAbstractionController.getDocsHandler.bind(routesAbstractionController),
     description: 'Return api docs',
 };
