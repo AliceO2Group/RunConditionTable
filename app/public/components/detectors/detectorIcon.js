@@ -25,8 +25,6 @@ export default function detectorIcon(model, item, n, index, detectorName) {
             }, item, index, detectorName))),
         h('button.btn.transparent.tooltip.no-border-bottom.pointer', {
             onclick: () => {
-                console.log(document.getElementById('qcTypeSelectionModal'));
-                console.log('clicked!');
                 document.getElementById('qcTypeSelectionModal').style.display = 'block';
                 document.addEventListener('click', (event) => {
                     const modalContent = document.getElementsByClassName('modal-content');
