@@ -44,6 +44,7 @@ class RunConditionTableApplication {
 
         this.webUiServer = webUiServer;
         this.databaseService = database.databaseService;
+        this.databaseManager = database.databaseManager;
         this.databaseService.healthcheckInsertData();
         this.syncManager = alimonitorServices.syncManager;
         this.defineEndpoints();
@@ -72,6 +73,7 @@ class RunConditionTableApplication {
     async run() {
         this.logger.info('Starting RCT app...');
         try {
+            await this.databaseManager.sync();
             await this.httpServer.listen();
         } catch (error) {
             this.logger.error(`Error while starting RCT app: ${error}`);
