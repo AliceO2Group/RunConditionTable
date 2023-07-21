@@ -12,8 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
-import noSubPageSelected from "../../../userView/data/table/noSubPageSelected.js";
-import content from "./content.js";
+import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
+import content from './content.js';
 
 export default function panel(model, runs, detectors) {
     const urlParams = model.router.getUrl().searchParams;

@@ -12,12 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconChevronBottom } from '/js/src/index.js';
-import quantityInput from '../../../../components/common/quantityInput.js';
-import { RCT } from '../../../../config.js';
+import { h } from '/js/src/index.js';
 
-export default function qcTypeSelection(model, close) {
+export default function qcTypeSelection(model, close, item, index, detectorName) {
     const title = h('h3', 'Quality Control type');
+    const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName}&rows-on-site=50&site=1`;
 
     return h('', [
         h('.flex.bottom-20.justify-center.items-center',
@@ -27,7 +26,12 @@ export default function qcTypeSelection(model, close) {
 
         h('.flex-wrap.justify-center.items-center',
             h('button.btn.btn-primary.m1', {
-                onclick: () => console.log('clicked!'),
-            }, 'Apply changes')),
+                onclick: () => model.router.go(flagsUrl),
+            }, 'Run based')),
+
+        h('.flex-wrap.justify-center.items-center',
+            h('button.btn.btn-primary.m1', {
+                onclick: () => model.router.go(flagsUrl),
+            }, 'Time based')),
     ]);
 }

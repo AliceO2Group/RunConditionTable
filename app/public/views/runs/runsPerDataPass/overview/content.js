@@ -12,18 +12,18 @@
  * or submit itself to any jurisdiction.
  */
 
-import indexChip from "../../../../components/chips/indexChip.js";
-import pager from "../../../../components/table/pager.js";
-import { defaultIndexString } from "../../../../utils/defaults.js";
-import { anyFiltersActive } from "../../../../utils/filtering/filterUtils.js";
-import pagesCellsSpecials from "../../../userView/data/pagesCellsSpecials.js";
-import title from "../../../userView/data/table/title.js";
-import header from "../table/header.js";
-import row from "../table/row.js";
+import indexChip from '../../../../components/chips/indexChip.js';
+import pager from '../../../../components/table/pager.js';
+import { defaultIndexString } from '../../../../utils/defaults.js';
+import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
+import pagesCellsSpecials from '../../../userView/data/pagesCellsSpecials.js';
+import title from '../../../userView/data/table/title.js';
+import header from '../table/header.js';
+import row from '../table/row.js';
 import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
 
-import { RCT } from "../../../../config.js";
-import pageSettings from "../../../userView/data/pageSettings/pageSettings.js";
+import { RCT } from '../../../../config.js';
+import pageSettings from '../../../userView/data/pageSettings/pageSettings.js';
 const { pageNames } = RCT;
 
 export default function content(model, runs, detectors) {
@@ -108,7 +108,7 @@ export default function content(model, runs, detectors) {
                             }, [
                                 header(visibleFields, data, model),
                                 model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page, dataPointer.index, runs, detectors),
+                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.index, runs, detectors),
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
@@ -124,10 +124,10 @@ export default function content(model, runs, detectors) {
 }
 
 function tableBody(
-    model, visibleFields, data, cellsSpecials, page, index, runs, detectors,
+    model, visibleFields, data, cellsSpecials, index, runs, detectors,
 ) {
     return h('tbody', { id: `table-body-${data.url}` },
         data.rows.map((item) => row(
-                model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
-            )));
+            model, visibleFields, data, item, cellsSpecials, index, runs, detectors, 'qcTypeSelectionModal',
+        )));
 }

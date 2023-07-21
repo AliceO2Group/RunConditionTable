@@ -36,14 +36,15 @@ export default function dataPanel(model, runs, detectors, flags) {
         NotAsked: () => h('', 'not asked'),
         Loading: () => spinnerAndReloadView(model),
         Success: () => {
-            switch(page) {
+            switch (page) {
                 case pageNames.flags:
                     return flagsPanel(model, runs, detectors, flags);
                 case pageNames.runsPerDataPass:
                     return runsPerDataPassPanel(model, runs, detectors);
                 default:
                     return tablePanel(model, runs, detectors);
-        }},
+            }
+        },
         Failure: (status) => failureStatusAndReload(model, status),
     }) : unknownError(model);
 }

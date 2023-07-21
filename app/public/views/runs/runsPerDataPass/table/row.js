@@ -29,9 +29,7 @@ export default function row(
         h(`td.${pageName}-${field.name.includes('detector') ? 'detector' : field.name}-cell.text-ellipsis`,
             item[field.name]
                 ? cellsSpecials[field.name]
-                    ? pageName === 'dataPasses'
-                        ? cellsSpecials[field.name](model, runs, item)
-                        : cellsSpecials[field.name](model, item)
+                    ? cellsSpecials[field.name](model, item)
                     : /.*_detector/.test(field.name)
                         ? detectorIcon(model, item, field.name, index, detectors.getDetectorName(field.name))
                         : item[field.name]

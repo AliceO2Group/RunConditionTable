@@ -12,27 +12,45 @@
  * or submit itself to any jurisdiction.
  */
 
+import qcTypeSelection from '../../views/runs/runsPerDataPass/overview/qcTypeSelection.js';
 import { h } from '/js/src/index.js';
 
 export default function detectorIcon(model, item, n, index, detectorName) {
-    const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName}&rows-on-site=50&site=1`;
+    return [
+        h('.modal', { id: 'qcTypeSelectionModal' },
+            h('.modal-content.abs-center.p3', {
+                id: 'qcTypeSelectionModalContent',
+            }, qcTypeSelection(model, () => {
+                document.getElementById('qcTypeSelectionModal').style.display = 'none';
+            }, item, index, detectorName))),
+        h('button.btn.transparent.tooltip.no-border-bottom.pointer', {
+            onclick: () => {
+                console.log(document.getElementById('qcTypeSelectionModal'));
+                console.log('clicked!');
+                document.getElementById('qcTypeSelectionModal').style.display = 'block';
+                document.addEventListener('click', (event) => {
+                    const modalContent = document.getElementsByClassName('modal-content');
+                    const modal = document.getElementsByClassName('modal');
+                    if (Array.from(modalContent).find((e) => e != event.target)
+                    && Array.from(modal).find((e) => e == event.target)
+                    && document.getElementById('qcTypeSelectionModal')) {
+                        document.getElementById('qcTypeSelectionModal').style.display = 'none';
+                    }
+                });
+            } },
+        h('svg', { width: '20px', height: '20px' },
+            h('circle',
+                {
+                    cx: '50%',
+                    cy: '50%',
+                    r: '8px', //
 
-    return h('button.btn.transparent.tooltip.no-border-bottom.pointer', {
-        onclick: () => {
-            model.router.go(flagsUrl);
-        } },
-    h('svg', { width: '20px', height: '20px' },
-        h('circle',
-            {
-                cx: '50%',
-                cy: '50%',
-                r: '8px', //
-
-                /*
-                 *Stroke: '#F7B538', strokes for the limited acceptance flags only
-                 *'stroke-width': '3',
-                 */
-                fill: '#8CB369',
-            })),
-    h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
+                    /*
+                     *Stroke: '#F7B538', strokes for the limited acceptance flags only
+                     *'stroke-width': '3',
+                     */
+                    fill: '#8CB369',
+                })),
+        h('span.detector-tooltip-field', `run_det_id: ${item[n]}`)),
+    ];
 }
