@@ -16,25 +16,26 @@ import qcTypeSelection from '../../views/runs/runsPerDataPass/overview/qcTypeSel
 import { h } from '/js/src/index.js';
 
 export default function detectorIcon(model, item, index, detectorName) {
-    const runDetectorId = `${item}-${index}-${detectorName}`;
+    const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
+    const runBasedQcModalId = `${runDetectorId}-qc-modal`;
     return [
-        h('.modal', { id: 'qcTypeSelectionModal' },
+        h('.modal', { id: runBasedQcModalId },
             h('.modal-content.abs-center.p3', {
-                id: 'qcTypeSelectionModalContent',
+                id: `${runBasedQcModalId}-content`,
             }, qcTypeSelection(model, () => {
-                document.getElementById('qcTypeSelectionModal').style.display = 'none';
+                document.getElementById(runBasedQcModalId).style.display = 'none';
             }, item, index, detectorName, runDetectorId))),
         h('button.btn.no-border-bottom.pointer.run-quality.good', {
             id: runDetectorId,
             onclick: () => {
-                document.getElementById('qcTypeSelectionModal').style.display = 'block';
+                document.getElementById(runBasedQcModalId).style.display = 'block';
                 document.addEventListener('click', (event) => {
                     const modalContent = document.getElementsByClassName('modal-content');
                     const modal = document.getElementsByClassName('modal');
                     if (Array.from(modalContent).find((e) => e != event.target)
                     && Array.from(modal).find((e) => e == event.target)
-                    && document.getElementById('qcTypeSelectionModal')) {
-                        document.getElementById('qcTypeSelectionModal').style.display = 'none';
+                    && document.getElementById(runBasedQcModalId)) {
+                        document.getElementById(runBasedQcModalId).style.display = 'none';
                     }
                 });
             } },

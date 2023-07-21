@@ -20,24 +20,24 @@ export default function qcTypeSelection(model, close, item, index, detectorName,
     const runQualitySelectId = 'run-quality-select';
 
     function handleRunQualityChange() {
-        const documentBody = document.getElementById(runDetectorId);
+        console.log(runDetectorId);
+        const detectorIcon = document.getElementById(runDetectorId);
         const themesSelection = document.getElementById(runQualitySelectId);
         const selectedTheme = themesSelection.options[themesSelection.selectedIndex].value;
         switch (selectedTheme) {
             case '0':
-                /* Ehevi */
-                if (documentBody.classList.contains('bad')) {
-                    documentBody.classList.remove('bad');
-                    documentBody.classList.add('good');
-                    documentBody.innerHTML = 'good';
+                if (detectorIcon.classList.contains('bad')) {
+                    detectorIcon.classList.remove('bad');
+                    detectorIcon.classList.add('good');
+                    detectorIcon.innerHTML = 'good';
                 }
                 break;
             case '1':
                 /* WebUI */
-                if (documentBody.classList.contains('good')) {
-                    documentBody.classList.remove('good');
-                    documentBody.classList.add('bad');
-                    documentBody.innerHTML = 'bad';
+                if (detectorIcon.classList.contains('good')) {
+                    detectorIcon.classList.remove('good');
+                    detectorIcon.classList.add('bad');
+                    detectorIcon.innerHTML = 'bad';
                 }
                 break;
             default:
