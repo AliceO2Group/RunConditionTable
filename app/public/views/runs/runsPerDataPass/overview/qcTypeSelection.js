@@ -15,16 +15,14 @@
 import { h, iconChevronBottom } from '/js/src/index.js';
 
 export default function qcTypeSelection(model, close, item, index, detectorName, runDetectorId) {
-    const title = h('h3', 'Run quality');
     const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName}&rows-on-site=50&site=1`;
     const runQualitySelectId = 'run-quality-select';
 
     function handleRunQualityChange() {
-        console.log(runDetectorId);
         const detectorIcon = document.getElementById(runDetectorId);
-        const themesSelection = document.getElementById(runQualitySelectId);
-        const selectedTheme = themesSelection.options[themesSelection.selectedIndex].value;
-        switch (selectedTheme) {
+        const runQualitySelection = document.getElementById(runQualitySelectId);
+        const selectedQuality = runQualitySelection.options[runQualitySelection.selectedIndex].value;
+        switch (selectedQuality) {
             case '0':
                 if (detectorIcon.classList.contains('bad')) {
                     detectorIcon.classList.remove('bad');
@@ -33,7 +31,6 @@ export default function qcTypeSelection(model, close, item, index, detectorName,
                 }
                 break;
             case '1':
-                /* WebUI */
                 if (detectorIcon.classList.contains('good')) {
                     detectorIcon.classList.remove('good');
                     detectorIcon.classList.add('bad');
@@ -46,16 +43,11 @@ export default function qcTypeSelection(model, close, item, index, detectorName,
     }
 
     return h('', [
+        h('.flex.items-center',
+            h('h6.inline.top-15.left-10', index)),
         h('.flex.bottom-20.items-center',
-            h('.inline.top-15.left-10',
-                title)),
-
-        item.run_number,
-        '..',
-        index,
-        '..',
-        detectorName,
-
+            h('h3.inline.top-15.left-10', item.run_number),
+            h('h3.inline.top-15.left-10', detectorName)),
         h('.flex-wrap.justify-between.items-center',
             h('', 'Run quality'),
             h('select.select.color-theme', {
@@ -70,6 +62,6 @@ export default function qcTypeSelection(model, close, item, index, detectorName,
         h('.flex-wrap.justify-center.items-center',
             h('button.btn.btn-primary.m1', {
                 onclick: () => model.router.go(flagsUrl),
-            }, 'Time based')),
+            }, 'Time based quality')),
     ]);
 }
