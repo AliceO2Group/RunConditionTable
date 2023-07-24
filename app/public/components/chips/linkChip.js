@@ -15,7 +15,7 @@
 import { h } from '/js/src/index.js';
 
 export default function linkChip(navigation, label, href) {
-    return h(`a.btn.chip.m1.no-text-decoration`, {
+    return h('a.btn.chip.m1.no-text-decoration', {
         onclick: (e) => navigation.handleLinkEvent(e),
         href: href,
     }, label);

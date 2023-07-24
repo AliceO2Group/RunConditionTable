@@ -13,9 +13,11 @@
  */
 
 import { h } from '/js/src/index.js';
-import subPagesCount from './subPagesCount.js';
 
 export default function sidebarItem(model, pageName, label) {
+    const subPagesCount = model.getSubPagesCount(pageName);
+    const displayedSubPagesCount = subPagesCount > 0 ? ` (${subPagesCount})` : '';
+
     return h('.flex-wrap', [
         h('.page-title', {
             class: model.router.params.page === pageName ? 'selected' : '',
@@ -27,9 +29,9 @@ export default function sidebarItem(model, pageName, label) {
                     h('.current-page',
                         h('.title-text-relative.hidden', label))),
                 h('.folder-20.vertical-center'),
-                h('.title-text.vertical-center', label, subPagesCount(model, pageName)))
+                h('.title-text.vertical-center', label, displayedSubPagesCount))
             : h('div',
                 h('.folder-20.vertical-center'),
-                h('.title-text.vertical-center', label, subPagesCount(model, pageName)))),
+                h('.title-text.vertical-center', label, displayedSubPagesCount))),
     ]);
 }

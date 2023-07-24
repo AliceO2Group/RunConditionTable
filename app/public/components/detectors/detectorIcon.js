@@ -38,7 +38,7 @@ export default function detectorIcon(navigation, item, index, detectorName) {
                         document.getElementById(runBasedQcModalId).style.display = 'none';
                     }
                 });
-            }},
+            } },
         'good'),
     ];
 }
