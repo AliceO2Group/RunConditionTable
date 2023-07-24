@@ -14,7 +14,7 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { getReadableFileSizeString } from '../../../utils/utils.js';
-import actionChip from '../../../components/chips/actionChip.js';
+import linkChip from '../../../components/chips/linkChip.js';
 const { dataReqParams: DRP } = RCT;
 const { pageNames: PN } = RCT;
 
@@ -48,20 +48,20 @@ pagesCellsSpecials[PN.periods] = {
     name: (model, item) => [
         h('td.text-ellipsis', item.name),
         h('td',
-            actionChip(
+            linkChip(
                 model.navigation,
                 'runs',
                 // eslint-disable-next-line max-len
                 `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`,
             ),
 
-            actionChip(
+            linkChip(
                 model.navigation,
                 'data passes',
                 `/?page=${PN.dataPasses}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`,
             ),
 
-            actionChip(
+            linkChip(
                 model.navigation,
                 'MC',
                 `/?page=${PN.mc}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`,
@@ -83,7 +83,7 @@ pagesCellsSpecials[PN.dataPasses] = {
                     model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`);
                 },
             }, 'runs'),
-            actionChip(
+            linkChip(
                 model.navigation,
                 'anchorage',
                 // eslint-disable-next-line max-len
@@ -96,7 +96,7 @@ pagesCellsSpecials[PN.mc] = {
     name: (model, item) => [
         h('td.text-ellipsis', item.name),
         h('td',
-            actionChip(
+            linkChip(
                 model.navigation,
                 'anchored',
                 // eslint-disable-next-line max-len

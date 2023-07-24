@@ -14,23 +14,9 @@
 
 import { h } from '/js/src/index.js';
 
-export default function actionChip(navigation, label, href = undefined) {
-    let chipClasses = '.btn.chip.m1';
-
-    if (navigation.router && href !== undefined) {
-        const url = navigation.router.getUrl();
-        if (href === url.pathname + url.search || href['href'] && href.href === url.href) {
-            chipClasses += ' highlight-blue';
-        }
-    }
-
-    if (typeof href !== 'undefined') {
-        return h(`a${chipClasses}.no-text-decoration`, {
-            onclick: (e) => navigation.handleLinkEvent(e),
-            href: href,
-        }, label);
-    }
-    return h(`button${chipClasses}`, {
+export default function linkChip(navigation, label, href) {
+    return h(`a.btn.chip.m1.no-text-decoration`, {
         onclick: (e) => navigation.handleLinkEvent(e),
+        href: href,
     }, label);
 }
