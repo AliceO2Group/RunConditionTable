@@ -14,15 +14,8 @@
 
 import { h } from '/js/src/index.js';
 
-export default function actionChip(
-    navigation,
-    label,
-    href = undefined,
-    classes = '',
-    margin = '.m1',
-    force = false,
-) {
-    let chipClasses = `.btn.chip${classes}${margin}`;
+export default function actionChip(navigation, label, href = undefined) {
+    let chipClasses = '.btn.chip.m1';
 
     if (navigation.router && href !== undefined) {
         const url = navigation.router.getUrl();
@@ -31,7 +24,7 @@ export default function actionChip(
         }
     }
 
-    if (typeof href !== 'undefined' && !force) {
+    if (typeof href !== 'undefined') {
         return h(`a${chipClasses}.no-text-decoration`, {
             onclick: (e) => navigation.handleLinkEvent(e),
             href: href,
