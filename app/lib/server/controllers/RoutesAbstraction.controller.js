@@ -13,13 +13,13 @@
 
 const getApiDocsAsJson = (routes) => routes.map(({ method, path, description }) => ({ method, path, description }));
 
+// eslint-disable-next-line valid-jsdoc
 /**
  * @class
  * @classdesc Controller class used for handling dependencies among routes and other controllers.
  * It uses singleton pattern.
- * Case for api/docs endpoints which needs other endpoints (router trees already parsed).
+ * Case for api/docs endpoints which needs other endpoints (router trees parsed already).
  */
-
 class RoutesAbstractionController {
     constructor() { }
 
