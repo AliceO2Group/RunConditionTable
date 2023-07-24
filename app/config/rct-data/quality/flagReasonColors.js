@@ -12,10 +12,10 @@
  * or submit itself to any jurisdiction.
  */
 
-flagReasonColors = {
+const flagReasonColors = {
     neutral: '277DA1',
     bad: '922C40',
     limitedAcceptance: 'DC9750',
-},
+};
 
 module.exports = flagReasonColors;

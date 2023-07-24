@@ -14,7 +14,7 @@
 
 const runBasedQuality = {
     good: 'good',
-    bad: 'bad'
+    bad: 'bad',
 };
 
 module.exports = runBasedQuality;
