@@ -13,6 +13,8 @@
  */
 
 import { h, iconChevronBottom } from '/js/src/index.js';
+import { RCT } from '../../../../config.js';
+const { runBasedQuality } = RCT.quality;
 
 export default function qcTypeSelection(navigation, close, item, index, detectorName, runDetectorId) {
     const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName}&rows-on-site=50&site=1`;
@@ -24,17 +26,18 @@ export default function qcTypeSelection(navigation, close, item, index, detector
         const selectedQuality = runQualitySelection.options[runQualitySelection.selectedIndex].value;
         switch (selectedQuality) {
             case '0':
-                if (detectorIcon.classList.contains('bad')) {
-                    detectorIcon.classList.remove('bad');
-                    detectorIcon.classList.add('good');
-                    detectorIcon.innerHTML = 'good';
+                if (detectorIcon.classList.contains(runBasedQuality.bad)) {
+                    detectorIcon.classList.remove(runBasedQuality.bad);
+                    detectorIcon.classList.add(runBasedQuality.good);
+                    detectorIcon.innerHTML = runBasedQuality.good;
                 }
                 break;
             case '1':
-                if (detectorIcon.classList.contains('good')) {
-                    detectorIcon.classList.remove('good');
-                    detectorIcon.classList.add('bad');
-                    detectorIcon.innerHTML = 'bad';
+                if (detectorIcon.classList.contains(runBasedQuality.good)) {
+                    detectorIcon.classList.remove(runBasedQuality.good);
+                    detectorIcon.classList.add(runBasedQuality.bad);
+                    RCT.add
+                    detectorIcon.innerHTML = runBasedQuality.bad;
                 }
                 break;
             default:
@@ -55,8 +58,8 @@ export default function qcTypeSelection(navigation, close, item, index, detector
                 name: runQualitySelectId,
                 onchange: () => handleRunQualityChange(),
             }, [
-                h('option', { value: 0 }, 'good'),
-                h('option', { value: 1 }, 'bad'),
+                h('option', { value: 0 }, runBasedQuality.good),
+                h('option', { value: 1 }, runBasedQuality.bad),
             ], iconChevronBottom())),
 
         h('.flex-wrap.justify-center.items-center',

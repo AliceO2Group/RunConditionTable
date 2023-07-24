@@ -14,6 +14,8 @@
 
 import qcTypeSelection from '../../views/runs/runsPerDataPass/overview/qcTypeSelection.js';
 import { h } from '/js/src/index.js';
+import { RCT } from '../../config.js';
+const { runBasedQuality } = RCT.quality;
 
 export default function detectorIcon(navigation, item, index, detectorName) {
     const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
@@ -39,6 +41,6 @@ export default function detectorIcon(navigation, item, index, detectorName) {
                     }
                 });
             } },
-        'good'),
+        runBasedQuality.good),
     ];
 }
