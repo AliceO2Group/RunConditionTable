@@ -27,8 +27,8 @@ const specificallyDefinedRepositories = {};
 module.exports = (sequelize) => {
     const modelName2Repository = Object.entries(modelsCreator(sequelize)).map(([modelName, model]) =>
         [modelName + 'Repository',
-        modelName in specificallyDefinedRepositories ? 
-            new specificallyDefinedRepositories[modelName](model) : new Repository(model)]
+        new (specificallyDefinedRepositories[modelName] ?? Repository) (model),
+    ]
     );
 
     return Object.fromEntries(modelName2Repository);
