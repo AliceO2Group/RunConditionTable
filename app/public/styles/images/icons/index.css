@@ -91,6 +91,13 @@
     display: inline-block;
 }
 
+.external-link-15-primary {
+    background-image: url('/styles/images/icons/15/primary/External\ Link.svg');
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+}
+
 /**
  * 20px
  */
