@@ -17,11 +17,11 @@ const { viewTypes, pagesViewGroups } = require('./viewTypes.js');
 const fieldNames = require('./fieldNames.js');
 const { filterTypes, filterInputTypes } = require('./filterTypes.js');
 const detectors = require('./detectors.js').sort();
-const flags = require('./flags.json');
 const roles = require('./roles.js');
 const physicalParticlesData = require('./physicalParticlesData.js');
 const beamTypesMappings = require('./beamTypesMappings.js');
 const healthcheckQueries = require('./healthcheckQueries.js');
+const quality = require('./quality');
 
 module.exports = {
     pageNames,
@@ -32,7 +32,7 @@ module.exports = {
     filterInputTypes,
     detectors,
     roles,
-    flags,
+    quality,
     physicalParticlesData,
     beamTypesMappings,
     ...healthcheckQueries,

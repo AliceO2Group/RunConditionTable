@@ -13,7 +13,7 @@
  */
 
 const detectors = require('./detectors.js').sort();
-const flags = require('./flags.json');
+const flags = require('./quality/flags.json');
 const physicalParticlesData = require('./physicalParticlesData.js');
 
 const checkStaticData = {
