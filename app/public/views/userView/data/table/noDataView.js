@@ -55,7 +55,7 @@ export default function noDataView(model, dataPointer, anyFiltersActive) {
 
     const clearFiltersBtn = h('button.btn.btn-secondary.m3', {
         onclick: () => {
-            model.goToDefaultPageUrl(dataPointer.page);
+            model.navigation.goToDefaultPageUrl(dataPointer.page);
         },
     }, 'Clear filters');
 

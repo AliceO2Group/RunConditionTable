@@ -12,14 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-const { roles, flags: flagsTypes, detectors, pageNames, filterTypes, filterInputTypes, fieldNames } = require('./rct-data');
+const { roles, detectors, pageNames, filterTypes, filterInputTypes, fieldNames, quality } = require('./rct-data');
 
 module.exports = { // Properties that will be provided to frontend in the public folder
     filterTypes: filterTypes,
     filterInputTypes: filterInputTypes,
 
     roles,
-    flagsTypes,
+    quality,
     endpoints: {
         login: '/login/',
         logout: '/logout/',
@@ -58,21 +58,9 @@ module.exports = { // Properties that will be provided to frontend in the public
     pageNames: pageNames,
     fieldNames: fieldNames,
 
-    operationsNames: {
-        flag_insert: 'flags_insert',
-        flag_delete: 'flag_delete',
-        flag_update: 'flag_update',
-        verification_insert: 'verification_insert',
-    },
-
     detectors: detectors,
     themes: {
         ehevi: 'ehevi',
         webui: 'webui',
-    },
-    flagReasonColors: {
-        neutral: '277DA1',
-        bad: '922C40',
-        limitedAcceptance: 'DC9750',
     },
 };

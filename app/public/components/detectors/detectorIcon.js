@@ -12,27 +12,35 @@
  * or submit itself to any jurisdiction.
  */
 
+import qcTypeSelection from '../../views/runs/runsPerDataPass/overview/qcTypeSelection.js';
 import { h } from '/js/src/index.js';
+import { RCT } from '../../config.js';
+const { runBasedQuality } = RCT.quality;
 
-export default function detectorIcon(model, item, n, index, detectorName) {
-    const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName}&rows-on-site=50&site=1`;
-
-    return h('button.btn.transparent.tooltip.no-border-bottom.pointer', {
-        onclick: () => {
-            model.router.go(flagsUrl);
-        } },
-    h('svg', { width: '20px', height: '20px' },
-        h('circle',
-            {
-                cx: '50%',
-                cy: '50%',
-                r: '8px', //
-
-                /*
-                 *Stroke: '#F7B538', strokes for the limited acceptance flags only
-                 *'stroke-width': '3',
-                 */
-                fill: '#8CB369',
-            })),
-    h('span.detector-tooltip-field', `run_det_id: ${item[n]}`));
+export default function detectorIcon(navigation, item, index, detectorName, timeBased = false) {
+    const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
+    const runBasedQcModalId = `${runDetectorId}-qc-modal`;
+    return [
+        h('.modal', { id: runBasedQcModalId },
+            h('.modal-content.abs-center.p3', {
+                id: `${runBasedQcModalId}-content`,
+            }, qcTypeSelection(navigation, () => {
+                document.getElementById(runBasedQcModalId).style.display = 'none';
+            }, item, index, detectorName, runDetectorId, timeBased))),
+        h('button.btn.no-border-bottom.pointer.run-quality.good', {
+            id: runDetectorId,
+            onclick: () => {
+                document.getElementById(runBasedQcModalId).style.display = 'block';
+                document.addEventListener('click', (event) => {
+                    const modalContent = document.getElementsByClassName('modal-content');
+                    const modal = document.getElementsByClassName('modal');
+                    if (Array.from(modalContent).find((e) => e != event.target)
+                    && Array.from(modal).find((e) => e == event.target)
+                    && document.getElementById(runBasedQcModalId)) {
+                        document.getElementById(runBasedQcModalId).style.display = 'none';
+                    }
+                });
+            } },
+        runBasedQuality.good),
+    ];
 }

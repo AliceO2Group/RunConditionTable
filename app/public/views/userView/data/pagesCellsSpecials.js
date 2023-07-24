@@ -14,7 +14,7 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { getReadableFileSizeString } from '../../../utils/utils.js';
-import actionChip from '../../../components/chips/actionChip.js';
+import linkChip from '../../../components/chips/linkChip.js';
 const { dataReqParams: DRP } = RCT;
 const { pageNames: PN } = RCT;
 
@@ -48,28 +48,22 @@ pagesCellsSpecials[PN.periods] = {
     name: (model, item) => [
         h('td.text-ellipsis', item.name),
         h('td',
-            actionChip(
-                model,
+            linkChip(
+                model.navigation,
                 'runs',
-                (e) => model.handleClick(e),
-                '',
                 // eslint-disable-next-line max-len
                 `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`,
             ),
 
-            actionChip(
-                model,
+            linkChip(
+                model.navigation,
                 'data passes',
-                (e) => model.handleClick(e),
-                '',
                 `/?page=${PN.dataPasses}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`,
             ),
 
-            actionChip(
-                model,
+            linkChip(
+                model.navigation,
                 'MC',
-                (e) => model.handleClick(e),
-                '',
                 `/?page=${PN.mc}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`,
             )),
     ],
@@ -89,11 +83,9 @@ pagesCellsSpecials[PN.dataPasses] = {
                     model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`);
                 },
             }, 'runs'),
-            actionChip(
-                model,
+            linkChip(
+                model.navigation,
                 'anchorage',
-                (e) => model.handleClick(e),
-                '',
                 // eslint-disable-next-line max-len
                 `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
             )),
@@ -104,11 +96,9 @@ pagesCellsSpecials[PN.mc] = {
     name: (model, item) => [
         h('td.text-ellipsis', item.name),
         h('td',
-            actionChip(
-                model,
+            linkChip(
+                model.navigation,
                 'anchored',
-                (e) => model.handleClick(e),
-                '',
                 // eslint-disable-next-line max-len
                 `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
             )),

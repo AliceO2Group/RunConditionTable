@@ -12,9 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-export default function subPagesCount(model, pageName) {
-    const subPagesCount = model.getSubPagesCount(pageName);
-    return subPagesCount > 0
-        ? ` (${model.getSubPagesCount(pageName)})`
-        : '';
-}
+const runBasedQuality = {
+    good: 'good',
+    bad: 'bad',
+};
+
+module.exports = runBasedQuality;

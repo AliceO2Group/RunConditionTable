@@ -15,7 +15,7 @@
 import { h } from '/js/src/index.js';
 import flagVisualization from './flagVisualization.js';
 import { RCT } from '../../../../config.js';
-const { flagReasonColors } = RCT;
+const { flagReasonColors } = RCT.quality;
 
 function filterDistinct(a) {
     return a.filter((value, index, array) => array.indexOf(value) === index);

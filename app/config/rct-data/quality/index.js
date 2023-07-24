@@ -12,27 +12,12 @@
  * or submit itself to any jurisdiction.
  */
 
-/* Modal background */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2 !important;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-  }
-  
-  /* Modal Content/Box */
-.modal-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    background-color: var(--off-white);
-    box-shadow: 0 0 15px 4px rgba(0,0,0,0.06);
-}
+const flags = require('./flags.json');
+const runBasedQuality = require('./quality.js');
+const flagReasonColors = require('./flagReasonColors.js');
+
+module.exports = {
+    runBasedQuality: runBasedQuality,
+    flags: flags,
+    flagReasonColors: flagReasonColors,
+};
