@@ -21,19 +21,19 @@ module.exports = (sequelize) => {
             field: 'run_number',
         },
         timeO2Start: {
-            type: Sequelize.DATE,
+            type: Sequelize.BIGINT,
             field: 'time_start',
         },
         timeO2End: {
-            type: Sequelize.DATE,
+            type: Sequelize.BIGINT,
             field: 'time_end',
         },
         timeTrgStart: {
-            type: Sequelize.DATE,
+            type: Sequelize.BIGINT,
             field: 'time_trg_start',
         },
         timeTrgEnd: {
-            type: Sequelize.DATE,
+            type: Sequelize.BIGINT,
             field: 'time_trg_end',
         },
         startTime: {
@@ -42,7 +42,7 @@ module.exports = (sequelize) => {
                 const timeTrgStart = this.getDataValue('timeTrgStart');
                 const timeO2Start = this.getDataValue('timeO2Start');
                 const runStartString = timeTrgStart ?? timeO2Start;
-                return runStartString ? new Date(runStartString).getTime() : null;
+                return runStartString;
             },
         },
         endTime: {
@@ -54,7 +54,7 @@ module.exports = (sequelize) => {
                 const timeTrgEnd = this.getDataValue('timeTrgEnd');
                 const timeO2End = this.getDataValue('timeO2End');
                 const runEndString = timeTrgEnd ?? timeO2End;
-                return (runEndString ? new Date(runEndString) : new Date()).getTime();
+                return runEndString;
             },
         },
         runDuration: {
