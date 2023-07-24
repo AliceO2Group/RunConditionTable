@@ -36,7 +36,6 @@ export default function qcTypeSelection(navigation, close, item, index, detector
                 if (detectorIcon.classList.contains(runBasedQuality.good)) {
                     detectorIcon.classList.remove(runBasedQuality.good);
                     detectorIcon.classList.add(runBasedQuality.bad);
-                    RCT.add
                     detectorIcon.innerHTML = runBasedQuality.bad;
                 }
                 break;
