@@ -15,14 +15,14 @@
 import qcTypeSelection from '../../views/runs/runsPerDataPass/overview/qcTypeSelection.js';
 import { h } from '/js/src/index.js';
 
-export default function detectorIcon(model, item, index, detectorName) {
+export default function detectorIcon(navigation, item, index, detectorName) {
     const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
     const runBasedQcModalId = `${runDetectorId}-qc-modal`;
     return [
         h('.modal', { id: runBasedQcModalId },
             h('.modal-content.abs-center.p3', {
                 id: `${runBasedQcModalId}-content`,
-            }, qcTypeSelection(model, () => {
+            }, qcTypeSelection(navigation, () => {
                 document.getElementById(runBasedQcModalId).style.display = 'none';
             }, item, index, detectorName, runDetectorId))),
         h('button.btn.no-border-bottom.pointer.run-quality.good', {

@@ -14,7 +14,7 @@
 
 import { h, iconChevronBottom } from '/js/src/index.js';
 
-export default function qcTypeSelection(model, close, item, index, detectorName, runDetectorId) {
+export default function qcTypeSelection(navigation, close, item, index, detectorName, runDetectorId) {
     const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName}&rows-on-site=50&site=1`;
     const runQualitySelectId = 'run-quality-select';
 
@@ -61,7 +61,7 @@ export default function qcTypeSelection(model, close, item, index, detectorName,
 
         h('.flex-wrap.justify-center.items-center',
             h('button.btn.btn-primary.m1', {
-                onclick: () => model.router.go(flagsUrl),
+                onclick: () => navigation.router.go(flagsUrl),
             }, 'Time based quality')),
     ]);
 }

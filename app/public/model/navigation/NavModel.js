@@ -74,8 +74,7 @@ export default class Navigation extends Observable {
                     const siteReqParams = `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
                     const dpUrl = new URL(url.origin + url.pathname + dpSearchParams + siteReqParams);
                     this.parent.fetchedData.reqForData(true, dpUrl).then(() => {
-                        // this.model.runs. ...
-                        const runNumbers = this.parent.fetchedData[pageNames.runsPerDataPass][dataPassName].payload.rows.map((row) => row.run_number);
+                        const runNumbers = this.model.runs.getRunsPerDataPass(dataPassName).map((row) => row.run_number);
                         this.model.runs.fetchFlagsSummary(dataPassName, runNumbers).then(() => {
                             parent.fetchedData.reqForData();
                         }).catch(() => {});
