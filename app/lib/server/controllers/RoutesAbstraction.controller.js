@@ -27,19 +27,15 @@ class RoutesAbstractionController {
         this.apiDocsJson = getApiDocsAsJson(routes);
     }
 
-    getDocs() {
-        return this.apiDocsJson;
-    }
-
+    // eslint-disable-next-line valid-jsdoc
     /**
      * Express hanlder for whole api description request
      */
-
     async getDocsHandler(req, res) {
-        if (!this.getDocs()) {
+        if (!this.apiDocsJson) {
             res.status(500).json({ message: 'Server misconfigured, please, contact administrator' });
         }
-        res.json(this.getDocs());
+        res.json(this.apiDocsJson);
     }
 }
 
