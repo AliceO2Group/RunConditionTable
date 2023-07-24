@@ -14,7 +14,7 @@
 const routesAbstractionController = require('../controllers/RoutesAbstraction.controller.js');
 
 module.exports = {
-    path: '/docs',
+    path: '/api-docs',
     method: 'get',
     args: { public: true },
     controller: routesAbstractionController.getDocsHandler.bind(routesAbstractionController),
