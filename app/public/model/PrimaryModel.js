@@ -112,7 +112,7 @@ export default class PrimaryModel extends Observable {
         if (this.getCurrentDataPointer().page === page && this.getCurrentDataPointer().index === index) {
             this.navigation.goToDefaultPageUrl(page);
         }
-        Reflect.deleteProperty(this.fetchedData[page], index);
+        delete this.fetchedData[page][index];
         this.notify();
     }
 
@@ -120,7 +120,7 @@ export default class PrimaryModel extends Observable {
         const { page, index } = this.getCurrentDataPointer();
         this.fetchedData[page][index] = null;
         this.navigation.goToDefaultPageUrl(page);
-        Reflect.deleteProperty(this.fetchedData[page], index);
+        delete this.fetchedData[page][index];
     }
 
     handleSessionError() {
