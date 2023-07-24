@@ -20,7 +20,7 @@ const getApiDocsAsJson = (routes) => routes.map(({ method, path, description }) 
  * It uses singleton pattern.
  * Case for api/docs endpoints which needs other endpoints (router trees parsed already).
  */
-class RoutesAbstractionController {
+class ApiDocumentationCotroller {
     constructor() { }
 
     provideRoutesForApiDocs(routes) {
@@ -39,4 +39,4 @@ class RoutesAbstractionController {
     }
 }
 
-module.exports = new RoutesAbstractionController();
+module.exports = new ApiDocumentationCotroller();

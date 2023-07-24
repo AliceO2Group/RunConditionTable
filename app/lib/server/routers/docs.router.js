@@ -11,12 +11,12 @@
  * or submit itself to any jurisdiction.
  */
 
-const routesAbstractionController = require('../controllers/RoutesAbstraction.controller.js');
+const apiDocumentationCotroller = require('../controllers/ApiDocumentation.controller.js');
 
 module.exports = {
     path: '/api-docs',
     method: 'get',
     args: { public: true },
-    controller: routesAbstractionController.getDocsHandler.bind(routesAbstractionController),
+    controller: apiDocumentationCotroller.getDocsHandler.bind(apiDocumentationCotroller),
     description: 'Return api docs',
 };

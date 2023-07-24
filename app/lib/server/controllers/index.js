@@ -13,5 +13,5 @@
 
 module.exports = {
     RunController: require('./run.controller.js'),
-    routesAbstractionController: require('./RoutesAbstraction.controller.js'),
+    apiDocumentationCotroller: require('./ApiDocumentation.controller.js'),
 };
