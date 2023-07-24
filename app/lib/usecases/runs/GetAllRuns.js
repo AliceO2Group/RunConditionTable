@@ -22,7 +22,7 @@ const { runAdapter } = require('../../database/adapters');
  * Executes this use case.
  *
  * @param {Object} dto The GetRunsDto containing all data.
- * @returns {Promise} Promise object represents the result of this use case.
+ * @returns {Promise<Run[]>} Promise object represents the result of this use case.
  */
 const GetRunUsecase = async () => {
     const runs = await RunRepository.findAll();

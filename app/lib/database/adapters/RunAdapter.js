@@ -16,7 +16,7 @@
  * RunAdapter
  */
 class RunAdapter {
- /**
+    /**
      * Converts the given database object to an entity object.
      *
      * @param {SequelizeRun} databaseObject Object to convert.
@@ -26,6 +26,12 @@ class RunAdapter {
         return databaseObject;
     }
 
+    /**
+     * Converts the given entity object to database object.
+     *
+     * @param {Run} databaseObject Object to convert.
+     * @returns {SequelizeRun} Converted entity object.
+     */
     toDatabase(entityObject) {
         const {
             runNumber,
