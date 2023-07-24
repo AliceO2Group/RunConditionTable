@@ -39,21 +39,4 @@ class RoutesAbstractionController {
     }
 }
 
-class SingletionRoutesAbstractionController {
-    constructor() {
-        throw 'SINGLETON';
-    }
-
-    /**
-     * Get singleton instance
-     * @returns {RoutesAbstractionController} Singleton instance
-     */
-    static getInstance() {
-        if (! SingletionRoutesAbstractionController.INSTANCE) {
-            SingletionRoutesAbstractionController.INSTANCE = new RoutesAbstractionController();
-        }
-        return SingletionRoutesAbstractionController.INSTANCE;
-    }
-}
-
-module.exports = SingletionRoutesAbstractionController;
+module.exports = new RoutesAbstractionController();

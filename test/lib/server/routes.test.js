@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 const { routes } = require('../../../app/lib/server/routers');
-const routesAbstractionController = require('../../../app/lib/server/controllers/RoutesAbstraction.controller.js').getInstance();
+const routesAbstractionController = require('../../../app/lib/server/controllers/RoutesAbstraction.controller.js');
 const assert = require('assert');
 
 module.exports = () => {
@@ -26,7 +26,7 @@ module.exports = () => {
         });
         describe('Routes Abstraction Controller', () => {
             it('Check if /api/docs would return proper json', () => {
-                assert(routesAbstractionController.getDocs().length === routes.length);
+                assert(routesAbstractionController.apiDocsJson.length === routes.length);
             });
         });
     });

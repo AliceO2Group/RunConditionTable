@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const routesAbstractionController = require('../controllers/RoutesAbstraction.controller.js').getInstance();
+const routesAbstractionController = require('../controllers/RoutesAbstraction.controller.js');
 
 module.exports = {
     path: '/docs',

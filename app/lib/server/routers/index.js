@@ -13,7 +13,7 @@
 
 const runRouter = require('./run.router.js');
 const docsRouter = require('./docs.router.js');
-const routesAbstractionController = require('../controllers/RoutesAbstraction.controller.js').getInstance();
+const routesAbstractionController = require('../controllers/RoutesAbstraction.controller.js');
 
 const routeTrees = [
     docsRouter,
