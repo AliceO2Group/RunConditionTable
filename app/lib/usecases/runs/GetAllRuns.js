@@ -16,24 +16,17 @@ const {
         RunRepository,
     },
 } = require('../../database').databaseManager;
-const { runAdapter } = require('../database/adapters');
+const { runAdapter } = require('../../database/adapters');
 
 /**
- * GetAllRuns
+ * Executes this use case.
+ *
+ * @param {Object} dto The GetRunsDto containing all data.
+ * @returns {Promise} Promise object represents the result of this use case.
  */
-class GetRunUseCase {
-    /**
-     * Executes this use case.
-     *
-     * @param {Object} dto The GetRunsDto containing all data.
-     * @returns {Promise} Promise object represents the result of this use case.
-     */
-    // eslint-disable-next-line no-unused-vars
-    async execute(dto) {
-        const runs = await RunRepository.findAll();
+const GetRunUsecase = async () => {
+    const runs = await RunRepository.findAll();
+    return runs ? runs.map((run) => runAdapter.toEntity(run)) : null;
+};
 
-        return runs ? runs.map((run) => runAdapter.toEntity(run)) : null;
-    }
-}
-
-module.exports = GetRunUseCase;
+module.exports = GetRunUsecase;

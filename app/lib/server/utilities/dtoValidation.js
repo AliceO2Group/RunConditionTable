@@ -23,8 +23,9 @@
  */
 const validateDTO = async (dto, req, res) => {
     let value = null;
+    const { query, params, body } = req;
     try {
-        value = await dto.validateAsync(req, {
+        value = await dto.validateAsync({ query, params, body }, {
             abortEarly: false,
         });
     } catch (err) {
