@@ -16,7 +16,7 @@ import { h, iconChevronBottom } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 const { runBasedQuality } = RCT.quality;
 
-export default function qcTypeSelection(navigation, close, item, index, detectorName, runDetectorId) {
+export default function qcTypeSelection(navigation, close, item, index, detectorName, runDetectorId, timeBased) {
     const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName}&rows-on-site=50&site=1`;
     const runQualitySelectId = 'run-quality-select';
 
@@ -61,9 +61,11 @@ export default function qcTypeSelection(navigation, close, item, index, detector
                 h('option', { value: 1 }, runBasedQuality.bad),
             ], iconChevronBottom())),
 
-        h('.flex-wrap.justify-center.items-center',
-            h('button.btn.btn-primary.m1', {
-                onclick: () => navigation.router.go(flagsUrl),
-            }, 'Time based quality')),
+        timeBased
+            ? h('.flex-wrap.justify-center.items-center',
+                h('button.btn.btn-primary.m1', {
+                    onclick: () => navigation.router.go(flagsUrl),
+                }, 'Time based quality'))
+            : '',
     ]);
 }

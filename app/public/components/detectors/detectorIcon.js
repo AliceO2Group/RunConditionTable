@@ -17,7 +17,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 const { runBasedQuality } = RCT.quality;
 
-export default function detectorIcon(navigation, item, index, detectorName) {
+export default function detectorIcon(navigation, item, index, detectorName, timeBased = false) {
     const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
     const runBasedQcModalId = `${runDetectorId}-qc-modal`;
     return [
@@ -26,7 +26,7 @@ export default function detectorIcon(navigation, item, index, detectorName) {
                 id: `${runBasedQcModalId}-content`,
             }, qcTypeSelection(navigation, () => {
                 document.getElementById(runBasedQcModalId).style.display = 'none';
-            }, item, index, detectorName, runDetectorId))),
+            }, item, index, detectorName, runDetectorId, timeBased))),
         h('button.btn.no-border-bottom.pointer.run-quality.good', {
             id: runDetectorId,
             onclick: () => {
