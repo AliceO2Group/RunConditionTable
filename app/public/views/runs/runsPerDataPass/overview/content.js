@@ -76,8 +76,9 @@ export default function content(model, runs, detectors) {
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
-    return dataPointer.index !== defaultIndexString
-        ? h('div.main-content', [
+    return dataPointer.index === defaultIndexString
+        ? noSubPageSelected(model)
+        : h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
                     title(model),
@@ -125,8 +126,7 @@ export default function content(model, runs, detectors) {
                 }, pageSettings(model, () => {
                     document.getElementById('pageSettingsModal').style.display = 'none';
                 }))),
-        ])
-        : noSubPageSelected(model);
+        ]);
 }
 
 function tableBody(
