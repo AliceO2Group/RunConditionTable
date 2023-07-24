@@ -11,6 +11,9 @@
  * or submit itself to any jurisdiction.
  */
 
+const { ApiDocsDTO } = require('../../domain/dtos');
+const { validateDTO } = require('../utilities');
+
 const getApiDocsAsJson = (routes) => routes.map(({ method, path, description }) => ({ method, path, description }));
 
 /**
@@ -30,6 +33,11 @@ class ApiDocumentationCotroller {
      * Express hanlder for whole api description request
      */
     async getDocsHandler(req, res) {
+        const validatedDTO = await validateDTO(ApiDocsDTO, req, res);
+        if (!validatedDTO) {
+            return;
+        }
+
         if (!this.apiDocsJson) {
             res.status(500).json({ message: 'Server misconfigured, please, contact administrator' });
         }

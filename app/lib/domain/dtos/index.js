@@ -12,7 +12,9 @@
  */
 
 const AllRunsDto = require('./AllRuns.dto');
+const ApiDocsDTO = require('./ApiDocs.dto');
 
 module.exports = {
     AllRunsDto,
+    ApiDocsDTO,
 };
