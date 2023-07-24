@@ -58,6 +58,6 @@ export default class Runs extends Observable {
 
     getRun(dataPass, runNumber) {
         const runsPerDataPass = this.getRunsPerDataPass(dataPass);
-        return runsPerDataPass.find((run) => run.run_number.toString() === runNumber.toString());
+        return runsPerDataPass?.find((run) => run.run_number.toString() === runNumber.toString());
     }
 }
