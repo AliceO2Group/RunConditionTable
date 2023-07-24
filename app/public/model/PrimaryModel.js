@@ -14,19 +14,14 @@
 
 import { Observable, Loader } from '/js/src/index.js';
 import FetchedDataManager from './data/FetchedDataManager.js';
-import { RCT } from '../config.js';
-import { defaultIndex, defaultIndexString, defaultRunNumbers } from '../utils/defaults.js';
-const { dataReqParams } = RCT;
-const { pageNames } = RCT;
+import { defaultIndex, defaultIndexString } from '../utils/defaults.js';
+import Navigation from './navigation/NavModel.js';
 
 export default class PrimaryModel extends Observable {
     constructor(parent) {
         super();
         this.parent = parent;
-        this.router = parent.router;
-        this.routerCallback = this.handleLocationChange.bind(this);
-        this.router.observe(this.routerCallback);
-        this.router.bubbleTo(this);
+        this.router = this.parent.router;
 
         this.fetchedData = new FetchedDataManager(this.router, this);
 
@@ -35,7 +30,7 @@ export default class PrimaryModel extends Observable {
 
         this.loader = new Loader();
 
-        this.handleLocationChange(); // Init first page
+        this.navigation = new Navigation(parent, this);
     }
 
     changeSearchFieldsVisibility() {
@@ -46,56 +41,6 @@ export default class PrimaryModel extends Observable {
     changeSortingRowVisibility() {
         this.sortingRowVisible = !this.sortingRowVisible;
         this.notify();
-    }
-
-    async handleLocationChange() {
-        const url = this.router.getUrl();
-        const { page } = this.router.params;
-        switch (url.pathname) {
-            case '/': {
-                if (! page) {
-                    this.router.go(`/?page=${pageNames.periods}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-name`);
-                } else {
-                    await this.pageNavigation(url, page);
-                    this.fetchedData.reqForData()
-                        .then(() => {})
-                        .catch(() => {});
-                }
-                break;
-            }
-            case '/admin/':
-                throw 'TODO';
-            default:
-                break;
-        }
-    }
-
-    async pageNavigation(url, page) {
-        switch (page) {
-            case pageNames.flags: {
-                const dataPassName = this.router.params['data_pass_name'];
-                if (dataPassName) {
-                    await this.parent.runs.fetchRunsPerDataPass(dataPassName).then(() => {}).catch(() => {});
-
-                    const dpSearchParams = `?page=${pageNames.runsPerDataPass}&index=${dataPassName}`;
-                    const siteReqParams = `&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
-                    const dpUrl = new URL(url.origin + url.pathname + dpSearchParams + siteReqParams);
-                    this.fetchedData.reqForData(true, dpUrl).then(() => {
-                        const runNumbers = this.fetchedData[pageNames.runsPerDataPass][dataPassName].payload.rows.map((row) => row.run_number);
-                        this.parent.runs.fetchFlagsSummary(dataPassName, runNumbers).then(() => {
-                            this.fetchedData.reqForData();
-                        }).catch(() => {});
-                    });
-                }
-                break;
-            }
-            default: {
-                this.fetchedData.reqForData()
-                    .then(() => {})
-                    .catch(() => {});
-                break;
-            }
-        }
     }
 
     async logout() {
@@ -122,13 +67,6 @@ export default class PrimaryModel extends Observable {
         await this.fetchedData.reqForData(true);
         document.location.reload(true);
         this.notify();
-    }
-
-    goToDefaultPageUrl(page) {
-        const url = page === pageNames.flags
-            ? `/?page=${page}&run_numbers=${defaultRunNumbers}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`
-            : `/?page=${page}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1`;
-        this.router.go(url);
     }
 
     getDataPointerFromUrl(url) {
@@ -172,7 +110,7 @@ export default class PrimaryModel extends Observable {
     removeSubPage(page, index) {
         this.fetchedData[page][index] = null;
         if (this.getCurrentDataPointer().page === page && this.getCurrentDataPointer().index === index) {
-            this.goToDefaultPageUrl(page);
+            this.navigation.goToDefaultPageUrl(page);
         }
         Reflect.deleteProperty(this.fetchedData[page], index);
         this.notify();
@@ -181,13 +119,8 @@ export default class PrimaryModel extends Observable {
     removeCurrentData() {
         const { page, index } = this.getCurrentDataPointer();
         this.fetchedData[page][index] = null;
-        this.goToDefaultPageUrl(page);
+        this.navigation.goToDefaultPageUrl(page);
         Reflect.deleteProperty(this.fetchedData[page], index);
-    }
-
-    handleClick(e) {
-        this.router.handleLinkEvent(e);
-        this.notify();
     }
 
     handleSessionError() {

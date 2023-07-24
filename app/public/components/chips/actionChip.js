@@ -15,10 +15,8 @@
 import { h } from '/js/src/index.js';
 
 export default function actionChip(
-    model,
+    navigation,
     label,
-    onclickAction,
-    id = '',
     href = undefined,
     classes = '',
     margin = '.m1',
@@ -26,8 +24,8 @@ export default function actionChip(
 ) {
     let chipClasses = `.btn.chip${classes}${margin}`;
 
-    if (model.router && href !== undefined) {
-        const url = model.router.getUrl();
+    if (navigation.router && href !== undefined) {
+        const url = navigation.router.getUrl();
         if (href === url.pathname + url.search || href['href'] && href.href === url.href) {
             chipClasses += ' highlight-blue';
         }
@@ -35,13 +33,11 @@ export default function actionChip(
 
     if (typeof href !== 'undefined' && !force) {
         return h(`a${chipClasses}.no-text-decoration`, {
-            id: id,
-            onclick: onclickAction,
+            onclick: (e) => navigation.handleLinkEvent(e),
             href: href,
         }, label);
     }
     return h(`button${chipClasses}`, {
-        id: id,
-        onclick: onclickAction,
+        onclick: (e) => navigation.handleLinkEvent(e),
     }, label);
 }

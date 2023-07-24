@@ -49,27 +49,21 @@ pagesCellsSpecials[PN.periods] = {
         h('td.text-ellipsis', item.name),
         h('td',
             actionChip(
-                model,
+                model.navigation,
                 'runs',
-                (e) => model.handleClick(e),
-                '',
                 // eslint-disable-next-line max-len
                 `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-run_number`,
             ),
 
             actionChip(
-                model,
+                model.navigation,
                 'data passes',
-                (e) => model.handleClick(e),
-                '',
                 `/?page=${PN.dataPasses}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`,
             ),
 
             actionChip(
-                model,
+                model.navigation,
                 'MC',
-                (e) => model.handleClick(e),
-                '',
                 `/?page=${PN.mc}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1`,
             )),
     ],
@@ -90,10 +84,8 @@ pagesCellsSpecials[PN.dataPasses] = {
                 },
             }, 'runs'),
             actionChip(
-                model,
+                model.navigation,
                 'anchorage',
-                (e) => model.handleClick(e),
-                '',
                 // eslint-disable-next-line max-len
                 `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
             )),
@@ -105,10 +97,8 @@ pagesCellsSpecials[PN.mc] = {
         h('td.text-ellipsis', item.name),
         h('td',
             actionChip(
-                model,
+                model.navigation,
                 'anchored',
-                (e) => model.handleClick(e),
-                '',
                 // eslint-disable-next-line max-len
                 `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.rowsOnSite}=50&${DRP.site}=1&sorting=-name`,
             )),
