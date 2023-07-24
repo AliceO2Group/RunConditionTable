@@ -14,7 +14,6 @@
 const routesAbstractionController = require('../controllers/RoutesAbstraction.controller.js').getInstance();
 
 module.exports = {
-    routesAbstractionController,
     path: '/docs',
     method: 'get',
     args: { public: true },

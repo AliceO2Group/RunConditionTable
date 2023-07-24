@@ -13,6 +13,7 @@
 
 const runRouter = require('./run.router.js');
 const docsRouter = require('./docs.router.js');
+const routesAbstractionController = require('../controllers/RoutesAbstraction.controller.js').getInstance();
 
 const routeTrees = [
     docsRouter,
@@ -49,7 +50,7 @@ function buildRoute(controllerTree) {
 }
 
 const routes = routeTrees.map(buildRoute).flat();
-docsRouter.routesAbstractionController.provideRoutesForApiDocs(routes);
+routesAbstractionController.provideRoutesForApiDocs(routes);
 
 /**
  * Take WebUi http server and bind all endpoints
