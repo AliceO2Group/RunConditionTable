@@ -32,7 +32,7 @@ function buildRoute(controllerTree) {
     const routesStack = [];
     const parseControllerTree = (constrollerSubtree, path, args) => {
         constrollerSubtree.children
-            ?.forEach((ch) => parseControllerTree(ch, ch.path ? path + checkPath(ch.path) : path, { ...args, ...ch.args }));
+            ?.forEach((child) => parseControllerTree(child, child.path ? path + checkPath(child.path) : path, { ...args, ...child.args }));
 
         const { method, controller, description } = constrollerSubtree;
         if (constrollerSubtree.method && constrollerSubtree.controller) {
