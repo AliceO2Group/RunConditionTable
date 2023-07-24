@@ -11,17 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const { databaseManager: { repositories: { RunRepository } } } = require('../../database');
-const { GetAllRuns } = require
-/**
- * List All runs in db
- */
-
-const listRunsHandler = async (req, res, next) => {
-    const result = await RunRepository.findAll();
-    res.json(result);
-}; // TODO DTO
+const dtoValidation = require('./dtoValidation');
 
 module.exports = {
-    listRunsHandler,
+    ...dtoValidation,
 };
