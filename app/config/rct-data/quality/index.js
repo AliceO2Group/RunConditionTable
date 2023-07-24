@@ -15,11 +15,9 @@
 const flags = require('./flags.json');
 const runBasedQuality = require('./quality.js');
 const flagReasonColors = require('./flagReasonColors.js');
-const operationNames = require('./operations.js');
 
 module.exports = {
     runBasedQuality: runBasedQuality,
     flags: flags,
     flagReasonColors: flagReasonColors,
-    operationNames: operationNames,
 };
