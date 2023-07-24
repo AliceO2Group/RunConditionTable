@@ -86,8 +86,6 @@ export default class PrimaryModel extends Observable {
                             this.fetchedData.reqForData();
                         }).catch(() => {});
                     });
-                } else {
-                    this.goToDefaultPageUrl(pageNames.flags);
                 }
                 break;
             }
