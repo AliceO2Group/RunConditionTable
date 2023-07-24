@@ -13,8 +13,10 @@
 
 const Joi = require('joi');
 
-const emptyJoiObj = Joi.object({});
+const emptyDTO = Joi.object({});
+const tokenDTO = Joi.object({ token: Joi.string().allow() });
 
 module.exports = {
-    emptyJoiObj,
+    emptyDTO,
+    tokenDTO,
 };

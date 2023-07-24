@@ -12,12 +12,12 @@
  */
 
 const Joi = require('joi');
-const { emptyJoiObj } = require('./commons.dto');
+const { emptyDTO, tokenDTO } = require('./commons.dto');
 
 const AllRunsDto = Joi.object({
-    query: emptyJoiObj,
-    params: emptyJoiObj,
-    body: emptyJoiObj,
+    query: tokenDTO,
+    params: emptyDTO,
+    body: emptyDTO,
 });
 
 module.exports = AllRunsDto;
