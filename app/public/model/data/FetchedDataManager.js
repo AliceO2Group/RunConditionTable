@@ -17,8 +17,7 @@ import { RemoteData, Loader } from '/js/src/index.js';
 import FetchedData from './FetchedData.js';
 import { replaceUrlParams } from '../../utils/url/urlUtils.js';
 import { RCT } from '../../../config.js';
-const { dataReqParams } = RCT;
-const { pageNames } = RCT;
+const { dataReqParams, defaultDataReqParams, pageNames } = RCT;
 
 /**
  * Object of this class provide organization of many FetchedData objects,
@@ -31,7 +30,7 @@ export default class FetchedDataManager {
         this.router = router;
         this.loader = new Loader();
 
-        this.rowsOnSite = 50;
+        this.rowsOnSite = defaultDataReqParams.rowsOnSite;
 
         for (const n in pageNames) {
             if (Object.prototype.hasOwnProperty.call(pageNames, n)) {
@@ -135,7 +134,8 @@ export default class FetchedDataManager {
 
     changeRowsOnSite(rowsOnSite) {
         const url = this.router.getUrl();
-        const newUrl = replaceUrlParams(url, [[dataReqParams.rowsOnSite, rowsOnSite]]);
+        this.rowsOnSite = rowsOnSite;
+        const newUrl = replaceUrlParams(url, [[dataReqParams.rowsOnSite, this.rowsOnSite]]);
         this.router.go(newUrl);
     }
 
