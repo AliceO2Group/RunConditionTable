@@ -55,7 +55,7 @@ export default function flagsContent(model, runs, detectors, flags) {
                     .catch(() => {
                     });
             },
-        }, iconShareBoxed()),
+        }, h('.link-20-primary.abs-center')),
 
         h('button.btn.icon-only-button', {
             className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',

@@ -228,6 +228,13 @@
     display: inline-block;
 }
 
+.link-20-primary {
+    background-image: url('/styles/images/icons/20/primary/Link.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
 /**
  * 24px
  */
