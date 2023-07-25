@@ -17,8 +17,11 @@ const { validateDTO } = require('../utilities');
 
 /**
  * List All runs in db
+ * @param {Object} req express HTTP request object
+ * @param {Object} res express HTTP response object
+ * @param {Object} next express next handler
+ * @returns {undefined}
  */
-
 const listRunsHandler = async (req, res, next) => {
     const validatedDTO = await validateDTO(AllRunsDTO, req, res);
     if (validatedDTO) {
