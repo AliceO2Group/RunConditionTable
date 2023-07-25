@@ -42,23 +42,6 @@ class DatabaseManager {
     }
 
     /**
-     * 
-     * @returns Invoke sequelize.sync()
-     */
-    async sync() {
-        this.logger.warn('Models sync!');
-
-        try {
-            await this.sequelize.sync();
-        } catch (error) {
-            this.logger.error(`Error while performing models sync: ${error}`);
-            return Promise.reject(error);
-        }
-
-        this.logger.info('Models synced!');
-    }
-
-    /**
      * Executes every *pending* migrations.
      *
      * @returns {Promise} Promise object represents the outcome.
