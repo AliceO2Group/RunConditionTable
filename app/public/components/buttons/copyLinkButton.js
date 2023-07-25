@@ -15,6 +15,11 @@
 import { h } from '/js/src/index.js';
 import snackBar from '../snackBars/snackBar.js';
 
+/**
+ * @param {string} url - url that will be returned to the user
+ * @returns a button that once clicked will give the user the url
+ */
+
 export default function copyLinkButton(url) {
     const snackBarId = `${url}-copied`;
     const thisButtonId = `${url}-copy-link-button`;
