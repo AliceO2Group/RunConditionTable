@@ -16,15 +16,10 @@ import { h } from '/js/src/index.js';
 import { filterField, filterType, filterSearch, isFilterExpression, filtersFromUrl } from '../../../../../utils/filtering/filterUtils.js';
 
 export default function activeFilters(model, url) {
-    const data = model.getCurrentData();
     const dataPointer = model.getCurrentDataPointer();
-    const { fields } = data;
-    const baseUrl = `/?page=${dataPointer.page}&index=${dataPointer.index}`;
 
     function onClearAll() {
-        const firstField = fields.find((f) => f !== undefined && f.name);
-        const clearUrl = `${baseUrl}${model.navigation.siteReqParamsPhrase()}&sorting=-${firstField.name}`;
-        model.router.go(clearUrl);
+        model.navigation.go(dataPointer.page, dataPointer.index);
     }
 
     function onClearFilter(filter) {
