@@ -109,7 +109,7 @@ export default class Model extends Observable {
     }
 
     setDataAccessSubmodel() {
-        const modeName = 'primary';
+        const modeName = 'dataAccess';
         localStorage.token = sessionService.session.token;
         this.submodels[modeName] = new DataAccessModel(this);
         this.submodels[modeName].bubbleTo(this);
