@@ -18,15 +18,15 @@ const { dataReqParams, pageNames } = RCT;
 
 export default function indexChip(model, pageName, index) {
     const dataPointer = model.getCurrentDataPointer();
-    const { page } = dataPointer;
-    const data = model.fetchedData[page][dataPointer.index].payload;
+    const currentPage = dataPointer.page;
+    const data = model.fetchedData[currentPage][dataPointer.index].payload;
     const { fields } = data;
     const firstField = fields.find((f) => f !== undefined && f.name);
-    const targetUrl = `/?page=${page}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`;
+    const targetUrl = `/?page=${currentPage}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`;
 
-    return page !== pageNames.periods && model.fetchedData[page][index] && page === pageName
+    return currentPage !== pageNames.periods && model.fetchedData[currentPage][index] && currentPage === pageName
         ? h('.chip.flex-wrap.justify-between.items-center', {
-            id: `chip-${page}-${index}`,
+            id: `chip-${currentPage}-${index}`,
             class: dataPointer.index === index ? 'primary' : '',
         },
         h('button.btn.transparent', { onclick: () => {
@@ -34,7 +34,7 @@ export default function indexChip(model, pageName, index) {
         } }, index),
         h('button.btn.icon-only-button.transparent', {
             onclick: () => {
-                model.removeSubPage(page, index);
+                model.removeSubPage(currentPage, index);
                 model.notify();
             },
         }, dataPointer.index === index ? h('.close-20-off-white') : h('.close-20-primary')))
