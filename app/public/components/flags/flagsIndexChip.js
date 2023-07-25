@@ -14,11 +14,11 @@
 
 import { h } from '/js/src/index.js';
 
-export default function flagsIndexChip(model, targetPage, targetIndex, label) {
+export default function flagsIndexChip(navigation, targetPage, targetIndex, label) {
     return h('.chip', {
         id: `chip-${targetPage}-${label}`,
     },
     h('button.btn.transparent', { onclick: () => {
-        model.router.go(`/?page=${targetPage}&index=${targetIndex}${model.navigation.siteReqParamsPhrase()}`);
+        navigation.go(targetPage, targetIndex);
     } }, label));
 }

@@ -76,7 +76,7 @@ export default function content(model, runs, detectors) {
         : h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
-                    title(model),
+                    title(pageNames.runsPerDataPass),
                     chips,
                     h('button.btn.btn-secondary', {
                         onclick: () => {

@@ -107,4 +107,8 @@ export default class Navigation extends Observable {
         this.router.handleLinkEvent(e);
         this.notify();
     }
+
+    go(targetPage, targetIndex) {
+        this.router.go(`/?page=${targetPage}&index=${targetIndex}${this.siteReqParamsPhrase()}`);
+    }
 }

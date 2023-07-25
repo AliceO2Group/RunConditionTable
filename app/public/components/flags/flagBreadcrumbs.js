@@ -21,11 +21,11 @@ const { pageNames } = RCT;
 
 export default function flagBreadCrumbs(model, dataPass, run, detector) {
     return [
-        title(model),
+        title(pageNames.flags),
         h('.forward-20'),
-        flagsIndexChip(model, pageNames.dataPasses, periodName(dataPass), dataPass),
+        flagsIndexChip(model.navigation, pageNames.dataPasses, periodName(dataPass), dataPass),
         h('.forward-20'),
-        flagsIndexChip(model, pageNames.runsPerDataPass, dataPass, run),
+        flagsIndexChip(model.navigation, pageNames.runsPerDataPass, dataPass, run),
         h('.forward-20'),
         h('h3.ph-15.text-primary', detector),
     ];

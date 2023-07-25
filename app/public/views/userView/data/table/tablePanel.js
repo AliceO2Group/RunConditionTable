@@ -86,7 +86,7 @@ export default function tablePanel(model, runs, detectors) {
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
-                    title(model),
+                    title(dataPointer.page),
                     chips,
                     h('button.btn.btn-secondary', {
                         onclick: () => {
