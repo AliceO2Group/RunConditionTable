@@ -11,10 +11,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const AllRunsDto = require('./AllRuns.dto');
+const AllRunsDTO = require('./AllRuns.dto');
 const ApiDocsDTO = require('./ApiDocs.dto');
 
 module.exports = {
-    AllRunsDto,
+    AllRunsDTO,
     ApiDocsDTO,
 };
