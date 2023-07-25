@@ -12,7 +12,7 @@
  */
 
 const { GetAllRunsUsecase } = require('../../usecases/runs');
-const { AllRunsDto } = require('../../domain/dtos');
+const { AllRunsDTO } = require('../../domain/dtos');
 const { validateDTO } = require('../utilities');
 
 /**
@@ -20,15 +20,13 @@ const { validateDTO } = require('../utilities');
  */
 
 const listRunsHandler = async (req, res, next) => {
-    const validatedDTO = await validateDTO(AllRunsDto, req, res);
-    if (!validatedDTO) {
-        return;
+    const validatedDTO = await validateDTO(AllRunsDTO, req, res);
+    if (validatedDTO) {
+        const runs = await GetAllRunsUsecase(validatedDTO.query);
+        res.json({
+            data: runs,
+        });
     }
-
-    const runs = await GetAllRunsUsecase(validatedDTO);
-    res.json({
-        data: runs,
-    });
 };
 
 module.exports = {

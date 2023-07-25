@@ -21,12 +21,13 @@ const { runAdapter } = require('../../database/adapters');
 /**
  * Executes this use case.
  *
- * @param {Object} dto The GetRunsDto containing all data.
+ * @param {Object} query - object which defines filtering
  * @returns {Promise<Run[]>} Promise object represents the result of this use case.
  */
-const GetRunUsecase = async () => {
+// eslint-disable-next-line no-unused-vars
+const GetAllRunsUsecase = async (query) => { // TODO utitlization of that argument
     const runs = await RunRepository.findAll();
     return runs ? runs.map((run) => runAdapter.toEntity(run)) : null;
 };
 
-module.exports = GetRunUsecase;
+module.exports = GetAllRunsUsecase;
