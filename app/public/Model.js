@@ -13,7 +13,7 @@
  */
 
 import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
-import PrimaryModel from './model/PrimaryModel.js';
+import DataAccessModel from './model/DataAccessModel.js';
 import ServiceUnavailableModel from './model/ServiceUnavailableModel.js';
 import { RCT } from './config.js';
 import Flags from './views/flags/Flags.js';
@@ -111,7 +111,7 @@ export default class Model extends Observable {
     setPrimary() {
         const modeName = 'primary';
         localStorage.token = sessionService.session.token;
-        this.submodels[modeName] = new PrimaryModel(this);
+        this.submodels[modeName] = new DataAccessModel(this);
         this.submodels[modeName].bubbleTo(this);
         this.mode = modeName;
         this.notify();

@@ -27,7 +27,7 @@ export default class Navigation extends Observable {
      * The constructor of the Overview model object
      *
      * @param {Model} model Pass the model to access the defined functions
-     * @param {PrimaryModel} parent Pass the primary model to access the defined functions
+     * @param {DataAccessModel} parent Pass the primary model to access the defined functions
      */
     constructor(model, parent) {
         super();
