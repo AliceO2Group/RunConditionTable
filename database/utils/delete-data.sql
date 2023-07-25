@@ -14,7 +14,7 @@ DO
 $do$
 BEGIN 
     EXECUTE (
-        SELECT ('truncate ' ||  string_agg(table_name, ',') || ' cascade;') 
+        SELECT ('truncate "' ||  string_agg(table_name, '","') || '" cascade;') 
         FROM information_schema.tables 
         WHERE table_schema='public');
 END
