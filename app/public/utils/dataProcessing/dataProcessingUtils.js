@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-export const periodName = (dataPassName) => {
+export const extractPeriodName = (dataPassName) => {
     const [period] = dataPassName.split('_');
     return period;
 };

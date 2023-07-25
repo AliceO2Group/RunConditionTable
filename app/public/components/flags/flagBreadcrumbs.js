@@ -15,7 +15,7 @@
 import { h } from '/js/src/index.js';
 import flagsIndexChip from './flagsIndexChip.js';
 import title from '../table/title.js';
-import { periodName } from '../../utils/dataProcessing/dataProcessingUtils.js';
+import { extractPeriodName } from '../../utils/dataProcessing/dataProcessingUtils.js';
 import { RCT } from '../../config.js';
 const { pageNames } = RCT;
 
@@ -23,7 +23,7 @@ export default function flagBreadCrumbs(model, dataPass, run, detector) {
     return [
         title(pageNames.flags),
         h('.forward-20'),
-        flagsIndexChip(model.navigation, pageNames.dataPasses, periodName(dataPass), dataPass),
+        flagsIndexChip(model.navigation, pageNames.dataPasses, extractPeriodName(dataPass), dataPass),
         h('.forward-20'),
         flagsIndexChip(model.navigation, pageNames.runsPerDataPass, dataPass, run),
         h('.forward-20'),
