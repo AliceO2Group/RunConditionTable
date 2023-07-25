@@ -20,7 +20,7 @@ import pagesCellsSpecials from '../../../userView/data/pagesCellsSpecials.js';
 import title from '../../../userView/data/table/title.js';
 import header from '../table/header.js';
 import row from '../table/row.js';
-import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
+import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 
 import { RCT } from '../../../../config.js';
 import pageSettings from '../../../userView/data/pageSettings/pageSettings.js';
@@ -30,6 +30,7 @@ import activeFilters from '../../../userView/data/table/filtering/activeFilters.
 import sortingRow from '../../../userView/data/table/sortingRow.js';
 import noDataView from '../../../userView/data/table/noDataView.js';
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
+import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
 const { pageNames } = RCT;
 
 export default function content(model, runs, detectors) {
@@ -61,15 +62,7 @@ export default function content(model, runs, detectors) {
             },
         }, iconDataTransferDownload()),
 
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                navigator.clipboard.writeText(url.toString())
-                    .then(() => {
-                    })
-                    .catch(() => {
-                    });
-            },
-        }, h('.link-20-primary.abs-center')),
+        copyLinkButton(model.router.getUrl().toString()),
 
         h('button.btn.icon-only-button', {
             className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',

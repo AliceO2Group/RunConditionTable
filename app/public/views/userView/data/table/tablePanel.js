@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
+import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 import downloadCSV from '../../../../utils/csvExport.js';
 import tableHeader from './header.js';
 import row from './row.js';
@@ -33,6 +33,7 @@ import { defaultIndexString } from '../../../../utils/defaults.js';
 import noSubPageSelected from './noSubPageSelected.js';
 import title from './title.js';
 import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
+import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
 
 const { pageNames } = RCT;
 
@@ -72,15 +73,7 @@ export default function tablePanel(model, runs, detectors) {
             },
         }, iconDataTransferDownload()),
 
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                navigator.clipboard.writeText(url.toString())
-                    .then(() => {
-                    })
-                    .catch(() => {
-                    });
-            },
-        }, h('.link-20-primary.abs-center')),
+        copyLinkButton(model.router.getUrl().toString()),
 
         h('button.btn.icon-only-button', {
             className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',

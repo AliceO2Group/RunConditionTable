@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
+import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 import filter from './table/filtering/filter.js';
 
 import downloadCSV from '../../../../utils/csvExport.js';
@@ -22,6 +22,7 @@ import flagsVisualization from '../../flags/flagsVisualization.js';
 import flagsTable from '../../flags/flagsTable.js';
 import flagBreadCrumbs from '../../../components/common/flagBreadcrumbs.js';
 import detectorName from './flags/detectorName.js';
+import copyLinkButton from '../../../components/buttons/copyLinkButton.js';
 
 export default function flagsDataPanel(model) {
     const urlParams = model.router.getUrl().searchParams;
@@ -44,15 +45,7 @@ export default function flagsDataPanel(model) {
             },
         }, iconDataTransferDownload()),
 
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                navigator.clipboard.writeText(model.router.getUrl().toString())
-                    .then(() => {
-                    })
-                    .catch(() => {
-                    });
-            },
-        }, h('.link-20-primary.abs-center')),
+        copyLinkButton(model.router.getUrl().toString()),
 
         h('button.btn.icon-only-button', {
             className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',

@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
+import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 import filter from '../../userView/data/table/filtering/filter.js';
 import downloadCSV from '../../../../utils/csvExport.js';
 import pageSettings from '../../userView/data/pageSettings/pageSettings.js';
@@ -21,6 +21,7 @@ import flagsTable from './flagsTable.js';
 import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
 import { defaultRunNumbers } from '../../../../utils/defaults.js';
 import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
+import copyLinkButton from '../../../components/buttons/copyLinkButton.js';
 
 export default function flagsContent(model, runs, detectors, flags) {
     const urlParams = model.router.getUrl().searchParams;
@@ -47,15 +48,7 @@ export default function flagsContent(model, runs, detectors, flags) {
             },
         }, iconDataTransferDownload()),
 
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                navigator.clipboard.writeText(model.router.getUrl().toString())
-                    .then(() => {
-                    })
-                    .catch(() => {
-                    });
-            },
-        }, h('.link-20-primary.abs-center')),
+        copyLinkButton(model.router.getUrl().toString()),
 
         h('button.btn.icon-only-button', {
             className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',
