@@ -15,7 +15,9 @@
 .ehevi .snackbar {
     display: none;
     position: absolute;
-    background-color: var(--white);
+    top: 1.5em;
+    background-color: var(--selection-color);
+    color: var(--primary);
     position: absolute;
     border: none;
     border-radius: 0.5em;

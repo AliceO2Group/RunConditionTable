@@ -52,6 +52,13 @@
     display: inline-block;
 }
 
+.done-10-primary {
+    background-image: url('/styles/images/icons/10/primary/Done.svg');
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+}
+
 /**
  * 15px
  */

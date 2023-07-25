@@ -22,5 +22,5 @@ export default function snackBar(message, id = null) {
             const snackbar = document.getElementById(snackBarId);
             snackbar.style.display = 'none';
         },
-    }, h('', message));
+    }, message);
 }

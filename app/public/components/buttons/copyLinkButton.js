@@ -20,19 +20,6 @@ export default function copyLinkButton(url) {
     const thisButtonId = `${url}-copy-link-button`;
     const thisButtonContentId = `${thisButtonId}-content`;
 
-    /*
-     *Document.addEventListener('click', (event) => {
-     *    const modalContent = document.getElementsByClassName('modal-content');
-     *    const modal = document.getElementsByClassName('modal');
-     *    if ((Array.from(modalContent).find((e) => e == event.target)
-     *        || Array.from(modal).find((e) => e == event.target))
-     *        && document.getElementById('myModal')) {
-     *        document.getElementById('myModal').style.display = 'none';
-     *    }
-     *});
-     *
-     */
-
     return h('button.btn.btn-secondary.icon-only-button', {
         id: thisButtonId,
         onclick: () => {
@@ -41,7 +28,7 @@ export default function copyLinkButton(url) {
                     const snackbar = document.getElementById(snackBarId);
                     const thisButton = document.getElementById(thisButtonId);
                     const thisButtonContent = document.getElementById(thisButtonContentId);
-                    snackbar.style.display = 'block';
+                    snackbar.style.display = 'flex';
 
                     document.addEventListener('click', (event) => {
                         if (thisButton != event.target && thisButtonContent != event.target) {
@@ -55,5 +42,5 @@ export default function copyLinkButton(url) {
         },
     }, h('.link-20-primary.abs-center', {
         id: thisButtonContentId,
-    }), snackBar('Copied!', snackBarId));
+    }), snackBar(h('.flex-row.items-center.gap-0-5', h('.done-10-primary'), 'Copied!'), snackBarId));
 }
