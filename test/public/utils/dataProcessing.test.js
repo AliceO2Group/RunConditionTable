@@ -11,14 +11,16 @@
  * or submit itself to any jurisdiction.
  */
 
-const CSVExportSuite = require('./csvExport.test');
-const dataProcessingSuite = require('./dataProcessing.test');
-const filterUtilsSuite = require('./filterUtils.test');
-const urlUtilsSuite = require('./urlUtils.test');
+const req = require('esm')(module)
+const assert = require('assert');
+const { periodName } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
 
 module.exports = () => {
-    describe('CSV Export', CSVExportSuite);
-    describe('Data processing', dataProcessingSuite);
-    describe('Filter utils', filterUtilsSuite);
-    describe('URL utils', urlUtilsSuite);
+    const dataPassName = 'LHC18q_calo_cluster_pass3';
+    const expectedPeriodName = 'LHC18q';
+    describe('Extract period name', () => {
+        it('should return correct value', () => {
+            assert(periodName(dataPassName) === expectedPeriodName);
+        });
+    });
 };
