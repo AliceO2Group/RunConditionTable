@@ -57,7 +57,7 @@ export default class Model extends Observable {
         const { status, result, ok } = await this.postLoginPasses(username);
         this._tokenExpirationHandler(status);
         if (ok) {
-            this.setPrimary();
+            this.setDataAccess();
         } else if (/5\d\d/.test(status)) {
             this.setServiceUnavailable(result);
         }
@@ -108,7 +108,7 @@ export default class Model extends Observable {
         }, messageShowTimeout);
     }
 
-    setPrimary() {
+    setDataAccess() {
         const modeName = 'primary';
         localStorage.token = sessionService.session.token;
         this.submodels[modeName] = new DataAccessModel(this);
