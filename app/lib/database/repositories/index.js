@@ -44,12 +44,12 @@ const validateSpecificRepositoriesConfiguration = (models) => {
 const repositoriesFactory = (models) => {
     validateSpecificRepositoriesConfiguration(models);
 
-    const modelName2Repository = Object.entries(models).map(([modelName, model]) =>
+    const modelNameToRepository = Object.entries(models).map(([modelName, model]) =>
         [modelName + 'Repository',
         new (specificallyDefinedRepositories[modelName] ?? Repository) (model),
     ]);
 
-    return Object.fromEntries(modelName2Repository);
+    return Object.fromEntries(modelNameToRepository);
 };
 
 
