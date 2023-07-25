@@ -105,7 +105,7 @@ class RunConditionTableApplication {
     }
 
     static isInDevMode() {
-        return process.env.ENV_MODE === 'development';
+        return process.env.ENV_MODE === 'dev';
     }
 
     static getEnvMode() {
