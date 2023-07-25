@@ -57,9 +57,9 @@ export default class Model extends Observable {
         const { status, result, ok } = await this.postLoginPasses(username);
         this._tokenExpirationHandler(status);
         if (ok) {
-            this.setDataAccess();
+            this.setDataAccessSubmodel();
         } else if (/5\d\d/.test(status)) {
-            this.setServiceUnavailable(result);
+            this.setServiceUnavailableModel(result);
         }
     }
 
@@ -88,7 +88,7 @@ export default class Model extends Observable {
         return [roles.dict.Guest];
     }
 
-    setServiceUnavailable(result) {
+    setServiceUnavailableModel(result) {
         const messageShowTimeout = 200;
         const modeName = 'serviceUnavailable';
         if (!this.submodels[modeName]) {
@@ -108,7 +108,7 @@ export default class Model extends Observable {
         }, messageShowTimeout);
     }
 
-    setDataAccess() {
+    setDataAccessSubmodel() {
         const modeName = 'primary';
         localStorage.token = sessionService.session.token;
         this.submodels[modeName] = new DataAccessModel(this);
