@@ -23,13 +23,27 @@ const Repository = require('./Repository.js');
  */
 const specificallyDefinedRepositories = {};
 
+/**
+ * @see specificallyDefinedRepositories
+ * It checks if specificallyDefinedRepositories is correct, if not, it throws an error.
+ * @param {Object<string, Sequelize.Model>} models 
+ */
+const validateSpecificRepositoriesConfiguration = (models) => {
+    Object.entries(specificallyDefinedRepositories).forEach(([modelName, RepoClass]) => { 
+        if (! (modelName in models) || (! (RepoClass.prototype instanceof Repository))) {
+            throw Error({message: `Incorrect configuration of specificallyDefinedRepositories for modelName: <${modelName}>`})
+        }
+    })
+}
 
 /**
- * 
- * @param {Object<string, Model>} models dict: modelName -> sequelize model, @see {specificallyDefinedRepositories}
+ * Instantiate sequelize models repositories according to repositiry pattern.
+ * @param {Object<string, Sequelize.Model>} models dict: modelName -> sequelize model, @see specificallyDefinedRepositories
  * @returns {Object<string, Repository>} dict: repositoryName -> repository instance per one model, (repositoryName = modelName + 'Repository')
  */
 const repositoriesFactory = (models) => {
+    validateSpecificRepositoriesConfiguration(models);
+
     const modelName2Repository = Object.entries(models).map(([modelName, model]) =>
         [modelName + 'Repository',
         new (specificallyDefinedRepositories[modelName] ?? Repository) (model),
