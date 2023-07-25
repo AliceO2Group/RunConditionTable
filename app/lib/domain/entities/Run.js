@@ -21,9 +21,9 @@
  * @property {number|null} timeTrgEnd
  * @property {number|null} startTime timestamp of the run's start, either trigger start if it exists or o2 start or null
  * @property {number|null} endTime timestamp of the run's end, either trigger end if it exists or o2 end or now (always null if start is null)
+ * @property {number|null} runDuration
  * @property {number|null} fillNumber
  * @property {number|null} lhcBeamEnergy
- * @property {number|null} runDuration
  * @property {number|null} l3CurrentVal
  * @property {number|null} dipoleCurrentVal
  */

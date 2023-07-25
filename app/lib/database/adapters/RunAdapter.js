@@ -23,7 +23,35 @@ class RunAdapter {
      * @returns {Run} Converted entity object.
      */
     toEntity(databaseObject) {
-        return databaseObject;
+        const {
+            runNumber,
+            timeO2Start,
+            timeO2End,
+            timeTrgStart,
+            timeTrgEnd,
+            startTime,
+            endTime,
+            runDuration,
+            fillNumber,
+            lhcBeamEnergy,
+            l3CurrentVal,
+            dipoleCurrentVal,
+        } = databaseObject;
+
+        return {
+            runNumber,
+            timeO2Start,
+            timeO2End,
+            timeTrgStart,
+            timeTrgEnd,
+            startTime,
+            endTime,
+            runDuration,
+            fillNumber,
+            lhcBeamEnergy,
+            l3CurrentVal,
+            dipoleCurrentVal,
+        }
     }
 
     /**
