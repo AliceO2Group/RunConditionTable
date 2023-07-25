@@ -15,14 +15,21 @@ const Sequelize = require('sequelize');
 
 const Run = require('./Run.js');
 
-module.exports = (sequelize) => {
+
+/**
+ * 
+ * @param {Sequelize} sequelize instance 
+ * @returns {Objecy<string, Sequelize.Model>} dict modelName -> sequelize model
+ */
+const modelsFactory = (sequelize) => {
     let models = {
         Run,
     };
-    models = Object.entries(models)
-                .map(([modelName, model]) => [modelName, model(sequelize)]); // instantiate models
-    models.forEach(([_, mInstance]) => mInstance.associate?.(sequelize.models)); // associate models
+    models = Object.entries(models).map(([modelName, model]) => [modelName, model(sequelize)]); // instantiate models
+    models.forEach(([_, modelInstance]) => modelInstance.associate?.(sequelize.models)); // associate models
     models = Object.fromEntries(models);
     
     return models;
 };
+
+module.exports = modelsFactory;

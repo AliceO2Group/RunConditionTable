@@ -12,7 +12,6 @@
  */
 
 
-const modelsCreator = require('../models');
 const Repository = require('./Repository.js');
 
 /**
@@ -24,14 +23,23 @@ const Repository = require('./Repository.js');
  */
 const specificallyDefinedRepositories = {};
 
-module.exports = (sequelize) => {
-    const modelName2Repository = Object.entries(modelsCreator(sequelize)).map(([modelName, model]) =>
+
+/**
+ * 
+ * @param {Object<string, Model>} models dict: modelName -> sequelize model, @see {specificallyDefinedRepositories}
+ * @returns {Object<string, Repository>} dict: repositoryName -> repository instance per one model, (repositoryName = modelName + 'Repository')
+ */
+const repositoriesFactory = (models) => {
+    const modelName2Repository = Object.entries(models).map(([modelName, model]) =>
         [modelName + 'Repository',
         new (specificallyDefinedRepositories[modelName] ?? Repository) (model),
     ]
     );
 
     return Object.fromEntries(modelName2Repository);
-}
+};
+
+
+module.exports = repositoriesFactory;
 
 

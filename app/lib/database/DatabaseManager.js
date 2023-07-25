@@ -14,7 +14,8 @@
 const { Sequelize } = require('sequelize');
 const { Log } = require('@aliceo2/web-ui')
 const config = require('../../config');
-const repositoriesCreator = require('./repositories');
+const modelsFactory = require('./models');
+const repositoriesFactory = require('./repositories');
 
 /**
  * Sequelize implementation of the Database.
@@ -34,12 +35,8 @@ class DatabaseManager {
                 schema: this.schema,
             },
         });
-        this._repositories = repositoriesCreator(this.sequelize);
-    }
-
-
-    get repositories() {
-        return this._repositories;
+        this.models = modelsFactory(this.sequelize);
+        this.repositories = repositoriesFactory(this.models);
     }
 
     /**
