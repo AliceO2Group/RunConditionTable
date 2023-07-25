@@ -16,18 +16,18 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 const { dataReqParams, pageNames } = RCT;
 
-export default function indexChip(model, index) {
+export default function indexChip(model, pageName, index) {
     const dataPointer = model.getCurrentDataPointer();
     const { page } = dataPointer;
-    const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
+    const data = model.fetchedData[page][dataPointer.index].payload;
     const { fields } = data;
     const firstField = fields.find((f) => f !== undefined && f.name);
     const targetUrl = `/?page=${page}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`;
 
-    return page !== pageNames.periods && model.fetchedData[page][index]
+    return page !== pageNames.periods && model.fetchedData[page][index] && page === pageName
         ? h('.chip.flex-wrap.justify-between.items-center', {
             id: `chip-${page}-${index}`,
-            class: dataPointer.index === index && dataPointer.page === page ? 'primary' : '',
+            class: dataPointer.index === index ? 'primary' : '',
         },
         h('button.btn.transparent', { onclick: () => {
             model.router.go(targetUrl);
@@ -37,6 +37,6 @@ export default function indexChip(model, index) {
                 model.removeSubPage(page, index);
                 model.notify();
             },
-        }, dataPointer.index === index && dataPointer.page === page ? h('.close-20-off-white') : h('.close-20-primary')))
+        }, dataPointer.index === index ? h('.close-20-off-white') : h('.close-20-primary')))
         : '';
 }
