@@ -17,7 +17,7 @@ import pager from '../../../../components/table/pager.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
 import pagesCellsSpecials from '../../../userView/data/pagesCellsSpecials.js';
-import title from '../../../userView/data/table/title.js';
+import title from '../../../../components/table/title.js';
 import header from '../table/header.js';
 import row from '../table/row.js';
 import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';

@@ -15,7 +15,7 @@
 import { h } from '/js/src/index.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import indexChip from '../../../../components/chips/indexChip.js';
-import title from './title.js';
+import title from '../../../../components/table/title.js';
 
 export default function noSubPageSelected(model) {
     const dataPointer = model.getCurrentDataPointer();

@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import flagsIndexChip from './flagsIndexChip.js';
-import title from '../../views/userView/data/table/title.js';
+import title from '../table/title.js';
 import { periodName } from '../../utils/dataProcessing/dataProcessingUtils.js';
 import { RCT } from '../../config.js';
 const { pageNames } = RCT;

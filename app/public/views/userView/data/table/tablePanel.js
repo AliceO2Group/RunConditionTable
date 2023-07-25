@@ -31,7 +31,7 @@ import pageSettings from '../pageSettings/pageSettings.js';
 import indexChip from '../../../../components/chips/indexChip.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import noSubPageSelected from './noSubPageSelected.js';
-import title from './title.js';
+import title from '../../../../components/table/title.js';
 import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
 import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
 
