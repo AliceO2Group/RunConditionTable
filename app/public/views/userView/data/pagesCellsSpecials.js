@@ -120,6 +120,10 @@ pagesCellsSpecials[PN.runsPerPeriod] = {
     time_end: (model, item) => dateFormatter(item.time_end),
     time_trg_start: (model, item) => dateFormatter(item.time_trg_start),
     time_trg_end: (model, item) => dateFormatter(item.time_trg_end),
+    fill_number: (model, item) => h('a', {
+        href: `https://ali-bookkeeping.cern.ch/?page=lhc-fill-details&fillNumber=${item.fill_number}`,
+        target: '_blank',
+    }, item.fill_number, h('.external-link-15-blue')),
 };
 
 pagesCellsSpecials[PN.flags] = {

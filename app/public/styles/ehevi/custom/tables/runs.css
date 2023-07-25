@@ -86,7 +86,16 @@
 .ehevi .runs-table .runsPerDataPass-fill_number-cell,
 .ehevi .runs-table .runsPerDataPass-fill_number-header {
     min-width: 100px;
-    text-align: right;
+    text-align: center;
+}
+
+.ehevi .runs-table .runsPerPeriod-fill_number-cell a,
+.ehevi .runs-table .runsPerDataPass-fill_number-cell a {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.3em;
+    align-items: center;
 }
 
 /* L3 current */
