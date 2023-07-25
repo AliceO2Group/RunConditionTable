@@ -12,13 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
-
-export default function flagsIndexChip(model, targetPage, targetIndex, label) {
-    return h('.chip', {
-        id: `chip-${targetPage}-${label}`,
-    },
-    h('button.btn.transparent', { onclick: () => {
-        model.router.go(`/?page=${targetPage}&index=${targetIndex}${model.navigation.siteReqParamsPhrase()}`);
-    } }, label));
-}
+export const periodName = (dataPassName) => {
+    const [period] = dataPassName.split('_');
+    return period;
+};
