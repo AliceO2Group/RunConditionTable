@@ -23,18 +23,30 @@ module.exports = (sequelize) => {
         timeO2Start: {
             type: Sequelize.BIGINT,
             field: 'time_start',
+            get() {
+                return Number(this.getDataValue('timeO2Start'))
+            }
         },
         timeO2End: {
             type: Sequelize.BIGINT,
             field: 'time_end',
+            get() {
+                return Number(this.getDataValue('timeO2End'))
+            }
         },
         timeTrgStart: {
             type: Sequelize.BIGINT,
             field: 'time_trg_start',
+            get() {
+                return Number(this.getDataValue('timeTrgStart'))
+            }
         },
         timeTrgEnd: {
             type: Sequelize.BIGINT,
             field: 'time_trg_end',
+            get() {
+                return Number(this.getDataValue('timeTrgEnd'))
+            }
         },
         startTime: {
             type: Sequelize.VIRTUAL,
@@ -42,7 +54,7 @@ module.exports = (sequelize) => {
                 const timeTrgStart = this.getDataValue('timeTrgStart');
                 const timeO2Start = this.getDataValue('timeO2Start');
                 const runStartString = timeTrgStart ?? timeO2Start;
-                return runStartString;
+                return Number(runStartString);
             },
         },
         endTime: {
@@ -54,7 +66,7 @@ module.exports = (sequelize) => {
                 const timeTrgEnd = this.getDataValue('timeTrgEnd');
                 const timeO2End = this.getDataValue('timeO2End');
                 const runEndString = timeTrgEnd ?? timeO2End;
-                return runEndString;
+                return Number(runEndString);
             },
         },
         runDuration: {
