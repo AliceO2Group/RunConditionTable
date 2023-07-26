@@ -17,7 +17,7 @@ import { RCT } from '../../config.js';
 const { pageNames } = RCT;
 
 /**
- * @param {*} model - provides a set of functions
+ * @param {Observable} model - provides a set of functions
  * @param {string} pageName - name of the page
  * @param {string} index - index of the item on page
  * @returns - button that navigates user to the related (page, index) view
