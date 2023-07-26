@@ -199,6 +199,39 @@ for stage in $STAGES; do
             $DOCKER_COMP_CMD rm --stop --force -v $SERVICES;
         ;;
 
+        build*)
+            BUILD_STAGES=$(echo ${stage#build} | sed -E "s/(\[|\:|\])/ /g");
+            BUILD_STAGES=$(echo $BUILD_STAGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g");
+            if [ -z "$BUILD_STAGES" ]; then
+                echo 'default build[build,up]; up in detached mode';
+                BUILD_STAGES="build up";
+            fi
+            echo $BUILD_STAGES;
+            for bs in $BUILD_STAGES; do
+                echo "*** *** do build : $bs";
+                if [ "$bs" == 'up' ]; then
+                    bs="up --detach";
+                fi
+                build "$bs";
+            done
+        ;;
+
+        attach)
+            docker attach $APP_CONTAINER_NAME || exit_codes_filter 130;
+        ;;
+
+        follow)
+            $DOCKER_COMP_CMD logs --follow $OTHER_OPTS $SERVICES || exit_codes_filter 1;
+        ;;
+
+        stop)
+            $DOCKER_COMP_CMD stop $OTHER_OPTS $SERVICES;
+        ;;
+
+        *)
+            incorrect_stage_err $stage
+        ;;
+
         db*)
             DB_CMD=$(echo ${stage#db:});
             case $DB_CMD in
@@ -333,46 +366,6 @@ for stage in $STAGES; do
                     incorrect_stage_err $stage;
                 ;;
             esac
-        ;;
-
-        build*)
-            BUILD_STAGES=$(echo ${stage#build} | sed -E "s/(\[|\:|\])/ /g");
-            BUILD_STAGES=$(echo $BUILD_STAGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g");
-            if [ -z "$BUILD_STAGES" ]; then
-                echo 'default build[build,up]; up in detached mode';
-                BUILD_STAGES="build up";
-            fi
-            echo $BUILD_STAGES;
-            for bs in $BUILD_STAGES; do
-                echo "*** *** do build : $bs";
-                if [ "$bs" == 'up' ]; then
-                    bs="up --detach";
-                fi
-                build "$bs";
-            done
-            # if [[ -n "$FAST_DUMP" ]]; then
-            #     ctr=''
-            #     while (! docker ps | grep -E "o2-rct_database.*Up" &> /dev/null) || (! $PROJECT_DIR/rctmake dump:restore -F $FAST_DUMP &> /dev/null) && [[ $(echo $ctr | wc -c) -lt 20 ]]; do
-            #         sleep 0.5;    
-            #     done
-            #     docker logs $APP_CONTAINER_NAME
-            # fi
-        ;;
-
-        attach)
-            docker attach $APP_CONTAINER_NAME || exit_codes_filter 130;
-        ;;
-
-        follow)
-            $DOCKER_COMP_CMD logs --follow $OTHER_OPTS $SERVICES || exit_codes_filter 1;
-        ;;
-
-        stop)
-            $DOCKER_COMP_CMD stop $OTHER_OPTS $SERVICES;
-        ;;
-
-        *)
-            incorrect_stage_err $stage
         ;;
     esac
 
