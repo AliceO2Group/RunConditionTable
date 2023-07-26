@@ -26,7 +26,7 @@ class RunService {
      */
     async getAll() { // TODO args
         const runs = await RunRepository.findAll();
-        return runs ? runs.map((run) => runAdapter.toEntity(run)) : null;
+        return runs.map((run) => runAdapter.toEntity(run));
     }
 }
 
