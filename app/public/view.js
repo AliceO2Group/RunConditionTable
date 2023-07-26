@@ -17,13 +17,11 @@ import serviceUnavailablePanel from './views/serviceUnavailableView.js';
 import sessionErrorPanel from './views/sessionErrorView.js';
 import waitingPanel from './views/waitingView.js';
 import { switchCase } from '/js/src/index.js';
-import { h } from '/js/src/index.js';
 
 export default function view(model) {
-    return h('',
-        switchCase(model.mode, {
-            serviceUnavailable: () => serviceUnavailablePanel(model),
-            sessionError: () => sessionErrorPanel(model),
-            dataAccess: () => userPanel(model),
-        }, () => waitingPanel())());
+    return switchCase(model.mode, {
+        serviceUnavailable: () => serviceUnavailablePanel(model),
+        sessionError: () => sessionErrorPanel(model),
+        dataAccess: () => userPanel(model),
+    }, () => waitingPanel())();
 }
