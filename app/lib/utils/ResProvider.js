@@ -240,7 +240,7 @@ class ResProvider {
     }
 
     static getServiceEndpoint(serviceAbbr) {
-        // BK-RUNS, ML-DP, ML-MC
+        // BK_RUNS, BK_FILLS, ML_DP, ML_MC
         const varsDef = {};
         varsDef[`RCT_EP_${serviceAbbr}_PROT`] = 'prot';
         varsDef[`RCT_EP_${serviceAbbr}_HOST`] = 'host';
