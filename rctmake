@@ -153,6 +153,7 @@ else
     done
 fi
 
+#TODO validate args target etc.
 
 APP_CONTAINER_NAME="o2-rct_application-$TARGET"
 DB_CONTAINER_NAME="o2-rct_database-$TARGET"
