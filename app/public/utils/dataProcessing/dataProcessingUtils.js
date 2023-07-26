@@ -23,5 +23,7 @@ export const getClosestDefinedEnergy = (energy, definedEnergies, acceptableMargi
         (acc, current) => Math.abs(current - energy) < Math.abs(acc - energy) ? current : acc,
         definedEnergyValues[0],
     );
-    return closest - energy <= acceptableMargin ? Object.keys(definedEnergies).find((key) => definedEnergies[key] === closest) : energy;
+    return Math.abs(closest - energy) <= acceptableMargin
+        ? Object.keys(definedEnergies).find((key) => definedEnergies[key] === closest)
+        : energy.toString();
 };
