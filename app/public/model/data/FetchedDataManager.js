@@ -121,21 +121,21 @@ export default class FetchedDataManager {
 
     changePage(pageNumber) {
         const url = this.router.getUrl();
-        const newUrl = replaceUrlParams(url, [[dataReqParams.site, pageNumber]]);
+        const newUrl = replaceUrlParams(url, { [dataReqParams.site]: pageNumber });
         this.router.go(newUrl);
     }
 
     changeSorting(sorting) {
         const url = this.router.getUrl();
         const { field, order } = sorting;
-        const newUrl = replaceUrlParams(url, [['sorting', `${order == -1 ? '-' : ''}${field}`]]);
+        const newUrl = replaceUrlParams(url, { 'sorting': `${order == -1 ? '-' : ''}${field}`});
         this.router.go(newUrl);
     }
 
     changeRowsOnSite(rowsOnSite) {
         const url = this.router.getUrl();
         this.rowsOnSite = rowsOnSite;
-        const newUrl = replaceUrlParams(url, [[dataReqParams.rowsOnSite, this.rowsOnSite]]);
+        const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.rowsOnSite });
         this.router.go(newUrl);
     }
 

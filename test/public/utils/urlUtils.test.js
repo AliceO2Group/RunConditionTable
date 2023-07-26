@@ -20,7 +20,7 @@ module.exports = () => {
     const targetUrl = new URL('http://localhost:8081/?page=periods&index=_0&rows-on-site=50&site=2');
     describe('Replace URL params', () => {
         it('should return correct value', () => {
-            assert(replaceUrlParams(url, [['site', 2]]).href === targetUrl.href);
+            assert(replaceUrlParams(url, {site:  2}).href === targetUrl.href);
         });
     });
 };
