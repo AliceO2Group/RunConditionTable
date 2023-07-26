@@ -4,8 +4,6 @@ echo $@
 PROJECT_DIR="$(dirname $(realpath $0))";
 SCRIPT_NAME="$(basename $0)"
 
-APP_CONTAINER_NAME="o2-rct_application"
-DB_CONTAINER_NAME="o2-rct_database"
 # TODO describe rest of path, RCT_USER etc. via env vars pulled during deployment
 
 usage() {
@@ -117,7 +115,7 @@ else
                 usage;
             ;;
             -t|--target)
-                TARGET=$2;
+                export TARGET=$2;
                 shift 2;
                 ;;
             -S|--service)
@@ -154,6 +152,10 @@ else
         esac
     done
 fi
+
+
+APP_CONTAINER_NAME="o2-rct_application-$TARGET"
+DB_CONTAINER_NAME="o2-rct_database-$TARGET"
 
 DOCKER_COMP_CMD="docker compose -p $TARGET -f $MAIN_DOCKER_COMPOSE_YML -f $DOCKER_DIR/docker-compose-$TARGET.yml --env-file "$DOCKER_DIR/$TARGET.env" --project-directory $PROJECT_DIR";
 MOCK_DB=${MOCK_DB:-false};
@@ -228,10 +230,6 @@ for stage in $STAGES; do
             $DOCKER_COMP_CMD stop $SERVICES;
         ;;
 
-        *)
-            incorrect_stage_err $stage
-        ;;
-
         db*)
             DB_CMD=$(echo ${stage#db:});
             case $DB_CMD in
@@ -263,6 +261,9 @@ for stage in $STAGES; do
                 ;;
                 *)
                     incorrect_stage_err $stage;
+                ;;
+                *)
+                    incorrect_stage_err $stage
                 ;;
             esac
         ;;
@@ -366,6 +367,9 @@ for stage in $STAGES; do
                     incorrect_stage_err $stage;
                 ;;
             esac
+        ;;
+        *)
+            incorrect_stage_err $stage
         ;;
     esac
 

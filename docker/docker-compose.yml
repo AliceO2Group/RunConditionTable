@@ -1,6 +1,7 @@
 version: '3.1'
 services:
   o2-rct_application:
+    container_name: o2-rct_application-$TARGET
     stdin_open: true
     tty: true 
     build:
@@ -12,6 +13,7 @@ services:
       - o2-rct_network
 
   o2-rct_database:
+    container_name: o2-rct_database-$TARGET
     build: 
       context: ./
       dockerfile: docker/database.dockerfile

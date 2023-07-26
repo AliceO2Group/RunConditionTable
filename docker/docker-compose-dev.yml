@@ -1,7 +1,6 @@
 
 services:
   o2-rct_application:
-    container_name: o2-rct_application
     build: 
       target: development
     env_file:
@@ -15,7 +14,6 @@ services:
     restart: "no"
 
   o2-rct_database:
-    container_name: o2-rct_database
     build: 
       target: development
     
