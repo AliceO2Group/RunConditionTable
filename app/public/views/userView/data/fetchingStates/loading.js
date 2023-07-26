@@ -13,20 +13,12 @@
  */
 
 import { h } from '/js/src/index.js';
-import viewButton from '../../../../components/common/viewButton.js';
 import spinner from '../../../../components/common/spinner.js';
 
-export default function spinnerAndReloadView(model) {
-    const reloadBtn = viewButton(
-        model,
-        'Retry',
-        () => {
-            document.location.reload(true);
-        },
-        '',
-        undefined,
-        '.btn-primary.m3',
-    );
+export default function loading() {
+    const reloadBtn = h('button.btn.btn-primary.m3', {
+        onclick: () => document.location.reload()
+    }, 'Retry')
     const loadingMessage = h('h3', 'Loading...');
 
     return h('.loginDiv.top-100', [

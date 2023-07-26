@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import tablePanel from './table/tablePanel.js';
-import spinnerAndReloadView from './fetchingStates/loading.js';
+import loading from './fetchingStates/loading.js';
 import failureStatusAndReload from './fetchingStates/failure.js';
 import unknownError from './fetchingStates/unknown.js';
 import { RCT } from '../../../config.js';
@@ -34,8 +34,9 @@ export default function dataPanel(model, runs, detectors, flags) {
 
     return data ? data.match({
         NotAsked: () => h('', 'not asked'),
-        Loading: () => spinnerAndReloadView(model),
-        Success: () => {
+        Loading: () => loading(),
+        Success: () => 
+        {
             switch (page) {
                 case pageNames.flags:
                     return flagsPanel(model, runs, detectors, flags);
