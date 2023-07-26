@@ -34,5 +34,5 @@ export default function view(model) {
                 document.getElementById(adminLoginModalId).style.display = 'block';
                 return '';
             },
-        }, () => waitingPanel(model))/*Switch returns function*/());
+        }, () => waitingPanel())());
 }
