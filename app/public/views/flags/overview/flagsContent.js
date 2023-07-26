@@ -27,12 +27,12 @@ export default function flagsContent(model, runs, detectors, flags) {
     const urlParams = model.router.getUrl().searchParams;
 
     const dataPassName = urlParams.get('data_pass_name');
-    const run = urlParams.get('run_numbers');
+    const runNumber = urlParams.get('run_numbers');
     const detector = urlParams.get('detector');
 
     const detectorName = detectors.getDetectorName(detector);
-    const flagsData = flags.getFlags(run, detectorName);
-    const runData = runs.getRun(dataPassName, run);
+    const flagsData = flags.getFlags(runNumber, detectorName);
+    const runData = runs.getRun(dataPassName, runNumber);
 
     const functionalities = (model) => h('.btn-group',
         h('button.btn.btn-secondary.icon-only-button', {
@@ -55,11 +55,11 @@ export default function flagsContent(model, runs, detectors, flags) {
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
-    return run > noRunNumbers && runData
+    return runNumber > noRunNumbers && runData
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
-                    flagBreadCrumbs(model, dataPassName, run, detectorName),
+                    flagBreadCrumbs(model, dataPassName, runNumber, detectorName),
                     h('button.btn.btn-secondary', {
                         onclick: () => {
                             document.getElementById('pageSettingsModal').style.display = 'block';
