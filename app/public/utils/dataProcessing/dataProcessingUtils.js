@@ -16,3 +16,7 @@ export const extractPeriodName = (dataPassName) => {
     const [period] = dataPassName.split('_');
     return period;
 };
+
+export const getClosestDefinedEnergy = (energy, listOfDefinedEnergies, acceptableMargin) => {
+
+};

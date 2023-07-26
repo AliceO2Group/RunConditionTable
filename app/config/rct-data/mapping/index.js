@@ -12,10 +12,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const beamTypes = require('./beamTypes.js');
-const energies = require('./energies.js');
+const beamType = require('./beamType.js');
+const energy = require('./energy.js');
 
 module.exports = {
-    beamTypes: beamTypes,
-    energies: energies,
+    beamType: beamType,
+    energy: energy,
 };

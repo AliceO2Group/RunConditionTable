@@ -12,11 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-const energies = {
-    ['6800']: 6800,
-    ['7000']: 7000,
-    ['5360/2']: 5360 / 2,
-    ['450']: 450,
+const energy = {
+    values: {
+        ['6800']: 6800,
+        ['7000']: 7000,
+        ['5360/2']: 5360 / 2,
+        ['450']: 450,
+    },
+    acceptableMargin: 0.01,
 };
 
-module.exports = energies;
+module.exports = energy;

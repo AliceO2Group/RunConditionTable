@@ -12,14 +12,16 @@
  * or submit itself to any jurisdiction.
  */
 
-const beamTypes = {
-    pp: 'p-p',
-    nn: 'n-n',
-    XeXe: 'Xe-Xe',
-    PbPb: 'Pb-Pb',
-    pPb: 'p-Pb',
-    Pbp: 'p-Pb',
-    pA: 'p-A',
+const beamType = {
+    values: {
+        pp: 'p-p',
+        nn: 'n-n',
+        XeXe: 'Xe-Xe',
+        PbPb: 'Pb-Pb',
+        pPb: 'p-Pb',
+        Pbp: 'p-Pb',
+        pA: 'p-A',
+    },
 };
 
-module.exports = beamTypes;
+module.exports = beamType;
