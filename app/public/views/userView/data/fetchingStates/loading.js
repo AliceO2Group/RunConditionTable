@@ -22,7 +22,7 @@ export default function loading() {
     const loadingMessage = h('h3', 'Loading...');
 
     return h('.loginDiv.top-100', [
-        h('.my-tooltip-bg',
+        h('.panel',
             spinner(),
             loadingMessage),
         reloadBtn,
