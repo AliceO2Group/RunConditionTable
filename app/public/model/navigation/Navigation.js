@@ -109,9 +109,10 @@ export default class Navigation extends Observable {
     }
 
     /**
-     * 
+     * Go to the url specified by the pageName and index
      * @param {string} targetPage - pageName that the user will be navigated to
      * @param {string} targetIndex - index on the page
+     * @returns {void}
      */
     go(targetPage, targetIndex) {
         this.router.go(`/?page=${targetPage}&index=${targetIndex}${this.siteReqParamsPhrase()}`);
