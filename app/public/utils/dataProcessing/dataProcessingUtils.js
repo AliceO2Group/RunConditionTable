@@ -17,6 +17,11 @@ export const extractPeriodName = (dataPassName) => {
     return period;
 };
 
-export const getClosestDefinedEnergy = (energy, listOfDefinedEnergies, acceptableMargin) => {
-
+export const getClosestDefinedEnergy = (energy, definedEnergies, acceptableMargin) => {
+    const definedEnergyValues = Object.values(definedEnergies);
+    const closest = definedEnergyValues.reduce(
+        (acc, current) => Math.abs(current - energy) < Math.abs(acc - energy) ? current : acc,
+        definedEnergyValues[0],
+    );
+    return closest - energy <= acceptableMargin ? Object.keys(definedEnergies).find((key) => definedEnergies[key] === closest) : energy;
 };
