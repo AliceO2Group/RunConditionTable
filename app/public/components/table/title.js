@@ -13,12 +13,10 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../../../config.js';
+import { RCT } from '../../config.js';
 const { pageNames } = RCT;
 
-export default function title(model) {
-    const { page } = model.getCurrentDataPointer();
-
+export default function title(page) {
     const pageTitle = () => {
         switch (page) {
             case pageNames.periods: return 'Periods';

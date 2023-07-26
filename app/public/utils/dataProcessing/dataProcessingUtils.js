@@ -12,6 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-export const defaultIndexString = '_0';
-export const noRunNumbers = '-1';
-export const defaultIndex = (_index) => _index ? _index : defaultIndexString;
+export const extractPeriodName = (dataPassName) => {
+    const [period] = dataPassName.split('_');
+    return period;
+};

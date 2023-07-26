@@ -29,10 +29,10 @@ export default function view(model) {
         switchCase(model.mode, {
             serviceUnavailable: () => serviceUnavailablePanel(model),
             sessionError: () => sessionErrorPanel(model),
-            primary: () => userPanel(model),
+            dataAccess: () => userPanel(model),
             admin: () => {
                 document.getElementById(adminLoginModalId).style.display = 'block';
                 return '';
             },
-        }, () => waitingPanel(model))/*Switch returns function*/());
+        }, () => waitingPanel())());
 }

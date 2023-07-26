@@ -11,7 +11,17 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+const { ResProvider } = require('../../lib/utils');
 
-export const defaultIndexString = '_0';
-export const noRunNumbers = '-1';
-export const defaultIndex = (_index) => _index ? _index : defaultIndexString;
+const lhcFills = {
+    url: ResProvider.getServiceEndpoint('BK_FILLS'),
+    params: {
+        fillNumber: 'fillNumber',
+    },
+};
+
+const bookkeeping = {
+    lhcFills: lhcFills,
+};
+
+module.exports = { bookkeeping };

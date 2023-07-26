@@ -13,7 +13,7 @@
  */
 
 import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
-import PrimaryModel from './model/PrimaryModel.js';
+import DataAccessModel from './model/DataAccessModel.js';
 import ServiceUnavailableModel from './model/ServiceUnavailableModel.js';
 import { RCT } from './config.js';
 import Flags from './views/flags/Flags.js';
@@ -57,9 +57,9 @@ export default class Model extends Observable {
         const { status, result, ok } = await this.postLoginPasses(username);
         this._tokenExpirationHandler(status);
         if (ok) {
-            this.setPrimary();
+            this.setDataAccessSubmodel();
         } else if (/5\d\d/.test(status)) {
-            this.setServiceUnavailable(result);
+            this.setServiceUnavailableModel(result);
         }
     }
 
@@ -88,7 +88,7 @@ export default class Model extends Observable {
         return [roles.dict.Guest];
     }
 
-    setServiceUnavailable(result) {
+    setServiceUnavailableModel(result) {
         const messageShowTimeout = 200;
         const modeName = 'serviceUnavailable';
         if (!this.submodels[modeName]) {
@@ -108,10 +108,10 @@ export default class Model extends Observable {
         }, messageShowTimeout);
     }
 
-    setPrimary() {
-        const modeName = 'primary';
+    setDataAccessSubmodel() {
+        const modeName = 'dataAccess';
         localStorage.token = sessionService.session.token;
-        this.submodels[modeName] = new PrimaryModel(this);
+        this.submodels[modeName] = new DataAccessModel(this);
         this.submodels[modeName].bubbleTo(this);
         this.mode = modeName;
         this.notify();

@@ -17,10 +17,10 @@ import pager from '../../../../components/table/pager.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
 import pagesCellsSpecials from '../../../userView/data/pagesCellsSpecials.js';
-import title from '../../../userView/data/table/title.js';
+import title from '../../../../components/table/title.js';
 import header from '../table/header.js';
 import row from '../table/row.js';
-import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
+import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 
 import { RCT } from '../../../../config.js';
 import pageSettings from '../../../userView/data/pageSettings/pageSettings.js';
@@ -30,6 +30,7 @@ import activeFilters from '../../../userView/data/table/filtering/activeFilters.
 import sortingRow from '../../../userView/data/table/sortingRow.js';
 import noDataView from '../../../userView/data/table/noDataView.js';
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
+import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
 const { pageNames } = RCT;
 
 export default function content(model, runs, detectors) {
@@ -38,7 +39,9 @@ export default function content(model, runs, detectors) {
     const page = model.fetchedData[dataPointer.page];
     const { url } = page[dataPointer.index].payload;
 
-    const chips = model.getSubPages(dataPointer.page).filter((index) => index !== defaultIndexString).map((index) => indexChip(model, index));
+    const chips = model.getSubPages(dataPointer.page)
+        .filter((index) => index !== defaultIndexString)
+        .map((index) => indexChip(model, dataPointer.page, index));
 
     data.rows = data.rows.filter((item) => item.name != 'null');
 
@@ -61,15 +64,7 @@ export default function content(model, runs, detectors) {
             },
         }, iconDataTransferDownload()),
 
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                navigator.clipboard.writeText(url.toString())
-                    .then(() => {
-                    })
-                    .catch(() => {
-                    });
-            },
-        }, iconShareBoxed()),
+        copyLinkButton(model.router.getUrl().toString()),
 
         h('button.btn.icon-only-button', {
             className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',
@@ -81,7 +76,7 @@ export default function content(model, runs, detectors) {
         : h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
-                    title(model),
+                    title(pageNames.runsPerDataPass),
                     chips,
                     h('button.btn.btn-secondary', {
                         onclick: () => {

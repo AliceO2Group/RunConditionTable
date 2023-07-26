@@ -14,29 +14,32 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
-const { dataReqParams, pageNames } = RCT;
+const { pageNames } = RCT;
 
-export default function indexChip(model, index) {
+/**
+ * @param {Observable} model - provides a set of functions
+ * @param {string} pageName - name of the page
+ * @param {string} index - index of the item on page
+ * @returns - button that navigates user to the related (page, index) view
+ */
+
+export default function indexChip(model, pageName, index) {
     const dataPointer = model.getCurrentDataPointer();
-    const { page } = dataPointer;
-    const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
-    const { fields } = data;
-    const firstField = fields.find((f) => f !== undefined && f.name);
-    const targetUrl = `/?page=${page}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`;
+    const currentPage = dataPointer.page;
 
-    return page !== pageNames.periods && model.fetchedData[page][index]
+    return currentPage !== pageNames.periods && model.fetchedData[currentPage][index] && currentPage === pageName
         ? h('.chip.flex-wrap.justify-between.items-center', {
-            id: `chip-${page}-${index}`,
-            class: dataPointer.index === index && dataPointer.page === page ? 'primary' : '',
+            id: `chip-${currentPage}-${index}`,
+            class: dataPointer.index === index ? 'primary' : '',
         },
         h('button.btn.transparent', { onclick: () => {
-            model.router.go(targetUrl);
+            model.navigation.go(currentPage, index);
         } }, index),
         h('button.btn.icon-only-button.transparent', {
             onclick: () => {
-                model.removeSubPage(page, index);
+                model.removeSubPage(currentPage, index);
                 model.notify();
             },
-        }, dataPointer.index === index && dataPointer.page === page ? h('.close-20-off-white') : h('.close-20-primary')))
+        }, dataPointer.index === index ? h('.close-20-off-white') : h('.close-20-primary')))
         : '';
 }

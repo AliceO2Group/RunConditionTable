@@ -15,9 +15,15 @@ import { RCT } from '../../config.js';
 const { filterTypes, fieldNames, filterInputTypes } = RCT;
 const sqlWildCard = '%';
 
-export const filterField = (filterString) => filterString.split('-')[0];
+export const filterField = (filterString) => {
+    const [field] = filterString.split('-');
+    return field;
+};
 
-export const filterType = (filterString) => filterString.split('=')[0].split('-')[1];
+export const filterType = (filterString) => {
+    const [typePhrase] = filterString.split('=');
+    return typePhrase.split('-')[1];
+};
 
 export const filterSearch = (filterString) => {
     const rawSearch = decodeURIComponent(filterString.split('=')[1]);

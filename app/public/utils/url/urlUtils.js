@@ -12,9 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-export function replaceUrlParams(url, entries) {
+export function replaceUrlParams(url, params) {
     const currentParams = Object.fromEntries(url.searchParams.entries());
-    for (const [k, v] of entries) {
+    for (const [k, v] of Object.entries(params)) {
         currentParams[k] = v;
     }
 

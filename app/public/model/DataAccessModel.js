@@ -15,9 +15,9 @@
 import { Observable, Loader } from '/js/src/index.js';
 import FetchedDataManager from './data/FetchedDataManager.js';
 import { defaultIndex, defaultIndexString } from '../utils/defaults.js';
-import Navigation from './navigation/NavModel.js';
+import Navigation from './navigation/Navigation.js';
 
-export default class PrimaryModel extends Observable {
+export default class DataAccessModel extends Observable {
     constructor(parent) {
         super();
         this.parent = parent;

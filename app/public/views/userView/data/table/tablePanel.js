@@ -12,15 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconDataTransferDownload, iconReload, iconShareBoxed } from '/js/src/index.js';
+import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 import downloadCSV from '../../../../utils/csvExport.js';
 import tableHeader from './header.js';
 import row from './row.js';
 import pagesCellsSpecials from '../pagesCellsSpecials.js';
 import pager from '../../../../components/table/pager.js';
 
-import postingDataConfig from '../posting/postingDataConfig.js';
-import { postForm } from '../posting/postForm.js';
 import filter from './filtering/filter.js';
 import activeFilters from './filtering/activeFilters.js';
 import noDataView from './noDataView.js';
@@ -31,8 +29,9 @@ import pageSettings from '../pageSettings/pageSettings.js';
 import indexChip from '../../../../components/chips/indexChip.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import noSubPageSelected from './noSubPageSelected.js';
-import title from './title.js';
+import title from '../../../../components/table/title.js';
 import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
+import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
 
 const { pageNames } = RCT;
 
@@ -49,7 +48,9 @@ export default function tablePanel(model, runs, detectors) {
     const page = model.fetchedData[dataPointer.page];
     const { url } = page[dataPointer.index].payload;
 
-    const chips = model.getSubPages(dataPointer.page).filter((index) => index !== defaultIndexString).map((index) => indexChip(model, index));
+    const chips = model.getSubPages(dataPointer.page)
+        .filter((index) => index !== defaultIndexString)
+        .map((index) => indexChip(model, dataPointer.page, index));
 
     data.rows = data.rows.filter((item) => item.name != 'null');
 
@@ -72,15 +73,7 @@ export default function tablePanel(model, runs, detectors) {
             },
         }, iconDataTransferDownload()),
 
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                navigator.clipboard.writeText(url.toString())
-                    .then(() => {
-                    })
-                    .catch(() => {
-                    });
-            },
-        }, iconShareBoxed()),
+        copyLinkButton(model.router.getUrl().toString()),
 
         h('button.btn.icon-only-button', {
             className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',
@@ -91,7 +84,7 @@ export default function tablePanel(model, runs, detectors) {
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
-                    title(model),
+                    title(dataPointer.page),
                     chips,
                     h('button.btn.btn-secondary', {
                         onclick: () => {
@@ -125,7 +118,7 @@ export default function tablePanel(model, runs, detectors) {
                             }, [
                                 tableHeader(visibleFields, data, model),
                                 model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page, dataPointer.index, runs, detectors),
+                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.index, runs, detectors),
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
@@ -141,11 +134,10 @@ export default function tablePanel(model, runs, detectors) {
 }
 
 function tableBody(
-    model, visibleFields, data, cellsSpecials, page, index, runs, detectors,
+    model, visibleFields, data, cellsSpecials, index, runs, detectors,
 ) {
     return h('tbody', { id: `table-body-${data.url}` },
-        [postingDataConfig[page] ? postForm(model, data) : '']
-            .concat(data.rows.map((item) => row(
-                model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
-            ))));
+        data.rows.map((item) => row(
+            model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
+        )));
 }

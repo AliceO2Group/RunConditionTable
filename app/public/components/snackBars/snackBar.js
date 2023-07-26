@@ -12,6 +12,15 @@
  * or submit itself to any jurisdiction.
  */
 
-export const defaultIndexString = '_0';
-export const noRunNumbers = '-1';
-export const defaultIndex = (_index) => _index ? _index : defaultIndexString;
+import { h } from '/js/src/index.js';
+
+export default function snackBar(message, id = null) {
+    const snackBarId = id ? id : `snackbar-${message}`;
+    return h('button.snackbar', {
+        id: snackBarId,
+        onclick: () => {
+            const snackbar = document.getElementById(snackBarId);
+            snackbar.style.display = 'none';
+        },
+    }, message);
+}

@@ -52,6 +52,13 @@
     display: inline-block;
 }
 
+.done-10-primary {
+    background-image: url('/styles/images/icons/10/primary/Done.svg');
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+}
+
 /**
  * 15px
  */
@@ -86,6 +93,13 @@
 
 .more-15-primary {
     background-image: url('/styles/images/icons/15/primary/More.svg');
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+}
+
+.external-link-15-blue {
+    background-image: url('/styles/images/icons/15/blue/External\ Link.svg');
     width: 15px;
     height: 15px;
     display: inline-block;
@@ -216,6 +230,13 @@
 
 .forward-20 {
     background-image: url('/styles/images/icons/20/primary/Forward.svg');
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.link-20-primary {
+    background-image: url('/styles/images/icons/20/primary/Link.svg');
     width: 20px;
     height: 20px;
     display: inline-block;

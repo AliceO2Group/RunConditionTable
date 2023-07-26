@@ -25,7 +25,7 @@ export default function pager(model, data, pagerOnly = true) {
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
 
     const pageButton = (targetSite) => {
-        const url = replaceUrlParams(data.url, [[site, targetSite]]);
+        const url = replaceUrlParams(data.url, { [RCT.dataReqParams.site]: targetSite });
         return viewButton(
             model,
             targetSite,

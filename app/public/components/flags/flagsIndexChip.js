@@ -14,14 +14,11 @@
 
 import { h } from '/js/src/index.js';
 
-export default function flagsIndexChip(model, targetPage, label) {
+export default function flagsIndexChip(navigation, targetPage, targetIndex, label) {
     return h('.chip', {
         id: `chip-${targetPage}-${label}`,
     },
     h('button.btn.transparent', { onclick: () => {
-        // TODO once url scheme is confirmed
-        // eslint-disable-next-line max-len
-        // Model.router.go(`/?page=${targetPage}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`);
-        history.back();
+        navigation.go(targetPage, targetIndex);
     } }, label));
 }

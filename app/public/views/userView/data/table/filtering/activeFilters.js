@@ -13,22 +13,13 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../../../../config.js';
 import { filterField, filterType, filterSearch, isFilterExpression, filtersFromUrl } from '../../../../../utils/filtering/filterUtils.js';
 
-const { dataReqParams, defaultDataReqParams } = RCT;
-
 export default function activeFilters(model, url) {
-    const data = model.getCurrentData();
     const dataPointer = model.getCurrentDataPointer();
-    const { fields } = data;
-    const baseUrl = `/?page=${dataPointer.page}&index=${dataPointer.index}`;
-    const defaultUrlParams = `${dataReqParams.rowsOnSite}=${defaultDataReqParams.rowsOnSite}&${dataReqParams.site}=${defaultDataReqParams.site}`;
 
     function onClearAll() {
-        const firstField = fields.find((f) => f !== undefined && f.name);
-        const clearUrl = `${baseUrl}&${defaultUrlParams}&sorting=-${firstField.name}`;
-        model.router.go(clearUrl);
+        model.navigation.go(dataPointer.page, dataPointer.index);
     }
 
     function onClearFilter(filter) {
