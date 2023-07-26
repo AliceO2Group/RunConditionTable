@@ -1,7 +1,6 @@
 
 services:
-  o2-rct_application:
-    container_name: o2-rct_application-test
+  application:
     build: 
       target: test
     env_file:
@@ -22,8 +21,7 @@ services:
         
     restart: "no"
 
-  o2-rct_database:
-    container_name: o2-rct_database-test
+  database:
     build: 
       target: test
     env_file:
@@ -43,7 +41,7 @@ services:
     restart: "no"
 
 networks:
-  o2-rct_network:
+  network:
     driver: bridge
     ipam:
       driver: default

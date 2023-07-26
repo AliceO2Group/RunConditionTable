@@ -4,6 +4,9 @@ echo $@
 PROJECT_DIR="$(dirname $(realpath $0))";
 SCRIPT_NAME="$(basename $0)"
 
+DEV_MODE=dev
+TEST_MODE=test
+
 # TODO describe rest of path, RCT_USER etc. via env vars pulled during deployment
 
 usage() {
@@ -154,17 +157,22 @@ else
 fi
 
 #TODO validate args target etc.
+TARGET=${TARGET:-dev}
+export APP_CONTAINER_NAME="o2rct_application-$TARGET"
+export DB_CONTAINER_NAME="o2rct_database-$TARGET"
 
-APP_CONTAINER_NAME="o2-rct_application-$TARGET"
-DB_CONTAINER_NAME="o2-rct_database-$TARGET"
+DOCKER_COMP_CMD="docker compose -p $TARGET-o2rct 
+                    -f $MAIN_DOCKER_COMPOSE_YML 
+                    -f $DOCKER_DIR/docker-compose-$TARGET.yml 
+                    --env-file "$DOCKER_DIR/$TARGET.env" 
+                    --project-directory $PROJECT_DIR";
 
-DOCKER_COMP_CMD="docker compose -p $TARGET -f $MAIN_DOCKER_COMPOSE_YML -f $DOCKER_DIR/docker-compose-$TARGET.yml --env-file "$DOCKER_DIR/$TARGET.env" --project-directory $PROJECT_DIR";
 MOCK_DB=${MOCK_DB:-false};
 export MOCK_DB;
 
 
 build() {
-    ORDER=$1;
+    ORDER_AND_FLAGS="$@";
     mkdir -p $PROJECT_DIR/security;
     CACHE_DIR="$PROJECT_DIR/database/cache";
     mkdir -p $CACHE_DIR;
@@ -177,13 +185,13 @@ build() {
 
             $DOCKER_COMP_CMD \
                 -f "$DOCKER_DIR/docker-compose-volumes.yml" $OPTIONAL_DB_EXPOSE \
-                $ORDER $SERVICES;
+                $ORDER_AND_FLAGS $SERVICES;
         ;;
 
         test)
             mkdir -p $PROJECT_DIR/reports;
             $DOCKER_COMP_CMD \
-                $ORDER --abort-on-container-exit;
+                $ORDER_AND_FLAGS --abort-on-container-exit;
         ;;
         *)
             usage "Incorrect build target: $TARGET";
@@ -213,8 +221,12 @@ for stage in $STAGES; do
             for bs in $BUILD_STAGES; do
                 echo "*** *** do build : $bs";
                 if [ "$bs" == 'up' ]; then
-                    bs="up --detach";
-                fi
+                    if [ "$TARGET" = "$DEV_MODE" ]; then 
+                        bs="up --detach";
+                    elif [ "$TARGET" = "$TEST_MODE" ]; then
+                        bs="up --abort-on-container-exit";
+                    fi;
+                fi;
                 build "$bs";
             done
         ;;

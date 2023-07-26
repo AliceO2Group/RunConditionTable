@@ -1,6 +1,6 @@
 
 services:
-  o2-rct_application:
+  application:
     build: 
       target: development
     env_file:
@@ -13,7 +13,7 @@ services:
 
     restart: "no"
 
-  o2-rct_database:
+  database:
     build: 
       target: development
     
@@ -23,7 +23,7 @@ services:
     restart: "no"
 
 networks:
-  o2-rct_network:
+  network:
     driver: bridge
     ipam:
       driver: default
