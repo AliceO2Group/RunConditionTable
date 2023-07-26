@@ -19,7 +19,7 @@ import pageSettings from '../../userView/data/pageSettings/pageSettings.js';
 import flagsVisualization from '../../../components/flags/flagsVisualization.js';
 import flagsTable from './flagsTable.js';
 import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
-import { defaultRunNumbers } from '../../../../utils/defaults.js';
+import { noRunNumbers } from '../../../../utils/defaults.js';
 import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
 import copyLinkButton from '../../../components/buttons/copyLinkButton.js';
 
@@ -55,7 +55,7 @@ export default function flagsContent(model, runs, detectors, flags) {
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
-    return run > defaultRunNumbers && runData
+    return run > noRunNumbers && runData
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',

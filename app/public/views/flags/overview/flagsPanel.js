@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { defaultRunNumbers } from '../../../../utils/defaults.js';
+import { noRunNumbers } from '../../../../utils/defaults.js';
 import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
 import flagsContent from './flagsContent.js';
 
@@ -21,7 +21,7 @@ export default function flagsPanel(model, runs, detectors, flags) {
 
     const run = urlParams.get('run_numbers');
 
-    return run > defaultRunNumbers
+    return run > noRunNumbers
         ? flagsContent(model, runs, detectors, flags)
         : noSubPageSelected(model);
 }

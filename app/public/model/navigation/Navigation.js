@@ -13,7 +13,7 @@
 
 import { Observable } from '/js/src/index.js';
 import { RCT } from '../../config.js';
-import { defaultRunNumbers } from '../../utils/defaults.js';
+import { noRunNumbers } from '../../utils/defaults.js';
 const { pageNames, dataReqParams, defaultDataReqParams } = RCT;
 
 /**
@@ -94,7 +94,7 @@ export default class Navigation extends Observable {
 
     goToDefaultPageUrl(page) {
         const url = page === pageNames.flags
-            ? `/?page=${page}&run_numbers=${defaultRunNumbers}${this.siteReqParamsPhrase()}`
+            ? `/?page=${page}&run_numbers=${noRunNumbers}${this.siteReqParamsPhrase()}`
             : `/?page=${page}${this.siteReqParamsPhrase()}`;
         this.router.go(url);
     }
