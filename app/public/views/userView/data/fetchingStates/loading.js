@@ -17,8 +17,8 @@ import spinner from '../../../../components/common/spinner.js';
 
 export default function loading() {
     const reloadBtn = h('button.btn.btn-primary.m3', {
-        onclick: () => document.location.reload()
-    }, 'Retry')
+        onclick: () => document.location.reload(),
+    }, 'Retry');
     const loadingMessage = h('h3', 'Loading...');
 
     return h('.loginDiv.top-100', [

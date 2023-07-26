@@ -35,8 +35,7 @@ export default function dataPanel(model, runs, detectors, flags) {
     return data ? data.match({
         NotAsked: () => h('', 'not asked'),
         Loading: () => loading(),
-        Success: () => 
-        {
+        Success: () => {
             switch (page) {
                 case pageNames.flags:
                     return flagsPanel(model, runs, detectors, flags);
