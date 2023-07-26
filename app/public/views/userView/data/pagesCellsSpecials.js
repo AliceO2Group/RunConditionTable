@@ -15,6 +15,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { getReadableFileSizeString } from '../../../utils/utils.js';
 import linkChip from '../../../components/chips/linkChip.js';
+import { getClosestDefinedEnergy } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 const { dataReqParams: DRP, pageNames: PN, outerServices } = RCT;
 
 /**
@@ -67,9 +68,12 @@ pagesCellsSpecials[PN.periods] = {
             )),
     ],
 
-    energy: (model, item) =>
-        `${Number(item.energy).toFixed(2)}`
-    ,
+    energy: (model, item) => {
+        const energy = Number(item.energy).toFixed(2);
+        const definedEnergies = RCT.mapping.energy.values;
+        const { acceptableMargin } = RCT.mapping.energy;
+        return `${getClosestDefinedEnergy(energy, definedEnergies, acceptableMargin)}`;
+    },
 };
 
 pagesCellsSpecials[PN.dataPasses] = {
