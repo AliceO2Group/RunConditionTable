@@ -192,7 +192,7 @@ build() {
         test)
             mkdir -p $PROJECT_DIR/reports;
             $DOCKER_COMP_CMD \
-                $ORDER_AND_FLAGS --abort-on-container-exit;
+                $ORDER_AND_FLAGS;
         ;;
         *)
             usage "Incorrect build target: $TARGET";
@@ -215,8 +215,8 @@ for stage in $STAGES; do
             BUILD_STAGES=$(echo ${stage#build} | sed -E "s/(\[|\:|\])/ /g");
             BUILD_STAGES=$(echo $BUILD_STAGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g");
             if [ -z "$BUILD_STAGES" ]; then
-                echo 'default build[build,up]; up in detached mode';
-                BUILD_STAGES="build up";
+                echo 'default build[build,create,up]; up in detached mode';
+                BUILD_STAGES="build create up";
             fi
             echo $BUILD_STAGES;
             for bs in $BUILD_STAGES; do
