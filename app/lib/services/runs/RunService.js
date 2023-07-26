@@ -24,7 +24,7 @@ class RunService {
      *
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getAllRuns() { // TODO args
+    async getAll() { // TODO args
         const runs = await RunRepository.findAll();
         return runs ? runs.map((run) => runAdapter.toEntity(run)) : null;
     }
