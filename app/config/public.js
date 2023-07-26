@@ -13,10 +13,10 @@
  */
 
 const { roles, detectors, pageNames, filterTypes, filterInputTypes, fieldNames, quality } = require('./rct-data');
-const { bookkeeping } = require('./outer');
+const { bookkeeping } = require('./outerServices');
 
 module.exports = { // Properties that will be provided to frontend in the public folder
-    outer: { bookkeeping },
+    outerServices: { bookkeeping },
     filterTypes: filterTypes,
     filterInputTypes: filterInputTypes,
 

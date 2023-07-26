@@ -15,7 +15,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { getReadableFileSizeString } from '../../../utils/utils.js';
 import linkChip from '../../../components/chips/linkChip.js';
-const { dataReqParams: DRP, pageNames: PN, outer } = RCT;
+const { dataReqParams: DRP, pageNames: PN, outerServices } = RCT;
 
 /**
  * Configuration what buttons at which cells and which pages are supposed
@@ -120,7 +120,7 @@ pagesCellsSpecials[PN.runsPerPeriod] = {
     time_trg_start: (model, item) => dateFormatter(item.time_trg_start),
     time_trg_end: (model, item) => dateFormatter(item.time_trg_end),
     fill_number: (model, item) => h('a', {
-        href: `${outer.bookkeeping.lhcFills.url}&${outer.bookkeeping.lhcFills.params.fillNumber}=${item.fill_number}`,
+        href: `${outerServices.bookkeeping.lhcFills.url}&${outerServices.bookkeeping.lhcFills.params.fillNumber}=${item.fill_number}`,
         target: '_blank',
     }, item.fill_number, h('.external-link-15-blue')),
 };
