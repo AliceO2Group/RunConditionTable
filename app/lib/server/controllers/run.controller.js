@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { GetAllRunsUsecase } = require('../../usecases/runs');
+const runService = require('../../services/runs/RunService');
 const { AllRunsDTO } = require('../../domain/dtos');
 const { validateDTO } = require('../utilities');
 
@@ -25,7 +25,7 @@ const { validateDTO } = require('../utilities');
 const listRunsHandler = async (req, res, next) => {
     const validatedDTO = await validateDTO(AllRunsDTO, req, res);
     if (validatedDTO) {
-        const runs = await GetAllRunsUsecase(validatedDTO.query);
+        const runs = await runService.getAllRuns(validatedDTO.query);
         res.json({
             data: runs,
         });

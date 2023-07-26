@@ -18,14 +18,16 @@ const {
 } = require('../../database').databaseManager;
 const { runAdapter } = require('../../database/adapters');
 
-/**
- * Executes this use case.
- *
- * @returns {Promise<Run[]>} Promise object represents the result of this use case.
- */
-const GetAllRunsUsecase = async () => {
-    const runs = await RunRepository.findAll();
-    return runs ? runs.map((run) => runAdapter.toEntity(run)) : null;
-};
+class RunService {
+    /**
+     * Return all runs
+     *
+     * @returns {Promise<Run[]>} Promise object represents the result of this use case.
+     */
+    async getAllRuns() { // TODO args
+        const runs = await RunRepository.findAll();
+        return runs ? runs.map((run) => runAdapter.toEntity(run)) : null;
+    }
+}
 
-module.exports = GetAllRunsUsecase;
+module.exports = new RunService();
