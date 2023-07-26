@@ -26,25 +26,19 @@ module.exports = () => {
     });
 
     describe('Get closest defined energy', () => {
+        const definedEnergyValues = {
+            "450": 450,
+            "6800": 6800,
+            "7000": 7000,
+            "5360/2": 2680
+        };
         it('should return the input energy if nothing is withing the acceptable margin', () => {
-            const definedEnergyValues = {
-                "450": 450,
-                "6800": 6800,
-                "7000": 7000,
-                "5360/2": 2680
-            };
             const energy = 6900;
             const acceptableMargin = 10;
             assert(getClosestDefinedEnergy(energy, definedEnergyValues, acceptableMargin) === energy.toString());
         });
 
         it('should resolve edge cases', () => {
-            const definedEnergyValues = {
-                "450": 450,
-                "6800": 6800,
-                "7000": 7000,
-                "5360/2": 2680
-            };
             const energy = 6900;
             const acceptableMargin = 100;
             const expectedOutcome = "6800";
@@ -52,12 +46,6 @@ module.exports = () => {
         });
 
         it('should return the key energy', () => {
-            const definedEnergyValues = {
-                "450": 450,
-                "6800": 6800,
-                "7000": 7000,
-                "5360/2": 2680
-            };
             const energy = 2680;
             const acceptableMargin = 1;
             const expectedOutcome = "5360/2";
