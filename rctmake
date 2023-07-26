@@ -104,7 +104,6 @@ exit_codes_filter() {
 PREVIOD_USER_LOC=$(pwd);
 DOCKER_DIR="$PROJECT_DIR/docker";
 MAIN_DOCKER_COMPOSE_YML="$DOCKER_DIR/docker-compose.yml"
-DOCKER_COMP_CMD="docker compose -f $MAIN_DOCKER_COMPOSE_YML --project-directory $PROJECT_DIR ";
 
 # defualt behaviour => dettached production built
 if [[  $# -eq 0 ]]; then
@@ -156,33 +155,32 @@ else
     done
 fi
 
+DOCKER_COMP_CMD="docker compose -p $TARGET -f $MAIN_DOCKER_COMPOSE_YML -f $DOCKER_DIR/docker-compose-$TARGET.yml --env-file "$DOCKER_DIR/$TARGET.env" --project-directory $PROJECT_DIR";
 MOCK_DB=${MOCK_DB:-false};
 export MOCK_DB;
 
 
 build() {
+    ORDER=$1;
     mkdir -p $PROJECT_DIR/security;
     CACHE_DIR="$PROJECT_DIR/database/cache";
     mkdir -p $CACHE_DIR;
-    ORDER=$1;
-    export DB_EXPOSED_PORT;
-    OPTIONAL_DB_EXPOSE=$(if [ -n "$DB_EXPOSED_PORT"  ]; then echo "-f $DOCKER_DIR/docker-compose-db-expose.yml"; fi);
-    echo $OPTIONAL_DB_EXPOSE;
+
+   
     case $TARGET in 
         dev)
+            export DB_EXPOSED_PORT;
+            OPTIONAL_DB_EXPOSE=$(if [ -n "$DB_EXPOSED_PORT"  ]; then echo "-f $DOCKER_DIR/docker-compose-db-expose.yml"; fi);
+
             $DOCKER_COMP_CMD \
-                -f "$DOCKER_DIR/docker-compose-dev.yml" \
                 -f "$DOCKER_DIR/docker-compose-volumes.yml" $OPTIONAL_DB_EXPOSE \
-                --env-file "$DOCKER_DIR/dev.env" \
                 $ORDER $OTHER_OPTS $SERVICES;
         ;;
 
         test)
             mkdir -p $PROJECT_DIR/reports;
             $DOCKER_COMP_CMD \
-                -f "$DOCKER_DIR/docker-compose-test.yml" \
-                --env-file $DOCKER_DIR/test.env \
-                up --build --abort-on-container-exit $OTHER_OPTS;
+                $ORDER --abort-on-container-exit $OTHER_OPTS;
         ;;
         *)
             usage "Incorrect build target: $TARGET";
