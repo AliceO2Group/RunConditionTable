@@ -157,15 +157,16 @@ else
 fi
 
 #TODO validate args target etc.
-TARGET=${TARGET:-dev}
+export TARGET=${TARGET:-dev}
 export APP_CONTAINER_NAME="o2rct_application-$TARGET"
 export DB_CONTAINER_NAME="o2rct_database-$TARGET"
 
-DOCKER_COMP_CMD="docker compose -p $TARGET-o2rct 
+DOCKER_COMP_CMD_NO_ENV="docker compose -p $TARGET-o2rct 
                     -f $MAIN_DOCKER_COMPOSE_YML 
                     -f $DOCKER_DIR/docker-compose-$TARGET.yml 
                     --env-file "$DOCKER_DIR/$TARGET.env" 
                     --project-directory $PROJECT_DIR";
+DOCKER_COMP_CMD="$DOCKER_COMP_CMD_NO_ENV -f $DOCKER_DIR/docker-compose-env.yml"
 
 MOCK_DB=${MOCK_DB:-false};
 export MOCK_DB;
@@ -207,7 +208,7 @@ for stage in $STAGES; do
     echo " *** do $stage";
     case $stage in
         prune)
-            $DOCKER_COMP_CMD rm --stop --force -v $SERVICES;
+            $DOCKER_COMP_CMD_NO_ENV rm --stop --force -v $SERVICES;
         ;;
 
         build*)

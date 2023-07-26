@@ -8,7 +8,7 @@ FROM node:18.16.0-buster as base
     RUN npm --silent ci
 
 
-FROM base as development
+FROM base as dev
     RUN apt update -y && apt install -y \
         postgresql-client
 

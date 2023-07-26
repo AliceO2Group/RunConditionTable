@@ -1,10 +1,6 @@
 
 services:
   application:
-    build: 
-      target: test
-    env_file:
-      - ./docker/test.env
     volumes:
       - type: bind
         read_only: true
@@ -22,11 +18,6 @@ services:
     restart: "no"
 
   database:
-    build: 
-      target: test
-    env_file:
-      - ./docker/test.env
-
     volumes:
     - type: bind
       read_only: true

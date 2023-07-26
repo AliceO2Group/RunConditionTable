@@ -1,25 +1,13 @@
 
 services:
   application:
-    build: 
-      target: development
-    env_file:
-    - ./docker/dev.env
-    
     ports:
     - target: $RCT_HTTP_PORT
       published: $RCT_HTTP_PORT
-    
-
+      
     restart: "no"
 
   database:
-    build: 
-      target: development
-    
-    env_file:
-    - ./docker/dev.env
-
     restart: "no"
 
 networks:

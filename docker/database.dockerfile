@@ -2,7 +2,7 @@ FROM postgres:14.2-bullseye as base
 
 WORKDIR /postgres/run
 
-FROM base as development
+FROM base as dev
     RUN apt update -y && \
         apt install -y \
         sudo \
