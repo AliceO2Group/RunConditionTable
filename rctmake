@@ -106,7 +106,7 @@ PREVIOD_USER_LOC=$(pwd);
 DOCKER_DIR="$PROJECT_DIR/docker";
 MAIN_DOCKER_COMPOSE_YML="$DOCKER_DIR/docker-compose.yml"
 
-# defualt behaviour => dettached production built
+
 if [[  $# -eq 0 ]]; then
     usage 'no option specfied'
 else
@@ -156,7 +156,6 @@ else
     done
 fi
 
-#TODO validate args target etc.
 export TARGET=${TARGET:-dev}
 export APP_CONTAINER_NAME="o2rct_application-$TARGET"
 export DB_CONTAINER_NAME="o2rct_database-$TARGET"
