@@ -174,13 +174,13 @@ build() {
 
             $DOCKER_COMP_CMD \
                 -f "$DOCKER_DIR/docker-compose-volumes.yml" $OPTIONAL_DB_EXPOSE \
-                $ORDER $OTHER_OPTS $SERVICES;
+                $ORDER $SERVICES;
         ;;
 
         test)
             mkdir -p $PROJECT_DIR/reports;
             $DOCKER_COMP_CMD \
-                $ORDER --abort-on-container-exit $OTHER_OPTS;
+                $ORDER --abort-on-container-exit;
         ;;
         *)
             usage "Incorrect build target: $TARGET";
@@ -221,11 +221,11 @@ for stage in $STAGES; do
         ;;
 
         follow)
-            $DOCKER_COMP_CMD logs --follow $OTHER_OPTS $SERVICES || exit_codes_filter 1;
+            $DOCKER_COMP_CMD logs --follow $SERVICES || exit_codes_filter 1;
         ;;
 
         stop)
-            $DOCKER_COMP_CMD stop $OTHER_OPTS $SERVICES;
+            $DOCKER_COMP_CMD stop $SERVICES;
         ;;
 
         *)
