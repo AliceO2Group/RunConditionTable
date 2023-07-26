@@ -12,10 +12,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const config = require('../config/configProvider.js');
-const views = require('./views');
-const procedures = require('./procedures')
-const { adjustValuesToSql, switchCase } = require('../utils');
+const config = require('../../config/configProvider.js');
+const views = require('../views');
+const procedures = require('../procedures')
+const { adjustValuesToSql, switchCase } = require('../../utils');
 
 const { pageNames: PN, procedures: PC, filterTypes } = config.public;
 const DRP = config.public.dataReqParams;
@@ -71,7 +71,7 @@ const handleLike = (fieldName, values, like) => {
     }
 }
 
-class QueryBuilder {
+class PGQueryBuilder {
 
     static filteringPart(params) {
         const filtersTypesToParams = {
@@ -136,7 +136,7 @@ class QueryBuilder {
                     ${viewGen(params)})
                 SELECT *
                 FROM ${viewName}
-                ${QueryBuilder.filteringPart(params)}
+                ${PGQueryBuilder.filteringPart(params)}
                 ${orderingPart(params)}
                 ${dataSubsetQueryPart(params)};`;
     }
@@ -146,4 +146,4 @@ class QueryBuilder {
     }
 }
 
-module.exports = QueryBuilder;
+module.exports = PGQueryBuilder;

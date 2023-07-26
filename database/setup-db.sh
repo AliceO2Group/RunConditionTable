@@ -170,8 +170,6 @@ create_other() {
 }
 
 grant() {
-  # psql -c "ALTER DATABASE \"$RCT_DB_NAME\" OWNER TO \"$RCT_DB_USERNAME\""
-  # psql -c "GRANT ALL PRIVILEGES ON DATABASE \"$RCT_DB_NAME\" TO \"$RCT_DB_USERNAME\""
   psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
   psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
 }
@@ -210,28 +208,4 @@ if [ "$NO_MODIFY_DAEMON" != 'true' ]; then
         echo ${file_path}${file_name} event: ${file_event}; 
       done &
   fi
-fi
-
-
-mock_use_info() {
-  car << info >&2
-Info: 
-  ***********************************************
-  ***********************************************
-  *********                          ************
-  *********        MOCK DATA         ************
-  *********                          ************
-  ***********************************************
-  ***********************************************
-info
-}
-
-if [ "$MOCK_DB" = "true" ] || [ "$1" == "--mock" ]; then
-  echo "mock temporarly disabled"
-  exit 0
-  
-  # mock_use_info
-  # MOCK_DATA="$SCRIPTS_DIR/mock/mock.tar"
-  # echo "restoring database data from $MOCK_DATA"
-  # pg_restore -d $RCT_DB_NAME $MOCK_DATA
 fi

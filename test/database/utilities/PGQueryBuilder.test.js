@@ -11,12 +11,11 @@
  * or submit itself to any jurisdiction.
  */
 
-const QueryBuilder = require('../../../app/lib/database/QueryBuilder');
+const PGQueryBuilder = require('../../../app/lib/database/utilities/PGQueryBuilder');
 const views = require('../../../app/lib/database/views');
 const expect = require('chai').expect;
-const database = require('../../../app/lib/database');
+const { databaseService } = require('../../../app/lib/database/DatabaseService');
 const { assert } = require('chai');
-const { databaseService } = database;
 
 
 module.exports = () => {
@@ -24,7 +23,7 @@ module.exports = () => {
         describe('should', () => {
             it('build query', async () => {
                 const params = {page: 'periods'};
-                const result = QueryBuilder.buildSelect(params);
+                const result = PGQueryBuilder.buildSelect(params);
                 expect(result).to.not.be.null;
             });
 
@@ -34,7 +33,7 @@ module.exports = () => {
                     FROM periods_view`
 
                 const params = {page: 'periods'};
-                const result = QueryBuilder.buildSelect(params);
+                const result = PGQueryBuilder.buildSelect(params);
                 expect(result).to.not.be.null;
                 expect(result).to.not.be.equal(expectedOutcome);
             });
@@ -51,7 +50,7 @@ module.exports = () => {
                 };
 
                 assert.doesNotThrow( async () => {
-                    const q = QueryBuilder.buildSelect(filteringParams);
+                    const q = PGQueryBuilder.buildSelect(filteringParams);
                     await databaseService.pgExec(q);
                 });
                 
@@ -71,7 +70,7 @@ module.exports = () => {
                 };
 
                 assert.doesNotThrow( async () => {
-                    const q = QueryBuilder.buildSelect(filteringParams);
+                    const q = PGQueryBuilder.buildSelect(filteringParams);
                     await databaseService.pgExec(q);
                 });
             });
@@ -93,7 +92,7 @@ module.exports = () => {
                 };
 
                 assert.doesNotThrow( async () => {
-                    const q = QueryBuilder.buildSelect(filteringParams);
+                    const q = PGQueryBuilder.buildSelect(filteringParams);
                     await databaseService.pgExec(q);
                 });
             });
@@ -109,7 +108,7 @@ module.exports = () => {
                 };
 
                 assert.throws(() => {
-                    const q = QueryBuilder.buildSelect(filteringParams);
+                    const q = PGQueryBuilder.buildSelect(filteringParams);
                 });
             });
 

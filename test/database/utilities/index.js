@@ -11,10 +11,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const QueryBuilderSuite = require('./QueryBuilder.test');
+const PGQueryBuilderSuite = require('./PGQueryBuilder.test');
 const DatabaseServiceSuite = require('./DataBaseService.test');
 
 module.exports = () => {
-    describe('QueryBuilder', QueryBuilderSuite);
+    describe('PGQueryBuilder', PGQueryBuilderSuite);
     describe('DatabaseService', DatabaseServiceSuite);
 };

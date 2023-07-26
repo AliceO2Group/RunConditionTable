@@ -10,17 +10,15 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const { databaseService } = require('../../../app/lib/database/DatabaseService');
+const databaseManager = require('../../app/lib/database/DatabaseManager.js');
 const assert = require('assert');
 
-
 module.exports = () => {
-    describe('DatabaseSuite', () => {
-        describe('Check Initialization of DatabaseService', () => {
-            it('should connect to the database successfully', () => {
+    describe('DatabaseManagerSuite', () => {
+        describe('Check Initialization of sequelize db', () => {
+            it('sequlize should migrate without errors', () => {
                 assert.doesNotThrow(async () => {
-                    await databaseService.getDate();
-                    await databaseService.healthcheckInsertData();
+                    await databaseManager.migrate();
                 });
             });
         });

@@ -19,7 +19,8 @@ const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
 // Services
 const alimonitorServices = require('./lib/alimonitor-services');
 // Database
-const database = require('./lib/database');
+const { databaseManager } = require('./lib/database/DatabaseManager.js');
+const { databaseService } = require('./lib/database/DatabaseService.js');
 
 // Server
 const { webUiServer } = require('./lib/server');
@@ -43,7 +44,8 @@ class RunConditionTableApplication {
         this.logger = new Log(RunConditionTableApplication.name);
 
         this.webUiServer = webUiServer;
-        this.databaseService = database.databaseService;
+        this.databaseService = databaseService;
+        this.databaseManager = databaseManager;
         this.databaseService.healthcheckInsertData();
         this.syncManager = alimonitorServices.syncManager;
         this.defineEndpoints();
@@ -72,6 +74,7 @@ class RunConditionTableApplication {
     async run() {
         this.logger.info('Starting RCT app...');
         try {
+            await this.databaseManager.migrate();
             await this.httpServer.listen();
         } catch (error) {
             this.logger.error(`Error while starting RCT app: ${error}`);
@@ -103,7 +106,7 @@ class RunConditionTableApplication {
     }
 
     static isInDevMode() {
-        return process.env.ENV_MODE === 'development';
+        return process.env.ENV_MODE === 'dev';
     }
 
     static getEnvMode() {

@@ -11,14 +11,16 @@
  * or submit itself to any jurisdiction.
  */
 
-const UtilitiesSuite = require('./utils.test');
-const ResProviderSuite = require('./resProvider.test');
-const ConfigSuite = require('./config');
-const ServerSuite = require('./server');
-
-module.exports = () => {
-    describe('Utilities', UtilitiesSuite);
-    describe('Res Provider', ResProviderSuite);
-    describe('Config', ConfigSuite);
-    describe('Server', ServerSuite);
-};
+/**
+ * @typedef SequelizeRun
+ *
+ * @property {number} runNumber
+ * @property {number|null} timeO2Start
+ * @property {number|null} timeO2End
+ * @property {number|null} timeTrgStart
+ * @property {number|null} timeTrgEnd
+ * @property {number|null} fillNumber
+ * @property {number|null} lhcBeamEnergy
+ * @property {number|null} l3CurrentVal
+ * @property {number|null} dipoleCurrentVal
+ */

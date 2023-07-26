@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 const { Log } = require('@aliceo2/web-ui');
-const { databaseService } = require('../database');
+const { databaseService } = require('../database/DatabaseService.js');
 const config = require('../../config');
 
 const monalisaService = require('./MonalisaService');

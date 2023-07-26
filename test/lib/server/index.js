@@ -10,19 +10,11 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const { databaseService } = require('../../../app/lib/database/DatabaseService');
-const assert = require('assert');
 
+const WebUiServerSuite = require('./WebUiServer.test');
+const RoutesSuite = require('./routes.test');
 
 module.exports = () => {
-    describe('DatabaseSuite', () => {
-        describe('Check Initialization of DatabaseService', () => {
-            it('should connect to the database successfully', () => {
-                assert.doesNotThrow(async () => {
-                    await databaseService.getDate();
-                    await databaseService.healthcheckInsertData();
-                });
-            });
-        });
-    });
+    describe('Routes', RoutesSuite);
+    describe('WebUiServer', WebUiServerSuite);
 };

@@ -11,14 +11,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const UtilitiesSuite = require('./utils.test');
-const ResProviderSuite = require('./resProvider.test');
-const ConfigSuite = require('./config');
-const ServerSuite = require('./server');
+const AllRunsDTO = require('./AllRuns.dto');
+const ApiDocsDTO = require('./ApiDocs.dto');
 
-module.exports = () => {
-    describe('Utilities', UtilitiesSuite);
-    describe('Res Provider', ResProviderSuite);
-    describe('Config', ConfigSuite);
-    describe('Server', ServerSuite);
+module.exports = {
+    AllRunsDTO,
+    ApiDocsDTO,
 };

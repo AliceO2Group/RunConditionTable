@@ -1,4 +1,6 @@
 #!/bin/bash
+echo $@
+
 PROJECT_DIR="$(dirname $(realpath $0))";
 SCRIPT_NAME="$(basename $0)"
 
@@ -143,7 +145,10 @@ else
                 ALL_PERMISSIONS='true';
                 shift 1;
             ;;
-            
+            --db-expose)
+                DB_EXPOSED_PORT=$2;
+                shift 2;
+            ;;
             *)
                 usage "Incorrect flag: $1"
             ;;
@@ -160,11 +165,14 @@ build() {
     CACHE_DIR="$PROJECT_DIR/database/cache";
     mkdir -p $CACHE_DIR;
     ORDER=$1;
+    export DB_EXPOSED_PORT;
+    OPTIONAL_DB_EXPOSE=$(if [ -n "$DB_EXPOSED_PORT"  ]; then echo "-f $DOCKER_DIR/docker-compose-db-expose.yml"; fi);
+    echo $OPTIONAL_DB_EXPOSE;
     case $TARGET in 
         dev)
             $DOCKER_COMP_CMD \
                 -f "$DOCKER_DIR/docker-compose-dev.yml" \
-                -f "$DOCKER_DIR/docker-compose-volumes.yml" \
+                -f "$DOCKER_DIR/docker-compose-volumes.yml" $OPTIONAL_DB_EXPOSE \
                 --env-file "$DOCKER_DIR/dev.env" \
                 $ORDER $OTHER_OPTS $SERVICES;
         ;;

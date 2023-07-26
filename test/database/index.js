@@ -12,7 +12,9 @@
  */
 
 const UtilitiesSuite = require('./utilities');
+const DatabaseManagerSuite = require('./DatabaseManger.test');
 
 module.exports = () => {
+    describe('DatabaseManager', DatabaseManagerSuite);
     describe('Utilities', UtilitiesSuite);
 };

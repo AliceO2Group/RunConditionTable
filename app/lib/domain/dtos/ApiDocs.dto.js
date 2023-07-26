@@ -11,14 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
-const UtilitiesSuite = require('./utils.test');
-const ResProviderSuite = require('./resProvider.test');
-const ConfigSuite = require('./config');
-const ServerSuite = require('./server');
+const Joi = require('joi');
+const { emptyDTO, tokenDTO } = require('./commons.dto');
 
-module.exports = () => {
-    describe('Utilities', UtilitiesSuite);
-    describe('Res Provider', ResProviderSuite);
-    describe('Config', ConfigSuite);
-    describe('Server', ServerSuite);
-};
+const ApiDocsDTO = Joi.object({
+    query: tokenDTO,
+    params: emptyDTO,
+    body: emptyDTO,
+});
+
+module.exports = ApiDocsDTO;

@@ -11,14 +11,12 @@
  * or submit itself to any jurisdiction.
  */
 
-const UtilitiesSuite = require('./utils.test');
-const ResProviderSuite = require('./resProvider.test');
-const ConfigSuite = require('./config');
-const ServerSuite = require('./server');
+const apiDocumentationCotroller = require('../controllers/ApiDocumentation.controller.js');
 
-module.exports = () => {
-    describe('Utilities', UtilitiesSuite);
-    describe('Res Provider', ResProviderSuite);
-    describe('Config', ConfigSuite);
-    describe('Server', ServerSuite);
+module.exports = {
+    path: '/api-docs',
+    method: 'get',
+    args: { public: true },
+    controller: apiDocumentationCotroller.getDocsHandler.bind(apiDocumentationCotroller),
+    description: 'Return api docs',
 };
