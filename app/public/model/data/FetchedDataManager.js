@@ -128,7 +128,7 @@ export default class FetchedDataManager {
     changeSorting(sorting) {
         const url = this.router.getUrl();
         const { field, order } = sorting;
-        const newUrl = replaceUrlParams(url, { 'sorting': `${order == -1 ? '-' : ''}${field}`});
+        const newUrl = replaceUrlParams(url, { sorting: `${order == -1 ? '-' : ''}${field}` });
         this.router.go(newUrl);
     }
 
