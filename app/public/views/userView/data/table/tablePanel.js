@@ -19,8 +19,6 @@ import row from './row.js';
 import pagesCellsSpecials from '../pagesCellsSpecials.js';
 import pager from '../../../../components/table/pager.js';
 
-import postingDataConfig from '../posting/postingDataConfig.js';
-import { postForm } from '../posting/postForm.js';
 import filter from './filtering/filter.js';
 import activeFilters from './filtering/activeFilters.js';
 import noDataView from './noDataView.js';
@@ -120,7 +118,7 @@ export default function tablePanel(model, runs, detectors) {
                             }, [
                                 tableHeader(visibleFields, data, model),
                                 model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.page, dataPointer.index, runs, detectors),
+                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.index, runs, detectors),
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
@@ -136,11 +134,10 @@ export default function tablePanel(model, runs, detectors) {
 }
 
 function tableBody(
-    model, visibleFields, data, cellsSpecials, page, index, runs, detectors,
+    model, visibleFields, data, cellsSpecials, index, runs, detectors,
 ) {
     return h('tbody', { id: `table-body-${data.url}` },
-        [postingDataConfig[page] ? postForm(model, data) : '']
-            .concat(data.rows.map((item) => row(
-                model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
-            ))));
+        data.rows.map((item) => row(
+            model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
+        )));
 }
