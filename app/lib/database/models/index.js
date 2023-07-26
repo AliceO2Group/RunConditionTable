@@ -19,7 +19,7 @@ const Run = require('./Run.js');
 /**
  * 
  * @param {Sequelize} sequelize instance 
- * @returns {Objecy<string, Sequelize.Model>} dict modelName -> sequelize model
+ * @returns {Object<string, Sequelize.Model>} dict modelName -> sequelize model
  */
 const modelsFactory = (sequelize) => {
     let models = {
