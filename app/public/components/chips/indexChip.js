@@ -14,15 +14,18 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
-const { dataReqParams, pageNames } = RCT;
+const { pageNames } = RCT;
+
+/**
+ * @param {*} model - provides a set of functions
+ * @param {string} pageName - name of the page
+ * @param {string} index - index of the item on page
+ * @returns - button that navigates user to the related (page, index) view
+ */
 
 export default function indexChip(model, pageName, index) {
     const dataPointer = model.getCurrentDataPointer();
     const currentPage = dataPointer.page;
-    const data = model.fetchedData[currentPage][dataPointer.index].payload;
-    const { fields } = data;
-    const firstField = fields.find((f) => f !== undefined && f.name);
-    const targetUrl = `/?page=${currentPage}&index=${index}&${dataReqParams.rowsOnSite}=50&${dataReqParams.site}=1&sorting=-${firstField.name}`;
 
     return currentPage !== pageNames.periods && model.fetchedData[currentPage][index] && currentPage === pageName
         ? h('.chip.flex-wrap.justify-between.items-center', {
@@ -30,7 +33,7 @@ export default function indexChip(model, pageName, index) {
             class: dataPointer.index === index ? 'primary' : '',
         },
         h('button.btn.transparent', { onclick: () => {
-            model.router.go(targetUrl);
+            model.navigation.go(currentPage, index);
         } }, index),
         h('button.btn.icon-only-button.transparent', {
             onclick: () => {
