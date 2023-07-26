@@ -23,3 +23,12 @@ services:
     - ./docker/dev.env
 
     restart: "no"
+
+networks:
+  o2-rct_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.200.201.0/24"
+          gateway: "172.200.201.1"
