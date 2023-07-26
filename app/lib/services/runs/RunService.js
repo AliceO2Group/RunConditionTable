@@ -30,4 +30,6 @@ class RunService {
     }
 }
 
-module.exports = new RunService();
+module.exports = {
+    runService: new RunService(),
+};
