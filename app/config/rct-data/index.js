@@ -19,13 +19,14 @@ const { filterTypes, filterInputTypes } = require('./filterTypes.js');
 const detectors = require('./detectors.js').sort();
 const roles = require('./roles.js');
 const physicalParticlesData = require('./physicalParticlesData.js');
-const beamTypesMappings = require('./beamTypesMappings.js');
 const healthcheckQueries = require('./healthcheckQueries.js');
 const quality = require('./quality');
+const mapping = require('./mapping');
 
 module.exports = {
     pageNames,
     viewTypes,
+    mapping,
     pagesViewGroups,
     fieldNames,
     filterTypes,
@@ -34,6 +35,5 @@ module.exports = {
     roles,
     quality,
     physicalParticlesData,
-    beamTypesMappings,
     ...healthcheckQueries,
 };

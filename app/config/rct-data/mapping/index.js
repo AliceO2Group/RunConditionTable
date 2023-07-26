@@ -12,14 +12,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const beamTypesMappings = {
-    pp: 'p-p',
-    nn: 'n-n',
-    XeXe: 'Xe-Xe',
-    PbPb: 'Pb-Pb',
-    pPb: 'p-Pb',
-    Pbp: 'p-Pb',
-    pA: 'p-A',
-};
+const beamType = require('./beamType.js');
+const energy = require('./energy.js');
 
-module.exports = beamTypesMappings;
+module.exports = {
+    beamType: beamType,
+    energy: energy,
+};
