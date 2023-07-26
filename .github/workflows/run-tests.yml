@@ -58,4 +58,4 @@ jobs:
       - name: Installing dependencies
         run: npm ci
       - name: Running tests
-        run: npm run test:mocha
+        run: npm run docker:test
