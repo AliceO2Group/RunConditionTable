@@ -207,4 +207,6 @@ class DatabaseService {
 
 }
 
-module.exports = new DatabaseService();
+module.exports = {
+    databaseService: new DatabaseService()
+};

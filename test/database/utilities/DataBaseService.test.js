@@ -10,10 +10,9 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const database = require('../../../app/lib/database');
+const { databaseService } = require('../../../app/lib/database/DatabaseService');
 const assert = require('assert');
 
-const { databaseService } = database;
 
 module.exports = () => {
     describe('DatabaseSuite', () => {

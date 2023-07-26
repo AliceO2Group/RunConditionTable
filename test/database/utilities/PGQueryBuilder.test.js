@@ -14,9 +14,8 @@
 const PGQueryBuilder = require('../../../app/lib/database/utilities/PGQueryBuilder');
 const views = require('../../../app/lib/database/views');
 const expect = require('chai').expect;
-const database = require('../../../app/lib/database');
+const { databaseService } = require('../../../app/lib/database/DatabaseService');
 const { assert } = require('chai');
-const { databaseService } = database;
 
 
 module.exports = () => {

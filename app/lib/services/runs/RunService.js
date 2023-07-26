@@ -12,10 +12,12 @@
  */
 
 const {
-    repositories: {
-        RunRepository,
+    databaseManager: {
+        repositories: {
+            RunRepository,
+        },
     },
-} = require('../../database').databaseManager;
+} = require('../../database/DatabaseManager');
 const { runAdapter } = require('../../database/adapters');
 
 class RunService {

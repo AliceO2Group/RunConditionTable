@@ -19,7 +19,8 @@ const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
 // Services
 const alimonitorServices = require('./lib/alimonitor-services');
 // Database
-const database = require('./lib/database');
+const { databaseManager } = require('./lib/database/DatabaseManager.js');
+const { databaseService } = require('./lib/database/DatabaseService.js');
 
 // Server
 const { webUiServer } = require('./lib/server');
@@ -43,8 +44,8 @@ class RunConditionTableApplication {
         this.logger = new Log(RunConditionTableApplication.name);
 
         this.webUiServer = webUiServer;
-        this.databaseService = database.databaseService;
-        this.databaseManager = database.databaseManager;
+        this.databaseService = databaseService;
+        this.databaseManager = databaseManager;
         this.databaseService.healthcheckInsertData();
         this.syncManager = alimonitorServices.syncManager;
         this.defineEndpoints();
