@@ -12,11 +12,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const energyMapping = {
-    ['6800']: 6800,
-    ['7000']: 7000,
-    ['5360/2']: 5360 / 2,
-    ['450']: 450,
-};
+const beamTypes = require('./beamTypes.js');
+const energies = require('./energies.js');
 
-module.exports = energyMapping;
+module.exports = {
+    beamTypes: beamTypes,
+    energies: energies,
+};

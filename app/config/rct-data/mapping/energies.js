@@ -12,14 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
-const beamTypeMapping = {
-    pp: 'p-p',
-    nn: 'n-n',
-    XeXe: 'Xe-Xe',
-    PbPb: 'Pb-Pb',
-    pPb: 'p-Pb',
-    Pbp: 'p-Pb',
-    pA: 'p-A',
+const energies = {
+    ['6800']: 6800,
+    ['7000']: 7000,
+    ['5360/2']: 5360 / 2,
+    ['450']: 450,
 };
 
-module.exports = beamTypeMapping;
+module.exports = energies;

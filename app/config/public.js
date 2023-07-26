@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { roles, detectors, pageNames, filterTypes, filterInputTypes, fieldNames, quality } = require('./rct-data');
+const { roles, detectors, pageNames, filterTypes, filterInputTypes, fieldNames, quality, mapping } = require('./rct-data');
 const { bookkeeping } = require('./outerServices');
 
 module.exports = { // Properties that will be provided to frontend in the public folder
@@ -22,6 +22,7 @@ module.exports = { // Properties that will be provided to frontend in the public
 
     roles,
     quality,
+    mapping,
     endpoints: {
         login: '/login/',
         logout: '/logout/',
