@@ -12,8 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
-import spinner from '../components/common/spinner.js';
 import { h } from '/js/src/index.js';
+import spinner from '../components/common/spinner.js';
 
 export default function waitingPanel() {
     const reloadBtn = h('button.btn.btn-primary.m3', { onclick: () => document.location.reload(true) }, 'Retry');

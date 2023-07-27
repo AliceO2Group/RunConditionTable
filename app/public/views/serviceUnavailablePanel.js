@@ -13,19 +13,16 @@
  */
 
 import { h } from '/js/src/index.js';
-import dataPanel from './userView/data/dataPanel.js';
-import sidebar from '../components/sidebar/sidebar.js';
+import messagePanel from '../components/messagePanel/messagePanel.js';
 
-export default function userPanel(model) {
+export default function serviceUnavailablePanel(model) {
     const submodel = model.submodels[model.mode];
-    return h('.flex-column.absolute-fill', [
-        h('.flex-grow.flex-row.outline-gray', [
-            sidebar(submodel),
-            h('section.outline-gray.flex-grow.relative.user-panel-main-content', [
-                h('.scroll-y.absolute-fill',
-                    { id: 'user-panel-main-content' },
-                    dataPanel(submodel, model.runs, model.detectors, model.flags)),
-            ]),
-        ]),
-    ]);
+    const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => submodel.retry() }, 'Retry');
+    const reason = 'Service temporarily unavailable';
+    const message = 'Please contact the administrator';
+    const notification = h('.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close', {
+        id: submodel.messageFieldId,
+    }, '');
+
+    return messagePanel('no-network-90', reason, message, retryBtn, notification);
 }

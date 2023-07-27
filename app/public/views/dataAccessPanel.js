@@ -13,21 +13,19 @@
  */
 
 import { h } from '/js/src/index.js';
+import dataPanel from './userView/data/dataPanel.js';
+import sidebar from '../components/sidebar/sidebar.js';
 
-export default function serviceUnavailablePanel(model) {
+export default function dataAccessPanel(model) {
     const submodel = model.submodels[model.mode];
-    const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => submodel.retry() }, 'Retry');
-    const applicationTitle = h('h1', 'Run Condition Table');
-    const reason = h('h3', 'Service temporarily unavailable');
-    const message = h('h5', 'Please contact the administrator');
-
-    return h('.panel.abs-center',
-        applicationTitle,
-        h('.no-network-90'),
-        reason,
-        message,
-        h('.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close', {
-            id: submodel.messageFieldId,
-        }, ''),
-        retryBtn);
+    return h('.flex-column.absolute-fill', [
+        h('.flex-grow.flex-row.outline-gray', [
+            sidebar(submodel),
+            h('section.outline-gray.flex-grow.relative.user-panel-main-content', [
+                h('.scroll-y.absolute-fill',
+                    { id: 'user-panel-main-content' },
+                    dataPanel(submodel, model.runs, model.detectors, model.flags)),
+            ]),
+        ]),
+    ]);
 }

@@ -12,16 +12,16 @@
  * or submit itself to any jurisdiction.
  */
 
-import userPanel from './views/userView.js';
-import serviceUnavailablePanel from './views/serviceUnavailableView.js';
-import sessionErrorPanel from './views/sessionErrorView.js';
-import waitingPanel from './views/waitingView.js';
+import dataAccessPanel from './views/dataAccessPanel.js';
+import serviceUnavailablePanel from './views/serviceUnavailablePanel.js';
+import sessionErrorPanel from './views/sessionErrorPanel.js';
+import waitingPanel from './views/waitingPanel.js';
 import { switchCase } from '/js/src/index.js';
 
 export default function view(model) {
     return switchCase(model.mode, {
         serviceUnavailable: () => serviceUnavailablePanel(model),
         sessionError: () => sessionErrorPanel(model),
-        dataAccess: () => userPanel(model),
+        dataAccess: () => dataAccessPanel(model),
     }, () => waitingPanel())();
 }
