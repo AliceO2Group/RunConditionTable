@@ -18,8 +18,7 @@ import { RCT } from './config.js';
 import Flags from './views/flags/Flags.js';
 import Detectors from './views/detectors/Detectors.js';
 import Runs from './views/runs/Runs.js';
-import ServiceUnavailable from './views/serviceUnavailable/ServiceUnavailable.js';
-const { roles, messageTimeout } = RCT;
+const { roles, dataAccess } = RCT;
 
 export default class Model extends Observable {
     constructor() {
@@ -35,9 +34,6 @@ export default class Model extends Observable {
 
         this.loader = new Loader();
 
-        this.mode = null;
-        this.submodels = {};
-
         this.runs = new Runs(this);
         this.runs.bubbleTo(this);
 
@@ -47,24 +43,27 @@ export default class Model extends Observable {
         this.detectors = new Detectors(this);
         this.detectors.bubbleTo(this);
 
+        this.dataAccess = new DataAccessModel(this);
+        this.dataAccess.bubbleTo(this);
+        this.dataAccess.setState(dataAccess.states.default);
+
         this.loginEndpoint = `/api${RCT.endpoints.login}`;
         this.login('physicist');
     }
 
     async login(username) {
-        this.mode = null;
+        this.dataAccess.setState(dataAccess.states.default);
         this.notify();
-        const { status, result, ok } = await this.postLoginPasses(username);
-        this._tokenExpirationHandler(status);
-        if (ok) {
-            this.setDataAccessSubmodel();
-        } else if (/5\d\d/.test(status)) {
-            this.setServiceUnavailableModel(result);
-        }
-    }
 
-    postLoginPasses(username) {
-        return this.loader.post(this.loginEndpoint, { username: username });
+        const { status, result, ok } = await this.loader.post(this.loginEndpoint, { username: username });
+        await this._tokenExpirationHandler(status);
+        if (ok) {
+            localStorage.token = sessionService.session.token;
+            this.dataAccess.setState(dataAccess.states.dataAccess);
+            this.notify();
+        } else if (/5\d\d/.test(status)) {
+            this.dataAccess.setState(dataAccess.states.serviceUnavailable, result);
+        }
     }
 
     isDetectorRole(role) {
@@ -88,42 +87,12 @@ export default class Model extends Observable {
         return [roles.dict.Guest];
     }
 
-    setServiceUnavailableModel(result) {
-        const modeName = 'serviceUnavailable';
-        if (!this.submodels[modeName]) {
-            this.submodels[modeName] = new ServiceUnavailable(this);
-            this.submodels[modeName].bubbleTo(this);
-        }
-        this.mode = modeName;
-        this.notify();
-        const model = this;
-        setTimeout(() => {
-            model.submodels[modeName].hideResult(result);
-            model.notify();
-            setTimeout(() => {
-                model.submodels[modeName].showResult(result);
-                model.notify();
-            }, messageTimeout);
-        }, messageTimeout);
-    }
-
-    setDataAccessSubmodel() {
-        const modeName = 'dataAccess';
-        localStorage.token = sessionService.session.token;
-        this.submodels[modeName] = new DataAccessModel(this);
-        this.submodels[modeName].bubbleTo(this);
-        this.mode = modeName;
-        this.notify();
-    }
-
-    _tokenExpirationHandler(status) {
+    async _tokenExpirationHandler(status) {
         if (status == 403) {
             localStorage.token = null;
             alert('Auth token expired!');
-            this.router.unobserve(this.primary.routerCallback);
             this.router.go('/', true);
-            this.primary = null;
-            this.mode = 'default';
+            this.dataAccess.setState(dataAccess.states.sessionError);
             document.location.reload(true);
         }
     }

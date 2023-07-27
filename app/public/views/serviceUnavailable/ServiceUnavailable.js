@@ -15,28 +15,27 @@
 import { Observable } from '/js/src/index.js';
 
 export default class ServiceUnavailable extends Observable {
-    constructor(model, result) {
+    constructor(model) {
         super();
         this.model = model;
-        this.lastResult = result;
         this.messageFieldId = 'serviceUnavailableMessageFieldID';
-    }
-
-    async retry() {
-        await this.model.login();
     }
 
     showResult(result) {
         const field = document.getElementById(this.messageFieldId);
-        field.innerText = result.message;
-        field.classList.remove('notification-close');
-        field.classList.add('notification-open');
+        if (field) {
+            field.innerText = result.message ? result.message : result;
+            field.classList.remove('notification-close');
+            field.classList.add('notification-open');
+        }
     }
 
     hideResult() {
         const field = document.getElementById(this.messageFieldId);
-        field.innerText = '';
-        field.classList.add('notification-close');
-        field.classList.remove('notification-open');
+        if (field) {
+            field.innerText = '';
+            field.classList.add('notification-close');
+            field.classList.remove('notification-open');
+        }
     }
 }

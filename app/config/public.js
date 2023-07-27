@@ -12,10 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
-const { roles, detectors, pageNames, filterTypes, filterInputTypes, fieldNames, quality, mapping } = require('./rct-data');
+const { roles, detectors, pageNames, filterTypes, filterInputTypes, fieldNames, quality, mapping, dataAccess } = require('./rct-data');
 const { bookkeeping } = require('./outerServices');
 
 module.exports = { // Properties that will be provided to frontend in the public folder
+    dataAccess,
     messageTimeout: 200,
     outerServices: { bookkeeping },
     filterTypes: filterTypes,

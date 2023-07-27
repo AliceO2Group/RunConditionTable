@@ -15,12 +15,12 @@
 import { h } from '/js/src/index.js';
 import messagePanel from '../components/messagePanel/messagePanel.js';
 
-export default function serviceUnavailablePanel(serviceUnavailableModel) {
-    const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => serviceUnavailableModel.retry() }, 'Retry');
+export default function serviceUnavailablePanel(model) {
+    const retryBtn = h('button.btn.btn-primary.m3', { onclick: async () => await model.login() }, 'Retry');
     const reason = 'Service temporarily unavailable';
     const message = 'Please contact the administrator';
     const notification = h('.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close', {
-        id: serviceUnavailableModel.messageFieldId,
+        id: model.dataAccess.serviceUnavailable.messageFieldId,
     }, '');
 
     return messagePanel('no-network-90', reason, message, retryBtn, notification);

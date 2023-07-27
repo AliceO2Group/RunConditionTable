@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { Observable, RemoteData } from '/js/src/index.js';
+import { Observable } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 const { pageNames: PN } = RCT;
 
@@ -29,26 +29,12 @@ export default class Flags extends Observable {
     constructor(model) {
         super();
         this.model = model;
-        this._flags = RemoteData.NotAsked();
     }
-
-    /*
-     *Async fetchAllFlags() {
-     *    this.notify();
-     *}
-     */
 
     getAllFlags() {
-        const submodel = this.model.submodels[this.model.mode];
-        const [flagsDataIndex] = Object.keys(submodel.fetchedData[PN.flags]);
-        return submodel.fetchedData[PN.flags][flagsDataIndex].payload.rows;
+        const [flagsDataIndex] = Object.keys(this.model.dataAccess.fetchedData[PN.flags]);
+        return this.model.dataAccess.fetchedData[PN.flags][flagsDataIndex].payload.rows;
     }
-
-    /*
-     *GetFlags() {
-     *    return this._flags;
-     *}
-     */
 
     getFlags(runNumber, detector) {
         const allFlags = this.getAllFlags();

@@ -17,14 +17,14 @@ import dataPanel from './userView/data/dataPanel.js';
 import sidebar from '../components/sidebar/sidebar.js';
 
 export default function dataAccessPanel(model) {
-    const submodel = model.submodels[model.mode];
+    const { dataAccess } = model;
     return h('.flex-column.absolute-fill', [
         h('.flex-grow.flex-row.outline-gray', [
-            sidebar(submodel),
+            sidebar(dataAccess),
             h('section.outline-gray.flex-grow.relative.user-panel-main-content', [
                 h('.scroll-y.absolute-fill',
                     { id: 'user-panel-main-content' },
-                    dataPanel(submodel, model.runs, model.detectors, model.flags)),
+                    dataPanel(dataAccess, model.runs, model.detectors, model.flags)),
             ]),
         ]),
     ]);
