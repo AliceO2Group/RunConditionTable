@@ -1,5 +1,4 @@
 #!/bin/bash
-echo $@
 
 PROJECT_DIR="$(dirname $(realpath $0))";
 SCRIPT_NAME="$(basename $0)"
@@ -14,12 +13,10 @@ DP_CONTAINERS_OPT="$DB_CONTAINER_NAME-($DEV_MODE|$TEST_MODE))"
 
 ITWILLBEDELETED="!(It will be deleted)"
 
-# TODO describe rest of path, RCT_USER etc. via env vars pulled during deployment
-
 usage() {
-    if [ -n "$1" ]; then
+    ERROR="$1";
+    if [ -n "$ERROR" ]; then
         BORDER_PATTERN="' *'"
-        ERROR="$1";
         ERROR_REASON_MESS=" error reason: $ERROR";
         LENGTH=$(expr length "$ERROR_REASON_MESS" / 2 + 2);
         HORIZONTAL_BORDER=$(seq -s' *' $LENGTH| tr -d '[:digit:]');
@@ -59,31 +56,31 @@ Usage:
             2. stop - stop containers                      
             
             3. prune - delete containers, all virtual volumens and virtual network
+            4. follow - like docker-compose follow
+            5. logs - like docker-compose logs
 
-            4. app:attach - like docker attach to $APP_CONTAINERS_OPT
-            5. app:ip - retrive ip of $DB_CONTAINERS_OPT
+            6. app:attach - like docker attach to $APP_CONTAINERS_OPT
+            7. app:ip - retrive ip of $DB_CONTAINERS_OPT
 
-            5. follow - like docker-compose follow
 
-            6. db:export - export db sql definition from pgmodeler design $ITWILLBEDELETED
-            7. db:clean | db:truncate - truncate database in db container
-            8. db:ip - print db container ipv4 address
+            8. db:export - export db sql definition from pgmodeler design $ITWILLBEDELETED
+            9. db:clean | db:truncate - truncate database in db container
+            10. db:ip - print db container ipv4 address
+            11. db:counts - print statistics of data in each table in db
 
-            10. dump:(make|mk) - make dump of current database (in docker container) data, 
+            13. dump:(make|mk) - make dump of current database (in docker container) data, 
                       need option -F|--dump-file <FILE> to specify dump file relative path
                 e.g.: ./$SCRIPT_NAME dump -F dump_file
-            11. dump:(list|ls) - print list cached dumps
-            12. dump:tree - print tree of cached dumps
-            13. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
-            14. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
+            14. dump:(list|ls) - print list cached dumps
+            15. dump:tree - print tree of cached dumps
+            16. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
+            17. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
                 e.g.: ./$SCRIPT_NAME restore -F dump_file
-            15. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
-            16. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
+            18. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
+            19. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
         ! An additional -S|--service <SERVICE> flag can be specified for run, follow, stop and prune stages.
         <SERVICE> $APP_CONTAINERS_OPT or $DB_CONTAINERS_OPT is the name of the service the stages are performed for.
-
-        ! Production - Deprecated - as the Alice tool, RCT production will NOT be handeled with the use of dockers
     
 $ERROR_MESSAGE_PRINT
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -120,13 +117,14 @@ MAIN_DOCKER_COMPOSE_YML="$DOCKER_DIR/docker-compose.yml"
 if [[  $# -eq 0 ]]; then
     usage 'no option specfied'
 else
+    if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
+        usage;
+    fi;
+
     STAGES=$(echo $1 | tr ',' ' ');
     shift 1;
     while [[ $# -gt 0 ]]; do
         case $1 in 
-            -h|--help)
-                usage;
-            ;;
             -t|--target)
                 export TARGET=$2;
                 shift 2;
