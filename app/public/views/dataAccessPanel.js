@@ -18,10 +18,11 @@ import sidebar from '../components/sidebar/sidebar.js';
 
 export default function dataAccessPanel(model) {
     const { dataAccess, runs, detectors, flags } = model;
+
     return h('.flex-column.absolute-fill', [
-        h('.flex-grow.flex-row.outline-gray', [
+        h('.flex-grow.flex-row', [
             sidebar(dataAccess),
-            h('section.outline-gray.flex-grow.relative.user-panel-main-content', [
+            h('section.flex-grow.relative.user-panel-main-content', [
                 h('.scroll-y.absolute-fill',
                     { id: 'user-panel-main-content' },
                     dataPanel(dataAccess, runs, detectors, flags)),
