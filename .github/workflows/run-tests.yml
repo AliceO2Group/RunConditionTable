@@ -21,7 +21,6 @@ jobs:
           node-version: '18.x'
       - run: npm ci
       - run: npm run test
-      # - run: ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
       - name: Send codecov report for RunConditionTable
         uses: codecov/codecov-action@v3
         with:
@@ -43,15 +42,3 @@ jobs:
       - name: Running static analysis
         run: npm run static
 
-  # test:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Use Node.js 18.x
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: '18.x'
-  #     - name: Running tests
-  #       run: npm run test
