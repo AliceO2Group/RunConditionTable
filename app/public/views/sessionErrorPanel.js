@@ -17,8 +17,8 @@ import messagePanel from '../components/messagePanel/messagePanel.js';
 
 export default function sessionErrorPanel(model) {
     const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => model.login() }, 'Login');
-    const reason = h('h3', 'Session error');
-    const message = h('h5', 'Please retry to login');
+    const reason = 'Session error';
+    const message = 'Please retry to login';
 
     return messagePanel('session-timeout-90', reason, message, retryBtn);
 }
