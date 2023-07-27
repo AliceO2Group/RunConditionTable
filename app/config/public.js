@@ -35,7 +35,6 @@ module.exports = { // Properties that will be provided to frontend in the public
         login: 'post',
         logout: 'post',
         rctData: 'get',
-        date: 'get',
         insertData: 'post',
         authControl: 'get',
     },
