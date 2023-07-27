@@ -9,6 +9,21 @@ services:
         target: /opt/RunConditionTable/reports
         bind:
           create_host_path: true
+      - type: bind
+        read_only: true
+        source: ./.eslintrc
+        target: /opt/RunConditionTable/.eslintrc
+
+      - type: bind
+        read_only: true
+        source: ./.nycrc
+        target: /opt/RunConditionTable/.nycrc
+        
+      - type: bind
+        read_only: true
+        source: ./test
+        target: /opt/RunConditionTable/test
+
         
   database:
     restart: "no"

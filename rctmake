@@ -170,7 +170,8 @@ export DB_CONTAINER_NAME="o2rct_database-$TARGET"
 
 DOCKER_COMP_CMD_NO_ENV="docker compose -p $TARGET-o2rct 
                     -f $MAIN_DOCKER_COMPOSE_YML 
-                    -f $DOCKER_DIR/docker-compose-$TARGET.yml 
+                    -f $DOCKER_DIR/docker-compose-$TARGET.yml
+                    -f $DOCKER_DIR/docker-compose-volumes.yml
                     --env-file "$DOCKER_DIR/$TARGET.env" 
                     --project-directory $PROJECT_DIR";
 DOCKER_COMP_CMD="$DOCKER_COMP_CMD_NO_ENV -f $DOCKER_DIR/docker-compose-env.yml"
@@ -187,7 +188,7 @@ run() {
             OPTIONAL_DB_EXPOSE=$(if [ -n "$DB_EXPOSED_PORT"  ]; then echo "-f $DOCKER_DIR/docker-compose-db-expose.yml"; fi);
 
             $DOCKER_COMP_CMD \
-                -f "$DOCKER_DIR/docker-compose-volumes.yml" $OPTIONAL_DB_EXPOSE \
+                $OPTIONAL_DB_EXPOSE \
                 $SUBCMD_AND_FLAGS $SERVICES;
         ;;
 

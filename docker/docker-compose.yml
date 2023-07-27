@@ -2,6 +2,7 @@ version: '3.1'
 services:
   application:
     container_name: $APP_CONTAINER_NAME
+    command: ["./scripts/check-host-and-exec.sh", "$DB_CONTAINER_NAME", "5432", "10", "--", "npm", "run", "start:$TARGET"]
     stdin_open: true
     tty: true 
     build:
