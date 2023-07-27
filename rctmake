@@ -372,10 +372,10 @@ for stage in $STAGES; do
                 ;;
 
                 remove|rm)
-                    if [ -z "$DUMP_FIL" ]; then
+                    if [ -z "$DUMP_FILE" ]; then
                         usage "dump file unspecified, use flag -F|--dump-file <FILE>";
                     fi 
-                    rm $DUMP_PATH;
+                    rm -rf $DUMP_PATH;
                 ;;
 
                 export|ex)
