@@ -63,10 +63,10 @@ Usage:
             7. app:ip - retrive ip of $DB_CONTAINERS_OPT
 
 
-            8. db:export - export db sql definition from pgmodeler design $ITWILLBEDELETED
+            8. db:(export|ex) - export db sql definition from pgmodeler design $ITWILLBEDELETED
             9. db:clean | db:truncate - truncate database in db container
             10. db:ip - print db container ipv4 address
-            11. db:counts - print statistics of data in each table in db
+            11. db:(counts|ct) - print statistics of data in each table in db
 
             13. dump:(make|mk) - make dump of current database (in docker container) data, 
                       need option -F|--dump-file <FILE> to specify dump file relative path
@@ -207,10 +207,9 @@ run() {
     esac
 }
 
-
+source $DOCKER_DIR/$TARGET.env
 for stage in $STAGES; do
-    RCT_DATABASE='rct-db';
-    RCT_USER='postgres';
+    RCT_DB_USER='postgres'; # more privileges than rct-user
 
     echo " *** do $stage";
     case $stage in
@@ -254,18 +253,18 @@ for stage in $STAGES; do
         db*)
             DB_CMD=$(echo ${stage#db:});
             case $DB_CMD in
-                export)
+                export|ex)
                     $PROJECT_DIR/database/setup-db.sh --only-export;
                 ;;
                 clean | truncate)
                     docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/delete-data.sql" \
-                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "/postgres/run/delete-data.sql";
+                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "/postgres/run/delete-data.sql";
                 ;;
                 
                 ip)
                     docker inspect $DB_CONTAINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
                 ;;
-                counts)
+                counts|ct)
                     docker exec $DB_CONTAINER_NAME /docker-entrypoint-initdb.d/utils/print-data.sh
                 ;;
                 *)
@@ -318,7 +317,7 @@ for stage in $STAGES; do
                     if [ -z $DO_NOT_PERFORME_WHILE_FILE_EXISTS ]; then
                         docker exec $DB_CONTAINER_NAME mkdir -p $(dirname $CONTAINER_DUMP_PATH) \
                         && docker exec $DB_CONTAINER_NAME \
-                            pg_dump --data-only --format=tar -d $RCT_DATABASE -U $RCT_USER --file="$CONTAINER_DUMP_PATH";
+                            pg_dump --data-only --format=tar -d $RCT_DB_NAME -U $RCT_DB_USER --file="$CONTAINER_DUMP_PATH";
                     fi
                 ;;
 
@@ -341,8 +340,8 @@ for stage in $STAGES; do
                         usage "Dump file name unspecified, use flag -F|--dump-file <FILE>";
                     fi
                     docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/delete-data.sql" \
-                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "/postgres/run/delete-data.sql" \
-                    && docker exec $DB_CONTAINER_NAME pg_restore --data-only -U $RCT_USER -d $RCT_DATABASE $CONTAINER_DUMP_PATH;
+                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "/postgres/run/delete-data.sql" \
+                    && docker exec $DB_CONTAINER_NAME pg_restore --data-only -U $RCT_DB_USER -d $RCT_DB_NAME $CONTAINER_DUMP_PATH;
                 ;;
 
                 migrate|mg)
