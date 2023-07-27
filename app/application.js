@@ -62,7 +62,6 @@ class RunConditionTableApplication {
         httpServer.post(EP.logout, (req, res) => databaseService.logoutSession(req, res));
         httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res));
         httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res));
-        httpServer.get(EP.date, (req, res) => databaseService.getDate(req, res));
         httpServer.get(EP.sync, async (_req, _res) => this.syncManager.syncAll());
     }
 

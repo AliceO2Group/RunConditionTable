@@ -58,8 +58,6 @@ export default class Navigation extends Observable {
                 }
                 break;
             }
-            case '/admin/':
-                throw 'TODO';
             default:
                 break;
         }
