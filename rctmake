@@ -7,7 +7,12 @@ SCRIPT_NAME="$(basename $0)"
 DEV_MODE=dev
 TEST_MODE=test
 APP_CONTAINER_NAME_BASE="o2rct_application"
+APP_CONTAINERS_OPT="$APP_CONTAINER_NAME_BASE-([$DEV_MODE|$TEST_MODE])"
+
 DB_CONTAINER_NAME_BASE="o2rct_database"
+DP_CONTAINERS_OPT="$DB_CONTAINER_NAME-($DEV_MODE|$TEST_MODE))"
+
+ITWILLBEDELETED="!(It will be deleted)"
 
 # TODO describe rest of path, RCT_USER etc. via env vars pulled during deployment
 
@@ -29,7 +34,7 @@ usage() {
     cat << USAGE >&2
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 This script is intended to provide handy functionalities during 
-    development, testing and production for building, deployment and managing acquired data.
+    development, testing for building, deployment and managing acquired data.
 The script can be run from any location.
 The script performs defined tasks sequentially.
 Some tasks might or have to be run with dedicated flags.
@@ -37,29 +42,32 @@ Tasks are called stages.
 
 Usage:  
         ./$SCRIPT_NAME <STAGES> [<FLAGS>]
-            'raw usage of script is for production purpose and is described at the end'
         where STAGES is comma separeted list of stages performed sequentialy. 
         In default behaviour failure of one stage causes stopping pipeline execution, it can be changes via flag --ignore-errors.
+        Using moste of stages requires TARGET to be specified (default dev). It can be specified via flag -t|--target as test as well as via exporting env var TARGET;
+        Each stage is performed within the context of target.
+        Using conatiners build as dev and test is separted and can be performed in parallel.
+
+        Is seems that there is one case of target test, just something like ./rctmake run --target test.
+
         STAGE can be a:
-            1. build|build[BUILD_STATGES] - build application (deploys containers). By defualt 
-                    build stage behaves as docker-compose ... up --build.
-                    BUILD_STATGES are colon separated docker-compose tasks like build,up
-                Using build stage requires usage of -|--target flag wich specifies one of prod,dev,test.
-                e.g.: ./$SCRIPT_NAME build -t dev
-                      ./$SCRIPT_NAME build[up] -t dev
+            1. run|run[RUN_SUBSTATGES] - run application (deploys containers). By defualt 
+                    run stage behaves as docker-compose ... up --build.
+                    RUN_SUBSTATGES are colon separated docker-compose tasks like run,create,up,...
+                e.g.: ./$SCRIPT_NAME run -t dev
+                      ./$SCRIPT_NAME run[up] -t test
             2. stop - stop containers                      
             
-            3. prune - delete both containers, all virtual volumens and virtual network
+            3. prune - delete containers, all virtual volumens and virtual network
 
-            4. attach - like docker attach to rct_application
+            4. app:attach - like docker attach to $APP_CONTAINERS_OPT
+            5. app:ip - retrive ip of $DB_CONTAINERS_OPT
 
             5. follow - like docker-compose follow
 
-            6. db:export - export db sql definition from pgmodeler design
+            6. db:export - export db sql definition from pgmodeler design $ITWILLBEDELETED
             7. db:clean | db:truncate - truncate database in db container
             8. db:ip - print db container ipv4 address
-
-            9. app:ip - print app container ipv4 address
 
             10. dump:(make|mk) - make dump of current database (in docker container) data, 
                       need option -F|--dump-file <FILE> to specify dump file relative path
@@ -72,8 +80,8 @@ Usage:
             15. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
             16. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
-        ! An additional -S|--service <SERVICE> flag can be specified for build, follow, stop and prune stages.
-        <SERVICE> ($DB_CONTAINER_NAME_BASE-([$DEV_MODE|$TEST_MODE]) or $APP_CONTAINER_NAME-($DEV_MODE|$TEST_MODE)) is the name of the service the stages are performed for.
+        ! An additional -S|--service <SERVICE> flag can be specified for run, follow, stop and prune stages.
+        <SERVICE> $APP_CONTAINERS_OPT or $DB_CONTAINERS_OPT is the name of the service the stages are performed for.
 
         ! Production - Deprecated - as the Alice tool, RCT production will NOT be handeled with the use of dockers
     
@@ -173,7 +181,7 @@ MOCK_DB=${MOCK_DB:-false};
 export MOCK_DB;
 
 
-build() {
+run() {
     SUBCMD_AND_FLAGS="$@";
     mkdir -p $PROJECT_DIR/security;
     CACHE_DIR="$PROJECT_DIR/database/cache";
@@ -196,7 +204,7 @@ build() {
                 $SUBCMD_AND_FLAGS;
         ;;
         *)
-            usage "Incorrect build target: $TARGET";
+            usage "Incorrect run target: $TARGET";
         ;;
     esac
 }
@@ -212,29 +220,25 @@ for stage in $STAGES; do
             $DOCKER_COMP_CMD_NO_ENV rm --stop --force -v $SERVICES;
         ;;
 
-        build*)
-            BUILD_STAGES=$(echo ${stage#build} | sed -E "s/(\[|\:|\])/ /g");
-            BUILD_STAGES=$(echo $BUILD_STAGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g");
-            if [ -z "$BUILD_STAGES" ]; then
-                echo 'default build[build,create,up]; up in detached mode';
-                BUILD_STAGES="build create up";
+        run*)
+            RUN_SUBSTATGES=$(echo ${stage#run} | sed -E "s/(\[|\:|\])/ /g");
+            RUN_SUBSTATGES=$(echo $RUN_SUBSTATGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g");
+            if [ -z "$RUN_SUBSTATGES" ]; then
+                echo 'default run[run,create,up]; up in detached mode';
+                RUN_SUBSTATGES="run create up";
             fi
-            echo $BUILD_STAGES;
-            for bs in $BUILD_STAGES; do
-                echo "*** *** do build : $bs";
-                if [ "$bs" == 'up' ]; then
+            echo $RUN_SUBSTATGES;
+            for rs in $RUN_SUBSTATGES; do
+                echo "*** *** do run : $rs";
+                if [ "$rs" == 'up' ]; then
                     if [ "$TARGET" = "$DEV_MODE" ]; then 
-                        bs="up --detach";
+                        rs="up --detach";
                     elif [ "$TARGET" = "$TEST_MODE" ]; then
-                        bs="up --abort-on-container-exit";
+                        rs="up --abort-on-container-exit";
                     fi;
                 fi;
-                build "$bs";
+                run "$rs";
             done
-        ;;
-
-        attach)
-            docker attach $APP_CONTAINER_NAME || exit_codes_filter 130;
         ;;
 
         follow)
@@ -271,14 +275,14 @@ for stage in $STAGES; do
         app*)
             APP_CMD=$(echo ${stage#app:});
             case $APP_CMD in
+                attach)
+                    docker attach $APP_CONTAINER_NAME || exit_codes_filter 130;
+                ;;
                 ip)
                     docker inspect $APP_CONTAINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
                 ;;
                 *)
                     incorrect_stage_err $stage;
-                ;;
-                *)
-                    incorrect_stage_err $stage
                 ;;
             esac
         ;;
