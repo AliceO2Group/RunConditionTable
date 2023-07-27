@@ -50,7 +50,7 @@ module.exports = { // Properties that will be provided to frontend in the public
         rowsOnSite: 50,
     },
 
-    dataRespondFields: {
+    dataResponseFields: {
         totalRowsCount: 'totalRowsCount',
         rows: 'rows',
         fields: 'fields',

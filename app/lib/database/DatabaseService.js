@@ -19,7 +19,7 @@ const config = require('./../config/configProvider.js');
 const {distinct} = require('../utils')
 
 const DRP = config.public.dataReqParams;
-const DRF = config.public.dataRespondFields;
+const DRF = config.public.dataResponseFields;
 
 /**
  * This class handle communication with postgres database using 'pg' package
