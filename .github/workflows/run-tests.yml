@@ -53,9 +53,5 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - name: Install mocha
-        run: npm install -g mocha
-      - name: Installing dependencies
-        run: npm ci
       - name: Running tests
         run: npm run test
