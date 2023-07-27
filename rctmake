@@ -66,7 +66,7 @@ Usage:
             8. app:ip - retrive ip of $DB_CONTAINER_NAME
 
             9. db:attach - run psql on $DB_CONTRAINER_NAME
-            10. db:bttach - run bash on $DB_CONTRAINER_NAME
+            10. db:battach - run bash on $DB_CONTRAINER_NAME
             11. db:(export|ex) - export db sql definition from pgmodeler design $ITWILLBEDELETED
             12. db:clean | db:truncate - truncate database in db container
             13. db:ip - print db container ipv4 address
