@@ -242,7 +242,11 @@ for stage in $STAGES; do
         ;;
 
         follow)
-            $DOCKER_COMP_CMD logs --follow $SERVICES || exit_codes_filter 1;
+            $DOCKER_COMP_CMD logs --follow $SERVICES || exit_codes_filter 1 130;
+        ;;
+
+        logs)
+            $DOCKER_COMP_CMD logs $SERVICES || exit_codes_filter 1;
         ;;
 
         stop)
