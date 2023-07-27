@@ -225,14 +225,14 @@ for stage in $STAGES; do
             fi
             echo $RUN_SUBSTATGES;
             for rs in $RUN_SUBSTATGES; do
-                echo "*** *** do run : $rs";
                 if [ "$rs" == 'up' ]; then
                     if [ "$TARGET" = "$DEV_MODE" ]; then 
                         rs="up --detach";
                     elif [ "$TARGET" = "$TEST_MODE" ]; then
-                        rs="up --abort-on-container-exit";
+                        rs="up --exit-code-from application";
                     fi;
                 fi;
+                echo "*** *** do run : $rs";
                 run "$rs";
             done
         ;;
