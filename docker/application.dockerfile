@@ -1,9 +1,8 @@
 FROM node:18.16.0-buster as base 
-
-    WORKDIR /opt/RunConditionTable
     RUN apt update -y && apt install -y \
         netcat \
         bash
+
     COPY ./package*.json ./
     RUN npm --silent ci
 

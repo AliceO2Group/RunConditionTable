@@ -7,9 +7,11 @@ DEV_MODE=dev
 TEST_MODE=test
 APP_CONTAINER_NAME_BASE="o2rct_application"
 APP_CONTAINERS_OPT="$APP_CONTAINER_NAME_BASE-([$DEV_MODE|$TEST_MODE])"
+APP_WORKINGDIR='/opt/RunConditionTable'
 
 DB_CONTAINER_NAME_BASE="o2rct_database"
 DP_CONTAINERS_OPT="$DB_CONTAINER_NAME-($DEV_MODE|$TEST_MODE))"
+DB_WORKINGDIR='/postgres/run'
 
 ITWILLBEDELETED="!(It will be deleted)"
 
@@ -59,25 +61,27 @@ Usage:
             4. follow - like docker-compose follow
             5. logs - like docker-compose logs
 
-            6. app:attach - like docker attach to $APP_CONTAINERS_OPT
-            7. app:ip - retrive ip of $DB_CONTAINERS_OPT
+            6. app:attach - like docker attach to $APP_CONTAINERS_OPT - to running application
+            7. app:battach - run bash on $APP_CONTAINER_NAME
+            8. app:ip - retrive ip of $DB_CONTAINER_NAME
 
+            9. db:attach - run psql on $DB_CONTRAINER_NAME
+            10. db:bttach - run bash on $DB_CONTRAINER_NAME
+            11. db:(export|ex) - export db sql definition from pgmodeler design $ITWILLBEDELETED
+            12. db:clean | db:truncate - truncate database in db container
+            13. db:ip - print db container ipv4 address
+            14. db:(counts|ct) - print statistics of data in each table in db
 
-            8. db:(export|ex) - export db sql definition from pgmodeler design $ITWILLBEDELETED
-            9. db:clean | db:truncate - truncate database in db container
-            10. db:ip - print db container ipv4 address
-            11. db:(counts|ct) - print statistics of data in each table in db
-
-            13. dump:(make|mk) - make dump of current database (in docker container) data, 
+            15. dump:(make|mk) - make dump of current database (in docker container) data, 
                       need option -F|--dump-file <FILE> to specify dump file relative path
                 e.g.: ./$SCRIPT_NAME dump -F dump_file
-            14. dump:(list|ls) - print list cached dumps
-            15. dump:tree - print tree of cached dumps
-            16. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
-            17. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
+            16. dump:(list|ls) - print list cached dumps
+            17. dump:tree - print tree of cached dumps
+            18. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
+            19. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
                 e.g.: ./$SCRIPT_NAME restore -F dump_file
-            18. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
-            19. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
+            20. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
+            21. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
         ! An additional -S|--service <SERVICE> flag can be specified for run, follow, stop and prune stages.
         <SERVICE> $APP_CONTAINERS_OPT or $DB_CONTAINERS_OPT is the name of the service the stages are performed for.
@@ -248,12 +252,25 @@ for stage in $STAGES; do
         db*)
             DB_CMD=$(echo ${stage#db:});
             case $DB_CMD in
+                attach)
+                    if [ \"$RUNNING_ENV\" != 'DOCKER' ]; then 
+                        docker exec -it $DB_CONTAINER_NAME psql -U postgres -d \"rct-db\"; 
+                    else 
+                        export PGPASSWORD=postgres; 
+                        psql -h $DB_CONTAINER_NAME -U postgres -d \"rct-db\"; 
+                    fi;
+                ;;
+
+                battach)
+                    docker exec -it $DB_CONTAINER_NAME /bin/bash;
+                ;;
+
                 export|ex)
                     $PROJECT_DIR/database/setup-db.sh --only-export;
                 ;;
                 clean | truncate)
-                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/delete-data.sql" \
-                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "/postgres/run/delete-data.sql";
+                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:$DB_WORKINGDIR/delete-data.sql" \
+                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "$DB_WORKINGDIR/run/delete-data.sql";
                 ;;
                 
                 ip)
@@ -274,6 +291,9 @@ for stage in $STAGES; do
                 attach)
                     docker attach $APP_CONTAINER_NAME || exit_codes_filter 130;
                 ;;
+                battach)
+                    docker exec -it $APP_CONTAINER_NAME bash
+                ;;
                 ip)
                     docker inspect $APP_CONTAINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
                 ;;
@@ -288,7 +308,7 @@ for stage in $STAGES; do
             DUMPS_DIR="$PROJECT_DIR/database/cache/dumps";
             mkdir -p "$DUMPS_DIR";
             DUMP_PATH="$DUMPS_DIR/$DUMP_FILE";
-            CONTAINER_DUMP_PATH="/postgres/run/database/cache/dumps/$DUMP_FILE";
+            CONTAINER_DUMP_PATH="$DB_WORKINGDIR/database/cache/dumps/$DUMP_FILE";
 
             case $DUMP_CMD in
                 make|mk)
@@ -334,8 +354,8 @@ for stage in $STAGES; do
                     if [ -z "$DUMP_FILE" ]; then
                         usage "Dump file name unspecified, use flag -F|--dump-file <FILE>";
                     fi
-                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/delete-data.sql" \
-                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "/postgres/run/delete-data.sql" \
+                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:$DB_WORKINGDIR/delete-data.sql" \
+                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "$DB_WORKINGDIR/delete-data.sql" \
                     && docker exec $DB_CONTAINER_NAME pg_restore --data-only -U $RCT_DB_USER -d $RCT_DB_NAME $CONTAINER_DUMP_PATH;
                 ;;
 
