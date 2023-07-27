@@ -19,8 +19,9 @@ import waitingPanel from './views/waitingPanel.js';
 import { switchCase } from '/js/src/index.js';
 
 export default function view(model) {
-    return switchCase(model.mode, {
-        serviceUnavailable: () => serviceUnavailablePanel(model),
+    const { mode } = model;
+    return switchCase(mode, {
+        serviceUnavailable: () => serviceUnavailablePanel(model.submodels[mode]),
         sessionError: () => sessionErrorPanel(model),
         dataAccess: () => dataAccessPanel(model),
     }, () => waitingPanel())();

@@ -14,12 +14,12 @@
 
 import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
 import DataAccessModel from './model/DataAccessModel.js';
-import ServiceUnavailableModel from './model/ServiceUnavailableModel.js';
 import { RCT } from './config.js';
 import Flags from './views/flags/Flags.js';
 import Detectors from './views/detectors/Detectors.js';
 import Runs from './views/runs/Runs.js';
-const { roles } = RCT;
+import ServiceUnavailable from './views/serviceUnavailable/ServiceUnavailable.js';
+const { roles, messageTimeout } = RCT;
 
 export default class Model extends Observable {
     constructor() {
@@ -47,7 +47,7 @@ export default class Model extends Observable {
         this.detectors = new Detectors(this);
         this.detectors.bubbleTo(this);
 
-        this.logginEndpoint = '/api/login/';
+        this.loginEndpoint = `/api${RCT.endpoints.login}`;
         this.login('physicist');
     }
 
@@ -64,7 +64,7 @@ export default class Model extends Observable {
     }
 
     postLoginPasses(username) {
-        return this.loader.post(this.logginEndpoint, { username: username });
+        return this.loader.post(this.loginEndpoint, { username: username });
     }
 
     isDetectorRole(role) {
@@ -89,23 +89,22 @@ export default class Model extends Observable {
     }
 
     setServiceUnavailableModel(result) {
-        const messageShowTimeout = 200;
         const modeName = 'serviceUnavailable';
         if (!this.submodels[modeName]) {
-            this.submodels[modeName] = new ServiceUnavailableModel(this);
+            this.submodels[modeName] = new ServiceUnavailable(this);
             this.submodels[modeName].bubbleTo(this);
         }
         this.mode = modeName;
         this.notify();
         const model = this;
         setTimeout(() => {
-            model.submodels[modeName].unsetResult(result);
+            model.submodels[modeName].hideResult(result);
             model.notify();
             setTimeout(() => {
-                model.submodels[modeName].setResult(result);
+                model.submodels[modeName].showResult(result);
                 model.notify();
-            }, messageShowTimeout);
-        }, messageShowTimeout);
+            }, messageTimeout);
+        }, messageTimeout);
     }
 
     setDataAccessSubmodel() {

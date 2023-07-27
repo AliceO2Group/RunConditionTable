@@ -16,6 +16,7 @@ const { roles, detectors, pageNames, filterTypes, filterInputTypes, fieldNames, 
 const { bookkeeping } = require('./outerServices');
 
 module.exports = { // Properties that will be provided to frontend in the public folder
+    messageTimeout: 200,
     outerServices: { bookkeeping },
     filterTypes: filterTypes,
     filterInputTypes: filterInputTypes,

@@ -14,28 +14,26 @@
 
 import { Observable } from '/js/src/index.js';
 
-export default class ServiceUnavailableModel extends Observable {
-    constructor(parent, result) {
+export default class ServiceUnavailable extends Observable {
+    constructor(model, result) {
         super();
-        this.parent = parent;
-        this.router = parent.router;
-        this.router.bubbleTo(this);
-        this.messageFieldId = 'serviceUnavailableMessageFieldID';
+        this.model = model;
         this.lastResult = result;
+        this.messageFieldId = 'serviceUnavailableMessageFieldID';
     }
 
     async retry() {
-        await this.parent.login();
+        await this.model.login();
     }
 
-    setResult(result) {
+    showResult(result) {
         const field = document.getElementById(this.messageFieldId);
         field.innerText = result.message;
         field.classList.remove('notification-close');
         field.classList.add('notification-open');
     }
 
-    unsetResult() {
+    hideResult() {
         const field = document.getElementById(this.messageFieldId);
         field.innerText = '';
         field.classList.add('notification-close');
