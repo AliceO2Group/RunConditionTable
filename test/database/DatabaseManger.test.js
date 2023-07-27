@@ -18,7 +18,6 @@ module.exports = () => {
         describe('Check Initialization of sequelize db', () => {
             it('sequlize should migrate without errors', async () => {
                 await assert.doesNotReject(async () => {
-                    throw 'a'
                     await databaseManager.migrate();
                 });
             });
