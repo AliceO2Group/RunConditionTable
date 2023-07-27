@@ -17,8 +17,9 @@ module.exports = () => {
     describe('DatabaseManagerSuite', () => {
         describe('Check Initialization of sequelize db', () => {
             it('sequlize should migrate without errors', () => {
-                assert.doesNotThrow(async () => {
-                    await databaseManager.migrate();
+                assert.doesNotThrow(() => {
+                    throw 'a'
+                    // await databaseManager.migrate();
                 });
             });
         });
