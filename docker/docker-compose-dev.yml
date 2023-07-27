@@ -1,14 +1,40 @@
 
 services:
   application:
+    restart: "no"
     ports:
     - target: $RCT_HTTP_PORT
       published: $RCT_HTTP_PORT
-      
-    restart: "no"
+
+    volumes:
+      - type: bind
+        read_only: false
+        source: ./database/cache
+        target: /opt/RunConditionTable/database/cache
+        bind:
+          create_host_path: true
+      - type: bind
+        read_only: true
+        source: ./security
+        target: /opt/RunConditionTable/security
+        bind:
+          create_host_path: true
 
   database:
     restart: "no"
+
+    volumes:
+      - type: bind
+        read_only: true
+        source: ./database
+        target: /postgres/run/database
+      - type: bind
+        read_only: false
+        source: ./database/cache
+        target: /postgres/run/database/cache
+        bind:
+          create_host_path: true
+
 
 networks:
   network:

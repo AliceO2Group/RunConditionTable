@@ -1,34 +1,16 @@
 
 services:
   application:
+    restart: "no"
     volumes:
-      - type: bind
-        read_only: true
-        source: ./security
-        target: /opt/RunConditionTable/security
-      - type: bind
-        read_only: false
-        source: ./database/cache
-        target: /opt/RunConditionTable/database/cache
       - type: bind
         read_only: false
         source: ./reports
         target: /opt/RunConditionTable/reports
+        bind:
+          create_host_path: true
         
-    restart: "no"
-
   database:
-    volumes:
-    - type: bind
-      read_only: true
-      source: ./database
-      target: /docker-entrypoint-initdb.d
-    - type: bind
-      read_only: false
-      source: ./database/cache
-      target: /postgres/run/database/cache
-
-    
     restart: "no"
 
 networks:

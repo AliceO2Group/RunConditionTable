@@ -181,11 +181,6 @@ export MOCK_DB;
 
 run() {
     SUBCMD_AND_FLAGS="$@";
-    mkdir -p $PROJECT_DIR/security;
-    CACHE_DIR="$PROJECT_DIR/database/cache";
-    mkdir -p $CACHE_DIR;
-
-   
     case $TARGET in 
         dev)
             export DB_EXPOSED_PORT;
@@ -197,7 +192,6 @@ run() {
         ;;
 
         test)
-            mkdir -p $PROJECT_DIR/reports;
             $DOCKER_COMP_CMD \
                 $SUBCMD_AND_FLAGS;
         ;;
