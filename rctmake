@@ -6,6 +6,8 @@ SCRIPT_NAME="$(basename $0)"
 
 DEV_MODE=dev
 TEST_MODE=test
+APP_CONTAINER_NAME_BASE="o2rct_application"
+DB_CONTAINER_NAME_BASE="o2rct_database"
 
 # TODO describe rest of path, RCT_USER etc. via env vars pulled during deployment
 
@@ -71,7 +73,7 @@ Usage:
             16. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
         ! An additional -S|--service <SERVICE> flag can be specified for build, follow, stop and prune stages.
-        <SERVICE> ($DB_CONTAINER_NAME or $APP_CONTAINER_NAME) is the name of the service the stages are performed for.
+        <SERVICE> ($DB_CONTAINER_NAME_BASE-([$DEV_MODE|$TEST_MODE]) or $APP_CONTAINER_NAME-($DEV_MODE|$TEST_MODE)) is the name of the service the stages are performed for.
 
         ! Production - Deprecated - as the Alice tool, RCT production will NOT be handeled with the use of dockers
     
@@ -172,7 +174,7 @@ export MOCK_DB;
 
 
 build() {
-    ORDER_AND_FLAGS="$@";
+    SUBCMD_AND_FLAGS="$@";
     mkdir -p $PROJECT_DIR/security;
     CACHE_DIR="$PROJECT_DIR/database/cache";
     mkdir -p $CACHE_DIR;
@@ -185,13 +187,13 @@ build() {
 
             $DOCKER_COMP_CMD \
                 -f "$DOCKER_DIR/docker-compose-volumes.yml" $OPTIONAL_DB_EXPOSE \
-                $ORDER_AND_FLAGS $SERVICES;
+                $SUBCMD_AND_FLAGS $SERVICES;
         ;;
 
         test)
             mkdir -p $PROJECT_DIR/reports;
             $DOCKER_COMP_CMD \
-                $ORDER_AND_FLAGS;
+                $SUBCMD_AND_FLAGS;
         ;;
         *)
             usage "Incorrect build target: $TARGET";
