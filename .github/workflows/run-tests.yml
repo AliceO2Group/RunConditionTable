@@ -1,5 +1,5 @@
 name: Tests
-## TODO
+
 on:
   pull_request:
   push:
@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '18.x'
       - run: npm ci
-      - run: npm run docker:test
+      - run: npm run test
       # - run: ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
       - name: Send codecov report for RunConditionTable
         uses: codecov/codecov-action@v3
