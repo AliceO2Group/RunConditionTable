@@ -13,16 +13,12 @@
  */
 
 import { h } from '/js/src/index.js';
+import messagePanel from '../components/messagePanel/messagePanel.js';
 
 export default function sessionErrorPanel(model) {
     const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => model.login() }, 'Login');
     const reason = h('h3', 'Session error');
     const message = h('h5', 'Please retry to login');
 
-    return h('.panel.abs-center',
-        h('.session-timeout-90'),
-        reason,
-        message,
-        h('.p1'),
-        h('.flex-wrap.justify-center', retryBtn));
+    return messagePanel('session-timeout-90', reason, message, retryBtn);
 }
