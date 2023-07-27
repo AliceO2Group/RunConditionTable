@@ -19,13 +19,10 @@ import title from '../../../../components/table/title.js';
 
 export default function noSubPageSelected(model) {
     const dataPointer = model.getCurrentDataPointer();
-    const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
 
     const chips = model.getSubPages(dataPointer.page)
         .filter((index) => index !== defaultIndexString)
         .map((index) => indexChip(model, dataPointer.page, index));
-
-    data.rows = data.rows.filter((item) => item.name != 'null');
 
     return h('div.main-content', [
         h('div.flex-wrap.justify-between.items-center',
