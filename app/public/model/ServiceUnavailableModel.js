@@ -20,6 +20,7 @@ export default class ServiceUnavailableModel extends Observable {
         this.parent = parent;
         this.router = parent.router;
         this.router.bubbleTo(this);
+        this.messageFieldId = 'serviceUnavailableMessageFieldID';
         this.lastResult = result;
     }
 
@@ -28,14 +29,14 @@ export default class ServiceUnavailableModel extends Observable {
     }
 
     setResult(result) {
-        const field = document.getElementById('serviceUnavailableMessageFieldID');
+        const field = document.getElementById(this.messageFieldId);
         field.innerText = result.message;
         field.classList.remove('notification-close');
         field.classList.add('notification-open');
     }
 
     unsetResult() {
-        const field = document.getElementById('serviceUnavailableMessageFieldID');
+        const field = document.getElementById(this.messageFieldId);
         field.innerText = '';
         field.classList.add('notification-close');
         field.classList.remove('notification-open');

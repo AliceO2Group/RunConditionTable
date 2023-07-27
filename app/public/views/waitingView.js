@@ -11,6 +11,7 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+
 import spinner from '../components/common/spinner.js';
 import { h } from '/js/src/index.js';
 
@@ -18,9 +19,8 @@ export default function waitingPanel() {
     const reloadBtn = h('button.btn.btn-primary.m3', { onclick: () => document.location.reload(true) }, 'Retry');
     const loadingMessage = h('h3', 'Loading...');
 
-    return h('.panel.top-100',
+    return h('.panel.abs-center',
         spinner(),
         loadingMessage,
-        reloadBtn
-    );
+        reloadBtn);
 }

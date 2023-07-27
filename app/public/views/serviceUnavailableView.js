@@ -11,21 +11,23 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+
 import { h } from '/js/src/index.js';
 
 export default function serviceUnavailablePanel(model) {
     const submodel = model.submodels[model.mode];
     const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => submodel.retry() }, 'Retry');
-    const title = h('h1.primary', 'Run Condition Table');
-    const subtitle = h('h3', 'Service temporarily unavailable - please conntact an administrator');
+    const applicationTitle = h('h1', 'Run Condition Table');
+    const reason = h('h3', 'Service temporarily unavailable');
+    const message = h('h5', 'Please contact the administrator');
 
-    return h('.panel.top-100', [
-        title,
+    return h('.panel.abs-center',
+        applicationTitle,
         h('.no-network-90'),
-        subtitle,
-        h('.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close',
-            { id: 'serviceUnavailableMessageFieldID' },
-            ''),
-        retryBtn,
-    ]);
+        reason,
+        message,
+        h('.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close', {
+            id: submodel.messageFieldId,
+        }, ''),
+        retryBtn);
 }
