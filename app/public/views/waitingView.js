@@ -18,7 +18,7 @@ export default function waitingPanel() {
     const reloadBtn = h('button.btn.btn-primary.m3', { onclick: () => document.location.reload(true) }, 'Retry');
     const loadingMessage = h('h3', 'Loading...');
 
-    return h('.loginDiv.top-100', [
+    return h('.panel.top-100', [
         h('.panel',
             spinner(),
             loadingMessage),

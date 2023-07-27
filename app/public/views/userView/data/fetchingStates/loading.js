@@ -21,7 +21,7 @@ export default function loading() {
     }, 'Retry');
     const loadingMessage = h('h3', 'Loading...');
 
-    return h('.loginDiv.top-100', [
+    return h('.panel.top-100', [
         h('.panel',
             spinner(),
             loadingMessage),

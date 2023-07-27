@@ -17,7 +17,7 @@ export default function sessionErrorPanel(model) {
     const title = h('h1.primary.justify-center', 'Run Condition Table');
     const subtitle = h('h3.danger.justify-center', 'Session Error');
 
-    return h('div.loginDiv', h('div.loginDiv.bg-gray-lighter.br3.p4', [
+    return h('div.panel', h('div.panel.bg-gray-lighter.br3.p4', [
         title,
         subtitle,
         h('.p1'),

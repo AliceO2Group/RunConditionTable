@@ -27,7 +27,7 @@ export default function unknownError(model) {
     const loadingMessage = h('h3', 'Unknown error');
     const explanation = h('h5', 'Request could not be handled properly');
 
-    return h('.loginDiv.top-100', [
+    return h('.panel.top-100', [
         h('.unexpected-90'),
         loadingMessage,
         explanation,

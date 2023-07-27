@@ -19,7 +19,7 @@ export default function serviceUnavailablePanel(model) {
     const title = h('h1.primary', 'Run Condition Table');
     const subtitle = h('h3', 'Service temporarily unavailable - please conntact an administrator');
 
-    return h('.loginDiv.top-100', [
+    return h('.panel.top-100', [
         title,
         h('.no-network-90'),
         subtitle,

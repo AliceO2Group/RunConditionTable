@@ -68,21 +68,21 @@ export default function noDataView(model, dataPointer, anyFiltersActive) {
                 : 'There is no data to be displayed here'
     }`);
 
-    const noPeriodsView = h('.loginDiv.top-100', [
+    const noPeriodsView = h('.panel.top-100', [
         h('.synchronize-90'),
         noDataMessage,
         noDataExplanation,
         reloadBtn,
     ]);
 
-    const noDataView = h('.loginDiv.top-100', [
+    const noDataView = h('.panel.top-100', [
         h('.nothing-found-90'),
         noDataMessage,
         noDataExplanation,
         goBackBtn,
     ]);
 
-    const noMatchingDataView = h('.loginDiv.top-100', [
+    const noMatchingDataView = h('.panel.top-100', [
         h('.nothing-found-90'),
         noDataMessage,
         noDataExplanation,
