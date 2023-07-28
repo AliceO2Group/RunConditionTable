@@ -41,6 +41,10 @@ export default class DataAccessModel extends Observable {
 
     setState(state, result = null) {
         this.state = state;
+        this.handleStateChange(result);
+    }
+
+    handleStateChange(result) {
         if (this.state === states.serviceUnavailable) {
             setTimeout(() => {
                 this.serviceUnavailable.hideResult(result);
