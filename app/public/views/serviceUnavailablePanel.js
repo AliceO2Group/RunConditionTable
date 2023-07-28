@@ -11,21 +11,17 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+
 import { h } from '/js/src/index.js';
+import messagePanel from '../components/messagePanel/messagePanel.js';
 
 export default function serviceUnavailablePanel(model) {
-    const submodel = model.submodels[model.mode];
-    const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => submodel.retry() }, 'Retry');
-    const title = h('h1.primary', 'Run Condition Table');
-    const subtitle = h('h3', 'Service temporarily unavailable - please conntact an administrator');
+    const retryBtn = h('button.btn.btn-primary.m3', { onclick: async () => await model.login() }, 'Retry');
+    const reason = 'Service temporarily unavailable';
+    const message = 'Please contact the administrator';
+    const notification = h('.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close', {
+        id: model.dataAccess.serviceUnavailable.messageFieldId,
+    }, '');
 
-    return h('.loginDiv.top-100', [
-        title,
-        h('.no-network-90'),
-        subtitle,
-        h('.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close',
-            { id: 'serviceUnavailableMessageFieldID' },
-            ''),
-        retryBtn,
-    ]);
+    return messagePanel('no-network-90', reason, message, retryBtn, notification);
 }

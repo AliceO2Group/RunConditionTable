@@ -91,7 +91,7 @@ export default function content(model, runs, detectors) {
                                 }
                             });
                         },
-                    }, h('.settings-20'))),
+                    }, h('settings-20-primary'))),
 
                 h('div', functionalities(model))),
             model.searchFieldsVisible ? filter(model) : '',

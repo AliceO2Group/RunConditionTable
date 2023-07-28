@@ -12,19 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
-import spinner from '../../../../components/common/spinner.js';
+const states = {
+    default: 'default',
+    serviceUnavailable: 'serviceUnavailable',
+    sessionError: 'sessionError',
+    dataAccess: 'dataAccess',
+};
 
-export default function loading() {
-    const reloadBtn = h('button.btn.btn-primary.m3', {
-        onclick: () => document.location.reload(),
-    }, 'Retry');
-    const loadingMessage = h('h3', 'Loading...');
-
-    return h('.panel.top-100', [
-        h('.panel',
-            spinner(),
-            loadingMessage),
-        reloadBtn,
-    ]);
-}
+module.exports = states;

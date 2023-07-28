@@ -16,8 +16,8 @@ import { RemoteData, Loader } from '/js/src/index.js';
 
 import FetchedData from './FetchedData.js';
 import { replaceUrlParams } from '../../utils/url/urlUtils.js';
-import { RCT } from '../../../config.js';
-const { dataReqParams, defaultDataReqParams, pageNames } = RCT;
+import { RCT } from '../../config.js';
+const { dataReqParams, defaultDataReqParams, pageNames, dataAccess } = RCT;
 
 /**
  * Object of this class provide organization of many FetchedData objects,
@@ -90,7 +90,7 @@ export default class FetchedDataManager {
 
         const reqEndpoint = this.getReqEndpoint(url, countAllRecord);
         const { result, status, ok } = await this.model.loader.get(reqEndpoint);
-        this.model.parent._tokenExpirationHandler(status);
+        await this.model.parent._tokenExpirationHandler(status);
 
         if (ok) {
             const s = RemoteData.Success(new FetchedData(url, result, totalRecordsNumber));
@@ -107,7 +107,7 @@ export default class FetchedDataManager {
             this[page][index] = previous;
             alert(`${status} ${result?.message}`);
             if (result?.message.includes('SESSION_ERROR')) {
-                this.model.handleSessionError();
+                this.model.setState(dataAccess.states.sessionError);
             }
             this.router.go(previous?.payload?.url ? previous.payload.url : '/');
         }

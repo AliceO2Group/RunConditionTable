@@ -12,12 +12,15 @@
  * or submit itself to any jurisdiction.
  */
 
-.ehevi .sort-down-20.selected {
-    background-color: var(--color-primary) !important;
-    border-radius: 10px;
-}
+import { h } from '/js/src/index.js';
+import spinner from '../components/common/spinner.js';
 
-.ehevi .sort-up-20.selected {
-    background-color: var(--color-primary) !important;
-    border-radius: 10px;
+export default function waitingPanel() {
+    const reloadBtn = h('button.btn.btn-primary.m3', { onclick: () => document.location.reload(true) }, 'Retry');
+    const loadingMessage = h('h3', 'Loading...');
+
+    return h('.panel.abs-center',
+        spinner(),
+        loadingMessage,
+        reloadBtn);
 }

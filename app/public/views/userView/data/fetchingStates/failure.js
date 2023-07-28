@@ -27,7 +27,7 @@ export default function failureStatusAndReload(model, status) {
     const loadingMessage = h('h3', 'Failed to load data');
     const explanation = h('h5', `The services are unavailable (status: ${status ? status : 'unknown'})`);
 
-    return h('.loginDiv.top-100', [
+    return h('.panel.top-100', [
         h('.no-network-90'),
         loadingMessage,
         explanation,

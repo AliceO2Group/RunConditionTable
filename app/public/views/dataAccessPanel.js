@@ -16,15 +16,16 @@ import { h } from '/js/src/index.js';
 import dataPanel from './userView/data/dataPanel.js';
 import sidebar from '../components/sidebar/sidebar.js';
 
-export default function userPanel(model) {
-    const submodel = model.submodels[model.mode];
+export default function dataAccessPanel(model) {
+    const { dataAccess, runs, detectors, flags } = model;
+
     return h('.flex-column.absolute-fill', [
-        h('.flex-grow.flex-row.outline-gray', [
-            sidebar(submodel),
-            h('section.outline-gray.flex-grow.relative.user-panel-main-content', [
+        h('.flex-grow.flex-row', [
+            sidebar(dataAccess),
+            h('section.flex-grow.relative.user-panel-main-content', [
                 h('.scroll-y.absolute-fill',
                     { id: 'user-panel-main-content' },
-                    dataPanel(submodel, model.runs, model.detectors, model.flags)),
+                    dataPanel(dataAccess, runs, detectors, flags)),
             ]),
         ]),
     ]);

@@ -104,7 +104,7 @@ export default function filter(model) {
                     h('option', { value: '', selected: true, disabled: true, hidden: true }, 'Field'),
                     fields.filter((field) => getFieldName(model, field))
                         .map((field) => h('option', { value: field.name }, getFieldName(model, field))),
-                ], h('.close-10')),
+                ], h('.close-10-primary')),
 
                 h('select.select.filter-select', {
                     id: 'filters-opts-select',
@@ -114,7 +114,7 @@ export default function filter(model) {
                     h('option', { value: '', selected: true, disabled: true, hidden: true }, 'Filtering type'),
                     h('option', { value: aggregatedFiltersTypes }, aggregatedFiltersTypes),
                     h('option', { value: filterTypes.between }, filterTypes.between),
-                ], h('.close-10')),
+                ], h('.close-10-primary')),
 
                 h('.text-field',
                     h('input.form-control.relative', {
@@ -146,6 +146,6 @@ export default function filter(model) {
 
                 h('button.btn.btn-secondary.icon-only-button', {
                     onclick: () => onFilterSubmit(),
-                }, h('.save-20')))),
+                }, h('.save-20-primary')))),
     ]);
 }

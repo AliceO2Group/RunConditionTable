@@ -22,8 +22,10 @@ const physicalParticlesData = require('./physicalParticlesData.js');
 const healthcheckQueries = require('./healthcheckQueries.js');
 const quality = require('./quality');
 const mapping = require('./mapping');
+const dataAccess = require('./dataAccess');
 
 module.exports = {
+    dataAccess,
     pageNames,
     viewTypes,
     mapping,

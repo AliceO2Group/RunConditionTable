@@ -16,7 +16,7 @@ const defaultRowsOnSite = 50;
 const defaultSite = 1;
 
 import { RCT } from '../../../config.js';
-const DRF = RCT.dataRespondFields;
+const DRF = RCT.dataResponseFields;
 
 /**
  * Object of this class is used to hold data fetched from backend

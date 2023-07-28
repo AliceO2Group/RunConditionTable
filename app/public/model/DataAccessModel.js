@@ -16,13 +16,19 @@ import { Observable, Loader } from '/js/src/index.js';
 import FetchedDataManager from './data/FetchedDataManager.js';
 import { defaultIndex, defaultIndexString } from '../utils/defaults.js';
 import Navigation from './navigation/Navigation.js';
+import ServiceUnavailable from './ServiceUnavailable.js';
+import { RCT } from '../config.js';
+const { messageTimeout } = RCT;
+const { states } = RCT.dataAccess;
 
 export default class DataAccessModel extends Observable {
     constructor(parent) {
         super();
+        this.state = states.default;
         this.parent = parent;
         this.router = this.parent.router;
 
+        this.serviceUnavailable = new ServiceUnavailable(parent);
         this.fetchedData = new FetchedDataManager(this.router, this);
 
         this.searchFieldsVisible = false;
@@ -31,6 +37,24 @@ export default class DataAccessModel extends Observable {
         this.loader = new Loader();
 
         this.navigation = new Navigation(parent, this);
+    }
+
+    setState(state, result = null) {
+        this.state = state;
+        this.handleStateChange(result);
+    }
+
+    handleStateChange(result) {
+        if (this.state === states.serviceUnavailable) {
+            setTimeout(() => {
+                this.serviceUnavailable.hideResult(result);
+                this.parent.notify();
+                setTimeout(() => {
+                    this.serviceUnavailable.showResult(result);
+                    this.parent.notify();
+                }, messageTimeout);
+            }, messageTimeout);
+        }
     }
 
     changeSearchFieldsVisibility() {
@@ -46,7 +70,7 @@ export default class DataAccessModel extends Observable {
     async logout() {
         const logoutEndpoint = '/api/logout/';
         const { result, status, ok } = this.loader.post(logoutEndpoint);
-        this.parent._tokenExpirationHandler(status);
+        await this.parent._tokenExpirationHandler(status);
 
         localStorage.token = null;
         this.parent.mode = 'default';

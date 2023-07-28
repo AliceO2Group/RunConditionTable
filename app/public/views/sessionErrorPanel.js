@@ -12,17 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
-.ehevi .input-label {
-    margin: 0px;
-    padding: 0px;
-    margin-bottom: 4px;
-    font-size: 14px;
-    font-weight: bold;
-}
+import { h } from '/js/src/index.js';
+import messagePanel from '../components/messagePanel/messagePanel.js';
 
-.ehevi .icon-input {
-    width: 100%;
-    margin-top: 0px;
-    padding-top: 0px;
-    height: 50px;
+export default function sessionErrorPanel(model) {
+    const retryBtn = h('button.btn.btn-primary.m3', { onclick: () => model.login() }, 'Login');
+    const reason = 'Session error';
+    const message = 'Please retry to login';
+
+    return messagePanel('session-timeout-90', reason, message, retryBtn);
 }
