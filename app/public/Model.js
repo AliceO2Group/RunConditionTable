@@ -99,7 +99,7 @@ export default class Model extends Observable {
 
     async controlServerRequest(name = '/api/auth-control/') {
         const { status } = this.loader.get(name);
-        this._tokenExpirationHandler(status);
+        await this._tokenExpirationHandler(status);
     }
 
     restoreSession() {

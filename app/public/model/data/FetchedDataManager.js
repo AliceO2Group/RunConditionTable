@@ -90,7 +90,7 @@ export default class FetchedDataManager {
 
         const reqEndpoint = this.getReqEndpoint(url, countAllRecord);
         const { result, status, ok } = await this.model.loader.get(reqEndpoint);
-        this.model.parent._tokenExpirationHandler(status);
+        await this.model.parent._tokenExpirationHandler(status);
 
         if (ok) {
             const s = RemoteData.Success(new FetchedData(url, result, totalRecordsNumber));

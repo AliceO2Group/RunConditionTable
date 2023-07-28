@@ -66,7 +66,7 @@ export default class DataAccessModel extends Observable {
     async logout() {
         const logoutEndpoint = '/api/logout/';
         const { result, status, ok } = this.loader.post(logoutEndpoint);
-        this.parent._tokenExpirationHandler(status);
+        await this.parent._tokenExpirationHandler(status);
 
         localStorage.token = null;
         this.parent.mode = 'default';
