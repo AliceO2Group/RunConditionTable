@@ -71,5 +71,3 @@ BEGIN
     END IF;
 END;
 $$;
-
--- call INSERT_mc('lhc17jj', 'des', 'pwg', array['LHC22m']::varchar[], array['apass1']::varchar[], NULL, NULL, 10, 10);

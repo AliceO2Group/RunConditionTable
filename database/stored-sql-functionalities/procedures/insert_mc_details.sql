@@ -42,4 +42,4 @@ BEGIN
         end if;
     END LOOP;
 END;
-$$
+$$;

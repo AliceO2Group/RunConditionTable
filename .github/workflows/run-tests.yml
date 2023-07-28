@@ -41,4 +41,3 @@ jobs:
         run: npm ci
       - name: Running static analysis
         run: npm run static
-

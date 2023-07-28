@@ -21,7 +21,7 @@ for dir in "$HOOKS_DIR/*/"; do
         echo $ss
         echo "" >> "$TMP_SCRIPT"
         chmod +x $TMP_SCRIPT
-        while read line; do
+        while read -r line; do
             echo $line >> $TMP_SCRIPT
         done < $ss
     done

@@ -54,5 +54,3 @@ const repositoriesFactory = (models) => {
 
 
 module.exports = repositoriesFactory;
-
-
