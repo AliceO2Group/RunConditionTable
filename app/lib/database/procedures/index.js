@@ -17,4 +17,4 @@ const flags = require('./flags.js');
 
 module.exports = {
     ...flags
-}
+};

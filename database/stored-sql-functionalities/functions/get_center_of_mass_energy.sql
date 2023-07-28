@@ -56,5 +56,3 @@ BEGIN
     return get_center_of_mass_energy(_energy_per_beam, beam_type_t);
 END;
 $body$;
-
-
