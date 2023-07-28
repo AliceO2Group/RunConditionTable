@@ -8,9 +8,3 @@ FROM base as dev
         inotify-tools
 
 FROM base as test
-
-
-
-
-
-

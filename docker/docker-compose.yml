@@ -24,7 +24,4 @@ services:
       - RUNNING_ENV=DOCKER
     networks:
       - network
-  
       
-
-
