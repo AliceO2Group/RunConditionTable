@@ -73,7 +73,7 @@ export default function flagsContent(model, runs, detectors, flags) {
                                 }
                             });
                         },
-                    }, h('.settings-20'))),
+                    }, h('.settings-20-primary'))),
 
                 h('div', functionalities(model))),
             model.searchFieldsVisible ? filter(model) : '',

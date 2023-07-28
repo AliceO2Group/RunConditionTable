@@ -48,7 +48,7 @@ export default function activeFilters(model, url) {
                         onclick: () => {
                             onClearFilter(filter);
                         },
-                    }, h('.close-10'))),
+                    }, h('.close-10-primary'))),
             ])),
     ];
 }

@@ -62,7 +62,7 @@ export default function pageSettings(model, close) {
 
     return h('', [
         h('.flex.bottom-20.justify-center.items-center',
-            h('.settings-40'),
+            h('.settings-40-primary'),
             h('.inline.top-15.left-10',
                 title)),
 
