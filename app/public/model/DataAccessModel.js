@@ -16,7 +16,7 @@ import { Observable, Loader } from '/js/src/index.js';
 import FetchedDataManager from './data/FetchedDataManager.js';
 import { defaultIndex, defaultIndexString } from '../utils/defaults.js';
 import Navigation from './navigation/Navigation.js';
-import ServiceUnavailable from '../views/serviceUnavailable/ServiceUnavailable.js';
+import ServiceUnavailable from './ServiceUnavailable.js';
 import { RCT } from '../config.js';
 const { messageTimeout } = RCT;
 const { states } = RCT.dataAccess;

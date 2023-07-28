@@ -30,29 +30,28 @@ export default class Runs extends Observable {
     constructor(model) {
         super();
         this.model = model;
-        this.fetchedData = this.model.dataAccess.fetchedData;
     }
 
     async fetchFlagsSummary(dataPass, runNumbers) {
         const url = this.model.router.getUrl();
         const search = `?page=${PN.flags}&data_pass_name=${dataPass}&run_numbers=${runNumbers}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
         const flagsUrl = new URL(url.origin + url.pathname + search);
-        await this.fetchedData.reqForData(true, flagsUrl);
+        await this.model.dataAccess.fetchedData.reqForData(true, flagsUrl);
     }
 
     async fetchRunsPerDataPass(dataPass) {
-        const page = this.fetchedData[PN.dataPasses];
+        const page = this.model.dataAccess.fetchedData[PN.dataPasses];
         const [pIndex] = Object.keys(page);
         const { url } = page[pIndex].payload;
         const dpSearchParams = `?page=${PN.runsPerDataPass}&index=${dataPass}&${DRP.rowsOnSite}=50&${DRP.site}=1`;
-        await this.fetchedData.reqForData(true, new URL(url.origin + url.pathname + dpSearchParams));
+        await this.model.dataAccess.fetchedData.reqForData(true, new URL(url.origin + url.pathname + dpSearchParams));
 
-        const runNumbers = this.fetchedData[PN.runsPerDataPass][dataPass].payload.rows.map((row) => row.run_number);
+        const runNumbers = this.model.dataAccess.fetchedData[PN.runsPerDataPass][dataPass].payload.rows.map((row) => row.run_number);
         await this.fetchFlagsSummary(dataPass, runNumbers);
     }
 
     getRunsPerDataPass(dataPass) {
-        return this.fetchedData[PN.runsPerDataPass][dataPass].payload.rows;
+        return this.model.dataAccess.fetchedData[PN.runsPerDataPass][dataPass].payload.rows;
     }
 
     getRun(dataPass, runNumber) {
