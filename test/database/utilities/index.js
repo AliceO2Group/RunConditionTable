@@ -12,7 +12,7 @@
  */
 
 const PGQueryBuilderSuite = require('./PGQueryBuilder.test');
-const DatabaseServiceSuite = require('./DataBaseService.test');
+const DatabaseServiceSuite = require('./DatabaseService.test');
 
 module.exports = () => {
     describe('PGQueryBuilder', PGQueryBuilderSuite);
