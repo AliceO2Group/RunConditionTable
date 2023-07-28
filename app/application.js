@@ -82,12 +82,10 @@ class RunConditionTableApplication {
             this.logger.info('Stopping RCT app...');
             try {
                 await this.httpServer.close();
+                await this.syncManager.clearSyncAllTask();
             } catch (error) {
                 this.logger.error(`Error while stopping RCT app: ${error}`);
             }
-            await this.syncManager.clearSyncAllTask();
-
-            this.logger.info('RCT app stopped');
         } else {
             this.logger.info('Stopping already...');
         }
@@ -108,7 +106,6 @@ class RunConditionTableApplication {
     get httpServer() {
         return this.webUiServer.httpServer;
     }
-
 }
 
 module.exports = new RunConditionTableApplication();
