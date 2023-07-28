@@ -41,7 +41,7 @@ if [ "$SUCCESS" = "true" ]; then
     echo "$HOST:$PORT is reachable"
     echo running "$CMD_ARGS"
     $CMD_ARGS
-    exit 0;
+    exit $?;
 else
     echo "cannot reach $HOST:$PORT"
     exit 1;

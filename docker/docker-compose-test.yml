@@ -1,43 +1,38 @@
 
 services:
-  o2-rct_application:
-    container_name: o2-rct_application-test
-    build: 
-      target: test
-    env_file:
-      - ./docker/test.env
+  application:
+    restart: "no"
     volumes:
-      - type: bind
-        read_only: true
-        source: ./security
-        target: /opt/RunConditionTable/security
-      - type: bind
-        read_only: false
-        source: ./database/cache
-        target: /opt/RunConditionTable/database/cache
       - type: bind
         read_only: false
         source: ./reports
         target: /opt/RunConditionTable/reports
+        bind:
+          create_host_path: true
+      - type: bind
+        read_only: true
+        source: ./.eslintrc
+        target: /opt/RunConditionTable/.eslintrc
+
+      - type: bind
+        read_only: true
+        source: ./.nycrc
+        target: /opt/RunConditionTable/.nycrc
         
+      - type: bind
+        read_only: true
+        source: ./test
+        target: /opt/RunConditionTable/test
+
+        
+  database:
     restart: "no"
 
-  o2-rct_database:
-    container_name: o2-rct_database-test
-    build: 
-      target: test
-    env_file:
-      - ./docker/test.env
-
-    volumes:
-    - type: bind
-      read_only: true
-      source: ./database
-      target: /docker-entrypoint-initdb.d
-    - type: bind
-      read_only: false
-      source: ./database/cache
-      target: /postgres/run/database/cache
-
-    
-    restart: "no"
+networks:
+  network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.200.202.0/24"
+          gateway: "172.200.202.1"

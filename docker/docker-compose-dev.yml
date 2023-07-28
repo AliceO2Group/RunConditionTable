@@ -1,25 +1,46 @@
 
 services:
-  o2-rct_application:
-    container_name: o2-rct_application
-    build: 
-      target: development
-    env_file:
-    - ./docker/dev.env
-    
+  application:
+    restart: "no"
     ports:
     - target: $RCT_HTTP_PORT
       published: $RCT_HTTP_PORT
-    
 
+    volumes:
+      - type: bind
+        read_only: false
+        source: ./database/cache
+        target: /opt/RunConditionTable/database/cache
+        bind:
+          create_host_path: true
+      - type: bind
+        read_only: true
+        source: ./security
+        target: /opt/RunConditionTable/security
+        bind:
+          create_host_path: true
+
+  database:
     restart: "no"
 
-  o2-rct_database:
-    container_name: o2-rct_database
-    build: 
-      target: development
-    
-    env_file:
-    - ./docker/dev.env
+    volumes:
+      - type: bind
+        read_only: true
+        source: ./database
+        target: /postgres/run/database
+      - type: bind
+        read_only: false
+        source: ./database/cache
+        target: /postgres/run/database/cache
+        bind:
+          create_host_path: true
 
-    restart: "no"
+
+networks:
+  network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.200.201.0/24"
+          gateway: "172.200.201.1"

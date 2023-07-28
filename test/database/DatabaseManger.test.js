@@ -10,14 +10,14 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const databaseManager = require('../../app/lib/database/DatabaseManager.js');
+const { databaseManager } = require('../../app/lib/database/DatabaseManager.js'); 
 const assert = require('assert');
 
 module.exports = () => {
     describe('DatabaseManagerSuite', () => {
         describe('Check Initialization of sequelize db', () => {
-            it('sequlize should migrate without errors', () => {
-                assert.doesNotThrow(async () => {
+            it('sequlize should migrate without errors', async () => {
+                await assert.doesNotReject(async () => {
                     await databaseManager.migrate();
                 });
             });

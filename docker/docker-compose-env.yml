@@ -1,0 +1,13 @@
+
+services:
+  application:
+    build:
+      target: $TARGET
+    env_file:
+      - ./docker/$TARGET.env
+  
+  database:
+    build:
+      target: $TARGET
+    env_file:
+      - ./docker/$TARGET.env

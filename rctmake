@@ -1,17 +1,24 @@
 #!/bin/bash
-echo $@
 
 PROJECT_DIR="$(dirname $(realpath $0))";
 SCRIPT_NAME="$(basename $0)"
 
-APP_CONTAINER_NAME="o2-rct_application"
-DB_CONTAINER_NAME="o2-rct_database"
-# TODO describe rest of path, RCT_USER etc. via env vars pulled during deployment
+DEV_MODE=dev
+TEST_MODE=test
+APP_CONTAINER_NAME_BASE="o2rct_application"
+APP_CONTAINERS_OPT="$APP_CONTAINER_NAME_BASE-([$DEV_MODE|$TEST_MODE])"
+APP_WORKINGDIR='/opt/RunConditionTable'
+
+DB_CONTAINER_NAME_BASE="o2rct_database"
+DP_CONTAINERS_OPT="$DB_CONTAINER_NAME-($DEV_MODE|$TEST_MODE))"
+DB_WORKINGDIR='/postgres/run'
+
+ITWILLBEDELETED="!(It will be deleted)"
 
 usage() {
-    if [ -n "$1" ]; then
+    ERROR="$1";
+    if [ -n "$ERROR" ]; then
         BORDER_PATTERN="' *'"
-        ERROR="$1";
         ERROR_REASON_MESS=" error reason: $ERROR";
         LENGTH=$(expr length "$ERROR_REASON_MESS" / 2 + 2);
         HORIZONTAL_BORDER=$(seq -s' *' $LENGTH| tr -d '[:digit:]');
@@ -26,7 +33,7 @@ usage() {
     cat << USAGE >&2
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 This script is intended to provide handy functionalities during 
-    development, testing and production for building, deployment and managing acquired data.
+    development, testing for building, deployment and managing acquired data.
 The script can be run from any location.
 The script performs defined tasks sequentially.
 Some tasks might or have to be run with dedicated flags.
@@ -34,45 +41,50 @@ Tasks are called stages.
 
 Usage:  
         ./$SCRIPT_NAME <STAGES> [<FLAGS>]
-            'raw usage of script is for production purpose and is described at the end'
         where STAGES is comma separeted list of stages performed sequentialy. 
         In default behaviour failure of one stage causes stopping pipeline execution, it can be changes via flag --ignore-errors.
+        Using moste of stages requires TARGET to be specified (default dev). It can be specified via flag -t|--target as test as well as via exporting env var TARGET;
+        Each stage is performed within the context of target.
+        Using conatiners build as dev and test is separted and can be performed in parallel.
+
+        Is seems that there is one case of target test, just something like ./rctmake run --target test.
+
         STAGE can be a:
-            1. build|build[BUILD_STATGES] - build application (deploys containers). By defualt 
-                    build stage behaves as docker-compose ... up --build.
-                    BUILD_STATGES are colon separated docker-compose tasks like build,up
-                Using build stage requires usage of -|--target flag wich specifies one of prod,dev,test.
-                e.g.: ./$SCRIPT_NAME build -t dev
-                      ./$SCRIPT_NAME build[up] -t dev
+            1. run|run[RUN_SUBSTATGES] - run application (deploys containers). By defualt 
+                    run stage behaves as docker-compose ... up --build.
+                    RUN_SUBSTATGES are colon separated docker-compose tasks like run,create,up,...
+                e.g.: ./$SCRIPT_NAME run -t dev
+                      ./$SCRIPT_NAME run[up] -t test
             2. stop - stop containers                      
             
-            3. prune - delete both containers, all virtual volumens and virtual network
+            3. prune - delete containers, all virtual volumens and virtual network
+            4. follow - like docker-compose follow
+            5. logs - like docker-compose logs
 
-            4. attach - like docker attach to rct_application
+            6. app:attach - like docker attach to $APP_CONTAINERS_OPT - to running application
+            7. app:battach - run bash on $APP_CONTAINER_NAME
+            8. app:ip - retrive ip of $DB_CONTAINER_NAME
 
-            5. follow - like docker-compose follow
+            9. db:attach - run psql on $DB_CONTRAINER_NAME
+            10. db:battach - run bash on $DB_CONTRAINER_NAME
+            11. db:(export|ex) - export db sql definition from pgmodeler design $ITWILLBEDELETED
+            12. db:clean | db:truncate - truncate database in db container
+            13. db:ip - print db container ipv4 address
+            14. db:(counts|ct) - print statistics of data in each table in db
 
-            6. db:export - export db sql definition from pgmodeler design
-            7. db:clean | db:truncate - truncate database in db container
-            8. db:ip - print db container ipv4 address
-
-            9. app:ip - print app container ipv4 address
-
-            10. dump:(make|mk) - make dump of current database (in docker container) data, 
+            15. dump:(make|mk) - make dump of current database (in docker container) data, 
                       need option -F|--dump-file <FILE> to specify dump file relative path
                 e.g.: ./$SCRIPT_NAME dump -F dump_file
-            11. dump:(list|ls) - print list cached dumps
-            12. dump:tree - print tree of cached dumps
-            13. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
-            14. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
+            16. dump:(list|ls) - print list cached dumps
+            17. dump:tree - print tree of cached dumps
+            18. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
+            19. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
                 e.g.: ./$SCRIPT_NAME restore -F dump_file
-            15. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
-            16. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
+            20. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
+            21. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
-        ! An additional -S|--service <SERVICE> flag can be specified for build, follow, stop and prune stages.
-        <SERVICE> ($DB_CONTAINER_NAME or $APP_CONTAINER_NAME) is the name of the service the stages are performed for.
-
-        ! Production - Deprecated - as the Alice tool, RCT production will NOT be handeled with the use of dockers
+        ! An additional -S|--service <SERVICE> flag can be specified for run, follow, stop and prune stages.
+        <SERVICE> $APP_CONTAINERS_OPT or $DB_CONTAINERS_OPT is the name of the service the stages are performed for.
     
 $ERROR_MESSAGE_PRINT
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -104,21 +116,21 @@ exit_codes_filter() {
 PREVIOD_USER_LOC=$(pwd);
 DOCKER_DIR="$PROJECT_DIR/docker";
 MAIN_DOCKER_COMPOSE_YML="$DOCKER_DIR/docker-compose.yml"
-DOCKER_COMP_CMD="docker compose -f $MAIN_DOCKER_COMPOSE_YML --project-directory $PROJECT_DIR ";
 
-# defualt behaviour => dettached production built
+
 if [[  $# -eq 0 ]]; then
     usage 'no option specfied'
 else
+    if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
+        usage;
+    fi;
+
     STAGES=$(echo $1 | tr ',' ' ');
     shift 1;
     while [[ $# -gt 0 ]]; do
         case $1 in 
-            -h|--help)
-                usage;
-            ;;
             -t|--target)
-                TARGET=$2;
+                export TARGET=$2;
                 shift 2;
                 ;;
             -S|--service)
@@ -156,66 +168,115 @@ else
     done
 fi
 
+export TARGET=${TARGET:-dev}
+export APP_CONTAINER_NAME="o2rct_application-$TARGET"
+export DB_CONTAINER_NAME="o2rct_database-$TARGET"
+
+DOCKER_COMP_CMD_NO_ENV="docker compose -p $TARGET-o2rct 
+                    -f $MAIN_DOCKER_COMPOSE_YML 
+                    -f $DOCKER_DIR/docker-compose-$TARGET.yml
+                    -f $DOCKER_DIR/docker-compose-volumes.yml
+                    --env-file "$DOCKER_DIR/$TARGET.env" 
+                    --project-directory $PROJECT_DIR";
+DOCKER_COMP_CMD="$DOCKER_COMP_CMD_NO_ENV -f $DOCKER_DIR/docker-compose-env.yml"
+
 MOCK_DB=${MOCK_DB:-false};
 export MOCK_DB;
 
 
-build() {
-    mkdir -p $PROJECT_DIR/security;
-    CACHE_DIR="$PROJECT_DIR/database/cache";
-    mkdir -p $CACHE_DIR;
-    ORDER=$1;
-    export DB_EXPOSED_PORT;
-    OPTIONAL_DB_EXPOSE=$(if [ -n "$DB_EXPOSED_PORT"  ]; then echo "-f $DOCKER_DIR/docker-compose-db-expose.yml"; fi);
-    echo $OPTIONAL_DB_EXPOSE;
+run() {
+    SUBCMD_AND_FLAGS="$@";
     case $TARGET in 
         dev)
+            export DB_EXPOSED_PORT;
+            OPTIONAL_DB_EXPOSE=$(if [ -n "$DB_EXPOSED_PORT"  ]; then echo "-f $DOCKER_DIR/docker-compose-db-expose.yml"; fi);
+
             $DOCKER_COMP_CMD \
-                -f "$DOCKER_DIR/docker-compose-dev.yml" \
-                -f "$DOCKER_DIR/docker-compose-volumes.yml" $OPTIONAL_DB_EXPOSE \
-                --env-file "$DOCKER_DIR/dev.env" \
-                $ORDER $OTHER_OPTS $SERVICES;
+                $OPTIONAL_DB_EXPOSE \
+                $SUBCMD_AND_FLAGS $SERVICES;
         ;;
 
         test)
-            mkdir -p $PROJECT_DIR/reports;
             $DOCKER_COMP_CMD \
-                -f "$DOCKER_DIR/docker-compose-test.yml" \
-                --env-file $DOCKER_DIR/test.env \
-                up --build --abort-on-container-exit $OTHER_OPTS;
+                $SUBCMD_AND_FLAGS;
         ;;
         *)
-            usage "Incorrect build target: $TARGET";
+            usage "Incorrect run target: $TARGET";
         ;;
     esac
 }
 
-
+source $DOCKER_DIR/$TARGET.env
 for stage in $STAGES; do
-    RCT_DATABASE='rct-db';
-    RCT_USER='postgres';
+    RCT_DB_USER='postgres'; # more privileges than rct-user
 
     echo " *** do $stage";
     case $stage in
         prune)
-            $DOCKER_COMP_CMD rm --stop --force -v $SERVICES;
+            $DOCKER_COMP_CMD_NO_ENV rm --stop --force -v $SERVICES;
+        ;;
+
+        run*)
+            RUN_SUBSTATGES=$(echo ${stage#run} | sed -E "s/(\[|\:|\])/ /g");
+            RUN_SUBSTATGES=$(echo $RUN_SUBSTATGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g");
+            if [ -z "$RUN_SUBSTATGES" ]; then
+                echo 'default run[run,create,up]; up in detached mode';
+                RUN_SUBSTATGES="run create up";
+            fi
+            echo $RUN_SUBSTATGES;
+            for rs in $RUN_SUBSTATGES; do
+                if [ "$rs" == 'up' ]; then
+                    if [ "$TARGET" = "$DEV_MODE" ]; then 
+                        rs="up --detach";
+                    elif [ "$TARGET" = "$TEST_MODE" ]; then
+                        rs="up --exit-code-from application";
+                    fi;
+                fi;
+                echo "*** *** do run : $rs";
+                run "$rs";
+            done
+        ;;
+
+        follow)
+            $DOCKER_COMP_CMD logs --follow $SERVICES || exit_codes_filter 1 130;
+        ;;
+
+        logs)
+            $DOCKER_COMP_CMD logs $SERVICES || exit_codes_filter 1;
+        ;;
+
+        stop)
+            $DOCKER_COMP_CMD stop $SERVICES;
         ;;
 
         db*)
             DB_CMD=$(echo ${stage#db:});
             case $DB_CMD in
-                export)
+                attach)
+                    if [ \"$RUNNING_ENV\" != 'DOCKER' ]; then 
+                        docker exec -it $DB_CONTAINER_NAME psql -U postgres -d \"rct-db\"; 
+                    else 
+                        export PGPASSWORD=postgres; 
+                        psql -h $DB_CONTAINER_NAME -U postgres -d \"rct-db\"; 
+                    fi;
+                ;;
+
+                battach)
+                    docker exec -it $DB_CONTAINER_NAME /bin/bash;
+                ;;
+
+                export|ex)
                     $PROJECT_DIR/database/setup-db.sh --only-export;
                 ;;
                 clean | truncate)
-                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/delete-data.sql" \
-                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "/postgres/run/delete-data.sql";
+                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:$DB_WORKINGDIR/delete-data.sql" \
+                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "$DB_WORKINGDIR/run/delete-data.sql";
                 ;;
                 
                 ip)
                     docker inspect $DB_CONTAINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
                 ;;
-                counts)
+                counts|ct)
                     docker exec $DB_CONTAINER_NAME /docker-entrypoint-initdb.d/utils/print-data.sh
                 ;;
                 *)
@@ -227,6 +288,12 @@ for stage in $STAGES; do
         app*)
             APP_CMD=$(echo ${stage#app:});
             case $APP_CMD in
+                attach)
+                    docker attach $APP_CONTAINER_NAME || exit_codes_filter 130;
+                ;;
+                battach)
+                    docker exec -it $APP_CONTAINER_NAME bash
+                ;;
                 ip)
                     docker inspect $APP_CONTAINER_NAME -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
                 ;;
@@ -241,7 +308,7 @@ for stage in $STAGES; do
             DUMPS_DIR="$PROJECT_DIR/database/cache/dumps";
             mkdir -p "$DUMPS_DIR";
             DUMP_PATH="$DUMPS_DIR/$DUMP_FILE";
-            CONTAINER_DUMP_PATH="/postgres/run/database/cache/dumps/$DUMP_FILE";
+            CONTAINER_DUMP_PATH="$DB_WORKINGDIR/database/cache/dumps/$DUMP_FILE";
 
             case $DUMP_CMD in
                 make|mk)
@@ -265,7 +332,7 @@ for stage in $STAGES; do
                     if [ -z $DO_NOT_PERFORME_WHILE_FILE_EXISTS ]; then
                         docker exec $DB_CONTAINER_NAME mkdir -p $(dirname $CONTAINER_DUMP_PATH) \
                         && docker exec $DB_CONTAINER_NAME \
-                            pg_dump --data-only --format=tar -d $RCT_DATABASE -U $RCT_USER --file="$CONTAINER_DUMP_PATH";
+                            pg_dump --data-only --format=tar -d $RCT_DB_NAME -U $RCT_DB_USER --file="$CONTAINER_DUMP_PATH";
                     fi
                 ;;
 
@@ -287,9 +354,9 @@ for stage in $STAGES; do
                     if [ -z "$DUMP_FILE" ]; then
                         usage "Dump file name unspecified, use flag -F|--dump-file <FILE>";
                     fi
-                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:/postgres/run/delete-data.sql" \
-                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_USER -d $RCT_DATABASE -f "/postgres/run/delete-data.sql" \
-                    && docker exec $DB_CONTAINER_NAME pg_restore --data-only -U $RCT_USER -d $RCT_DATABASE $CONTAINER_DUMP_PATH;
+                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:$DB_WORKINGDIR/delete-data.sql" \
+                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "$DB_WORKINGDIR/delete-data.sql" \
+                    && docker exec $DB_CONTAINER_NAME pg_restore --data-only -U $RCT_DB_USER -d $RCT_DB_NAME $CONTAINER_DUMP_PATH;
                 ;;
 
                 migrate|mg)
@@ -317,10 +384,10 @@ for stage in $STAGES; do
                 ;;
 
                 remove|rm)
-                    if [ -z "$DUMP_FIL" ]; then
+                    if [ -z "$DUMP_FILE" ]; then
                         usage "dump file unspecified, use flag -F|--dump-file <FILE>";
                     fi 
-                    rm $DUMP_PATH;
+                    rm -rf $DUMP_PATH;
                 ;;
 
                 export|ex)
@@ -336,43 +403,6 @@ for stage in $STAGES; do
                 ;;
             esac
         ;;
-
-        build*)
-            BUILD_STAGES=$(echo ${stage#build} | sed -E "s/(\[|\:|\])/ /g");
-            BUILD_STAGES=$(echo $BUILD_STAGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g");
-            if [ -z "$BUILD_STAGES" ]; then
-                echo 'default build[build,up]; up in detached mode';
-                BUILD_STAGES="build up";
-            fi
-            echo $BUILD_STAGES;
-            for bs in $BUILD_STAGES; do
-                echo "*** *** do build : $bs";
-                if [ "$bs" == 'up' ]; then
-                    bs="up --detach";
-                fi
-                build "$bs";
-            done
-            # if [[ -n "$FAST_DUMP" ]]; then
-            #     ctr=''
-            #     while (! docker ps | grep -E "o2-rct_database.*Up" &> /dev/null) || (! $PROJECT_DIR/rctmake dump:restore -F $FAST_DUMP &> /dev/null) && [[ $(echo $ctr | wc -c) -lt 20 ]]; do
-            #         sleep 0.5;    
-            #     done
-            #     docker logs $APP_CONTAINER_NAME
-            # fi
-        ;;
-
-        attach)
-            docker attach $APP_CONTAINER_NAME || exit_codes_filter 130;
-        ;;
-
-        follow)
-            $DOCKER_COMP_CMD logs --follow $OTHER_OPTS $SERVICES || exit_codes_filter 1;
-        ;;
-
-        stop)
-            $DOCKER_COMP_CMD stop $OTHER_OPTS $SERVICES;
-        ;;
-
         *)
             incorrect_stage_err $stage
         ;;

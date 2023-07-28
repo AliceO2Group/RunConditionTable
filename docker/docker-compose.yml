@@ -1,6 +1,9 @@
 version: '3.1'
 services:
-  o2-rct_application:
+  application:
+    container_name: $APP_CONTAINER_NAME
+    working_dir: /opt/RunConditionTable
+    command: ["./scripts/check-host-and-exec.sh", "$DB_CONTAINER_NAME", "5432", "10", "--", "npm", "run", "start:$TARGET"]
     stdin_open: true
     tty: true 
     build:
@@ -9,25 +12,16 @@ services:
     environment:
       - RUNNING_ENV=DOCKER
     networks:
-      - o2-rct_network
+      - network
 
-  o2-rct_database:
+  database:
+    container_name: $DB_CONTAINER_NAME 
+    working_dir: /postgres/run
     build: 
       context: ./
       dockerfile: docker/database.dockerfile
     environment:
       - RUNNING_ENV=DOCKER
     networks:
-      - o2-rct_network
-
-networks:
-  o2-rct_network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.200.200.0/24"
-          gateway: "172.200.200.1"
+      - network
       
-
-

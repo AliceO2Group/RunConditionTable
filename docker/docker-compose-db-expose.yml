@@ -1,5 +1,5 @@
 services:
-  o2-rct_database:
+  database:
     ports:
       - target: $RCT_DB_PORT
         published: $DB_EXPOSED_PORT 

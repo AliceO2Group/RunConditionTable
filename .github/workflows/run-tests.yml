@@ -1,5 +1,5 @@
 name: Tests
-## TODO
+
 on:
   pull_request:
   push:
@@ -20,8 +20,7 @@ jobs:
         with:
           node-version: '18.x'
       - run: npm ci
-      - run: npm run docker:test
-      # - run: ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
+      - run: npm run test
       - name: Send codecov report for RunConditionTable
         uses: codecov/codecov-action@v3
         with:
@@ -43,19 +42,3 @@ jobs:
       - name: Running static analysis
         run: npm run static
 
-  test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-      - name: Install mocha
-        run: npm install -g mocha
-      - name: Installing dependencies
-        run: npm ci
-      - name: Running tests
-        run: npm run docker:test

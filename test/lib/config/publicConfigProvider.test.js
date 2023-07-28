@@ -13,12 +13,13 @@
 
 const assert = require('assert');
 const { buildPublicConfig } = require('../../../app/lib/config/publicConfigProvider');
+const config = require('../../../app/config');
 
 module.exports = () => {
     describe('Public Config Provider', () => {
         describe('Filtering objects', () => {
             it('should provide public config', () => {
-                assert.doesNotThrow(() => buildPublicConfig());
+                assert.doesNotThrow(() => buildPublicConfig(config));
             });
         });
     });
