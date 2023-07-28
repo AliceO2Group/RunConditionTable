@@ -16,10 +16,9 @@ const assert = require('assert');
 
 module.exports = () => {
     describe('DatabaseSuite', () => {
-        describe('Check Initialization of DatabaseService', () => {
-            it('should connect to the database successfully', () => {
-                assert.doesNotThrow(async () => {
-                    await databaseService.getDate();
+        describe('Check methods of DatabaseService', () => {
+            it('should succesfully performe healthcheckInsertData', async () => {
+                await assert.doesNotReject(async () => {
                     await databaseService.healthcheckInsertData();
                 });
             });

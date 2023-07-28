@@ -41,12 +41,6 @@ class DatabaseService {
         config.database.max = 20
 
         this.pool = new Pool(config.database)
-        this.pool.on('remove', () => {
-            // this.logger.info(`removing client, clients in pool: ${this.pool._clients.length}`);
-        })
-        this.pool.on('acquire', () => {
-            // this.logger.info(`acquiring client, clients in pool: ${this.pool._clients.length}`);
-        })
         this.pool.on('error', (e) => {
             this.logger.error(`database pg pool fatal error: ${e.stack}`);
         })
@@ -120,7 +114,6 @@ class DatabaseService {
             return;
         }
 
-        
         const params = {...req.query, ...req.params}
 
         const connectErrorHandler = (connectErr) => {
@@ -186,10 +179,6 @@ class DatabaseService {
         }
     }
 
-    async getDate(req, res) {
-        await this.pgExecFetchData(req, res, 'SELECT NOW();');
-    }
-
     responseWithStatus(res, status, message) {
         res.status(status).json({ message: message });
     }
@@ -203,8 +192,6 @@ class DatabaseService {
             }
         }
     }
-
-
 }
 
 module.exports = {

@@ -55,4 +55,6 @@ class WebUiServer {
     }
 }
 
-exports.WebUiServer = WebUiServer;
+module.exports = {
+    webUiServer: new WebUiServer(),
+};
