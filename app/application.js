@@ -23,7 +23,7 @@ const { databaseManager } = require('./lib/database/DatabaseManager.js');
 const { databaseService } = require('./lib/database/DatabaseService.js');
 
 // Server
-const { webUiServer } = require('./lib/server');
+const { webUiServer } = require('./lib/server/WebUiServer.js');
 
 // Extract important
 const EP = config.public.endpoints;
