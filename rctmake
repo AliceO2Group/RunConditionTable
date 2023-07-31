@@ -253,12 +253,7 @@ for stage in $STAGES; do
             DB_CMD=$(echo ${stage#db:});
             case $DB_CMD in
                 attach)
-                    if [ \"$RUNNING_ENV\" != 'DOCKER' ]; then 
-                        docker exec -it $DB_CONTAINER_NAME psql -U postgres -d \"rct-db\"; 
-                    else 
-                        export PGPASSWORD=postgres; 
-                        psql -h $DB_CONTAINER_NAME -U postgres -d \"rct-db\"; 
-                    fi;
+                    docker exec -it $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME; 
                 ;;
 
                 battach)
