@@ -23,11 +23,12 @@ const { runAdapter } = require('../../database/adapters');
 class RunService {
     /**
      * Return all runs
-     * @param {Object} queryClauses - Sequelize query definiton with where clause,... #TODO
+     * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getAll(queryClauses) { // TODO args
-        const runs = await RunRepository.findAll(queryClauses);
+    async getAll(query) { // TODO args
+        // TODO mapping query.filter to {where: ...}
+        const runs = await RunRepository.findAll(query);
         return runs.map((run) => runAdapter.toEntity(run));
     }
 }

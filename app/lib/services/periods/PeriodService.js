@@ -23,11 +23,11 @@ const { periodAdapter } = require('../../database/adapters');
 class PeriodService {
     /**
      * Return all periods
-     * @param {Object} queryClauses - Sequelize query definiton with where clause,... #TODO
+     * @param {Object} query -  Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getAll(queryClauses) { // TODO args
-        const periods = await PeriodRepository.findAll(queryClauses);
+    async getAll(query) { // TODO args
+        const periods = await PeriodRepository.findAll(query);
         return periods.map((period) => periodAdapter.toEntity(period));
     }
 }
