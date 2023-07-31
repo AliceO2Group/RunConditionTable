@@ -27,7 +27,7 @@ const periods_view = () => `
     FROM periods AS p
     LEFT JOIN runs as r
         ON r.period_id = p.id
-    GROUP BY p.name, p.year, beam;
+    GROUP BY p.name, p.year, beam
 `;
 
 module.exports = periods_view;
