@@ -21,7 +21,7 @@ module.exports = (sequelize) => {
             type: Sequelize.STRING,
             unique: true,
         },
-    }, { timestamp: false });
+    }, { timestamps: false });
 
     BeamType.associate = (models) => {
         BeamType.hasMany(models.Period); 

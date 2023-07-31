@@ -21,17 +21,13 @@ module.exports = (sequelize) => {
             unique: true,
         },
         year: {
-            type: Sequelize.VIRTUAL,
-            get() {
-                const name = this.getDataValue('name');
-                return extractPeriodYear(name);
-            }
+            type: Sequelize.INTEGER,
         },
-    }, { timestamp: false });
+    }, { timestamps: false });
 
     Period.associate = (models) => {
         Period.hasMany(models.Run);
-        Period.belongsTo(models.BeamType)
+        Period.belongsTo(models.BeamType, {foreginKey: 'beam_type_id'})
     };
     
     return Period;
