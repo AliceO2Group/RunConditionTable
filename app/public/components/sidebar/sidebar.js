@@ -16,6 +16,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 import sidebarItem from './sidebarItem.js';
 import pageSettings from '../../views/userView/data/pageSettings/pageSettings.js';
+import about from '../about/about.js';
 const { pageNames } = RCT;
 
 /**
@@ -32,6 +33,10 @@ const modals = (model) => [
         }, pageSettings(model, () => {
             document.getElementById('pageSettingsModal').style.display = 'none';
         }))),
+    h('.modal', { id: 'aboutModal' },
+        h('.modal-content.abs-center.p3', {
+            id: 'aboutModalContent',
+        }, about())),
 ];
 
 export default function sidebar(model) {
@@ -73,7 +78,20 @@ export default function sidebar(model) {
                 h('', 'Defined filters')),
 
             h('.sidebar-section',
+                h('button.sidebar-item-button', {
+                    onclick: () => {
+                        document.getElementById('aboutModal').style.display = 'block';
+                        document.addEventListener('click', (event) => {
+                            const modalContent = document.getElementsByClassName('modal-content');
+                            const modal = document.getElementsByClassName('modal');
+                            if (Array.from(modalContent).find((e) => e != event.target)
+                                && Array.from(modal).find((e) => e == event.target)
+                                && document.getElementById('aboutModal')) {
+                                document.getElementById('aboutModal').style.display = 'none';
+                            }
+                        });
+                    } },
                 h('.flex-wrap.page-title',
                     h('.about-15-off-white.vertical-center'),
-                    h('.title-text.vertical-center', 'About')))));
+                    h('.title-text.vertical-center', 'About'))))));
 }
