@@ -23,7 +23,6 @@ import row from '../table/row.js';
 import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 
 import { RCT } from '../../../../config.js';
-import pageSettings from '../../../userView/data/pageSettings/pageSettings.js';
 import downloadCSV from '../../../../utils/csvExport.js';
 import filter from '../../../userView/data/table/filtering/filter.js';
 import activeFilters from '../../../userView/data/table/filtering/activeFilters.js';
@@ -31,6 +30,7 @@ import sortingRow from '../../../userView/data/table/sortingRow.js';
 import noDataView from '../../../userView/data/table/noDataView.js';
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
 import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
+import { modalIds, showModal } from '../../../modal/modal.js';
 const { pageNames } = RCT;
 
 export default function content(model, runs, detectors) {
@@ -79,18 +79,7 @@ export default function content(model, runs, detectors) {
                     title(pageNames.runsPerDataPass),
                     chips,
                     h('button.btn.btn-secondary', {
-                        onclick: () => {
-                            document.getElementById('pageSettingsModal').style.display = 'block';
-                            document.addEventListener('click', (event) => {
-                                const modalContent = document.getElementsByClassName('modal-content');
-                                const modal = document.getElementsByClassName('modal');
-                                if (Array.from(modalContent).find((e) => e != event.target)
-                                && Array.from(modal).find((e) => e == event.target)
-                                && document.getElementById('pageSettingsModal')) {
-                                    document.getElementById('pageSettingsModal').style.display = 'none';
-                                }
-                            });
-                        },
+                        onclick: () => showModal(modalIds.pageSettings.modal),
                     }, h('settings-20-primary'))),
 
                 h('div', functionalities(model))),
@@ -115,12 +104,6 @@ export default function content(model, runs, detectors) {
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
                 : noDataView(model, dataPointer, anyFiltersActive(url)),
-            h('.modal', { id: 'pageSettingsModal' },
-                h('.modal-content.abs-center.p3', {
-                    id: 'pageSettingsModalContent',
-                }, pageSettings(model, () => {
-                    document.getElementById('pageSettingsModal').style.display = 'none';
-                }))),
         ]);
 }
 

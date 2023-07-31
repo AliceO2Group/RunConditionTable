@@ -15,8 +15,7 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 import sidebarItem from './sidebarItem.js';
-import pageSettings from '../../views/userView/data/pageSettings/pageSettings.js';
-import about from '../about/about.js';
+import { modal, modalIds, showModal } from '../../views/modal/modal.js';
 const { pageNames } = RCT;
 
 /**
@@ -26,22 +25,10 @@ const { pageNames } = RCT;
  * @returns {*}
  */
 
-const modals = (model) => [
-    h('.modal', { id: 'pageSettingsModal' },
-        h('.modal-content.abs-center.p3', {
-            id: 'pageSettingsModalContent',
-        }, pageSettings(model, () => {
-            document.getElementById('pageSettingsModal').style.display = 'none';
-        }))),
-    h('.modal', { id: 'aboutModal' },
-        h('.modal-content.abs-center.p3', {
-            id: 'aboutModalContent',
-        }, about())),
-];
-
 export default function sidebar(model) {
     return h('.sidebar.p3',
-        modals(model),
+        modal(modalIds.about.modal),
+        modal(modalIds.pageSettings.modal, model),
         h('.logo'),
         h('.flex-column.gap-20',
             h('.sidebar-section',
@@ -58,18 +45,7 @@ export default function sidebar(model) {
             h('.sidebar-section',
                 h('.sidebar-section-title', 'Preferences'),
                 h('button.sidebar-item-button', {
-                    onclick: () => {
-                        document.getElementById('pageSettingsModal').style.display = 'block';
-                        document.addEventListener('click', (event) => {
-                            const modalContent = document.getElementsByClassName('modal-content');
-                            const modal = document.getElementsByClassName('modal');
-                            if (Array.from(modalContent).find((e) => e != event.target)
-                        && Array.from(modal).find((e) => e == event.target)
-                        && document.getElementById('pageSettingsModal')) {
-                                document.getElementById('pageSettingsModal').style.display = 'none';
-                            }
-                        });
-                    } },
+                    onclick: () => showModal(modalIds.pageSettings.modal) },
                 h('.flex-wrap.page-title',
                     h('.settings-20-off-white.vertical-center'),
                     h('.title-text.vertical-center', 'Page settings'))),
@@ -79,18 +55,8 @@ export default function sidebar(model) {
 
             h('.sidebar-section',
                 h('button.sidebar-item-button', {
-                    onclick: () => {
-                        document.getElementById('aboutModal').style.display = 'block';
-                        document.addEventListener('click', (event) => {
-                            const modalContent = document.getElementsByClassName('modal-content');
-                            const modal = document.getElementsByClassName('modal');
-                            if (Array.from(modalContent).find((e) => e != event.target)
-                                && Array.from(modal).find((e) => e == event.target)
-                                && document.getElementById('aboutModal')) {
-                                document.getElementById('aboutModal').style.display = 'none';
-                            }
-                        });
-                    } },
+                    onclick: () => showModal(modalIds.about.modal),
+                },
                 h('.flex-wrap.page-title',
                     h('.about-15-off-white.vertical-center'),
                     h('.title-text.vertical-center', 'About'))))));

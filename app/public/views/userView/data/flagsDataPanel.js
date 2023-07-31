@@ -17,12 +17,12 @@ import filter from './table/filtering/filter.js';
 
 import downloadCSV from '../../../../utils/csvExport.js';
 
-import pageSettings from './pageSettings/pageSettings.js';
 import flagsVisualization from '../../flags/flagsVisualization.js';
 import flagsTable from '../../flags/flagsTable.js';
 import flagBreadCrumbs from '../../../components/common/flagBreadcrumbs.js';
 import detectorName from './flags/detectorName.js';
 import copyLinkButton from '../../../components/buttons/copyLinkButton.js';
+import { modalIds, showModal } from '../../modal/modal.js';
 
 export default function flagsDataPanel(model) {
     const urlParams = model.router.getUrl().searchParams;
@@ -57,18 +57,7 @@ export default function flagsDataPanel(model) {
             h('div.flex-wrap.justify-between.items-center',
                 flagBreadCrumbs(model, dataPassName, run, detectorName(detector)),
                 h('button.btn.btn-secondary', {
-                    onclick: () => {
-                        document.getElementById('pageSettingsModal').style.display = 'block';
-                        document.addEventListener('click', (event) => {
-                            const modalContent = document.getElementsByClassName('modal-content');
-                            const modal = document.getElementsByClassName('modal');
-                            if (Array.from(modalContent).find((e) => e != event.target)
-                            && Array.from(modal).find((e) => e == event.target)
-                            && document.getElementById('pageSettingsModal')) {
-                                document.getElementById('pageSettingsModal').style.display = 'none';
-                            }
-                        });
-                    },
+                    onclick: () => showModal(modalIds.pageSettings.modal),
                 }, h('.settings-20-primary'))),
 
             h('div', functionalities(model))),
@@ -76,11 +65,5 @@ export default function flagsDataPanel(model) {
 
         flagsVisualization(model, dataPassName, run, detectorName(detector)),
         flagsTable(model, run, detectorName(detector)),
-        h('.modal', { id: 'pageSettingsModal' },
-            h('.modal-content.abs-center.p3', {
-                id: 'pageSettingsModalContent',
-            }, pageSettings(model, () => {
-                document.getElementById('pageSettingsModal').style.display = 'none';
-            }))),
     ]);
 }
