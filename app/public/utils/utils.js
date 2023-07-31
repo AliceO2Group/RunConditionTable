@@ -22,7 +22,7 @@ export const reduceSerialIf = (
 
 export function getReadableFileSizeString(fileSizeInBytes) {
     let i = -1;
-    const byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
+    const byteUnits = [' kB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
     do {
         fileSizeInBytes /= 1024;
         i++;
