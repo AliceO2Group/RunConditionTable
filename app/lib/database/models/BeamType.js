@@ -17,11 +17,11 @@ const { extractPeriodYear } = require('../../utils');
 
 module.exports = (sequelize) => {
     const BeamType = sequelize.define('BeamType', {
-        name: {
+        beamType: {
             type: Sequelize.STRING,
             unique: true,
         },
-    }, { timestamps: false });
+    }, { timestamps: false, tableName: 'beams_dictionary'});
 
     BeamType.associate = (models) => {
         BeamType.hasMany(models.Period); 
