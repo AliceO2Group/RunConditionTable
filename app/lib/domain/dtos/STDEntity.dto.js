@@ -14,10 +14,10 @@
 const Joi = require('joi');
 const { emptyDTO, tokenDTO } = require('./commons.dto');
 
-const ApiDocsDTO = Joi.object({
-    query: tokenDTO,
+const STDEntityDTO = Joi.object({
+    query: tokenDTO, //TODO extend with filters
     params: emptyDTO,
     body: emptyDTO,
 });
 
-module.exports = ApiDocsDTO;
+module.exports = STDEntityDTO;

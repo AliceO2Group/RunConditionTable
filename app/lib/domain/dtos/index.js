@@ -11,10 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const AllRunsDTO = require('./AllRuns.dto');
-const ApiDocsDTO = require('./ApiDocs.dto');
+const STDEntityDTO = require('./STDEntity.dto');
 
 module.exports = {
-    AllRunsDTO,
-    ApiDocsDTO,
+    STDEntityDTO,
 };

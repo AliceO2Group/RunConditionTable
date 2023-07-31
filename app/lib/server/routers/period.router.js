@@ -11,13 +11,16 @@
  * or submit itself to any jurisdiction.
  */
 
-const Joi = require('joi');
-const { emptyDTO, tokenDTO } = require('./commons.dto');
+const { PeriodController } = require('../controllers');
 
-const AllRunsDTO = Joi.object({
-    query: tokenDTO, //TODO extend with filters
-    params: emptyDTO,
-    body: emptyDTO,
-});
-
-module.exports = AllRunsDTO;
+module.exports = {
+    path: '/periods',
+    args: { public: false },
+    children: [
+        {
+            method: 'get',
+            controller: PeriodController.listPeriodsHandler,
+            description: 'List all periods which are present in DB with avg energy of run\'s beams associated with them',
+        },
+    ],
+};

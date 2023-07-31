@@ -11,6 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
+const periodRouter = require('./period.router.js');
 const runRouter = require('./run.router.js');
 const docsRouter = require('./docs.router.js');
 const apiDocumentationCotroller = require('../controllers/ApiDocumentation.controller.js');
@@ -18,6 +19,7 @@ const apiDocumentationCotroller = require('../controllers/ApiDocumentation.contr
 const routeTrees = [
     docsRouter,
     runRouter,
+    periodRouter,
 ];
 
 const checkPath = (path) => {

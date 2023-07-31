@@ -24,8 +24,8 @@ class PeriodAdapter {
             id,
             name,
             year,
+            BeamTypeId,
             BeamType: {
-                id: BeamTypeId,
                 name: BeamTypeName,
             },
             energy,
@@ -35,7 +35,7 @@ class PeriodAdapter {
             id,
             name,
             year,
-            BeamTypeId:
+            BeamTypeId,
             BeamTypeName,
             energy,
         }
@@ -60,6 +60,7 @@ class PeriodAdapter {
             id,
             name,
             year,
+            BeamTypeId,
             BeamType: {
                 id: BeamTypeId,
                 name: BeamTypeName,

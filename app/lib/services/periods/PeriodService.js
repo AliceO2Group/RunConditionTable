@@ -27,11 +27,14 @@ class PeriodService {
     /**
      * Return all periods
      * @param {Object} query -  Filtering query definiton from http request,... #TODO
-     * @returns {Promise<Run[]>} Promise object represents the result of this use case.
+     * @returns {Promise<Period[]>} Promise object represents the result of this use case.
      */
     async getAll() {
         const periods = await PeriodRepository.findAll({
-            include: { association: BeamType },
+            include: {
+                model: BeamType,
+                required: true,
+            },
         });
         return periods.map((period) => periodAdapter.toEntity(period));
     }
