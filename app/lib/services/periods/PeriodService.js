@@ -11,6 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
+const Sequelize = require('sequelize');
+
 const {
     databaseManager: {
         repositories: {
@@ -18,6 +20,7 @@ const {
         },
         models: {
             BeamType,
+            Run,
         },
     },
 } = require('../../database/DatabaseManager');
@@ -31,10 +34,25 @@ class PeriodService {
      */
     async getAll() {
         const periods = await PeriodRepository.findAll({
-            include: {
-                model: BeamType,
-                required: true,
-            },
+            include: [
+                {
+                    model: BeamType,
+                    required: true,
+                }, {
+                    model: Run,
+                    attributes: [],
+                },
+            ],
+            attributes: [
+                'id',
+                'name',
+                [
+                    Sequelize.fn('avg',
+                        Sequelize.fn('get_center_of_mass_energy', Sequelize.col('Runs.energy_per_beam'), Sequelize.col('BeamType.id'))),
+                    'energy',
+                ],
+            ],
+            group: ['Period.id', 'BeamType.id'],
         });
         return periods.map((period) => periodAdapter.toEntity(period));
     }

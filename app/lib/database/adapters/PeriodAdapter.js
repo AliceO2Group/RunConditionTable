@@ -27,14 +27,14 @@ class PeriodAdapter {
             BeamTypeId,
             BeamType,
             energy,
-        } = databaseObject;
+        } = databaseObject.dataValues; // strange behaviour when using custom colum (energy as result as function)
 
         return {
             id,
             name,
             year,
             beamTypeId: BeamTypeId,
-            beamType: BeamType.name,
+            beamType: BeamType?.name,
             energy,
         }
     }
