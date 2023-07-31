@@ -33,7 +33,7 @@ class DatabaseManager {
             logging: config.database.logging ? this.logger.debug.bind(this.logger) : false,
             dialect: 'postgres',
             define: {
-                underscored: false,
+                underscored: true,
                 schema: this.schema,
             },
         });
