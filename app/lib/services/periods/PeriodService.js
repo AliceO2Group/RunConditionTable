@@ -40,6 +40,7 @@ class PeriodService {
                     required: true,
                 }, {
                     model: Run,
+                    required: true,
                     attributes: [],
                 },
             ],
@@ -49,7 +50,11 @@ class PeriodService {
                 [
                     Sequelize.fn('avg',
                         Sequelize.fn('get_center_of_mass_energy', Sequelize.col('Runs.energy_per_beam'), Sequelize.col('BeamType.id'))),
-                    'energy',
+                    'avgEnergy',
+                ],
+                [
+                    Sequelize.fn('array_agg', Sequelize.fn('DISTINCT', Sequelize.col('Runs.energy_per_beam'))),
+                    'distinctEnergies',
                 ],
             ],
             group: ['Period.id', 'BeamType.id'],

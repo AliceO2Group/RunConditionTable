@@ -26,7 +26,8 @@ class PeriodAdapter {
             year,
             BeamTypeId,
             BeamType,
-            energy,
+            avgEnergy,
+            distinctEnergies
         } = databaseObject.dataValues; // TODO strange behaviour when using custom column (energy as result as function) without acces dataValues
 
         return {
@@ -35,7 +36,8 @@ class PeriodAdapter {
             year,
             beamTypeId: BeamTypeId,
             beamType: BeamType?.name,
-            energy,
+            avgEnergy,
+            distinctEnergies : distinctEnergies.filter((_) => (_)),
         }
     }
 
