@@ -20,18 +20,18 @@ const {
 } = require('../../database/DatabaseManager');
 const { periodAdapter } = require('../../database/adapters');
 
-class RunService {
+class PeriodService {
     /**
-     * Return all runs
+     * Return all periods
      * @param {Object} queryClauses - Sequelize query definiton with where clause,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
     async getAll(queryClauses) { // TODO args
-        const runs = await PeriodRepository.findAll(queryClauses);
-        return runs.map((run) => periodAdapter.toEntity(run));
+        const periods = await PeriodRepository.findAll(queryClauses);
+        return periods.map((period) => periodAdapter.toEntity(period));
     }
 }
 
 module.exports = {
-    runService: new RunService(),
+    periodService: new PeriodService(),
 };
