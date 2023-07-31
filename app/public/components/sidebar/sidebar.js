@@ -43,5 +43,10 @@ export default function sidebar(model) {
                 h('.sidebar-section-title', 'Preferences'),
                 h('', 'UI theme'),
                 h('', 'List of detectors'),
-                h('', 'Defined filters'))));
+                h('', 'Defined filters')),
+
+            h('.sidebar-section',
+                h('.flex-wrap.page-title',
+                    h('.about-15-off-white.vertical-center'),
+                    h('.title-text.vertical-center', 'About')))));
 }
