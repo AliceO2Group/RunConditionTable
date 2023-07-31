@@ -14,7 +14,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const Run = sequelize.define('run', {
+    const Run = sequelize.define('Run', {
         runNumber: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -92,6 +92,11 @@ module.exports = (sequelize) => {
             field: 'dipole_current',
         },
     }, { timestamps: false });
+
     
+    Run.associate = (models) => {
+        Run.belongsTo(models.Period);
+    };
+
     return Run;
 };

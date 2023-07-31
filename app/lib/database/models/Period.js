@@ -31,7 +31,7 @@ module.exports = (sequelize) => {
 
     Period.associate = (models) => {
         Period.hasMany(models.Run);
-        Period.belongsToMany(models.BeamType)
+        Period.belongsTo(models.BeamType)
     };
     
     return Period;
