@@ -16,9 +16,10 @@ const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
     const BeamType = sequelize.define('BeamType', {
-        beamType: {
+        name: {
             type: Sequelize.STRING,
             unique: true,
+            field: 'beam_type',
         },
     }, { timestamps: false, tableName: 'beams_dictionary'});
 

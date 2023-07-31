@@ -11,10 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
+const PeriodAdapter = require('./PeriodAdapter');
 const RunAdapter = require('./RunAdapter');
 
 const runAdapter = new RunAdapter();
+const periodAdapter = new PeriodAdapter;
 
 module.exports = {
     runAdapter,
+    periodAdapter,
 }

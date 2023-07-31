@@ -16,6 +16,9 @@ const {
         repositories: {
             PeriodRepository,
         },
+        models: {
+            BeamType,
+        },
     },
 } = require('../../database/DatabaseManager');
 const { periodAdapter } = require('../../database/adapters');
@@ -26,8 +29,10 @@ class PeriodService {
      * @param {Object} query -  Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getAll(query) { // TODO args
-        const periods = await PeriodRepository.findAll(query);
+    async getAll() {
+        const periods = await PeriodRepository.findAll({
+            include: { association: BeamType },
+        });
         return periods.map((period) => periodAdapter.toEntity(period));
     }
 }
