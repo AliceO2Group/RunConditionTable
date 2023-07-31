@@ -25,9 +25,7 @@ class PeriodAdapter {
             name,
             year,
             BeamTypeId,
-            BeamType: {
-                name: BeamTypeName,
-            },
+            BeamType,
             energy,
         } = databaseObject;
 
@@ -35,8 +33,8 @@ class PeriodAdapter {
             id,
             name,
             year,
-            BeamTypeId,
-            BeamTypeName,
+            beamTypeId: BeamTypeId,
+            beamType: BeamType.name,
             energy,
         }
     }
@@ -52,18 +50,18 @@ class PeriodAdapter {
             id,
             name,
             year,
-            BeamTypeId,
-            BeamTypeName,
+            beamTypeId,
+            beamTypeName,
         } = entityObject;
 
         return {
             id,
             name,
             year,
-            BeamTypeId,
+            BeamTypeId: beamTypeId,
             BeamType: {
-                id: BeamTypeId,
-                name: BeamTypeName,
+                id: beamTypeId,
+                name: beamTypeName,
             }
         }
     }
