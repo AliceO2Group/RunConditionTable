@@ -1,3 +1,4 @@
+
 /**
  * @license
  * Copyright CERN and copyright holders of ALICE O2. This software is
@@ -15,24 +16,16 @@ const Sequelize = require('sequelize');
 const { extractPeriodYear } = require('../../utils');
 
 module.exports = (sequelize) => {
-    const Period = sequelize.define('Period', {
+    const BeamType = sequelize.define('Period', {
         name: {
             type: Sequelize.STRING,
             unique: true,
         },
-        year: {
-            type: Sequelize.VIRTUAL,
-            get() {
-                const name = this.getDataValue('name');
-                return extractPeriodYear(name);
-            }
-        },
     }, { timestamp: false });
 
-    Period.associate = (models) => {
-        Period.hasMany(models.Run);
-        Period.belongsToMany(models.BeamType)
+    BeamType.associate = (models) => {
+        BeamType.hasMany(models.Period); 
     };
     
-    return Period;
+    return BeamType;
 };
