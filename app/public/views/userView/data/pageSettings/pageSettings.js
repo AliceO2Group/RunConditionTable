@@ -19,7 +19,7 @@ import { RCT } from '../../../../config.js';
 export default function pageSettings(model, close) {
     const rowsPerPageInputId = 'rows-per-page-input-id-modal';
     const themeSelectId = 'theme-selection';
-    const title = h('h3', 'Page settings');
+    const title = h('h3.text-primary', 'Page settings');
 
     function onclickSetRowsOnSite(model) {
         const input = document.getElementById(rowsPerPageInputId);
@@ -67,13 +67,13 @@ export default function pageSettings(model, close) {
                 title)),
 
         h('.flex-wrap.justify-between.items-center',
-            h('', 'Rows per page'),
+            h('.text-dark-blue', 'Rows per page'),
             quantityInput(rowsPerPageInputId,
                 model.router.params['rows-on-site'],
                 model.fetchedData.changeRowsOnSite)),
 
         h('.flex-wrap.justify-between.items-center',
-            h('', 'UI theme'),
+            h('.text-dark-blue', 'UI theme'),
             h('select.select.color-theme', {
                 id: themeSelectId,
                 name: themeSelectId,

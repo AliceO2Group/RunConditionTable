@@ -15,6 +15,7 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 import sidebarItem from './sidebarItem.js';
+import pageSettings from '../../views/userView/data/pageSettings/pageSettings.js';
 const { pageNames } = RCT;
 
 /**
@@ -24,8 +25,18 @@ const { pageNames } = RCT;
  * @returns {*}
  */
 
+const modals = (model) => [
+    h('.modal', { id: 'pageSettingsModal' },
+        h('.modal-content.abs-center.p3', {
+            id: 'pageSettingsModalContent',
+        }, pageSettings(model, () => {
+            document.getElementById('pageSettingsModal').style.display = 'none';
+        }))),
+];
+
 export default function sidebar(model) {
     return h('.sidebar.p3',
+        modals(model),
         h('.logo'),
         h('.flex-column.gap-20',
             h('.sidebar-section',
@@ -41,7 +52,23 @@ export default function sidebar(model) {
 
             h('.sidebar-section',
                 h('.sidebar-section-title', 'Preferences'),
-                h('', 'UI theme'),
+                h('button.sidebar-item-button', {
+                    onclick: () => {
+                        document.getElementById('pageSettingsModal').style.display = 'block';
+                        document.addEventListener('click', (event) => {
+                            const modalContent = document.getElementsByClassName('modal-content');
+                            const modal = document.getElementsByClassName('modal');
+                            if (Array.from(modalContent).find((e) => e != event.target)
+                        && Array.from(modal).find((e) => e == event.target)
+                        && document.getElementById('pageSettingsModal')) {
+                                document.getElementById('pageSettingsModal').style.display = 'none';
+                            }
+                        });
+                    } },
+                h('.flex-wrap.page-title',
+                    h('.settings-20-off-white.vertical-center'),
+                    h('.title-text.vertical-center', 'Page settings'))),
+
                 h('', 'List of detectors'),
                 h('', 'Defined filters')),
 
