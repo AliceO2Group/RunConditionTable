@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { runService } = require('../../services/runs/RunService');
+const { periodService } = require('../../services/periods/PeriodService');
 const { STDEntityDTO } = require('../../domain/dtos');
 const { validateDTO } = require('../utilities');
 
@@ -22,10 +22,10 @@ const { validateDTO } = require('../utilities');
  * @param {Object} next express next handler
  * @returns {undefined}
  */
-const listRunsHandler = async (req, res, next) => {
+const listPeriodsHandler = async (req, res, next) => {
     const validatedDTO = await validateDTO(STDEntityDTO, req, res);
     if (validatedDTO) {
-        const runs = await runService.getAll(validatedDTO.query);
+        const runs = await periodService.getAll(validatedDTO.query);
         res.json({
             data: runs,
         });
@@ -33,5 +33,5 @@ const listRunsHandler = async (req, res, next) => {
 };
 
 module.exports = {
-    listRunsHandler,
+    listPeriodsHandler,
 };

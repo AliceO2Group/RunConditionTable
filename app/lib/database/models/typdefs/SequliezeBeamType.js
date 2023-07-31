@@ -11,13 +11,9 @@
  * or submit itself to any jurisdiction.
  */
 
-const Joi = require('joi');
-const { emptyDTO, tokenDTO } = require('./commons.dto');
-
-const AllRunsDTO = Joi.object({
-    query: tokenDTO, //TODO extend with filters
-    params: emptyDTO,
-    body: emptyDTO,
-});
-
-module.exports = AllRunsDTO;
+/**
+ * @typedef SequelizeBeamType
+ *
+ * @property {number} id
+ * @property {string} name
+ */

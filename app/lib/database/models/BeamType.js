@@ -1,3 +1,4 @@
+
 /**
  * @license
  * Copyright CERN and copyright holders of ALICE O2. This software is
@@ -11,8 +12,20 @@
  * or submit itself to any jurisdiction.
  */
 
-module.exports = {
-    RunController: require('./run.controller.js'),
-    PeriodController: require('./period.controller.js'),
-    apiDocumentationCotroller: require('./ApiDocumentation.controller.js'),
+const Sequelize = require('sequelize');
+
+module.exports = (sequelize) => {
+    const BeamType = sequelize.define('BeamType', {
+        name: {
+            type: Sequelize.STRING,
+            unique: true,
+            field: 'beam_type',
+        },
+    }, { timestamps: false, tableName: 'beams_dictionary'});
+
+    BeamType.associate = (models) => {
+        BeamType.hasMany(models.Period); 
+    };
+    
+    return BeamType;
 };

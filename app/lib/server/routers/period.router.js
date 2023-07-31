@@ -11,8 +11,16 @@
  * or submit itself to any jurisdiction.
  */
 
+const { PeriodController } = require('../controllers');
+
 module.exports = {
-    RunController: require('./run.controller.js'),
-    PeriodController: require('./period.controller.js'),
-    apiDocumentationCotroller: require('./ApiDocumentation.controller.js'),
+    path: '/periods',
+    args: { public: false },
+    children: [
+        {
+            method: 'get',
+            controller: PeriodController.listPeriodsHandler,
+            description: 'List all periods which are present in DB with avg energy of run\'s beams associated with them',
+        },
+    ],
 };

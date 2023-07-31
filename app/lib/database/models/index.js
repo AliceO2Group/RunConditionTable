@@ -13,8 +13,9 @@
 
 const Sequelize = require('sequelize');
 
+const BeamType = require('./BeamType.js');
+const Period = require('./Period.js');
 const Run = require('./Run.js');
-
 
 /**
  * 
@@ -23,6 +24,8 @@ const Run = require('./Run.js');
  */
 const modelsFactory = (sequelize) => {
     let models = {
+        BeamType,
+        Period,
         Run,
     };
     models = Object.entries(models).map(([modelName, model]) => [modelName, model(sequelize)]); // instantiate models

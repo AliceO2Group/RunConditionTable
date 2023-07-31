@@ -11,8 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
-module.exports = {
-    RunController: require('./run.controller.js'),
-    PeriodController: require('./period.controller.js'),
-    apiDocumentationCotroller: require('./ApiDocumentation.controller.js'),
-};
+/**
+ * @typedef Period
+ *
+ * @property {number} id
+ * @property {string} name
+ * @property {number} year
+ * @property {number} beamTypeId
+ * @property {string} beamType
+ * @property {number|null} energy
+ */

@@ -11,13 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
-const Joi = require('joi');
-const { emptyDTO, tokenDTO } = require('./commons.dto');
-
-const ApiDocsDTO = Joi.object({
-    query: tokenDTO,
-    params: emptyDTO,
-    body: emptyDTO,
-});
-
-module.exports = ApiDocsDTO;
+/**
+ * @typedef SequelizePeriod
+ *
+ * @property {number} id
+ * @property {string} name
+ * @property {number} year
+ * @property {number} BeamTypeId
+ * @property {SequelizeBeamType} BeamType
+ * @property {number|null} energy
+ */

@@ -23,11 +23,12 @@ const { runAdapter } = require('../../database/adapters');
 class RunService {
     /**
      * Return all runs
-     *
+     * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getAll() { // TODO args
-        const runs = await RunRepository.findAll();
+    async getAll(query) { // TODO args
+        // TODO mapping query.filter to {where: ...}
+        const runs = await RunRepository.findAll(query);
         return runs.map((run) => runAdapter.toEntity(run));
     }
 }

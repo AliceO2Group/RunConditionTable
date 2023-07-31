@@ -31,11 +31,11 @@ class Repository {
     /**
      * Returns all entities.
      *
-     * @param {Object} findQuery the find query (see sequelize findAll options) or a find query builder
+     * @param {Object} queryClauses the find query (see sequelize findAll options) or a find query builder
      * @returns {Promise<array>} Promise object representing the full mock data
      */
-    async findAll(findQuery = {}) {
-        return this.model.findAll(findQuery);
+    async findAll(queryClauses = {}) {
+        return this.model.findAll(queryClauses);
     }
 }
 

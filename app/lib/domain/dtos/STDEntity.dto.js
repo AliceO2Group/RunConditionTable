@@ -11,8 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
-module.exports = {
-    RunController: require('./run.controller.js'),
-    PeriodController: require('./period.controller.js'),
-    apiDocumentationCotroller: require('./ApiDocumentation.controller.js'),
-};
+const Joi = require('joi');
+const { emptyDTO, tokenDTO } = require('./commons.dto');
+
+const STDEntityDTO = Joi.object({
+    query: tokenDTO, //TODO extend with filters
+    params: emptyDTO,
+    body: emptyDTO,
+});
+
+module.exports = STDEntityDTO;
