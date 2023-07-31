@@ -13,7 +13,6 @@
  */
 
 const Sequelize = require('sequelize');
-const { extractPeriodYear } = require('../../utils');
 
 module.exports = (sequelize) => {
     const BeamType = sequelize.define('BeamType', {
