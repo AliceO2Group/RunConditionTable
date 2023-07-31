@@ -25,6 +25,7 @@ const { validateDTO } = require('../utilities');
 const listRunsHandler = async (req, res, next) => {
     const validatedDTO = await validateDTO(AllRunsDTO, req, res);
     if (validatedDTO) {
+        // TODO mapping query.filter to {where: ...}
         const runs = await runService.getAll(validatedDTO.query);
         res.json({
             data: runs,
