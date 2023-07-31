@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const runService = require('../../services/runs/RunService');
+const { runService } = require('../../services/runs/RunService');
 const { AllRunsDTO } = require('../../domain/dtos');
 const { validateDTO } = require('../utilities');
 
