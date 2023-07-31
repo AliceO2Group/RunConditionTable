@@ -19,5 +19,6 @@
  * @property {number} year
  * @property {number} beamTypeId
  * @property {string} beamType
- * @property {number|null} energy
+ * @property {number|null} avgEnergy
+ * @property {Array<number>} distinctEnergies
  */
