@@ -12,7 +12,9 @@
  */
 
 const dtoValidation = require('./dtoValidation');
+const filterParser = require('./filterParser');
 
 module.exports = {
     ...dtoValidation,
+    ...filterParser,
 };

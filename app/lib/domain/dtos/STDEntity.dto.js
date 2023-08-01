@@ -15,7 +15,7 @@ const Joi = require('joi');
 const { emptyDTO, tokenDTO } = require('./commons.dto');
 
 const STDEntityDTO = Joi.object({
-    query: tokenDTO, //TODO extend with filters
+    query: tokenDTO.unknown(true), //TODO extend with filters
     params: emptyDTO,
     body: emptyDTO,
 });
