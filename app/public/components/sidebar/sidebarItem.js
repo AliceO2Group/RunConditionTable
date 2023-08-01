@@ -24,14 +24,14 @@ export default function sidebarItem(model, pageName, label) {
             onclick: () => model.navigation.goToDefaultPageUrl(pageName),
         },
         model.router.params.page === pageName
-            ? h('div',
+            ? h('',
                 h('.vertical-center',
                     h('.current-page',
                         h('.title-text-relative.hidden', label))),
-                h('.folder-20.vertical-center'),
+                h('.folder-15-off-white.vertical-center'),
                 h('.title-text.vertical-center', label, displayedSubPagesCount))
-            : h('div',
-                h('.folder-20.vertical-center'),
+            : h('',
+                h('.folder-15-off-white.vertical-center'),
                 h('.title-text.vertical-center', label, displayedSubPagesCount))),
     ]);
 }

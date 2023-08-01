@@ -25,13 +25,13 @@ import noDataView from './noDataView.js';
 
 import { RCT } from '../../../../config.js';
 import sortingRow from './sortingRow.js';
-import pageSettings from '../pageSettings/pageSettings.js';
 import indexChip from '../../../../components/chips/indexChip.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import noSubPageSelected from './noSubPageSelected.js';
 import title from '../../../../components/table/title.js';
 import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
 import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
+import { modalIds, showModal } from '../../../modal/modal.js';
 
 const { pageNames } = RCT;
 
@@ -87,18 +87,7 @@ export default function tablePanel(model, runs, detectors) {
                     title(dataPointer.page),
                     chips,
                     h('button.btn.btn-secondary', {
-                        onclick: () => {
-                            document.getElementById('pageSettingsModal').style.display = 'block';
-                            document.addEventListener('click', (event) => {
-                                const modalContent = document.getElementsByClassName('modal-content');
-                                const modal = document.getElementsByClassName('modal');
-                                if (Array.from(modalContent).find((e) => e != event.target)
-                                && Array.from(modal).find((e) => e == event.target)
-                                && document.getElementById('pageSettingsModal')) {
-                                    document.getElementById('pageSettingsModal').style.display = 'none';
-                                }
-                            });
-                        },
+                        onclick: () => showModal(modalIds.pageSettings.modal),
                     }, h('.settings-20-primary'))),
 
                 h('div', functionalities(model))),
@@ -123,12 +112,6 @@ export default function tablePanel(model, runs, detectors) {
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
                 : noDataView(model, dataPointer, anyFiltersActive(url)),
-            h('.modal', { id: 'pageSettingsModal' },
-                h('.modal-content.abs-center.p3', {
-                    id: 'pageSettingsModalContent',
-                }, pageSettings(model, () => {
-                    document.getElementById('pageSettingsModal').style.display = 'none';
-                }))),
         ])
         : noSubPageSelected(model);
 }

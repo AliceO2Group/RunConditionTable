@@ -15,13 +15,13 @@
 import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 import filter from '../../userView/data/table/filtering/filter.js';
 import downloadCSV from '../../../../utils/csvExport.js';
-import pageSettings from '../../userView/data/pageSettings/pageSettings.js';
 import flagsVisualization from '../../../components/flags/flagsVisualization.js';
 import flagsTable from './flagsTable.js';
 import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
 import { noRunNumbers } from '../../../../utils/defaults.js';
 import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
 import copyLinkButton from '../../../components/buttons/copyLinkButton.js';
+import { modalIds, showModal } from '../../modal/modal.js';
 
 export default function flagsContent(model, runs, detectors, flags) {
     const urlParams = model.router.getUrl().searchParams;
@@ -61,18 +61,7 @@ export default function flagsContent(model, runs, detectors, flags) {
                 h('div.flex-wrap.justify-between.items-center',
                     flagBreadCrumbs(model, dataPassName, runNumber, detectorName),
                     h('button.btn.btn-secondary', {
-                        onclick: () => {
-                            document.getElementById('pageSettingsModal').style.display = 'block';
-                            document.addEventListener('click', (event) => {
-                                const modalContent = document.getElementsByClassName('modal-content');
-                                const modal = document.getElementsByClassName('modal');
-                                if (Array.from(modalContent).find((e) => e != event.target)
-                            && Array.from(modal).find((e) => e == event.target)
-                            && document.getElementById('pageSettingsModal')) {
-                                    document.getElementById('pageSettingsModal').style.display = 'none';
-                                }
-                            });
-                        },
+                        onclick: () => showModal(modalIds.pageSettings.modal),
                     }, h('.settings-20-primary'))),
 
                 h('div', functionalities(model))),
@@ -80,12 +69,6 @@ export default function flagsContent(model, runs, detectors, flags) {
 
             flagsVisualization(runData, flagsData),
             flagsTable(model, flagsData),
-            h('.modal', { id: 'pageSettingsModal' },
-                h('.modal-content.abs-center.p3', {
-                    id: 'pageSettingsModalContent',
-                }, pageSettings(model, () => {
-                    document.getElementById('pageSettingsModal').style.display = 'none';
-                }))),
         ])
         : noSubPageSelected(model);
 }
