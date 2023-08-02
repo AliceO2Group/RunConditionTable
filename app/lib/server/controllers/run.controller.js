@@ -14,7 +14,6 @@
 const { runService } = require('../../services/runs/RunService');
 const { STDEntityDTO } = require('../../domain/dtos');
 const { validateDTO } = require('../utilities');
-const { filterToSequelizeWhereClause } = require('../utilities');
 
 /**
  * List All runs in db
@@ -23,14 +22,10 @@ const { filterToSequelizeWhereClause } = require('../utilities');
  * @param {Object} next express next handler
  * @returns {undefined}
  */
-const util = require('util');
 
 const listRunsHandler = async (req, res, next) => {
     const validatedDTO = await validateDTO(STDEntityDTO, req, res);
     if (validatedDTO) {
-        console.log(util.inspect(validatedDTO.query.filter, { depth: null, colors: true }));
-        console.log(util.inspect(filterToSequelizeWhereClause(validatedDTO.query.filter, pruneRedundantANDOperator=false), { depth: null, colors: true, compact:false }));
-
         const runs = await runService.getAll(validatedDTO.query);
         res.json({
             data: runs,

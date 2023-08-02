@@ -26,43 +26,67 @@ const defaultGroupOperator = 'and';
 const reservedNames = new Set([...relationalOperators, ...logicOperators, ...[_groupOperatorName]]);
 
 const transformationSentinel = 'and';
-const pruneFilter = (filter) => filter[Op[transformationSentinel]];
 
-const handleIntermidiateFilterNode = (fieldGroup, groupOperator, opts) =>
-    opts.pruneRedundantANDOperator && groupOperator === defaultGroupOperator ?
-        transformFilter(fieldGroup, opts) :
-        { [Op[groupOperator]]: transformFilter(fieldGroup, opts) };
+class TransformHelper {
+    constructor(opts) {
+        this.opts = opts;
+    }
 
-const handelFieldFilterTail = (fieldGroup, groupOperator, opts) => {
-    const transformedFieldGroup = Object.fromEntries(
-        Object.entries(fieldGroup).map(([lOp, val]) => [
-            Op[lOp] ?? throwWrapper(new Error(`No relational operator like <${lOp}>, only <${[...relationalOperators]}>`)),
-            val,
-        ]),
-    );
-    return opts.pruneRedundantANDOperator && groupOperator === defaultGroupOperator ?
-        transformedFieldGroup :
-        { [Op[groupOperator]]: transformedFieldGroup };
-};
+    insertSentinel(filter) {
+        return { [transformationSentinel]: filter };
+    }
 
-const pullGroupOperator = (group) => {
-    const readGroupOperator = group[_groupOperatorName];
-    const groupOperator = readGroupOperator ?? defaultGroupOperator;
-    delete group[_groupOperatorName];
-    return groupOperator;
-};
+    removeSentinel(filter) {
+        return filter[Op[transformationSentinel]];
+    }
 
-const transformFilter = (filter, opts) => Object.fromEntries(
-    Object.entries(filter)
-        .map(([k, group]) => {
-            const groupOperator = pullGroupOperator(group);
-            if (!reservedNames.has(k)) { // Assumes that k is field from db view
-                return [k, handelFieldFilterTail(group, groupOperator, opts)];
-            } else { // Then k stands for logical operator
-                return [Op[k], handleIntermidiateFilterNode(group, groupOperator, opts)];
-            }
-        }),
-);
+    handleIntermidiateFilterNode(group, groupOperator) {
+        const transformedSubfilter = this.transformHelper(group);
+        return this.opts.pruneRedundantANDOperator && groupOperator === defaultGroupOperator ?
+            transformedSubfilter :
+            { [Op[groupOperator]]: transformedSubfilter };
+    }
+
+    handelFieldFilterTail(fieldGroup, groupOperator) {
+        const transformedFieldGroup = Object.fromEntries(Object.entries(fieldGroup)
+            .map(([relOp, val]) => [
+                Op[relOp] ?? throwWrapper(new Error(`No relational operator like <${relOp}>, only <${[...relationalOperators]}>`)),
+                val,
+            ]));
+        return this.opts.pruneRedundantANDOperator && groupOperator === defaultGroupOperator ?
+            transformedFieldGroup :
+            { [Op[groupOperator]]: transformedFieldGroup };
+    }
+
+    pullGroupOperator(group) {
+        const readGroupOperator = group[_groupOperatorName];
+        const groupOperator = readGroupOperator ?? defaultGroupOperator;
+        delete group[_groupOperatorName];
+        return groupOperator;
+    }
+
+    transformHelper(filter) {
+        return Object.fromEntries(Object.entries(filter)
+            .map(([k, group]) => {
+                const groupOperator = this.pullGroupOperator(group);
+                if (!reservedNames.has(k)) { // Assumes that k is field from db view
+                    return [k, this.handelFieldFilterTail(group, groupOperator)];
+                } else { // Then k stands for logical operator
+                    return [Op[k], this.handleIntermidiateFilterNode(group, groupOperator)];
+                }
+            }));
+    }
+
+    transform(filter) {
+        if (!filter) {
+            return {};
+        }
+        filter = this.insertSentinel(filter);
+        filter = this.transformHelper(filter);
+        filter = this.removeSentinel(filter);
+        return filter;
+    }
+}
 
 /**
  * Transform filter object from http request.query to sequelize where-clause object
@@ -142,9 +166,7 @@ const transformFilter = (filter, opts) => Object.fromEntries(
  * @returns {Object} sequelize where object
  */
 const filterToSequelizeWhereClause = (filter, pruneRedundantANDOperator = true) =>
-    pruneFilter(
-        transformFilter({ [transformationSentinel]: filter }, { pruneRedundantANDOperator }),
-    );
+    new TransformHelper({ pruneRedundantANDOperator }).transform(filter);
 
 module.exports = {
     filterToSequelizeWhereClause,
