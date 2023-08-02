@@ -90,21 +90,22 @@ class TransformHelper {
 
 /**
  * Transform filter object from http request.query to sequelize where-clause object
- * Considering the filter object is a tree, each root -> leaf path can be described as ,
- * 1. one of two patterns
- * (dots separate nodes, words written uppercase are non-terminal, (as in formal gramatics terminology)
- * and that written lowercase are terminal, e.g. operator not is terminal):
+ * Considering the filter object is a tree, each root -> leaf path can be described as:
+ * 1. one of the two patterns
+ * (dots separate nodes, uppercase written words are non-terminal (as in formal gramatics terminology)
+ * and that lowercase are terminal, e.g. operator 'not' is terminal):
  *
  *   (.LOGIC_OPERATR)*.DB_FIELD_NAME.(RELATION_OPERATOR.VALUE | GROUP_OPERATOR.(LOGIC_OPERATOR)) | or
  *   (.LOGIC_OPERATR)*.GROUP_OPERATOR.(LOGIC_OPERATOR)
  *
- *      where GROUP_OPERATOR can be only _goperator which is actual name placed in url,
- * so each top-down path begins with sequence of logical operator and ends with
+ *      where '_goperator' is the only GROUP_OPERATOR terminal,
+ *
+ * So each top-down path begins with sequence of logical operators and ends with
  *         DB_FIELD_NAME._fgoperator.(and|or|not)
  * or with DB_FIELD_NAME.RELATIONAL_OPERATOR.VALUE
  * or with ._fgoperator.(and|or|not)
  *
- * 2. or as regex:
+ * 2. one of the two corresnponding regexes:
  *   (\.((and)|(or)|(not)))*\.([_a-z][_a-z0-9]*)\.(((and)|(or)|(not))\..*)|(_fgoperator\.((or)|(and)|(not))))                |
  *   -----------------------  ------------------   -----------------------|--------------------------------                  | or
  *       (.LOGIC_OPERATR)*      .DB_FIELD_NAME     RELATION_OPERATOR.VALUE   GROUP_OPERATOR.LOGIC_OPERATOR                   |
@@ -114,18 +115,18 @@ class TransformHelper {
  *       (.LOGIC_OPERATR)*     .GROUP_OPERATOR.LOGIC_OPERATOR
  *
  *
- * 3. As this api is intened for handling http requests in which filtering is defined in url query params,
- * the GROUP_OPERATOR is syntax sugar for writtening requests in other way:
+ * 3. As this api is intended for handling http requests in which filtering is defined by url query params,
+ * the GROUP_OPERATOR is syntax sugar:
  * Instead of /?filter[field1][or][gt]=10&filter[field1][or][lt]=3
  * it can be
  *            /?filter[field1][gt]=10&filter[field][lt]=3&filter[field1][_fgoperator]=or
- * GROUP_OPERATOR can be ommited, by default it is 'and'.
+ * GROUP_OPERATOR can be ommited, its default value is an 'and'.
  *
  * Example:
  * 1` URL is: .../?filter[or][field1][gt]=10&filter[or][field1][lt]=3&filter[or][field1][_goperator]=or ...
  *              ... &filter[or][filed2][like]=LHC_%pass&filter[or][filed2][notLike]=LHC_c%
  * 2` The url will be parsed by qs in express to:
- * {
+ * const query = {
  * "filter": {
  *   "or": {
  *     "field1": {
@@ -140,8 +141,8 @@ class TransformHelper {
  *   }
  * }
  *
- * 3` from which object under key filter should extracted and then it will be transformed
- * to sequelize-compatible where-clause applicabed in query functions.
+ * 3` query.filter is being passed as an argument to filterToSequelizeWhereClause function
+ * which returns sequelize-compatible where-clause
  *
  * {
  *  [Symbol(or)]: {
@@ -161,8 +162,7 @@ class TransformHelper {
  * }
  *
  * @param {Object} filter - from req.query
- * @param {boolean} pruneRedundantANDOperator - if true removes unnecessaary 'and oparators', default true,
- * takes precedence over includeImpliciteANDOperator option,
+ * @param {boolean} pruneRedundantANDOperator - if true (default) remove unnecessaary 'and' operators
  * @returns {Object} sequelize where object
  */
 const filterToSequelizeWhereClause = (filter, pruneRedundantANDOperator = true) =>
