@@ -11,8 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const STDEntityDTO = require('./STDEntity.dto');
+const stdRequestDTO = require('./stdRequest.dto');
 
 module.exports = {
-    STDEntityDTO,
+    ...stdRequestDTO,
 };
