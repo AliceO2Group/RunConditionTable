@@ -28,27 +28,36 @@ const reservedNames = new Set([...relationalOperators, ...logicOperators, ...[_g
 const transformationSentinel = 'and';
 const pruneFilter = (filter) => filter[Op[transformationSentinel]];
 
-const transformFilterTail = (fieldGroup) => Object.fromEntries(
-    Object.entries(fieldGroup).map(([k, v]) => [
-        Op[k] ?? throwWrapper(new Error(`No relational operator like <${k}>, only <${[...relationalOperators]}>`)),
-        v,
-    ]),
-); // TODO handle arrays
+const handleIntermidiateFilterNode = (fieldGroup, groupOperator, includeImpliciteLogicOperator) =>
+    includeImpliciteLogicOperator || groupOperator != defaultGroupOperator ?
+        { [Op[groupOperator]]: transforFilter(fieldGroup) } :
+        transforFilter(fieldGroup);
+
+const handelFieldFilterTail = (fieldGroup, groupOperator) => {
+    const transformedFieldGroup = Object.fromEntries(
+        Object.entries(fieldGroup).map(([k, v]) => [
+            Op[k] ?? throwWrapper(new Error(`No relational operator like <${k}>, only <${[...relationalOperators]}>`)),
+            v, // TODO handle arrays
+        ]),
+    );
+    return { [Op[groupOperator]]: transformedFieldGroup };
+};
+
+const pullGroupOperator = (v) => {
+    const readGroupOperator = v[_groupOperatorName];
+    const groupOperator = readGroupOperator ?? defaultGroupOperator;
+    delete v[_groupOperatorName];
+    return groupOperator;
+};
 
 const transforFilter = (filter, includeImpliciteLogicOperator) => Object.fromEntries(
     Object.entries(filter)
-        .map(([k, v]) => {
-            const readGroupOperator = v[_groupOperatorName];
-            const groupOperator = readGroupOperator ?? defaultGroupOperator;
-            delete v[_groupOperatorName];
-
+        .map(([k, fieldGroup]) => {
+            const groupOperator = pullGroupOperator(fieldGroup);
             if (!reservedNames.has(k)) { // Assumes that k is field from db view
-                const fieldGroup = transformFilterTail(v, includeImpliciteLogicOperator);
-                return [k, { [Op[groupOperator]]: fieldGroup }];
+                return [k, handelFieldFilterTail(fieldGroup, groupOperator)];
             } else { // Then k stands for logical operator
-                return includeImpliciteLogicOperator || groupOperator != defaultGroupOperator ?
-                    [Op[k], { [Op[groupOperator]]: transforFilter(v) }] :
-                    [Op[k], transforFilter(v)];
+                return [Op[k], handleIntermidiateFilterNode(fieldGroup, groupOperator, includeImpliciteLogicOperator)];
             }
         }),
 );
