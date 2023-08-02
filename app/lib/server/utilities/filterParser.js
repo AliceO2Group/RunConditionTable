@@ -74,7 +74,11 @@ class TransformHelper {
             .map(([k, group]) => {
                 const groupOperator = this.pullGroupOperator(group);
                 if (!reservedNames.has(k)) { // Assumes that k is field from db view
-                    return [k, this.handelFieldFilterTail(group, groupOperator)];
+                    if (typeof group === 'object') {
+                        return [k, this.handelFieldFilterTail(group, groupOperator)];
+                    } else {
+                        return [k, group]; // Assumes that there is not relation operator
+                    }
                 } else { // Then k stands for logical operator
                     return [Op[k], this.handleIntermidiateFilterNode(group, groupOperator)];
                 }
