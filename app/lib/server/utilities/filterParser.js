@@ -90,7 +90,7 @@ class TransformHelper {
 
 /**
  * Transform filter object from http request.query to sequelize where-clause object
- * Considering that the filter object as a tree, then each root -> leaf path can be described as ,
+ * Considering the filter object is a tree, each root -> leaf path can be described as ,
  * 1. one of two patterns
  * (dots separate nodes, words written uppercase are non-terminal, (as in formal gramatics terminology)
  * and that written lowercase are terminal, e.g. operator not is terminal):
