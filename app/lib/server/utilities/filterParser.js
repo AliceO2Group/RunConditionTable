@@ -25,12 +25,33 @@ const defaultGroupOperator = 'and';
 
 const reservedNames = new Set([...relationalOperators, ...logicOperators, ...[_groupOperatorName]]);
 
+const transformationSentinel = 'and';
+const pruneFilter = (filter) => filter[Op[transformationSentinel]];
+
 const transformFilterTail = (fieldGroup) => Object.fromEntries(
     Object.entries(fieldGroup).map(([k, v]) => [
         Op[k] ?? throwWrapper(new Error(`No relational operator like <${k}>, only <${[...relationalOperators]}>`)),
         v,
     ]),
 ); // TODO handle arrays
+
+const transforFilter = (filter, includeImpliciteLogicOperator) => Object.fromEntries(
+    Object.entries(filter)
+        .map(([k, v]) => {
+            const readGroupOperator = v[_groupOperatorName];
+            const groupOperator = readGroupOperator ?? defaultGroupOperator;
+            delete v[_groupOperatorName];
+
+            if (!reservedNames.has(k)) { // Assumes that k is field from db view
+                const fieldGroup = transformFilterTail(v, includeImpliciteLogicOperator);
+                return [k, { [Op[groupOperator]]: fieldGroup }];
+            } else { // Then k stands for logical operator
+                return includeImpliciteLogicOperator || groupOperator != defaultGroupOperator ?
+                    [Op[k], { [Op[groupOperator]]: transforFilter(v) }] :
+                    [Op[k], transforFilter(v)];
+            }
+        }),
+);
 
 /**
  * Transform filter object from http request.query to sequelize where object
@@ -42,7 +63,7 @@ const transformFilterTail = (fieldGroup) => Object.fromEntries(
  *   (.LOGIC_OPERATR)*.DB_FIELD_NAME.(RELATION_OPERATOR.VALUE | GROUP_OPERATOR.(LOGIC_OPERATOR)) | or
  *   (.LOGIC_OPERATR)*.GROUP_OPERATOR.(LOGIC_OPERATOR)
  *
- *      where GROUP_OPERATOR can be only _fgoperator which is actual name placed in url,
+ *      where GROUP_OPERATOR can be only _goperator which is actual name placed in url,
  * so each top-down path begins with sequence of logical operator and ends with
  *         DB_FIELD_NAME._fgoperator.(and|or|not)
  * or with DB_FIELD_NAME.RELATIONAL_OPERATOR.VALUE
@@ -75,38 +96,14 @@ const transformFilterTail = (fieldGroup) => Object.fromEntries(
  * }
  *
  * @param {Object} filter - from req.query
+ * @param {boolean} includeImpliciteLogicOperator - if true default group operator will be added explicitely
+ * (default is 'and', as in sequelize), default false
  * @returns {Object} sequelize where object
  */
-
-const a = {
-    filed1: {
-        or: {
-            ft: 10,
-            lt: 3,
-        },
-    },
-};
-
-const transforFilter = (filter, includeImpliciteLogicOperator) => Object.fromEntries(
-    Object.entries(filter)
-        .map(([k, v]) => {
-            const readGroupOperator = v[_groupOperatorName];
-            const groupOperator = readGroupOperator ?? defaultGroupOperator;
-            delete v[_groupOperatorName];
-
-            if (!reservedNames.has(k)) { // Assumes that k is field from db view
-                const fieldGroup = transformFilterTail(v, includeImpliciteLogicOperator);
-                return [k, { [Op[groupOperator]]: fieldGroup }];
-            } else { // Then k stands for logical operator
-                return includeImpliciteLogicOperator || groupOperator != defaultGroupOperator ?
-                    [Op[k], { [Op[groupOperator]]: transforFilter(v) }] :
-                    [Op[k], transforFilter(v)];
-            }
-        }),
-);
-
 const filterToSequelizeWhereClause = (filter, includeImpliciteLogicOperator = false) =>
-    transforFilter({ and: filter }, includeImpliciteLogicOperator);
+    pruneFilter(
+        transforFilter({ [transformationSentinel]: filter }, includeImpliciteLogicOperator),
+    );
 
 module.exports = {
     filterToSequelizeWhereClause,
