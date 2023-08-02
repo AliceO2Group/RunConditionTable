@@ -19,9 +19,14 @@ module.exports = () => {
         describe('Transforming filtes to sequelize where-cluase ', () => {
             it('not existing operator', () => {
                 const srcFilter = {
-                    not:
-                    
-                }
+                    not: {
+                        nand: {
+                            field3: { eq: 1 },
+                        },
+                    },
+                };
+
+                assert.throws(() => filterToSequelizeWhereClause(srcFilter));
             }),
             it('correct transformation - with pruning', () => {
                 const srcFilter = {
@@ -54,6 +59,39 @@ module.exports = () => {
                 };
 
                 assert.deepEqual(expecedFilter, filterToSequelizeWhereClause(srcFilter));
+            });
+
+            it('correct transformation - without pruning', () => {
+                const srcFilter = {
+                    field1: {
+                        gt: '10',
+                        lt: '3',
+                        _goperator: 'or',
+                    },
+                    filed2: {
+                        like: 'LHC_%pass',
+                        notLike: 'LHC_c%',
+                    },
+                };
+
+                const expecedFilter = {
+                    [Op.and]: {
+                        field1: {
+                            [Op.or]: {
+                                [Op.gt]: '10',
+                                [Op.lt]: '3',
+                            },
+                        },
+                        filed2: {
+                            [Op.and]: {
+                                [Op.like]: 'LHC_%pass',
+                                [Op.notLike]: 'LHC_c%',
+                            },
+                        },
+                    },
+                };
+
+                assert.deepEqual(expecedFilter, filterToSequelizeWhereClause(srcFilter, false));
             });
         });
     });

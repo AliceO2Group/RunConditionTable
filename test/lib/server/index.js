@@ -12,7 +12,9 @@
  */
 
 const RoutesSuite = require('./routes.test');
+const FilterSuite = require('./filtes.test');
 
 module.exports = () => {
     describe('Routes', RoutesSuite);
+    describe('Filtering', FilterSuite);
 };
