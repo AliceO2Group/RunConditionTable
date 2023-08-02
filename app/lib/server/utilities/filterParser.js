@@ -18,12 +18,12 @@ const { throwWrapper } = require('../../utils');
 const unitaryRelationalOperators = new Set(['gt', 'gte', 'lt', 'lte', 'ne', 'like', 'notLike', 'iLike', 'notILike', 'regexp', 'notRegexp', 'iRegexp', 'notIRegexp']);
 const arrayRelationalConditions = new Set(['between', 'notBetween', 'in', 'notIn']);
 const relationalOperators = new Set([...arrayRelationalConditions, ...unitaryRelationalOperators]);
-const logicOperators = new Set(['not', 'and', 'or']);
+const logicalOperators = new Set(['not', 'and', 'or']);
 
 const _groupOperatorName = '_goperator';
 const defaultGroupOperator = 'and';
 
-const reservedNames = new Set([...relationalOperators, ...logicOperators, ...[_groupOperatorName]]);
+const reservedNames = new Set([...relationalOperators, ...logicalOperators, ...[_groupOperatorName]]);
 
 const transformationSentinel = 'and';
 
@@ -54,7 +54,7 @@ class TransformHelper {
     handelFieldFilterTail(fieldGroup, groupOperator) {
         const transformedFieldGroup = Object.fromEntries(Object.entries(fieldGroup)
             .map(([relOp, val]) => [
-                Op[relOp] ?? throwWrapper(new Error(`No relational operator like <${relOp}>, only <${[...relationalOperators]}>`)),
+                Op[relOp] ?? throwWrapper(new Error(`No relational operator <${relOp}>, only <${[...relationalOperators]}> are allowed`)),
                 arrayRelationalConditions.has(relOp) ? this.handleArrayValues(val) : val,
             ]));
         return this.opts.pruneRedundantANDOperator && groupOperator === defaultGroupOperator ?
@@ -80,7 +80,10 @@ class TransformHelper {
                         return [k, group]; // Assumes that there is not relation operator
                     }
                 } else { // Then k stands for logical operator
-                    return [Op[k], this.handleIntermidiateFilterNode(group, groupOperator)];
+                    return [
+                        Op[k] ?? throwWrapper(new Error(`No logical operator <${k}>, only <${[...logicalOperators]}> are allowed`)),
+                        this.handleIntermidiateFilterNode(group, groupOperator),
+                    ];
                 }
             }));
     }
