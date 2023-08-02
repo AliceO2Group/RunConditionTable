@@ -12,7 +12,7 @@
  */
 
 const { STDEntityDTO } = require('../../domain/dtos');
-const { validateDTO } = require('../utilities');
+const { validateDtoOrRepondOnFailure } = require('../utilities');
 
 const getApiDocsAsJson = (routes) => routes.map(({ method, path, description }) => ({ method, path, description }));
 
@@ -33,15 +33,13 @@ class ApiDocumentationCotroller {
      * Express hanlder for whole api description request
      */
     async getDocsHandler(req, res) {
-        const validatedDTO = await validateDTO(STDEntityDTO, req, res);
-        if (!validatedDTO) {
-            return;
+        const validatedDTO = await validateDtoOrRepondOnFailure(STDEntityDTO, req, res);
+        if (validatedDTO) {
+            if (!this.apiDocsJson) {
+                res.status(500).json({ message: 'Server misconfigured, please, contact administrator' });
+            }
+            res.json(this.apiDocsJson);
         }
-
-        if (!this.apiDocsJson) {
-            res.status(500).json({ message: 'Server misconfigured, please, contact administrator' });
-        }
-        res.json(this.apiDocsJson);
     }
 }
 

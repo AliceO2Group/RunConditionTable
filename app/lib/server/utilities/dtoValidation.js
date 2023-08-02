@@ -21,7 +21,7 @@
  *                          HTTP request.
  * @returns {Promise<object>} Returns the validated value or null if an error occurred.
  */
-const validateDTO = async (dto, req, res) => {
+const validateDtoOrRepondOnFailure = async (dto, req, res) => {
     const { query, params, body } = req;
     try {
         return await dto.validateAsync({ query, params, body }, {
@@ -40,5 +40,5 @@ const validateDTO = async (dto, req, res) => {
 };
 
 module.exports = {
-    validateDTO,
+    validateDtoOrRepondOnFailure,
 };

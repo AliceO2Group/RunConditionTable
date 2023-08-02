@@ -13,7 +13,7 @@
 
 const { periodService } = require('../../services/periods/PeriodService');
 const { STDEntityDTO } = require('../../domain/dtos');
-const { validateDTO } = require('../utilities');
+const { validateDtoOrRepondOnFailure } = require('../utilities');
 
 /**
  * List All runs in db
@@ -23,7 +23,7 @@ const { validateDTO } = require('../utilities');
  * @returns {undefined}
  */
 const listPeriodsHandler = async (req, res, next) => {
-    const validatedDTO = await validateDTO(STDEntityDTO, req, res);
+    const validatedDTO = await validateDtoOrRepondOnFailure(STDEntityDTO, req, res);
     if (validatedDTO) {
         const runs = await periodService.getAll(validatedDTO.query);
         res.json({
