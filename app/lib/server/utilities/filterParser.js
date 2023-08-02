@@ -54,11 +54,11 @@ const transforFilter = (filter, includeImpliciteLogicOperator) => Object.fromEnt
 );
 
 /**
- * Transform filter object from http request.query to sequelize where object
- * Assuming that the filter object can be considered as tree, then each root -> leaf,
- * 1. path can be described using one of two patterns
+ * Transform filter object from http request.query to sequelize where-clause object
+ * Considering that the filter object as a tree, then each root -> leaf path can be described as ,
+ * 1. one of two patterns
  * (dots separate nodes, words written uppercase are non-terminal, (as in formal gramatics terminology)
- * and that written lowercase are terminal, e.g. operator not is termianl):
+ * and that written lowercase are terminal, e.g. operator not is terminal):
  *
  *   (.LOGIC_OPERATR)*.DB_FIELD_NAME.(RELATION_OPERATOR.VALUE | GROUP_OPERATOR.(LOGIC_OPERATOR)) | or
  *   (.LOGIC_OPERATR)*.GROUP_OPERATOR.(LOGIC_OPERATOR)
@@ -69,7 +69,7 @@ const transforFilter = (filter, includeImpliciteLogicOperator) => Object.fromEnt
  * or with DB_FIELD_NAME.RELATIONAL_OPERATOR.VALUE
  * or with ._fgoperator.(and|or|not)
  *
- * 2. Path can be described using regex as:
+ * 2. or as regex:
  *   (\.((and)|(or)|(not)))*\.([_a-z][_a-z0-9]*)\.(((and)|(or)|(not))\..*)|(_fgoperator\.((or)|(and)|(not))))                |
  *   -----------------------  ------------------   -----------------------|--------------------------------                  | or
  *       (.LOGIC_OPERATR)*      .DB_FIELD_NAME     RELATION_OPERATOR.VALUE   GROUP_OPERATOR.LOGIC_OPERATOR                   |
@@ -84,15 +84,45 @@ const transforFilter = (filter, includeImpliciteLogicOperator) => Object.fromEnt
  * Instead of /?filter[field1][or][gt]=10&filter[field1][or][lt]=3
  * it can be
  *            /?filter[field1][gt]=10&filter[field][lt]=3&filter[field1][_fgoperator]=or
- * GROUP_OPERATOR can be ommited, by default it is and.
+ * GROUP_OPERATOR can be ommited, by default it is 'and'.
  *
  * Example:
- * 1` URL: .../?filter[or][field1][gt]=10&filter[or][field1][lt]=3&filter[or][field1][_gfoperator]=or ...
- *                            ... &filter[or][filed2][like]=LHC_%pass&filter[or][filed2][notLike]=LHC_c%
- * 2` will be parsed by qs in exporess to
- *  {or: {
- *
+ * 1` URL is: .../?filter[or][field1][gt]=10&filter[or][field1][lt]=3&filter[or][field1][_goperator]=or ...
+ *              ... &filter[or][filed2][like]=LHC_%pass&filter[or][filed2][notLike]=LHC_c%
+ * 2` The url will be parsed by qs in express to:
+ * {
+ * "filter": {
+ *   "or": {
+ *     "field1": {
+ *       "gt": "10",
+ *       "lt": "3",
+ *       "_goperator": "or"
+ *     },
+ *     "filed2": {
+ *       "like": "LHC_%pass",
+ *       "notLike": "LHC_c%"
+ *     }
+ *   }
  * }
+ *
+ * 3` from which object under key filter should extracted and then it will be transformed
+ * to sequelize-compatible where-clause applicabed in query functions.
+ *
+ * {
+ *  [Symbol(or)]: {
+ *    field1: {
+ *      [Symbol(or)]: {
+ *        [Symbol(gt)]: '10',
+ *        [Symbol(lt)]: '3'
+ *      }
+ *    },
+ *    filed2: {
+ *      [Symbol(and)]: {
+ *        [Symbol(like)]: 'LHC_%pass',
+ *        [Symbol(notLike)]: 'LHC_c%'
+ *      }
+ *    }
+ *  }
  * }
  *
  * @param {Object} filter - from req.query
