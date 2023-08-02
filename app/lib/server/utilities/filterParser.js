@@ -28,36 +28,38 @@ const reservedNames = new Set([...relationalOperators, ...logicOperators, ...[_g
 const transformationSentinel = 'and';
 const pruneFilter = (filter) => filter[Op[transformationSentinel]];
 
-const handleIntermidiateFilterNode = (fieldGroup, groupOperator, includeImpliciteLogicOperator) =>
-    includeImpliciteLogicOperator || groupOperator != defaultGroupOperator ?
-        { [Op[groupOperator]]: transforFilter(fieldGroup) } :
-        transforFilter(fieldGroup);
+const handleIntermidiateFilterNode = (fieldGroup, groupOperator, opts) =>
+    opts.pruneRedundantANDOperator && groupOperator === defaultGroupOperator ?
+        transformFilter(fieldGroup, opts) :
+        { [Op[groupOperator]]: transformFilter(fieldGroup, opts) };
 
-const handelFieldFilterTail = (fieldGroup, groupOperator) => {
+const handelFieldFilterTail = (fieldGroup, groupOperator, opts) => {
     const transformedFieldGroup = Object.fromEntries(
-        Object.entries(fieldGroup).map(([k, v]) => [
-            Op[k] ?? throwWrapper(new Error(`No relational operator like <${k}>, only <${[...relationalOperators]}>`)),
-            v, // TODO handle arrays
+        Object.entries(fieldGroup).map(([lOp, val]) => [
+            Op[lOp] ?? throwWrapper(new Error(`No relational operator like <${lOp}>, only <${[...relationalOperators]}>`)),
+            val,
         ]),
     );
-    return { [Op[groupOperator]]: transformedFieldGroup };
+    return opts.pruneRedundantANDOperator && groupOperator === defaultGroupOperator ?
+        transformedFieldGroup :
+        { [Op[groupOperator]]: transformedFieldGroup };
 };
 
-const pullGroupOperator = (v) => {
-    const readGroupOperator = v[_groupOperatorName];
+const pullGroupOperator = (group) => {
+    const readGroupOperator = group[_groupOperatorName];
     const groupOperator = readGroupOperator ?? defaultGroupOperator;
-    delete v[_groupOperatorName];
+    delete group[_groupOperatorName];
     return groupOperator;
 };
 
-const transforFilter = (filter, includeImpliciteLogicOperator) => Object.fromEntries(
+const transformFilter = (filter, opts) => Object.fromEntries(
     Object.entries(filter)
-        .map(([k, fieldGroup]) => {
-            const groupOperator = pullGroupOperator(fieldGroup);
+        .map(([k, group]) => {
+            const groupOperator = pullGroupOperator(group);
             if (!reservedNames.has(k)) { // Assumes that k is field from db view
-                return [k, handelFieldFilterTail(fieldGroup, groupOperator)];
+                return [k, handelFieldFilterTail(group, groupOperator, opts)];
             } else { // Then k stands for logical operator
-                return [Op[k], handleIntermidiateFilterNode(fieldGroup, groupOperator, includeImpliciteLogicOperator)];
+                return [Op[k], handleIntermidiateFilterNode(group, groupOperator, opts)];
             }
         }),
 );
@@ -135,13 +137,13 @@ const transforFilter = (filter, includeImpliciteLogicOperator) => Object.fromEnt
  * }
  *
  * @param {Object} filter - from req.query
- * @param {boolean} includeImpliciteLogicOperator - if true default group operator will be added explicitely
- * (default is 'and', as in sequelize), default false
+ * @param {boolean} pruneRedundantANDOperator - if true removes unnecessaary 'and oparators', default true,
+ * takes precedence over includeImpliciteANDOperator option,
  * @returns {Object} sequelize where object
  */
-const filterToSequelizeWhereClause = (filter, includeImpliciteLogicOperator = false) =>
+const filterToSequelizeWhereClause = (filter, pruneRedundantANDOperator = true) =>
     pruneFilter(
-        transforFilter({ [transformationSentinel]: filter }, includeImpliciteLogicOperator),
+        transformFilter({ [transformationSentinel]: filter }, { pruneRedundantANDOperator }),
     );
 
 module.exports = {
