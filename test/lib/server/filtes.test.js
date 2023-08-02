@@ -58,7 +58,7 @@ module.exports = () => {
                     },
                 };
 
-                assert.deepEqual(expecedFilter, filterToSequelizeWhereClause(srcFilter));
+                assert.deepStrictEqual(expecedFilter, filterToSequelizeWhereClause(srcFilter));
             });
 
             it('correct transformation - without pruning', () => {
@@ -91,7 +91,29 @@ module.exports = () => {
                     },
                 };
 
-                assert.deepEqual(expecedFilter, filterToSequelizeWhereClause(srcFilter, false));
+                assert.deepStrictEqual(expecedFilter, filterToSequelizeWhereClause(srcFilter, false));
+            });
+
+            it('correct transformation - with array values, with pruning', () => {
+                const srcFilter = {
+                    field1: {
+                        in: '1,2,4,5      ,1',
+                    },
+                    filed2: {
+                        notBetween: '-123,1.1',
+                    },
+                };
+
+                const expecedFilter = {
+                    field1: {
+                        [Op.in]: ['1', '2', '3', '4', '1'],
+                    },
+                    filed2: {
+                        [Op.notBetween]: ['-123', '1.1'],
+                    },
+                };
+
+                assert.deepStrictEqual(expecedFilter, filterToSequelizeWhereClause(srcFilter));
             });
         });
     });

@@ -47,11 +47,15 @@ class TransformHelper {
             { [Op[groupOperator]]: transformedSubfilter };
     }
 
+    handleArrayValues(val) {
+        return val.split(/,/).map((v) => v.trim());
+    }
+
     handelFieldFilterTail(fieldGroup, groupOperator) {
         const transformedFieldGroup = Object.fromEntries(Object.entries(fieldGroup)
             .map(([relOp, val]) => [
                 Op[relOp] ?? throwWrapper(new Error(`No relational operator like <${relOp}>, only <${[...relationalOperators]}>`)),
-                val,
+                arrayRelationalConditions.has(relOp) ? this.handleArrayValues(val) : val,
             ]));
         return this.opts.pruneRedundantANDOperator && groupOperator === defaultGroupOperator ?
             transformedFieldGroup :
