@@ -26,38 +26,48 @@ const { pageNames } = RCT;
  */
 
 export default function sidebar(model) {
-    return h('.sidebar.p3',
-        modal(modalIds.about.modal),
-        modal(modalIds.pageSettings.modal, model),
-        h('.logo'),
-        h('.flex-column.gap-20',
-            h('.sidebar-section',
-                h('.sidebar-section-title', 'Pages'),
-                sidebarItem(model, pageNames.periods, 'Periods'),
-                sidebarItem(model, pageNames.dataPasses, 'Data Passes'),
-                sidebarItem(model, pageNames.anchoragePerDatapass, 'Anchorage per Data pass'),
-                sidebarItem(model, pageNames.mc, 'Monte Carlo'),
-                sidebarItem(model, pageNames.anchoredPerMC, 'Anchored per MC'),
-                sidebarItem(model, pageNames.runsPerPeriod, 'Runs per period'),
-                sidebarItem(model, pageNames.runsPerDataPass, 'Runs per Data pass'),
-                sidebarItem(model, pageNames.flags, 'QA flags')),
+    return h('.sidebar.p3', {
+        onmouseover: Array.from(document.getElementsByClassName('sidebar-section-title')),
+    },
+    modal(modalIds.about.modal),
+    modal(modalIds.pageSettings.modal, model),
+    h('.logo'),
+    h('.flex-column.gap-20',
+        h('.sidebar-section',
+            h('.sidebar-section-title', 'Pages'),
+            sidebarItem(model, pageNames.periods, 'Periods'),
+            sidebarItem(model, pageNames.dataPasses, 'Data Passes'),
+            sidebarItem(model, pageNames.anchoragePerDatapass, 'Anchorage per Data pass'),
+            sidebarItem(model, pageNames.mc, 'Monte Carlo'),
+            sidebarItem(model, pageNames.anchoredPerMC, 'Anchored per MC'),
+            sidebarItem(model, pageNames.runsPerPeriod, 'Runs per period'),
+            sidebarItem(model, pageNames.runsPerDataPass, 'Runs per Data pass'),
+            sidebarItem(model, pageNames.flags, 'QA flags')),
 
-            h('.sidebar-section',
-                h('.sidebar-section-title', 'Preferences'),
-                h('button.sidebar-item-button', {
-                    onclick: () => showModal(modalIds.pageSettings.modal) },
-                h('.flex-wrap.page-title',
-                    h('.settings-20-off-white.vertical-center'),
-                    h('.title-text.vertical-center', 'Page settings'))),
+        h('.sidebar-section',
+            h('.sidebar-section-title', 'Preferences'),
+            h('button.sidebar-item-button', {
+                onclick: () => showModal(modalIds.pageSettings.modal) },
+            h('.flex-wrap.page-title',
+                h('.settings-20-off-white.vertical-center'),
+                h('.title-text.vertical-center', 'Page settings'))),
 
-                h('', 'List of detectors'),
-                h('', 'Defined filters')),
+            h('button.sidebar-item-button', {
+                onclick: () => showModal(modalIds.about.modal),
+            },
+            h('.flex-wrap.page-title.justify-center.items-center',
+                h('.detector-15-off-white'),
+                h('.title-text', 'dett'))),
 
-            h('.sidebar-section',
-                h('button.sidebar-item-button', {
-                    onclick: () => showModal(modalIds.about.modal),
-                },
-                h('.flex-wrap.page-title',
-                    h('.about-15-off-white.vertical-center'),
-                    h('.title-text.vertical-center', 'About'))))));
+            h('.flex-wrap.page-title.justify-center.items-center',
+                h('.detector-15-off-white.vertical-center'),
+                h('.title-text.vertical-center', 'Detectors'))),
+
+        h('.sidebar-section',
+            h('button.sidebar-item-button', {
+                onclick: () => showModal(modalIds.about.modal),
+            },
+            h('.flex-wrap.page-title',
+                h('.about-15-off-white.vertical-center'),
+                h('.title-text.vertical-center', 'About'))))));
 }

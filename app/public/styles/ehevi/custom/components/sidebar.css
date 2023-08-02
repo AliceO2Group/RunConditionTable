@@ -17,6 +17,7 @@
     text-decoration: none !important;
     color: var(--color-gray-darker);
     line-height: normal;
+    align-items: center;
 }
 
 .ehevi .page-title:hover {
@@ -46,9 +47,18 @@
 }
 
 .ehevi .sidebar {
+    width: 3.6em;
     background-color: var(--primary) !important;
     color: var(--off-white) !important;
     font-size: small !important;
+}
+
+.ehevi .sidebar:hover {
+    width: 15em !important;
+}
+
+.ehevi .sidebar:hover {
+    width: 15em !important;
 }
 
 .ehevi .sidebar-section-title {
