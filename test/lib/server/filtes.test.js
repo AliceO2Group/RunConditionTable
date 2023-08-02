@@ -28,6 +28,23 @@ module.exports = () => {
 
                 assert.throws(() => filterToSequelizeWhereClause(srcFilter));
             }),
+
+            it('default relational operator', () => {
+                const srcFilter = {
+                    not: {
+                        field3: 1,
+                    },
+                };
+
+                const expectedFilter = {
+                    [Op.not]: {
+                        field3: 1,
+                    },
+                };
+
+                assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
+            }),
+
             it('correct transformation - with pruning', () => {
                 const srcFilter = {
                     or: {
@@ -43,7 +60,7 @@ module.exports = () => {
                     },
                 };
 
-                const expecedFilter = {
+                const expectedFilter = {
                     [Op.or]: {
                         field1: {
                             [Op.or]: {
@@ -58,7 +75,7 @@ module.exports = () => {
                     },
                 };
 
-                assert.deepStrictEqual(expecedFilter, filterToSequelizeWhereClause(srcFilter));
+                assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
             });
 
             it('correct transformation - without pruning', () => {
@@ -74,7 +91,7 @@ module.exports = () => {
                     },
                 };
 
-                const expecedFilter = {
+                const expectedFilter = {
                     [Op.and]: {
                         field1: {
                             [Op.or]: {
@@ -91,7 +108,7 @@ module.exports = () => {
                     },
                 };
 
-                assert.deepStrictEqual(expecedFilter, filterToSequelizeWhereClause(srcFilter, false));
+                assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter, false));
             });
 
             it('correct transformation - with array values, with pruning', () => {
@@ -104,16 +121,16 @@ module.exports = () => {
                     },
                 };
 
-                const expecedFilter = {
+                const expectedFilter = {
                     field1: {
-                        [Op.in]: ['1', '2', '3', '4', '1'],
+                        [Op.in]: ['1', '2', '4', '5', '1'],
                     },
                     filed2: {
                         [Op.notBetween]: ['-123', '1.1'],
                     },
                 };
 
-                assert.deepStrictEqual(expecedFilter, filterToSequelizeWhereClause(srcFilter));
+                assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
             });
         });
     });
