@@ -11,12 +11,12 @@
  * or submit itself to any jurisdiction.
  */
 
-const dtoValidation = require('./dtoValidation');
-const filterParser = require('./filterParser');
-const controllerWrapper = require('./controllerWrapper');
+const controllerWrapper = (controllerHandler) => (req, res, next) => controllerHandler(req, res, next).catch((err) => {
+    res.status(400).json({
+        error: err.message,
+    });
+});
 
 module.exports = {
-    ...dtoValidation,
-    ...filterParser,
-    ...controllerWrapper,
+    controllerWrapper,
 };
