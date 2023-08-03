@@ -25,6 +25,7 @@ const {
     },
 } = require('../../database/DatabaseManager');
 const { periodAdapter } = require('../../database/adapters');
+const { filterToSequelizeWhereClause } = require('../../server/utilities');
 
 class PeriodService {
     /**
@@ -32,7 +33,7 @@ class PeriodService {
      * @param {Object} query -  Filtering query definiton from http request,... #TODO
      * @returns {Promise<Period[]>} Promise object represents the result of this use case.
      */
-    async getAll() {
+    async getAll({ filter }) {
         const periods = await PeriodRepository.findAll({
             include: [
                 {
@@ -58,6 +59,8 @@ class PeriodService {
                 ],
             ],
             group: ['Period.id', 'BeamType.id'],
+
+            where: filterToSequelizeWhereClause(filter),
         });
         return periods.map((period) => periodAdapter.toEntity(period));
     }
