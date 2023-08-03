@@ -14,10 +14,24 @@
 const Joi = require('joi');
 const { emptyDTO, tokenDTO } = require('./commons.dto');
 
-const STDEntityDTO = Joi.object({
-    query: tokenDTO, //TODO extend with filters
+const emptyDataRequestDTO = Joi.object({
+    query: emptyDTO,
     params: emptyDTO,
     body: emptyDTO,
 });
 
-module.exports = STDEntityDTO;
+/**
+ * DTO that allows only:
+ * query.token - webUi token
+ * query.filter - object for building sequelize where-cluase
+ */
+const stdDataRequestDTO = Joi.object({
+    query: tokenDTO.keys({ filter: Joi.object({}).unknown(true) }), //TODO make more strict
+    params: emptyDTO,
+    body: emptyDTO,
+});
+
+module.exports = {
+    stdDataRequestDTO,
+    emptyDataRequestDTO,
+};

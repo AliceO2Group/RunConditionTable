@@ -12,8 +12,8 @@
  */
 
 const { runService } = require('../../services/runs/RunService');
-const { STDEntityDTO } = require('../../domain/dtos');
-const { validateDTO } = require('../utilities');
+const { stdDataRequestDTO } = require('../../domain/dtos');
+const { validateDtoOrRepondOnFailure } = require('../utilities');
 
 /**
  * List All runs in db
@@ -22,8 +22,9 @@ const { validateDTO } = require('../utilities');
  * @param {Object} next express next handler
  * @returns {undefined}
  */
+
 const listRunsHandler = async (req, res, next) => {
-    const validatedDTO = await validateDTO(STDEntityDTO, req, res);
+    const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
         const runs = await runService.getAll(validatedDTO.query);
         res.json({

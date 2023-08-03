@@ -11,6 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
+const { controllerHandlerWrapper } = require('../utilities');
 const periodRouter = require('./period.router.js');
 const runRouter = require('./run.router.js');
 const docsRouter = require('./docs.router.js');
@@ -41,7 +42,7 @@ function buildRoute(controllerTree) {
             if (process.env.ENV_MODE === 'test' || process.env.ENV_MODE === 'dev') {
                 args.public = true;
             }
-            routesStack.push({ method, path, controller, args, description });
+            routesStack.push({ method, path, controller: controllerHandlerWrapper(controller), args, description });
         } else if (method && ! controller || ! method && controller) {
             throw `Routers incorrect configuration for ${path}, [method: '${method}'], [controller: '${controller}']`;
         }

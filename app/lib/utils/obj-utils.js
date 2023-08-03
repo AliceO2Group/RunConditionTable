@@ -99,6 +99,10 @@ function distinct(arr) {
     return arr.filter((value, index, self) => self.indexOf(value) === index);
 }
 
+const throwWrapper = (error) => {
+    throw error;
+};
+
 function throwNotImplemented() {
     throw new Error('Not implemented');
 }
@@ -118,6 +122,7 @@ module.exports = {
     applyOptsToObj,
     nullIfThrows,
     distinct,
+    throwWrapper,
     throwNotImplemented,
     throwAbstract,
 };
