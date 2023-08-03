@@ -26,7 +26,7 @@ module.exports = {
             path: '/:id/runs',
             method: 'get',
             controller: RunController.listRunsPerDataPass,
-            description: 'List run belonging to data pass which id is provided',
+            description: 'List runs belonging to data pass which id is provided',
         },
     ],
 };
