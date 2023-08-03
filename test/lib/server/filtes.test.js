@@ -17,12 +17,12 @@ const { filterToSequelizeWhereClause } = require('../../../app/lib/server/utilit
 module.exports = () => {
     describe('Server utils', () => {
         describe('Transforming filtes to sequelize where-cluase ', () => {
-            it('empty filter', () => {
+            it('should return emty object when provided with undefined or empty object', () => {
                 assert.deepStrictEqual(filterToSequelizeWhereClause(undefined), {});
                 assert.deepStrictEqual(filterToSequelizeWhereClause({}), {});
             }),
 
-            it('not existing operator', () => {
+            it('should throw error when filter object has an non-existant ', () => {
                 const srcFilter = {
                     not: {
                         nand: {
@@ -34,7 +34,7 @@ module.exports = () => {
                 assert.throws(() => filterToSequelizeWhereClause(srcFilter));
             }),
 
-            it('default relational operator', () => {
+            it('should handle syntax for default relational operator \'eq\'', () => {
                 const srcFilter = {
                     not: {
                         field3: 1,
@@ -50,7 +50,7 @@ module.exports = () => {
                 assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
             }),
 
-            it('correct transformation - with pruning', () => {
+            it('should transform filter object - with pruning', () => {
                 const srcFilter = {
                     or: {
                         field1: {
@@ -83,7 +83,7 @@ module.exports = () => {
                 assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
             });
 
-            it('correct transformation - without pruning', () => {
+            it('should transform filter object - without pruning', () => {
                 const srcFilter = {
                     field1: {
                         gt: '10',
@@ -116,7 +116,7 @@ module.exports = () => {
                 assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter, false));
             });
 
-            it('correct transformation - with array values, with pruning', () => {
+            it('should transform filter object containing array values - with pruning', () => {
                 const srcFilter = {
                     field1: {
                         in: '1,2,4,5      ,1',
