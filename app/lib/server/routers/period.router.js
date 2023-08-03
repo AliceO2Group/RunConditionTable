@@ -26,7 +26,7 @@ module.exports = {
             method: 'get',
             path: '/:id/runs',
             controller: RunController.listRunsPerPeriodHandler,
-            description: 'List all runs associated with period whose id is provided',
+            description: 'List all runs associated with period which id is provided',
         },
     ],
 };

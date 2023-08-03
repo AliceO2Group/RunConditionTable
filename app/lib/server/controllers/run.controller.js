@@ -23,7 +23,6 @@ const Joi = require('joi');
  * @param {Object} next express next handler
  * @returns {undefined}
  */
-
 const listRunsHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
@@ -34,6 +33,13 @@ const listRunsHandler = async (req, res, next) => {
     }
 };
 
+/**
+ * List runs belonging to period which id is provided
+ * @param {Object} req express HTTP request object
+ * @param {Object} res express HTTP response object
+ * @param {Object} next express next handler
+ * @returns {undefined}
+ */
 const listRunsPerPeriodHandler = async (req, res, next) => {
     const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
