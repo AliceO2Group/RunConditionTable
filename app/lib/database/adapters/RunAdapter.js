@@ -36,6 +36,7 @@ class RunAdapter {
             lhcBeamEnergy,
             l3CurrentVal,
             dipoleCurrentVal,
+            DetectorSubsystems,
         } = databaseObject;
 
         return {
@@ -51,6 +52,7 @@ class RunAdapter {
             lhcBeamEnergy,
             l3CurrentVal,
             dipoleCurrentVal,
+            detectorSubsystems: DetectorSubsystems,
         }
     }
 

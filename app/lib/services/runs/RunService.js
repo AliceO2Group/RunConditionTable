@@ -31,7 +31,7 @@ class RunService {
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
     async getAll({ filter }) {
-        const runs = await RunRepository.findAll({
+        const runs = await RunRepository.findAllWithDetectors({
             where: filterToSequelizeWhereClause(filter),
         });
         return runs.map((run) => runAdapter.toEntity(run));

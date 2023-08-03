@@ -14,6 +14,7 @@
 
 const Repository = require('./Repository.js');
 
+const RunRepository = require('./RunRepository.js');
 /**
  * Object for holding repository classes defined in files in this directory. 
  * If repository is not defined here explicitly then it will be created implicitly via models mapping
@@ -21,7 +22,9 @@ const Repository = require('./Repository.js');
  *  1. Instances are created here, so metioned files should export classes not instances.
  *  2. The object have to keep each repository under key the same as corresponding model is kept. 
  */
-const specificallyDefinedRepositories = {};
+const specificallyDefinedRepositories = {
+    Run: RunRepository,
+};
 
 /**
  * @see specificallyDefinedRepositories
