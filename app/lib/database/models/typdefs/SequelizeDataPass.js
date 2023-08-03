@@ -11,9 +11,12 @@
  * or submit itself to any jurisdiction.
  */
 
-module.exports = {
-    RunController: require('./run.controller.js'),
-    PeriodController: require('./period.controller.js'),
-    apiDocumentationCotroller: require('./ApiDocumentation.controller.js'),
-    DataPassController: require('./dataPass.controller.js'),
-};
+/**
+ * @typedef SequelizeDataPass
+ *
+ * @property {Number} id
+ * @property {string} name
+ * @property {string|null} description
+ * @property {Number|null} reconstructedEvents
+ * @property {Number|null} outputSize
+ */

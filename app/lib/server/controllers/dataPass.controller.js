@@ -11,22 +11,22 @@
  * or submit itself to any jurisdiction.
  */
 
-const { runService } = require('../../services/runs/RunService');
+const { dataPassService } = require('../../services/dataPasses/DataPassService');
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
 const Joi = require('joi');
 
 /**
- * List All runs in db
+ * List All data passes in db
  * @param {Object} req express HTTP request object
  * @param {Object} res express HTTP response object
  * @param {Object} next express next handler
  * @returns {undefined}
  */
-const listRunsHandler = async (req, res, next) => {
+const listDataPassesHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
-        const runs = await runService.getAll(validatedDTO.query);
+        const runs = await dataPassService.getAll(validatedDTO.query);
         res.json({
             data: runs,
         });
@@ -34,35 +34,17 @@ const listRunsHandler = async (req, res, next) => {
 };
 
 /**
- * List runs belonging to period which id is provided
+ * List data passes belonging to period which id is provided
  * @param {Object} req express HTTP request object
  * @param {Object} res express HTTP response object
  * @param {Object} next express next handler
  * @returns {undefined}
  */
-const listRunsPerPeriodHandler = async (req, res, next) => {
+const listDataPassesPerPeriodHandler = async (req, res, next) => {
     const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
-        const runs = await runService.getRunsPerPeriod(validatedDTO.params.id, validatedDTO.query);
-        res.json({
-            data: runs,
-        });
-    }
-};
-
-/**
- * List runs belonging to period which id is provided
- * @param {Object} req express HTTP request object
- * @param {Object} res express HTTP response object
- * @param {Object} next express next handler
- * @returns {undefined}
- */
-const listRunsPerDataPass = async (req, res, next) => {
-    const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
-    const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
-    if (validatedDTO) {
-        const runs = await runService.getRunsPerDataPass(validatedDTO.params.id, validatedDTO.query);
+        const runs = await dataPassService.getDataPassesPerPeriod(validatedDTO.params.id, validatedDTO.query);
         res.json({
             data: runs,
         });
@@ -70,7 +52,6 @@ const listRunsPerDataPass = async (req, res, next) => {
 };
 
 module.exports = {
-    listRunsHandler,
-    listRunsPerPeriodHandler,
-    listRunsPerDataPass,
+    listDataPassesHandler,
+    listDataPassesPerPeriodHandler,
 };

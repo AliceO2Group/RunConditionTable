@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { PeriodController, RunController } = require('../controllers');
+const { PeriodController, RunController, DataPassController } = require('../controllers');
 
 module.exports = {
     path: '/periods',
@@ -27,6 +27,12 @@ module.exports = {
             path: '/:id/runs',
             controller: RunController.listRunsPerPeriodHandler,
             description: 'List all runs associated with period which id is provided',
+        },
+        {
+            method: 'get',
+            path: '/:id/data-passes',
+            controller: DataPassController.listDataPassesPerPeriodHandler,
+            description: 'List all data passes associated with period which id is provided',
         },
     ],
 };
