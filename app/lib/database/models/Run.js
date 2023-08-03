@@ -98,7 +98,8 @@ module.exports = (sequelize) => {
         Run.belongsTo(models.Period);
         Run.belongsToMany(models.DetectorSubsystem, {
             through: 'runs_detectors', 
-            foreginKey: 'run_number',
+            foreignKey: 'run_number',
+            timestamps: false,
         });
         Run.belongsToMany(models.DataPass, {
             through: 'data_passes_runs',
