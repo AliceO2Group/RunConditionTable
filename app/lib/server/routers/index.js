@@ -14,13 +14,15 @@
 const { controllerHandlerWrapper } = require('../utilities');
 const periodRouter = require('./period.router.js');
 const runRouter = require('./run.router.js');
+const dataPassRouter = require('./dataPass.router.js');
 const docsRouter = require('./docs.router.js');
 const apiDocumentationCotroller = require('../controllers/ApiDocumentation.controller.js');
 
 const routeTrees = [
     docsRouter,
-    runRouter,
     periodRouter,
+    runRouter,
+    dataPassRouter,
 ];
 
 const checkPath = (path) => {

@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { dataPassService } = require('../../services/runs/RunService');
+const { dataPassService } = require('../../services/dataPasses/DataPassService');
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
 const Joi = require('joi');
