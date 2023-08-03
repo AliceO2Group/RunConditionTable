@@ -98,6 +98,8 @@ module.exports = (sequelize) => {
         Run.belongsTo(models.Period);
         Run.belongsToMany(models.DataPass, {
             through: 'data_passes_runs',
+            foreignKey: 'run_number',
+            timestamps: false,
         });
     };
 
