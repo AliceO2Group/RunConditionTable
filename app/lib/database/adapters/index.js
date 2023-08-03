@@ -13,11 +13,14 @@
 
 const PeriodAdapter = require('./PeriodAdapter');
 const RunAdapter = require('./RunAdapter');
+const DataPassAdapter = require('./DataPassAdapter');
 
 const runAdapter = new RunAdapter();
-const periodAdapter = new PeriodAdapter;
+const periodAdapter = new PeriodAdapter();
+const dataPassAdapter = new DataPassAdapter();
 
 module.exports = {
     runAdapter,
     periodAdapter,
+    dataPassAdapter,
 }
