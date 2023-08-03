@@ -20,7 +20,7 @@ module.exports = {
         {
             method: 'get',
             controller: DataPassController.listDataPassesHandler,
-            description: 'List all runs which are present in DB',
+            description: 'List all data passes which are present in DB',
         },
     ],
 };
