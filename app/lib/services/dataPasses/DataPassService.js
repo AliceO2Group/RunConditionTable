@@ -25,13 +25,29 @@ class DataPassService {
     /**
      * Return all data passes,
      * @param {Object} query -  Filtering query definiton from http request
-     * @returns {Promise<Period[]>} Promise object represents the result of this use case.
+     * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
     async getAll({ filter }) {
         const periods = await DataPassRepository.findAll({
             where: filterToSequelizeWhereClause(filter),
         });
         return periods.map((dataPass) => dataPassAdapter.toEntity(dataPass));
+    }
+
+    /**
+     * Return data passes belonging to period which id is provided
+     * @param {Number} periodId - id of period which for runs should be returnd
+     * @param {Object} query - Filtering query definiton from http request,... #TODO
+     * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
+     */
+    async getDataPassesPerPeriod(periodId, { filter }) {
+        const runs = await DataPassRepository.findAll({
+            where: {
+                period_id: periodId,
+                ...filterToSequelizeWhereClause(filter),
+            },
+        });
+        return runs.map((dataPass) => DataPassRepository.toEntity(dataPass));
     }
 }
 
