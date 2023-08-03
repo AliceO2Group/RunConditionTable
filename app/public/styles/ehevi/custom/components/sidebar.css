@@ -57,10 +57,16 @@
     width: 15em !important;
 }
 
-.ehevi .sidebar:hover {
-    width: 15em !important;
+.ehevi .sidebar .sidebar-section-title {
+    text-transform: uppercase;
 }
 
-.ehevi .sidebar-section-title {
-    text-transform: uppercase;
+.ehevi .sidebar .hide-on-close {
+    opacity: 0;
+    transition: opacity 0.3s linear;
+}
+
+.ehevi .sidebar:hover .hide-on-close {
+    opacity: 1;
+    transition: opacity 0.3s linear;
 }

@@ -29,9 +29,9 @@ export default function sidebarItem(model, pageName, label) {
                     h('.current-page',
                         h('.title-text-relative.hidden', label))),
                 h('.folder-15-off-white.vertical-center'),
-                h('.title-text.vertical-center', label, displayedSubPagesCount))
+                h('.title-text.vertical-center.hide-on-close', label, displayedSubPagesCount))
             : h('',
                 h('.folder-15-off-white.vertical-center'),
-                h('.title-text.vertical-center', label, displayedSubPagesCount))),
+                h('.title-text.vertical-center.hide-on-close', label, displayedSubPagesCount))),
     ]);
 }

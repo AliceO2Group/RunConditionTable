@@ -31,10 +31,10 @@ export default function sidebar(model) {
     },
     modal(modalIds.about.modal),
     modal(modalIds.pageSettings.modal, model),
-    h('.logo'),
+    h('.logo.hide-on-close'),
     h('.flex-column.gap-20',
         h('.sidebar-section',
-            h('.sidebar-section-title', 'Pages'),
+            h('.sidebar-section-title.hide-on-close', 'Pages'),
             sidebarItem(model, pageNames.periods, 'Periods'),
             sidebarItem(model, pageNames.dataPasses, 'Data Passes'),
             sidebarItem(model, pageNames.anchoragePerDatapass, 'Anchorage per Data pass'),
@@ -45,23 +45,23 @@ export default function sidebar(model) {
             sidebarItem(model, pageNames.flags, 'QA flags')),
 
         h('.sidebar-section',
-            h('.sidebar-section-title', 'Preferences'),
+            h('.sidebar-section-title.hide-on-close', 'Preferences'),
             h('button.sidebar-item-button', {
                 onclick: () => showModal(modalIds.pageSettings.modal) },
             h('.flex-wrap.page-title',
                 h('.settings-20-off-white.vertical-center'),
-                h('.title-text.vertical-center', 'Page settings'))),
+                h('.title-text.vertical-center.hide-on-close', 'Page settings'))),
 
             h('button.sidebar-item-button', {
                 onclick: () => showModal(modalIds.about.modal),
             },
             h('.flex-wrap.page-title.justify-center.items-center',
                 h('.detector-15-off-white'),
-                h('.title-text', 'dett'))),
+                h('.title-text.hide-on-close', 'dett'))),
 
             h('.flex-wrap.page-title.justify-center.items-center',
                 h('.detector-15-off-white.vertical-center'),
-                h('.title-text.vertical-center', 'Detectors'))),
+                h('.title-text.vertical-center.hide-on-close', 'Detectors'))),
 
         h('.sidebar-section',
             h('button.sidebar-item-button', {
@@ -69,5 +69,5 @@ export default function sidebar(model) {
             },
             h('.flex-wrap.page-title',
                 h('.about-15-off-white.vertical-center'),
-                h('.title-text.vertical-center', 'About'))))));
+                h('.title-text.vertical-center.hide-on-close', 'About'))))));
 }
