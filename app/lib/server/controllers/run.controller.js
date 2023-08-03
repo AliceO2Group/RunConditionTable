@@ -14,6 +14,7 @@
 const { runService } = require('../../services/runs/RunService');
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
+const Joi = require('joi');
 
 /**
  * List All runs in db
@@ -22,7 +23,6 @@ const { validateDtoOrRepondOnFailure } = require('../utilities');
  * @param {Object} next express next handler
  * @returns {undefined}
  */
-
 const listRunsHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
@@ -33,6 +33,25 @@ const listRunsHandler = async (req, res, next) => {
     }
 };
 
+/**
+ * List runs belonging to period which id is provided
+ * @param {Object} req express HTTP request object
+ * @param {Object} res express HTTP response object
+ * @param {Object} next express next handler
+ * @returns {undefined}
+ */
+const listRunsPerPeriodHandler = async (req, res, next) => {
+    const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
+    const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
+    if (validatedDTO) {
+        const runs = await runService.getRunsPerPeriod(validatedDTO.params.id, validatedDTO.query);
+        res.json({
+            data: runs,
+        });
+    }
+};
+
 module.exports = {
     listRunsHandler,
+    listRunsPerPeriodHandler,
 };

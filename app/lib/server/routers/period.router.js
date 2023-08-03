@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { PeriodController } = require('../controllers');
+const { PeriodController, RunController } = require('../controllers');
 
 module.exports = {
     path: '/periods',
@@ -21,6 +21,12 @@ module.exports = {
             method: 'get',
             controller: PeriodController.listPeriodsHandler,
             description: 'List all periods which are present in DB with avg energy of run\'s beams associated with them',
+        },
+        {
+            method: 'get',
+            path: '/:id/runs',
+            controller: RunController.listRunsPerPeriodHandler,
+            description: 'List all runs associated with period which id is provided',
         },
     ],
 };

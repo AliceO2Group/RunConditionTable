@@ -27,9 +27,25 @@ class RunService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getAll({ filter }) { // TODO args
+    async getAll({ filter }) {
         const runs = await RunRepository.findAll({
             where: filterToSequelizeWhereClause(filter),
+        });
+        return runs.map((run) => runAdapter.toEntity(run));
+    }
+
+    /**
+     * Return all runs
+     * @param {Number} periodId - id of period which for runs should be returnd
+     * @param {Object} query - Filtering query definiton from http request,... #TODO
+     * @returns {Promise<Run[]>} Promise object represents the result of this use case.
+     */
+    async getRunsPerPeriod(periodId, { filter }) {
+        const runs = await RunRepository.findAll({
+            where: {
+                period_id: periodId,
+                ...filterToSequelizeWhereClause(filter),
+            },
         });
         return runs.map((run) => runAdapter.toEntity(run));
     }
