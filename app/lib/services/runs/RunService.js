@@ -16,6 +16,9 @@ const {
         repositories: {
             RunRepository,
         },
+        models: {
+            DataPass,
+        },
     },
 } = require('../../database/DatabaseManager');
 const { runAdapter } = require('../../database/adapters');
@@ -35,7 +38,7 @@ class RunService {
     }
 
     /**
-     * Return all runs
+     * Return all runs belonging to one period
      * @param {Number} periodId - id of period which for runs should be returnd
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
@@ -44,6 +47,33 @@ class RunService {
         const runs = await RunRepository.findAll({
             where: {
                 period_id: periodId,
+                ...filterToSequelizeWhereClause(filter),
+            },
+        });
+        return runs.map((run) => runAdapter.toEntity(run));
+    }
+
+    /**
+     * Return all runs belonging to one data pass
+     * @param {Number} dataPassId - id of period which for runs should be returnd
+     * @param {Object} query - Filtering query definiton from http request,... #TODO
+     * @returns {Promise<Run[]>} Promise object represents the result of this use case.
+     */
+    async getRunsPerDataPass(dataPassId, { filter }) {
+        const runs = await RunRepository.findAll({
+            include: [
+                {
+                    model: DataPass,
+                    required: true,
+                    attributes: [],
+                    through: {
+                        where: {
+                            data_pass_id: dataPassId,
+                        },
+                    },
+                },
+            ],
+            where: {
                 ...filterToSequelizeWhereClause(filter),
             },
         });

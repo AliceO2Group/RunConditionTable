@@ -51,7 +51,26 @@ const listRunsPerPeriodHandler = async (req, res, next) => {
     }
 };
 
+/**
+ * List runs belonging to period which id is provided
+ * @param {Object} req express HTTP request object
+ * @param {Object} res express HTTP response object
+ * @param {Object} next express next handler
+ * @returns {undefined}
+ */
+const listRunsPerDataPass = async (req, res, next) => {
+    const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
+    const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
+    if (validatedDTO) {
+        const runs = await runService.getRunsPerDataPass(validatedDTO.params.id, validatedDTO.query);
+        res.json({
+            data: runs,
+        });
+    }
+};
+
 module.exports = {
     listRunsHandler,
     listRunsPerPeriodHandler,
+    listRunsPerDataPass,
 };

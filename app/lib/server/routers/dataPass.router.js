@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { DataPassController } = require('../controllers');
+const { DataPassController, RunController } = require('../controllers');
 
 module.exports = {
     path: '/data-passes',
@@ -21,6 +21,12 @@ module.exports = {
             method: 'get',
             controller: DataPassController.listDataPassesHandler,
             description: 'List all data passes which are present in DB',
+        },
+        {
+            path: '/:id/runs',
+            method: 'get',
+            controller: RunController.listRunsPerDataPass,
+            description: 'List run belonging to data pass which id is provided',
         },
     ],
 };
