@@ -96,6 +96,9 @@ module.exports = (sequelize) => {
     
     Run.associate = (models) => {
         Run.belongsTo(models.Period);
+        Run.belongsToMany(models.DataPass, {
+            through: 'data_passes_runs',
+        });
     };
 
     return Run;
