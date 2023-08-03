@@ -26,4 +26,5 @@
  * @property {number|null} lhcBeamEnergy
  * @property {number|null} l3CurrentVal
  * @property {number|null} dipoleCurrentVal
+ * @property {DetectorSubsystem[]} detectorSubsystems
  */
