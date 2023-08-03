@@ -11,11 +11,11 @@
  * or submit itself to any jurisdiction.
  */
 
-const controllerWrapper = (controllerHandler) =>
+const controllerHandlerWrapper = (controllerHandler) =>
     async (req, res, next) =>
         await controllerHandler(req, res, next)
             .catch((err) => res.status(400).json({ error: err.message }));
 
 module.exports = {
-    controllerWrapper,
+    controllerHandlerWrapper,
 };
