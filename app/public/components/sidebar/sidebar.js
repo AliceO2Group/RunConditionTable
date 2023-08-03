@@ -26,13 +26,13 @@ const { pageNames } = RCT;
  */
 
 export default function sidebar(model) {
-    return h('.sidebar.p3',
+    return h('.sidebar',
         modal(modalIds.about.modal),
         modal(modalIds.pageSettings.modal, model),
-        h('.logo.hide-on-close'),
+        h('.logo.ph3.hide-on-close'),
         h('.flex-column.gap-20',
             h('.sidebar-section',
-                h('.sidebar-section-title.hide-on-close', 'Pages'),
+                h('.sidebar-section-title.ph3.hide-on-close', 'Pages'),
                 sidebarItem(model, pageNames.periods, 'Periods'),
                 sidebarItem(model, pageNames.dataPasses, 'Data Passes'),
                 sidebarItem(model, pageNames.anchoragePerDatapass, 'Anchorage per Data pass'),
@@ -43,11 +43,11 @@ export default function sidebar(model) {
                 sidebarItem(model, pageNames.flags, 'QA flags')),
 
             h('.sidebar-section',
-                h('.sidebar-section-title.hide-on-close', 'Preferences'),
+                h('.sidebar-section-title.ph3.hide-on-close', 'Preferences'),
                 h('button.sidebar-item-button', {
                     onclick: () => showModal(modalIds.pageSettings.modal),
                 }, h('.page-title',
-                    h('.settings-20-off-white.vertical-center'),
+                    h('.settings-15-off-white.vertical-center'),
                     h('.title-text.vertical-center.hide-on-close', 'Page settings'))),
 
                 h('button.sidebar-item-button', {
