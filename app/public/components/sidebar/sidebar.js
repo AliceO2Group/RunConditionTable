@@ -45,27 +45,21 @@ export default function sidebar(model) {
             h('.sidebar-section',
                 h('.sidebar-section-title.hide-on-close', 'Preferences'),
                 h('button.sidebar-item-button', {
-                    onclick: () => showModal(modalIds.pageSettings.modal) },
-                h('.flex-wrap.page-title',
+                    onclick: () => showModal(modalIds.pageSettings.modal),
+                }, h('.page-title',
                     h('.settings-20-off-white.vertical-center'),
                     h('.title-text.vertical-center.hide-on-close', 'Page settings'))),
 
                 h('button.sidebar-item-button', {
                     onclick: () => showModal(modalIds.about.modal),
-                },
-                h('.flex-wrap.page-title.justify-center.items-center',
+                }, h('.page-title',
                     h('.detector-15-off-white'),
-                    h('.title-text.hide-on-close', 'dett'))),
-
-                h('.flex-wrap.page-title.justify-center.items-center',
-                    h('.detector-15-off-white.vertical-center'),
-                    h('.title-text.vertical-center.hide-on-close', 'Detectors'))),
+                    h('.title-text.hide-on-close', 'Detectors')))),
 
             h('.sidebar-section',
                 h('button.sidebar-item-button', {
                     onclick: () => showModal(modalIds.about.modal),
-                },
-                h('.flex-wrap.page-title',
+                }, h('.page-title',
                     h('.about-15-off-white.vertical-center'),
                     h('.title-text.vertical-center.hide-on-close', 'About'))))));
 }

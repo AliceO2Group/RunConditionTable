@@ -18,20 +18,10 @@ export default function sidebarItem(model, pageName, label) {
     const subPagesCount = model.getSubPagesCount(pageName);
     const displayedSubPagesCount = subPagesCount > 0 ? ` (${subPagesCount})` : '';
 
-    return h('.flex-wrap', [
-        h('.page-title', {
-            class: model.router.params.page === pageName ? 'selected' : '',
-            onclick: () => model.navigation.goToDefaultPageUrl(pageName),
-        },
-        model.router.params.page === pageName
-            ? h('',
-                h('.vertical-center',
-                    h('.current-page',
-                        h('.title-text-relative.hidden', label))),
-                h('.folder-15-off-white.vertical-center'),
-                h('.title-text.vertical-center.hide-on-close', label, displayedSubPagesCount))
-            : h('',
-                h('.folder-15-off-white.vertical-center'),
-                h('.title-text.vertical-center.hide-on-close', label, displayedSubPagesCount))),
-    ]);
+    return h(`button.sidebar-item-button${model.router.params.page === pageName ? '.current-page' : ''}`, {
+        class: model.router.params.page === pageName ? 'selected' : '',
+        onclick: () => model.navigation.goToDefaultPageUrl(pageName),
+    }, h('.page-title',
+        h('.folder-15-off-white.vertical-center'),
+        h('.title-text.vertical-center.hide-on-close', label, displayedSubPagesCount)));
 }

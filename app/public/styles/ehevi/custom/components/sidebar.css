@@ -17,7 +17,11 @@
     text-decoration: none !important;
     color: var(--color-gray-darker);
     line-height: normal;
+    display: flex;
+    flex-direction: row;
     align-items: center;
+    overflow: hidden;
+    min-width: 15px !important;
 }
 
 .ehevi .page-title:hover {
@@ -30,20 +34,17 @@
 
 .ehevi .title-text {
     color: var(--off-white) !important;
-    padding-left: 30px;
-    padding-top: 0;
-    margin-top: 0;
+    padding-left: 2em;
 }
 
-.ehevi .current-page {
-    background-color: var(--white) !important;
-    opacity: 0.1;
-    border-radius: 25px;
-    position: relative;
-    left: -5px;
-    padding-right: 45px;
-    min-height: 25px;
-    align-items: center;
+.ehevi .sidebar-item-button.current-page {
+    background-color: var(--primary-hover) !important;
+    border-radius: 25px !important;
+}
+
+.ehevi sidebar:hover .sidebar-item-button.current-page {
+    background-color: var(--primary-hover) !important;
+    border-radius: 25px !important;
 }
 
 .ehevi .sidebar {
@@ -51,10 +52,11 @@
     background-color: var(--primary) !important;
     color: var(--off-white) !important;
     font-size: small !important;
+    padding: 0.45em !important;
 }
 
 .ehevi .sidebar:hover {
-    width: 15em !important;
+    width: 20em !important;
 }
 
 .ehevi .sidebar .sidebar-section-title {
