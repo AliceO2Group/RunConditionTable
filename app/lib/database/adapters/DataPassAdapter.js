@@ -21,6 +21,7 @@ class DataPassAdapter {
      */
     toEntity(databaseObject) {
         const {
+            id,
             name,
             description,
             reconstructedEvents,
@@ -28,6 +29,7 @@ class DataPassAdapter {
         } = databaseObject;
 
         return {
+            id,
             name,
             description,
             reconstructedEvents,

@@ -14,6 +14,7 @@
 /**
  * @typedef DataPass
  *
+ * @property {Number} id
  * @property {string} name
  * @property {string|null} description
  * @property {Number|null} reconstructedEvents
