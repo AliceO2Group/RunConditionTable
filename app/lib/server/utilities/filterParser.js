@@ -172,6 +172,9 @@ class TransformHelper {
  *  }
  * }
  *
+ * What is equivalent to sql:
+ * WHERE (field1 > 10 OR field1 < 3) OR (field2 like 'LHC_%pass' AND field2 NOT LIKE 'LHC_c%')
+ *
  * @param {Object} filter - from req.query
  * @param {boolean} pruneRedundantANDOperator - if true (default) remove unnecessaary 'and' operators
  * @returns {Object} sequelize where object
