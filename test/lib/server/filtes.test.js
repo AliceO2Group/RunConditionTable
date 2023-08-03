@@ -17,6 +17,11 @@ const { filterToSequelizeWhereClause } = require('../../../app/lib/server/utilit
 module.exports = () => {
     describe('Server utils', () => {
         describe('Transforming filtes to sequelize where-cluase ', () => {
+            it('empty filter', () => {
+                assert.deepStrictEqual(filterToSequelizeWhereClause(undefined), {});
+                assert.deepStrictEqual(filterToSequelizeWhereClause({}), {});
+            }),
+
             it('not existing operator', () => {
                 const srcFilter = {
                     not: {
