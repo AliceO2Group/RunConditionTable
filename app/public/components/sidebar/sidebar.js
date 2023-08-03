@@ -53,8 +53,8 @@ export default function sidebar(model) {
                 h('button.sidebar-item-button', {
                     onclick: () => showModal(modalIds.about.modal),
                 }, h('.page-title',
-                    h('.detector-15-off-white'),
-                    h('.title-text.hide-on-close', 'Detectors')))),
+                    h('.detector-15-off-white.vertical-center'),
+                    h('.title-text.vertical-center.hide-on-close', 'Detectors')))),
 
             h('.sidebar-section',
                 h('button.sidebar-item-button', {

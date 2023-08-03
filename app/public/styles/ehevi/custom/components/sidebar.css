@@ -48,7 +48,7 @@
 }
 
 .ehevi .sidebar {
-    width: 3.6em;
+    width: 3.9em;
     background-color: var(--primary) !important;
     color: var(--off-white) !important;
     font-size: small !important;
@@ -72,3 +72,9 @@
     opacity: 1;
     transition: opacity 0.3s linear;
 }
+
+/*
+.ehevi .sidebar-section {
+    overflow: hidden;
+}
+*/
