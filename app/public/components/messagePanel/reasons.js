@@ -14,6 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import messagePanel from './messagePanel.js';
+import spinner from '../common/spinner.js';
 
 const requestButton = (model) => h('button.btn.btn-primary.m3', {
     onclick: () => model.fetchedData.reqForData(true),
@@ -49,3 +50,14 @@ export const serviceUnavailable = (model) => messagePanel(
         id: model.dataAccess.serviceUnavailable.messageFieldId,
     }, ''),
 );
+
+export const waiting = () => {
+    const retryButton = h('button.btn.btn-primary.m3', { onclick: () => document.location.reload(true) }, 'Retry');
+    const loadingMessage = h('h3', 'Loading...');
+
+    return h('.panel.abs-center',
+        spinner(),
+        loadingMessage,
+        retryButton
+    );
+}

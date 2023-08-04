@@ -15,8 +15,7 @@
 import tablePanel from './table/tablePanel.js';
 import flagsPanel from '../../flags/overview/flagsPanel.js';
 import { default as runsPerDataPassPanel } from '../../runs/runsPerDataPass/overview/panel.js';
-import waitingPanel from '../../waitingPanel.js';
-import { failure, unknown } from '../../../components/messagePanel/reasons.js';
+import { failure, unknown, waiting } from '../../../components/messagePanel/reasons.js';
 import { RCT } from '../../../config.js';
 const { pageNames } = RCT;
 
@@ -32,7 +31,7 @@ export default function dataPanel(model, runs, detectors, flags) {
 
     return data ? data.match({
         NotAsked: () => unknown(model),
-        Loading: () => waitingPanel(),
+        Loading: () => waiting(),
         Success: () => {
             switch (page) {
                 case pageNames.flags:
