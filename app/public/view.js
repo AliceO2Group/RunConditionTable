@@ -13,17 +13,16 @@
  */
 
 import dataAccessPanel from './views/dataAccessPanel.js';
-import serviceUnavailablePanel from './views/serviceUnavailablePanel.js';
-import sessionErrorPanel from './views/sessionErrorPanel.js';
-import waitingPanel from './views/waitingPanel.js';
 import { switchCase } from '/js/src/index.js';
+import { serviceUnavailable, sessionError } from './components/messagePanel/reasons.js';
+import waitingPanel from './views/waitingPanel.js';
 
 export default function view(model) {
     const { state } = model.dataAccess;
 
     return switchCase(state, {
-        serviceUnavailable: () => serviceUnavailablePanel(model),
-        sessionError: () => sessionErrorPanel(model),
+        serviceUnavailable: () => serviceUnavailable(model),
+        sessionError: () => sessionError(model),
         dataAccess: () => dataAccessPanel(model),
     }, () => waitingPanel())();
 }

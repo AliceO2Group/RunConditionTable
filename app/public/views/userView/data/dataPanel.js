@@ -13,12 +13,11 @@
  */
 
 import tablePanel from './table/tablePanel.js';
-import failureStatusAndReload from './fetchingStates/failure.js';
-import unknownError from './fetchingStates/unknownError.js';
-import { RCT } from '../../../config.js';
 import flagsPanel from '../../flags/overview/flagsPanel.js';
 import { default as runsPerDataPassPanel } from '../../runs/runsPerDataPass/overview/panel.js';
 import waitingPanel from '../../waitingPanel.js';
+import { failure, unknown } from '../../../components/messagePanel/reasons.js';
+import { RCT } from '../../../config.js';
 const { pageNames } = RCT;
 
 /**
@@ -32,7 +31,7 @@ export default function dataPanel(model, runs, detectors, flags) {
     const data = model.fetchedData[page][index];
 
     return data ? data.match({
-        NotAsked: () => unknownError(model),
+        NotAsked: () => unknown(model),
         Loading: () => waitingPanel(),
         Success: () => {
             switch (page) {
@@ -44,6 +43,6 @@ export default function dataPanel(model, runs, detectors, flags) {
                     return tablePanel(model, runs, detectors);
             }
         },
-        Failure: (status) => failureStatusAndReload(model, status),
-    }) : unknownError(model);
+        Failure: (status) => failure(model, status),
+    }) : unknown(model);
 }
