@@ -14,7 +14,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const DataPass = sequelize.define('DataPass', {
+    const SimulationPass = sequelize.define('SimulationPass', {
         name: {
             type: Sequelize.STRING,
             unique: true,
@@ -22,7 +22,15 @@ module.exports = (sequelize) => {
         description: {
             type: Sequelize.TEXT,
         },
-        reconstructedEvents: {
+        jiraId: {
+            type: Sequelize.STRING,
+            field: 'jira'
+        },
+        PWG: {
+            type: Sequelize.TEXT,
+            field: 'pwg',
+        },
+        requestedEvents: {
             type: Sequelize.INTEGER,
             field: 'number_of_events',
         },
@@ -30,23 +38,25 @@ module.exports = (sequelize) => {
             type: Sequelize.REAL,
             field: 'size',
         },
-        lastRun: {
-            type: Sequelize.INTEGER,
-        },
     }, { timestamps: false });
-    DataPass.associate = (models) => {
-        DataPass.belongsTo(models.Period);
-        DataPass.belongsToMany(models.Run, {
-            through: 'data_passes_runs',
-            foreignKey: 'data_pass_id',
+
+    SimulationPass.associate = (models) => {
+        SimulationPass.belongsToMany(models.Period, {
+            through: 'anchored_periods',
+            foreignKey: 'sim_pass_id',
             timestamps: false,
         });
-        DataPass.belongsToMany(models.SimulationPass, {
+        SimulationPass.belongsToMany(models.DataPass, {
             through: 'anchored_passes',
-            foreignKey: 'data_pass_id',
+            foreignKey: 'sim_pass_id',
+            timestamps: false,
+        });
+        SimulationPass.belongsToMany(models.Run, {
+            through: 'simulation_passes_runs',
+            foreignKey: 'simulation_pass_id',
             timestamps: false,
         });
     };
 
-    return DataPass;
+    return SimulationPass;
 };

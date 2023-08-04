@@ -106,6 +106,11 @@ module.exports = (sequelize) => {
             foreignKey: 'run_number',
             timestamps: false,
         });
+        Run.belongsToMany(models.SimulationPass, {
+            through: 'simulation_passes_runs',
+            foreignKey: 'run_number',
+            timestamps: false,
+        });
     };
 
     return Run;
