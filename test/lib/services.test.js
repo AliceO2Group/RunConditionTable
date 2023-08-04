@@ -47,9 +47,9 @@ module.exports = () => {
             it('check whether methods do not throws', async () => {
                 await assert.doesNotReject(simulationPassesService.getAll.bind(simulationPassesService, {}));
             });
-            // it('check whether methods do not throws', async () => {
-            //     await assert.doesNotReject(simulationPassesService.getSimulationPassesPerPeriod.bind(simulationPassesService, 0, {}));
-            // });
+            it('check whether methods do not throws', async () => {
+                await assert.doesNotReject(simulationPassesService.getSimulationPassesPerPeriod.bind(simulationPassesService, 0, {}));
+            });
         });
     });
 };
