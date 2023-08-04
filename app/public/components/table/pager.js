@@ -12,8 +12,6 @@
  * or submit itself to any jurisdiction.
  */
 
-import viewButton from '../common/viewButton.js';
-import { replaceUrlParams } from '../../utils/url/urlUtils.js';
 import { h, iconChevronBottom } from '/js/src/index.js';
 import itemsCounter from '../../views/userView/data/table/items-counter.js';
 import { RCT } from '../../config.js';
@@ -25,21 +23,11 @@ export default function pager(model, data, pagerOnly = true) {
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
     const columnOptionsSelectId = 'columns-option-select-id';
 
-    const pageButton = (targetSite) => {
-        const url = replaceUrlParams(data.url, { [RCT.dataReqParams.site]: targetSite });
-        return viewButton(
-            model,
-            targetSite,
-            () => model.fetchedData.changePage(targetSite),
-            '',
-            url.pathname + url.search,
-            `.btn${targetSite === currentSite ? '.btn-primary' : '.btn-secondary'}`,
-            '',
-            true,
-        );
-    };
+    const pageButton = (targetSite) => h(`button.btn${targetSite === currentSite ? '.btn-primary' : '.btn-secondary'}.no-text-decoration`, {
+        onclick: () => model.fetchedData.changePage(targetSite),
+    }, targetSite);
 
-    const siteChangingController = (targetSite, content) => h('a.btn.btn-secondary.site-changing-controller', {
+    const siteChangingController = (targetSite, content) => h('button.btn.btn-secondary.site-changing-controller', {
         onclick: () => model.fetchedData.changePage(targetSite),
     }, content);
 
