@@ -96,7 +96,7 @@ class RunService {
                     attributes: [],
                     through: {
                         where: {
-                            sim_pass_id: simulationPassId,
+                            simulation_pass_id: simulationPassId,
                         },
                     },
                 },
