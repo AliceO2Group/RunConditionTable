@@ -18,6 +18,7 @@ const {
         },
         models: {
             DataPass,
+            SimulationPass,
         },
     },
 } = require('../../database/DatabaseManager');
@@ -69,6 +70,33 @@ class RunService {
                     through: {
                         where: {
                             data_pass_id: dataPassId,
+                        },
+                    },
+                },
+            ],
+            where: {
+                ...filterToSequelizeWhereClause(filter),
+            },
+        });
+        return runs.map((run) => runAdapter.toEntity(run));
+    }
+
+    /**
+     * Return all runs belonging to one simulation pass
+     * @param {Number} simulationPassId - id of data pass which for runs should be returnd
+     * @param {Object} query - Filtering query definiton from http request,... #TODO
+     * @returns {Promise<Run[]>} Promise object represents the result of this use case.
+     */
+    async getRunsPerSimulationPass(simulationPassId, { filter }) {
+        const runs = await RunRepository.findAllWithDetectors({
+            include: [
+                {
+                    model: SimulationPass,
+                    required: true,
+                    attributes: [],
+                    through: {
+                        where: {
+                            sim_pass_id: simulationPassId,
                         },
                     },
                 },
