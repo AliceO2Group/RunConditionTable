@@ -11,8 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const UtilitiesSuite = require('./utils.test');
-const ResProviderSuite = require('./resProvider.test');
+const UtilitiesSuite = require('./utils/utils.test');
+const ResProviderSuite = require('./utils/resProvider.test');
 const ConfigSuite = require('./config');
 const ServerSuite = require('./server');
 

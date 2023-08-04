@@ -12,7 +12,7 @@
  */
 
 const assert = require('assert');
-const ResProvider = require('../../app/lib/utils/ResProvider');
+const ResProvider = require('../../../app/lib/utils/ResProvider');
 
 module.exports = () => {
     describe('Res Provider', () => {
