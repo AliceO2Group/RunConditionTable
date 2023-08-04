@@ -55,7 +55,7 @@ class RunService {
 
     /**
      * Return all runs belonging to one data pass
-     * @param {Number} dataPassId - id of period which for runs should be returnd
+     * @param {Number} dataPassId - id of data pass which for runs should be returnd
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */

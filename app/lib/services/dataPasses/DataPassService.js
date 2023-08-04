@@ -47,7 +47,7 @@ class DataPassService {
                 ...filterToSequelizeWhereClause(filter),
             },
         });
-        return runs.map((dataPass) => DataPassRepository.toEntity(dataPass));
+        return runs.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
 }
 

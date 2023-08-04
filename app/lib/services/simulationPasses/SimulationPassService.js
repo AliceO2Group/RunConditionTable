@@ -26,7 +26,7 @@ const { filterToSequelizeWhereClause } = require('../../server/utilities');
 
 class SimulationPassesService {
     /**
-     * Return all data passes,
+     * Return all simulation passes,
      * @param {Object} query -  Filtering query definiton from http request
      * @returns {Promise<SimulationPass[]>} Promise object represents the result of this use case.
      */
@@ -39,7 +39,7 @@ class SimulationPassesService {
 
     /**
      * Return data passes belonging to period which id is provided
-     * @param {Number} periodId - id of period which for runs should be returnd
+     * @param {Number} periodId - id of period which for simulation passes should be returnd
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<SimulationPass[]>} Promise object represents the result of this use case.
      */
