@@ -23,5 +23,5 @@
  * @property {number|null} lhcBeamEnergy
  * @property {number|null} l3CurrentVal
  * @property {number|null} dipoleCurrentVal
- * @property {SequelizeDetectorSubsystem[]} DetectorSubsystems
+ * @property {SequelizeDetectorSubsystem[]|null} DetectorSubsystems
  */
