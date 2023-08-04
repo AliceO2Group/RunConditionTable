@@ -12,9 +12,12 @@
  */
 
 const DetectorSubsystemAdapter = require('./DetectorSubsystemAdapter');
-const detectorSubsystemAdapter = new DetectorSubsystemAdapter();
 
 class RunAdapter {
+    constructor() {
+        this.detectorSubsystemAdapter = new DetectorSubsystemAdapter();
+    }
+    
     /**
      * Converts the given database object to an entity object.
      *
@@ -51,7 +54,7 @@ class RunAdapter {
             lhcBeamEnergy,
             l3CurrentVal,
             dipoleCurrentVal,
-            detectorSubsystems: DetectorSubsystems?.map(detectorSubsystemAdapter.toEntity.bind(detectorSubsystemAdapter)),
+            detectorSubsystems: DetectorSubsystems?.map(this.detectorSubsystemAdapter.toEntity.bind(this.detectorSubsystemAdapter)),
         }
     }
 
