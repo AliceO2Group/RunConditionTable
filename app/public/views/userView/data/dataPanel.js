@@ -12,14 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
 import tablePanel from './table/tablePanel.js';
-import loading from './fetchingStates/loading.js';
 import failureStatusAndReload from './fetchingStates/failure.js';
-import unknownError from './fetchingStates/unknown.js';
+import unknownError from './fetchingStates/unknownError.js';
 import { RCT } from '../../../config.js';
 import flagsPanel from '../../flags/overview/flagsPanel.js';
 import { default as runsPerDataPassPanel } from '../../runs/runsPerDataPass/overview/panel.js';
+import waitingPanel from '../../waitingPanel.js';
 const { pageNames } = RCT;
 
 /**
@@ -33,8 +32,8 @@ export default function dataPanel(model, runs, detectors, flags) {
     const data = model.fetchedData[page][index];
 
     return data ? data.match({
-        NotAsked: () => h('', 'not asked'),
-        Loading: () => loading(),
+        NotAsked: () => unknownError(model),
+        Loading: () => waitingPanel(),
         Success: () => {
             switch (page) {
                 case pageNames.flags:

@@ -13,24 +13,13 @@
  */
 
 import { h } from '/js/src/index.js';
-import viewButton from '../../../../components/common/viewButton.js';
+import messagePanel from '../../../../components/messagePanel/messagePanel.js';
 
 export default function failureStatusAndReload(model, status) {
-    const reloadBtn = viewButton(
-        model,
-        'Reload',
-        () => model.fetchedData.reqForData(true),
-        '',
-        undefined,
-        '.btn-primary.m3',
+    return messagePanel(
+        'no-network-90',
+        'Failed to load data',
+        `The services are unavailable (status: ${status ? status : 'unknown'})`,
+        h('button.btn.btn-primary.m3', { onclick: () => model.fetchedData.reqForData() }, 'Reload'),
     );
-    const loadingMessage = h('h3', 'Failed to load data');
-    const explanation = h('h5', `The services are unavailable (status: ${status ? status : 'unknown'})`);
-
-    return h('.panel.top-100', [
-        h('.no-network-90'),
-        loadingMessage,
-        explanation,
-        reloadBtn,
-    ]);
 }

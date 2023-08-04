@@ -12,7 +12,6 @@
  */
 
 const Repository = require("./Repository");
-const Sequelize = require('sequelize');
 const deepmerge = require('deepmerge');
 
 /**

@@ -13,18 +13,12 @@
  */
 
 import { h } from '/js/src/index.js';
-import spinner from '../../../../components/common/spinner.js';
+import messagePanel from '../../../../components/messagePanel/messagePanel.js';
 
-export default function loading() {
-    const reloadBtn = h('button.btn.btn-primary.m3', {
-        onclick: () => document.location.reload(),
-    }, 'Retry');
-    const loadingMessage = h('h3', 'Loading...');
+export default function unknownError(model) {
+    const reloadButton = h('button.btn.btn-primary.m3', { onclick: () => model.fetchedData.reqForData(true) }, 'Reload');
+    const reason = 'Unknown error';
+    const message = 'Request could not be handled properly';
 
-    return h('.panel.top-100', [
-        h('.panel',
-            spinner(),
-            loadingMessage),
-        reloadBtn,
-    ]);
+    return messagePanel('unexpected-90', reason, message, reloadButton);
 }
