@@ -57,7 +57,7 @@ class DataPassService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
-    async getAnchorageForSimulationPass(simulationPassId, { filter }) {
+    async getAnchoredToSimulationPass(simulationPassId, { filter }) {
         const runs = await DataPassRepository.findAll({
             include: [
                 {
