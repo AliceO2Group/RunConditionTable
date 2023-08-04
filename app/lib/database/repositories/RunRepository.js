@@ -13,26 +13,28 @@
 
 const Repository = require("./Repository");
 const Sequelize = require('sequelize');
+const deepmerge = require('deepmerge');
 
 /**
  * Sequelize implementation of the Repository.
  */
 class RunRepository extends Repository  {
     /**
-     * Returns all entities.
+     * Returns all Run entities with associated DetectorSubsystem entities.
      *
      * @param {Object} queryClauses the find query (see sequelize findAll options) or a find query builder
      * @returns {Promise<Run[]>} Promise object representing the full mock data
      */
     async findAllWithDetectors(queryClauses = {}) {
-        return this.model.findAll({
+        const baseClause = {
             include: [{
                 model: this.model.sequelize.models.DetectorSubsystem,
                 raw:true,
-                required: true,                
+                required: true,
             }],
-            ...queryClauses
-        });
+        };
+        console.log(deepmerge(baseClause, queryClauses))
+        return this.model.findAll(deepmerge(baseClause, queryClauses));
     }
 }
 
