@@ -13,7 +13,7 @@
 const { dataPassService } = require('../../app/lib/services/dataPasses/DataPassService');
 const { runService } = require('../../app/lib/services/runs/RunService');
 const { periodService } = require('../../app/lib/services/periods/PeriodService');
-const { simulationPassesService } = require('../../app/lib/services/simulationPasses/SimulationPassService');
+const { simulationPassService } = require('../../app/lib/services/simulationPasses/SimulationPassService');
 
 const assert = require('assert');
 
@@ -45,10 +45,10 @@ module.exports = () => {
         });
         describe('SimulationPassService', () => {
             it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(simulationPassesService.getAll.bind(simulationPassesService, {}));
+                await assert.doesNotReject(simulationPassService.getAll.bind(simulationPassService, {}));
             });
             it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(simulationPassesService.getSimulationPassesPerPeriod.bind(simulationPassesService, 0, {}));
+                await assert.doesNotReject(simulationPassService.getSimulationPassesPerPeriod.bind(simulationPassService, 0, {}));
             });
         });
     });

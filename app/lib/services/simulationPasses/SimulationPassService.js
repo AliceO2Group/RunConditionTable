@@ -18,13 +18,14 @@ const {
         },
         models: {
             Period,
+            DataPass,
         },
     },
 } = require('../../database/DatabaseManager');
 const { simulationPassAdapter } = require('../../database/adapters');
 const { filterToSequelizeWhereClause } = require('../../server/utilities');
 
-class SimulationPassesService {
+class SimulationPassService {
     /**
      * Return all simulation passes,
      * @param {Object} query -  Filtering query definiton from http request
@@ -38,7 +39,7 @@ class SimulationPassesService {
     }
 
     /**
-     * Return data passes belonging to period which id is provided
+     * Return simulation passes belonging to period which id is provided
      * @param {Number} periodId - id of period which for simulation passes should be returnd
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<SimulationPass[]>} Promise object represents the result of this use case.
@@ -63,8 +64,35 @@ class SimulationPassesService {
         });
         return runs.map((dataPass) => simulationPassAdapter.toEntity(dataPass));
     }
+
+    /**
+     * Return simulation passes which are anchored to data pass which id is provided
+     * @param {Number} dataPassId - id of data pass which for simulation passes should be returnd
+     * @param {Object} query - Filtering query definiton from http request,... #TODO
+     * @returns {Promise<SimulationPass[]>} Promise object represents the result of this use case.
+     */
+    async getAnchorageForDataPass(dataPassId, { filter }) {
+        const runs = await SimulationPassRepository.findAll({
+            include: [
+                {
+                    model: DataPass,
+                    required: true,
+                    attributes: [],
+                    through: {
+                        where: {
+                            data_pass_id: dataPassId,
+                        },
+                    },
+                },
+            ],
+            where: {
+                ...filterToSequelizeWhereClause(filter),
+            },
+        });
+        return runs.map((dataPass) => simulationPassAdapter.toEntity(dataPass));
+    }
 }
 
 module.exports = {
-    simulationPassesService: new SimulationPassesService(),
+    simulationPassService: new SimulationPassService(),
 };
