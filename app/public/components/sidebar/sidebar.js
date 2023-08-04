@@ -16,6 +16,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 import sidebarItem from './sidebarItem.js';
 import { modal, modalIds, showModal } from '../../views/modal/modal.js';
+import { pageTitle } from '../table/title.js';
 const { pageNames } = RCT;
 
 /**
@@ -33,14 +34,14 @@ export default function sidebar(model) {
         h('.flex-column.gap-20',
             h('.sidebar-section',
                 h('.sidebar-section-title.ph2.hide-on-close', 'Pages'),
-                sidebarItem(model, pageNames.periods, 'Periods'),
-                sidebarItem(model, pageNames.dataPasses, 'Data Passes'),
-                sidebarItem(model, pageNames.anchoragePerDatapass, 'Anchorage per Data pass'),
-                sidebarItem(model, pageNames.mc, 'Monte Carlo'),
-                sidebarItem(model, pageNames.anchoredPerMC, 'Anchored per MC'),
-                sidebarItem(model, pageNames.runsPerPeriod, 'Runs per period'),
-                sidebarItem(model, pageNames.runsPerDataPass, 'Runs per Data pass'),
-                sidebarItem(model, pageNames.flags, 'QA flags')),
+                sidebarItem(model, pageNames.periods, pageTitle(pageNames.periods)),
+                sidebarItem(model, pageNames.dataPasses, pageTitle(pageNames.dataPasses)),
+                sidebarItem(model, pageNames.anchoragePerDatapass, pageTitle(pageNames.anchoragePerDatapass)),
+                sidebarItem(model, pageNames.mc, pageTitle(pageNames.mc)),
+                sidebarItem(model, pageNames.anchoredPerMC, pageTitle(pageNames.anchoredPerMC)),
+                sidebarItem(model, pageNames.runsPerPeriod, pageTitle(pageNames.runsPerPeriod)),
+                sidebarItem(model, pageNames.runsPerDataPass, pageTitle(pageNames.runsPerDataPass)),
+                sidebarItem(model, pageNames.flags, pageTitle(pageNames.flags))),
 
             h('.sidebar-section',
                 h('.sidebar-section-title.ph2.hide-on-close', 'Preferences'),
