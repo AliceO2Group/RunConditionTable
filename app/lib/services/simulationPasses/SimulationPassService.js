@@ -58,7 +58,6 @@ class SimulationPassesService {
                 },
             ],
             where: {
-                period_id: periodId,
                 ...filterToSequelizeWhereClause(filter),
             },
         });
