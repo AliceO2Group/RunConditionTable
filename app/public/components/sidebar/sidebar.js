@@ -32,7 +32,7 @@ export default function sidebar(model) {
         h('.logo.ph3.hide-on-close'),
         h('.flex-column.gap-20',
             h('.sidebar-section',
-                h('.sidebar-section-title.ph3.hide-on-close', 'Pages'),
+                h('.sidebar-section-title.ph2.hide-on-close', 'Pages'),
                 sidebarItem(model, pageNames.periods, 'Periods'),
                 sidebarItem(model, pageNames.dataPasses, 'Data Passes'),
                 sidebarItem(model, pageNames.anchoragePerDatapass, 'Anchorage per Data pass'),
@@ -43,7 +43,7 @@ export default function sidebar(model) {
                 sidebarItem(model, pageNames.flags, 'QA flags')),
 
             h('.sidebar-section',
-                h('.sidebar-section-title.ph3.hide-on-close', 'Preferences'),
+                h('.sidebar-section-title.ph2.hide-on-close', 'Preferences'),
                 h('button.sidebar-item-button', {
                     onclick: () => showModal(modalIds.pageSettings.modal),
                 }, h('.page-title',

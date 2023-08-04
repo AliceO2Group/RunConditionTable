@@ -21,7 +21,6 @@
     flex-direction: row;
     align-items: center;
     overflow: hidden;
-    min-width: 15px !important;
 }
 
 .ehevi .page-title:hover {
@@ -42,11 +41,6 @@
     border-radius: 25px !important;
 }
 
-.ehevi sidebar:hover .sidebar-item-button.current-page {
-    background-color: var(--primary-hover) !important;
-    border-radius: 25px !important;
-}
-
 .ehevi .sidebar {
     width: 3.9em;
     background-color: var(--primary) !important;
@@ -61,6 +55,7 @@
 
 .ehevi .sidebar .sidebar-section-title {
     text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .ehevi .sidebar .hide-on-close {
