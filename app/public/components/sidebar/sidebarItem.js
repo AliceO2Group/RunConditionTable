@@ -30,7 +30,7 @@ export default function sidebarItem(model, pageName, label) {
             case pageNames.runsPerPeriod: return h('.runs-per-period-15-off-white.vertical-center');
             case pageNames.runsPerDataPass: return h('.runs-per-dp-15-off-white.vertical-center');
             case pageNames.flags: return h('.qa-15-off-white.vertical-center');
-            default: h('.folder-15-off-white.vertical-center');
+            default: return h('.folder-15-off-white.vertical-center');
         }
     };
 
