@@ -21,7 +21,7 @@ const {
 const { simulationPassAdapter } = require('../../database/adapters');
 const { filterToSequelizeWhereClause } = require('../../server/utilities');
 
-class DataPassService {
+class SimulationPassesService {
     /**
      * Return all data passes,
      * @param {Object} query -  Filtering query definiton from http request
@@ -40,7 +40,7 @@ class DataPassService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<SimulationPass[]>} Promise object represents the result of this use case.
      */
-    async getDataPassesPerPeriod(periodId, { filter }) {
+    async getSimulationPassesPerPeriod(periodId, { filter }) {
         const runs = await SimulationPassRepository.findAll({
             where: {
                 period_id: periodId,
@@ -52,5 +52,5 @@ class DataPassService {
 }
 
 module.exports = {
-    dataPassService: new DataPassService(),
+    simulationPassesService: new SimulationPassesService(),
 };
