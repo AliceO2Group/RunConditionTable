@@ -17,6 +17,7 @@ const BeamType = require('./BeamType.js');
 const Period = require('./Period.js');
 const Run = require('./Run.js');
 const DataPass = require('./DataPass.js');
+const DetectorSubsystem = require('./DetectorSubsystem.js');
 
 /**
  * 
@@ -29,6 +30,7 @@ const modelsFactory = (sequelize) => {
         Period,
         Run,
         DataPass,
+        DetectorSubsystem,
     };
     models = Object.entries(models).map(([modelName, model]) => [modelName, model(sequelize)]); // instantiate models
     models.forEach(([_, modelInstance]) => modelInstance.associate?.(sequelize.models)); // associate models

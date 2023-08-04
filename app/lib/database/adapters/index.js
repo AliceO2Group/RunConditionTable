@@ -14,13 +14,16 @@
 const PeriodAdapter = require('./PeriodAdapter');
 const RunAdapter = require('./RunAdapter');
 const DataPassAdapter = require('./DataPassAdapter');
+const DetectorSubsystemAdapter = require('./DetectorSubsystemAdapter');
 
 const runAdapter = new RunAdapter();
 const periodAdapter = new PeriodAdapter();
 const dataPassAdapter = new DataPassAdapter();
+const detectorSubsystemAdapter = new DetectorSubsystemAdapter();
 
 module.exports = {
     runAdapter,
     periodAdapter,
     dataPassAdapter,
+    detectorSubsystemAdapter,
 }

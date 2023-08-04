@@ -12,16 +12,8 @@
  */
 
 /**
- * @typedef SequelizeRun
+ * @typedef SequelizeDetectorSubsystem
  *
- * @property {number} runNumber
- * @property {number|null} timeO2Start
- * @property {number|null} timeO2End
- * @property {number|null} timeTrgStart
- * @property {number|null} timeTrgEnd
- * @property {number|null} fillNumber
- * @property {number|null} lhcBeamEnergy
- * @property {number|null} l3CurrentVal
- * @property {number|null} dipoleCurrentVal
- * @property {SequelizeDetectorSubsystem[]|null} DetectorSubsystems
+ * @property {number} id
+ * @property {string} name
  */

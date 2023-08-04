@@ -31,7 +31,7 @@ class RunService {
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
     async getAll({ filter }) {
-        const runs = await RunRepository.findAll({
+        const runs = await RunRepository.findAllWithDetectors({
             where: filterToSequelizeWhereClause(filter),
         });
         return runs.map((run) => runAdapter.toEntity(run));
@@ -44,7 +44,7 @@ class RunService {
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
     async getRunsPerPeriod(periodId, { filter }) {
-        const runs = await RunRepository.findAll({
+        const runs = await RunRepository.findAllWithDetectors({
             where: {
                 period_id: periodId,
                 ...filterToSequelizeWhereClause(filter),
@@ -60,7 +60,7 @@ class RunService {
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
     async getRunsPerDataPass(dataPassId, { filter }) {
-        const runs = await RunRepository.findAll({
+        const runs = await RunRepository.findAllWithDetectors({
             include: [
                 {
                     model: DataPass,

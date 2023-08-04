@@ -11,11 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
+const DetectorSubsystemAdapter = require('./DetectorSubsystemAdapter');
 
-/**
- * RunAdapter
- */
 class RunAdapter {
+    constructor() {
+        this.detectorSubsystemAdapter = new DetectorSubsystemAdapter();
+    }
+    
     /**
      * Converts the given database object to an entity object.
      *
@@ -36,6 +38,7 @@ class RunAdapter {
             lhcBeamEnergy,
             l3CurrentVal,
             dipoleCurrentVal,
+            DetectorSubsystems,
         } = databaseObject;
 
         return {
@@ -51,6 +54,7 @@ class RunAdapter {
             lhcBeamEnergy,
             l3CurrentVal,
             dipoleCurrentVal,
+            detectorSubsystems: DetectorSubsystems?.map(this.detectorSubsystemAdapter.toEntity.bind(this.detectorSubsystemAdapter)),
         }
     }
 
