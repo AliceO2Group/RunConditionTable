@@ -29,10 +29,13 @@ module.exports = () => {
                 await assert.doesNotReject(runService.getAll.bind(runService, {}));
             });
             it('check whether methods do not throws', async () => {
+                await assert.doesNotReject(runService.getRunsPerPeriod.bind(runService, 0, {}));
+            });
+            it('check whether methods do not throws', async () => {
                 await assert.doesNotReject(runService.getRunsPerDataPass.bind(runService, 0, {}));
             });
             it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(runService.getRunsPerPeriod.bind(runService, 0, {}));
+                await assert.doesNotReject(runService.getRunsPerSimulationPass.bind(runService, 0, {}));
             });
         });
         describe('DataPassService', () => {
@@ -41,6 +44,9 @@ module.exports = () => {
             });
             it('check whether methods do not throws', async () => {
                 await assert.doesNotReject(dataPassService.getDataPassesPerPeriod.bind(dataPassService, 0, {}));
+            });
+            it('check whether methods do not throws', async () => {
+                await assert.doesNotReject(dataPassService.getAnchoredToSimulationPass.bind(dataPassService, 0, {}));
             });
         });
         describe('SimulationPassService', () => {
