@@ -51,7 +51,26 @@ const listDataPassesPerPeriodHandler = async (req, res, next) => {
     }
 };
 
+/**
+ * List data passes anchored to simulation pass which id is provided
+ * @param {Object} req express HTTP request object
+ * @param {Object} res express HTTP response object
+ * @param {Object} next express next handler
+ * @returns {undefined}
+ */
+const listAnchoredToSimulationPass = async (req, res, next) => {
+    const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
+    const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
+    if (validatedDTO) {
+        const runs = await dataPassService.getAnchoredToSimulationPass(validatedDTO.params.id, validatedDTO.query);
+        res.json({
+            data: runs,
+        });
+    }
+};
+
 module.exports = {
     listDataPassesHandler,
     listDataPassesPerPeriodHandler,
+    listAnchoredToSimulationPass,
 };

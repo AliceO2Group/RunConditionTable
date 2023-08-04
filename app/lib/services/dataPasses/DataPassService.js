@@ -16,10 +16,12 @@ const {
         repositories: {
             DataPassRepository,
         },
+        models: {
+            SimulationPass,
+        },
     },
 } = require('../../database/DatabaseManager');
 const { dataPassAdapter } = require('../../database/adapters');
-const SimulationPass = require('../../database/models/SimulationPass');
 const { filterToSequelizeWhereClause } = require('../../server/utilities');
 
 class DataPassService {
