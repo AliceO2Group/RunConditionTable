@@ -16,6 +16,9 @@ const {
         repositories: {
             SimulationPassRepository,
         },
+        models: {
+            Period,
+        },
     },
 } = require('../../database/DatabaseManager');
 const { simulationPassAdapter } = require('../../database/adapters');
@@ -42,6 +45,18 @@ class SimulationPassesService {
      */
     async getSimulationPassesPerPeriod(periodId, { filter }) {
         const runs = await SimulationPassRepository.findAll({
+            include: [
+                {
+                    model: Period,
+                    required: true,
+                    attributes: [],
+                    through: {
+                        where: {
+                            period_id: periodId,
+                        },
+                    },
+                },
+            ],
             where: {
                 period_id: periodId,
                 ...filterToSequelizeWhereClause(filter),
