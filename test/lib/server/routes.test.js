@@ -12,7 +12,9 @@
  */
 const { routes } = require('../../../app/lib/server/routers');
 const apiDocumentationCotroller = require('../../../app/lib/server/controllers/ApiDocumentation.controller.js');
+const { makeHttpRequestForJSON, replaceAll } = require('../../../app/lib/utils');
 const assert = require('assert');
+const config = require('../../../app/config');
 
 module.exports = () => {
     describe('WebUiServerSuite', () => {
@@ -27,6 +29,14 @@ module.exports = () => {
         describe('Routes Abstraction Controller', () => {
             it('Check if /api/docs would return proper json', () => {
                 assert(apiDocumentationCotroller.apiDocsJson.length === routes.length);
+            });
+        });
+        describe('Endpoints', () => {
+            routes.map(async ({ path }) => {
+                const url = `${config.http.tls ? 'https' : 'http'}://localhost:${config.http.port}/api${replaceAll(path, /:[^/]+/, '0')}`;
+                it(`Check if endpoint ${path} parametrized as ${url} works correctly`, async () => {
+                    await assert.doesNotReject(makeHttpRequestForJSON(url));
+                });
             });
         });
     });

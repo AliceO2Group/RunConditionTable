@@ -36,6 +36,7 @@ function checkClientType(endpoint) {
 }
 
 function makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFailure) {
+    endpoint = new URL(endpoint);
     return new Promise((resolve, reject) => {
         let rawData = '';
         const req = checkClientType(endpoint).request(endpoint, opts, async (res) => {
