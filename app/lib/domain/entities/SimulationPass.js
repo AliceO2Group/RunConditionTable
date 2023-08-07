@@ -11,16 +11,14 @@
  * or submit itself to any jurisdiction.
  */
 
-const UtilitiesSuite = require('./utils/utils.test');
-const ResProviderSuite = require('./utils/resProvider.test');
-const ConfigSuite = require('./config');
-const ServerSuite = require('./server');
-const ServicesSuite = require('./services.test');
-
-module.exports = () => {
-    describe('Utilities', UtilitiesSuite);
-    describe('Res Provider', ResProviderSuite);
-    describe('Config', ConfigSuite);
-    describe('Server', ServerSuite);
-    ServicesSuite();
-};
+/**
+ * @typedef SimulationPass
+ *
+ * @property {Number} id
+ * @property {string} name
+ * @property {string|null} description
+ * @property {string|null} jiraId
+ * @property {string|null} PWG
+ * @property {Number|null} requestedEvents
+ * @property {Number|null} outputSize
+ */

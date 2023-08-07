@@ -12,18 +12,13 @@
  */
 
 /**
- * Execute an async function and return an eventually thrown error
+ * @typedef SequelizeSimulationPass
  *
- * @param {function} callable an async function to call
- *
- * @return {Promise<null|Error>} the eventually caught error
+ * @property {Number} id
+ * @property {string} name
+ * @property {string|null} description
+ * @property {string|null} jiraId
+ * @property {string|null} PWG
+ * @property {Number|null} requestedEvents
+ * @property {Number|null} outputSize
  */
-
-module.exports.catchAsyncError = async (callable) => {
-    try {
-        await callable();
-    } catch (e) {
-        return e;
-    }
-    return null;
-};

@@ -33,7 +33,6 @@ class RunRepository extends Repository  {
                 required: true,
             }],
         };
-        console.log(deepmerge(baseClause, queryClauses))
         return this.model.findAll(deepmerge(baseClause, queryClauses));
     }
 }

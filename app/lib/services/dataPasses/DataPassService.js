@@ -16,6 +16,9 @@ const {
         repositories: {
             DataPassRepository,
         },
+        models: {
+            SimulationPass,
+        },
     },
 } = require('../../database/DatabaseManager');
 const { dataPassAdapter } = require('../../database/adapters');
@@ -47,7 +50,35 @@ class DataPassService {
                 ...filterToSequelizeWhereClause(filter),
             },
         });
-        return runs.map((dataPass) => DataPassRepository.toEntity(dataPass));
+        return runs.map((dataPass) => dataPassAdapter.toEntity(dataPass));
+    }
+
+    /**
+     * Return data passes which to period which id is provided
+     * @param {Number} simulationPassId - id of simulaton pass which for runs should be returnd
+     * @param {Object} query - Filtering query definiton from http request,... #TODO
+     * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
+     */
+    async getAnchoredToSimulationPass(simulationPassId, { filter }) {
+        const runs = await DataPassRepository.findAll({
+            include: [
+                {
+                    model: SimulationPass,
+                    require: true,
+                    attributes: [],
+                    through: {
+                        where: {
+                            sim_pass_id: simulationPassId,
+                        },
+                    },
+                },
+            ],
+
+            where: {
+                ...filterToSequelizeWhereClause(filter),
+            },
+        });
+        return runs.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
 }
 

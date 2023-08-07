@@ -35,10 +35,11 @@ function checkClientType(endpoint) {
     }
 }
 
-function makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFailure) {
+function makeHttpRequestForJSON(url, opts, logger, onSuccess, onFailure) {
+    url = new URL(url);
     return new Promise((resolve, reject) => {
         let rawData = '';
-        const req = checkClientType(endpoint).request(endpoint, opts, async (res) => {
+        const req = checkClientType(url).request(url, opts, async (res) => {
             const { statusCode } = res;
             const contentType = res.headers['content-type'];
 
@@ -49,9 +50,9 @@ function makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFailure) {
                 if (opts.allowRedirects) {
                     redirect = true;
                     logger.warn(mess);
-                    const nextHop = new URL(endpoint.origin + res.headers.location);
+                    const nextHop = new URL(url.origin + res.headers.location);
                     nextHop.searchParams.set('res_path', 'json');
-                    logger.warn(`from ${endpoint.href} to ${nextHop.href}`);
+                    logger.warn(`from ${url.href} to ${nextHop.href}`);
                     resolve(await makeHttpRequestForJSON(nextHop));
                 } else {
                     throw new Error(mess);
@@ -74,7 +75,7 @@ function makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFailure) {
             req.on('error', (e) => {
                 logger.error(`ERROR httpGet: ${e}`);
                 if (onFailure) {
-                    onFailure(endpoint, e);
+                    onFailure(url, e);
                 }
                 reject(e);
             });
@@ -91,12 +92,12 @@ function makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFailure) {
 
                         const data = JSON.parse(rawData);
                         if (onSuccess) {
-                            onSuccess(endpoint, data);
+                            onSuccess(url, data);
                         }
                         resolve(data);
                     }
                 } catch (e) {
-                    logger.error(`${e.message} for endpoint: ${endpoint.href}`);
+                    logger.error(`${e.message} for endpoint: ${url.href}`);
                     const fp = path.join(
                         __dirname,
                         '..',
@@ -107,9 +108,9 @@ function makeHttpRequestForJSON(endpoint, opts, logger, onSuccess, onFailure) {
                         'rawJson',
                         'failing-endpoints.txt',
                     );
-                    fs.appendFileSync(fp, `${endpoint.href}\n     ${e.message}\n`);
+                    fs.appendFileSync(fp, `${url.href}\n     ${e.message}\n`);
                     if (onFailure) {
-                        onFailure(endpoint, e);
+                        onFailure(url, e);
                     }
                     reject(e);
                 }

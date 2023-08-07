@@ -11,22 +11,22 @@
  * or submit itself to any jurisdiction.
  */
 
-const { dataPassService } = require('../../services/dataPasses/DataPassService');
+const { simulationPassService } = require('../../services/simulationPasses/SimulationPassService');
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
 const Joi = require('joi');
 
 /**
- * List All data passes in db
+ * List All simulation passes in db
  * @param {Object} req express HTTP request object
  * @param {Object} res express HTTP response object
  * @param {Object} next express next handler
  * @returns {undefined}
  */
-const listDataPassesHandler = async (req, res, next) => {
+const listSimulationPassesHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
-        const runs = await dataPassService.getAll(validatedDTO.query);
+        const runs = await simulationPassService.getAll(validatedDTO.query);
         res.json({
             data: runs,
         });
@@ -34,17 +34,17 @@ const listDataPassesHandler = async (req, res, next) => {
 };
 
 /**
- * List data passes belonging to period which id is provided
+ * List simulation passes belonging to period which id is provided
  * @param {Object} req express HTTP request object
  * @param {Object} res express HTTP response object
  * @param {Object} next express next handler
  * @returns {undefined}
  */
-const listDataPassesPerPeriodHandler = async (req, res, next) => {
+const listSimulationPassesPerPeriodHandler = async (req, res, next) => {
     const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
-        const runs = await dataPassService.getDataPassesPerPeriod(validatedDTO.params.id, validatedDTO.query);
+        const runs = await simulationPassService.getSimulationPassesPerPeriod(validatedDTO.params.id, validatedDTO.query);
         res.json({
             data: runs,
         });
@@ -52,17 +52,17 @@ const listDataPassesPerPeriodHandler = async (req, res, next) => {
 };
 
 /**
- * List data passes anchored to simulation pass which id is provided
+ * List simulation passes which are anchored to data pass wich id is provided
  * @param {Object} req express HTTP request object
  * @param {Object} res express HTTP response object
  * @param {Object} next express next handler
  * @returns {undefined}
  */
-const listAnchoredToSimulationPass = async (req, res, next) => {
+const listAnchorageForDataPassHandler = async (req, res, next) => {
     const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
-        const runs = await dataPassService.getAnchoredToSimulationPass(validatedDTO.params.id, validatedDTO.query);
+        const runs = await simulationPassService.getAnchorageForDataPass(validatedDTO.params.id, validatedDTO.query);
         res.json({
             data: runs,
         });
@@ -70,7 +70,7 @@ const listAnchoredToSimulationPass = async (req, res, next) => {
 };
 
 module.exports = {
-    listDataPassesHandler,
-    listDataPassesPerPeriodHandler,
-    listAnchoredToSimulationPass,
+    listSimulationPassesHandler,
+    listSimulationPassesPerPeriodHandler,
+    listAnchorageForDataPassHandler,
 };

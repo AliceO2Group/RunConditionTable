@@ -28,6 +28,11 @@ module.exports = (sequelize) => {
     Period.associate = (models) => {
         Period.hasMany(models.Run);
         Period.belongsTo(models.BeamType, {foreginKey: 'beam_type_id'})
+        Period.belongsToMany(models.SimulationPass,  {
+            through: 'anchored_periods',
+            foreignKey: 'period_id',
+            timestamps: false,
+        });
     };
     
     return Period;

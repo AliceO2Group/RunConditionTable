@@ -12,19 +12,8 @@
  */
 
 const assert = require('assert');
-const Utils = require('../../app/lib/utils');
-const ServicesDataCommons = require('../../app/lib/alimonitor-services/ServicesDataCommons.js');
-
-const arrayEquals = (a, b) => Array.isArray(a) &&
-        Array.isArray(b) &&
-        a.length === b.length &&
-        a.every((val, index) => {
-            if (Array.isArray(val)) {
-                return arrayEquals(val, b[index]);
-            } else {
-                return val === b[index];
-            }
-        });
+const Utils = require('../../../app/lib/utils');
+const ServicesDataCommons = require('../../../app/lib/alimonitor-services/ServicesDataCommons.js');
 
 module.exports = () => {
     describe('Utils', () => {
@@ -38,11 +27,11 @@ module.exports = () => {
             };
 
             it('should do nothing when no keptFields provided', () => {
-                assert(Utils.filterObject(objectSample) === objectSample);
+                assert.deepStrictEqual(Utils.filterObject(objectSample), objectSample);
             });
 
             it('should filter the values correctly', () => {
-                assert(Utils.filterObject(objectSample, keptFields)['2'] === 'value1');
+                assert.deepStrictEqual(Utils.filterObject(objectSample, keptFields)['2'], 'value1');
             });
 
             it('should return an empty object when told to suppress undefined values', () => {
@@ -52,20 +41,17 @@ module.exports = () => {
 
         describe('Parsing values to sql', () => {
             const sampleValues1 = [4, 5, 6];
-            const sampleValues2 = [4, 5, undefined];
-            const sampleValues3 = [4, 5, 'DEFAULT'];
 
             it('should return the same values when not NaN nor DEFAULT', () => {
-                Utils.adjustValuesToSql(sampleValues1).forEach((obj, index) =>
-                    assert(obj) == sampleValues1[index]);
+                assert.deepStrictEqual(Utils.adjustValuesToSql(sampleValues1), sampleValues1);
             });
 
             it('should parse undefined values as null', () => {
-                assert(Utils.adjustValuesToSql(sampleValues2)[2] === null);
+                assert(Utils.adjustValuesToSql(undefined) === null);
             });
 
-            it('should return wrap DEFAULT in quotes', () => {
-                assert(Utils.adjustValuesToSql(sampleValues3)[2] === 'DEFAULT');
+            it('should return unquoted DEFAULT', () => {
+                assert(Utils.adjustValuesToSql('DEFAULT') === 'DEFAULT');
             });
         });
 
@@ -73,10 +59,10 @@ module.exports = () => {
             const expectedRes = ['"end"'];
             const basicCase = ['sth else'];
             it('should wrap END keyword in quotes', () => {
-                assert(arrayEquals(Utils.preserveSQLKeywords(['end']), expectedRes));
+                assert.deepStrictEqual(Utils.preserveSQLKeywords(['end']), expectedRes);
             });
             it('should not affect other words', () => {
-                assert(arrayEquals(Utils.preserveSQLKeywords(basicCase), basicCase));
+                assert.deepStrictEqual(Utils.preserveSQLKeywords(basicCase), basicCase);
             });
         });
 
@@ -116,7 +102,7 @@ module.exports = () => {
                 const expectedOutcome = [[1, 2, 3], [4, 5]];
                 const outcome = Utils.arrayToChunks(array, chunkSize);
 
-                assert(arrayEquals(expectedOutcome, outcome));
+                assert.deepStrictEqual(expectedOutcome, outcome);
             });
         });
 
@@ -125,7 +111,7 @@ module.exports = () => {
                 const periodNameSamples = ['LHC12c', 'LHC23j', 'LHC00q', 'LHC', 'LHC51', null];
                 const expectedOutcome = [2012, 2023, 2000, 'NULL', 1951, 'NULL'];
                 const outcome = periodNameSamples.map((periodName) => ServicesDataCommons.extractPeriodYear(periodName));
-                assert(arrayEquals(expectedOutcome, outcome));
+                assert.deepStrictEqual(expectedOutcome, outcome);
             });
         });
     });

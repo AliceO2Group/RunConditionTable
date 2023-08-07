@@ -16,4 +16,5 @@ module.exports = {
     PeriodController: require('./period.controller.js'),
     apiDocumentationCotroller: require('./ApiDocumentation.controller.js'),
     DataPassController: require('./dataPass.controller.js'),
+    SimulationPassController: require('./simulationPass.controller.js'),
 };
