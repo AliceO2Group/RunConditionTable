@@ -18,7 +18,7 @@ const { simulationPassService } = require('../../app/lib/services/simulationPass
 const assert = require('assert');
 
 const boundMethodCheck = (boundMethod) =>
-    it(`Check if method <${boundMethod.name}> works correctly`,
+    it(`should call method <${boundMethod.name}> without errors`,
         async () => await assert.doesNotReject(boundMethod()));
 
 module.exports = () => {

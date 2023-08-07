@@ -19,7 +19,7 @@ const config = require('../../../app/config');
 module.exports = () => {
     describe('WebUiServerSuite', () => {
         describe('Routes definitions', () => {
-            it('Check if routes are properly parsed', () => {
+            it('should parse routes correctly', () => {
                 assert(routes.every((r) =>[r.method, r.path, r.controller, r.description].every((_) => _)));
                 assert(routes.every(({ controller }) =>
                     (Array.isArray(controller) ? controller : [controller])
@@ -27,14 +27,14 @@ module.exports = () => {
             });
         });
         describe('Routes Abstraction Controller', () => {
-            it('Check if /api/docs would return proper json', () => {
+            it('should retrieve all endpoints description from apiDocs', () => {
                 assert(apiDocumentationCotroller.apiDocsJson.length === routes.length);
             });
         });
         describe('Endpoints', () => {
             routes.map(async ({ path }) => {
                 const url = `${config.http.tls ? 'https' : 'http'}://localhost:${config.http.port}/api${replaceAll(path, /:[^/]+/, '0')}`;
-                it(`Check if endpoint ${path} parametrized as ${url} works correctly`, async () => {
+                it(`should fetch from ${path} <${url}> without errors`, async () => {
                     await assert.doesNotReject(makeHttpRequestForJSON(url));
                 });
             });
