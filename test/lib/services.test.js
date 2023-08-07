@@ -17,60 +17,38 @@ const { simulationPassService } = require('../../app/lib/services/simulationPass
 
 const assert = require('assert');
 
+const boundMethodCheck = (boundMethod) =>
+    it(`Check if method <${boundMethod.name}> works correctly`,
+        async () => await assert.doesNotReject(boundMethod()));
+
 module.exports = () => {
     describe('Services suite', () => {
         describe('PeriodService', () => {
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(periodService.getAll.bind(periodService, {}));
-            });
+            [periodService.getAll.bind(periodService, {})]
+                .map(boundMethodCheck);
         });
         describe('RunService', () => {
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(runService.getAll.bind(runService, {}));
-            });
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(runService.getRunsPerPeriod.bind(runService, 0, {}));
-            });
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(runService.getRunsPerDataPass.bind(runService, 0, {}));
-            });
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(runService.getRunsPerSimulationPass.bind(runService, 0, {}));
-            });
-        });
-
-        describe('RunService xdxd', () => {
             [
                 runService.getAll.bind(runService, {}),
                 runService.getRunsPerPeriod.bind(runService, 0, {}),
                 runService.getRunsPerDataPass.bind(runService, 0, {}),
                 runService.getRunsPerSimulationPass.bind(runService, 0, {}),
             ]
-                .map((boundMethod) =>
-                    it(`Check if method <${boundMethod.name}> of RunService works correctly`,
-                        async () => await assert.doesNotReject(boundMethod())));
+                .map(boundMethodCheck);
         });
         describe('DataPassService', () => {
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(dataPassService.getAll.bind(dataPassService, {}));
-            });
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(dataPassService.getDataPassesPerPeriod.bind(dataPassService, 0, {}));
-            });
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(dataPassService.getAnchoredToSimulationPass.bind(dataPassService, 0, {}));
-            });
+            [
+                dataPassService.getAll.bind(dataPassService, {}),
+                dataPassService.getDataPassesPerPeriod.bind(dataPassService, 0, {}),
+                dataPassService.getAnchoredToSimulationPass.bind(dataPassService, 0, {}),
+            ].map(boundMethodCheck);
         });
         describe('SimulationPassService', () => {
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(simulationPassService.getAll.bind(simulationPassService, {}));
-            });
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(simulationPassService.getSimulationPassesPerPeriod.bind(simulationPassService, 0, {}));
-            });
-            it('check whether methods do not throws', async () => {
-                await assert.doesNotReject(simulationPassService.getAnchorageForDataPass.bind(simulationPassService, 0, {}));
-            });
+            [
+                simulationPassService.getAll.bind(simulationPassService, {}),
+                simulationPassService.getSimulationPassesPerPeriod.bind(simulationPassService, 0, {}),
+                simulationPassService.getAnchorageForDataPass.bind(simulationPassService, 0, {}),
+            ].map(boundMethodCheck);
         });
     });
 };
