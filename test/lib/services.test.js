@@ -38,6 +38,18 @@ module.exports = () => {
                 await assert.doesNotReject(runService.getRunsPerSimulationPass.bind(runService, 0, {}));
             });
         });
+
+        describe('RunService xdxd', () => {
+            [
+                runService.getAll.bind(runService, {}),
+                runService.getRunsPerPeriod.bind(runService, 0, {}),
+                runService.getRunsPerDataPass.bind(runService, 0, {}),
+                runService.getRunsPerSimulationPass.bind(runService, 0, {}),
+            ]
+                .map((boundMethod) =>
+                    it(`Check if method <${boundMethod.name}> of RunService works correctly`,
+                        async () => await assert.doesNotReject(boundMethod())));
+        });
         describe('DataPassService', () => {
             it('check whether methods do not throws', async () => {
                 await assert.doesNotReject(dataPassService.getAll.bind(dataPassService, {}));
