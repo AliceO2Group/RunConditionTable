@@ -43,7 +43,11 @@ Usage:
         ./$SCRIPT_NAME <STAGES> [<FLAGS>]
         where STAGES is comma separeted list of stages performed sequentialy. 
         In default behaviour failure of one stage causes stopping pipeline execution, it can be changes via flag --ignore-errors.
-        Using moste of stages requires TARGET to be specified (default dev). It can be specified via flag -t|--target as test as well as via exporting env var TARGET;
+        Using mode of stages requires TARGET to be specified (default dev). It can be specified via flag -t|--target as test as well as via exporting env var TARGET;
+        It is possible to specify SUBTARGET from range 1-9 (defualt 1 for TARGET dev). It can be specified via flag -s|--subtarget as test as well as via exporting env var SUBTARGET;
+        It can be used for running muliple instances of application simultaneously.
+        For TARGET test, 0 is only allowed value for SUBTARGET and can be omitted.
+
         Each stage is performed within the context of target.
         Using conatiners build as dev and test is separted and can be performed in parallel.
 
@@ -133,7 +137,7 @@ else
                 export TARGET=$2;
                 shift 2;
                 ;;
-            --subtarget)
+            -s|--subtarget)
                 export SUBTARGET=$2;
                 shift 2;
                 ;;
@@ -173,9 +177,20 @@ else
 fi
 
 export TARGET=${TARGET:-dev}
-export SUBTARGET=${SUBTARGET:-0}
-export APP_CONTAINER_NAME="o2rct_application-$TARGET$SUBTARGET"
-export DB_CONTAINER_NAME="o2rct_database-$TARGET$SUBTARGET"
+if [[ "$TARGET" = "$DEV_MODE" ]]; then
+    SUBTARGET=${SUBTARGET:-1};
+    if ! [[ $SUBTARGET =~ ^[1-9]$ ]]; then
+        usage "incorrect SUBTARGET $SUBTARGET for target $TARGET";
+    fi;
+elif [[ "$TARGET" = "$TEST_MODE" ]]; then
+    SUBTARGET=0;
+else
+    usage "incorrect target $TARGET";
+fi;
+
+export SUBTARGET;
+export APP_CONTAINER_NAME="o2rct_application-$TARGET$SUBTARGET";
+export DB_CONTAINER_NAME="o2rct_database-$TARGET$SUBTARGET";
 
 DOCKER_COMP_CMD_NO_ENV="docker compose -p $TARGET$SUBTARGET-o2rct 
                     -f $MAIN_DOCKER_COMPOSE_YML 
