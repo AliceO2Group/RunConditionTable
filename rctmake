@@ -133,6 +133,10 @@ else
                 export TARGET=$2;
                 shift 2;
                 ;;
+            --subtarget)
+                export SUBTARGET=$2;
+                shift 2;
+                ;;
             -S|--service)
                 SERVICES="$SERVICES $(echo $2 | tr ',' ' ')";
                 shift 2;
@@ -169,12 +173,14 @@ else
 fi
 
 export TARGET=${TARGET:-dev}
-export APP_CONTAINER_NAME="o2rct_application-$TARGET"
-export DB_CONTAINER_NAME="o2rct_database-$TARGET"
+export SUBTARGET=${SUBTARGET:-0}
+export APP_CONTAINER_NAME="o2rct_application-$TARGET$SUBTARGET"
+export DB_CONTAINER_NAME="o2rct_database-$TARGET$SUBTARGET"
 
-DOCKER_COMP_CMD_NO_ENV="docker compose -p $TARGET-o2rct 
+DOCKER_COMP_CMD_NO_ENV="docker compose -p $TARGET$SUBTARGET-o2rct 
                     -f $MAIN_DOCKER_COMPOSE_YML 
                     -f $DOCKER_DIR/docker-compose-$TARGET.yml
+                    -f $DOCKER_DIR/docker-compose-network.yml
                     -f $DOCKER_DIR/docker-compose-volumes.yml
                     --env-file "$DOCKER_DIR/$TARGET.env" 
                     --project-directory $PROJECT_DIR";
