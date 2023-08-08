@@ -21,7 +21,7 @@ import pager from '../../../../components/table/pager.js';
 
 import filter from './filtering/filter.js';
 import activeFilters from './filtering/activeFilters.js';
-import noDataView from './noDataView.js';
+import { noDataFound, noMatchingData } from '../../../../components/messagePanel/messages.js';
 
 import { RCT } from '../../../../config.js';
 import sortingRow from './sortingRow.js';
@@ -111,7 +111,9 @@ export default function tablePanel(model, runs, detectors) {
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
-                : noDataView(model, dataPointer, anyFiltersActive(url)),
+                : anyFiltersActive(url)
+                    ? noMatchingData(model, dataPointer.page)
+                    : noDataFound(model),
         ])
         : noSubPageSelected(model);
 }

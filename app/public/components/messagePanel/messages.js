@@ -16,9 +16,16 @@ import { h } from '/js/src/index.js';
 import messagePanel from './messagePanel.js';
 import spinner from '../common/spinner.js';
 
+const goBack = 'Go back';
+const nothingFound = 'Nothing found';
+
 const requestButton = (model) => h('button.btn.btn-primary.m3', {
     onclick: () => model.fetchedData.reqForData(true),
 }, 'Reload');
+
+const removeCurrentDataButton = (model, label) => h('button.btn.btn-primary.m3', {
+    onclick: () => model.removeCurrentData(),
+}, label);
 
 export const failure = (model, status) => messagePanel(
     'no-network-90',
@@ -49,6 +56,30 @@ export const serviceUnavailable = (model) => messagePanel(
     h('.notification-content.shadow-level3.bg-danger.white.br2.p2.notification-close', {
         id: model.dataAccess.serviceUnavailable.messageFieldId,
     }, ''),
+);
+
+export const noMatchingData = (model, page) => messagePanel(
+    'nothing-found-90',
+    nothingFound,
+    'There is no data that matches your request',
+    [
+        h('button.btn.btn-secondary.m3', {
+            onclick: () => {
+                model.navigation.goToDefaultPageUrl(page);
+            },
+        }, 'Clear filters'),
+        removeCurrentDataButton(model, goBack),
+    ],
+);
+
+export const noDataFound = (model) => messagePanel(
+    'nothing-found-90',
+    nothingFound,
+    'There is no data to be displayed here',
+    [
+        removeCurrentDataButton(model, goBack),
+        requestButton(model),
+    ],
 );
 
 export const waiting = () => {
