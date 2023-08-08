@@ -19,36 +19,23 @@
     background-image: url('/styles/images/icons/10/primary/expand-arrow.svg');
     background-repeat: no-repeat;
     background-color: var(--white);
-    background-position-y: 5px;
+    background-position: center right 0.5em;
     border: 1px solid var(--selection-color) !important;
     border-radius: 10px;
     font-size: xx-small;
     padding-left: 10px;
     max-height: 30px;
+
+    font-size: small !important;
+    min-height: fit-content;
+    min-width: fit-content;
+    padding-right: 30px;
   }
 
-.ehevi .select.show-columns {
+.ehevi .select.column-options-select {
     min-width: 170px;
-    background-position-x: 92%;
-    background-position-y: 5px;
 }
 
-.ehevi .select.color-theme {
-    font-size: small !important;
-    min-height: fit-content;
-    min-width: fit-content;
-    padding-right: 30px;
-    background-position-x: 85%;
-}
-
-.ehevi select.filter-select {
-    font-size: small !important;
-    min-height: fit-content;
-    min-width: fit-content;
-    padding-right: 30px;
-    background-position-x: 90%;
-}
-
-.ehevi select.filter-select option[disabled]:first-child {
+.ehevi .select option[disabled]:first-child {
     display: none !important;
 }
