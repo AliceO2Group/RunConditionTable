@@ -34,13 +34,3 @@ services:
         target: /postgres/run/database/cache
         bind:
           create_host_path: true
-
-
-networks:
-  network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.200.201.0/24"
-          gateway: "172.200.201.1"

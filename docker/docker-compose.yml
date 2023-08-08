@@ -3,7 +3,7 @@ services:
   application:
     container_name: $APP_CONTAINER_NAME
     working_dir: /opt/RunConditionTable
-    command: ["./scripts/check-host-and-exec.sh", "$DB_CONTAINER_NAME", "5432", "10", "--", "npm", "run", "start:$TARGET"]
+    command: ["./scripts/check-host-and-exec.sh", "$DB_CONTAINER_NAME", "$RCT_DB_PORT", "10", "--", "npm", "run", "start:$TARGET${START_TARGET_MODIFIER:+:$START_TARGET_MODIFIER}"]
     stdin_open: true
     tty: true 
     build:

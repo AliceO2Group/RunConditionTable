@@ -1,0 +1,8 @@
+networks:
+  network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.200.20$SUBTARGET.0/24"
+          gateway: "172.200.20$SUBTARGET.1"
