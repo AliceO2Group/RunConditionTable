@@ -271,6 +271,7 @@ ALTER SEQUENCE public.runs_detectors_id_seq OWNER TO postgres;
 CREATE TABLE public.runs_detectors (
 	detector_id integer NOT NULL,
 	run_number integer NOT NULL,
+	quality varchar,
 	CONSTRAINT runs_detectors_pkey PRIMARY KEY (detector_id,run_number),
 	CONSTRAINT rd_pair_unique UNIQUE (detector_id,run_number)
 );

@@ -294,7 +294,7 @@ for stage in $STAGES; do
                 ;;
                 clean | truncate)
                     docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:$DB_WORKINGDIR/delete-data.sql" \
-                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "$DB_WORKINGDIR/run/delete-data.sql";
+                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "$DB_WORKINGDIR/delete-data.sql";
                 ;;
                 
                 ip)
