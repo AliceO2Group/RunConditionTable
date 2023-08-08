@@ -98,7 +98,7 @@ export default function filter(model) {
                 }, 'Use defined filters'))),
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-center',
-                h('select.select.filter-select', {
+                h('select.select', {
                     id: 'show-options-field',
                     name: 'showOptions' }, [
                     h('option', { value: '', selected: true, disabled: true, hidden: true }, 'Field'),
@@ -106,7 +106,7 @@ export default function filter(model) {
                         .map((field) => h('option', { value: field.name }, getFieldName(model, field))),
                 ], h('.close-10-primary')),
 
-                h('select.select.filter-select', {
+                h('select.select', {
                     id: 'filters-opts-select',
                     name: 'showOptions',
                     onchange: () => onFilteringTypeChange(),

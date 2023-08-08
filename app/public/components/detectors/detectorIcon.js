@@ -15,6 +15,7 @@
 import qcTypeSelection from '../../views/runs/runsPerDataPass/overview/qcTypeSelection.js';
 import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
+import { showModal } from '../../views/modal/modal.js';
 const { runBasedQuality } = RCT.quality;
 
 export default function detectorIcon(navigation, item, index, detectorName, timeBased = false) {
@@ -29,18 +30,8 @@ export default function detectorIcon(navigation, item, index, detectorName, time
             }, item, index, detectorName, runDetectorId, timeBased))),
         h('button.btn.no-border-bottom.pointer.run-quality.good', {
             id: runDetectorId,
-            onclick: () => {
-                document.getElementById(runBasedQcModalId).style.display = 'block';
-                document.addEventListener('click', (event) => {
-                    const modalContent = document.getElementsByClassName('modal-content');
-                    const modal = document.getElementsByClassName('modal');
-                    if (Array.from(modalContent).find((e) => e != event.target)
-                    && Array.from(modal).find((e) => e == event.target)
-                    && document.getElementById(runBasedQcModalId)) {
-                        document.getElementById(runBasedQcModalId).style.display = 'none';
-                    }
-                });
-            } },
+            onclick: () => showModal(runBasedQcModalId),
+        },
         runBasedQuality.good),
     ];
 }

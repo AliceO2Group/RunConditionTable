@@ -17,6 +17,10 @@
     text-decoration: none !important;
     color: var(--color-gray-darker);
     line-height: normal;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
 }
 
 .ehevi .page-title:hover {
@@ -29,28 +33,48 @@
 
 .ehevi .title-text {
     color: var(--off-white) !important;
-    padding-left: 30px;
-    padding-top: 0;
-    margin-top: 0;
+    padding-left: 2em;
 }
 
-.ehevi .current-page {
-    background-color: var(--white) !important;
-    opacity: 0.1;
-    border-radius: 25px;
-    position: relative;
-    left: -5px;
-    padding-right: 45px;
-    min-height: 25px;
-    align-items: center;
+.ehevi .sidebar-item-button.current-page {
+    background-color: var(--primary-hover) !important;
+    border-radius: 25px !important;
 }
 
 .ehevi .sidebar {
     background-color: var(--primary) !important;
     color: var(--off-white) !important;
     font-size: small !important;
+    padding: 0.45em !important;
 }
 
-.ehevi .sidebar-section-title {
+.ehevi .sidebar.sidebar-visible {
+    width: 20em !important;
+}
+
+.ehevi .sidebar.sidebar-collapsible {
+    width: 3.9em;
+    background-color: var(--primary) !important;
+    color: var(--off-white) !important;
+    font-size: small !important;
+    padding: 0.45em !important;
+}
+
+.ehevi .sidebar.sidebar-collapsible:hover {
+    width: 20em !important;
+}
+
+.ehevi .sidebar .sidebar-section-title {
     text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ehevi .sidebar.sidebar-collapsible .hide-on-close {
+    opacity: 0;
+    transition: opacity 0.3s linear;
+}
+
+.ehevi .sidebar.sidebar-collapsible:hover .hide-on-close {
+    opacity: 1;
+    transition: opacity 0.3s linear;
 }

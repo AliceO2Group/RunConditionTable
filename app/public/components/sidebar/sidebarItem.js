@@ -13,25 +13,31 @@
  */
 
 import { h } from '/js/src/index.js';
+import { RCT } from '../../config.js';
+const { pageNames } = RCT;
 
 export default function sidebarItem(model, pageName, label) {
     const subPagesCount = model.getSubPagesCount(pageName);
     const displayedSubPagesCount = subPagesCount > 0 ? ` (${subPagesCount})` : '';
 
-    return h('.flex-wrap', [
-        h('.page-title', {
-            class: model.router.params.page === pageName ? 'selected' : '',
-            onclick: () => model.navigation.goToDefaultPageUrl(pageName),
-        },
-        model.router.params.page === pageName
-            ? h('',
-                h('.vertical-center',
-                    h('.current-page',
-                        h('.title-text-relative.hidden', label))),
-                h('.folder-15-off-white.vertical-center'),
-                h('.title-text.vertical-center', label, displayedSubPagesCount))
-            : h('',
-                h('.folder-15-off-white.vertical-center'),
-                h('.title-text.vertical-center', label, displayedSubPagesCount))),
-    ]);
+    const icon = () => {
+        switch (pageName) {
+            case pageNames.periods: return h('.periods-15-off-white.vertical-center');
+            case pageNames.dataPasses: return h('.data-passes-15-off-white.vertical-center');
+            case pageNames.anchoragePerDatapass: return h('.anchorage-per-dp-15-off-white.vertical-center');
+            case pageNames.mc: return h('.mc-15-off-white.vertical-center');
+            case pageNames.anchoredPerMC: return h('.anchored-per-mc-15-off-white.vertical-center');
+            case pageNames.runsPerPeriod: return h('.runs-per-period-15-off-white.vertical-center');
+            case pageNames.runsPerDataPass: return h('.runs-per-dp-15-off-white.vertical-center');
+            case pageNames.flags: return h('.qa-15-off-white.vertical-center');
+            default: return h('.folder-15-off-white.vertical-center');
+        }
+    };
+
+    return h(`button.sidebar-item-button${model.router.params.page === pageName ? '.current-page' : ''}`, {
+        class: model.router.params.page === pageName ? 'selected' : '',
+        onclick: () => model.navigation.goToDefaultPageUrl(pageName),
+    }, h('.page-title',
+        icon(),
+        h('.title-text.vertical-center.hide-on-close', label, displayedSubPagesCount)));
 }

@@ -23,6 +23,7 @@ const { site } = RCT.dataReqParams;
 export default function pager(model, data, pagerOnly = true) {
     const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
+    const columnOptionsSelectId = 'columns-option-select-id';
 
     const pageButton = (targetSite) => {
         const url = replaceUrlParams(data.url, { [RCT.dataReqParams.site]: targetSite });
@@ -46,7 +47,7 @@ export default function pager(model, data, pagerOnly = true) {
     const moreSitesRight = currentSite < sitesNumber - 1;
 
     function handleOptionChange() {
-        const columnsOptionsSelect = document.getElementById('columns-options');
+        const columnsOptionsSelect = document.getElementById(columnOptionsSelectId);
         const selectedValue = columnsOptionsSelect.options[columnsOptionsSelect.selectedIndex].value;
         switch (selectedValue) {
             case '0':
@@ -88,9 +89,9 @@ export default function pager(model, data, pagerOnly = true) {
                             onclick: () => model.changeSortingRowVisibility(),
                         }, model.sortingRowVisible ? h('.sorting-20-off-white.abs-center') : h('.sorting-20-primary.abs-center')),
 
-                        h('select.select.show-columns', {
-                            id: 'columns-options',
-                            name: 'showOptions',
+                        h('select.select.column-options-select', {
+                            id: columnOptionsSelectId,
+                            name: columnOptionsSelectId,
                             onchange: () => handleOptionChange(),
                         },
                         [
