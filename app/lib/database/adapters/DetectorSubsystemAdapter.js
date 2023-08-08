@@ -23,11 +23,13 @@ class DetectorSubsystemAdapter {
         const {
             id,
             name,
+            RunDetectors: { quality },
         } = databaseObject;
 
         return {
             id,
             name,
+            quality,
         };
     }
 
