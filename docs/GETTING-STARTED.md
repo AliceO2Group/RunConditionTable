@@ -35,17 +35,17 @@ The address of the socket you've opened should be saved in CERN_SOCKS env var, e
 ```bash
 export CERN_SOCKS='socks://localhost:12345'
 ```
-3. If you want to use proxy set `CERN_SOCKS` to true:
+3. If you want to use proxy, set `CERN_SOCKS` to true:
 ```bash
 export CERN_SOCKS='true'
 ```
 
-## Database dumps managing
+## Database dumps
 Dumps are stored in `<ProjectDir>/database/cache/dumps`
 see `rctmake` help
 
 
 ## Testing
-1. `test` - main task for testing purpose, run static analysis and codecov on docker containers, results are available in `<ProjectDir>/reports/`
+1. `test` - main testing task, run static analysis and codecov on docker containers, results are available in `<ProjectDir>/reports/`
 2. `eslint` - static analysis, results in `<ProjectDir>/reports/static/static-analyzis.html`
 3. `reports:show` - open reports, static analysis and codecov in browser
