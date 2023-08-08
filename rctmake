@@ -87,8 +87,13 @@ Usage:
             20. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
             21. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
-        ! An additional -S|--service <SERVICE> flag can be specified for run, follow, stop and prune stages.
-        <SERVICE> $APP_CONTAINERS_OPT or $DB_CONTAINERS_OPT is the name of the service the stages are performed for.
+        Other options:
+            -S|--service <SERVICE>  - flag can be specified for run, follow, stop and prune stages.
+                <SERVICE> $APP_CONTAINERS_OPT or $DB_CONTAINERS_OPT is the name of the service the stages are performed for.
+            -p|--rct-http-port PORT - flag for setting env var RCT_HTTP_PORT
+            -m|--target-modifier START_TARGET_MODIFIER - add modification to npm task start:dev:START_TARGET_MODIFIER ot start:test:START_TARGET_MODIFIER, depends on choosen TARGET
+                In case of dev mode modifier ND cause running node instead of nodemon.
+
     
 $ERROR_MESSAGE_PRINT
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -116,7 +121,6 @@ exit_codes_filter() {
     return $LAST_CMD_EXIT_CODE
 }
 
-
 PREVIOD_USER_LOC=$(pwd);
 DOCKER_DIR="$PROJECT_DIR/docker";
 MAIN_DOCKER_COMPOSE_YML="$DOCKER_DIR/docker-compose.yml"
@@ -141,13 +145,17 @@ else
                 export SUBTARGET=$2;
                 shift 2;
                 ;;
+            -m|--target-modifier)
+                export START_TARGET_MODIFIER=$2;
+                shift 2;
+            ;;
+            -p|--rct-http-port)
+                export RCT_HTTP_PORT=$2;
+                shift 2;
+            ;;
             -S|--service)
                 SERVICES="$SERVICES $(echo $2 | tr ',' ' ')";
                 shift 2;
-                ;;
-            -m|--mock)
-                MOCK_DB=true;
-                shift 1;
                 ;;
             -F|--dump-file)
                 DUMP_FILE=$2;
