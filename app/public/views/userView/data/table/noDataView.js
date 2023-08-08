@@ -16,7 +16,6 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 const { pageNames } = RCT;
 
-
 export default function noDataView(model, dataPointer, anyFiltersActive) {
     const goBackBtn = h('button.btn.btn-primary.m3', {
         onclick: () => model.removeCurrentData(),
