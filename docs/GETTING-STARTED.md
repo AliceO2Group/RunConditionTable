@@ -1,5 +1,5 @@
 
-## Running the application
+# Running the application
 
 Most tasks are wrappers for `rctmake`.
 
@@ -21,13 +21,14 @@ npm run <TASK> -- RCTMAKE_ADDITIONAL_ARGUMENTS
 14. `reports:show` - open reports, static analysis and codecov in browser
 
 
-#### Database dumps managing, dumps are stored in `<ProjectDir>/database/cache/dumps`
+#### Database dumps managing
+Dumps are stored in `<ProjectDir>/database/cache/dumps`
 see `rctmake` help
 
-### Using grid certificates
+#### Using grid certificates
 Grid certificates need to be located in `<ProjectDir>/security/`. The certificate used by the application has to be named (TMP *TODO filename convention*) `rct-alimonitor-cert.p12`. It is also required to set `ALIMONITOR_PASSPHRASE` env var which holds the passphrase to that certificate.
 
-### Reaching CERN network
+#### Reaching CERN network
 1. By default, the application running on docker (var `RUNNING_ENV` is set to `DOCKER`) doesn't use proxy. Some functions of app (sync data) requires acces to cern network, so if running outside its, you can use some proxy configured by env var `CERN_SOCKS`, by defualt `socks://172.200.200.1:12345`, for wich you should open ssh socket locally via command:
 ```bash
 ssh -D 172.200.200.1:12345 <user>@<host>
