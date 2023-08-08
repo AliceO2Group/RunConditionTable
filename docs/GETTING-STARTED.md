@@ -18,7 +18,7 @@ Most tasks are `rctmake` wrappers.
 Grid certificates need to be located in `<ProjectDir>/security/`. The certificate used by the application has to be named (TMP *TODO filename convention*) `rct-alimonitor-cert.p12`. It is also required to set `ALIMONITOR_PASSPHRASE` env var which holds the passphrase to that certificate.
 
 ## Reaching CERN network
-1. By default, the application running on docker (var `RUNNING_ENV` is set to `DOCKER`) doesn't use proxy. Crucial functionalities (e.g. data synchronization) require access to the CERN network. If the host is not directly connected, a proxy configuration is needed. You can point proxy via env var `CERN_SOCKS` with value 'true' what will be evaluated to `socks://172.200.200.1:12345`, for wich you should open ssh socket locally via command:
+1. By default, the application running on docker (var `RUNNING_ENV` is set to `DOCKER`) doesn't use proxy. Crucial functionalities (e.g. data synchronization) require access to the CERN network. If the host is not directly connected, a proxy configuration is needed. You can point proxy via env var `CERN_SOCKS` with value 'true' what will be evaluated to `socks://172.200.200.1:12345`, for which you should open ssh socket locally via command:
 ```bash
 ssh -D 172.200.200.1:12345 <user>@<host>
 ```
