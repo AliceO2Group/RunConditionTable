@@ -14,7 +14,7 @@
 
 import dataAccessPanel from './views/dataAccessPanel.js';
 import { switchCase } from '/js/src/index.js';
-import { serviceUnavailable, sessionError, waiting } from './components/messagePanel/reasons.js';
+import { serviceUnavailable, sessionError, waiting } from './components/messagePanel/messages.js';
 
 export default function view(model) {
     const { state } = model.dataAccess;
