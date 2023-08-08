@@ -26,7 +26,7 @@ export default function pageSettings(model, close) {
     };
     const title = h('h3.text-primary', 'Page settings');
 
-    function onclickSetRowsOnSite(model) {
+    const onclickSetRowsOnSite = (model) => {
         const input = document.getElementById(rowsPerPageInputId);
         let rowsOnSite = input.value === '' ? input.placeholder : input.value;
         if (rowsOnSite < 1 || rowsOnSite > 200) {
@@ -36,17 +36,17 @@ export default function pageSettings(model, close) {
         }
         model.fetchedData.changeRowsOnSite(rowsOnSite);
         close();
-    }
+    };
 
-    function removeAllThemeClasses(element) {
+    const removeAllThemeClasses = (element) => {
         for (const theme of Object.keys(RCT.themes)) {
             if (element.classList.contains(theme)) {
                 element.classList.remove(theme);
             }
         }
-    }
+    };
 
-    function handleThemeSelection() {
+    const handleThemeSelection = () => {
         const documentBody = document.getElementById('body');
         const themesSelection = document.getElementById(themeSelectId);
         const selectedTheme = themesSelection.options[themesSelection.selectedIndex].value;
@@ -61,9 +61,9 @@ export default function pageSettings(model, close) {
             default:
                 break;
         }
-    }
+    };
 
-    function handleSidebarPreferenceSelection() {
+    const handleSidebarPreferenceSelection = () => {
         const sidebar = document.getElementById('sidebar');
         const visibleSidebarClassName = 'sidebar-visible';
         const collapsibleSidebarClassName = 'sidebar-collapsible';
@@ -89,7 +89,7 @@ export default function pageSettings(model, close) {
             default:
                 break;
         }
-    }
+    };
 
     return h('', [
         h('.flex.bottom-20.justify-center.items-center',
