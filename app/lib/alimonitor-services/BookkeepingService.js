@@ -75,6 +75,11 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     dataAdjuster(run) {
         try {
             run = Utils.filterObject(run, this.ketpFields);
+            const { detectors } = run;
+            delete run.detectors;
+            run.detectorNames = detectors.map(({ name }) => name.trim());
+            run.detectorQualities = detectors.map(({ quality }) => quality);
+
             this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3_current');
             this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipole_current');
             ServicesDataCommons.mapBeamTypeToCommonFormat(run);
@@ -103,13 +108,17 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     async dbAction(dbClient, d) {
         const { period } = d;
         const year = ServicesDataCommons.extractPeriodYear(period);
+        // console.log(d.detectorNames);
+        // console.log(d.detectorQualities);
+
         d = Utils.adjusetObjValuesToSql(d);
+        // console.log(d.detectorNames);
+        // console.log(d.detectorQualities);
 
         const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
 
-        const detectorsInSql = `${d.detectors.map((d) => d.name)}::varchar[]`;
-        const detectorsQualitiesInSql = `${d.detectors.map((d) => d.quality)}::varchar[]`;
-
+        const detectorInSql = `${d.detectorNames}::varchar[]`;
+        const detectorQualitiesInSql = `${d.detectorQualities}::varchar[]`;
         const pgCommand = `${period_insert}; call insert_run (
             ${d.run_number},
             ${d.period}, 
@@ -120,8 +129,8 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             ${d.run_type},
             ${d.fill_number},
             ${d.energy}, 
-            ${detectorsInSql},
-            ${detectorsQualitiesInSql},
+            ${detectorInSql},
+            ${detectorQualitiesInSql},
             ${d.l3_current},
             ${d.dipole_current}
         );`;
