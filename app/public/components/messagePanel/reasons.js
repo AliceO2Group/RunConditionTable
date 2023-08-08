@@ -58,6 +58,5 @@ export const waiting = () => {
     return h('.panel.abs-center',
         spinner(),
         loadingMessage,
-        retryButton
-    );
-}
+        retryButton);
+};
