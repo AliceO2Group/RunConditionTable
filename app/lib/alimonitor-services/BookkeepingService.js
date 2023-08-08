@@ -108,13 +108,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     async dbAction(dbClient, d) {
         const { period } = d;
         const year = ServicesDataCommons.extractPeriodYear(period);
-        // console.log(d.detectorNames);
-        // console.log(d.detectorQualities);
-
         d = Utils.adjusetObjValuesToSql(d);
-        // console.log(d.detectorNames);
-        // console.log(d.detectorQualities);
-
         const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
 
         const detectorInSql = `${d.detectorNames}::varchar[]`;
