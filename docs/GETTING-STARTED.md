@@ -8,7 +8,7 @@ Most tasks are `rctmake` wrappers.
 
 ## Starting with docker
 1. `dev` - main task for running application in dev mode. The task prunes, builds and runs containers, one for the database and one for the application. Changes in the local repo force the application restart (see nodemon and the `start:dev` script, see also `rctmake` option `--target-modifier`). You can run multiple instances of application in dev mode simultaneously, see `rctmake` option `--subtarget` and `--rct-http-port`.
-2. other `*dev*` tasks are modification of pervious one.
+2. `idev` - run node console with imported application instance (not running), should be run inside container see `app:battach`
 
 ## Starting locally
 1. `start:dev:local` - run the RCT application locally, by default it fetches env vars from `<ProjectDir>/docker/dev.env` with exception that `RCT_DB_HOST` env var is substituted to localhost. If you want to make other substitutions, specify them as follows (bash) before the aplication start: `(export FOO=bar; npm run start:dev:local)`
