@@ -42,14 +42,14 @@ Tasks are called stages.
 Usage:  
         ./$SCRIPT_NAME <STAGES> [<FLAGS>]
         where STAGES is comma separeted list of stages performed sequentialy. 
-        In default behaviour failure of one stage causes stopping pipeline execution, it can be changes via flag --ignore-errors.
-        Using mode of stages requires TARGET to be specified (default dev). It can be specified via flag -t|--target as test as well as via exporting env var TARGET;
+        By default, failure of any stage causes the stop of pipeline execution, it can be changed via flag --ignore-errors.
+        It is possible to specify TARGET (default dev). It can be specified via flag -t|--target as test as well as via exporting env var TARGET;
         It is possible to specify SUBTARGET from range 1-9 (defualt 1 for TARGET dev). It can be specified via flag -s|--subtarget as test as well as via exporting env var SUBTARGET;
         It can be used for running muliple instances of application simultaneously.
-        For TARGET test, 0 is only allowed value for SUBTARGET and can be omitted.
+        For TARGET test, 0 is the only allowed value for SUBTARGET and can be omitted.
 
         Each stage is performed within the context of target.
-        Using conatiners build as dev and test is separted and can be performed in parallel.
+        Using containers built as dev and test is separted and can be performed in parallel.
 
         Is seems that there is one case of target test, just something like ./rctmake run --target test.
 
@@ -91,7 +91,7 @@ Usage:
             -S|--service <SERVICE>  - flag can be specified for run, follow, stop and prune stages.
                 <SERVICE> $APP_CONTAINERS_OPT or $DB_CONTAINERS_OPT is the name of the service the stages are performed for.
             -p|--rct-http-port PORT - flag for setting env var RCT_HTTP_PORT
-            -m|--target-modifier START_TARGET_MODIFIER - add modification to npm task start:dev:START_TARGET_MODIFIER ot start:test:START_TARGET_MODIFIER, depends on choosen TARGET
+            -m|--target-modifier START_TARGET_MODIFIER - add modififying sufix to npm task like start:dev:START_TARGET_MODIFIER or start:test:START_TARGET_MODIFIER, depends on choosen TARGET
                 In case of dev mode modifier ND cause running node instead of nodemon.
 
     
