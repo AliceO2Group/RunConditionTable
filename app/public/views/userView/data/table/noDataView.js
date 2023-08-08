@@ -16,40 +16,15 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 const { pageNames } = RCT;
 
-function useState(defaultValue) {
-    let value = defaultValue;
-
-    function getValue() {
-        return value;
-    }
-
-    function setValue(newValue) {
-        value = newValue;
-    }
-
-    return [getValue, setValue];
-}
-
-const modes = {
-    requested: 0,
-    waiting: 1,
-};
 
 export default function noDataView(model, dataPointer, anyFiltersActive) {
-    const [mode, setMode] = useState(modes.waiting);
-
     const goBackBtn = h('button.btn.btn-primary.m3', {
         onclick: () => model.removeCurrentData(),
     }, 'Go back');
 
     const reloadBtn = h('button.btn.btn-primary.m3', {
         onclick: async () => {
-            if (mode() === modes.waiting) {
-                await model.sync();
-            } else {
-                model.fetchedData.reqForData(true);
-            }
-            setMode(modes.requested);
+            model.fetchedData.reqForData(true);
         },
     }, 'Reload');
 
@@ -94,8 +69,6 @@ export default function noDataView(model, dataPointer, anyFiltersActive) {
     return anyFiltersActive
         ? noMatchingDataView
         : dataPointer.page === pageNames.periods
-            ? mode() === modes.requested
-                ? 'loading'
-                : noPeriodsView
+            ? noPeriodsView
             : noDataView;
 }
