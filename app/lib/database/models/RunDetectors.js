@@ -14,20 +14,11 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const DetectorSubsystem = sequelize.define('DetectorSubsystem', {
-        name: {
+    const RunDetectors = sequelize.define('RunDetectors', {
+        quality: {
             type: Sequelize.STRING,
-            unique: true,
         },
-    }, { timestamps: false, tableName: 'detectors_subsystems' });
-
-    DetectorSubsystem.associate = (models) => {
-        DetectorSubsystem.belongsToMany(models.Run, {
-            through: models.RunDetectors, 
-            foreignKey: 'detector_id',
-            timestamps: false,
-        })
-    };
+    }, { timestamps: false, tableName: 'runs_detectors' });
     
-    return DetectorSubsystem;
+    return RunDetectors;
 };
