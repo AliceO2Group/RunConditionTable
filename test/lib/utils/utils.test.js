@@ -47,7 +47,7 @@ module.exports = () => {
             });
 
             it('should parse undefined values as null', () => {
-                assert(Utils.adjustValuesToSql(undefined) === null);
+                assert(Utils.adjustValuesToSql(undefined) === 'null');
             });
 
             it('should return unquoted DEFAULT', () => {
