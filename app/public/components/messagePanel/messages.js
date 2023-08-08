@@ -82,6 +82,13 @@ export const noDataFound = (model) => messagePanel(
     ],
 );
 
+export const nothingSelected = (model) => messagePanel(
+    'nothing-found-90',
+    'No subpage selected',
+    'Please select any of the subpages',
+    removeCurrentDataButton(model, goBack),
+);
+
 export const waiting = () => {
     const retryButton = h('button.btn.btn-primary.m3', { onclick: () => document.location.reload(true) }, 'Retry');
     const loadingMessage = h('h3', 'Loading...');
