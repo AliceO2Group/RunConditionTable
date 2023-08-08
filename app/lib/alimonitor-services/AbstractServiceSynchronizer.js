@@ -23,9 +23,9 @@ const PassCorrectnessMonitor = require('./PassCorrectnessMonitor.js');
 
 const defaultServiceSynchronizerOptions = {
     forceStop: false,
-    rawCacheUse: true,
-    useCacheJsonInsteadIfPresent: false,
-    omitWhenCached: false,
+    rawCacheUse: process.env['RCT_DEV_USE_CACHE'] === 'false' ? false : true,
+    useCacheJsonInsteadIfPresent: process.env['RCT_DEV_USE_CACHE_INSTEAD'] === 'true' ? true : false,
+    omitWhenCached: process.env['RCT_DEV_OMIT_WHEN_CACHED'] === 'true' ? true : false,
     batchSize: 4,
 };
 
@@ -187,7 +187,7 @@ class AbstractServiceSynchronizer {
     async getRawResponse(endpoint) {
         if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint)) {
             // eslint-disable-next-line capitalized-comments
-            // this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
+            this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return Cacher.getJsonSync(this.name, endpoint);
         }
         const onSucces = (endpoint, data) => {

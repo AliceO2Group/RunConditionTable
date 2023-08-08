@@ -35,6 +35,7 @@
     "start:dev:local": "(export RCT_DB_HOST=${RCT_DB_HOST:-localhost}; bash -c 'set -o allexport && ls && source ./docker/dev.env && set +o allexport && npm run start:dev')",
     "deploy:db:local": "./database/setup-db.sh --env ./docker/dev.env",
     "dev": "./rctmake prune,db:export,run,app:attach,stop --target dev",
+    "cdev": "(export RCT_DEV_USE_CACHE=true; npm run dev)", 
     "idev": "node -e \"app = require('./app/application.js'); const { databaseManager: dbm } = app\" -i",
     "node-dev-env": "(export RCT_DB_HOST=$(docker inspect o2rct_database-dev -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'); bash -c 'set -o allexport && ls && source ./docker/dev.env && set +o allexport && node')",
     "dev:up": "./rctmake run[up],app:attach",
