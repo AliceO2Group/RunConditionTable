@@ -30,7 +30,6 @@ import sortingRow from '../../../userView/data/table/sortingRow.js';
 import { noMatchingData, noDataFound } from '../../../../components/messagePanel/messages.js';
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
 import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
-import { modalIds, showModal } from '../../../modal/modal.js';
 const { pageNames } = RCT;
 
 export default function content(model, runs, detectors) {
@@ -77,10 +76,7 @@ export default function content(model, runs, detectors) {
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
                     title(pageNames.runsPerDataPass),
-                    chips,
-                    h('button.btn.btn-secondary', {
-                        onclick: () => showModal(modalIds.pageSettings.modal),
-                    }, h('settings-20-primary'))),
+                    chips),
 
                 h('div', functionalities(model))),
             model.searchFieldsVisible ? filter(model) : '',

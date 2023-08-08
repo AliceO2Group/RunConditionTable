@@ -22,7 +22,6 @@ import flagsTable from '../../flags/flagsTable.js';
 import flagBreadCrumbs from '../../../components/common/flagBreadcrumbs.js';
 import detectorName from './flags/detectorName.js';
 import copyLinkButton from '../../../components/buttons/copyLinkButton.js';
-import { modalIds, showModal } from '../../modal/modal.js';
 
 export default function flagsDataPanel(model) {
     const urlParams = model.router.getUrl().searchParams;
@@ -55,10 +54,7 @@ export default function flagsDataPanel(model) {
     return h('div.main-content', [
         h('div.flex-wrap.justify-between.items-center',
             h('div.flex-wrap.justify-between.items-center',
-                flagBreadCrumbs(model, dataPassName, run, detectorName(detector)),
-                h('button.btn.btn-secondary', {
-                    onclick: () => showModal(modalIds.pageSettings.modal),
-                }, h('.settings-20-primary'))),
+                flagBreadCrumbs(model, dataPassName, run, detectorName(detector))),
 
             h('div', functionalities(model))),
         model.searchFieldsVisible ? filter(model) : '',
