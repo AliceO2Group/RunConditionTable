@@ -4,10 +4,10 @@ Npm tasks are run via
 ```bash
 npm run <TASK> -- RCTMAKE_ADDITIONAL_ARGUMENTS
 ```
-Most tasks are wrappers for `rctmake`.
+Most tasks are `rctmake` wrappers.
 
 ## Starting with docker
-1. `dev` - main task for running application in dev mode. The task prune, build and run containers, one for the database and one for the application. Changes in the local repo force the application restart (see nodemon and the `start:dev` script, see also `rctmake` option `--target-modifier`). You can run multiple instances of application in dev mode simultaneously, see `rctmake` option `--subtarget` and `--rct-http-port`.
+1. `dev` - main task for running application in dev mode. The task prunes, builds and runs containers, one for the database and one for the application. Changes in the local repo force the application restart (see nodemon and the `start:dev` script, see also `rctmake` option `--target-modifier`). You can run multiple instances of application in dev mode simultaneously, see `rctmake` option `--subtarget` and `--rct-http-port`.
 2. other `*dev*` tasks are modification of pervious one.
 
 ## Starting locally
