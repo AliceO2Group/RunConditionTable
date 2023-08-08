@@ -31,7 +31,7 @@ or using script which opens defualt proxy (the same as above one)
 ```bash
 ssh -D localhost:12345 <user>@<host>
 ```
-then save the address of the socket you've opened in `CERN_SOCKS` env var e.g. 
+The address of the socket you've opened should be saved in CERN_SOCKS env var, e.g.:
 ```bash
 export CERN_SOCKS='socks://localhost:12345'
 ```
