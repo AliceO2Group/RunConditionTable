@@ -13,6 +13,9 @@ DECLARE q varchar;
 DECLARE dq varchar[];
 DEClARE trg_id integer;
 BEGIN
+    IF array_upper(_detectors, 1) IS NULL OR array_upper(_detectors_qualities, 1) IS NULL THEN
+        return;
+    END IF;
     for i in 1 .. array_upper(_detectors, 1) loop
         d = _detectors[i];
         q = _detectors_qualities[i];
