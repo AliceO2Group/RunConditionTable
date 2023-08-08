@@ -1,4 +1,3 @@
-
 # Running the application
 
 Most tasks are wrappers for `rctmake`.
@@ -11,14 +10,15 @@ npm run <TASK> -- RCTMAKE_ADDITIONAL_ARGUMENTS
 #### Within docker:
 1. `dev` - main task for running application in dev mode, see `rctmake` help. The task prune, build and run containers, one for the database and one for the application. Changes in the local repo force the application restart (see nodemon and the `start:dev` script, see also `rctmake` option `--target-modifier`). You can run multiple instances of application in dev mode simultaneously, see `rctmake` option `--subtarget` and `--rct-http-port`.
 2. other `*dev*` tasks are modification of pervious one.
+
 #### Starting locally:
- 1. `start:dev:local` - run the RCT application locally, by default it fetches env vars from `<ProjectDir>/docker/dev.env` with exception that `RCT_DB_HOST` env var is substituted to localhost. If you want to make other substitutions, specify them as follows (bash) before the aplication start: `(export FOO=bar; npm run start:dev:local)`
- 2. `deploy:db:local` - deploy the database locally with the use of `<ProjectDir>/database/setup-db.sh` script. It uses the same env as the upper task and follows the same env vars substitution logic.
+1. `start:dev:local` - run the RCT application locally, by default it fetches env vars from `<ProjectDir>/docker/dev.env` with exception that `RCT_DB_HOST` env var is substituted to localhost. If you want to make other substitutions, specify them as follows (bash) before the aplication start: `(export FOO=bar; npm run start:dev:local)`
+2. `deploy:db:local` - deploy the database locally with the use of `<ProjectDir>/database/setup-db.sh` script. It uses the same env as the upper task and follows the same env vars substitution logic.
 
 #### Testing
-15. `test` - main task for testing purpose, run static analysis and codecov on docker containers, results are available in `<ProjectDir>/reports/`
-13. `eslint` - static analysis, results in `<ProjectDir>/reports/static/static-analyzis.html`
-14. `reports:show` - open reports, static analysis and codecov in browser
+1. `test` - main task for testing purpose, run static analysis and codecov on docker containers, results are available in `<ProjectDir>/reports/`
+2. `eslint` - static analysis, results in `<ProjectDir>/reports/static/static-analyzis.html`
+3. `reports:show` - open reports, static analysis and codecov in browser
 
 
 #### Database dumps managing
