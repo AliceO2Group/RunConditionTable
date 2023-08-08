@@ -86,7 +86,7 @@
     "lib/",
     "database/"
   ],
-  "bundledDependencies": [
+  "bundleDependencies": [
     "@aliceo2/web-ui",
     "deepmerge",
     "esm",
