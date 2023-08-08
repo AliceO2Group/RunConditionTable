@@ -19,6 +19,7 @@ import { RCT } from '../../../../config.js';
 export default function pageSettings(model, close) {
     const rowsPerPageInputId = 'rows-per-page-input-id-modal';
     const themeSelectId = 'theme-selection';
+    const sidebarPreferenceSelectId = 'sidebar-selection';
     const title = h('h3.text-primary', 'Page settings');
 
     function onclickSetRowsOnSite(model) {
@@ -60,6 +61,36 @@ export default function pageSettings(model, close) {
         }
     }
 
+    function handleSidebarPreferenceSelection() {
+        const sidebar = document.getElementById('sidebar');
+        const visibleSidebarClassName = 'sidebar-visible';
+        const collapsibleSidebarClassName = 'sidebar-collapsible';
+        const collapsible = document.getElementsByClassName(collapsibleSidebarClassName);
+        const visible = document.getElementsByClassName(visibleSidebarClassName);
+        const sidebarPreferenceSelection = document.getElementById(sidebarPreferenceSelectId);
+        const selectedPreference = sidebarPreferenceSelection.options[sidebarPreferenceSelection.selectedIndex].value;
+        switch (selectedPreference) {
+            case '0':
+                /* Collapsible */
+                if (collapsible.length) {
+                    return;
+                }
+                sidebar?.classList.remove(visibleSidebarClassName);
+                sidebar?.classList.add(collapsibleSidebarClassName);
+                break;
+            case '1':
+                /* Always visible */
+                if (visible.length) {
+                    return;
+                }
+                sidebar?.classList.remove(collapsibleSidebarClassName);
+                sidebar?.classList.add(visibleSidebarClassName);
+                break;
+            default:
+                break;
+        }
+    }
+
     return h('', [
         h('.flex.bottom-20.justify-center.items-center',
             h('.settings-40-primary'),
@@ -81,6 +112,17 @@ export default function pageSettings(model, close) {
             }, [
                 h('option', { value: 0 }, 'Ehevi'),
                 h('option', { value: 1 }, 'WebUI'),
+            ], iconChevronBottom())),
+
+        h('.flex-wrap.justify-between.items-center',
+            h('.text-dark-blue', 'Sidebar'),
+            h('select.select.color-theme', {
+                id: sidebarPreferenceSelectId,
+                name: sidebarPreferenceSelectId,
+                onchange: () => handleSidebarPreferenceSelection(),
+            }, [
+                h('option', { value: 0 }, 'Collapsible'),
+                h('option', { value: 1 }, 'Always visible'),
             ], iconChevronBottom())),
 
         h('.flex-wrap.justify-center.items-center',

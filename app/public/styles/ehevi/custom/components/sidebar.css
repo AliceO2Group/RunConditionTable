@@ -42,6 +42,17 @@
 }
 
 .ehevi .sidebar {
+    background-color: var(--primary) !important;
+    color: var(--off-white) !important;
+    font-size: small !important;
+    padding: 0.45em !important;
+}
+
+.ehevi .sidebar.sidebar-visible {
+    width: 20em !important;
+}
+
+.ehevi .sidebar.sidebar-collapsible {
     width: 3.9em;
     background-color: var(--primary) !important;
     color: var(--off-white) !important;
@@ -49,7 +60,7 @@
     padding: 0.45em !important;
 }
 
-.ehevi .sidebar:hover {
+.ehevi .sidebar.sidebar-collapsible:hover {
     width: 20em !important;
 }
 
@@ -58,12 +69,12 @@
     letter-spacing: 0.05em;
 }
 
-.ehevi .sidebar .hide-on-close {
+.ehevi .sidebar.sidebar-collapsible .hide-on-close {
     opacity: 0;
     transition: opacity 0.3s linear;
 }
 
-.ehevi .sidebar:hover .hide-on-close {
+.ehevi .sidebar.sidebar-collapsible:hover .hide-on-close {
     opacity: 1;
     transition: opacity 0.3s linear;
 }
