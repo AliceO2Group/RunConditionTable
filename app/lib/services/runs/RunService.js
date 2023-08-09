@@ -118,8 +118,6 @@ class RunService {
         });
         await runDetector.update({ quality: newQuality });
         await runDetector.save();
-
-        return runDetector;
     }
 }
 
