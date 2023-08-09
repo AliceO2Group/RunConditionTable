@@ -30,7 +30,7 @@ function adjusetObjValuesToSql(obj) {
                 res[k] = adjustValuesToSql(v);
             }
         } else {
-            res[k] = null;
+            res[k] = 'null';
         }
     }
     return res;
@@ -38,7 +38,7 @@ function adjusetObjValuesToSql(obj) {
 
 function adjustValuesToSql(v) {
     if (!v) {
-        return null;
+        return 'null';
     }
 
     if (Array.isArray(v)) {
@@ -47,7 +47,7 @@ function adjustValuesToSql(v) {
 
     if (typeof v == 'string') {
         if (v.length == 0) {
-            return null;
+            return 'null';
         } else if (! sqlValueKeywords.includes(v?.trim().toUpperCase()) && isNaN(v)) {
             return `'${v}'`;
         }

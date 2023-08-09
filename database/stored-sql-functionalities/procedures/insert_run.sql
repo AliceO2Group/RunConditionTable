@@ -10,6 +10,7 @@ create or replace procedure insert_run(
     _fill_number integer,
     _energy_per_beam float,
     _detectors varchar[],
+    _detectors_qualities varchar[],
     _l3_current float,
     _dipole_current float)
 LANGUAGE plpgsql
@@ -74,6 +75,6 @@ BEGIN
         END IF;
     END IF;
 
-    call insert_detectors_for_runs(_run_number, _detectors);
+    call insert_detectors_for_runs(_run_number, _detectors, _detectors_qualities);
 END;
 $$;

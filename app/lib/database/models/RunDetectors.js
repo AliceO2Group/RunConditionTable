@@ -11,10 +11,14 @@
  * or submit itself to any jurisdiction.
  */
 
-/**
- * @typedef DetectorSubsystem
- *
- * @property {number} id
- * @property {string} name
- * @property {string} quality
- */
+const Sequelize = require('sequelize');
+
+module.exports = (sequelize) => {
+    const RunDetectors = sequelize.define('RunDetectors', {
+        quality: {
+            type: Sequelize.STRING,
+        },
+    }, { timestamps: false, tableName: 'runs_detectors' });
+    
+    return RunDetectors;
+};

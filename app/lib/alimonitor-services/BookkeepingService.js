@@ -36,7 +36,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             timeTrgEnd: 'time_trg_end',
             definition: 'run_type',
             lhcBeamEnergy: 'energy',
-            detectors: 'detectors',
+            detectorsQualities: 'detectors',
             aliceL3Current: 'l3_current_val',
             aliceL3Polarity: 'l3_current_polarity',
             aliceDipoleCurrent: 'dipole_current_val',
@@ -75,17 +75,11 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     dataAdjuster(run) {
         try {
             run = Utils.filterObject(run, this.ketpFields);
-            if (run.detectors) {
-                if (typeof run.detectors === 'string') {
-                    if (run.detectors.includes(',')) { // TODO may other delimiters
-                        run.detectors = run.detectors.split(/,/).map((d) => d.trim().toUpperCase());
-                    } else {
-                        run.detectors = run.detectors.split(/ +/).map((d) => d.trim().toUpperCase());
-                    }
-                }
-            } else {
-                run.detectors = [];
-            }
+            const { detectors } = run;
+            delete run.detectors;
+            run.detectorNames = detectors.map(({ name }) => name.trim());
+            run.detectorQualities = detectors.map(({ quality }) => quality);
+
             this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3_current');
             this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipole_current');
             ServicesDataCommons.mapBeamTypeToCommonFormat(run);
@@ -115,10 +109,10 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const { period } = d;
         const year = ServicesDataCommons.extractPeriodYear(period);
         d = Utils.adjusetObjValuesToSql(d);
-
         const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
 
-        const detectorsInSql = `${d.detectors}::varchar[]`;
+        const detectorInSql = `${d.detectorNames}::varchar[]`;
+        const detectorQualitiesInSql = `${d.detectorQualities}::varchar[]`;
         const pgCommand = `${period_insert}; call insert_run (
             ${d.run_number},
             ${d.period}, 
@@ -129,7 +123,8 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             ${d.run_type},
             ${d.fill_number},
             ${d.energy}, 
-            ${detectorsInSql},
+            ${detectorInSql},
+            ${detectorQualitiesInSql},
             ${d.l3_current},
             ${d.dipole_current}
         );`;
