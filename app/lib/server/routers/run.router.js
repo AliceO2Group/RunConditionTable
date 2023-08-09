@@ -22,5 +22,11 @@ module.exports = {
             controller: RunController.listRunsHandler,
             description: 'List all runs which are present in DB',
         },
+        {
+            method: 'patch',
+            path: '/:runNumber/detector-subsystems/:detectorSubsystemId',
+            controller: RunController.updateRunDetectorQualityHandler,
+            description: 'Update run/detectorSubsystem based quality',
+        },
     ],
 };

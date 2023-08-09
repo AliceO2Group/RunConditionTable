@@ -94,21 +94,18 @@ const updateRunDetectorQualityHandler = async (req, res) => {
             detectorSubsystemId: Joi.number(),
         },
         query: {
-            quality: Joi.string(),
+            quality: Joi.string().required(),
         },
     });
 
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
-        const runDetector = await runService.updateRunDetectorQuality(
+        await runService.updateRunDetectorQuality(
             validatedDTO.params.runNumber,
-            validatedDTO.params.detectorId,
+            validatedDTO.params.detectorSubsystemId,
             validatedDTO.query.quality,
         );
-
-        res.json({
-            data: runDetector,
-        });
+        res.end();
     }
 };
 

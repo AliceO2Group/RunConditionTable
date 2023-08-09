@@ -110,7 +110,7 @@ class RunService {
     }
 
     async updateRunDetectorQuality(runNumber, detectorId, newQuality) {
-        const runDetector = RunDetectorsRepository.findOne({
+        const runDetector = await RunDetectorsRepository.findOne({
             where: {
                 run_number: runNumber,
                 detector_id: detectorId,
