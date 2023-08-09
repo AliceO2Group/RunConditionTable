@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
- .ehevi select.select {
+ .rct select.select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -32,10 +32,10 @@
     padding-right: 30px;
   }
 
-.ehevi .select.column-options-select {
+.rct .select.column-options-select {
     min-width: 170px;
 }
 
-.ehevi .select option[disabled]:first-child {
+.rct .select option[disabled]:first-child {
     display: none !important;
 }

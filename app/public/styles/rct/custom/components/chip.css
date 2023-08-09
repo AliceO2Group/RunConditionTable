@@ -12,12 +12,16 @@
  * or submit itself to any jurisdiction.
  */
 
-.ehevi .run-quality.good {
-    background-color: var(--green) !important;
-    color: var(--white);
+.rct .chip {
+    background-color:var(--selection-color);
+    color: var(--primary);
+    border-radius: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    align-items: center;
 }
 
-.ehevi .run-quality.bad {
-    background-color: var(--red) !important;
-    color: var(--white);
+.rct .chip.primary {
+    background-color: var(--primary-hover) !important;
+    color: var(--off-white) !important;
 }

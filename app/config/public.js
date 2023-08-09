@@ -63,7 +63,7 @@ module.exports = { // Properties that will be provided to frontend in the public
 
     detectors: detectors,
     themes: {
-        ehevi: 'ehevi',
+        rct: 'rct',
         webui: 'webui',
     },
 };

@@ -12,36 +12,19 @@
  * or submit itself to any jurisdiction.
  */
 
-.ehevi .pager-panel {
-    background-color: white !important;
-    border-radius: 15px;
-    justify-content: space-between;
-    font-size: xx-small;
-}
-
-.ehevi .rows-per-page {
-    padding-left: 10px;
-    padding-right: 5px;
-}
-
-.ehevi input.pager {
+.rct .quantity-input input[type=number] {
+    -moz-appearance: textfield !important;
+    -webkit-appearance: textfield !important;
+    appearance: textfield !important;
     padding: 0 !important;
     border: none !important;
-    width: 43px;
+    width: 25px;
     box-shadow: none !important;
     background-color: var(--color-white);
 }
 
-.ehevi input.pager:focus {
-    border: none !important;
-}
-
-.ehevi .site-changing-controller {
-    padding: 5px;
-    margin: 3px;
-    cursor: pointer;
-}
-
-.ehevi .pager-buttons {
-    margin-right: 10px;
+.rct .quantity-input input[type=number]::-webkit-inner-spin-button,
+.rct .quantity-input input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

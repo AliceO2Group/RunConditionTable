@@ -12,14 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-.ehevi .anchoragePerDatapass-table {
+.rct .anchoragePerDatapass-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.ehevi .anchoragePerDatapass-table td:first-child,
-.ehevi .anchoragePerDatapass-table th:first-child {
+.rct .anchoragePerDatapass-table td:first-child,
+.rct .anchoragePerDatapass-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -29,58 +29,58 @@
     z-index: 1 !important;
 }
 
-.ehevi .anchoragePerDatapass-table tr:hover td:first-child {
+.rct .anchoragePerDatapass-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.ehevi .anchoragePerDatapass-table tr.row-selected td:first-child{
+.rct .anchoragePerDatapass-table tr.row-selected td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.ehevi .anchoragePerDatapass-table tr.row-selected:hover td:first-child{
+.rct .anchoragePerDatapass-table tr.row-selected:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
 /* Name */
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-name-cell,
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-name-header {
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-name-cell,
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-name-header {
     min-width: 200px;
     text-align: left;
 }
 
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-name-cell td:first-child {
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-name-cell td:first-child {
     min-width: 10em !important;
 }
 
 /* Description */
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-description-cell,
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-description-header {
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-description-cell,
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-description-header {
     min-width: 300px;
     text-align: left;
 }
 
 /* Jira */
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-jira-cell,
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-jira-header {
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-jira-cell,
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-jira-header {
     min-width: 80px;
     text-align: right !important;
 }
 
 /* PWG */
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-pwg-cell,
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-pwg-header {
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-pwg-cell,
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-pwg-header {
     min-width: 50px;
     text-align: right !important;
 }
 
 /* Number of events */
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-number_of_events-cell,
-.ehevi .anchoragePerDatapass-table .anchoragePerDatapass-number_of_events-header {
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-number_of_events-cell,
+.rct .anchoragePerDatapass-table .anchoragePerDatapass-number_of_events-header {
     min-width: 80px;
     text-align: right;
 }
 
-.ehevi .anchoragePerDatapass-table td:last-child,
-.ehevi .anchoragePerDatapass-table th:last-child {
+.rct .anchoragePerDatapass-table td:last-child,
+.rct .anchoragePerDatapass-table th:last-child {
     padding-right: 2em;
 }

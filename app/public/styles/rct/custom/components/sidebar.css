@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-.ehevi .page-title {
+.rct .page-title {
     cursor: pointer;
     text-decoration: none !important;
     color: var(--color-gray-darker);
@@ -23,36 +23,36 @@
     overflow: hidden;
 }
 
-.ehevi .page-title:hover {
+.rct .page-title:hover {
     font-weight: 200;
 }
 
-.ehevi .page-title.selected {
+.rct .page-title.selected {
     font-weight: 600;
 }
 
-.ehevi .title-text {
+.rct .title-text {
     color: var(--off-white) !important;
     padding-left: 2em;
 }
 
-.ehevi .sidebar-item-button.current-page {
+.rct .sidebar-item-button.current-page {
     background-color: var(--primary-hover) !important;
     border-radius: 25px !important;
 }
 
-.ehevi .sidebar {
+.rct .sidebar {
     background-color: var(--primary) !important;
     color: var(--off-white) !important;
     font-size: small !important;
     padding: 0.45em !important;
 }
 
-.ehevi .sidebar.sidebar-visible {
+.rct .sidebar.sidebar-visible {
     width: 20em !important;
 }
 
-.ehevi .sidebar.sidebar-collapsible {
+.rct .sidebar.sidebar-collapsible {
     width: 3.9em;
     background-color: var(--primary) !important;
     color: var(--off-white) !important;
@@ -60,21 +60,21 @@
     padding: 0.45em !important;
 }
 
-.ehevi .sidebar.sidebar-collapsible:hover {
+.rct .sidebar.sidebar-collapsible:hover {
     width: 20em !important;
 }
 
-.ehevi .sidebar .sidebar-section-title {
+.rct .sidebar .sidebar-section-title {
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
-.ehevi .sidebar.sidebar-collapsible .hide-on-close {
+.rct .sidebar.sidebar-collapsible .hide-on-close {
     opacity: 0;
     transition: opacity 0.3s linear;
 }
 
-.ehevi .sidebar.sidebar-collapsible:hover .hide-on-close {
+.rct .sidebar.sidebar-collapsible:hover .hide-on-close {
     opacity: 1;
     transition: opacity 0.3s linear;
 }
