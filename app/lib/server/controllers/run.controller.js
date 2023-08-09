@@ -87,9 +87,35 @@ const listRunsPerSimulationPassHandler = async (req, res, next) => {
     }
 };
 
+const updateRunDetectorQualityHandler = async (req, res) => {
+    const customDTO = stdDataRequestDTO.keys({
+        params: {
+            runNumber: Joi.number(),
+            detectorSubsystemId: Joi.number(),
+        },
+        query: {
+            quality: Joi.string(),
+        },
+    });
+
+    const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
+    if (validatedDTO) {
+        const runDetector = await runService.updateRunDetectorQuality(
+            validatedDTO.params.runNumber,
+            validatedDTO.params.detectorId,
+            validatedDTO.query.quality,
+        );
+
+        res.json({
+            data: runDetector,
+        });
+    }
+};
+
 module.exports = {
     listRunsHandler,
     listRunsPerPeriodHandler,
     listRunsPerDataPass,
     listRunsPerSimulationPassHandler,
+    updateRunDetectorQualityHandler,
 };
