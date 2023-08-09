@@ -21,7 +21,7 @@ import pager from '../../../../components/table/pager.js';
 
 import filter from './filtering/filter.js';
 import activeFilters from './filtering/activeFilters.js';
-import noDataView from './noDataView.js';
+import { noDataFound, noMatchingData } from '../../../../components/messagePanel/messages.js';
 
 import { RCT } from '../../../../config.js';
 import sortingRow from './sortingRow.js';
@@ -31,7 +31,6 @@ import noSubPageSelected from './noSubPageSelected.js';
 import title from '../../../../components/table/title.js';
 import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
 import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
-import { modalIds, showModal } from '../../../modal/modal.js';
 
 const { pageNames } = RCT;
 
@@ -85,10 +84,7 @@ export default function tablePanel(model, runs, detectors) {
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
                     title(dataPointer.page),
-                    chips,
-                    h('button.btn.btn-secondary', {
-                        onclick: () => showModal(modalIds.pageSettings.modal),
-                    }, h('.settings-20-primary'))),
+                    chips),
 
                 h('div', functionalities(model))),
             model.searchFieldsVisible ? filter(model) : '',
@@ -111,7 +107,9 @@ export default function tablePanel(model, runs, detectors) {
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
-                : noDataView(model, dataPointer, anyFiltersActive(url)),
+                : anyFiltersActive(url)
+                    ? noMatchingData(model, dataPointer.page)
+                    : noDataFound(model),
         ])
         : noSubPageSelected(model);
 }

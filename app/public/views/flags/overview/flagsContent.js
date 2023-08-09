@@ -21,7 +21,6 @@ import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
 import { noRunNumbers } from '../../../../utils/defaults.js';
 import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
 import copyLinkButton from '../../../components/buttons/copyLinkButton.js';
-import { modalIds, showModal } from '../../modal/modal.js';
 
 export default function flagsContent(model, runs, detectors, flags) {
     const urlParams = model.router.getUrl().searchParams;
@@ -59,10 +58,7 @@ export default function flagsContent(model, runs, detectors, flags) {
         ? h('div.main-content', [
             h('div.flex-wrap.justify-between.items-center',
                 h('div.flex-wrap.justify-between.items-center',
-                    flagBreadCrumbs(model, dataPassName, runNumber, detectorName),
-                    h('button.btn.btn-secondary', {
-                        onclick: () => showModal(modalIds.pageSettings.modal),
-                    }, h('.settings-20-primary'))),
+                    flagBreadCrumbs(model, dataPassName, runNumber, detectorName)),
 
                 h('div', functionalities(model))),
             model.searchFieldsVisible ? filter(model) : '',
