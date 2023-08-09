@@ -12,14 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-.ehevi .mc-table {
+.rct .anchoredPerMC-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.ehevi .mc-table td:first-child,
-.ehevi .mc-table th:first-child {
+.rct .anchoredPerMC-table td:first-child,
+.rct .anchoredPerMC-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -29,58 +29,51 @@
     z-index: 1 !important;
 }
 
-.ehevi .mc-table tr:hover td:first-child {
+.rct .anchoredPerMC-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.ehevi .mc-table tr.row-selected td:first-child{
+.rct .anchoredPerMC-table tr.row-selected td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.ehevi .mc-table tr.row-selected:hover td:first-child{
+.rct .anchoredPerMC-table tr.row-selected:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
 /* Name */
-.ehevi .mc-table .mc-name-cell,
-.ehevi .mc-table .mc-name-header {
-    min-width: 150px;
+.rct .anchoredPerMC-table .anchoredPerMC-name-cell,
+.rct .anchoredPerMC-table .anchoredPerMC-name-header {
+    min-width: 500px;
     text-align: left;
 }
 
-.ehevi .mc-table .mc-name-cell td:first-child {
-    min-width: 10em !important;
+.rct .anchoredPerMC-table .anchoredPerMC-name-cell td:first-child {
+    min-width: 20em !important;
 }
 
 /* Description */
-.ehevi .mc-table .mc-description-cell,
-.ehevi .mc-table .mc-description-header {
+.rct .anchoredPerMC-table .anchoredPerMC-description-cell,
+.rct .anchoredPerMC-table .anchoredPerMC-description-header {
     min-width: 300px;
     text-align: left;
 }
 
-/* Jira */
-.ehevi .mc-table .mc-jira-cell,
-.ehevi .mc-table .mc-jira-header {
-    min-width: 80px;
-    text-align: right !important;
-}
-
-/* PWG */
-.ehevi .mc-table .mc-pwg-cell,
-.ehevi .mc-table .mc-pwg-header {
-    min-width: 50px;
-    text-align: right !important;
-}
-
 /* Number of events */
-.ehevi .mc-table .mc-number_of_events-cell,
-.ehevi .mc-table .mc-number_of_events-header {
-    min-width: 80px;
+.rct .anchoredPerMC-table .anchoredPerMC-number_of_events-cell,
+.rct .anchoredPerMC-table .anchoredPerMC-number_of_events-header {
+    min-width: 50px;
     text-align: right;
 }
 
-.ehevi .mc-table td:last-child,
-.ehevi .mc-table th:last-child {
+/* Size */
+.rct .anchoredPerMC-table .anchoredPerMC-size-cell,
+.rct .anchoredPerMC-table .anchoredPerMC-size-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+.rct .anchoredPerMC-table td:last-child,
+.rct .anchoredPerMC-table th:last-child {
     padding-right: 2em;
 }

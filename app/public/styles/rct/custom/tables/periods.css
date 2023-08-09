@@ -12,14 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-.ehevi .dataPasses-table {
+.rct .periods-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.ehevi .dataPasses-table td:first-child,
-.ehevi .dataPasses-table th:first-child {
+.rct .periods-table td:first-child,
+.rct .periods-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -29,44 +29,51 @@
     z-index: 1 !important;
 }
 
-.ehevi .dataPasses-table tr:hover td:first-child {
+.rct .periods-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.ehevi .dataPasses-table tr.row-selected td:first-child{
+.rct .periods-table tr.row-selected td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.ehevi .dataPasses-table tr.row-selected:hover td:first-child{
+.rct .periods-table tr.row-selected:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
-/* Name */
-.ehevi .dataPasses-table .dataPasses-name-cell,
-.ehevi .dataPasses-table .dataPasses-name-header {
-    min-width: 500px;
+/* Names */
+.rct .periods-table .periods-name-cell,
+.rct .periods-table .periods-name-header {
+    min-width: 380px;
     text-align: left;
 }
 
-.ehevi .dataPasses-table .dataPasses-name-cell td:first-child {
-    min-width: 20em !important;
+.rct .periods-table .periods-name-cell td:first-child {
+    min-width: 7em !important;
 }
 
-/* Description */
-.ehevi .dataPasses-table .dataPasses-description-cell,
-.ehevi .dataPasses-table .dataPasses-description-header {
-    min-width: 300px;
-    text-align: left;
-}
-
-/* Size */
-.ehevi .dataPasses-table .dataPasses-size-cell,
-.ehevi .dataPasses-table .dataPasses-size-header {
-    min-width: 100px;
+/* Years */
+.rct .periods-table .periods-year-cell,
+.rct .periods-table .periods-year-header {
+    min-width: 80px;
     text-align: right;
 }
 
-.ehevi .dataPasses-table td:last-child,
-.ehevi .dataPasses-table th:last-child {
+/* Beam types */
+.rct .periods-table .periods-beam-cell,
+.rct .periods-table .periods-beam-header {
+    min-width: 80px;
+    text-align: right;
+}
+
+/* Mean energy */
+.rct .periods-table .periods-energy-cell,
+.rct .periods-table .periods-energy-header {
+    min-width: 60px;
+    text-align: right;
+}
+
+.rct .periods-table td:last-child,
+.rct .periods-table th:last-child {
     padding-right: 2em;
 }

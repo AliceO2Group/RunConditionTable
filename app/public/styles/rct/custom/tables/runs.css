@@ -1,0 +1,132 @@
+/**
+ * @license
+ * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
+ * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
+ * All rights not expressly granted are reserved.
+ *
+ * This software is distributed under the terms of the GNU General Public
+ * License v3 (GPL Version 3), copied verbatim in the file "COPYING".
+ *
+ * In applying this license CERN does not waive the privileges and immunities
+ * granted to it by virtue of its status as an Intergovernmental Organization
+ * or submit itself to any jurisdiction.
+ */
+
+.rct .runs-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* Checkboxes */
+.rct .runs-table td:first-child,
+.rct .runs-table th:first-child {
+    position: sticky !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    width: 40px !important;
+    left: 0;
+    background-color: var(--color-white);
+    z-index: 1 !important;
+}
+
+.rct .runs-table tr:hover td:first-child {
+    background-color: var(--active-color) !important;
+}
+
+.rct .runs-table tr.row-selected td:first-child{
+    background-color: var(--row-selected-color);
+}
+
+.rct .runs-table tr.row-selected:hover td:first-child{
+    background-color: var(--focus-color) !important;
+}
+
+/* Run number */
+.rct .runs-table .runsPerPeriod-run_number-cell,
+.rct .runs-table .runsPerPeriod-run_number-header,
+.rct .runs-table .runsPerDataPass-run_number-cell,
+.rct .runs-table .runsPerDataPass-run_number-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Start time, end time, trigger start time, trigger end time */
+.rct .runs-table .runsPerPeriod-time_start-cell,
+.rct .runs-table .runsPerPeriod-time_start-header,
+.rct .runs-table .runsPerDataPass-time_start-cell,
+.rct .runs-table .runsPerDataPass-time_start-header,
+.rct .runs-table .runsPerPeriod-time_end-cell,
+.rct .runs-table .runsPerPeriod-time_end-header,
+.rct .runs-table .runsPerDataPass-time_end-cell,
+.rct .runs-table .runsPerDataPass-time_end-header,
+.rct .runs-table .runsPerPeriod-time_trg_start-cell,
+.rct .runs-table .runsPerPeriod-time_trg_start-header,
+.rct .runs-table .runsPerDataPass-time_trg_start-cell,
+.rct .runs-table .runsPerDataPass-time_trg_start-header,
+.rct .runs-table .runsPerPeriod-time_trg_end-cell,
+.rct .runs-table .runsPerPeriod-time_trg_end-header,
+.rct .runs-table .runsPerDataPass-time_trg_end-cell,
+.rct .runs-table .runsPerDataPass-time_trg_end-header  {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Center of mass energy */
+.rct .runs-table .runsPerPeriod-center_of_mass_energy-cell,
+.rct .runs-table .runsPerPeriod-center_of_mass_energy-header,
+.rct .runs-table .runsPerDataPass-center_of_mass_energy-cell,
+.rct .runs-table .runsPerDataPass-center_of_mass_energy-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Fill number */
+.rct .runs-table .runsPerPeriod-fill_number-cell,
+.rct .runs-table .runsPerPeriod-fill_number-header,
+.rct .runs-table .runsPerDataPass-fill_number-cell,
+.rct .runs-table .runsPerDataPass-fill_number-header {
+    min-width: 100px;
+    text-align: center;
+}
+
+.rct .runs-table .runsPerPeriod-fill_number-cell a,
+.rct .runs-table .runsPerDataPass-fill_number-cell a {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.3em;
+    align-items: center;
+}
+
+/* L3 current */
+.rct .runs-table .runsPerPeriod-l3_current-cell,
+.rct .runs-table .runsPerPeriod-l3_current-header,
+.rct .runs-table .runsPerDataPass-l3_current-cell,
+.rct .runs-table .runsPerDataPass-l3_current-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Dipole current */
+.rct .runs-table .runsPerPeriod-dipole_current-cell,
+.rct .runs-table .runsPerPeriod-dipole_current-header,
+.rct .runs-table .runsPerDataPass-dipole_current-cell,
+.rct .runs-table .runsPerDataPass-dipole_current-header {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Detectors */
+.rct .runs-table .runsPerPeriod-detector-header,
+.rct .runs-table .runsPerPeriod-detector-cell,
+.rct .runs-table .runsPerDataPass-detector-header,
+.rct .runs-table .runsPerDataPass-detector-cell {
+    min-width: 50px;
+    text-align: center;
+    border: none !important;
+}
+
+.rct .runs-table td:last-child,
+.rct .runs-table th:last-child {
+    padding-right: 2em;
+}

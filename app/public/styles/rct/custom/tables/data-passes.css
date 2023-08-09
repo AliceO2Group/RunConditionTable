@@ -12,14 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-.ehevi .anchoredPerMC-table {
+.rct .dataPasses-table {
     border-collapse: collapse;
     width: 100%;
 }
 
 /* Checkboxes */
-.ehevi .anchoredPerMC-table td:first-child,
-.ehevi .anchoredPerMC-table th:first-child {
+.rct .dataPasses-table td:first-child,
+.rct .dataPasses-table th:first-child {
     position: sticky !important;
     min-width: 40px !important;
     max-width: 40px !important;
@@ -29,51 +29,44 @@
     z-index: 1 !important;
 }
 
-.ehevi .anchoredPerMC-table tr:hover td:first-child {
+.rct .dataPasses-table tr:hover td:first-child {
     background-color: var(--active-color) !important;
 }
 
-.ehevi .anchoredPerMC-table tr.row-selected td:first-child{
+.rct .dataPasses-table tr.row-selected td:first-child{
     background-color: var(--row-selected-color);
 }
 
-.ehevi .anchoredPerMC-table tr.row-selected:hover td:first-child{
+.rct .dataPasses-table tr.row-selected:hover td:first-child{
     background-color: var(--focus-color) !important;
 }
 
 /* Name */
-.ehevi .anchoredPerMC-table .anchoredPerMC-name-cell,
-.ehevi .anchoredPerMC-table .anchoredPerMC-name-header {
+.rct .dataPasses-table .dataPasses-name-cell,
+.rct .dataPasses-table .dataPasses-name-header {
     min-width: 500px;
     text-align: left;
 }
 
-.ehevi .anchoredPerMC-table .anchoredPerMC-name-cell td:first-child {
+.rct .dataPasses-table .dataPasses-name-cell td:first-child {
     min-width: 20em !important;
 }
 
 /* Description */
-.ehevi .anchoredPerMC-table .anchoredPerMC-description-cell,
-.ehevi .anchoredPerMC-table .anchoredPerMC-description-header {
+.rct .dataPasses-table .dataPasses-description-cell,
+.rct .dataPasses-table .dataPasses-description-header {
     min-width: 300px;
     text-align: left;
 }
 
-/* Number of events */
-.ehevi .anchoredPerMC-table .anchoredPerMC-number_of_events-cell,
-.ehevi .anchoredPerMC-table .anchoredPerMC-number_of_events-header {
-    min-width: 50px;
-    text-align: right;
-}
-
 /* Size */
-.ehevi .anchoredPerMC-table .anchoredPerMC-size-cell,
-.ehevi .anchoredPerMC-table .anchoredPerMC-size-header {
+.rct .dataPasses-table .dataPasses-size-cell,
+.rct .dataPasses-table .dataPasses-size-header {
     min-width: 100px;
     text-align: right;
 }
 
-.ehevi .anchoredPerMC-table td:last-child,
-.ehevi .anchoredPerMC-table th:last-child {
+.rct .dataPasses-table td:last-child,
+.rct .dataPasses-table th:last-child {
     padding-right: 2em;
 }

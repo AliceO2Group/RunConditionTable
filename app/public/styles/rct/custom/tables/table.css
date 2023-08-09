@@ -22,55 +22,55 @@
     --white: #ffffff;
 }
 
-.ehevi .x-scrollable-table {
+.rct .x-scrollable-table {
     width: 100%;
     overflow-x: scroll;
     position: relative !important;
 }
 
-.ehevi .track.row-not-selected:hover {
+.rct .track.row-not-selected:hover {
     background-color: var(--active-color) !important;
 }
 
-.ehevi .track.row-not-selected:hover td {
+.rct .track.row-not-selected:hover td {
     background-color: var(--active-color) !important;
 }
 
-.ehevi .track.row-selected:hover {
+.rct .track.row-selected:hover {
     background-color: var(--focus-color) !important;
 }
 
-.ehevi .track.row-selected:hover td {
+.rct .track.row-selected:hover td {
     background-color: var(--focus-color) !important;
 }
 
-.ehevi table tbody tr.row-selected {
+.rct table tbody tr.row-selected {
     background-color: var(--row-selected-color);
 }
 
-.ehevi table tr.track.row-selected:nth-child(odd) td {
+.rct table tr.track.row-selected:nth-child(odd) td {
     background-color: #FCCA61;
 }
 
-.ehevi table tr.track.row-selected td .chip{
+.rct table tr.track.row-selected td .chip{
     background-color: #FACB80;
     color: #634F40;
     /*#EAE7FA; /* remember this color!*/
 }
 
-.ehevi tbody tr.track.row-not-selected:nth-child(odd) td {
+.rct tbody tr.track.row-not-selected:nth-child(odd) td {
     background-color: #f1f4fb;
 }
 
-.ehevi table thead {
+.rct table thead {
     font-size: x-small;
 }
 
-.ehevi table thead.header tr {
+.rct table thead.header tr {
     height: 30px !important;
 }
 
-.ehevi table tbody tr {
+.rct table tbody tr {
     max-height: 20px !important;
     
     margin: 0em !important;
@@ -81,17 +81,17 @@
     border: 0;
 }
 
-.ehevi table tbody td {
+.rct table tbody td {
     border: 0;
 }
 
-.ehevi .border-sh {
+.rct .border-sh {
     background-color: white !important;
     border-radius: 15px !important;
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
-.ehevi input[type="checkbox"] {
+.rct input[type="checkbox"] {
     appearance: none;
     background-color: var(--color-white);
     border-radius: 0.15em;
@@ -105,13 +105,13 @@
     cursor: pointer;
 }
 
-.ehevi input[type="checkbox"].ticked {
+.rct input[type="checkbox"].ticked {
     background-color: var(--dark-blue);
     border-radius: 0.15em;
     border: 0.15em solid var(--dark-blue) !important;
 }
 
-.ehevi input[type="checkbox"]::before {
+.rct input[type="checkbox"]::before {
     content: "";
     width: 0.65em;
     height: 0.65em;
@@ -124,7 +124,7 @@
     background-color: var(--color-white);
 }
   
-.ehevi input[type="checkbox"]:checked::before {
+.rct input[type="checkbox"]:checked::before {
     transform: scale(1);
     background-color: var(--color-white);
 }

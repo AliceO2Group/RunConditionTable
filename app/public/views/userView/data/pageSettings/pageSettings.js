@@ -52,8 +52,8 @@ export default function pageSettings(model, close) {
         const selectedTheme = themesSelection.options[themesSelection.selectedIndex].value;
         removeAllThemeClasses(documentBody);
         switch (selectedTheme) {
-            case RCT.themes.ehevi:
-                documentBody.classList.add(RCT.themes.ehevi);
+            case RCT.themes.rct:
+                documentBody.classList.add(RCT.themes.rct);
                 break;
             case RCT.themes.webui:
                 documentBody.classList.add(RCT.themes.webui);
@@ -110,7 +110,7 @@ export default function pageSettings(model, close) {
                 name: themeSelectId,
                 onchange: () => handleThemeSelection(),
             }, [
-                h('option', { value: RCT.themes.ehevi }, 'Ehevi'),
+                h('option', { value: RCT.themes.rct }, 'RCT'),
                 h('option', { value: RCT.themes.webui }, 'WebUI'),
             ], iconChevronBottom())),
 
