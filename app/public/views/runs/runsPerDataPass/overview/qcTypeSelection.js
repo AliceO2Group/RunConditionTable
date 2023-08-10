@@ -44,12 +44,12 @@ export default function qcTypeSelection(navigation, close, item, index, detector
         }
     }
 
-    return h('', [
+    return h('.p-1em', [
         h('.flex.items-center',
-            h('h6.inline.top-15.p-left-1em', index)),
+            h('h6', index)),
         h('.flex.p-bottom-1em.items-center',
-            h('h3.inline.top-15.p-left-1em', item.run_number),
-            h('h3.inline.top-15.p-left-1em', detectorName)),
+            h('h3.inline', item.run_number),
+            h('h3.inline.p-left-1em', detectorName)),
         h('.flex-wrap.justify-between.items-center',
             h('', 'Run quality'),
             h('select.select.color-theme', {

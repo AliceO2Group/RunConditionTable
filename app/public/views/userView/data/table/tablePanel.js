@@ -92,7 +92,7 @@ export default function tablePanel(model, runs, detectors) {
 
             data.rows?.length > 0
                 ? visibleFields.length > 0
-                    ? h('.p-top-10',
+                    ? h('.p-top-05em',
                         h('.x-scrollable-table.border-sh',
                             pager(model, data, false),
                             h('table', {

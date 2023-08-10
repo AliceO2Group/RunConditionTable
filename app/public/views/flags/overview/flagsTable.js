@@ -23,7 +23,7 @@ export default function flagsTable(model, flagsData) {
     const cellsSpecials = pagesCellsSpecials[PN.flags];
 
     return flagsData.length > 0
-        ? h('.p-top-10',
+        ? h('.p-top-05em',
             h('.x-scrollable-table.border-sh',
                 h('table', {
                     id: 'flags-data-table',

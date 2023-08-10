@@ -91,7 +91,7 @@ export default function detectorSettings(userPreferences, close) {
         }
     };
 
-    return h('', [
+    return h('.p-1em', [
         h('.flex.p-bottom-1em.justify-center.items-center',
             h('.detector-40-primary'),
             h('.p-left-1em', title)),

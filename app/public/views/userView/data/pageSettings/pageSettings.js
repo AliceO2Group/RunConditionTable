@@ -91,7 +91,7 @@ export default function pageSettings(userPreferences, close) {
         }
     };
 
-    return h('', [
+    return h('.p-1em', [
         h('.flex.p-bottom-1em.justify-center.items-center',
             h('.settings-40-primary'),
             h('.p-left-1em', title)),
