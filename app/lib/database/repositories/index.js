@@ -51,6 +51,7 @@ const repositoriesFactory = (models) => {
         [modelName + 'Repository',
         new (specificallyDefinedRepositories[modelName] ?? Repository) (model),
     ]);
+    modelNameToRepository.forEach(([_, repository]) => { repository.T = repository.asT() });
 
     return Object.fromEntries(modelNameToRepository);
 };
