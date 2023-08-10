@@ -11,18 +11,19 @@
  * or submit itself to any jurisdiction.
  */
 
-const getTransactionalMethods = (classObj) => {
+const nonTransactionalFunctions = new Set(['constructor', 'asT', '_asT'])
+
+const getTransactionalMethodsNames = (classObj, ) => {
     const classesStack = [];
     while (typeof Object.getPrototypeOf(classObj) !== 'object') {
         classesStack.push(classObj);
         classObj = Object.getPrototypeOf(classObj);
     }
 
-    const nonSequelizeFunctions = new Set(['constructor', 'asT', '_asT'])
     return classesStack
         .map(cl => Object.getOwnPropertyNames(cl.prototype))
         .flat()
-        .filter(n => ! nonSequelizeFunctions.has(n));
+        .filter(name => ! nonTransactionalFunctions.has(name));
 }
 
 /**
@@ -64,15 +65,16 @@ class Repository {
 
     _asT() {
         const { sequelize } = this.model;
-        getTransactionalMethods(this.constructor).forEach(transactionalMethod => {
-            const nonTransationBoundMethod = this[transactionalMethod].bind(this);
-            this[transactionalMethod] = async (...args) => 
-                sequelize.transaction(async (t) => { 
-                    return await nonTransationBoundMethod(...args);
+        getTransactionalMethodsNames(this.constructor).forEach(transactionalMethodName => {
+            const boundMethodWithoutTransaction = this[transactionalMethodName].bind(this);
+            this[transactionalMethodName] = async (...args) => 
+                sequelize.transaction(async () => { 
+                    return await boundMethodWithoutTransaction(...args);
             });
         });
     }
 
+    
     asT() {
         const instanceWithTransactions = new this.constructor(this.model);
         instanceWithTransactions._asT();
