@@ -14,19 +14,26 @@
 
 import { h } from '/js/src/index.js';
 
-export default function detectorSettings(userPreferences, close) {
+export default function detectorSettings(userPreferences) {
     const title = h('h3.text-primary', 'Detector list');
+
+    const isActive = (detector) => userPreferences.detectorList[detector] === true;
 
     const detectors = () => h('.text-dark-blue', Object.keys(userPreferences.detectorList).map((detector) => [
         h('.flex-wrap.justify-between.items-center',
             h('.text-dark-blue', detector),
-            h('input.toggle-switch', {
-                type: 'checkbox',
-                onclick: () => {
-                    userPreferences.changeDetectorVisibility(detector);
-                },
-                checked: userPreferences.detectorList[detector] === true,
-            })),
+            h('.switch',
+                h('input', {
+                    id: `switch-input-${detector}`,
+                    type: 'checkbox',
+                    checked: isActive(detector),
+                }),
+                h('span.slider.round', {
+                    onclick: () => {
+                        userPreferences.changeDetectorVisibility(detector);
+                        document.getElementById(`switch-input-${detector}`).checked = isActive(detector);
+                    },
+                }))),
     ]));
 
     return h('.p-1em', [
@@ -35,10 +42,5 @@ export default function detectorSettings(userPreferences, close) {
             h('.p-left-1em', title)),
 
         detectors(),
-
-        h('.flex-wrap.justify-center.items-center.p-1em.p-bottom-0',
-            h('button.btn.btn-primary', {
-                onclick: () => close(),
-            }, 'Apply changes')),
     ]);
 }

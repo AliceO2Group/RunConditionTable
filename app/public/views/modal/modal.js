@@ -81,9 +81,7 @@ export const modal = (modalId, model = null) => {
             return h(`.${modalClassNames.modal}`, { id: modalIds.detectors.modal },
                 h(`.${modalClassNames.content}.abs-center.p3`, {
                     id: modalIds.detectors.content,
-                }, detectorSettings(model.userPreferences, () => {
-                    document.getElementById(modalIds.pageSettings.modal).style.display = 'none';
-                })));
+                }, detectorSettings(model.userPreferences)));
         }
     }
 };
