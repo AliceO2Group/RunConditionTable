@@ -12,8 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
-class NotFoundError extends Error {}
+class NotFoundEntityError extends Error {}
 
 module.exports = {
-    NotFoundError,
+    NotFoundEntityError,
 };

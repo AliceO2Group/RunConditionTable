@@ -12,6 +12,8 @@
  */
 
 const nonTransactionalFunctions = new Set(['constructor', 'asT', '_asT'])
+const { throwWrapper } = require('../../utils');
+const { NotFoundEntityError } = require('../../server/errors');
 
 const getTransactionalMethodsNames = (classObj, ) => {
     const classesStack = [];
@@ -61,6 +63,32 @@ class Repository {
      */
     async findOne(queryClauses = {}) {
         return this.model.findOne(queryClauses);
+    }
+
+    /**
+     * Apply a patch on a given dbObject and save the dbObject to the database
+     *
+     * @param {Object} dbOject the database object on which to apply the patch
+     * @param {Object} patch the patch to apply
+     * @return {Promise<void>} promise that resolves when the patch has been applied
+     */
+    async updateOne(dbOject, patch) {
+        return dbOject.update(patch);
+    }
+
+     /**
+     * Find a dbObject using query clause, apply given patch to it and save the dbObject to the database
+     *
+     * @param {Object} dbOject the database object on which to apply the patch
+     * @param {Object} patch the patch to apply
+     * @throws {NotFoundEntityError} if cannot find dbObject with given query clause
+     * @return {Promise<void>} promise that resolves when the patch has been applied
+     */
+    async findOneAndUpdate(query, patch) {
+        (
+            await this.model.findOne(query) ?? 
+            throwWrapper(new NotFoundEntityError(`No entity of model ${this.model.name} for clause ${JSON.stringify(query)}`))
+        ).update(patch);
     }
 
     _asT() {
