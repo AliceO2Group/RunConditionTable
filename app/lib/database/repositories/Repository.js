@@ -90,12 +90,12 @@ class Repository {
         await entity.update(patch);
     }
 
-    _asT() {
+    _asT(customOptions) {
         const { sequelize } = this.model;
         getTransactionalMethodsNames(this.constructor).forEach(transactionalMethodName => {
             const boundMethodWithoutTransaction = this[transactionalMethodName].bind(this);
             this[transactionalMethodName] = async (...args) => 
-                sequelize.transaction(async (t) => { 
+                sequelize.transaction(customOptions, async (t) => { 
                     return await boundMethodWithoutTransaction(...args);
             });
         });
@@ -105,11 +105,12 @@ class Repository {
      * Create copy of repository object which all business related methods are wrapped with sequelize.transcation(),
      * e.g: Repository.asT().findAll() is equal to sequelize.transaction((t) => Repository.findAll())
      * Module cls-hooked handles passing transaction object to sequelize queries automatically.
+     * @property {Object} customOptions - options passed to sequelize.transaction(options, callback)
      * @returns {Repository}
      */
-    asT() {
+    asT(customOptions) {
         const instanceWithTransactions = new this.constructor(this.model);
-        instanceWithTransactions._asT();
+        instanceWithTransactions._asT(customOptions);
         return instanceWithTransactions;
     }
 }
