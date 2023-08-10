@@ -50,7 +50,7 @@ export default class FetchedData {
     useUrlParams(url) {
         const params = Object.fromEntries(url.searchParams.entries());
         const DRP = RCT.dataReqParams;
-        this.rowsOnSite = params['rows-on-site'] ? params['rows-on-site'] : this.rowsOnSite;
+        this.rowsOnSite = params['rows-on-site'] ?? this.rowsOnSite;
         this.site = params[DRP.site] ? params[DRP.site] : defaultSite;
         if (params['sorting']) {
             const { sorting } = params;
