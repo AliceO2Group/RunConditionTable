@@ -34,8 +34,8 @@
 
 .rct .switch .slider:before {
     content: "";
-    height: 13px;
-    width: 13px;
+    height: 12px;
+    width: 12px;
     left: 2px;
     bottom: 2px;
     background-color: var(--white);
@@ -54,7 +54,7 @@
 }
 
 .slider.round {
-    border-radius: 17px;
+    border-radius: 13px;
 }
   
 .slider.round:before {
