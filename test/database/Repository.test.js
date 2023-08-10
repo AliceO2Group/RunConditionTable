@@ -17,18 +17,17 @@ module.exports = () => {
     describe('RepositoriesSuite', () => {
         describe('testing if transaction methods give the same result as non-transactional ones', () => {
             const testableMethodNames = new Set(['count', 'findAll', 'findOne']);
-            Object.values(repositories)
-                .map((repo) => Object.getOwnPropertyNames(repo.T)
-                                    .filter(n => testableMethodNames.has(n))
-                                    .map((methodName) => [repo, methodName]))
-            .flat()
-            .map(([repo, methodName]) => {
-                it(`should acquire the same result from transaction method and non-transactional one for repository ${repo.model.name}' and method '${methodName}'`, async () => {
-                    const nonTransactionResult = await repo[methodName]();
-                    const transationResult = await repo.T[methodName]();
-                    assert.deepStrictEqual(nonTransactionResult, transationResult);
-                })
-            });
+            Object.values(repositories).map((repo) => 
+                describe(`${repo.model.name}Repository`, () => Object.getOwnPropertyNames(repo.T)
+                    .filter(n => testableMethodNames.has(n))
+                    .map((methodName) => {
+                        it(`should acquire the same result from transaction and non-transactional method #${methodName}`, async () => {
+                            const nonTransactionResult = await repo[methodName]();
+                            const transationResult = await repo.T[methodName]();
+                            assert.deepStrictEqual(nonTransactionResult, transationResult);
+                        })
+                    }))
+            );
         });
     });
 };
