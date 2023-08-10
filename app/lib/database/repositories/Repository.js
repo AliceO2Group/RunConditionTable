@@ -85,10 +85,9 @@ class Repository {
      * @return {Promise<void>} promise that resolves when the patch has been applied
      */
     async findOneAndUpdate(query, patch) {
-        (
-            await this.model.findOne(query) ?? 
-            throwWrapper(new NotFoundEntityError(`No entity of model ${this.model.name} for clause ${JSON.stringify(query)}`))
-        ).update(patch);
+        const entity = await this.model.findOne(query) ??
+            throwWrapper(new NotFoundEntityError(`No entity of model ${this.model.name} for clause ${JSON.stringify(query)}`));
+        await entity.update(patch);
     }
 
     _asT() {
