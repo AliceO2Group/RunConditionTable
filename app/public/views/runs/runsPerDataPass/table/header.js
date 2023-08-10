@@ -14,11 +14,13 @@
 
 import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../../userView/data/headersSpecials.js';
+import { RCT } from '../../../../config.js';
 
 export default function header(visibleFields, data, model) {
+    const pageName = RCT.pageNames.runsPerDataPass;
     const columnsHeadersArray = (visibleFields, model) => {
         const dataHeaders = visibleFields.filter((field) => !/.*_detector/.test(field.name)).map((field) =>
-            h(`th.${model.getCurrentDataPointer().page}-${field.name}-header`, {
+            h(`th.${pageName}-${field.name}-header`, {
                 scope: 'col',
             }, h('.relative', [
                 headerSpecPresent(model, field) !== nonDisplayable
@@ -29,7 +31,7 @@ export default function header(visibleFields, data, model) {
         const detectorHeaders = visibleFields.filter((field) =>
             /.*_detector/.test(field.name) &&
             model.userPreferences.detectorList[field.name.slice(0, 3).toUpperCase()] === true).map((field) =>
-            h(`th.${model.getCurrentDataPointer().page}-detector-header`, {
+            h(`th.${pageName}-detector-header`, {
                 scope: 'col',
             }, h('.relative', [
                 headerSpecPresent(model, field) !== nonDisplayable

@@ -33,7 +33,6 @@ export default function detectorSettings(userPreferences) {
                     onclick: () => {
                         userPreferences.changeDetectorVisibility(detector);
                         document.getElementById(switchInputId(detector)).checked = isVisible(detector);
-                        userPreferences.notify();
                     },
                 }))),
     ]));

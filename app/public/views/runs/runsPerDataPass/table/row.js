@@ -15,11 +15,12 @@
 import { h } from '/js/src/index.js';
 import { reduceSerialIf } from '../../../../utils/utils.js';
 import detectorIcon from '../../../../components/detectors/detectorIcon.js';
+import { RCT } from '../../../../config.js';
 
 export default function row(
     model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
 ) {
-    const pageName = model.getCurrentDataPointer().page;
+    const pageName = RCT.pageNames.runsPerDataPass;
     const rowDivDef = reduceSerialIf(
         'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
