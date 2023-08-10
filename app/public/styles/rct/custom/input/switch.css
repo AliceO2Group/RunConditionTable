@@ -27,7 +27,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: var(--color-gray-dark);
     -webkit-transition: .4s;
     transition: .4s;
 }
@@ -38,13 +38,13 @@
     width: 13px;
     left: 2px;
     bottom: 2px;
-    background-color: white;
+    background-color: var(--white);
     -webkit-transition: .4s;
     transition: .4s;
 }
 
 .rct .switch input:checked + .slider {
-    background-color: #2196F3;
+    background-color: var(--primary);
 }
 
 .rct .switch input:checked + .slider:before {
