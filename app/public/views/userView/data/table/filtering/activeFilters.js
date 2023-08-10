@@ -32,15 +32,15 @@ export default function activeFilters(model, url) {
     }
 
     return [
-        h('div.flex-wrap.justify-between.items-center',
-            h('div.flex-wrap.justify-between.items-center',
+        h('.flex-wrap.justify-between.items-center',
+            h('.flex-wrap.justify-between.items-center',
                 h('h5', 'Active filters'),
                 h('button.btn.btn-secondary.font-size-small', {
                     onclick: () => onClearAll(),
                 }, 'Clear all'))),
         h('.flex-wrap.items-center.chips',
             filtersFromUrl(url).map((filter) => [
-                h('div.chip.filter-chip.inline',
+                h('.chip.filter-chip.inline',
                     h('.filter-field.inline', filter.field),
                     h('.filter-type.inline', filter.type),
                     h('.filter-input.inline', filter.search),

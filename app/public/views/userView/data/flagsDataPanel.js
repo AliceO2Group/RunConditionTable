@@ -51,12 +51,12 @@ export default function flagsDataPanel(model) {
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
-    return h('div.main-content', [
-        h('div.flex-wrap.justify-between.items-center',
-            h('div.flex-wrap.justify-between.items-center',
+    return h('.main-content', [
+        h('.flex-wrap.justify-between.items-center',
+            h('.flex-wrap.justify-between.items-center',
                 flagBreadCrumbs(model, dataPassName, run, detectorName(detector))),
 
-            h('div', functionalities(model))),
+            functionalities(model)),
         model.searchFieldsVisible ? filter(model) : '',
 
         flagsVisualization(model, dataPassName, run, detectorName(detector)),

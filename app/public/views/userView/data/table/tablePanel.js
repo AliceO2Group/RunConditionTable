@@ -80,13 +80,13 @@ export default function tablePanel(model, runs, detectors) {
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
     return dataPointer.index !== defaultIndexString || dataPointer.page == pageNames.periods
-        ? h('div.main-content', [
-            h('div.flex-wrap.justify-between.items-center',
-                h('div.flex-wrap.justify-between.items-center',
+        ? h('.main-content', [
+            h('.flex-wrap.justify-between.items-center',
+                h('.flex-wrap.justify-between.items-center',
                     title(dataPointer.page),
                     chips),
 
-                h('div', functionalities(model))),
+                functionalities(model)),
             model.searchFieldsVisible ? filter(model) : '',
             anyFiltersActive(url) ? activeFilters(model, url) : '',
 

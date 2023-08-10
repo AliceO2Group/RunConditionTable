@@ -25,9 +25,9 @@ export default function noSubPageSelected(model) {
         .filter((index) => index !== defaultIndexString)
         .map((index) => indexChip(model, dataPointer.page, index));
 
-    return h('div.main-content', [
-        h('div.flex-wrap.justify-between.items-center',
-            h('div.flex-wrap.justify-between.items-baseline',
+    return h('.main-content', [
+        h('.flex-wrap.justify-between.items-center',
+            h('.flex-wrap.justify-between.items-baseline',
                 title(dataPointer.page),
                 chips)),
 

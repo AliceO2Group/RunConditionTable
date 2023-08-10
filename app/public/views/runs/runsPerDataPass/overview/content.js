@@ -72,13 +72,13 @@ export default function content(model, runs, detectors) {
 
     return dataPointer.index === defaultIndexString
         ? noSubPageSelected(model)
-        : h('div.main-content', [
-            h('div.flex-wrap.justify-between.items-center',
-                h('div.flex-wrap.justify-between.items-center',
+        : h('.main-content', [
+            h('.flex-wrap.justify-between.items-center',
+                h('.flex-wrap.justify-between.items-center',
                     title(pageNames.runsPerDataPass),
                     chips),
 
-                h('div', functionalities(model))),
+                functionalities(model)),
             model.searchFieldsVisible ? filter(model) : '',
             anyFiltersActive(url) ? activeFilters(model, url) : '',
 

@@ -28,13 +28,13 @@ export default function pageSettings(userPreferences, close) {
 
     const onclickSetRowsOnSite = (userPreferences) => {
         const input = document.getElementById(rowsOnSiteInputId);
-        let inputValue = input.value === '' ? input.placeholder : input.value;
+        const inputValue = input.value === '' ? input.placeholder : input.value;
         if (inputValue < 1 || inputValue > 200) {
             alert('incorrect number of rows on page: must be in range of [1, 200]');
             input.value = userPreferences.rowsOnSite;
-            // rowsOnSite = userPreferences.rowsOnSite;
+        } else {
+            userPreferences.setRowsOnSite(inputValue);
         }
-        userPreferences.setRowsOnSite(rowsOnSite);
         close();
     };
 
