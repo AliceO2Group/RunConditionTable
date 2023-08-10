@@ -11,9 +11,9 @@
  * or submit itself to any jurisdiction.
  */
 
+const { throwWrapper, NotFoundEntityError } = require('../../utils');
+
 const nonTransactionalFunctions = new Set(['constructor', 'asT', '_asT'])
-const { throwWrapper } = require('../../utils');
-const { NotFoundEntityError } = require('../../server/errors');
 
 const getTransactionalMethodsNames = (classObj, ) => {
     const classesStack = [];
