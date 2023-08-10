@@ -38,7 +38,7 @@ export default class UserPreferences extends Observable {
 
     setRowsOnSite(rowsOnSite) {
         this.rowsOnSite = rowsOnSite;
-        const url = this.router.getUrl();
+        const url = this.parent.router.getUrl();
         const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.rowsOnSite });
         this.parent.router.go(newUrl);
     }
