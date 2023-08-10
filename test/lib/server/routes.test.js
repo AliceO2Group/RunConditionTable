@@ -32,7 +32,7 @@ module.exports = () => {
             });
         });
         describe('Endpoints', () => {
-            routes.map(async ({ path }) => {
+            routes.filter(({ method }) => method === 'get').map(async ({ path }) => {
                 const url = `${config.http.tls ? 'https' : 'http'}://localhost:${config.http.port}/api${replaceAll(path, /:[^/]+/, '0')}`;
                 it(`should fetch from ${path} <${url}> without errors`, async () => {
                     await assert.doesNotReject(makeHttpRequestForJSON(url));

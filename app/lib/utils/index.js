@@ -16,6 +16,7 @@ const LogsStacker = require('./LogsStacker.js');
 const objUtils = require('./obj-utils.js');
 const ResProvider = require('./ResProvider.js');
 const sqlUtils = require('./sql-utils.js');
+const errors = require('./errors.js');
 
 module.exports = {
     ResProvider,
@@ -23,4 +24,5 @@ module.exports = {
     ...sqlUtils,
     ...httpUtils,
     ...objUtils,
+    ...errors,
 };

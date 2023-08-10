@@ -13,8 +13,10 @@
 
 const UtilitiesSuite = require('./utilities');
 const DatabaseManagerSuite = require('./DatabaseManger.test');
+const RepositoriesSuite = require('./Repository.test');
 
 module.exports = () => {
-    describe('DatabaseManager', DatabaseManagerSuite);
+    DatabaseManagerSuite();
     describe('Utilities', UtilitiesSuite);
+    RepositoriesSuite();
 };

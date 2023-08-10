@@ -15,6 +15,7 @@ const {
     databaseManager: {
         repositories: {
             RunRepository,
+            RunDetectorsRepository,
         },
         models: {
             DataPass,
@@ -106,6 +107,17 @@ class RunService {
             },
         });
         return runs.map((run) => runAdapter.toEntity(run));
+    }
+
+    async updateRunDetectorQuality(runNumber, detectorId, newQuality) {
+        const queryClause = {
+            where: {
+                run_number: runNumber,
+                detector_id: detectorId,
+            },
+        };
+        const patch = { quality: newQuality };
+        await RunDetectorsRepository.T.findOneAndUpdate(queryClause, patch);
     }
 }
 
