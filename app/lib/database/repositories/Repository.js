@@ -75,8 +75,9 @@ class Repository {
     }
 
     /**
-     * Create repository copy which all business related methods are wrapped with sequelize.transcation(), e.g.
-     * Repository.asT().findAll() is equal to sequelize.transaction(() => Repository.findAll())
+     * Create copy of repository object which all business related methods are wrapped with sequelize.transcation(),
+     * e.g: Repository.asT().findAll() is equal to sequelize.transaction((t) => Repository.findAll())
+     * Module cls-hooked handles passing transaction object to sequelize queries automatically.
      * @returns {Repository}
      */
     asT() {
