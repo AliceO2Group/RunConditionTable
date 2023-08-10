@@ -31,7 +31,7 @@ export default class UserPreferences extends Observable {
         super();
         this.router = router;
         this.rowsOnSite = defaultRowsOnSite;
-        this.uiTheme = RCT.themes.ehevi;
+        this.uiTheme = RCT.themes.rct;
         this.sidebarPreference = sidebarPreferences.collapsible;
         this.detectorList = RCT.detectors.reduce((obj, curr) => ({ ...obj, [curr]: true }), {});
     }
