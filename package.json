@@ -57,6 +57,7 @@
   "homepage": "https://github.com/AliceO2Group/RunConditionTable#readme",
   "dependencies": {
     "@aliceo2/web-ui": "^2.0.0",
+    "cls-hooked": "^4.2.2",
     "csvtojson": "^2.0.10",
     "deepmerge": "^4.3.1",
     "esm": "^3.2.25",
@@ -88,6 +89,7 @@
   ],
   "bundleDependencies": [
     "@aliceo2/web-ui",
+    "cls-hooked",
     "deepmerge",
     "esm",
     "joi",

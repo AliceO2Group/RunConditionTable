@@ -18,6 +18,7 @@ const path = require('path')
 const config = require('../../config');
 const modelsFactory = require('./models');
 const repositoriesFactory = require('./repositories');
+const cls = require('cls-hooked');
 
 /**
  * Sequelize implementation of the Database.
@@ -26,6 +27,8 @@ class DatabaseManager {
     constructor() {
         this.logger = new Log(DatabaseManager.name);
         this.schema = 'public';
+        const o2rct_namespace = cls.createNamespace('o2rct-namespace');
+        Sequelize.useCLS(o2rct_namespace);
 
         this.sequelize = new Sequelize({
             ...config.database,

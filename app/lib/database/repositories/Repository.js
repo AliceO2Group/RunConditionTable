@@ -68,7 +68,7 @@ class Repository {
         getTransactionalMethodsNames(this.constructor).forEach(transactionalMethodName => {
             const boundMethodWithoutTransaction = this[transactionalMethodName].bind(this);
             this[transactionalMethodName] = async (...args) => 
-                sequelize.transaction(async () => { 
+                sequelize.transaction(async (t) => { 
                     return await boundMethodWithoutTransaction(...args);
             });
         });
