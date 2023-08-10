@@ -74,7 +74,11 @@ class Repository {
         });
     }
 
-    
+    /**
+     * Create repository copy which all business related methods are wrapped with sequelize.transcation(), e.g.
+     * Repository.asT().findAll() is equal to sequelize.transaction(() => Repository.findAll())
+     * @returns {Repository}
+     */
     asT() {
         const instanceWithTransactions = new this.constructor(this.model);
         instanceWithTransactions._asT();
