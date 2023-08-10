@@ -18,6 +18,7 @@ import { defaultIndex, defaultIndexString } from '../utils/defaults.js';
 import Navigation from './navigation/Navigation.js';
 import ServiceUnavailable from './ServiceUnavailable.js';
 import { RCT } from '../config.js';
+import UserPreferences from './UserPreferences.js';
 const { messageTimeout } = RCT;
 const { states } = RCT.dataAccess;
 
@@ -27,6 +28,8 @@ export default class DataAccessModel extends Observable {
         this.state = states.default;
         this.parent = parent;
         this.router = this.parent.router;
+
+        this.userPreferences = new UserPreferences(this.router);
 
         this.serviceUnavailable = new ServiceUnavailable(parent);
         this.fetchedData = new FetchedDataManager(this.router, this);

@@ -12,7 +12,6 @@
  * or submit itself to any jurisdiction.
  */
 
-const defaultRowsOnSite = 50;
 const defaultSite = 1;
 
 import { RCT } from '../../../config.js';
@@ -27,8 +26,9 @@ const DRF = RCT.dataResponseFields;
  */
 
 export default class FetchedData {
-    constructor(url, content, totalRecordsNumber = null) {
+    constructor(url, content, rowsOnSite, totalRecordsNumber = null) {
         this.url = url;
+        this.rowsOnSite = rowsOnSite;
 
         this.sorting = {
             field: null,
@@ -49,8 +49,7 @@ export default class FetchedData {
     useUrlParams(url) {
         const params = Object.fromEntries(url.searchParams.entries());
         const DRP = RCT.dataReqParams;
-        // TODO examine why it not works;
-        this.rowsOnSite = params['rows-on-site'] ? params['rows-on-site'] : defaultRowsOnSite;
+        this.rowsOnSite = params['rows-on-site'] ? params['rows-on-site'] : this.rowsOnSite;
         this.site = params[DRP.site] ? params[DRP.site] : defaultSite;
         if (params['sorting']) {
             const { sorting } = params;

@@ -17,7 +17,7 @@ import { RemoteData, Loader } from '/js/src/index.js';
 import FetchedData from './FetchedData.js';
 import { replaceUrlParams } from '../../utils/url/urlUtils.js';
 import { RCT } from '../../config.js';
-const { dataReqParams, defaultDataReqParams, pageNames, dataAccess } = RCT;
+const { dataReqParams, pageNames, dataAccess } = RCT;
 
 /**
  * Object of this class provide organization of many FetchedData objects,
@@ -29,8 +29,6 @@ export default class FetchedDataManager {
         this.model = model;
         this.router = router;
         this.loader = new Loader();
-
-        this.rowsOnSite = defaultDataReqParams.rowsOnSite;
 
         for (const n in pageNames) {
             if (Object.prototype.hasOwnProperty.call(pageNames, n)) {
@@ -50,6 +48,12 @@ export default class FetchedDataManager {
     async reqForData(force = false, url = null) {
         if (url === null) {
             url = this.router.getUrl();
+            if (!url.searchParams.has(dataReqParams.rowsOnSite)) {
+                url = new URL(`${url.href}&${dataReqParams.rowsOnSite}=${this.model.userPreferences.rowsOnSite}`);
+            }
+            if (!url.searchParams.has(dataReqParams.site)) {
+                url = new URL(`${url.href}&${dataReqParams.site}=1`);
+            }
         }
         const { page, index } = this.model.getDataPointerFromUrl(url);
         const data = this[page][index];
@@ -93,7 +97,7 @@ export default class FetchedDataManager {
         await this.model.parent._tokenExpirationHandler(status);
 
         if (ok) {
-            const s = RemoteData.Success(new FetchedData(url, result, totalRecordsNumber));
+            const s = RemoteData.Success(new FetchedData(url, result, this.model.userPreferences.rowsOnSite, totalRecordsNumber));
             this[page][index] = s;
             previous?.match({
                 NotAsked: () => {},
@@ -132,10 +136,9 @@ export default class FetchedDataManager {
         this.router.go(newUrl);
     }
 
-    changeRowsOnSite(rowsOnSite) {
+    changeRowsOnSite() {
         const url = this.router.getUrl();
-        this.rowsOnSite = rowsOnSite;
-        const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.rowsOnSite });
+        const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.model.userPreferences.rowsOnSite });
         this.router.go(newUrl);
     }
 
