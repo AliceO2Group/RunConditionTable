@@ -67,9 +67,8 @@ export default class FetchedData {
     parseFetchedFields(content) {
         this.fields = content.data.fields.map((field) => ({
             ...field,
-            marked: /.*_detector/.test(field.name)
-                ? this.detectorList[field.name.slice(0, 3).toUpperCase()]
-                : content.data.rows.some((r) => r[field.name]),
+            marked: /.*_detector/.test(field.name) && this.detectorList[field.name.slice(0, 3).toUpperCase()]
+                || content.data.rows.some((r) => r[field.name]),
         }));
     }
 
