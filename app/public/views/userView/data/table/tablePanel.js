@@ -80,7 +80,7 @@ export default function tablePanel(model, runs, detectors) {
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
     return dataPointer.index !== defaultIndexString || dataPointer.page == pageNames.periods
-        ? h('.main-content', [
+        ? h('.p-1em', [
             h('.flex-wrap.justify-between.items-center',
                 h('.flex-wrap.justify-between.items-center',
                     title(dataPointer.page),

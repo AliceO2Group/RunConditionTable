@@ -32,6 +32,7 @@ export default function sidebar(model) {
     },
     modal(modalIds.about.modal),
     modal(modalIds.pageSettings.modal, model),
+    modal(modalIds.detectors.modal, model),
     h('.logo.ph3.hide-on-close'),
     h('.flex-column.gap-20',
         h('.sidebar-section',
@@ -54,7 +55,7 @@ export default function sidebar(model) {
                 h('.title-text.vertical-center.hide-on-close', 'Page settings'))),
 
             h('button.sidebar-item-button', {
-                onclick: () => showModal(modalIds.about.modal),
+                onclick: () => showModal(modalIds.detectors.modal),
             }, h('.page-title',
                 h('.detector-15-off-white.vertical-center'),
                 h('.title-text.vertical-center.hide-on-close', 'Detectors')))),

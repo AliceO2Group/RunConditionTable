@@ -18,9 +18,9 @@ export default function about() {
     const title = h('h3.text-primary', 'About');
 
     return h('', [
-        h('.flex.bottom-20.justify-center.items-center',
+        h('.flex.p-bottom-1em.justify-center.items-center',
             h('.settings-40-primary'),
-            h('.inline.top-15.left-10',
+            h('.p-left-1em',
                 title)),
 
         h('.flex-wrap.justify-between.items-center',

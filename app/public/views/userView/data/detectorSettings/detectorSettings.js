@@ -16,7 +16,7 @@ import { h, iconChevronBottom } from '/js/src/index.js';
 import quantityInput from '../../../../components/common/quantityInput.js';
 import { RCT } from '../../../../config.js';
 
-export default function pageSettings(userPreferences, close) {
+export default function detectorSettings(userPreferences, close) {
     const rowsOnSiteInputId = 'rows-per-page-input-id-modal';
     const themeSelectId = 'theme-selection';
     const sidebarPreferenceSelectId = 'sidebar-selection';
@@ -24,7 +24,7 @@ export default function pageSettings(userPreferences, close) {
         visible: 'visible',
         collapsible: 'collapsible',
     };
-    const title = h('h3.text-primary', 'Page settings');
+    const title = h('h3.text-primary', 'Detector list');
 
     const onclickSetRowsOnSite = (userPreferences) => {
         const input = document.getElementById(rowsOnSiteInputId);
@@ -93,7 +93,7 @@ export default function pageSettings(userPreferences, close) {
 
     return h('', [
         h('.flex.p-bottom-1em.justify-center.items-center',
-            h('.settings-40-primary'),
+            h('.detector-40-primary'),
             h('.p-left-1em', title)),
 
         h('.flex-wrap.justify-between.items-center',
