@@ -14,25 +14,32 @@
 
 import { h } from '/js/src/index.js';
 import { reduceSerialIf } from '../../../../utils/utils.js';
+import detectorIcon from '../../../../components/detectors/detectorIcon.js';
 import { RCT } from '../../../../config.js';
 
 export default function row(
-    model, visibleFields, data, item, cellsSpecials, runs,
+    model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
 ) {
-    const pageName = model.getCurrentDataPointer().page;
+    const pageName = RCT.pageNames.runsPerPeriod;
     const rowDivDef = reduceSerialIf(
         'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 
-    const dataCells = visibleFields.map((field) =>
+    const dataCells = visibleFields.filter((field) => !/.*_detector/.test(field.name)).map((field) =>
         h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
             item[field.name]
                 ? cellsSpecials[field.name]
-                    ? pageName === RCT.pageNames.dataPasses
-                        ? cellsSpecials[field.name](model, runs, item)
-                        : cellsSpecials[field.name](model, item)
+                    ? cellsSpecials[field.name](model, item)
                     : item[field.name]
+                : ''));
+
+    const detectorCells = visibleFields.filter((field) =>
+        /.*_detector/.test(field.name) &&
+        model.userPreferences.detectorList[field.name.slice(0, 3).toUpperCase()] === true).map((field) =>
+        h(`td.${pageName}-detector-cell.text-ellipsis`,
+            item[field.name]
+                ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name), true)
                 : ''));
 
     const checkbox = h('td.relative.track',
@@ -45,5 +52,5 @@ export default function row(
             },
         }));
 
-    return h(rowDivDef, [checkbox].concat(dataCells));
+    return h(rowDivDef, [checkbox].concat(dataCells).concat(detectorCells));
 }

@@ -12,36 +12,27 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
-import downloadCSV from '../../../../utils/csvExport.js';
-import tableHeader from './header.js';
-import row from './row.js';
-import pagesCellsSpecials from '../pagesCellsSpecials.js';
+import indexChip from '../../../../components/chips/indexChip.js';
 import pager from '../../../../components/table/pager.js';
-
-import filter from './filtering/filter.js';
-import activeFilters from './filtering/activeFilters.js';
-import { noDataFound, noMatchingData } from '../../../../components/messagePanel/messages.js';
+import { defaultIndexString } from '../../../../utils/defaults.js';
+import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
+import pagesCellsSpecials from '../../../userView/data/pagesCellsSpecials.js';
+import title from '../../../../components/table/title.js';
+import header from '../table/header.js';
+import row from '../table/row.js';
+import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 
 import { RCT } from '../../../../config.js';
-import sortingRow from './sortingRow.js';
-import indexChip from '../../../../components/chips/indexChip.js';
-import { defaultIndexString } from '../../../../utils/defaults.js';
-import noSubPageSelected from './noSubPageSelected.js';
-import title from '../../../../components/table/title.js';
-import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
+import downloadCSV from '../../../../utils/csvExport.js';
+import filter from '../../../userView/data/table/filtering/filter.js';
+import activeFilters from '../../../userView/data/table/filtering/activeFilters.js';
+import sortingRow from '../../../userView/data/table/sortingRow.js';
+import { noMatchingData, noDataFound } from '../../../../components/messagePanel/messages.js';
+import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
 import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
-
 const { pageNames } = RCT;
 
-/**
- * Creates vnode containing table of fetched data (main content)
- * and additional features like page controller or columns visibility controller
- * @param model
- * @returns {*}
- */
-
-export default function tablePanel(model, runs) {
+export default function content(model, runs, detectors) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
     const page = model.fetchedData[dataPointer.page];
@@ -79,11 +70,12 @@ export default function tablePanel(model, runs) {
             onclick: () => model.changeSearchFieldsVisibility(),
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
-    return dataPointer.index !== defaultIndexString || dataPointer.page == pageNames.periods
-        ? h('.p-1em', [
+    return dataPointer.index === defaultIndexString
+        ? noSubPageSelected(model)
+        : h('.p-1em', [
             h('.flex-wrap.justify-between.items-center',
                 h('.flex-wrap.justify-between.items-center',
-                    title(dataPointer.page),
+                    title(pageNames.runsPerDataPass),
                     chips),
 
                 functionalities(model)),
@@ -101,24 +93,23 @@ export default function tablePanel(model, runs) {
                                     ? 'runs-table'
                                     : `${dataPointer.page}-table`}`,
                             }, [
-                                tableHeader(visibleFields, data, model),
+                                header(visibleFields, data, model),
                                 model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-                                tableBody(model, visibleFields, data, cellsSpecials, runs),
+                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.index, runs, detectors),
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
                 : anyFiltersActive(url)
                     ? noMatchingData(model, dataPointer.page)
                     : noDataFound(model),
-        ])
-        : noSubPageSelected(model);
+        ]);
 }
 
 function tableBody(
-    model, visibleFields, data, cellsSpecials, runs,
+    model, visibleFields, data, cellsSpecials, index, runs, detectors,
 ) {
     return h('tbody', { id: `table-body-${data.url}` },
         data.rows.map((item) => row(
-            model, visibleFields, data, item, cellsSpecials, runs,
+            model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
         )));
 }
