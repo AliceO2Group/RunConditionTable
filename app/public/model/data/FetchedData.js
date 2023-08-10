@@ -26,9 +26,10 @@ const DRF = RCT.dataResponseFields;
  */
 
 export default class FetchedData {
-    constructor(url, content, rowsOnSite, totalRecordsNumber = null) {
+    constructor(url, content, userPreferences, totalRecordsNumber = null) {
         this.url = url;
-        this.rowsOnSite = rowsOnSite;
+        this.rowsOnSite = userPreferences.rowsOnSite;
+        this.detectorList = userPreferences.detectorList;
 
         this.sorting = {
             field: null,
@@ -64,15 +65,12 @@ export default class FetchedData {
     }
 
     parseFetchedFields(content) {
-        const { length } = content.data.fields;
-        this.fields = content.data.fields.map((item) => {
-            item.marked =
-                length < 5
-                || content.data.rows.length == 0
-                || content.data.rows.some((r) => r[item.name]); // TODO
-
-            return item;
-        });
+        this.fields = content.data.fields.map((field) => ({
+            ...field,
+            marked: /.*_detector/.test(field.name)
+                ? this.detectorList[field.name.slice(0, 3).toUpperCase()]
+                : content.data.rows.some((r) => r[field.name]),
+        }));
     }
 
     parseFetchedRows(content) {

@@ -25,15 +25,21 @@ export default function row(
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 
-    const dataCells = visibleFields.map((field) =>
-        h(`td.${pageName}-${field.name.includes('detector') ? 'detector' : field.name}-cell.text-ellipsis`,
+    const dataCells = visibleFields.filter((field) => !/.*_detector/.test(field.name)).map((field) =>
+        h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
             item[field.name]
                 ? cellsSpecials[field.name]
                     ? cellsSpecials[field.name](model, item)
-                    : /.*_detector/.test(field.name)
-                        ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name), true)
-                        : item[field.name]
-                : '..'));
+                    : item[field.name]
+                : ''));
+
+    const detectorCells = visibleFields.filter((field) =>
+        /.*_detector/.test(field.name) &&
+        model.userPreferences.detectorList[field.name.slice(0, 3).toUpperCase()] === true).map((field) =>
+        h(`td.${pageName}-detector-cell.text-ellipsis`,
+            item[field.name]
+                ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name), true)
+                : ''));
 
     const checkbox = h('td.relative.track',
         h(`input.checkbox.abs-center${item.marked ? '.ticked' : ''}`, {
@@ -45,5 +51,5 @@ export default function row(
             },
         }));
 
-    return h(rowDivDef, [checkbox].concat(dataCells));
+    return h(rowDivDef, [checkbox].concat(dataCells).concat(detectorCells));
 }

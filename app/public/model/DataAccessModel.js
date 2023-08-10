@@ -29,7 +29,7 @@ export default class DataAccessModel extends Observable {
         this.parent = parent;
         this.router = this.parent.router;
 
-        this.userPreferences = new UserPreferences(this.router);
+        this.userPreferences = new UserPreferences(this);
 
         this.serviceUnavailable = new ServiceUnavailable(parent);
         this.fetchedData = new FetchedDataManager(this.router, this);

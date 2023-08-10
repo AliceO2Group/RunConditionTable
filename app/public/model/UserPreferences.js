@@ -27,9 +27,9 @@ export const sidebarPreferences = {
 /** Rows per page, UI theme, Sidebar, Detector list, predefined filters */
 
 export default class UserPreferences extends Observable {
-    constructor(router) {
+    constructor(parent) {
         super();
-        this.router = router;
+        this.parent = parent;
         this.rowsOnSite = defaultRowsOnSite;
         this.uiTheme = RCT.themes.rct;
         this.sidebarPreference = sidebarPreferences.collapsible;
@@ -40,7 +40,7 @@ export default class UserPreferences extends Observable {
         this.rowsOnSite = rowsOnSite;
         const url = this.router.getUrl();
         const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.rowsOnSite });
-        this.router.go(newUrl);
+        this.parent.router.go(newUrl);
     }
 
     setUiTheme(uiTheme) {
@@ -53,5 +53,6 @@ export default class UserPreferences extends Observable {
 
     changeDetectorVisibility(detector) {
         this.detectorList[detector] = !this.detectorList[detector];
+        this.parent.notify();
     }
 }

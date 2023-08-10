@@ -25,6 +25,8 @@ export default function row(
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 
+    // Const detecorCells
+
     const dataCells = visibleFields.map((field) =>
         h(`td.${pageName}-${field.name.includes('detector') ? 'detector' : field.name}-cell.text-ellipsis`,
             item[field.name]

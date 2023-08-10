@@ -97,7 +97,7 @@ export default class FetchedDataManager {
         await this.model.parent._tokenExpirationHandler(status);
 
         if (ok) {
-            const s = RemoteData.Success(new FetchedData(url, result, this.model.userPreferences.rowsOnSite, totalRecordsNumber));
+            const s = RemoteData.Success(new FetchedData(url, result, this.model.userPreferences, totalRecordsNumber));
             this[page][index] = s;
             previous?.match({
                 NotAsked: () => {},
