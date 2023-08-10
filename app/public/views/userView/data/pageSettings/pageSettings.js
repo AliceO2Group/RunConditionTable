@@ -124,8 +124,8 @@ export default function pageSettings(userPreferences, close) {
                 h('option', { value: sidebarPreferences.visible }, 'Always visible'),
             ], iconChevronBottom())),
 
-        h('.flex-wrap.justify-center.items-center',
-            h('button.btn.btn-primary.m1', {
+        h('.flex-wrap.justify-center.items-center.p-1em.p-bottom-0',
+            h('button.btn.btn-primary', {
                 onclick: () => onclickSetRowsOnSite(userPreferences),
             }, 'Apply changes')),
     ]);

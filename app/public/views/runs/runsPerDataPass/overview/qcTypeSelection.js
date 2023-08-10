@@ -62,8 +62,8 @@ export default function qcTypeSelection(navigation, close, item, index, detector
             ], iconChevronBottom())),
 
         timeBased
-            ? h('.flex-wrap.justify-center.items-center',
-                h('button.btn.btn-primary.m1', {
+            ? h('.flex-wrap.justify-center.items-center.p-1em.p-bottom-0',
+                h('button.btn.btn-primary', {
                     onclick: () => navigation.router.go(flagsUrl),
                 }, 'Time based quality'))
             : '',
