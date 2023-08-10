@@ -17,21 +17,22 @@ import { h } from '/js/src/index.js';
 export default function detectorSettings(userPreferences) {
     const title = h('h3.text-primary', 'Detector list');
 
-    const isActive = (detector) => userPreferences.detectorList[detector] === true;
+    const isVisible = (detector) => userPreferences.detectorList[detector] === true;
+    const switchInputId = (detector) => `switch-input-${detector}`;
 
     const detectors = () => h('.text-dark-blue', Object.keys(userPreferences.detectorList).map((detector) => [
         h('.flex-wrap.justify-between.items-center',
             h('.text-dark-blue', detector),
             h('.switch',
                 h('input', {
-                    id: `switch-input-${detector}`,
+                    id: switchInputId(detector),
                     type: 'checkbox',
-                    checked: isActive(detector),
+                    checked: isVisible(detector),
                 }),
                 h('span.slider.round', {
                     onclick: () => {
                         userPreferences.changeDetectorVisibility(detector);
-                        document.getElementById(`switch-input-${detector}`).checked = isActive(detector);
+                        document.getElementById(switchInputId(detector)).checked = isVisible(detector);
                     },
                 }))),
     ]));
