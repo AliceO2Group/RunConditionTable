@@ -38,7 +38,7 @@ export default function row(
                 : '..'));
 
     const checkbox = h('td.relative.track',
-        h(`input.abs-center${item.marked ? '.ticked' : ''}`, {
+        h(`input.checkbox.abs-center${item.marked ? '.ticked' : ''}`, {
             type: 'checkbox',
             checked: item.marked,
             onclick: () => {

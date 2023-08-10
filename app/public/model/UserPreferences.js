@@ -51,7 +51,7 @@ export default class UserPreferences extends Observable {
         this.sidebarPreference = sidebarPreference;
     }
 
-    changeDetectorVisiblity(detector) {
+    changeDetectorVisibility(detector) {
         this.detectorList[detector] = !this.detectorList[detector];
     }
 }

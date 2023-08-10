@@ -12,18 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconChevronBottom } from '/js/src/index.js';
-import quantityInput from '../../../../components/common/quantityInput.js';
-import { RCT } from '../../../../config.js';
+import { h } from '/js/src/index.js';
 
 export default function detectorSettings(userPreferences, close) {
     const rowsOnSiteInputId = 'rows-per-page-input-id-modal';
-    const themeSelectId = 'theme-selection';
-    const sidebarPreferenceSelectId = 'sidebar-selection';
-    const sidebarPreferences = {
-        visible: 'visible',
-        collapsible: 'collapsible',
-    };
+
     const title = h('h3.text-primary', 'Detector list');
 
     const onclickApply = (userPreferences) => {
@@ -38,57 +31,18 @@ export default function detectorSettings(userPreferences, close) {
         close();
     };
 
-    const removeAllThemeClasses = (element) => {
-        for (const theme of Object.keys(RCT.themes)) {
-            if (element.classList.contains(theme)) {
-                element.classList.remove(theme);
-            }
-        }
-    };
-
-    const handleThemeSelection = () => {
-        const documentBody = document.getElementById('body');
-        const themesSelection = document.getElementById(themeSelectId);
-        const selectedTheme = themesSelection.options[themesSelection.selectedIndex].value;
-        removeAllThemeClasses(documentBody);
-        switch (selectedTheme) {
-            case RCT.themes.rct:
-                documentBody.classList.add(RCT.themes.rct);
-                break;
-            case RCT.themes.webui:
-                documentBody.classList.add(RCT.themes.webui);
-                break;
-            default:
-                break;
-        }
-    };
-
-    const handleSidebarPreferenceSelection = () => {
-        const sidebar = document.getElementById('sidebar');
-        const visibleSidebarClassName = 'sidebar-visible';
-        const collapsibleSidebarClassName = 'sidebar-collapsible';
-        const collapsible = document.getElementsByClassName(collapsibleSidebarClassName);
-        const visible = document.getElementsByClassName(visibleSidebarClassName);
-        const sidebarPreferenceSelection = document.getElementById(sidebarPreferenceSelectId);
-        const selectedPreference = sidebarPreferenceSelection.options[sidebarPreferenceSelection.selectedIndex].value;
-        switch (selectedPreference) {
-            case sidebarPreferences.collapsible:
-                if (collapsible.length) {
-                    return;
-                }
-                sidebar?.classList.remove(visibleSidebarClassName);
-                sidebar?.classList.add(collapsibleSidebarClassName);
-                break;
-            case sidebarPreferences.visible:
-                if (visible.length) {
-                    return;
-                }
-                sidebar?.classList.remove(collapsibleSidebarClassName);
-                sidebar?.classList.add(visibleSidebarClassName);
-                break;
-            default:
-                break;
-        }
+    const detectors = () => {
+        return h('.text-dark-blue', Object.keys(userPreferences.detectorList).map((detector) => [
+            h('.flex-wrap.justify-between.items-center',
+                h('.text-dark-blue', detector),
+                h('input.toggle-switch', {
+                    type: 'checkbox',
+                    onclick: () => {
+                        userPreferences.changeDetectorVisibility(detector);
+                    },
+                    checked: userPreferences.detectorList[detector] === true,
+                })),
+        ]));
     };
 
     return h('.p-1em', [
@@ -96,33 +50,7 @@ export default function detectorSettings(userPreferences, close) {
             h('.detector-40-primary'),
             h('.p-left-1em', title)),
 
-        h('.flex-wrap.justify-between.items-center',
-            h('.text-dark-blue', 'Rows on site'),
-            quantityInput(rowsOnSiteInputId,
-                userPreferences.rowsOnSite,
-                userPreferences.setRowsOnSite)),
-
-        h('.flex-wrap.justify-between.items-center',
-            h('.text-dark-blue', 'UI theme'),
-            h('select.select.color-theme', {
-                id: themeSelectId,
-                name: themeSelectId,
-                onchange: () => handleThemeSelection(),
-            }, [
-                h('option', { value: RCT.themes.rct }, 'RCT'),
-                h('option', { value: RCT.themes.webui }, 'WebUI'),
-            ], iconChevronBottom())),
-
-        h('.flex-wrap.justify-between.items-center',
-            h('.text-dark-blue', 'Sidebar'),
-            h('select.select.color-theme', {
-                id: sidebarPreferenceSelectId,
-                name: sidebarPreferenceSelectId,
-                onchange: () => handleSidebarPreferenceSelection(),
-            }, [
-                h('option', { value: sidebarPreferences.collapsible }, 'Collapsible'),
-                h('option', { value: sidebarPreferences.visible }, 'Always visible'),
-            ], iconChevronBottom())),
+        detectors(),
 
         h('.flex-wrap.justify-center.items-center.p-1em.p-bottom-0',
             h('button.btn.btn-primary', {

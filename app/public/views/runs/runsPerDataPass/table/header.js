@@ -30,7 +30,7 @@ export default function header(visibleFields, data, model) {
     const rowsOptions = (model, data) =>
         h('th', { scope: 'col' },
             h('.relative',
-                h(`input.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
+                h(`input.checkbox.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
                     type: 'checkbox',
                     onclick: (e) => {
                         for (const row of data.rows) {
