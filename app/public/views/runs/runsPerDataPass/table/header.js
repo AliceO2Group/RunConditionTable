@@ -16,16 +16,29 @@ import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../../userView/data/headersSpecials.js';
 
 export default function header(visibleFields, data, model) {
-    const columnsHeadersArray = (visibleFields, model) =>
-        visibleFields.map((f) => [
-            h(`th.${model.getCurrentDataPointer().page}-${f.name.includes('detector') ? 'detector' : f.name}-header`, {
+    const columnsHeadersArray = (visibleFields, model) => {
+        const dataHeaders = visibleFields.filter((field) => !/.*_detector/.test(field.name)).map((field) =>
+            h(`th.${model.getCurrentDataPointer().page}-${field.name}-header`, {
                 scope: 'col',
             }, h('.relative', [
-                headerSpecPresent(model, f) !== nonDisplayable ?
-                    h('.inline', getHeaderSpecial(model, f))
+                headerSpecPresent(model, field) !== nonDisplayable
+                    ? h('.inline', getHeaderSpecial(model, field))
                     : '',
-            ])),
-        ]);
+            ])));
+
+        const detectorHeaders = visibleFields.filter((field) =>
+            /.*_detector/.test(field.name) &&
+            model.userPreferences.detectorList[field.name.slice(0, 3).toUpperCase()] === true).map((field) =>
+            h(`th.${model.getCurrentDataPointer().page}-detector-header`, {
+                scope: 'col',
+            }, h('.relative', [
+                headerSpecPresent(model, field) !== nonDisplayable
+                    ? h('.inline', getHeaderSpecial(model, field))
+                    : '',
+            ])));
+
+        return dataHeaders.concat(detectorHeaders);
+    };
 
     const rowsOptions = (model, data) =>
         h('th', { scope: 'col' },
