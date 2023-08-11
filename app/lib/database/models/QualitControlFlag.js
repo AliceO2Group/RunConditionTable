@@ -14,7 +14,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const QualityControlFlag = sequelize.define('Run', {
+    const QualityControlFlag = sequelize.define('QualityControlFlag', {
         timeStart: {
             type: Sequelize.DATE,
         },
@@ -30,9 +30,8 @@ module.exports = (sequelize) => {
     }, { 
         timestamps: true, 
         createdAt: 'addition_time', 
-        updatedAt: 'last_modification_time' 
+        updatedAt: 'last_modification_time',
     });
-
     
     QualityControlFlag.associate = (models) => { 
         QualityControlFlag.belongsTo(models.Run);
