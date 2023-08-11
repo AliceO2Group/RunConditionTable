@@ -12,8 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
-import downloadCSV from '../../../../utils/csvExport.js';
+import { h } from '/js/src/index.js';
 import tableHeader from './header.js';
 import row from './row.js';
 import pagesCellsSpecials from '../pagesCellsSpecials.js';
@@ -23,16 +22,23 @@ import filter from './filtering/filter.js';
 import activeFilters from './filtering/activeFilters.js';
 import { noDataFound, noMatchingData } from '../../../../components/messagePanel/messages.js';
 
-import { RCT } from '../../../../config.js';
 import sortingRow from './sortingRow.js';
 import indexChip from '../../../../components/chips/indexChip.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import noSubPageSelected from './noSubPageSelected.js';
 import title from '../../../../components/table/title.js';
 import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
-import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
-
+import dataActionButtons, { dataActions } from '../../../../components/buttons/dataActionButtons.js';
+import { RCT } from '../../../../config.js';
 const { pageNames } = RCT;
+
+const applicableDataActions = {
+    [dataActions.hide]: true,
+    [dataActions.reload]: true,
+    [dataActions.downloadCSV]: true,
+    [dataActions.copyLink]: true,
+    [dataActions.showFilteringPanel]: true,
+};
 
 /**
  * Creates vnode containing table of fetched data (main content)
@@ -58,27 +64,6 @@ export default function tablePanel(model, runs) {
     const { fields } = data;
     const visibleFields = fields.filter((f) => f.marked);
 
-    const functionalities = (model) => h('.btn-group',
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                model.fetchedData.reqForData(true);
-                model.notify();
-            },
-        }, iconReload()),
-
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                downloadCSV(model);
-            },
-        }, iconDataTransferDownload()),
-
-        copyLinkButton(model.router.getUrl().toString()),
-
-        h('button.btn.icon-only-button', {
-            className: model.showFilteringPanel ? 'btn-primary' : 'btn-secondary',
-            onclick: () => model.changeSearchFieldsVisibility(),
-        }, model.showFilteringPanel ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
-
     return dataPointer.index !== defaultIndexString || dataPointer.page == pageNames.periods
         ? h('.p-1em', [
             h('.flex-wrap.justify-between.items-center',
@@ -86,7 +71,7 @@ export default function tablePanel(model, runs) {
                     title(dataPointer.page),
                     chips),
 
-                functionalities(model)),
+                dataActionButtons(model, applicableDataActions)),
             model.showFilteringPanel ? filter(model) : '',
             anyFiltersActive(url) ? activeFilters(model, url) : '',
 
