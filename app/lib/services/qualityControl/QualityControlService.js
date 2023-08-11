@@ -17,7 +17,7 @@ const {
             QualityControlFlagRepository,
         },
         models: {
-            DeteectorSubsystem,
+            DetectorSubsystem,
             FlagType,
             QualityControlFlagVerification,
         },
@@ -36,13 +36,9 @@ class QualityControlService {
         const qualityFlags = await QualityControlFlagRepository.findAll({
             include: [
                 {
-                    model: DeteectorSubsystem,
+                    model: DetectorSubsystem,
                     required: true,
                     attribute: ['name'],
-                },
-                {
-                    model: FlagType,
-                    required: true,
                 },
                 {
                     model: FlagType,

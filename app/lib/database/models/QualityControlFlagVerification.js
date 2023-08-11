@@ -20,6 +20,7 @@ module.exports = (sequelize) => {
             allowNull: false,
         },
     }, { 
+        tableName: 'verifications',
         timestamps: true, 
         createdAt: 'verification_time', 
         updatedAt: false,

@@ -35,8 +35,8 @@ class QualityControlFlagAdapter {
             addedBy,
             createdAt,
             updatedAt,
-            flagType,
-            verifications,
+            FlagType: flagType,
+            QualityControlFlagVerifications: verifications,
         } = databaseObject;
 
         return {
@@ -48,7 +48,7 @@ class QualityControlFlagAdapter {
             createdAt,
             updatedAt,
             flagType: this.flagTypeAdapter.toEntity(flagType),
-            verifications: verifications.map(this.qualityControlFlagVerificationAdapter.bind(this.qualityControlFlagVerificationAdapter)),
+            verifications: verifications.map((verification) => this.qualityControlFlagVerificationAdapter.toEntity(verification)),
         }
     }
 

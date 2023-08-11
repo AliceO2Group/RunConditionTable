@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { qualityControllService } = require('../../services/qualityControl/QualityControlService');
+const { qualityControlService } = require('../../services/qualityControl/QualityControlService');
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
 
@@ -25,7 +25,7 @@ const { validateDtoOrRepondOnFailure } = require('../utilities');
 const listAllTimeBasedFlagsHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
-        const flags = await qualityControllService.getAllTimeBasedFlags(validatedDTO.query);
+        const flags = await qualityControlService.getAllTimeBasedFlags(validatedDTO.query);
         res.json({
             data: flags,
         });
