@@ -35,3 +35,9 @@ export const detectorName = (detectorFieldName) => isDetectorField(detectorField
 export const isDetectorField = (fieldName) => /.*_detector/.test(fieldName);
 
 export const shouldDisplayDetectorField = (fieldName, detectorList) => isDetectorField(fieldName) && detectorList[detectorName(fieldName)];
+
+export const rowDisplayStyle = (isMarked, shouldHideMarkedRecords) => isMarked
+    ? shouldHideMarkedRecords
+        ? '.none'
+        : '.row-selected'
+    : '.row-not-selected';

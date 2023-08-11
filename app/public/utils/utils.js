@@ -13,12 +13,6 @@
  */
 
 export const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i], b[i]]);
-export const reduceSerialIf = (
-    initValue, ifTrue, ifFalse, conditions, accFunction,
-) =>
-    zip(zip(ifTrue, ifFalse), conditions)
-        .reduce((acc, ent) =>
-            accFunction(acc, ent[1] ? ent[0][0] : ent[0][1]), initValue);
 
 export function getReadableFileSizeString(fileSizeInBytes) {
     let i = -1;

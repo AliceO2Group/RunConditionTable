@@ -13,17 +13,13 @@
  */
 
 import { h } from '/js/src/index.js';
-import { reduceSerialIf } from '../../../../utils/utils.js';
 import { RCT } from '../../../../config.js';
+import { rowDisplayStyle } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function row(
     model, visibleFields, data, item, cellsSpecials, runs,
 ) {
     const pageName = model.getCurrentDataPointer().page;
-    const rowDivDef = reduceSerialIf(
-        'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
-        [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
-    );
 
     const dataCells = visibleFields.map((field) =>
         h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
@@ -45,5 +41,5 @@ export default function row(
             },
         }));
 
-    return h(rowDivDef, [checkbox].concat(dataCells));
+    return h(`tr.track${rowDisplayStyle(item.marked, data.hideMarkedRecords)}`, [checkbox].concat(dataCells));
 }

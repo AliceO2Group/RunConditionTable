@@ -13,19 +13,14 @@
  */
 
 import { h } from '/js/src/index.js';
-import { reduceSerialIf } from '../../../../utils/utils.js';
 import detectorIcon from '../../../../components/detectors/detectorIcon.js';
 import { RCT } from '../../../../config.js';
-import { isDetectorField, shouldDisplayDetectorField } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
+import { isDetectorField, rowDisplayStyle, shouldDisplayDetectorField } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function row(
     model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
 ) {
     const pageName = RCT.pageNames.runsPerDataPass;
-    const rowDivDef = reduceSerialIf(
-        'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
-        [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
-    );
 
     const dataCells = visibleFields.filter((field) => !isDetectorField(field.name)).map((field) =>
         h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
@@ -52,5 +47,5 @@ export default function row(
             },
         }));
 
-    return h(rowDivDef, [checkbox].concat(dataCells).concat(detectorCells));
+    return h(`tr.track${rowDisplayStyle(item.marked, data.hideMarkedRecords)}`, [checkbox].concat(dataCells).concat(detectorCells));
 }
