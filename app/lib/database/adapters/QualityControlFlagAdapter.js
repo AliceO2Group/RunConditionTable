@@ -13,6 +13,7 @@
 
 const FlagTypeAdapter = require('./FlagTypeAdaper');
 const QualityControlFlagVerificationAdapter = require('./QualityControlFlagVerificationAdapter');
+const DetectorSubsystemAdapter = require('./DetectorSubsystemAdapter');
 
 class QualityControlFlagAdapter {
     constructor() {
@@ -29,6 +30,9 @@ class QualityControlFlagAdapter {
     toEntity(databaseObject) {
         const {
             id,
+            data_pass_id,
+            run_number,
+            detector_id,
             timeStart,
             timeEnd,
             comment,
@@ -41,6 +45,9 @@ class QualityControlFlagAdapter {
 
         return {
             id,
+            data_pass_id,
+            run_number,
+            detector_id,
             timeStart,
             timeEnd,
             comment,
@@ -61,6 +68,9 @@ class QualityControlFlagAdapter {
     toDatabase(entityObject) {
         const {
             id,
+            data_pass_id,
+            run_number,
+            detector_id,
             timeStart,
             timeEnd,
             comment,
@@ -73,6 +83,9 @@ class QualityControlFlagAdapter {
 
         return {
             id,
+            data_pass_id,
+            run_number,
+            detector_id,
             timeStart,
             timeEnd,
             comment,
