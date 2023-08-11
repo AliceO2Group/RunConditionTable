@@ -65,7 +65,7 @@ export default function tablePanel(model, runs) {
     const visibleFields = fields.filter((f) => f.marked);
 
     return dataPointer.index !== defaultIndexString || dataPointer.page == pageNames.periods
-        ? h('.p-1em', [
+        ? h('.p-1rem', [
             h('.flex-wrap.justify-between.items-center',
                 h('.flex-wrap.justify-between.items-center',
                     title(dataPointer.page),

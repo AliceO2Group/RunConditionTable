@@ -57,7 +57,7 @@ export default function content(model, runs, detectors) {
 
     return dataPointer.index === defaultIndexString
         ? noSubPageSelected(model)
-        : h('.p-1em', [
+        : h('.p-1rem', [
             h('.flex-wrap.justify-between.items-center',
                 h('.flex-wrap.justify-between.items-center',
                     title(pageNames.runsPerDataPass),

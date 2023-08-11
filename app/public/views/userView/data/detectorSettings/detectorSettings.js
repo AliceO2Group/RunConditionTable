@@ -37,10 +37,10 @@ export default function detectorSettings(userPreferences) {
                 }))),
     ]));
 
-    return h('.p-1em', [
-        h('.flex.p-bottom-1em.justify-center.items-center',
+    return h('.p-1rem', [
+        h('.flex.p-bottom-1rem.justify-center.items-center',
             h('.detector-40-primary'),
-            h('.p-left-1em', title)),
+            h('.p-left-1rem', title)),
 
         detectors(),
     ]);

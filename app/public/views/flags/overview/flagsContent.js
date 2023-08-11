@@ -41,7 +41,7 @@ export default function flagsContent(model, runs, detectors, flags) {
     const runData = runs.getRun(dataPassName, runNumber);
 
     return runNumber > noRunNumbers && runData
-        ? h('.p-1em', [
+        ? h('.p-1rem', [
             h('.flex-wrap.justify-between.items-center',
                 h('.flex-wrap.justify-between.items-center',
                     flagBreadCrumbs(model, dataPassName, runNumber, detectorName)),

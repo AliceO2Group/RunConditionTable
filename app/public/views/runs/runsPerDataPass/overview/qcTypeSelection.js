@@ -44,12 +44,12 @@ export default function qcTypeSelection(navigation, close, item, index, detector
         }
     }
 
-    return h('.p-1em', [
+    return h('.p-1rem', [
         h('.flex.items-center',
             h('h6', index)),
-        h('.flex.p-bottom-1em.items-center',
+        h('.flex.p-bottom-1rem.items-center',
             h('h3.inline', item.run_number),
-            h('h3.inline.p-left-1em', detectorName)),
+            h('h3.inline.p-left-1rem', detectorName)),
         h('.flex-wrap.justify-between.items-center',
             h('', 'Run quality'),
             h('select.select.color-theme', {
@@ -62,7 +62,7 @@ export default function qcTypeSelection(navigation, close, item, index, detector
             ], iconChevronBottom())),
 
         timeBased
-            ? h('.flex-wrap.justify-center.items-center.p-1em.p-bottom-0',
+            ? h('.flex-wrap.justify-center.items-center.p-1rem.p-bottom-0',
                 h('button.btn.btn-primary', {
                     onclick: () => navigation.router.go(flagsUrl),
                 }, 'Time based quality'))
