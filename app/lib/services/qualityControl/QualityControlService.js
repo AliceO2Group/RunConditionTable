@@ -32,7 +32,7 @@ class QualityControlService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Quality[]>} Promise object represents the result of this use case.
      */
-    async getAll({ filter }) {
+    async getAllTimeBasedFlags({ filter }) {
         const qualityFlags = await QualityControlFlagRepository.findAll({
             include: [
                 {
