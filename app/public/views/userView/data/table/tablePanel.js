@@ -95,11 +95,8 @@ export default function tablePanel(model, runs) {
                     ? h('.p-top-05em',
                         h('.x-scrollable-table.border-sh',
                             pager(model, data, false),
-                            h('table', {
+                            h(`table.${dataPointer.page}-table`, {
                                 id: `data-table-${data.url}`,
-                                className: `${[pageNames.runsPerDataPass, pageNames.runsPerPeriod].includes(dataPointer.page)
-                                    ? 'runs-table'
-                                    : `${dataPointer.page}-table`}`,
                             }, [
                                 tableHeader(visibleFields, data, model),
                                 model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',

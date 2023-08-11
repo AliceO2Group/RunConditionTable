@@ -58,7 +58,7 @@ export default function content(model, runs, detectors) {
         : h('.p-1em', [
             h('.flex-wrap.justify-between.items-center',
                 h('.flex-wrap.justify-between.items-center',
-                    title(pageNames.runsPerDataPass),
+                    title(pageNames.runsPerPeriod),
                     chips),
 
                 dataActionButtons(model, applicableDataActions)),
@@ -70,11 +70,8 @@ export default function content(model, runs, detectors) {
                     ? h('.p-top-05em',
                         h('.x-scrollable-table.border-sh',
                             pager(model, data, false),
-                            h('table', {
+                            h('table.runs-table', {
                                 id: `data-table-${url}`,
-                                className: `${[pageNames.runsPerDataPass, pageNames.runsPerPeriod].includes(dataPointer.page)
-                                    ? 'runs-table'
-                                    : `${dataPointer.page}-table`}`,
                             }, [
                                 header(visibleFields, data, model),
                                 model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
