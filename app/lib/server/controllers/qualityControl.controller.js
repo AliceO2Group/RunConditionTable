@@ -43,7 +43,7 @@ const listAllTimeBasedFlagsHandler = async (req, res, next) => {
  * @returns {undefined}
  */
 const createTimeBasedQualityControlFlag = async (req, res, next) => {
-    const customDTO = stdDataRequestDTO.keys({
+    const customDTO = stdDataRequestDTO.concat(Joi.object({
         query: {
             time_end: Joi.number().required(),
             time_start: Joi.number().required(),
@@ -52,7 +52,7 @@ const createTimeBasedQualityControlFlag = async (req, res, next) => {
             detector_id: Joi.number().required(),
             flag_type_id: Joi.number().required(),
         },
-    });
+    }));
 
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
@@ -68,7 +68,7 @@ const createTimeBasedQualityControlFlag = async (req, res, next) => {
         const { token } = req.query;
 
         const entityParams = {
-            addedBy: token ? new O2TokenService(jwt).verify(token).username : 'unspecified',
+            addedBy: token ? new O2TokenService(jwt).verify(token).username : 'test',
             timeEnd: time_end,
             timeStart: time_start,
             data_pass_id: data_pass_id,
