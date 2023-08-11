@@ -17,4 +17,5 @@ module.exports = {
     apiDocumentationCotroller: require('./ApiDocumentation.controller.js'),
     DataPassController: require('./dataPass.controller.js'),
     SimulationPassController: require('./simulationPass.controller.js'),
+    QualityControlController: require('./qualityControl.controller.js'),
 };
