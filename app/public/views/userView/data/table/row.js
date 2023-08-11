@@ -41,5 +41,7 @@ export default function row(
             },
         }));
 
-    return h(`tr.track${rowDisplayStyle(item.marked, data.hideMarkedRecords)}`, [checkbox].concat(dataCells));
+    return h(`tr.track${rowDisplayStyle(item.marked, data.hideMarkedRecords)}`,
+        checkbox,
+        dataCells);
 }
