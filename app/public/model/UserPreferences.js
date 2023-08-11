@@ -24,7 +24,10 @@ export const sidebarPreferences = {
     collapsible: 'collapsible',
 };
 
-/** Rows per page, UI theme, Sidebar, Detector list, predefined filters */
+/**
+ * Observable responsible for handling and providing user preferences:
+ * number of rows on site, UI theme, sidebar preferenes, detector list and predefined filters
+ */
 
 export default class UserPreferences extends Observable {
     constructor(parent) {
