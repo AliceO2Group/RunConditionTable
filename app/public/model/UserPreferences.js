@@ -36,7 +36,7 @@ export default class UserPreferences extends Observable {
         this.rowsOnSite = defaultRowsOnSite;
         this.uiTheme = RCT.themes.rct;
         this.sidebarPreference = sidebarPreferences.collapsible;
-        this.detectorList = RCT.detectors.reduce((obj, detector) => ({ ...obj, [detector]: true }), {});
+        this.detectorList = RCT.detectors.reduce((acc, detector) => ({ ...acc, [detector]: true }), {});
     }
 
     setRowsOnSite(rowsOnSite) {
