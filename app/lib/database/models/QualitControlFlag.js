@@ -17,15 +17,19 @@ module.exports = (sequelize) => {
     const QualityControlFlag = sequelize.define('QualityControlFlag', {
         timeStart: {
             type: Sequelize.DATE,
+            allowNull: false,
         },
         timeEnd: {
             type: Sequelize.DATE,
+            allowNull: false,
         },
         comment: {
             type: Sequelize.TEXT,
+            allowNull: false,
         },
         addedBy: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull: false,
         },
     }, { 
         timestamps: true, 
@@ -34,12 +38,11 @@ module.exports = (sequelize) => {
     });
     
     QualityControlFlag.associate = (models) => { 
-        QualityControlFlag.belongsTo(models.Run);
-        QualityControlFlag.belongsTo(models.DataPass);
-        QualityControlFlag.belongsTo(models.DetectorSubsystem);
+        QualityControlFlag.belongsTo(models.Run, {foreignKey: 'run_number'});
+        QualityControlFlag.belongsTo(models.DataPass, {foreignKey: 'data_pass_id'});
+        QualityControlFlag.belongsTo(models.DetectorSubsystem, {foreignKey: 'detector_id'});
         // QualityControlFlag.belongsTo(models.FlagTypesDictionary);
         // QualityControlFlag.hasMany(models.QualityControlFlagVerification);
-
     };
 
     return QualityControlFlag;

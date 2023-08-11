@@ -20,6 +20,7 @@ const DataPass = require('./DataPass.js');
 const DetectorSubsystem = require('./DetectorSubsystem.js');
 const SimulationPass = require('./SimulationPass.js');
 const RunDetectors = require('./RunDetectors.js');
+const QualityControlFlag = require('./QualitControlFlag.js');
 
 /**
  * 
@@ -35,6 +36,7 @@ const modelsFactory = (sequelize) => {
         DetectorSubsystem,
         SimulationPass,
         RunDetectors,
+        QualityControlFlag,
     };
     models = Object.entries(models).map(([modelName, model]) => [modelName, model(sequelize)]); // instantiate models
     models.forEach(([_, modelInstance]) => modelInstance.associate?.(sequelize.models)); // associate models

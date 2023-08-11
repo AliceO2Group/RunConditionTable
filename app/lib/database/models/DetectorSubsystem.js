@@ -27,6 +27,7 @@ module.exports = (sequelize) => {
             foreignKey: 'detector_id',
             timestamps: false,
         })
+        DetectorSubsystem.hasMany(models.QualityControlFlag, {foreignKey: 'detector_id'});
     };
     
     return DetectorSubsystem;
