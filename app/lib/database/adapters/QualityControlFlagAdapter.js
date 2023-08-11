@@ -59,7 +59,29 @@ class QualityControlFlagAdapter {
      * @returns {SequelizeQualityControlFlag} Converted entity object.
      */
     toDatabase(entityObject) {
-        return entityObject;
+        const {
+            id,
+            timeStart,
+            timeEnd,
+            comment,
+            addedBy,
+            additionTime,
+            lastModificationTime,
+            flagType: FlagType,
+            verifications,
+        } = entityObject;
+
+        return {
+            id,
+            timeStart,
+            timeEnd,
+            comment,
+            addedBy,
+            additionTime,
+            lastModificationTime,
+            FlagType: this.flagTypeAdapter.toDatabase(FlagType),
+            QualityControlFlagVerifications: verifications.map((verification) => this.qualityControlFlagVerificationAdapter.toDatabase(verification)),
+        };
     }
 }
 

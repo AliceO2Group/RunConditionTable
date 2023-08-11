@@ -23,13 +23,13 @@ class QualityControlFlagVerificationAdapter {
         const {
             id,
             verifiedBy,
-            createdAt,
+            verification_time,
         } = databaseObject;
 
         return {
             id,
             verifiedBy,
-            verifiedAt: createdAt,
+            verifiedAt: verification_time,
         }
     }
 
@@ -40,7 +40,17 @@ class QualityControlFlagVerificationAdapter {
      * @returns {SequelizeQualityControlFlagVerification} Converted entity object.
      */
     toDatabase(entityObject) {
-        return entityObject;
+        const {
+            id,
+            verifiedBy,
+            verifiedAt: verification_time,
+        } = entityObject;
+
+        return {
+            id,
+            verifiedBy,
+            verification_time,
+        };
     }
 }
 
