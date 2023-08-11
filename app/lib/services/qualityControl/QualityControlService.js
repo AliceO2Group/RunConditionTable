@@ -58,12 +58,17 @@ class QualityControlService {
     /**
      * Create time based quality flag
      * @param {Object} entityParams - paramaters of new flag
-     * @returns {Promise<Quality[]>} Promise object represents the result of this use case.
+     * @returns {Promise} Promise object represents the result of this use case.
      */
     async createTimeBasedQualityControlFlag(entityParams) {
         await QualityControlFlagRepository.T.create(entityParams);
     }
 
+    /**
+     * Create verification for time based quality flag
+     * @param {Object} entityParams - paramaters of new flag
+     * @returns {Promise} Promise object represents the result of this use case.
+     */
     async createTimeBasedQualityControlFlagVerification(entityParams) {
         await QualityControlFlagVerificationRepository.T.create(entityParams);
     }
