@@ -25,7 +25,6 @@ module.exports = (sequelize) => {
         },
         comment: {
             type: Sequelize.TEXT,
-            allowNull: false,
         },
         addedBy: {
             type: Sequelize.STRING,
