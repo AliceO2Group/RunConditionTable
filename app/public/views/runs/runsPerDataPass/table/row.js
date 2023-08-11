@@ -16,6 +16,7 @@ import { h } from '/js/src/index.js';
 import { reduceSerialIf } from '../../../../utils/utils.js';
 import detectorIcon from '../../../../components/detectors/detectorIcon.js';
 import { RCT } from '../../../../config.js';
+import { isDetectorField, shouldDisplayDetectorField } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function row(
     model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
@@ -26,7 +27,7 @@ export default function row(
         [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
     );
 
-    const dataCells = visibleFields.filter((field) => !/.*_detector/.test(field.name)).map((field) =>
+    const dataCells = visibleFields.filter((field) => !isDetectorField(field.name)).map((field) =>
         h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
             item[field.name]
                 ? cellsSpecials[field.name]
@@ -35,8 +36,7 @@ export default function row(
                 : ''));
 
     const detectorCells = visibleFields.filter((field) =>
-        /.*_detector/.test(field.name) &&
-        model.userPreferences.detectorList[field.name.slice(0, 3).toUpperCase()] === true).map((field) =>
+        shouldDisplayDetectorField(field.name, model.userPreferences.detectorList)).map((field) =>
         h(`td.${pageName}-detector-cell.text-ellipsis`,
             item[field.name]
                 ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name), true)

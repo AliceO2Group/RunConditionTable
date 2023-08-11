@@ -15,11 +15,12 @@
 import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../../userView/data/headersSpecials.js';
 import { RCT } from '../../../../config.js';
+import { isDetectorField, shouldDisplayDetectorField } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function header(visibleFields, data, model) {
     const pageName = RCT.pageNames.runsPerPeriod;
     const columnsHeadersArray = (visibleFields, model) => {
-        const dataHeaders = visibleFields.filter((field) => !/.*_detector/.test(field.name)).map((field) =>
+        const dataHeaders = visibleFields.filter((field) => !isDetectorField(field.name)).map((field) =>
             h(`th.${pageName}-${field.name}-header`, {
                 scope: 'col',
             }, h('.relative', [
@@ -29,8 +30,7 @@ export default function header(visibleFields, data, model) {
             ])));
 
         const detectorHeaders = visibleFields.filter((field) =>
-            /.*_detector/.test(field.name) &&
-            model.userPreferences.detectorList[field.name.slice(0, 3).toUpperCase()] === true).map((field) =>
+            shouldDisplayDetectorField(field.name, model.userPreferences.detectorList)).map((field) =>
             h(`th.${pageName}-detector-header`, {
                 scope: 'col',
             }, h('.relative', [

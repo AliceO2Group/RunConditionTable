@@ -15,6 +15,7 @@
 const defaultSite = 1;
 
 import { RCT } from '../../../config.js';
+import { shouldDisplayDetectorField } from '../../utils/dataProcessing/dataProcessingUtils.js';
 const DRF = RCT.dataResponseFields;
 
 /**
@@ -67,8 +68,7 @@ export default class FetchedData {
     parseFetchedFields(content) {
         this.fields = content.data.fields.map((field) => ({
             ...field,
-            marked: /.*_detector/.test(field.name) && this.detectorList[field.name.slice(0, 3).toUpperCase()]
-                || content.data.rows.some((r) => r[field.name]),
+            marked: shouldDisplayDetectorField(field.name, this.detectorList) || content.data.rows.some((r) => r[field.name]),
         }));
     }
 

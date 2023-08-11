@@ -28,7 +28,6 @@
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run coverage:test && npm run coverage:report",
     "start:test": "npm run coverage",
-    "test:mocha": "env-cmd -f .env.test mocha",
     "reports:show": "open ./reports/**/*.html",
     "reports:clean": "rm -rf ./reports; rm -rf .nyc_output",
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
@@ -70,7 +69,6 @@
   },
   "devDependencies": {
     "chai": "^4.3.6",
-    "env-cmd": "^10.1.0",
     "eslint": "^8.26.0",
     "eslint-output": "^3.0.1",
     "mocha": "^10.1.0",
