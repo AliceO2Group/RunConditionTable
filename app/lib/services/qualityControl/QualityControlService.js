@@ -65,6 +65,15 @@ class QualityControlService {
     }
 
     /**
+     * Delete time based quality flag
+     * @param {Number} id - paramaters of new flag
+     * @returns {Promise} Promise object represents the result of this use case.
+     */
+    async deleteTimeBasedQualityControlFlag(id) {
+        return await QualityControlFlagRepository.T.removeOne({ id });
+    }
+
+    /**
      * Create verification for time based quality flag
      * @param {Object} entityParams - paramaters of new flag
      * @returns {Promise} Promise object represents the result of this use case.

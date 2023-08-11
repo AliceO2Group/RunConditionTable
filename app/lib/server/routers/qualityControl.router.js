@@ -36,6 +36,12 @@ module.exports = {
                     controller: QualityControlController.createTimeBasedQualityControlFlagVerification,
                     description: 'Verify flag with given id',
                 },
+                {
+                    path: '/:qcFlagId/delete',
+                    method: 'post',
+                    controller: QualityControlController.deleteTimeBasedQualityControlFlag,
+                    description: 'Delete flag with given id',
+                },
             ],
         },
     ],

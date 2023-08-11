@@ -98,6 +98,17 @@ class Repository {
         await this.model.create(dbObjectParams);
     }
 
+    /**
+     * Create new object in db
+     * @param {Object} whereClause
+     */
+    async removeOne(whereClause) {
+        return await this.model.destroy({
+            limit: 1,
+            where: whereClause
+        });
+    }
+
     _asT(customOptions) {
         const { sequelize } = this.model;
         getTransactionalMethodsNames(this.constructor).forEach(transactionalMethodName => {

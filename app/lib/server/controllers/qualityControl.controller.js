@@ -107,8 +107,34 @@ const createTimeBasedQualityControlFlagVerification = async (req, res, next) => 
     }
 };
 
+/**
+ * Delete quality control flag
+ * @param {Object} req express HTTP request object
+ * @param {Object} res express HTTP response object
+ * @param {Object} next express next handler
+ * @returns {undefined}
+ */
+const deleteTimeBasedQualityControlFlag = async (req, res, next) => {
+    const customDTO = stdDataRequestDTO.concat(Joi.object({
+        params: {
+            qcFlagId: Joi.number().required(),
+        },
+    }));
+
+    const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
+    if (validatedDTO) {
+        const count = await qualityControlService.deleteTimeBasedQualityControlFlag(validatedDTO.params.qcFlagId);
+        if (count === 1) {
+            res.sendStatus(200);
+        } else {
+            res.status(400).send(`No quality flag with id ${validatedDTO.params.qcFlagId}`);
+        }
+    }
+};
+
 module.exports = {
     listAllTimeBasedFlagsHandler,
     createTimeBasedQualityControlFlag,
     createTimeBasedQualityControlFlagVerification,
+    deleteTimeBasedQualityControlFlag,
 };
