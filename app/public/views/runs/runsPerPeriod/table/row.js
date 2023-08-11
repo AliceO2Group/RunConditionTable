@@ -39,7 +39,7 @@ export default function row(
         shouldDisplayDetectorField(field.name, model.userPreferences.detectorList)).map((field) =>
         h(`td.${pageName}-detector-cell.text-ellipsis`,
             item[field.name]
-                ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name), true)
+                ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name))
                 : ''));
 
     const checkbox = h('td.relative.track',
