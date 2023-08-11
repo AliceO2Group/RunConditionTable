@@ -13,7 +13,12 @@
 
 const req = require('esm')(module)
 const assert = require('assert');
-const { extractPeriodName, getClosestDefinedEnergy, detectorName, isDetectorField, shouldDisplayDetectorField } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
+const { extractPeriodName,
+        getClosestDefinedEnergy,
+        detectorName,
+        isDetectorField,
+        shouldDisplayDetectorField,
+        rowDisplayStyle } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
 
 module.exports = () => {
     describe('Extract period name', () => {
@@ -99,6 +104,33 @@ module.exports = () => {
 
         it('should recognize non-detector field', () => {
             assert(!shouldDisplayDetectorField(nonDetectorFieldName, detectorList));
+        });
+    });
+
+    describe('Check how the row should be displayed', () => {
+        const displayNone = '.none';
+        const rowSelected = '.row-selected';
+        const rowNotSelected = '.row-not-selected';
+
+        const selected = true;
+        const notSelected = false;
+        const shouldHideSelected = true;
+        const shouldNotHideSelected = false;
+        
+        it('should not display hidden rows', () => {
+            assert(rowDisplayStyle(selected, shouldHideSelected) === displayNone);
+        });
+
+        it('should apply selection class to selected rows', () => {
+            assert(rowDisplayStyle(selected, shouldNotHideSelected) === rowSelected);
+        });
+
+        it('should apply corresponding class to unselected rows', () => {
+            assert(rowDisplayStyle(notSelected, shouldNotHideSelected) === rowNotSelected);
+        });
+
+        it('should apply corresponding class to unselected rows', () => {
+            assert(rowDisplayStyle(notSelected, shouldHideSelected) === rowNotSelected);
         });
     });
 };
