@@ -26,7 +26,7 @@ const {
 const { qualityControlFlagAdapter } = require('../../database/adapters');
 const { filterToSequelizeWhereClause } = require('../../server/utilities');
 
-class RunService {
+class QualityControlService {
     /**
      * Return all runs
      * @param {Object} query - Filtering query definiton from http request,... #TODO
@@ -60,5 +60,5 @@ class RunService {
 }
 
 module.exports = {
-    runService: new RunService(),
+    qualityControlService: new QualityControlService(),
 };
