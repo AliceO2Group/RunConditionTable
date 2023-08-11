@@ -18,6 +18,7 @@ const runRouter = require('./run.router.js');
 const dataPassRouter = require('./dataPass.router.js');
 const docsRouter = require('./docs.router.js');
 const simulationPassRouter = require('./simulationPass.router.js');
+const qualityControlRouter = require('./qualityControl.router');
 
 const routeTrees = [
     docsRouter,
@@ -25,6 +26,7 @@ const routeTrees = [
     runRouter,
     dataPassRouter,
     simulationPassRouter,
+    qualityControlRouter,
 ];
 
 const checkPath = (path) => {
