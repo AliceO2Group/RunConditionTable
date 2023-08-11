@@ -50,9 +50,9 @@ export default function flagsContent(model, runs, detectors, flags) {
         copyLinkButton(model.router.getUrl().toString()),
 
         h('button.btn.icon-only-button', {
-            className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',
+            className: model.showFilteringPanel ? 'btn-primary' : 'btn-secondary',
             onclick: () => model.changeSearchFieldsVisibility(),
-        }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
+        }, model.showFilteringPanel ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
     return runNumber > noRunNumbers && runData
         ? h('.p-1em', [
@@ -61,7 +61,7 @@ export default function flagsContent(model, runs, detectors, flags) {
                     flagBreadCrumbs(model, dataPassName, runNumber, detectorName)),
 
                 functionalities(model)),
-            model.searchFieldsVisible ? filter(model) : '',
+            model.showFilteringPanel ? filter(model) : '',
 
             flagsVisualization(runData, flagsData),
             flagsTable(model, flagsData),

@@ -75,9 +75,9 @@ export default function tablePanel(model, runs) {
         copyLinkButton(model.router.getUrl().toString()),
 
         h('button.btn.icon-only-button', {
-            className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',
+            className: model.showFilteringPanel ? 'btn-primary' : 'btn-secondary',
             onclick: () => model.changeSearchFieldsVisibility(),
-        }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
+        }, model.showFilteringPanel ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
     return dataPointer.index !== defaultIndexString || dataPointer.page == pageNames.periods
         ? h('.p-1em', [
@@ -87,7 +87,7 @@ export default function tablePanel(model, runs) {
                     chips),
 
                 functionalities(model)),
-            model.searchFieldsVisible ? filter(model) : '',
+            model.showFilteringPanel ? filter(model) : '',
             anyFiltersActive(url) ? activeFilters(model, url) : '',
 
             data.rows?.length > 0
