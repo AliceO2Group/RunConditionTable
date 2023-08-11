@@ -74,11 +74,10 @@ export default function content(model, runs, detectors) {
                             pager(model, data, false),
                             h('table.runs-table', {
                                 id: `data-table-${data.url}`,
-                            }, [
-                                header(visibleFields, data, model),
-                                model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.index, runs, detectors),
-                            ]),
+                            },
+                            header(visibleFields, data, model),
+                            model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
+                            tableBody(model, visibleFields, data, cellsSpecials, dataPointer.index, runs, detectors)),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
                 : anyFiltersActive(url)

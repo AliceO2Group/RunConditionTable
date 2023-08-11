@@ -82,11 +82,10 @@ export default function tablePanel(model, runs) {
                             pager(model, data, false),
                             h(`table.${dataPointer.page}-table`, {
                                 id: `data-table-${data.url}`,
-                            }, [
-                                tableHeader(visibleFields, data, model),
-                                model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-                                tableBody(model, visibleFields, data, cellsSpecials, runs),
-                            ]),
+                            },
+                            tableHeader(visibleFields, data, model),
+                            model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
+                            tableBody(model, visibleFields, data, cellsSpecials, runs)),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
                 : anyFiltersActive(url)

@@ -28,13 +28,12 @@ export default function flagsTable(model, flagsData) {
                 h('table', {
                     id: 'flags-data-table',
                     className: 'flags-table',
-                }, [
-                    flagsTableHeader(model),
+                },
+                flagsTableHeader(model),
 
-                    h('tbody', { id: 'table-body-flagsData' },
-                        flagsData.map((item) => flagsTableRow(
-                            PN.flags, item, cellsSpecials,
-                        ))),
-                ])))
+                h('tbody', { id: 'table-body-flagsData' },
+                    flagsData.map((item) => flagsTableRow(
+                        PN.flags, item, cellsSpecials,
+                    ))))))
         : '';
 }
