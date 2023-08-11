@@ -22,7 +22,7 @@ export const dataActions = {
     downloadCSV: 'Download CSV',
     copyLink: 'Copy link',
     showFilteringPanel: 'Filter',
-}
+};
 
 export default function dataActionButtons(model, applicableDataActions) {
     return h('.btn-group',
@@ -46,7 +46,7 @@ export default function dataActionButtons(model, applicableDataActions) {
         applicableDataActions[dataActions.copyLink]
             ? copyLinkButton(model.router.getUrl().toString())
             : '',
-        
+
         applicableDataActions[dataActions.hide]
             ? h('button.btn.icon-only-button', {
                 className: model.hideCurrentPageMarkedRows ? 'btn-primary' : 'btn-secondary',
@@ -59,6 +59,5 @@ export default function dataActionButtons(model, applicableDataActions) {
                 className: model.showFilteringPanel ? 'btn-primary' : 'btn-secondary',
                 onclick: () => model.changeSearchFieldsVisibility(),
             }, model.showFilteringPanel ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center'))
-            : '',
-        );
+            : '');
 }

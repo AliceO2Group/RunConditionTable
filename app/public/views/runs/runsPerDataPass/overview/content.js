@@ -38,7 +38,7 @@ const applicableDataActions = {
     [dataActions.downloadCSV]: true,
     [dataActions.copyLink]: true,
     [dataActions.showFilteringPanel]: true,
-}
+};
 
 export default function content(model, runs, detectors) {
     const dataPointer = model.getCurrentDataPointer();
@@ -63,7 +63,7 @@ export default function content(model, runs, detectors) {
                     title(pageNames.runsPerDataPass),
                     chips),
 
-            dataActionButtons(model, applicableDataActions)),
+                dataActionButtons(model, applicableDataActions)),
             model.showFilteringPanel ? filter(model) : '',
             anyFiltersActive(url) ? activeFilters(model, url) : '',
 

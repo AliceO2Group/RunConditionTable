@@ -12,6 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
+import { h } from '/js/src/index.js';
 import indexChip from '../../../../components/chips/indexChip.js';
 import pager from '../../../../components/table/pager.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
@@ -20,17 +21,23 @@ import pagesCellsSpecials from '../../../userView/data/pagesCellsSpecials.js';
 import title from '../../../../components/table/title.js';
 import header from '../table/header.js';
 import row from '../table/row.js';
-import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
 
-import { RCT } from '../../../../config.js';
-import downloadCSV from '../../../../utils/csvExport.js';
 import filter from '../../../userView/data/table/filtering/filter.js';
 import activeFilters from '../../../userView/data/table/filtering/activeFilters.js';
 import sortingRow from '../../../userView/data/table/sortingRow.js';
 import { noMatchingData, noDataFound } from '../../../../components/messagePanel/messages.js';
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
-import copyLinkButton from '../../../../components/buttons/copyLinkButton.js';
+import dataActionButtons, { dataActions } from '../../../../components/buttons/dataActionButtons.js';
+import { RCT } from '../../../../config.js';
 const { pageNames } = RCT;
+
+const applicableDataActions = {
+    [dataActions.hide]: true,
+    [dataActions.reload]: true,
+    [dataActions.downloadCSV]: true,
+    [dataActions.copyLink]: true,
+    [dataActions.showFilteringPanel]: true,
+};
 
 export default function content(model, runs, detectors) {
     const dataPointer = model.getCurrentDataPointer();
@@ -46,27 +53,6 @@ export default function content(model, runs, detectors) {
     const { fields } = data;
     const visibleFields = fields.filter((f) => f.marked);
 
-    const functionalities = (model) => h('.btn-group',
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                model.fetchedData.reqForData(true);
-                model.notify();
-            },
-        }, iconReload()),
-
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                downloadCSV(model);
-            },
-        }, iconDataTransferDownload()),
-
-        copyLinkButton(model.router.getUrl().toString()),
-
-        h('button.btn.icon-only-button', {
-            className: model.showFilteringPanel ? 'btn-primary' : 'btn-secondary',
-            onclick: () => model.changeSearchFieldsVisibility(),
-        }, model.showFilteringPanel ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
-
     return dataPointer.index === defaultIndexString
         ? noSubPageSelected(model)
         : h('.p-1em', [
@@ -75,7 +61,7 @@ export default function content(model, runs, detectors) {
                     title(pageNames.runsPerDataPass),
                     chips),
 
-                functionalities(model)),
+                dataActionButtons(model, applicableDataActions)),
             model.showFilteringPanel ? filter(model) : '',
             anyFiltersActive(url) ? activeFilters(model, url) : '',
 
