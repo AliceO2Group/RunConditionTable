@@ -32,7 +32,11 @@ export default function detectorIcon(navigation, item, index, detectorName, time
             : '',
         h('button.btn.no-border-bottom.pointer.run-quality.good', {
             id: runDetectorId,
-            onclick: () => qualityChangePossible ?? showModal(runBasedQcModalId),
+            onclick: () => {
+                if (qualityChangePossible) {
+                    showModal(runBasedQcModalId);
+                }
+            },
         },
         runBasedQuality.good),
     ];
