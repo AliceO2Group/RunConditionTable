@@ -25,14 +25,14 @@ export default function qcTypeSelection(navigation, close, item, index, detector
         const runQualitySelection = document.getElementById(runQualitySelectId);
         const selectedQuality = runQualitySelection.options[runQualitySelection.selectedIndex].value;
         switch (selectedQuality) {
-            case '0':
+            case runBasedQuality.good:
                 if (detectorIcon.classList.contains(runBasedQuality.bad)) {
                     detectorIcon.classList.remove(runBasedQuality.bad);
                     detectorIcon.classList.add(runBasedQuality.good);
                     detectorIcon.innerHTML = runBasedQuality.good;
                 }
                 break;
-            case '1':
+            case runBasedQuality.bad:
                 if (detectorIcon.classList.contains(runBasedQuality.good)) {
                     detectorIcon.classList.remove(runBasedQuality.good);
                     detectorIcon.classList.add(runBasedQuality.bad);
@@ -57,8 +57,8 @@ export default function qcTypeSelection(navigation, close, item, index, detector
                 name: runQualitySelectId,
                 onchange: () => handleRunQualityChange(),
             }, [
-                h('option', { value: 0 }, runBasedQuality.good),
-                h('option', { value: 1 }, runBasedQuality.bad),
+                h('option', { value: runBasedQuality.good }, runBasedQuality.good),
+                h('option', { value: runBasedQuality.bad }, runBasedQuality.bad),
             ], iconChevronBottom())),
 
         timeBased
