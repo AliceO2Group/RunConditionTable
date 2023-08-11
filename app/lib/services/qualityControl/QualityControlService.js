@@ -28,7 +28,7 @@ const { filterToSequelizeWhereClause } = require('../../server/utilities');
 
 class QualityControlService {
     /**
-     * Return all runs
+     * Return All time based qualities / flags in db including their verification
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Quality[]>} Promise object represents the result of this use case.
      */

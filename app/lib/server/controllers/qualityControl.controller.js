@@ -16,7 +16,7 @@ const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
 
 /**
- * List All runs in db
+ * List All time based qualities / flags in db including their verification
  * @param {Object} req express HTTP request object
  * @param {Object} res express HTTP response object
  * @param {Object} next express next handler
