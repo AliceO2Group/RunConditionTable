@@ -22,12 +22,14 @@ export default function detectorIcon(navigation, item, index, detectorName, time
     const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
     const runBasedQcModalId = `${runDetectorId}-qc-modal`;
     return [
-        qualityChangePossible ?? h('.modal', { id: runBasedQcModalId },
-            h('.modal-content.abs-center.p3', {
-                id: `${runBasedQcModalId}-content`,
-            }, qcTypeSelection(navigation, () => {
-                document.getElementById(runBasedQcModalId).style.display = 'none';
-            }, item, index, detectorName, runDetectorId, timeBased))),
+        qualityChangePossible
+            ? h('.modal', { id: runBasedQcModalId },
+                h('.modal-content.abs-center.p3', {
+                    id: `${runBasedQcModalId}-content`,
+                }, qcTypeSelection(navigation, () => {
+                    document.getElementById(runBasedQcModalId).style.display = 'none';
+                }, item, index, detectorName, runDetectorId, timeBased)))
+            : '',
         h('button.btn.no-border-bottom.pointer.run-quality.good', {
             id: runDetectorId,
             onclick: () => qualityChangePossible ?? showModal(runBasedQcModalId),
