@@ -33,8 +33,9 @@ export default class DataAccessModel extends Observable {
         this.serviceUnavailable = new ServiceUnavailable(parent);
         this.fetchedData = new FetchedDataManager(this.router, this);
 
-        this.searchFieldsVisible = false;
+        this.showFilteringPanel = false;
         this.sortingRowVisible = false;
+        this.hideCurrentPageMarkedRows = false;
 
         this.loader = new Loader();
 
@@ -60,13 +61,18 @@ export default class DataAccessModel extends Observable {
     }
 
     changeSearchFieldsVisibility() {
-        this.searchFieldsVisible = !this.searchFieldsVisible;
+        this.showFilteringPanel = !this.showFilteringPanel;
         this.notify();
     }
 
     changeSortingRowVisibility() {
         this.sortingRowVisible = !this.sortingRowVisible;
         this.notify();
+    }
+
+    changeMarkedRowsVisibility() {
+        this.hideCurrentPageMarkedRows = !this.hideCurrentPageMarkedRows;
+        this.fetchedData.changeRecordsVisibility(this.getCurrentData());
     }
 
     async logout() {
