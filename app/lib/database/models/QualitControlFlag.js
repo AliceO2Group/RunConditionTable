@@ -18,10 +18,16 @@ module.exports = (sequelize) => {
         timeStart: {
             type: Sequelize.DATE,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue('timeStart'))
+            }
         },
         timeEnd: {
             type: Sequelize.DATE,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue('timeEnd'))
+            }
         },
         comment: {
             type: Sequelize.TEXT,
@@ -32,8 +38,8 @@ module.exports = (sequelize) => {
         },
     }, { 
         timestamps: true, 
-        createdAt: 'addition_time', 
-        updatedAt: 'last_modification_time',
+        createdAt: 'additionTime', 
+        updatedAt: 'lastModificationTime',
     });
 
     const QualityControlFlagVerification = sequelize.define('QualityControlFlagVerification', {
