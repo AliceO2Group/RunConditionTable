@@ -16,12 +16,14 @@ const RunAdapter = require('./RunAdapter');
 const DataPassAdapter = require('./DataPassAdapter');
 const DetectorSubsystemAdapter = require('./DetectorSubsystemAdapter');
 const SimulationPassAdapter = require('./SimulationPassAdapter');
+const QualityControlFlagAdapter = require('./QualityControlFlagAdapter');
 
 const runAdapter = new RunAdapter();
 const periodAdapter = new PeriodAdapter();
 const dataPassAdapter = new DataPassAdapter();
 const detectorSubsystemAdapter = new DetectorSubsystemAdapter();
 const simulationPassAdapter = new SimulationPassAdapter();
+const qualityControlFlagAdapter = new QualityControlFlagAdapter();
 
 module.exports = {
     runAdapter,
@@ -29,4 +31,5 @@ module.exports = {
     dataPassAdapter,
     detectorSubsystemAdapter,
     simulationPassAdapter,
+    qualityControlFlagAdapter,
 };
