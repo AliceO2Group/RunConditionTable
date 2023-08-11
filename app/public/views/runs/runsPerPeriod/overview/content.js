@@ -41,8 +41,6 @@ export default function content(model, runs, detectors) {
         .filter((index) => index !== defaultIndexString)
         .map((index) => indexChip(model, dataPointer.page, index));
 
-    data.rows = data.rows.filter((item) => item.name != 'null');
-
     const cellsSpecials = pagesCellsSpecials[dataPointer.page];
 
     const { fields } = data;
