@@ -90,6 +90,14 @@ class Repository {
         await entity.update(patch);
     }
 
+    /**
+     * Create new object in db
+     * @param {Object} dbObjectParams 
+     */
+    async create(dbObjectParams) {
+        await this.model.create(dbObjectParams);
+    }
+
     _asT(customOptions) {
         const { sequelize } = this.model;
         getTransactionalMethodsNames(this.constructor).forEach(transactionalMethodName => {

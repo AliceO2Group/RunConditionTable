@@ -53,6 +53,15 @@ class QualityControlService {
         });
         return qualityFlags.map((qualityFlags) => qualityControlFlagAdapter.toEntity(qualityFlags));
     }
+
+    /**
+     * Create time based quality flag
+     * @param {Object} entityParams - paramaters of new flag
+     * @returns {Promise<Quality[]>} Promise object represents the result of this use case.
+     */
+    async createTimeBasedQualityControlFlag(entityParams) {
+        await QualityControlFlagRepository.T.create(entityParams);
+    }
 }
 
 module.exports = {
