@@ -30,6 +30,12 @@ module.exports = {
                     controller: QualityControlController.createTimeBasedQualityControlFlag,
                     description: 'Create quality control flag instance',
                 },
+                {
+                    path: '/:qcFlagId/verify',
+                    method: 'post',
+                    controller: QualityControlController.createTimeBasedQualityControlFlagVerification,
+                    description: 'Verify flag with given id',
+                },
             ],
         },
     ],

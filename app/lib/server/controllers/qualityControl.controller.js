@@ -81,7 +81,34 @@ const createTimeBasedQualityControlFlag = async (req, res, next) => {
     }
 };
 
+/**
+ * Create verification for quality control flag
+ * @param {Object} req express HTTP request object
+ * @param {Object} res express HTTP response object
+ * @param {Object} next express next handler
+ * @returns {undefined}
+ */
+const createTimeBasedQualityControlFlagVerification = async (req, res, next) => {
+    const customDTO = stdDataRequestDTO.concat(Joi.object({
+        params: {
+            qcFlagId: Joi.number().required(),
+        },
+    }));
+
+    const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
+    if (validatedDTO) {
+        const { token } = req.query;
+        const entityParams = {
+            qcf_id: validatedDTO.params.qcFlagId,
+            verifiedBy: token ? new O2TokenService(jwt).verify(token).username : 'test',
+        };
+        await qualityControlService.createTimeBasedQualityControlFlagVerification(entityParams);
+        res.sendStatus(201);
+    }
+};
+
 module.exports = {
     listAllTimeBasedFlagsHandler,
     createTimeBasedQualityControlFlag,
+    createTimeBasedQualityControlFlagVerification,
 };

@@ -15,6 +15,7 @@ const {
     databaseManager: {
         repositories: {
             QualityControlFlagRepository,
+            QualityControlFlagVerificationRepository,
         },
         models: {
             DetectorSubsystem,
@@ -61,6 +62,10 @@ class QualityControlService {
      */
     async createTimeBasedQualityControlFlag(entityParams) {
         await QualityControlFlagRepository.T.create(entityParams);
+    }
+
+    async createTimeBasedQualityControlFlagVerification(entityParams) {
+        await QualityControlFlagVerificationRepository.T.create(entityParams);
     }
 }
 
