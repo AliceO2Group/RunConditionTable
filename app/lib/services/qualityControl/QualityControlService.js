@@ -33,7 +33,7 @@ class QualityControlService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Quality[]>} Promise object represents the result of this use case.
      */
-    async getAllTimeBasedFlags({ filter }) {
+    async getAllTimeBasedFlags({ filter, page }) {
         const qualityFlags = await QualityControlFlagRepository.findAll({
             include: [
                 {
@@ -51,6 +51,7 @@ class QualityControlService {
                 },
             ],
             where: filterToSequelizeWhereClause(filter),
+            ...page,
         });
         return qualityFlags.map((qualityFlags) => qualityControlFlagAdapter.toEntity(qualityFlags));
     }

@@ -30,9 +30,10 @@ class DataPassService {
      * @param {Object} query -  Filtering query definiton from http request
      * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
-    async getAll({ filter }) {
+    async getAll({ filter, page }) {
         const periods = await DataPassRepository.findAll({
             where: filterToSequelizeWhereClause(filter),
+            ...page,
         });
         return periods.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
@@ -43,12 +44,13 @@ class DataPassService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
-    async getDataPassesPerPeriod(periodId, { filter }) {
+    async getDataPassesPerPeriod(periodId, { filter, page }) {
         const runs = await DataPassRepository.findAll({
             where: {
                 period_id: periodId,
                 ...filterToSequelizeWhereClause(filter),
             },
+            ...page,
         });
         return runs.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
@@ -59,7 +61,7 @@ class DataPassService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
-    async getAnchoredToSimulationPass(simulationPassId, { filter }) {
+    async getAnchoredToSimulationPass(simulationPassId, { filter, page }) {
         const runs = await DataPassRepository.findAll({
             include: [
                 {
@@ -77,6 +79,7 @@ class DataPassService {
             where: {
                 ...filterToSequelizeWhereClause(filter),
             },
+            ...page,
         });
         return runs.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
