@@ -14,21 +14,21 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const DetectorSubsystem = sequelize.define('DetectorSubsystem', {
-        name: {
+    const QualityControlFlagVerification = sequelize.define('QualityControlFlagVerification', {
+        verifiedBy: {
             type: Sequelize.STRING,
-            unique: true,
+            allowNull: false,
         },
-    }, { timestamps: false, tableName: 'detectors_subsystems' });
+    }, { 
+        tableName: 'verifications',
+        timestamps: true, 
+        createdAt: 'verification_time', 
+        updatedAt: false,
+    });
 
-    DetectorSubsystem.associate = (models) => {
-        DetectorSubsystem.belongsToMany(models.Run, {
-            through: models.RunDetectors, 
-            foreignKey: 'detector_id',
-            timestamps: false,
-        })
-        DetectorSubsystem.hasMany(models.QualityControlFlag, {foreignKey: 'detector_id'});
+    QualityControlFlagVerification.associate = (models) => {
+        QualityControlFlagVerification.belongsTo(models.QualityControlFlag, {foreignKey: 'qcf_id'});
     };
-    
-    return DetectorSubsystem;
+
+    return QualityControlFlagVerification;
 };

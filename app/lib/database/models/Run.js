@@ -111,6 +111,7 @@ module.exports = (sequelize) => {
             foreignKey: 'run_number',
             timestamps: false,
         });
+        Run.hasMany(models.QualityControlFlag, {foreignKey: 'run_number'});
     };
 
     return Run;

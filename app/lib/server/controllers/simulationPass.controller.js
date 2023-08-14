@@ -41,7 +41,7 @@ const listSimulationPassesHandler = async (req, res, next) => {
  * @returns {undefined}
  */
 const listSimulationPassesPerPeriodHandler = async (req, res, next) => {
-    const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
+    const customDTO = stdDataRequestDTO.concat(Joi.object({ params: { id: Joi.number() } }));
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
         const runs = await simulationPassService.getSimulationPassesPerPeriod(validatedDTO.params.id, validatedDTO.query);
@@ -59,7 +59,7 @@ const listSimulationPassesPerPeriodHandler = async (req, res, next) => {
  * @returns {undefined}
  */
 const listAnchorageForDataPassHandler = async (req, res, next) => {
-    const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
+    const customDTO = stdDataRequestDTO.concat(Joi.object({ params: { id: Joi.number() } }));
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
         const runs = await simulationPassService.getAnchorageForDataPass(validatedDTO.params.id, validatedDTO.query);

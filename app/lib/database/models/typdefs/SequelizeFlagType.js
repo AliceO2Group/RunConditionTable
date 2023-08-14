@@ -11,11 +11,12 @@
  * or submit itself to any jurisdiction.
  */
 
-module.exports = {
-    RunController: require('./run.controller.js'),
-    PeriodController: require('./period.controller.js'),
-    apiDocumentationCotroller: require('./ApiDocumentation.controller.js'),
-    DataPassController: require('./dataPass.controller.js'),
-    SimulationPassController: require('./simulationPass.controller.js'),
-    QualityControlController: require('./qualityControl.controller.js'),
-};
+/**
+ * @typedef SequelizeFlagType
+ *
+ * @property {number} id
+ * @property {string} name
+ * @property {string} method
+ * @property {boolean} bad
+ * @property {boolean} obsolate 
+ */

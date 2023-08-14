@@ -14,21 +14,32 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-    const DetectorSubsystem = sequelize.define('DetectorSubsystem', {
+    const FlagType = sequelize.define('FlagType', {
         name: {
             type: Sequelize.STRING,
             unique: true,
+            allowNull: false,
         },
-    }, { timestamps: false, tableName: 'detectors_subsystems' });
+        method: {
+            type: Sequelize.STRING,
+            unique: true,
+            allowNull: false,
+        },
+        bad: {
+            type: Sequelize.BOOLEAN,
+            unique: true,
+            allowNull: false,
+        },
+        obsolate: {
+            type: Sequelize.BOOLEAN,
+            unique: true,
+            allowNull: false,
+        },
+    }, { timestamps: false, tableName: 'flag_types_dictionary'});
 
-    DetectorSubsystem.associate = (models) => {
-        DetectorSubsystem.belongsToMany(models.Run, {
-            through: models.RunDetectors, 
-            foreignKey: 'detector_id',
-            timestamps: false,
-        })
-        DetectorSubsystem.hasMany(models.QualityControlFlag, {foreignKey: 'detector_id'});
+    FlagType.associate = (models) => {
+        FlagType.hasMany(models.QualityControlFlag, {foreignKey: 'flag_type_id'});
     };
-    
-    return DetectorSubsystem;
+
+    return FlagType;
 };
