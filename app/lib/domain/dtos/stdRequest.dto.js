@@ -26,7 +26,12 @@ const emptyDataRequestDTO = Joi.object({
  * query.filter - object for building sequelize where-cluase
  */
 const stdDataRequestDTO = Joi.object({
-    query: tokenDTO.keys({ filter: Joi.object({}).unknown(true) }), //TODO make more strict
+    query: tokenDTO.keys({
+        filter: Joi.object({}).unknown(true),
+        page: Joi.object({
+            limit: Joi.number(),
+            offset: Joi.number(),
+        }) }), //TODO make more strict
     params: emptyDTO,
     body: emptyDTO,
 });

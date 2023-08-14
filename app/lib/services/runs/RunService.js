@@ -32,9 +32,10 @@ class RunService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getAll({ filter }) {
+    async getAll({ filter, page }) {
         const runs = await RunRepository.findAllWithDetectors({
             where: filterToSequelizeWhereClause(filter),
+            ...page,
         });
         return runs.map((run) => runAdapter.toEntity(run));
     }
