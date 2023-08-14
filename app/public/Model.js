@@ -18,7 +18,8 @@ import { RCT } from './config.js';
 import Flags from './views/flags/Flags.js';
 import Detectors from './views/detectors/Detectors.js';
 import Runs from './views/runs/Runs.js';
-const { roles, dataAccess } = RCT;
+import PeriodsModel from './views/periods/Periods.js';
+const { roles, dataAccess, pageNames } = RCT;
 
 export default class Model extends Observable {
     constructor() {
@@ -33,6 +34,9 @@ export default class Model extends Observable {
         this.router.bubbleTo(this);
 
         this.loader = new Loader();
+
+        this.periods = new PeriodsModel(this);
+        this.periods.bubbleTo(this);
 
         this.runs = new Runs(this);
         this.runs.bubbleTo(this);
@@ -49,6 +53,22 @@ export default class Model extends Observable {
 
         this.loginEndpoint = `/api${RCT.endpoints.login}`;
         this.login('physicist');
+
+        this.handleLocationChange();
+    }
+
+    /**
+     * Delegates sub-model actions depending on new location of the page
+     * @returns {vnode} The page to be loaded
+     */
+    async handleLocationChange() {
+        switch (this.router.params.page) {
+            case pageNames.periods:
+                await this.periods.fetchAllPeriods();
+                break;
+            default:
+                break;
+        }
     }
 
     async login(username) {
