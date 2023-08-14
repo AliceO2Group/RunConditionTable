@@ -41,7 +41,7 @@ const listRunsHandler = async (req, res, next) => {
  * @returns {undefined}
  */
 const listRunsPerPeriodHandler = async (req, res, next) => {
-    const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
+    const customDTO = stdDataRequestDTO.concat(Joi.object({ params: { id: Joi.number() } }));
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
         const runs = await runService.getRunsPerPeriod(validatedDTO.params.id, validatedDTO.query);
@@ -59,7 +59,7 @@ const listRunsPerPeriodHandler = async (req, res, next) => {
  * @returns {undefined}
  */
 const listRunsPerDataPass = async (req, res, next) => {
-    const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
+    const customDTO = stdDataRequestDTO.concat(Joi.object({ params: { id: Joi.number() } }));
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
         const runs = await runService.getRunsPerDataPass(validatedDTO.params.id, validatedDTO.query);
@@ -77,7 +77,7 @@ const listRunsPerDataPass = async (req, res, next) => {
  * @returns {undefined}
  */
 const listRunsPerSimulationPassHandler = async (req, res, next) => {
-    const customDTO = stdDataRequestDTO.keys({ params: { id: Joi.number() } });
+    const customDTO = stdDataRequestDTO.concat(Joi.object({ params: { id: Joi.number() } }));
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
         const runs = await runService.getRunsPerSimulationPass(validatedDTO.params.id, validatedDTO.query);
@@ -88,7 +88,7 @@ const listRunsPerSimulationPassHandler = async (req, res, next) => {
 };
 
 const updateRunDetectorQualityHandler = async (req, res) => {
-    const customDTO = stdDataRequestDTO.keys({
+    const customDTO = stdDataRequestDTO.concat(Joi.object({
         params: {
             runNumber: Joi.number(),
             detectorSubsystemId: Joi.number(),
@@ -96,7 +96,7 @@ const updateRunDetectorQualityHandler = async (req, res) => {
         query: {
             quality: Joi.string().required(),
         },
-    });
+    }));
 
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {

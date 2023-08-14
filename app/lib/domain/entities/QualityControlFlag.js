@@ -11,11 +11,16 @@
  * or submit itself to any jurisdiction.
  */
 
-module.exports = {
-    RunController: require('./run.controller.js'),
-    PeriodController: require('./period.controller.js'),
-    apiDocumentationCotroller: require('./ApiDocumentation.controller.js'),
-    DataPassController: require('./dataPass.controller.js'),
-    SimulationPassController: require('./simulationPass.controller.js'),
-    QualityControlController: require('./qualityControl.controller.js'),
-};
+/**
+ * @typedef QualityControlFlag
+ *
+ * @property {number} id
+ * @property {number} timeStart
+ * @property {number} timeEnd
+ * @property {string} comment
+ * @property {string} addedBy
+ * @property {number} createdAt
+ * @property {number} updatedAt
+ * @property {FlagType} flagType
+ * @property {Array<QualityControlFlagVerification>} verifications
+ */

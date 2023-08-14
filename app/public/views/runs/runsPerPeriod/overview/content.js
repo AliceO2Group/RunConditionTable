@@ -21,7 +21,6 @@ import pagesCellsSpecials from '../../../userView/data/pagesCellsSpecials.js';
 import title from '../../../../components/table/title.js';
 import header from '../table/header.js';
 import row from '../table/row.js';
-
 import filter from '../../../userView/data/table/filtering/filter.js';
 import activeFilters from '../../../userView/data/table/filtering/activeFilters.js';
 import sortingRow from '../../../userView/data/table/sortingRow.js';
