@@ -17,10 +17,10 @@ import { h } from '/js/src/index.js';
 export default function about() {
     const title = h('h3.text-primary', 'About');
 
-    return h('.p-1em', [
-        h('.flex.p-bottom-1em.justify-center.items-center',
+    return h('.p-1rem', [
+        h('.flex.p-bottom-1rem.justify-center.items-center',
             h('.settings-40-primary'),
-            h('.p-left-1em',
+            h('.p-left-1rem',
                 title)),
 
         h('.flex-wrap.justify-between.items-center',

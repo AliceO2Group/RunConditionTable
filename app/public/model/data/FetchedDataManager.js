@@ -30,6 +30,8 @@ export default class FetchedDataManager {
         this.router = router;
         this.loader = new Loader();
 
+        this.hideMarkedRecords = false;
+
         for (const n in pageNames) {
             if (Object.prototype.hasOwnProperty.call(pageNames, n)) {
                 this[n] = {};

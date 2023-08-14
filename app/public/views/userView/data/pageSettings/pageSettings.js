@@ -91,10 +91,10 @@ export default function pageSettings(userPreferences, close) {
         }
     };
 
-    return h('.p-1em', [
-        h('.flex.p-bottom-1em.justify-center.items-center',
+    return h('.p-1rem', [
+        h('.flex.p-bottom-1rem.justify-center.items-center',
             h('.settings-40-primary'),
-            h('.p-left-1em', title)),
+            h('.p-left-1rem', title)),
 
         h('.flex-wrap.justify-between.items-center',
             h('.text-dark-blue', 'Rows on site'),
@@ -124,7 +124,7 @@ export default function pageSettings(userPreferences, close) {
                 h('option', { value: sidebarPreferences.visible }, 'Always visible'),
             ], iconChevronBottom())),
 
-        h('.flex-wrap.justify-center.items-center.p-1em.p-bottom-0',
+        h('.flex-wrap.justify-center.items-center.p-1rem.p-bottom-0',
             h('button.btn.btn-primary', {
                 onclick: () => onclickApply(userPreferences),
             }, 'Apply changes')),

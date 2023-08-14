@@ -12,15 +12,22 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
+import { h } from '/js/src/index.js';
 import filter from '../../userView/data/table/filtering/filter.js';
-import downloadCSV from '../../../../utils/csvExport.js';
 import flagsVisualization from '../../../components/flags/flagsVisualization.js';
 import flagsTable from './flagsTable.js';
 import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
 import { noRunNumbers } from '../../../../utils/defaults.js';
 import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
-import copyLinkButton from '../../../components/buttons/copyLinkButton.js';
+import dataActionButtons, { dataActions } from '../../../components/buttons/dataActionButtons.js';
+
+const applicableDataActions = {
+    [dataActions.hide]: false,
+    [dataActions.reload]: true,
+    [dataActions.downloadCSV]: true,
+    [dataActions.copyLink]: true,
+    [dataActions.showFilteringPanel]: false,
+};
 
 export default function flagsContent(model, runs, detectors, flags) {
     const urlParams = model.router.getUrl().searchParams;
@@ -33,35 +40,14 @@ export default function flagsContent(model, runs, detectors, flags) {
     const flagsData = flags.getFlags(runNumber, detectorName);
     const runData = runs.getRun(dataPassName, runNumber);
 
-    const functionalities = (model) => h('.btn-group',
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                model.fetchedData.reqForData(true);
-                model.notify();
-            },
-        }, iconReload()),
-
-        h('button.btn.btn-secondary.icon-only-button', {
-            onclick: () => {
-                downloadCSV(model);
-            },
-        }, iconDataTransferDownload()),
-
-        copyLinkButton(model.router.getUrl().toString()),
-
-        h('button.btn.icon-only-button', {
-            className: model.searchFieldsVisible ? 'btn-primary' : 'btn-secondary',
-            onclick: () => model.changeSearchFieldsVisibility(),
-        }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
-
     return runNumber > noRunNumbers && runData
-        ? h('.p-1em', [
+        ? h('.p-1rem', [
             h('.flex-wrap.justify-between.items-center',
                 h('.flex-wrap.justify-between.items-center',
                     flagBreadCrumbs(model, dataPassName, runNumber, detectorName)),
 
-                functionalities(model)),
-            model.searchFieldsVisible ? filter(model) : '',
+                dataActionButtons(model, applicableDataActions)),
+            model.showFilteringPanel ? filter(model) : '',
 
             flagsVisualization(runData, flagsData),
             flagsTable(model, flagsData),
