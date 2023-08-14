@@ -22,6 +22,10 @@ services:
         read_only: true
         source: ./package-lock.json
         target: /opt/RunConditionTable/package-lock.json
+      - type: bind
+        read_only: true
+        source: ./.sequelizerc
+        target: /opt/RunConditionTable/.sequelizerc
     
   database:
     volumes:
