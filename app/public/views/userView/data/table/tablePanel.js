@@ -59,7 +59,7 @@ export default function tablePanel(model, runs) {
 
     data.rows = data.rows.filter((item) => item.name != 'null');
 
-    const cellsSpecials = pagesCellsSpecials[dataPointer.page];
+    const cellsSpecials = pagesCellsSpecials[dataPointer.page]; //
 
     const { fields } = data;
     const visibleFields = fields.filter((f) => f.marked);
