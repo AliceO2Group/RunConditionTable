@@ -32,9 +32,10 @@ class RunService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getAll({ filter }) {
+    async getAll({ filter, page }) {
         const runs = await RunRepository.findAllWithDetectors({
             where: filterToSequelizeWhereClause(filter),
+            ...page,
         });
         return runs.map((run) => runAdapter.toEntity(run));
     }
@@ -45,12 +46,13 @@ class RunService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getRunsPerPeriod(periodId, { filter }) {
+    async getRunsPerPeriod(periodId, { filter, page }) {
         const runs = await RunRepository.findAllWithDetectors({
             where: {
                 period_id: periodId,
                 ...filterToSequelizeWhereClause(filter),
             },
+            ...page,
         });
         return runs.map((run) => runAdapter.toEntity(run));
     }
@@ -61,7 +63,7 @@ class RunService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getRunsPerDataPass(dataPassId, { filter }) {
+    async getRunsPerDataPass(dataPassId, { filter, page }) {
         const runs = await RunRepository.findAllWithDetectors({
             include: [
                 {
@@ -78,6 +80,7 @@ class RunService {
             where: {
                 ...filterToSequelizeWhereClause(filter),
             },
+            ...page,
         });
         return runs.map((run) => runAdapter.toEntity(run));
     }
@@ -88,7 +91,7 @@ class RunService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getRunsPerSimulationPass(simulationPassId, { filter }) {
+    async getRunsPerSimulationPass(simulationPassId, { filter, page }) {
         const runs = await RunRepository.findAllWithDetectors({
             include: [
                 {
@@ -105,6 +108,7 @@ class RunService {
             where: {
                 ...filterToSequelizeWhereClause(filter),
             },
+            ...page,
         });
         return runs.map((run) => runAdapter.toEntity(run));
     }
