@@ -12,15 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-export const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i], b[i]]);
+import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
+import content from './content.js';
 
-export function getReadableFileSizeString(fileSizeInBytes) {
-    let i = -1;
-    const byteUnits = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    do {
-        fileSizeInBytes /= 1024;
-        i++;
-    } while (fileSizeInBytes > 1024);
+export default function panel(model, runs, detectors) {
+    const urlParams = model.router.getUrl().searchParams;
+    const periodName = urlParams.get('index');
 
-    return `${Math.max(fileSizeInBytes, 0.1).toFixed(1)}  ${byteUnits[i]}`;
+    return periodName
+        ? content(model, runs, detectors)
+        : noSubPageSelected(model);
 }

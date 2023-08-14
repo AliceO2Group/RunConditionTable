@@ -18,19 +18,25 @@ import { RCT } from '../../config.js';
 import { showModal } from '../../views/modal/modal.js';
 const { runBasedQuality } = RCT.quality;
 
-export default function detectorIcon(navigation, item, index, detectorName, timeBased = false) {
+export default function detectorIcon(navigation, item, index, detectorName, timeBased = false, qualityChangePossible = false) {
     const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
     const runBasedQcModalId = `${runDetectorId}-qc-modal`;
     return [
-        h('.modal', { id: runBasedQcModalId },
-            h('.modal-content.abs-center.p3', {
-                id: `${runBasedQcModalId}-content`,
-            }, qcTypeSelection(navigation, () => {
-                document.getElementById(runBasedQcModalId).style.display = 'none';
-            }, item, index, detectorName, runDetectorId, timeBased))),
+        qualityChangePossible
+            ? h('.modal', { id: runBasedQcModalId },
+                h('.modal-content.abs-center.p3', {
+                    id: `${runBasedQcModalId}-content`,
+                }, qcTypeSelection(navigation, () => {
+                    document.getElementById(runBasedQcModalId).style.display = 'none';
+                }, item, index, detectorName, runDetectorId, timeBased)))
+            : '',
         h('button.btn.no-border-bottom.pointer.run-quality.good', {
             id: runDetectorId,
-            onclick: () => showModal(runBasedQcModalId),
+            onclick: () => {
+                if (qualityChangePossible) {
+                    showModal(runBasedQcModalId);
+                }
+            },
         },
         runBasedQuality.good),
     ];

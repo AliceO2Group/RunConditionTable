@@ -27,3 +27,17 @@ export const getClosestDefinedEnergy = (energy, definedEnergies, acceptableMargi
         ? Object.keys(definedEnergies).find((key) => definedEnergies[key] === closest)
         : energy.toString();
 };
+
+export const detectorName = (detectorFieldName) => isDetectorField(detectorFieldName)
+    ? detectorFieldName.slice(0, 3).toUpperCase()
+    : null;
+
+export const isDetectorField = (fieldName) => /.*_detector/.test(fieldName);
+
+export const shouldDisplayDetectorField = (fieldName, detectorList) => isDetectorField(fieldName) && detectorList[detectorName(fieldName)];
+
+export const rowDisplayStyle = (isMarked, shouldHideMarkedRecords) => isMarked
+    ? shouldHideMarkedRecords
+        ? '.none'
+        : '.row-selected'
+    : '.row-not-selected';

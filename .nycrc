@@ -5,7 +5,8 @@
         "app/**/*.js"
     ],
     "exclude": [
-        "test/**"
+        "test/**",
+        "app/public/views/**"
     ],
     "reporter": [
         "html",

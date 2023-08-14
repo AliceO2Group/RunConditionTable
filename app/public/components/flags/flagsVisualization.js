@@ -59,7 +59,7 @@ export default function flagsVisualization(runData, flagsData) {
         h('.w-10', flagReason),
         flagVisualization(flagsGroupedByFlagReason[flagReason], time_start, time_end, flagColor(flagReason)));
 
-    return [
+    return h('.p-top-05em', [
         h('.relative', distinctFlagReasons.map((flagReason) => flagReasonVisualization(flagReason))),
         h('.relative',
             h('.flex-wrap.justify-between.items-center.pv1',
@@ -67,5 +67,5 @@ export default function flagsVisualization(runData, flagsData) {
                 h('.w-90.flex-wrap.justify-between.items-center',
                     h('', dateFormatter(time_start), h('.skinny', 'START')),
                     h('', dateFormatter(time_end), h('.skinny', 'END'))))),
-    ];
+    ]);
 }

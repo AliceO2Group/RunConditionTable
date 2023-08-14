@@ -13,7 +13,12 @@
 
 const req = require('esm')(module)
 const assert = require('assert');
-const { extractPeriodName, getClosestDefinedEnergy } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
+const { extractPeriodName,
+        getClosestDefinedEnergy,
+        detectorName,
+        isDetectorField,
+        shouldDisplayDetectorField,
+        rowDisplayStyle } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
 
 module.exports = () => {
     describe('Extract period name', () => {
@@ -50,6 +55,82 @@ module.exports = () => {
             const acceptableMargin = 1;
             const expectedOutcome = "5360/2";
             assert(getClosestDefinedEnergy(energy, definedEnergyValues, acceptableMargin) === expectedOutcome);
+        });
+    });
+
+    describe('Get detector name', () => {
+        const detectorFieldName = 'cpv_detector';
+        const nonDetectorFieldName = 'name';
+        const expectedOutcome = 'CPV';
+        
+        it('should extract detector name from the field name', () => {
+            assert(detectorName(detectorFieldName) === expectedOutcome);
+        });
+
+        it('should return null when provided field is not a detector field', () => {
+            assert(detectorName(nonDetectorFieldName) === null);
+        })
+    });
+
+    describe('Check if the field is detector field', () => {
+        const detectorFieldName = 'cpv_detector';
+        const nonDetectorFieldName = 'name';
+        
+        it('should recognize detector field', () => {
+            assert(isDetectorField(detectorFieldName));
+        });
+
+        it('should recognize non-detector field', () => {
+            assert(!isDetectorField(nonDetectorFieldName));
+        })
+    });
+
+    describe('Check if detector field should be displayed', () => {
+        const cpvFieldName = 'cpv_detector';
+        const phsFieldName = 'phs_detector';
+        const nonDetectorFieldName = 'name';
+        const detectorList = {
+            CPV: false,
+            PHS: true,
+        }
+        
+        it('should recognize non-displayable detector field', () => {
+            assert(!shouldDisplayDetectorField(cpvFieldName, detectorList));
+        });
+
+        it('should recognize displayable detector field', () => {
+            assert(shouldDisplayDetectorField(phsFieldName, detectorList));
+        });
+
+        it('should recognize non-detector field', () => {
+            assert(!shouldDisplayDetectorField(nonDetectorFieldName, detectorList));
+        });
+    });
+
+    describe('Check how the row should be displayed', () => {
+        const displayNone = '.none';
+        const rowSelected = '.row-selected';
+        const rowNotSelected = '.row-not-selected';
+
+        const selected = true;
+        const notSelected = false;
+        const shouldHideSelected = true;
+        const shouldNotHideSelected = false;
+        
+        it('should not display hidden rows', () => {
+            assert(rowDisplayStyle(selected, shouldHideSelected) === displayNone);
+        });
+
+        it('should apply selection class to selected rows', () => {
+            assert(rowDisplayStyle(selected, shouldNotHideSelected) === rowSelected);
+        });
+
+        it('should apply corresponding class to unselected rows', () => {
+            assert(rowDisplayStyle(notSelected, shouldNotHideSelected) === rowNotSelected);
+        });
+
+        it('should apply corresponding class to unselected rows', () => {
+            assert(rowDisplayStyle(notSelected, shouldHideSelected) === rowNotSelected);
         });
     });
 };

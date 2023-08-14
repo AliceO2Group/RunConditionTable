@@ -37,7 +37,6 @@ export default class Navigation extends Observable {
         this.router.observe(this.routerCallback);
         this.router.bubbleTo(this);
 
-        this.rowsOnSite = defaultDataReqParams.rowsOnSite;
         this.site = defaultDataReqParams.site;
 
         this.handleLocationChange();
@@ -98,7 +97,14 @@ export default class Navigation extends Observable {
     }
 
     siteReqParamsPhrase() {
-        return `&${dataReqParams.rowsOnSite}=${this.rowsOnSite}&${dataReqParams.site}=${this.site}`;
+        return `&${dataReqParams.rowsOnSite}=${this.parent.userPreferences.rowsOnSite}&${dataReqParams.site}=${this.site}`;
+    }
+
+    siteReqParams() {
+        return {
+            [dataReqParams.rowsOnSite]: this.parent.userPreferences.rowsOnSite,
+            [dataReqParams.site]: this.site,
+        };
     }
 
     handleLinkEvent(e) {

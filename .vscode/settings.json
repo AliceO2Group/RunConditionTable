@@ -10,7 +10,7 @@
     "files.exclude": {
         ".eslintrc": true,
         ".nycrc": true,
-        // ".github": true,
+        ".github": true,
         "codecov.yml": true,
 
         "LICENSE": true,

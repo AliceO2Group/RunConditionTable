@@ -41,7 +41,7 @@ const { pageNames } = RCT;
  * @returns {*}
  */
 
-export default function tablePanel(model, runs, detectors) {
+export default function tablePanel(model, runs) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
     const page = model.fetchedData[dataPointer.page];
@@ -80,19 +80,19 @@ export default function tablePanel(model, runs, detectors) {
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
     return dataPointer.index !== defaultIndexString || dataPointer.page == pageNames.periods
-        ? h('div.main-content', [
-            h('div.flex-wrap.justify-between.items-center',
-                h('div.flex-wrap.justify-between.items-center',
+        ? h('.p-1em', [
+            h('.flex-wrap.justify-between.items-center',
+                h('.flex-wrap.justify-between.items-center',
                     title(dataPointer.page),
                     chips),
 
-                h('div', functionalities(model))),
+                functionalities(model)),
             model.searchFieldsVisible ? filter(model) : '',
             anyFiltersActive(url) ? activeFilters(model, url) : '',
 
             data.rows?.length > 0
                 ? visibleFields.length > 0
-                    ? h('.p-top-10',
+                    ? h('.p-top-05em',
                         h('.x-scrollable-table.border-sh',
                             pager(model, data, false),
                             h('table', {
@@ -103,7 +103,7 @@ export default function tablePanel(model, runs, detectors) {
                             }, [
                                 tableHeader(visibleFields, data, model),
                                 model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-                                tableBody(model, visibleFields, data, cellsSpecials, dataPointer.index, runs, detectors),
+                                tableBody(model, visibleFields, data, cellsSpecials, runs),
                             ]),
                             data.rows.length > 15 ? pager(model, data) : ''))
                     : ''
@@ -115,10 +115,10 @@ export default function tablePanel(model, runs, detectors) {
 }
 
 function tableBody(
-    model, visibleFields, data, cellsSpecials, index, runs, detectors,
+    model, visibleFields, data, cellsSpecials, runs,
 ) {
     return h('tbody', { id: `table-body-${data.url}` },
         data.rows.map((item) => row(
-            model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
+            model, visibleFields, data, item, cellsSpecials, runs,
         )));
 }

@@ -35,8 +35,7 @@ const { pageNames } = RCT;
 export default function content(model, runs, detectors) {
     const dataPointer = model.getCurrentDataPointer();
     const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
-    const page = model.fetchedData[dataPointer.page];
-    const { url } = page[dataPointer.index].payload;
+    const { url } = data;
 
     const chips = model.getSubPages(dataPointer.page)
         .filter((index) => index !== defaultIndexString)
@@ -86,7 +85,7 @@ export default function content(model, runs, detectors) {
                         h('.x-scrollable-table.border-sh',
                             pager(model, data, false),
                             h('table', {
-                                id: `data-table-${data.url}`,
+                                id: `data-table-${url}`,
                                 className: `${[pageNames.runsPerDataPass, pageNames.runsPerPeriod].includes(dataPointer.page)
                                     ? 'runs-table'
                                     : `${dataPointer.page}-table`}`,

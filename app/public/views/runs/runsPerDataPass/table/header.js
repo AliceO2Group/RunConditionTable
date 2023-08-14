@@ -14,23 +14,38 @@
 
 import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../../userView/data/headersSpecials.js';
+import { RCT } from '../../../../config.js';
+import { isDetectorField, shouldDisplayDetectorField } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function header(visibleFields, data, model) {
-    const columnsHeadersArray = (visibleFields, model) =>
-        visibleFields.map((f) => [
-            h(`th.${model.getCurrentDataPointer().page}-${f.name.includes('detector') ? 'detector' : f.name}-header`, {
+    const pageName = RCT.pageNames.runsPerDataPass;
+    const columnsHeadersArray = (visibleFields, model) => {
+        const dataHeaders = visibleFields.filter((field) => !isDetectorField(field.name)).map((field) =>
+            h(`th.${pageName}-${field.name}-header`, {
                 scope: 'col',
             }, h('.relative', [
-                headerSpecPresent(model, f) !== nonDisplayable ?
-                    h('.inline', getHeaderSpecial(model, f))
+                headerSpecPresent(model, field) !== nonDisplayable
+                    ? h('.inline', getHeaderSpecial(model, field))
                     : '',
-            ])),
-        ]);
+            ])));
+
+        const detectorHeaders = visibleFields.filter((field) =>
+            shouldDisplayDetectorField(field.name, model.userPreferences.detectorList)).map((field) =>
+            h(`th.${pageName}-detector-header`, {
+                scope: 'col',
+            }, h('.relative', [
+                headerSpecPresent(model, field) !== nonDisplayable
+                    ? h('.inline', getHeaderSpecial(model, field))
+                    : '',
+            ])));
+
+        return dataHeaders.concat(detectorHeaders);
+    };
 
     const rowsOptions = (model, data) =>
         h('th', { scope: 'col' },
             h('.relative',
-                h(`input.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
+                h(`input.checkbox.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
                     type: 'checkbox',
                     onclick: (e) => {
                         for (const row of data.rows) {

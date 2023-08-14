@@ -15,6 +15,7 @@
 import { h } from '/js/src/index.js';
 import pageSettings from '../userView/data/pageSettings/pageSettings.js';
 import about from '../../components/about/about.js';
+import detectorSettings from '../userView/data/detectorSettings/detectorSettings.js';
 
 export const modalClassNames = {
     modal: 'modal',
@@ -29,6 +30,10 @@ export const modalIds = {
     about: {
         modal: 'aboutModalId',
         content: 'aboutModalContentId',
+    },
+    detectors: {
+        modal: 'detectorSettingsModalId',
+        content: 'detectorSettingsContentId',
     },
 };
 
@@ -50,7 +55,7 @@ export const showModal = (modalId) => {
             }
         });
     } else {
-        alert('Not found!');
+        alert(`${modalId} not found!`);
     }
 };
 
@@ -61,7 +66,7 @@ export const modal = (modalId, model = null) => {
                 ? h(`.${modalClassNames.modal}`, { id: modalIds.pageSettings.modal },
                     h(`.${modalClassNames.content}.abs-center.p3`, {
                         id: modalIds.pageSettings.content,
-                    }, pageSettings(model, () => {
+                    }, pageSettings(model.userPreferences, () => {
                         document.getElementById(modalIds.pageSettings.modal).style.display = 'none';
                     })))
                 : '';
@@ -71,6 +76,12 @@ export const modal = (modalId, model = null) => {
                 h(`.${modalClassNames.content}.abs-center.p3`, {
                     id: modalIds.about.content,
                 }, about()));
+        }
+        case modalIds.detectors.modal: {
+            return h(`.${modalClassNames.modal}`, { id: modalIds.detectors.modal },
+                h(`.${modalClassNames.content}.abs-center.p3`, {
+                    id: modalIds.detectors.content,
+                }, detectorSettings(model.userPreferences)));
         }
     }
 };

@@ -13,30 +13,32 @@
  */
 
 import { h } from '/js/src/index.js';
-import { reduceSerialIf } from '../../../../utils/utils.js';
 import detectorIcon from '../../../../components/detectors/detectorIcon.js';
+import { RCT } from '../../../../config.js';
+import { isDetectorField, rowDisplayStyle, shouldDisplayDetectorField } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function row(
     model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
 ) {
-    const pageName = model.getCurrentDataPointer().page;
-    const rowDivDef = reduceSerialIf(
-        'tr.track', ['.row-not-selected', '.d-none'], ['.row-selected', ''],
-        [!item.marked, data.hideMarkedRecords && item.marked], (a, b) => a + b,
-    );
+    const pageName = RCT.pageNames.runsPerDataPass;
 
-    const dataCells = visibleFields.map((field) =>
-        h(`td.${pageName}-${field.name.includes('detector') ? 'detector' : field.name}-cell.text-ellipsis`,
+    const dataCells = visibleFields.filter((field) => !isDetectorField(field.name)).map((field) =>
+        h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
             item[field.name]
                 ? cellsSpecials[field.name]
                     ? cellsSpecials[field.name](model, item)
-                    : /.*_detector/.test(field.name)
-                        ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name), true)
-                        : item[field.name]
-                : '..'));
+                    : item[field.name]
+                : ''));
+
+    const detectorCells = visibleFields.filter((field) =>
+        shouldDisplayDetectorField(field.name, model.userPreferences.detectorList)).map((field) =>
+        h(`td.${pageName}-detector-cell.text-ellipsis`,
+            item[field.name]
+                ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name), true, true)
+                : ''));
 
     const checkbox = h('td.relative.track',
-        h(`input.abs-center${item.marked ? '.ticked' : ''}`, {
+        h(`input.checkbox.abs-center${item.marked ? '.ticked' : ''}`, {
             type: 'checkbox',
             checked: item.marked,
             onclick: () => {
@@ -45,5 +47,8 @@ export default function row(
             },
         }));
 
-    return h(rowDivDef, [checkbox].concat(dataCells));
+    return h(`tr.track${rowDisplayStyle(item.marked, data.hideMarkedRecords)}`,
+        checkbox,
+        dataCells,
+        detectorCells);
 }

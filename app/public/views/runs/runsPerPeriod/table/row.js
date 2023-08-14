@@ -13,22 +13,28 @@
  */
 
 import { h } from '/js/src/index.js';
+import detectorIcon from '../../../../components/detectors/detectorIcon.js';
 import { RCT } from '../../../../config.js';
-import { rowDisplayStyle } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
+import { isDetectorField, rowDisplayStyle, shouldDisplayDetectorField } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function row(
-    model, visibleFields, data, item, cellsSpecials, runs,
+    model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
 ) {
-    const pageName = model.getCurrentDataPointer().page;
+    const pageName = RCT.pageNames.runsPerPeriod;
 
-    const dataCells = visibleFields.map((field) =>
+    const dataCells = visibleFields.filter((field) => !isDetectorField(field.name)).map((field) =>
         h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
             item[field.name]
                 ? cellsSpecials[field.name]
-                    ? pageName === RCT.pageNames.dataPasses
-                        ? cellsSpecials[field.name](model, runs, item)
-                        : cellsSpecials[field.name](model, item)
+                    ? cellsSpecials[field.name](model, item)
                     : item[field.name]
+                : ''));
+
+    const detectorCells = visibleFields.filter((field) =>
+        shouldDisplayDetectorField(field.name, model.userPreferences.detectorList)).map((field) =>
+        h(`td.${pageName}-detector-cell.text-ellipsis`,
+            item[field.name]
+                ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name))
                 : ''));
 
     const checkbox = h('td.relative.track',
@@ -43,5 +49,6 @@ export default function row(
 
     return h(`tr.track${rowDisplayStyle(item.marked, data.hideMarkedRecords)}`,
         checkbox,
-        dataCells);
+        dataCells,
+        detectorCells);
 }

@@ -16,8 +16,8 @@ import { h, iconChevronBottom } from '/js/src/index.js';
 import quantityInput from '../../../../components/common/quantityInput.js';
 import { RCT } from '../../../../config.js';
 
-export default function pageSettings(model, close) {
-    const rowsPerPageInputId = 'rows-per-page-input-id-modal';
+export default function pageSettings(userPreferences, close) {
+    const rowsOnSiteInputId = 'rows-per-page-input-id-modal';
     const themeSelectId = 'theme-selection';
     const sidebarPreferenceSelectId = 'sidebar-selection';
     const sidebarPreferences = {
@@ -26,15 +26,15 @@ export default function pageSettings(model, close) {
     };
     const title = h('h3.text-primary', 'Page settings');
 
-    const onclickSetRowsOnSite = (model) => {
-        const input = document.getElementById(rowsPerPageInputId);
-        let rowsOnSite = input.value === '' ? input.placeholder : input.value;
-        if (rowsOnSite < 1 || rowsOnSite > 200) {
+    const onclickApply = (userPreferences) => {
+        const input = document.getElementById(rowsOnSiteInputId);
+        const inputValue = input.value === '' ? input.placeholder : input.value;
+        if (inputValue < 1 || inputValue > 200) {
             alert('incorrect number of rows on page: must be in range of [1, 200]');
-            input.value = 50;
-            rowsOnSite = 50;
+            input.value = userPreferences.rowsOnSite;
+        } else {
+            userPreferences.setRowsOnSite(inputValue);
         }
-        model.fetchedData.changeRowsOnSite(rowsOnSite);
         close();
     };
 
@@ -91,17 +91,16 @@ export default function pageSettings(model, close) {
         }
     };
 
-    return h('', [
-        h('.flex.bottom-20.justify-center.items-center',
+    return h('.p-1em', [
+        h('.flex.p-bottom-1em.justify-center.items-center',
             h('.settings-40-primary'),
-            h('.inline.top-15.left-10',
-                title)),
+            h('.p-left-1em', title)),
 
         h('.flex-wrap.justify-between.items-center',
-            h('.text-dark-blue', 'Rows per page'),
-            quantityInput(rowsPerPageInputId,
-                model.router.params['rows-on-site'],
-                model.fetchedData.changeRowsOnSite)),
+            h('.text-dark-blue', 'Rows on site'),
+            quantityInput(rowsOnSiteInputId,
+                userPreferences.rowsOnSite,
+                userPreferences.setRowsOnSite)),
 
         h('.flex-wrap.justify-between.items-center',
             h('.text-dark-blue', 'UI theme'),
@@ -125,9 +124,9 @@ export default function pageSettings(model, close) {
                 h('option', { value: sidebarPreferences.visible }, 'Always visible'),
             ], iconChevronBottom())),
 
-        h('.flex-wrap.justify-center.items-center',
-            h('button.btn.btn-primary.m1', {
-                onclick: () => onclickSetRowsOnSite(model),
+        h('.flex-wrap.justify-center.items-center.p-1em.p-bottom-0',
+            h('button.btn.btn-primary', {
+                onclick: () => onclickApply(userPreferences),
             }, 'Apply changes')),
     ]);
 }

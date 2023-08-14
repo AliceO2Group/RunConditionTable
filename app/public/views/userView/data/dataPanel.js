@@ -15,6 +15,7 @@
 import tablePanel from './table/tablePanel.js';
 import flagsPanel from '../../flags/overview/flagsPanel.js';
 import { default as runsPerDataPassPanel } from '../../runs/runsPerDataPass/overview/panel.js';
+import { default as runsPerPeriodPanel } from '../../runs/runsPerPeriod/overview/panel.js';
 import { failure, unknown, waiting } from '../../../components/messagePanel/messages.js';
 import { RCT } from '../../../config.js';
 const { pageNames } = RCT;
@@ -38,8 +39,10 @@ export default function dataPanel(model, runs, detectors, flags) {
                     return flagsPanel(model, runs, detectors, flags);
                 case pageNames.runsPerDataPass:
                     return runsPerDataPassPanel(model, runs, detectors);
+                case pageNames.runsPerPeriod:
+                    return runsPerPeriodPanel(model, runs, detectors);
                 default:
-                    return tablePanel(model, runs, detectors);
+                    return tablePanel(model, runs);
             }
         },
         Failure: (status) => failure(model, status),

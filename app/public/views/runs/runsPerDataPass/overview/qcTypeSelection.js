@@ -25,14 +25,14 @@ export default function qcTypeSelection(navigation, close, item, index, detector
         const runQualitySelection = document.getElementById(runQualitySelectId);
         const selectedQuality = runQualitySelection.options[runQualitySelection.selectedIndex].value;
         switch (selectedQuality) {
-            case '0':
+            case runBasedQuality.good:
                 if (detectorIcon.classList.contains(runBasedQuality.bad)) {
                     detectorIcon.classList.remove(runBasedQuality.bad);
                     detectorIcon.classList.add(runBasedQuality.good);
                     detectorIcon.innerHTML = runBasedQuality.good;
                 }
                 break;
-            case '1':
+            case runBasedQuality.bad:
                 if (detectorIcon.classList.contains(runBasedQuality.good)) {
                     detectorIcon.classList.remove(runBasedQuality.good);
                     detectorIcon.classList.add(runBasedQuality.bad);
@@ -44,12 +44,12 @@ export default function qcTypeSelection(navigation, close, item, index, detector
         }
     }
 
-    return h('', [
+    return h('.p-1em', [
         h('.flex.items-center',
-            h('h6.inline.top-15.left-10', index)),
-        h('.flex.bottom-20.items-center',
-            h('h3.inline.top-15.left-10', item.run_number),
-            h('h3.inline.top-15.left-10', detectorName)),
+            h('h6', index)),
+        h('.flex.p-bottom-1em.items-center',
+            h('h3.inline', item.run_number),
+            h('h3.inline.p-left-1em', detectorName)),
         h('.flex-wrap.justify-between.items-center',
             h('', 'Run quality'),
             h('select.select.color-theme', {
@@ -57,13 +57,13 @@ export default function qcTypeSelection(navigation, close, item, index, detector
                 name: runQualitySelectId,
                 onchange: () => handleRunQualityChange(),
             }, [
-                h('option', { value: 0 }, runBasedQuality.good),
-                h('option', { value: 1 }, runBasedQuality.bad),
+                h('option', { value: runBasedQuality.good }, runBasedQuality.good),
+                h('option', { value: runBasedQuality.bad }, runBasedQuality.bad),
             ], iconChevronBottom())),
 
         timeBased
-            ? h('.flex-wrap.justify-center.items-center',
-                h('button.btn.btn-primary.m1', {
+            ? h('.flex-wrap.justify-center.items-center.p-1em.p-bottom-0',
+                h('button.btn.btn-primary', {
                     onclick: () => navigation.router.go(flagsUrl),
                 }, 'Time based quality'))
             : '',

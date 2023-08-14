@@ -14,6 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
+import { isDetectorField } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 const { fieldNames: fN } = RCT;
 
 const periodFields = Object.keys(fN.periods).reduce((acc, field) => ({ ...acc, [field]: fN.periods[field].fieldName }), {});
@@ -92,7 +93,7 @@ const fieldNames = {
 };
 
 export const getHeaderSpecial = (model, f) => {
-    if (/.*_detector/.test(f.name)) {
+    if (isDetectorField(f.name)) {
         return f.name.split('_')[0];
     }
     const n = headersSpecials[model.getCurrentDataPointer().page][f.name];
@@ -104,7 +105,7 @@ export const getHeaderSpecial = (model, f) => {
 };
 
 export const getFieldName = (model, f) => {
-    if (/.*_detector/.test(f.name)) {
+    if (isDetectorField(f.name)) {
         return null;
     }
     const n = fieldNames[model.getCurrentDataPointer().page][f.name];
@@ -121,6 +122,6 @@ export const nonDisplayable = 'nonDisplayable';
 
 export const headerSpecPresent = (model, f) => headersSpecials[model.getCurrentDataPointer().page][f.name]
     ? filterApplicableHeader
-    : /.*detector/.test(f.name)
+    : isDetectorField(f.name)
         ? filterNonApplicableHeader
         : nonDisplayable;

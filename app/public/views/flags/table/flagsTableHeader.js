@@ -15,12 +15,13 @@
 import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../userView/data/headersSpecials.js';
 import fields from './fields.js';
+import { RCT } from '../../../config.js';
 
 export default function flagsTableHeader(model) {
     const displayedFields = fields.filter((e) => e.display === true);
     const columnsHeadersArray = (fields, model) =>
         fields.map((f) => [
-            h(`th.${model.getCurrentDataPointer().page}-${f.name}-header`, {
+            h(`th.${RCT.pageNames.flags}-${f.name}-header`, {
                 scope: 'col',
             }, h('.relative', [
                 headerSpecPresent(model, f) !== nonDisplayable ?

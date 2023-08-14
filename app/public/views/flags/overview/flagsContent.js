@@ -55,12 +55,12 @@ export default function flagsContent(model, runs, detectors, flags) {
         }, model.searchFieldsVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center')));
 
     return runNumber > noRunNumbers && runData
-        ? h('div.main-content', [
-            h('div.flex-wrap.justify-between.items-center',
-                h('div.flex-wrap.justify-between.items-center',
+        ? h('.p-1em', [
+            h('.flex-wrap.justify-between.items-center',
+                h('.flex-wrap.justify-between.items-center',
                     flagBreadCrumbs(model, dataPassName, runNumber, detectorName)),
 
-                h('div', functionalities(model))),
+                functionalities(model)),
             model.searchFieldsVisible ? filter(model) : '',
 
             flagsVisualization(runData, flagsData),

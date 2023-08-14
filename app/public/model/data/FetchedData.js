@@ -12,10 +12,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const defaultRowsOnSite = 50;
 const defaultSite = 1;
 
 import { RCT } from '../../../config.js';
+import { shouldDisplayDetectorField } from '../../utils/dataProcessing/dataProcessingUtils.js';
 const DRF = RCT.dataResponseFields;
 
 /**
@@ -27,8 +27,10 @@ const DRF = RCT.dataResponseFields;
  */
 
 export default class FetchedData {
-    constructor(url, content, totalRecordsNumber = null) {
+    constructor(url, content, userPreferences, totalRecordsNumber = null) {
         this.url = url;
+        this.rowsOnSite = userPreferences.rowsOnSite;
+        this.detectorList = userPreferences.detectorList;
 
         this.sorting = {
             field: null,
@@ -49,8 +51,7 @@ export default class FetchedData {
     useUrlParams(url) {
         const params = Object.fromEntries(url.searchParams.entries());
         const DRP = RCT.dataReqParams;
-        // TODO examine why it not works;
-        this.rowsOnSite = params['rows-on-site'] ? params['rows-on-site'] : defaultRowsOnSite;
+        this.rowsOnSite = params['rows-on-site'] ?? this.rowsOnSite;
         this.site = params[DRP.site] ? params[DRP.site] : defaultSite;
         if (params['sorting']) {
             const { sorting } = params;
@@ -65,15 +66,10 @@ export default class FetchedData {
     }
 
     parseFetchedFields(content) {
-        const { length } = content.data.fields;
-        this.fields = content.data.fields.map((item) => {
-            item.marked =
-                length < 5
-                || content.data.rows.length == 0
-                || content.data.rows.some((r) => r[item.name]); // TODO
-
-            return item;
-        });
+        this.fields = content.data.fields.map((field) => ({
+            ...field,
+            marked: shouldDisplayDetectorField(field.name, this.detectorList) || content.data.rows.some((r) => r[field.name]),
+        }));
     }
 
     parseFetchedRows(content) {

@@ -90,14 +90,14 @@ export default function filter(model) {
     const aggregatedFiltersTypes = `${filterTypes.match}-${filterTypes.exclude}`;
 
     return h('.font-size-small', [
-        h('div.flex-wrap.justify-between.items-center',
-            h('div.flex-wrap.justify-between.items-center',
+        h('.flex-wrap.justify-between.items-center',
+            h('.flex-wrap.justify-between.items-center',
                 h('h5', 'Filter data'),
                 h('button.btn.btn-secondary', {
                     onclick: () => onFilterSubmit(),
                 }, 'Use defined filters'))),
-        h('div.flex-wrap.justify-between.items-center',
-            h('div.flex-wrap.justify-between.items-center',
+        h('.flex-wrap.justify-between.items-center',
+            h('.flex-wrap.justify-between.items-center',
                 h('select.select', {
                     id: 'show-options-field',
                     name: 'showOptions' }, [
