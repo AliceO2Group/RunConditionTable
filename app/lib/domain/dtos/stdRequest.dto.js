@@ -31,7 +31,8 @@ const stdDataRequestDTO = Joi.object({
         page: Joi.object({
             limit: Joi.number(),
             offset: Joi.number(),
-        }) }), //TODO make more strict
+        }),
+        order: Joi.object({}).unknown(true) }), //TODO make more strict
     params: emptyDTO,
     body: emptyDTO,
 });
