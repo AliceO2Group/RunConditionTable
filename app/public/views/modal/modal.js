@@ -66,7 +66,7 @@ export const modal = (modalId, model = null) => {
                 ? h(`.${modalClassNames.modal}`, { id: modalIds.pageSettings.modal },
                     h(`.${modalClassNames.content}.abs-center.p3`, {
                         id: modalIds.pageSettings.content,
-                    }, pageSettings(model.userPreferences, () => {
+                    }, pageSettings(model.parent.userPreferences, () => {
                         document.getElementById(modalIds.pageSettings.modal).style.display = 'none';
                     })))
                 : '';
@@ -81,7 +81,7 @@ export const modal = (modalId, model = null) => {
             return h(`.${modalClassNames.modal}`, { id: modalIds.detectors.modal },
                 h(`.${modalClassNames.content}.abs-center.p3`, {
                     id: modalIds.detectors.content,
-                }, detectorSettings(model.userPreferences)));
+                }, detectorSettings(model.parent.userPreferences)));
         }
     }
 };

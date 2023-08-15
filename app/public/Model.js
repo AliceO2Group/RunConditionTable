@@ -19,6 +19,7 @@ import Flags from './views/flags/Flags.js';
 import Detectors from './views/detectors/Detectors.js';
 import Runs from './views/runs/Runs.js';
 import PeriodsModel from './views/periods/Periods.js';
+import UserPreferences from './model/UserPreferences.js';
 const { roles, dataAccess, pageNames } = RCT;
 
 export default class Model extends Observable {
@@ -35,6 +36,9 @@ export default class Model extends Observable {
 
         this.loader = new Loader();
 
+        this.userPreferences = new UserPreferences(this);
+        this.userPreferences.bubbleTo(this);
+        
         this.periods = new PeriodsModel(this);
         this.periods.bubbleTo(this);
 
