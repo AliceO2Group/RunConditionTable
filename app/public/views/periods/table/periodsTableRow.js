@@ -14,13 +14,19 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
+import pagesCellsSpecials from '../../userView/data/pagesCellsSpecials.js';
 
-export default function periodsTableRow(periodData, visibleFields) {
+export default function periodsTableRow(periodData, visibleFields, model) {
     const pageName = RCT.pageNames.periods;
+    const cellsSpecials = pagesCellsSpecials[pageName];
 
     const dataCells = visibleFields.map((field) =>
         h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
-            periodData[field.name]));
+            periodData[field.name]
+                ? cellsSpecials[field.name]
+                    ? cellsSpecials[field.name](model, periodData)
+                    : periodData[field.name]
+                : ''));
 
     const checkbox = h('td.relative.track',
         h(`input.checkbox.abs-center${periodData.marked ? '.ticked' : ''}`, {

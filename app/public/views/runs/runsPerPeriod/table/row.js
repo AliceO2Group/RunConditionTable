@@ -31,7 +31,7 @@ export default function row(
                 : ''));
 
     const detectorCells = visibleFields.filter((field) =>
-        shouldDisplayDetectorField(field.name, model.userPreferences.detectorList)).map((field) =>
+        shouldDisplayDetectorField(field.name, model.parent.userPreferences.detectorList)).map((field) =>
         h(`td.${pageName}-detector-cell.text-ellipsis`,
             item[field.name]
                 ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name))

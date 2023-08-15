@@ -51,7 +51,7 @@ export default class FetchedDataManager {
         if (url === null) {
             url = this.router.getUrl();
             if (!url.searchParams.has(dataReqParams.rowsOnSite)) {
-                url = new URL(`${url.href}&${dataReqParams.rowsOnSite}=${this.model.userPreferences.rowsOnSite}`);
+                url = new URL(`${url.href}&${dataReqParams.rowsOnSite}=${this.model.parent.userPreferences.rowsOnSite}`);
             }
             if (!url.searchParams.has(dataReqParams.site)) {
                 url = new URL(`${url.href}&${dataReqParams.site}=1`);
@@ -140,7 +140,7 @@ export default class FetchedDataManager {
 
     changeRowsOnSite() {
         const url = this.router.getUrl();
-        const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.model.userPreferences.rowsOnSite });
+        const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.model.parent.userPreferences.rowsOnSite });
         this.router.go(newUrl);
     }
 
