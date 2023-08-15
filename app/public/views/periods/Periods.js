@@ -34,11 +34,13 @@ export default class PeriodsModel extends Observable {
         this._pagination.observe(() => this.fetchAllPeriods());
         this._pagination.itemsPerPageSelector$.observe(() => this.notify());
 
-        // Content
-        // this._currentPagePeriods = RemoteData.notAsked();
-        // this._allPeriods = RemoteData.notAsked();
+        /*
+         * Content
+         * this._currentPagePeriods = RemoteData.notAsked();
+         * this._allPeriods = RemoteData.notAsked();
+         */
 
-        this._periods = RemoteData.NotAsked()
+        this._periods = RemoteData.NotAsked();
     }
 
     /**
@@ -60,12 +62,12 @@ export default class PeriodsModel extends Observable {
         /**
          * @type {Period[]}
          */
-        
+
         /*
          * When fetching data, to avoid concurrency issues, save a flag stating if the fetched data should be concatenated with the current one
          * (infinite scroll) or if they should replace them
          */
-        
+
         const shouldKeepExisting = this._pagination.currentPage > 1 && this._pagination.isInfiniteScrollEnabled;
 
         if (!this._pagination.isInfiniteScrollEnabled) {
@@ -74,15 +76,15 @@ export default class PeriodsModel extends Observable {
         }
 
         /*
-        const params = {
-            'page[offset]': this._pagination.firstItemOffset,
-            'page[limit]': this._pagination.itemsPerPage,
-        };
-        */
+         *Const params = {
+         *    'page[offset]': this._pagination.firstItemOffset,
+         *    'page[limit]': this._pagination.itemsPerPage,
+         *};
+         */
 
         this._allPeriods = RemoteData.notAsked();
 
-        // const endpoint = `/api/periods?${new URLSearchParams(params).toString()}`;
+        // Const endpoint = `/api/periods?${new URLSearchParams(params).toString()}`;
         const endpoint = '/api/periods';
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
@@ -112,6 +114,4 @@ export default class PeriodsModel extends Observable {
     get periods() {
         return this._periods;
     }
-
-
 }
