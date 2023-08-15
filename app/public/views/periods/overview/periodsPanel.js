@@ -12,18 +12,17 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
-import spinner from '../../../components/common/spinner.js';
 import periodsContent from './periodsContent.js';
+import { waiting, unknown, failure } from '../../../components/messagePanel/messages.js';
 
 export default function periodsPanel(model) {
     const { periods } = model.periods;
+    const { dataAccess } = model;
 
     return periods.match({
-        NotAsked: () => 'not asked',
-        Loading: () => h('tr',
-            h('td', spinner())),
+        NotAsked: () => unknown(dataAccess),
+        Loading: () => waiting(),
         Success: () => periodsContent(periods.payload, model),
-        Failure: (errors) => h('', errors),
+        Failure: (errors) => failure(model, errors),
     });
 }
