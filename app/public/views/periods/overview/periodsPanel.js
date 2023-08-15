@@ -22,7 +22,7 @@ export default function periodsPanel(model) {
     return periods.match({
         NotAsked: () => unknown(dataAccess),
         Loading: () => waiting(),
-        Success: () => periodsContent(periods.payload, model),
+        Success: () => periodsContent(model.periods, periods.payload, model),
         Failure: (errors) => failureWithMessage(model, errors),
     });
 }
