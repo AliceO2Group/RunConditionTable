@@ -12,8 +12,9 @@
  * or submit itself to any jurisdiction.
  */
 
-import spinner from "../../../components/common/spinner.js";
-import periodsContent from "./periodsContent.js";
+import { h } from '/js/src/index.js';
+import spinner from '../../../components/common/spinner.js';
+import periodsContent from './periodsContent.js';
 
 export default function periodsPanel(model) {
     const { periods } = model.periods;
@@ -21,8 +22,8 @@ export default function periodsPanel(model) {
     return periods.match({
         NotAsked: () => 'not asked',
         Loading: () => h('tr',
-        h('td', spinner())),
+            h('td', spinner())),
         Success: () => periodsContent(periods.payload, model),
-        Failure: (errors) => h('tr', h('td', { colSpan: columnsCount }, errors))
-    })
+        Failure: (errors) => h('', errors),
+    });
 }
