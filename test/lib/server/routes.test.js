@@ -31,12 +31,20 @@ module.exports = () => {
                 assert(apiDocumentationCotroller.apiDocsJson.length === routes.length);
             });
         });
-        describe('Endpoints', () => {
+        describe('Endpoints for fetching data', () => {
             routes.filter(({ method }) => method === 'get').map(async ({ path }) => {
-                const url = `${config.http.tls ? 'https' : 'http'}://localhost:${config.http.port}/api${replaceAll(path, /:[^/]+/, '0')}`;
+                // eslint-disable-next-line max-len
+                const url = new URL(`${config.http.tls ? 'https' : 'http'}://localhost:${config.http.port}/api${replaceAll(path, /:[^/]+/, '0')}`);
                 it(`should fetch from ${path} <${url}> without errors`, async () => {
                     await assert.doesNotReject(makeHttpRequestForJSON(url));
                 });
+                if (url.pathname !== '/api/api-docs') { // Limit/offset are supported for endpoints which controllers base on sequelize
+                    url.searchParams.append('page[limit]', 2);
+                    url.searchParams.append('page[offset]', 1);
+                    it(`should fetch from ${path} <${url}> without errors`, async () => {
+                        await assert.doesNotReject(makeHttpRequestForJSON(url));
+                    });
+                }
             });
         });
     });
