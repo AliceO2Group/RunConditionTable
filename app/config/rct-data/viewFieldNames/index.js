@@ -12,12 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
+const oldPeriodFieldNames = require('./oldPeriodFieldNames.js');
 const periodFieldNames = require('./periodFieldNames.js');
 const runFieldNames = require('./runFieldNames.js');
 const dataPassFieldNames = require('./dataPassFieldNames.js');
 const mcFieldNames = require('./mcFieldNames.js');
 
 module.exports = {
+    oldPeriodFieldNames,
     periodFieldNames,
     runFieldNames,
     dataPassFieldNames,

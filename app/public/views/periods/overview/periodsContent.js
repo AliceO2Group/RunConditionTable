@@ -19,6 +19,7 @@ import dataActionButtons, { dataActions } from '../../../components/buttons/data
 import filter from '../../userView/data/table/filtering/filter.js';
 import { anyFiltersActive } from '../../../utils/filtering/filterUtils.js';
 import activeFilters from '../../userView/data/table/filtering/activeFilters.js';
+import { noDataFound, noMatchingData } from '../../../components/messagePanel/messages.js';
 const pageName = RCT.pageNames.periods;
 
 /**
@@ -52,8 +53,11 @@ export default function periodsContent(periods, model) {
         model.showFilteringPanel ? filter(dataAccess) : '',
         anyFiltersActive(url) ? activeFilters(dataAccess, url) : '',
 
-        // Periods.length > 0
-        table(periods));
+        periods.length > 0
+            ? table(periods)
+            : anyFiltersActive(url)
+                ? noMatchingData(dataAccess, pageName)
+                : noDataFound(dataAccess));
 
     /*
      *Return h('.p-1rem', [
