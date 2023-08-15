@@ -12,6 +12,7 @@
  */
 
 const { throwWrapper, NotFoundEntityError } = require('../../utils');
+const { QueryBuilder } = require('../utilities');
 
 const nonTransactionalFunctions = new Set(['constructor', 'asT', '_asT'])
 
@@ -41,8 +42,9 @@ class Repository {
         this.model = model;
     }
 
-    async count() {
-        return this.model.count();
+    async count(queryClauses = new QueryBuilder()) {
+        queryClauses = queryClauses instanceof QueryBuilder ? queryClauses : new QueryBuilder(queryClauses);
+        return this.model.count(queryClauses.toImplementation());
     }
 
     /**
@@ -51,8 +53,9 @@ class Repository {
      * @param {Object} queryClauses the find query (see sequelize findAll options)
      * @returns {Promise<array>} Promise object representing the full mock data
      */
-    async findAll(queryClauses = {}) {
-        return this.model.findAll(queryClauses);
+    async findAll(queryClauses = new QueryBuilder()) {
+        queryClauses = queryClauses instanceof QueryBuilder ? queryClauses : new QueryBuilder(queryClauses);
+        return this.model.findAll(queryClauses.toImplementation());
     }
 
     /**
@@ -62,7 +65,9 @@ class Repository {
      * @returns {Promise<Object>} Promise object representing the full mock data
      */
     async findOne(queryClauses = {}) {
-        return this.model.findOne(queryClauses);
+        queryClauses = queryClauses instanceof QueryBuilder ? queryClauses : new QueryBuilder(queryClauses);
+        queryClauses.addClause({limit: 1})
+        return this.model.findOne(queryClauses.toImplementation());
     }
 
     /**
@@ -84,8 +89,8 @@ class Repository {
      * @throws {NotFoundEntityError} if cannot find dbObject with given query clause
      * @return {Promise<void>} promise that resolves when the patch has been applied
      */
-    async findOneAndUpdate(query, patch) {
-        const entity = await this.model.findOne(query) ??
+    async findOneAndUpdate(queryClauses, patch) {
+        const entity = await this.model.findOne(queryClauses) ??
             throwWrapper(new NotFoundEntityError(`No entity of model ${this.model.name} for clause ${JSON.stringify(query)}`));
         await entity.update(patch);
     }
@@ -100,13 +105,12 @@ class Repository {
 
     /**
      * Create new object in db
-     * @param {Object} whereClause
+     * @param {Object} queryClauses
      */
-    async removeOne(whereClause) {
-        return await this.model.destroy({
-            limit: 1,
-            where: whereClause
-        });
+    async removeOne(queryClauses) {
+        queryClauses = queryClauses instanceof QueryBuilder ? queryClauses : new QueryBuilder(queryClauses);
+        queryClauses.addClause({limit: 1})
+        return await this.model.destroy(queryClauses.toImplementation());
     }
 
     _asT(customOptions) {

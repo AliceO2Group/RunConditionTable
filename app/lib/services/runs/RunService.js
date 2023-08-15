@@ -36,7 +36,7 @@ class RunService {
         const runs = await RunRepository.findAllWithDetectors({
             where: filterToSequelizeWhereClause(filter),
             ...page,
-            order: Object.entries(order),
+            order: order ? Object.entries(order) : null,
         });
         return runs.map((run) => runAdapter.toEntity(run));
     }

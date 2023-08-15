@@ -15,8 +15,8 @@
 const deepmerge = require('deepmerge');
 
 class QueryBuilder {
-    constructor() {
-        this.cluasesAccumulator = {};
+    constructor(initClauses) {
+        this.cluasesAccumulator = {...initClauses};
     }
 
     addFromHttpRequest({ filter, page, order }) {

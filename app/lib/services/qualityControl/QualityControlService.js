@@ -71,7 +71,7 @@ class QualityControlService {
      * @returns {Promise} Promise object represents the result of this use case.
      */
     async deleteTimeBasedQualityControlFlag(id) {
-        return await QualityControlFlagRepository.T.removeOne({ id });
+        return await QualityControlFlagRepository.T.removeOne({ where: { id } });
     }
 
     /**
