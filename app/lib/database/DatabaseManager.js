@@ -33,7 +33,7 @@ class DatabaseManager {
         this.sequelize = new Sequelize({
             ...config.database,
             username: config.database.user, // TEMPORARILY
-            logging: config.database.logging ? this.logger.debug.bind(this.logger) : false,
+            logging: true,//config.database.logging ? this.logger.debug.bind(this.logger) : false,
             dialect: 'postgres',
             define: {
                 underscored: true,

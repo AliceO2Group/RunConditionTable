@@ -12,7 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const deepmerge = require('deepmerge');
+const { deepmerge } = require('../../utils');
+const { filterToSequelizeWhereClause } = require('../../server/utilities');
 
 class QueryBuilder {
     constructor(initClauses) {
@@ -25,10 +26,16 @@ class QueryBuilder {
             ...page,
             order: order ? Object.entries(order) : null,
         })
+        return this;
     }
 
-    addClause(clause) {
-        this.cluasesAccumulator = deepmerge(this.cluasesAccumulator, clause);
+    add(clause) {
+        if (clause instanceof QueryBuilder) {
+            this.cluasesAccumulator = deepmerge(this.cluasesAccumulator, clause.toImplementation())
+        } else {
+            this.cluasesAccumulator = deepmerge(this.cluasesAccumulator, clause);
+        }
+        return this;
     }
 
     toImplementation() {

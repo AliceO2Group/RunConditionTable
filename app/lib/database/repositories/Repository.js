@@ -66,7 +66,7 @@ class Repository {
      */
     async findOne(queryClauses = {}) {
         queryClauses = queryClauses instanceof QueryBuilder ? queryClauses : new QueryBuilder(queryClauses);
-        queryClauses.addClause({limit: 1})
+        queryClauses.add({limit: 1})
         return this.model.findOne(queryClauses.toImplementation());
     }
 
@@ -109,7 +109,7 @@ class Repository {
      */
     async removeOne(queryClauses) {
         queryClauses = queryClauses instanceof QueryBuilder ? queryClauses : new QueryBuilder(queryClauses);
-        queryClauses.addClause({limit: 1})
+        queryClauses.add({limit: 1})
         return await this.model.destroy(queryClauses.toImplementation());
     }
 
