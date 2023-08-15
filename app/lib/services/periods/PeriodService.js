@@ -59,6 +59,7 @@ class PeriodService {
                 ],
             ],
             group: ['Period.id', 'BeamType.id'],
+            subQuery: false,
         };
         const periods = await PeriodRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequest(query));
         return periods.map((period) => periodAdapter.toEntity(period));
