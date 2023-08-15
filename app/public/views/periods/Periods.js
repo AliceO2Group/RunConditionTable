@@ -34,6 +34,8 @@ export default class PeriodsModel extends Observable {
         this._pagination.observe(() => this.fetchAllPeriods());
         this._pagination.itemsPerPageSelector$.observe(() => this.notify());
 
+        this._visibleFields = null;
+
         /*
          * Content
          * this._currentPagePeriods = RemoteData.notAsked();
@@ -50,6 +52,7 @@ export default class PeriodsModel extends Observable {
      */
     reset() {
         this._periods = RemoteData.NotAsked();
+        this._visibleFields = null;
         this._pagination.reset();
     }
 
@@ -75,17 +78,14 @@ export default class PeriodsModel extends Observable {
             this.notify();
         }
 
-        /*
-         *Const params = {
-         *    'page[offset]': this._pagination.firstItemOffset,
-         *    'page[limit]': this._pagination.itemsPerPage,
-         *};
-         */
+        const params = {
+            'page[offset]': this._pagination.firstItemOffset,
+            'page[limit]': this._pagination.itemsPerPage,
+        };
 
         this._allPeriods = RemoteData.notAsked();
 
-        // Const endpoint = `/api/periods?${new URLSearchParams(params).toString()}`;
-        const endpoint = '/api/periods';
+        const endpoint = `/api/periods?${new URLSearchParams(params).toString()}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             const concatenateWith = shouldKeepExisting ? this._periods.payload || [] : [];
