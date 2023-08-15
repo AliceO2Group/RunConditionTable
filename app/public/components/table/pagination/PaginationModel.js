@@ -74,6 +74,18 @@ export class PaginationModel extends Observable {
     }
 
     /**
+     * Navigate to the target page
+     *
+     * @param {number} page target page
+     * @return {void}
+     */
+    goToPage(page) {
+        if (page < this.pagesCount) {
+            this.currentPage = page;
+        }
+    }
+
+    /**
      * Returns the current page
      *
      * @return {number} the current page

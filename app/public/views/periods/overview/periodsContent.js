@@ -12,7 +12,6 @@
  */
 
 import { h } from '/js/src/index.js';
-// Import pagesCellsSpecials from '../../userView/data/pagesCellsSpecials.js';
 import { RCT } from '../../../config.js';
 import title from '../../../components/table/title.js';
 import dataActionButtons, { dataActions } from '../../../components/buttons/dataActionButtons.js';
@@ -20,6 +19,8 @@ import filter from '../../userView/data/table/filtering/filter.js';
 import { anyFiltersActive } from '../../../utils/filtering/filterUtils.js';
 import activeFilters from '../../userView/data/table/filtering/activeFilters.js';
 import { noDataFound, noMatchingData } from '../../../components/messagePanel/messages.js';
+import periodsTableHeader from '../table/periodsTableHeader.js';
+import periodsTableRow from '../table/periodsTableRow.js';
 const pageName = RCT.pageNames.periods;
 
 /**
@@ -37,11 +38,9 @@ const applicableDataActions = {
     [dataActions.showFilteringPanel]: true,
 };
 
-export default function periodsContent(periods, model) {
-    const table = (periods) => periods.map((period) => h('', period.id));
+export default function periodsContent(periodsModel, periods, model) {
     const { dataAccess } = model;
 
-    // Const cellsSpecials = pagesCellsSpecials[pageName];
     const url = model.router.getUrl();
 
     return h('.p-1rem',
@@ -54,37 +53,19 @@ export default function periodsContent(periods, model) {
         anyFiltersActive(url) ? activeFilters(dataAccess, url) : '',
 
         periods.length > 0
-            ? table(periods)
+            ? periodsModel.visibleFields.length > 0
+                ? h('.p-top-05em',
+                    h('.x-scrollable-table.border-sh',
+                        h(`table.${pageName}-table`, {
+                            id: `data-table-${pageName}`,
+                        },
+                        periodsTableHeader(pageName, periodsModel.visibleFields, periods, model),
+                        h('tbody', { id: `table-body-${pageName}` },
+                            periods.map((period) => periodsTableRow(
+                                period, periodsModel.visibleFields,
+                            ))))))
+                : ''
             : anyFiltersActive(url)
                 ? noMatchingData(dataAccess, pageName)
                 : noDataFound(dataAccess));
-
-    /*
-     *Return h('.p-1rem', [
-     *    h('.flex-wrap.justify-between.items-center',
-     *        h('.flex-wrap.justify-between.items-center',
-     *            title(dataPointer.page)),
-     *
-     *        dataActionButtons(model, applicableDataActions)),
-     *    model.showFilteringPanel ? filter(model) : '',
-     *    anyFiltersActive(url) ? activeFilters(model, url) : '',
-     *
-     *    data.rows?.length > 0
-     *        ? visibleFields.length > 0
-     *            ? h('.p-top-05em',
-     *                h('.x-scrollable-table.border-sh',
-     *                    pager(model, data, false),
-     *                    h(`table.${dataPointer.page}-table`, {
-     *                        id: `data-table-${data.url}`,
-     *                    },
-     *                    tableHeader(visibleFields, data, model),
-     *                    model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-     *                    tableBody(model, visibleFields, data, cellsSpecials, runs)),
-     *                    data.rows.length > 15 ? pager(model, data) : ''))
-     *            : ''
-     *        : anyFiltersActive(url)
-     *            ? noMatchingData(model, dataPointer.page)
-     *            : noDataFound(model),
-     *]);
-     */
 }
