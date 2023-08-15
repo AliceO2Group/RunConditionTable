@@ -59,8 +59,8 @@ class PeriodService {
                 ],
             ],
             group: ['Period.id', 'BeamType.id'],
-
             where: filterToSequelizeWhereClause(filter),
+            subQuery: false,
             ...page,
         });
         return periods.map((period) => periodAdapter.toEntity(period));
