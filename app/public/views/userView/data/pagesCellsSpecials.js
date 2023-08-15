@@ -51,19 +51,19 @@ pagesCellsSpecials[PN.periods] = {
                 model.navigation,
                 'runs',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-run_number`,
+                `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-run_number`,
             ),
 
             linkChip(
                 model.navigation,
                 'data passes',
-                `/?page=${PN.dataPasses}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1`,
+                `/?page=${PN.dataPasses}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1`,
             ),
 
             linkChip(
                 model.navigation,
                 'MC',
-                `/?page=${PN.mc}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1`,
+                `/?page=${PN.mc}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1`,
             )),
     ],
 
@@ -80,14 +80,14 @@ pagesCellsSpecials[PN.dataPasses] = {
                 onclick: async () => {
                     await runs.fetchRunsPerDataPass(item.name);
                     // eslint-disable-next-line max-len
-                    model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-run_number`);
+                    model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-run_number`);
                 },
             }, 'runs'),
             linkChip(
                 model.navigation,
                 'anchorage',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-name`,
+                `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-name`,
             )),
     ],
     size: (model, runs, item) => getReadableFileSizeString(Number(item.size)),
@@ -100,7 +100,7 @@ pagesCellsSpecials[PN.mc] = {
                 model.navigation,
                 'anchored',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-name`,
+                `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-name`,
             )),
     ],
 };
