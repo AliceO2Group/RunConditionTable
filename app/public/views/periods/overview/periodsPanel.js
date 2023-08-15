@@ -13,7 +13,7 @@
  */
 
 import periodsContent from './periodsContent.js';
-import { waiting, unknown, failure } from '../../../components/messagePanel/messages.js';
+import { waiting, unknown, failureWithMessage } from '../../../components/messagePanel/messages.js';
 
 export default function periodsPanel(model) {
     const { periods } = model.periods;
@@ -23,6 +23,6 @@ export default function periodsPanel(model) {
         NotAsked: () => unknown(dataAccess),
         Loading: () => waiting(),
         Success: () => periodsContent(periods.payload, model),
-        Failure: (errors) => failure(model, errors),
+        Failure: (errors) => failureWithMessage(model, errors),
     });
 }

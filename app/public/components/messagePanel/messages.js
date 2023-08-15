@@ -27,12 +27,22 @@ const removeCurrentDataButton = (model, label) => h('button.btn.btn-primary.m3',
     onclick: () => model.removeCurrentData(),
 }, label);
 
-export const failure = (model, status) => messagePanel(
+export const failureWithStatus = (model, status) => messagePanel(
     'no-network-90',
     'Failed to load data',
     `The services are unavailable (status: ${status ? status : 'unknown'})`,
     requestButton(model),
 );
+
+export const failureWithMessage = (model, errorObject) => {
+    const { detail, title } = errorObject.find((e) => Boolean(e));
+    return messagePanel(
+        'no-network-90',
+        detail,
+        title,
+        requestButton(model),
+    );
+};
 
 export const unknown = (model) => messagePanel(
     'unexpected-90',
