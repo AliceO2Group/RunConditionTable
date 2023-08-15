@@ -22,6 +22,19 @@ const columnDisplayOptions = {
 
 export default function newPager(periodsModel, model) {
     const columnOptionsSelectId = 'columns-option-select-id';
+    const currentSite = periodsModel.pagination.currentPage;
+    const sitesNumber = periodsModel.pagination.pagesCount;
+
+    const pageButton = (targetSite) => h(`button.btn${targetSite === currentSite ? '.btn-primary' : '.btn-secondary'}.no-text-decoration`, {
+        onclick: () => periodsModel.pagination.goToPage(targetSite),
+    }, targetSite);
+
+    const siteChangingController = (targetSite, content) => h('button.btn.btn-secondary.site-changing-controller', {
+        onclick: () => periodsModel.pagination.goToPage(targetSite),
+    }, content);
+
+    const moreSitesLeft = currentSite > 2;
+    const moreSitesRight = currentSite < sitesNumber - 1;
 
     function handleOptionChange() {
         const columnsOptionsSelect = document.getElementById(columnOptionsSelectId);
@@ -63,6 +76,48 @@ export default function newPager(periodsModel, model) {
                 h('option', { value: columnDisplayOptions.all }, 'All columns'),
                 // ToDo add customizable option => open modal here
             ], iconChevronBottom())),
+
+        h('.flex.pager-buttons',
+            // Move to the first site
+            currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
+            // Move one site back
+            currentSite > 1 ? siteChangingController(currentSite - 1, h('.back-15-primary')) : ' ',
+
+            // Move to the middle of sites range [first, current]
+            moreSitesLeft
+                ? siteChangingController(
+                    Math.floor(currentSite / 2),
+                    h('.more-15-primary'),
+                )
+                : '',
+
+            currentSite > 1 ? pageButton(currentSite - 1) : '',
+            pageButton(currentSite),
+            currentSite < sitesNumber ? pageButton(currentSite + 1) : '',
+
+            // Move to the middle of sites range [current, last]
+            moreSitesRight
+                ? siteChangingController(
+                    currentSite + Math.floor((sitesNumber - currentSite) / 2),
+                    h('.more-15-primary'),
+                )
+                : '',
+
+            // Move one site forward
+            currentSite < sitesNumber
+                ? siteChangingController(
+                    currentSite + 1,
+                    h('.forward-15-primary'),
+                )
+                : '',
+
+            // Move to the last site
+            currentSite < sitesNumber
+                ? siteChangingController(
+                    sitesNumber,
+                    h('.double-right-15-primary'),
+                )
+                : ''),
 
     ]);
 }
