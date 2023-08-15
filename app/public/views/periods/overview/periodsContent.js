@@ -38,6 +38,7 @@ const applicableDataActions = {
 
 export default function periodsContent(periods, model) {
     const table = (periods) => periods.map((period) => h('', period.id));
+    const { dataAccess } = model;
 
     // Const cellsSpecials = pagesCellsSpecials[pageName];
     const url = model.router.getUrl();
@@ -46,10 +47,10 @@ export default function periodsContent(periods, model) {
         h('.flex-wrap.justify-between.items-center',
             h('.flex-wrap.justify-between.items-center',
                 title(pageName)),
-            dataActionButtons(model, applicableDataActions)),
+            dataActionButtons(dataAccess, applicableDataActions)),
 
-        model.showFilteringPanel ? filter(model) : '',
-        anyFiltersActive(url) ? activeFilters(model, url) : '',
+        model.showFilteringPanel ? filter(dataAccess) : '',
+        anyFiltersActive(url) ? activeFilters(dataAccess, url) : '',
 
         // Periods.length > 0
         table(periods));

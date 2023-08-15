@@ -78,14 +78,17 @@ export default class PeriodsModel extends Observable {
             this.notify();
         }
 
-        const params = {
-            'page[offset]': this._pagination.firstItemOffset,
-            'page[limit]': this._pagination.itemsPerPage,
-        };
+        /*
+         *Const params = {
+         *    'page[offset]': this._pagination.firstItemOffset,
+         *    'page[limit]': this._pagination.itemsPerPage,
+         *};
+         */
 
         this._allPeriods = RemoteData.notAsked();
 
-        const endpoint = `/api/periods?${new URLSearchParams(params).toString()}`;
+        const endpoint = '/api/periods';
+        // Const endpoint = `/api/periods?${new URLSearchParams(params).toString()}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             const concatenateWith = shouldKeepExisting ? this._periods.payload || [] : [];
