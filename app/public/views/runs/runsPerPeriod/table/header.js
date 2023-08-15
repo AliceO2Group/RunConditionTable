@@ -30,7 +30,7 @@ export default function header(visibleFields, data, model) {
             ])));
 
         const detectorHeaders = visibleFields.filter((field) =>
-            shouldDisplayDetectorField(field.name, model.userPreferences.detectorList)).map((field) =>
+            shouldDisplayDetectorField(field.name, model.parent.userPreferences.detectorList)).map((field) =>
             h(`th.${pageName}-detector-header`, {
                 scope: 'col',
             }, h('.relative', [
