@@ -52,7 +52,7 @@ class QualityControlService {
             ],
         };
 
-        const qualityFlags = await QualityControlFlagRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequest(query));
+        const qualityFlags = await QualityControlFlagRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return qualityFlags.map((qualityFlags) => qualityControlFlagAdapter.toEntity(qualityFlags));
     }
 

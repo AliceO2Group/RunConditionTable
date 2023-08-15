@@ -33,7 +33,7 @@ class RunService {
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
     async getAll(query) {
-        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder().addFromHttpRequest(query));
+        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder().addFromHttpRequestQuery(query));
         return runs.map((run) => runAdapter.toEntity(run));
     }
 
@@ -49,7 +49,7 @@ class RunService {
                 period_id: periodId,
             },
         };
-        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder(baseClause).addFromHttpRequest(query));
+        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return runs.map((run) => runAdapter.toEntity(run));
     }
 
@@ -74,7 +74,7 @@ class RunService {
                 },
             ],
         };
-        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder(baseClause).addFromHttpRequest(query));
+        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return runs.map((run) => runAdapter.toEntity(run));
     }
 
@@ -99,7 +99,7 @@ class RunService {
                 },
             ],
         };
-        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder(baseClause).addFromHttpRequest(query));
+        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return runs.map((run) => runAdapter.toEntity(run));
     }
 

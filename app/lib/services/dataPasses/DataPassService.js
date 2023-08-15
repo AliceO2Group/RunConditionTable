@@ -31,7 +31,7 @@ class DataPassService {
      * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
     async getAll(query) {
-        const periods = await DataPassRepository.findAll(new QueryBuilder().addFromHttpRequest(query));
+        const periods = await DataPassRepository.findAll(new QueryBuilder().addFromHttpRequestQuery(query));
         return periods.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
 
@@ -48,7 +48,7 @@ class DataPassService {
             },
         };
 
-        const runs = await DataPassRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequest(query));
+        const runs = await DataPassRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return runs.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
 
@@ -74,7 +74,7 @@ class DataPassService {
             ],
         };
 
-        const runs = await DataPassRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequest(query));
+        const runs = await DataPassRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return runs.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
 }

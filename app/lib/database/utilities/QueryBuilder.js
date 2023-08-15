@@ -20,7 +20,7 @@ class QueryBuilder {
         this.cluasesAccumulator = {...initClauses};
     }
 
-    addFromHttpRequest({ filter, page, order }) {
+    addFromHttpRequestQuery({ filter, page, order }) {
         this.cluasesAccumulator = deepmerge(this.cluasesAccumulator, {
             where: filterToSequelizeWhereClause(filter),
             ...page,
