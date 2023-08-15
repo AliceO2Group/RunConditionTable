@@ -38,7 +38,7 @@ export default class Model extends Observable {
 
         this.userPreferences = new UserPreferences(this);
         this.userPreferences.bubbleTo(this);
-        
+
         this.periods = new PeriodsModel(this);
         this.periods.bubbleTo(this);
 
