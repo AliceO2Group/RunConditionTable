@@ -27,7 +27,7 @@ const periodFieldNames = {
         filterInput: filterInputTypes.number,
     },
     distinctEnergies: {
-        fieldName: 'Energies [GeV]',
+        fieldName: 'Run energies [GeV]',
         filterInput: filterInputTypes.number,
     },
 };
