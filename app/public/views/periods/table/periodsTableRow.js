@@ -15,8 +15,9 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import pagesCellsSpecials from '../../userView/data/pagesCellsSpecials.js';
+import { rowDisplayStyle } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 
-export default function periodsTableRow(periodData, visibleFields, model) {
+export default function periodsTableRow(periodData, visibleFields, model, periodsModel) {
     const pageName = RCT.pageNames.periods;
     const cellsSpecials = pagesCellsSpecials[pageName];
 
@@ -29,12 +30,15 @@ export default function periodsTableRow(periodData, visibleFields, model) {
                 : ''));
 
     const checkbox = h('td.relative.track',
-        h(`input.checkbox.abs-center${periodData.marked ? '.ticked' : ''}`, {
+        h(`input.checkbox.abs-center${periodData.selected ? '.ticked' : ''}`, {
             type: 'checkbox',
-            checked: periodData.marked,
+            checked: periodData.selected,
+            onclick: () => {
+                periodsModel.toggleSelection(periodData);
+            },
         }));
 
-    return h('tr.track',
+    return h(`tr.track${rowDisplayStyle(periodData.selected, periodsModel.hideMarkedRecords)}`,
         checkbox,
         dataCells);
 }
