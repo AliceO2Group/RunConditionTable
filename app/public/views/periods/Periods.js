@@ -36,6 +36,8 @@ export default class PeriodsModel extends Observable {
 
         this._fields = Object.keys(RCT.fieldNames.periods).map((field) => ({ name: field, visible: true }));
 
+        this._hideSelectedPeriods = false;
+
         /*
          *This._currentPagePeriods = RemoteData.notAsked();
          *this._allPeriods = RemoteData.notAsked();
@@ -124,5 +126,14 @@ export default class PeriodsModel extends Observable {
 
     get pagination() {
         return this._pagination;
+    }
+
+    get hideSelectedPeriods() {
+        return this._hideSelectedPeriods;
+    }
+
+    toggleSelection(period) {
+        period.selected = !period.selected;
+        this.notify();
     }
 }

@@ -62,7 +62,7 @@ export default function periodsContent(periodsModel, periods, model) {
                         periodsTableHeader(pageName, periodsModel.visibleFields, periods, model),
                         h('tbody', { id: `table-body-${pageName}` },
                             periods.map((period) => periodsTableRow(
-                                period, periodsModel.visibleFields, dataAccess,
+                                period, periodsModel.visibleFields, dataAccess, periodsModel
                             ))))))
                 : ''
             : anyFiltersActive(url)

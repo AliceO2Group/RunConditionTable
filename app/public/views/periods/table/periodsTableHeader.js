@@ -31,15 +31,15 @@ export default function periodsTableHeader(pageName, visibleFields, data, model)
     const rowsOptions = (model, data) =>
         h('th', { scope: 'col' },
             h('.relative',
-                h(`input.checkbox.abs-center${data.every((r) => r.marked) ? '.ticked' : ''}`, {
+                h(`input.checkbox.abs-center${data.every((r) => r.selected) ? '.ticked' : ''}`, {
                     type: 'checkbox',
                     onclick: (e) => {
                         for (const row of data) {
-                            row.marked = e.target.checked;
+                            row.selected = e.target.checked;
                         }
                         model.notify();
                     },
-                    checked: data.every((r) => r.marked),
+                    checked: data.every((r) => r.selected),
                 })));
 
     return h('thead.header',
