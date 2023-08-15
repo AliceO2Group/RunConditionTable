@@ -13,7 +13,7 @@
  */
 
 import { h, iconChevronBottom } from '/js/src/index.js';
-import itemsCounter from '../../views/userView/data/table/items-counter.js';
+import itemsCounter from '../../views/userView/data/table/items-counter.js'; //
 import { RCT } from '../../config.js';
 
 const { site } = RCT.dataReqParams;

@@ -37,11 +37,10 @@ export default class PeriodsModel extends Observable {
         this._fields = Object.keys(RCT.fieldNames.periods).map((field) => ({ name: field, visible: true }));
 
         this._hideSelectedPeriods = false;
+        this._sortingRowVisible = false;
 
-        /*
-         *This._currentPagePeriods = RemoteData.notAsked();
-         *this._allPeriods = RemoteData.notAsked();
-         */
+        this._currentPagePeriods = RemoteData.notAsked();
+        this._allPeriods = RemoteData.notAsked();
 
         this._periods = RemoteData.NotAsked();
     }
@@ -90,30 +89,29 @@ export default class PeriodsModel extends Observable {
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             const concatenateWith = shouldKeepExisting ? this._periods.payload || [] : [];
-            this._periods = RemoteData.success([...concatenateWith, ...items]);
+            this._currentPagePeriods = RemoteData.success([...concatenateWith, ...items]);
             this._pagination.itemsCount = totalCount;
         } catch (errors) {
-            this._periods = RemoteData.failure(errors);
+            this._currentPagePeriods = RemoteData.failure(errors);
         }
 
         this.notify();
     }
 
     /**
-     * Getter for all the run data
-     * @returns {RemoteData} Returns all of the filtered periods
-     */
-    getPeriods() {
-        return this._allPeriods;
-    }
-
-    /**
-     * Retro-compatibility access to paginated runs, returning all the runs contained in the current page if it applies
-     *
-     * @return {RemoteData} the runs in the current page
+     * Get all the periods
+     * @return {RemoteData} periods
      */
     get periods() {
         return this._periods;
+    }
+
+    /**
+     * Get current page periods
+     * @return {RemoteData} periods in the current page
+     */
+    get currentPagePeriods() {
+        return this._currentPagePeriods;
     }
 
     get visibleFields() {
@@ -132,8 +130,26 @@ export default class PeriodsModel extends Observable {
         return this._hideSelectedPeriods;
     }
 
+    get sortingRowVisible() {
+        return this._sortingRowVisible;
+    }
+
     toggleSelection(period) {
         period.selected = !period.selected;
+        this.notify();
+    }
+
+    toggleSortingRowVisibility() {
+        this._sortingRowVisible = !this._sortingRowVisible;
+        this.notify();
+    }
+
+    toggleFieldVisibility(targetField) {
+        const targetFieldIndex = this._fields.findIndex((f) => f.name === targetField.name);
+        const targetState = arguments[1] !== undefined
+            ? arguments[1]
+            : !this._fields[targetFieldIndex].visible;
+        this._fields[targetFieldIndex].visible = targetState;
         this.notify();
     }
 }
