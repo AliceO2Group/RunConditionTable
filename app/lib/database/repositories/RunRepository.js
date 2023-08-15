@@ -13,7 +13,6 @@
 
 const { QueryBuilder } = require("../utilities");
 const Repository = require("./Repository");
-const deepmerge = require('deepmerge');
 
 /**
  * Sequelize implementation of the Repository.

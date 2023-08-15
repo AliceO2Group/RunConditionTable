@@ -12,8 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
-const deepmerge = require('deepmerge');
+const basedeepmerge = require('deepmerge');
 
+/**
+ * Examine if value provided is mergeable @see {deepmerge}
+ * @param {Object} value - value to be examined
+ * @returns {boolean} result
+ */
 function isMergeableObject(value) {
     return isNonNullObject(value)
 		&& !isSpecial(value);
@@ -33,10 +38,30 @@ function isSpecial(value) {
         || typeof value === 'function';
 }
 
-const customDeepmerge = (x, y, opts) => deepmerge(x, y, { isMergeableObject, ...opts });
-customDeepmerge.all = (arr, opts) => deepmerge(arr, { isMergeableObject, ...opts });
+/**
+ * Deepmerge utility from package {@link https://github.com/TehShrike/deepmerge} with customized `isMergeableObject` function.
+ * Base function does not handle Sequelize objects e.g. of type Fn (Sequlize.fn) properly (corrupt them).
+ * @param {Object} x - first object
+ * @param {Object} y - second object, to be merged into first one (potentially replaces its property values)
+ * @param {Object} opts - merging options
+ * @returns {Object} result of merging
+ */
+function deepmerge(x, y, opts) {
+    return basedeepmerge(x, y, { isMergeableObject, ...opts });
+}
+
+/**
+ * Deepmerge utility from package {@link https://github.com/TehShrike/deepmerge} with customized `isMergeableObject` function.
+ * Base function does not handle Sequelize objects e.g. of type Fn (Sequlize.fn) properly (corrupt them).
+ * @param {Arr<Object>} arr - array of objects to be merged
+ * @param {Object} opts - merging options
+ * @returns {Object} result of merging
+ */
+deepmerge.all = function all(arr, opts) {
+    return basedeepmerge.all(arr, { isMergeableObject, ...opts });
+};
 
 module.exports = {
     isMergeableObject,
-    deepmerge: customDeepmerge,
+    deepmerge,
 };
