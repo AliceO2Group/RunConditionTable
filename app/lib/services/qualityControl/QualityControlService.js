@@ -25,7 +25,7 @@ const {
     },
 } = require('../../database/DatabaseManager');
 const { qualityControlFlagAdapter } = require('../../database/adapters');
-const { filterToSequelizeWhereClause } = require('../../server/utilities');
+const { QueryBuilder } = require('../../database/utilities');
 
 class QualityControlService {
     /**
@@ -33,8 +33,8 @@ class QualityControlService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Quality[]>} Promise object represents the result of this use case.
      */
-    async getAllTimeBasedFlags({ filter, page }) {
-        const qualityFlags = await QualityControlFlagRepository.findAll({
+    async getAllTimeBasedFlags(query) {
+        const baseClause = {
             include: [
                 {
                     model: DetectorSubsystem,
@@ -50,9 +50,9 @@ class QualityControlService {
                     required: false,
                 },
             ],
-            where: filterToSequelizeWhereClause(filter),
-            ...page,
-        });
+        };
+
+        const qualityFlags = await QualityControlFlagRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequest(query));
         return qualityFlags.map((qualityFlags) => qualityControlFlagAdapter.toEntity(qualityFlags));
     }
 

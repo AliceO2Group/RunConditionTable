@@ -24,7 +24,6 @@ const {
 } = require('../../database/DatabaseManager');
 const { simulationPassAdapter } = require('../../database/adapters');
 const { QueryBuilder } = require('../../database/utilities');
-const { filterToSequelizeWhereClause } = require('../../server/utilities');
 
 class SimulationPassService {
     /**

@@ -22,7 +22,7 @@ const {
     },
 } = require('../../database/DatabaseManager');
 const { dataPassAdapter } = require('../../database/adapters');
-const { filterToSequelizeWhereClause } = require('../../server/utilities');
+const { QueryBuilder } = require('../../database/utilities');
 
 class DataPassService {
     /**
@@ -30,11 +30,8 @@ class DataPassService {
      * @param {Object} query -  Filtering query definiton from http request
      * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
-    async getAll({ filter, page }) {
-        const periods = await DataPassRepository.findAll({
-            where: filterToSequelizeWhereClause(filter),
-            ...page,
-        });
+    async getAll(query) {
+        const periods = await DataPassRepository.findAll(new QueryBuilder().addFromHttpRequest(query));
         return periods.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
 
@@ -44,14 +41,14 @@ class DataPassService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
-    async getDataPassesPerPeriod(periodId, { filter, page }) {
-        const runs = await DataPassRepository.findAll({
+    async getDataPassesPerPeriod(periodId, query) {
+        const baseClause = {
             where: {
                 period_id: periodId,
-                ...filterToSequelizeWhereClause(filter),
             },
-            ...page,
-        });
+        };
+
+        const runs = await DataPassRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequest(query));
         return runs.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
 
@@ -61,8 +58,8 @@ class DataPassService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
-    async getAnchoredToSimulationPass(simulationPassId, { filter, page }) {
-        const runs = await DataPassRepository.findAll({
+    async getAnchoredToSimulationPass(simulationPassId, query) {
+        const baseClause = {
             include: [
                 {
                     model: SimulationPass,
@@ -75,12 +72,9 @@ class DataPassService {
                     },
                 },
             ],
+        };
 
-            where: {
-                ...filterToSequelizeWhereClause(filter),
-            },
-            ...page,
-        });
+        const runs = await DataPassRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequest(query));
         return runs.map((dataPass) => dataPassAdapter.toEntity(dataPass));
     }
 }
