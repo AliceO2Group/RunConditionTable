@@ -14,6 +14,7 @@
 import { Observable, RemoteData } from '/js/src/index.js';
 import { PaginationModel } from '../../components/table/pagination/PaginationModel.js';
 import { getRemoteDataSlice } from '../../utils/fetch/getRemoteDataSlice.js';
+import { RCT } from '../../config.js';
 
 /**
  * Model representing handlers for periods page
@@ -33,12 +34,11 @@ export default class PeriodsModel extends Observable {
         this._pagination = new PaginationModel(model.userPreferences);
         this._pagination.observe(() => this.fetchAllPeriods());
 
-        this._visibleFields = null;
+        this._visibleFields = Object.keys(RCT.fieldNames.periods);
 
         /*
-         * Content
-         * this._currentPagePeriods = RemoteData.notAsked();
-         * this._allPeriods = RemoteData.notAsked();
+         *This._currentPagePeriods = RemoteData.notAsked();
+         *this._allPeriods = RemoteData.notAsked();
          */
 
         this._periods = RemoteData.NotAsked();
@@ -51,7 +51,7 @@ export default class PeriodsModel extends Observable {
      */
     reset() {
         this._periods = RemoteData.NotAsked();
-        this._visibleFields = null;
+        this._visibleFields = Object.keys(RCT.fieldNames.periods);
         this._pagination.reset();
     }
 
@@ -112,5 +112,14 @@ export default class PeriodsModel extends Observable {
      */
     get periods() {
         return this._periods;
+    }
+
+    /**
+     * Retro-compatibility access to paginated runs, returning all the runs contained in the current page if it applies
+     *
+     * @return {RemoteData} the runs in the current page
+     */
+    get visibleFields() {
+        return this._visibleFields;
     }
 }

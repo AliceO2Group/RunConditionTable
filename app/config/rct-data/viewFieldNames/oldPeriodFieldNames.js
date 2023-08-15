@@ -13,23 +13,23 @@
  */
 const { filterInputTypes } = require('../filterTypes.js');
 
-const periodFieldNames = {
+const oldPeriodFieldNames = {
     name: {
         fieldName: 'Name',
         filterInput: filterInputTypes.text,
     },
-    beamType: {
+    year: {
+        fieldName: 'Year',
+        filterInput: filterInputTypes.number,
+    },
+    beam: {
         fieldName: 'Beam',
         filterInput: filterInputTypes.text,
     },
-    avgEnergy: {
+    energy: {
         fieldName: 'Mean energy [GeV]',
-        filterInput: filterInputTypes.number,
-    },
-    distinctEnergies: {
-        fieldName: 'Energies [GeV]',
         filterInput: filterInputTypes.number,
     },
 };
 
-module.exports = periodFieldNames;
+module.exports = oldPeriodFieldNames;
