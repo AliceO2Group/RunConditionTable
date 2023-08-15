@@ -12,17 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
-import periodsContent from './periodsContent.js';
-import { waiting, unknown, failureWithMessage } from '../../../components/messagePanel/messages.js';
+export default function newItemsCounter(paginationModel) {
+    const currentSite = paginationModel.currentPage;
 
-export default function periodsPanel(model) {
-    const { currentPagePeriods } = model.periods;
-    const { dataAccess } = model;
+    const firstRowIdx = (currentSite - 1) * paginationModel.itemsPerPage + 1;
+    const lastRowIdx = currentSite * paginationModel.itemsPerPage > paginationModel.itemsCount
+        ? paginationModel.itemsCount
+        : currentSite * paginationModel.itemsPerPage;
 
-    return currentPagePeriods.match({
-        NotAsked: () => unknown(dataAccess),
-        Loading: () => waiting(),
-        Success: () => periodsContent(model.periods, currentPagePeriods.payload, model),
-        Failure: (errors) => failureWithMessage(model, errors),
-    });
+    return `${firstRowIdx}-${lastRowIdx} of ${paginationModel.itemsCount}`;
 }
