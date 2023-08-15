@@ -12,7 +12,6 @@
  */
 import { Observable } from '/js/src/index.js';
 
-const DEFAULT_ITEMS_PER_PAGE = 10;
 const DEFAULT_CURRENT_PAGE = 1;
 const DEFAULT_ITEMS_COUNT = 0;
 const ENABLE_INFINITE_MODE_BY_DEFAULT = false;
@@ -25,19 +24,16 @@ const INFINITE_SCROLL_CHUNK_SIZE = 19;
 export class PaginationModel extends Observable {
     /**
      * Constructor
+     * @param {UserPreferences} userPreferences user preferences
      */
-    constructor() {
+    constructor(userPreferences) {
         super();
 
-        // Fallback value that will be used if items per page is not defined
-        this._defaultItemsPerPage = null;
-        this._itemsPerPage = null;
-        this._customItemsPerPage = '';
+        this._userPreferences = userPreferences;
+        this._itemsPerPage = userPreferences.rowsOnSite;
         this._currentPage = DEFAULT_CURRENT_PAGE;
         this._itemsCount = DEFAULT_ITEMS_COUNT;
         this._isInfiniteScrollEnabled = ENABLE_INFINITE_MODE_BY_DEFAULT;
-
-        this._itemsPerPageSelector$ = new Observable();
     }
 
     /**
@@ -46,25 +42,10 @@ export class PaginationModel extends Observable {
      * @return {void}
      */
     reset() {
-        this._itemsPerPage = null;
-        this._defaultItemsPerPage = null;
-        this._customItemsPerPage = '';
+        this._itemsPerPage = this._userPreferences.rowsOnSite;
         this._currentPage = DEFAULT_CURRENT_PAGE;
+        this._itemsCount = DEFAULT_ITEMS_COUNT;
         this._isInfiniteScrollEnabled = ENABLE_INFINITE_MODE_BY_DEFAULT;
-    }
-
-    /**
-     * Define the default items per page to use if there is not one already defined
-     *
-     * @param {number} defaultItemsPerPage the value to use as default items per page if none has been defined yet
-     *
-     * @return {void}
-     */
-    provideDefaultItemsPerPage(defaultItemsPerPage) {
-        if (defaultItemsPerPage !== this._defaultItemsPerPage) {
-            this._defaultItemsPerPage = defaultItemsPerPage;
-            this.notify();
-        }
     }
 
     /**
@@ -120,7 +101,7 @@ export class PaginationModel extends Observable {
     get itemsPerPage() {
         return this.isInfiniteScrollEnabled
             ? INFINITE_SCROLL_CHUNK_SIZE
-            : this._itemsPerPage || this._defaultItemsPerPage || DEFAULT_ITEMS_PER_PAGE;
+            : this._itemsPerPage;
     }
 
     /**
@@ -146,27 +127,6 @@ export class PaginationModel extends Observable {
      */
     get firstItemOffset() {
         return (this._currentPage - 1) * this.itemsPerPage;
-    }
-
-    /**
-     * Returns the amount of items per page defined by the user as free choice
-     *
-     * @return {string} the custom items per page
-     */
-    get customItemsPerPage() {
-        return this._customItemsPerPage;
-    }
-
-    /**
-     * Defines the amount of items per page defined by the user as free choice
-     *
-     * @param {string} customItemsPerPage the custom items per page
-     *
-     * @return {void}
-     */
-    set customItemsPerPage(customItemsPerPage) {
-        this._customItemsPerPage = customItemsPerPage;
-        this._itemsPerPageSelector$.notify();
     }
 
     /**
@@ -215,42 +175,5 @@ export class PaginationModel extends Observable {
         this._isAmountDropdownVisible = false;
         this._currentPage = DEFAULT_CURRENT_PAGE;
         this.notify();
-    }
-
-    /**
-     * Toggles amount dropdown visibility
-     *
-     * @return {void}
-     */
-    toggleAmountDropdownVisibility() {
-        this.isAmountDropdownVisible = !this.isAmountDropdownVisible;
-    }
-
-    /**
-     * States if the amount dropdown is visible or not
-     *
-     * @return {boolean} true if the dropdown is visible
-     */
-    get isAmountDropdownVisible() {
-        return this._isAmountDropdownVisible;
-    }
-
-    /**
-     * Defines if the amount dropdown is visible
-     *
-     * @param {boolean} visible true to display the dropdown, else false
-     */
-    set isAmountDropdownVisible(visible) {
-        this._isAmountDropdownVisible = visible;
-        this._itemsPerPageSelector$.notify();
-    }
-
-    /**
-     * Observable notified when the item per page selector change (either a custom value is typed, or its visibility change)
-     *
-     * @return {Observable} the selector observable
-     */
-    get itemsPerPageSelector$() {
-        return this._itemsPerPageSelector$;
     }
 }
