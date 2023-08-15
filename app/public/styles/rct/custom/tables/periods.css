@@ -60,15 +60,22 @@
 }
 
 /* Beam types */
-.rct .periods-table .periods-beam-cell,
-.rct .periods-table .periods-beam-header {
+.rct .periods-table .periods-beamType-cell,
+.rct .periods-table .periods-beamType-header {
     min-width: 80px;
     text-align: right;
 }
 
 /* Mean energy */
-.rct .periods-table .periods-energy-cell,
-.rct .periods-table .periods-energy-header {
+.rct .periods-table .periods-avgEnergy-cell,
+.rct .periods-table .periods-avgEnergy-header {
+    min-width: 60px;
+    text-align: right;
+}
+
+/* Run energied */
+.rct .periods-table .periods-distinctEnergies-cell,
+.rct .periods-table .periods-distinctEnergies-header {
     min-width: 60px;
     text-align: right;
 }
