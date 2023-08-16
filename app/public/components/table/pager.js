@@ -13,22 +13,24 @@
  */
 
 import { h, iconChevronBottom } from '/js/src/index.js';
-import itemsCounter from '../../views/userView/data/table/items-counter.js'; //
-import { RCT } from '../../config.js';
+import newItemsCounter from './newItemsCounter.js';
 
-const { site } = RCT.dataReqParams;
+const columnDisplayOptions = {
+    nonEmpty: 'nonEmty',
+    all: 'all',
+};
 
-export default function pager(model, data, pagerOnly = true) {
-    const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
-    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
+export default function pager(periodsModel, model) {
     const columnOptionsSelectId = 'columns-option-select-id';
+    const currentSite = periodsModel.pagination.currentPage;
+    const sitesNumber = periodsModel.pagination.pagesCount;
 
     const pageButton = (targetSite) => h(`button.btn${targetSite === currentSite ? '.btn-primary' : '.btn-secondary'}.no-text-decoration`, {
-        onclick: () => model.fetchedData.changePage(targetSite),
+        onclick: () => periodsModel.pagination.goToPage(targetSite),
     }, targetSite);
 
     const siteChangingController = (targetSite, content) => h('button.btn.btn-secondary.site-changing-controller', {
-        onclick: () => model.fetchedData.changePage(targetSite),
+        onclick: () => periodsModel.pagination.goToPage(targetSite),
     }, content);
 
     const moreSitesLeft = currentSite > 2;
@@ -38,98 +40,84 @@ export default function pager(model, data, pagerOnly = true) {
         const columnsOptionsSelect = document.getElementById(columnOptionsSelectId);
         const selectedValue = columnsOptionsSelect.options[columnsOptionsSelect.selectedIndex].value;
         switch (selectedValue) {
-            case '0':
-                /* Show non empty columns */
-                data.fields.forEach((f) => {
-                    model.fetchedData.changeItemStatus(
-                        f,
-                        data.rows.some((r) => r[f.name]),
-                    );
-                    model.notify();
+            case columnDisplayOptions.nonEmpty:
+                periodsModel.fields.forEach((field) => {
+                    periodsModel.toggleFieldVisibility(field, periodsModel.currentPagePeriods.payload.some((p) => p[field.name]));
                 });
                 break;
-            case '1':
-                /* Show all columns */
-                for (const field of data.fields) {
-                    field.marked = true;
+            case columnDisplayOptions.all:
+                for (const field of periodsModel.fields) {
+                    periodsModel.toggleFieldVisibility(field, true);
                 }
                 model.notify();
-                break;
-            case '2':
-                /* Customize */
                 break;
             default:
                 break;
         }
     }
 
-    return [
-        h('.flex-row.pager-panel.items-center', [
-            pagerOnly
-                ? ''
-                : [
-                    h('.flex-wrap.justify-between.items-center',
-                        h('.flex-wrap.justify-between.items-center.ph3',
-                            h('.italic', itemsCounter(data))),
+    return h('.flex-row.pager-panel.items-center', [
+        h('.flex-wrap.justify-between.items-center',
+            h('.flex-wrap.justify-between.items-center.ph3',
+                h('.italic', newItemsCounter(periodsModel.pagination))),
 
-                        h('button.btn.icon-only-button.m-right-15', {
-                            className: model.sortingRowVisible ? 'btn-primary' : 'btn-secondary',
-                            onclick: () => model.changeSortingRowVisibility(),
-                        }, model.sortingRowVisible ? h('.sorting-20-off-white.abs-center') : h('.sorting-20-primary.abs-center')),
+            h('button.btn.icon-only-button.m-right-15', {
+                className: periodsModel.sortingRowVisible ? 'btn-primary' : 'btn-secondary',
+                onclick: () => periodsModel.toggleSortingRowVisibility(),
+            }, periodsModel.sortingRowVisible ? h('.sorting-20-off-white.abs-center') : h('.sorting-20-primary.abs-center')),
 
-                        h('select.select.column-options-select', {
-                            id: columnOptionsSelectId,
-                            name: columnOptionsSelectId,
-                            onchange: () => handleOptionChange(),
-                        },
-                        [
-                            h('option', { value: 0 }, 'Non empty columns'),
-                            h('option', { value: 1 }, 'All columns'),
-                            h('option', { value: 2 }, 'Customize'),
-                        ], iconChevronBottom())),
-                ],
+            h('select.select.column-options-select', {
+                id: columnOptionsSelectId,
+                name: columnOptionsSelectId,
+                onchange: () => handleOptionChange(),
+            },
+            [
+                h('option', { value: columnDisplayOptions.nonEmpty }, 'Non empty columns'),
+                h('option', { value: columnDisplayOptions.all }, 'All columns'),
+                // ToDo add customizable option => open modal here
+            ], iconChevronBottom())),
 
-            h('.flex.pager-buttons',
-                // Move to the first site
-                currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
-                // Move one site back
-                currentSite > 1 ? siteChangingController(currentSite - 1, h('.back-15-primary')) : ' ',
+        h('.flex.pager-buttons',
+            // Move to the first site
+            currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
+            // Move one site back
+            currentSite > 1 ? siteChangingController(currentSite - 1, h('.back-15-primary')) : ' ',
 
-                // Move to the middle of sites range [first, current]
-                moreSitesLeft
-                    ? siteChangingController(
-                        Math.floor(currentSite / 2),
-                        h('.more-15-primary'),
-                    )
-                    : '',
+            // Move to the middle of sites range [first, current]
+            moreSitesLeft
+                ? siteChangingController(
+                    Math.floor(currentSite / 2),
+                    h('.more-15-primary'),
+                )
+                : '',
 
-                currentSite > 1 ? pageButton(currentSite - 1) : '',
-                pageButton(currentSite),
-                currentSite < sitesNumber ? pageButton(currentSite + 1) : '',
+            currentSite > 1 ? pageButton(currentSite - 1) : '',
+            pageButton(currentSite),
+            currentSite < sitesNumber ? pageButton(currentSite + 1) : '',
 
-                // Move to the middle of sites range [current, last]
-                moreSitesRight
-                    ? siteChangingController(
-                        currentSite + Math.floor((sitesNumber - currentSite) / 2),
-                        h('.more-15-primary'),
-                    )
-                    : '',
+            // Move to the middle of sites range [current, last]
+            moreSitesRight
+                ? siteChangingController(
+                    currentSite + Math.floor((sitesNumber - currentSite) / 2),
+                    h('.more-15-primary'),
+                )
+                : '',
 
-                // Move one site forward
-                currentSite < sitesNumber
-                    ? siteChangingController(
-                        currentSite + 1,
-                        h('.forward-15-primary'),
-                    )
-                    : '',
+            // Move one site forward
+            currentSite < sitesNumber
+                ? siteChangingController(
+                    currentSite + 1,
+                    h('.forward-15-primary'),
+                )
+                : '',
 
-                // Move to the last site
-                currentSite < sitesNumber
-                    ? siteChangingController(
-                        sitesNumber,
-                        h('.double-right-15-primary'),
-                    )
-                    : ''),
-        ]),
-    ];
+            // Move to the last site
+            currentSite < sitesNumber
+                ? siteChangingController(
+                    sitesNumber,
+                    h('.double-right-15-primary'),
+                )
+                : ''),
+
+    ]);
 }

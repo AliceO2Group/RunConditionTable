@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import tableHeader from './header.js';
 import row from './row.js';
 import pagesCellsSpecials from '../pagesCellsSpecials.js';
-import pager from '../../../../components/table/pager.js';
+import obsoletePager from '../../../../components/table/obsoletePager.js';
 
 import filter from './filtering/filter.js';
 import activeFilters from './filtering/activeFilters.js';
@@ -79,14 +79,14 @@ export default function tablePanel(model, runs) {
                 ? visibleFields.length > 0
                     ? h('.p-top-05em',
                         h('.x-scrollable-table.border-sh',
-                            pager(model, data, false),
+                            obsoletePager(model, data, false),
                             h(`table.${dataPointer.page}-table`, {
                                 id: `data-table-${data.url}`,
                             },
                             tableHeader(visibleFields, data, model),
                             model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
                             tableBody(model, visibleFields, data, cellsSpecials, runs)),
-                            data.rows.length > 15 ? pager(model, data) : ''))
+                            data.rows.length > 15 ? obsoletePager(model, data) : ''))
                     : ''
                 : anyFiltersActive(url)
                     ? noMatchingData(model, dataPointer.page)
