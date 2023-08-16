@@ -48,6 +48,7 @@ class PeriodService {
             attributes: [
                 'id',
                 'name',
+                'year',
                 [
                     Sequelize.fn('avg',
                         Sequelize.fn('get_center_of_mass_energy', Sequelize.col('Runs.energy_per_beam'), Sequelize.col('BeamType.id'))),
