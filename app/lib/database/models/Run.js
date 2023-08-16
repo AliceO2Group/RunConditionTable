@@ -91,6 +91,9 @@ module.exports = (sequelize) => {
             type: Sequelize.FLOAT,
             field: 'dipole_current',
         },
+        fillNumber: {
+            type: Sequelize.INTEGER,
+        }
     }, { timestamps: false });
 
     
