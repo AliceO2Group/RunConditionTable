@@ -13,7 +13,7 @@
  */
 
 import { h, iconChevronBottom } from '/js/src/index.js';
-import itemsCounter from '../../views/userView/data/table/items-counter.js'; //
+import obsoleteItemsCounter from '../../views/userView/data/table/obsoleteItemsCounter.js';
 import { RCT } from '../../config.js';
 
 const { site } = RCT.dataReqParams;
@@ -70,7 +70,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
                 : [
                     h('.flex-wrap.justify-between.items-center',
                         h('.flex-wrap.justify-between.items-center.ph3',
-                            h('.italic', itemsCounter(data))),
+                            h('.italic', obsoleteItemsCounter(data))),
 
                         h('button.btn.icon-only-button.m-right-15', {
                             className: model.sortingRowVisible ? 'btn-primary' : 'btn-secondary',
