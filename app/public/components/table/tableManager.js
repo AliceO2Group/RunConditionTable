@@ -21,7 +21,7 @@ const columnDisplayOptions = {
     all: 'all',
 };
 
-export default function tableManager(periodsModel, model) {
+export default function tableManager(dataModel, model) {
     const columnDisplayOptionsSelectId = 'columns-option-select-id';
 
     function handleColumnOptionDisplayChange() {
@@ -29,13 +29,13 @@ export default function tableManager(periodsModel, model) {
         const selectedOption = columnOptionsSelect.options[columnOptionsSelect.selectedIndex].value;
         switch (selectedOption) {
             case columnDisplayOptions.nonEmpty:
-                periodsModel.fields.forEach((field) => {
-                    periodsModel.toggleFieldVisibility(field, periodsModel.currentPagePeriods.payload.some((p) => p[field.name]));
+                dataModel.fields.forEach((field) => {
+                    dataModel.toggleFieldVisibility(field, dataModel.currentPageData.payload.some((p) => p[field.name]));
                 });
                 break;
             case columnDisplayOptions.all:
-                for (const field of periodsModel.fields) {
-                    periodsModel.toggleFieldVisibility(field, true);
+                for (const field of dataModel.fields) {
+                    dataModel.toggleFieldVisibility(field, true);
                 }
                 model.notify();
                 break;
@@ -47,12 +47,12 @@ export default function tableManager(periodsModel, model) {
     return h('.flex-row.pager-panel.items-center', [
         h('.flex-wrap.justify-between.items-center',
             h('.flex-wrap.justify-between.items-center.ph3',
-                h('.italic', itemsCounter(periodsModel.pagination))),
+                h('.italic', itemsCounter(dataModel.pagination))),
 
             h('button.btn.icon-only-button.m-right-15', {
-                className: periodsModel.sortingRowVisible ? 'btn-primary' : 'btn-secondary',
-                onclick: () => periodsModel.toggleSortingRowVisibility(),
-            }, periodsModel.sortingRowVisible ? h('.sorting-20-off-white.abs-center') : h('.sorting-20-primary.abs-center')),
+                className: dataModel.sortingRowVisible ? 'btn-primary' : 'btn-secondary',
+                onclick: () => dataModel.toggleSortingRowVisibility(),
+            }, dataModel.sortingRowVisible ? h('.sorting-20-off-white.abs-center') : h('.sorting-20-primary.abs-center')),
 
             h('select.select.column-display-options-select', {
                 id: columnDisplayOptionsSelectId,
@@ -66,10 +66,10 @@ export default function tableManager(periodsModel, model) {
             ], iconChevronBottom())),
 
         pageSelector(
-            periodsModel.pagination.currentPage,
-            periodsModel.pagination.pagesCount,
+            dataModel.pagination.currentPage,
+            dataModel.pagination.pagesCount,
             (page) => {
-                periodsModel.pagination.currentPage = page;
+                dataModel.pagination.currentPage = page;
             },
         ),
 

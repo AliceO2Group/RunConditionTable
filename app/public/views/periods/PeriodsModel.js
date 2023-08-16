@@ -111,10 +111,27 @@ export default class PeriodsModel extends Observable {
     }
 
     /**
+     * Fetch all the relevant data from the API
+     *
+     * @return {Promise<void>} void
+     */
+    async fetchCurrentPageData() {
+        await this.fetchCurrentPagePeriods();
+    }
+
+    /**
      * Get current page periods
      * @return {RemoteData} periods in the current page
      */
     get currentPagePeriods() {
+        return this._currentPagePeriods;
+    }
+
+    /**
+     * Get current page data
+     * @return {RemoteData} periods in the current page
+     */
+    get currentPageData() {
         return this._currentPagePeriods;
     }
 

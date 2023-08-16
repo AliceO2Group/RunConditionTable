@@ -39,7 +39,8 @@ const applicableDataActions = {
     [dataActions.showFilteringPanel]: true,
 };
 
-export default function periodsContent(periodsModel, periods, model) {
+export default function periodsContent(periodsModel, model) {
+    const periods = periodsModel.currentPagePeriods.payload;
     const { dataAccess } = model;
 
     const url = model.router.getUrl();

@@ -15,14 +15,11 @@
 import periodsContent from './periodsContent.js';
 import { waiting, unknown, failureWithMessage } from '../../../components/messagePanel/messages.js';
 
-export default function periodsPanel(model) {
-    const { currentPagePeriods } = model.periods;
-    const { dataAccess } = model;
-
-    return currentPagePeriods.match({
-        NotAsked: () => unknown(dataAccess),
+export default function periodsPanel(periodsModel, model) {
+    return periodsModel.currentPagePeriods.match({
+        NotAsked: () => unknown(periodsModel, model),
         Loading: () => waiting(),
-        Success: () => periodsContent(model.periods, currentPagePeriods.payload, model),
-        Failure: (errors) => failureWithMessage(model, errors),
+        Success: () => periodsContent(periodsModel, model),
+        Failure: (errors) => failureWithMessage(periodsModel, errors),
     });
 }
