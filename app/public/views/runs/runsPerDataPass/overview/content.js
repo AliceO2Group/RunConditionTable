@@ -71,7 +71,7 @@ export default function content(model, runs, detectors) {
                 ? visibleFields.length > 0
                     ? h('.p-top-05em',
                         h('.x-scrollable-table.border-sh',
-                            obsoletePager(model, data, false), //
+                            obsoletePager(model, data, false),
                             h('table.runs-table', {
                                 id: `data-table-${data.url}`,
                             },
