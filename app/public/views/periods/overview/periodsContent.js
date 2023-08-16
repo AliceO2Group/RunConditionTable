@@ -58,11 +58,11 @@ export default function periodsContent(periodsModel, model) {
             ? periodsModel.visibleFields.length > 0
                 ? h('.p-top-05em',
                     h('.x-scrollable-table.border-sh',
-                        tableManager(periodsModel, model),
+                        tableManager(periodsModel),
                         h(`table.${pageName}-table`, {
                             id: `data-table-${pageName}`,
                         },
-                        periodsTableHeader(pageName, periodsModel.visibleFields, periods, model),
+                        periodsTableHeader(pageName, periodsModel.visibleFields, periods, dataAccess),
                         h('tbody', { id: `table-body-${pageName}` },
                             periods.map((period) => periodsTableRow(
                                 period, periodsModel.visibleFields, dataAccess, periodsModel,
