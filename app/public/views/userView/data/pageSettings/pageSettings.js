@@ -99,8 +99,7 @@ export default function pageSettings(userPreferences, close) {
         h('.flex-wrap.justify-between.items-center',
             h('.text-dark-blue', 'Rows on site'),
             quantityInput(rowsOnSiteInputId,
-                userPreferences.rowsOnSite,
-                userPreferences.setRowsOnSite)),
+                userPreferences.rowsOnSite)),
 
         h('.flex-wrap.justify-between.items-center',
             h('.text-dark-blue', 'UI theme'),

@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 
-export default function quantityInput(id, defaultQuantity, callback) {
+export default function quantityInput(id, defaultQuantity) {
     function handleInput(e) {
         e.preventDefault();
         if (e.key === '1'
@@ -53,7 +53,6 @@ export default function quantityInput(id, defaultQuantity, callback) {
         quantity += change;
         quantity = Math.max(quantity, 1);
         document.getElementById(id).value = quantity;
-        () => callback(quantity);
     };
 
     const increaseButton = h('button.btn.btn-secondary', {
