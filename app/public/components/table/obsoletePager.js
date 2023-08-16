@@ -77,7 +77,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
                             onclick: () => model.changeSortingRowVisibility(),
                         }, model.sortingRowVisible ? h('.sorting-20-off-white.abs-center') : h('.sorting-20-primary.abs-center')),
 
-                        h('select.select.column-options-select', {
+                        h('select.select.column-display-options-select', {
                             id: columnOptionsSelectId,
                             name: columnOptionsSelectId,
                             onchange: () => handleOptionChange(),
