@@ -38,8 +38,8 @@ export default function pager(periodsModel, model) {
 
     function handleColumnOptionDisplayChange() {
         const columnOptionsSelect = document.getElementById(columnDisplayOptionsSelectId);
-        const selectedValue = columnOptionsSelect.options[columnOptionsSelect.selectedIndex].value;
-        switch (selectedValue) {
+        const selectedOption = columnOptionsSelect.options[columnOptionsSelect.selectedIndex].value;
+        switch (selectedOption) {
             case columnDisplayOptions.nonEmpty:
                 periodsModel.fields.forEach((field) => {
                     periodsModel.toggleFieldVisibility(field, periodsModel.currentPagePeriods.payload.some((p) => p[field.name]));
@@ -77,7 +77,7 @@ export default function pager(periodsModel, model) {
                 // ToDo add customizable option => open modal here
             ], iconChevronBottom())),
 
-        h('.flex.pager-buttons',
+        h('.flex.m-right-0-3-rem',
             // Move to the first site
             currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
             // Move one site back
