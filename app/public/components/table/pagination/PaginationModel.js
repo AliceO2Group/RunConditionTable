@@ -14,9 +14,6 @@ import { Observable } from '/js/src/index.js';
 
 const DEFAULT_CURRENT_PAGE = 1;
 const DEFAULT_ITEMS_COUNT = 0;
-const ENABLE_INFINITE_MODE_BY_DEFAULT = false;
-
-const INFINITE_SCROLL_CHUNK_SIZE = 19;
 
 /**
  * Model to handle pagination
@@ -33,7 +30,6 @@ export class PaginationModel extends Observable {
         this._itemsPerPage = userPreferences.rowsOnSite;
         this._currentPage = DEFAULT_CURRENT_PAGE;
         this._itemsCount = DEFAULT_ITEMS_COUNT;
-        this._isInfiniteScrollEnabled = ENABLE_INFINITE_MODE_BY_DEFAULT;
 
         this._userPreferences.observe(() => {
             this._itemsPerPage = this._userPreferences.rowsOnSite;
@@ -50,7 +46,6 @@ export class PaginationModel extends Observable {
         this._itemsPerPage = this._userPreferences.rowsOnSite;
         this._currentPage = DEFAULT_CURRENT_PAGE;
         this._itemsCount = DEFAULT_ITEMS_COUNT;
-        this._isInfiniteScrollEnabled = ENABLE_INFINITE_MODE_BY_DEFAULT;
     }
 
     /**
@@ -116,9 +111,7 @@ export class PaginationModel extends Observable {
      * @return {number} the amount of items per page
      */
     get itemsPerPage() {
-        return this.isInfiniteScrollEnabled
-            ? INFINITE_SCROLL_CHUNK_SIZE
-            : this._itemsPerPage;
+        return this._itemsPerPage;
     }
 
     /**
@@ -127,12 +120,11 @@ export class PaginationModel extends Observable {
      * @param {number} amount the amount of items
      */
     set itemsPerPage(amount) {
-        if (this._isInfiniteScrollEnabled || this._itemsPerPage !== amount) {
+        if (this._itemsPerPage !== amount) {
             this._itemsPerPage = amount;
             this._currentPage = DEFAULT_CURRENT_PAGE;
         }
         this._isAmountDropdownVisible = false;
-        this._isInfiniteScrollEnabled = false;
 
         this.notify();
     }
@@ -171,26 +163,5 @@ export class PaginationModel extends Observable {
      */
     set itemsCount(itemsCount) {
         this._itemsCount = itemsCount;
-    }
-
-    /**
-     * States if the infinite scroll mode is enabled
-     *
-     * @return {boolean} true if infinite scroll mode is enabled
-     */
-    get isInfiniteScrollEnabled() {
-        return this._isInfiniteScrollEnabled;
-    }
-
-    /**
-     * Enable the infinite mode
-     *
-     * @return {void}
-     */
-    enableInfiniteMode() {
-        this._isInfiniteScrollEnabled = true;
-        this._isAmountDropdownVisible = false;
-        this._currentPage = DEFAULT_CURRENT_PAGE;
-        this.notify();
     }
 }
