@@ -79,9 +79,9 @@ export default function pager(periodsModel, model) {
 
         h('.flex.m-right-0-3-rem',
             // Move to the first site
-            currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
+            currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : '',
             // Move one site back
-            currentSite > 1 ? siteChangingController(currentSite - 1, h('.back-15-primary')) : ' ',
+            currentSite > 1 ? siteChangingController(currentSite - 1, h('.back-15-primary')) : '',
 
             // Move to the middle of sites range [first, current]
             moreSitesLeft
