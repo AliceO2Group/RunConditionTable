@@ -44,6 +44,14 @@ export default class UserPreferences extends Observable {
         const url = this.parent.router.getUrl();
         const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.rowsOnSite });
         this.parent.router.go(newUrl);
+    } // Obsolete
+
+    setItemsPerPage(itemsPerPage) {
+        this.rowsOnSite = itemsPerPage;
+        this.notify();
+        const url = this.parent.router.getUrl();
+        const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.rowsOnSite });
+        this.parent.router.go(newUrl);
     }
 
     setUiTheme(uiTheme) {
