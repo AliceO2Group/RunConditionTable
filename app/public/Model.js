@@ -18,7 +18,7 @@ import { RCT } from './config.js';
 import Flags from './views/flags/Flags.js';
 import Detectors from './views/detectors/Detectors.js';
 import Runs from './views/runs/Runs.js';
-import PeriodsModel from './views/periods/Periods.js';
+import PeriodsModel from './views/periods/PeriodsModel.js';
 import UserPreferences from './model/UserPreferences.js';
 const { roles, dataAccess, pageNames } = RCT;
 

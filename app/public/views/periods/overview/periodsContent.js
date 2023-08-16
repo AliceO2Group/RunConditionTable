@@ -21,7 +21,7 @@ import activeFilters from '../../userView/data/table/filtering/activeFilters.js'
 import { noDataFound, noMatchingData } from '../../../components/messagePanel/messages.js';
 import periodsTableHeader from '../table/periodsTableHeader.js';
 import periodsTableRow from '../table/periodsTableRow.js';
-import pager from '../../../components/table/pager.js';
+import tableManager from '../../../components/table/tableManager.js';
 const pageName = RCT.pageNames.periods;
 
 /**
@@ -57,7 +57,7 @@ export default function periodsContent(periodsModel, periods, model) {
             ? periodsModel.visibleFields.length > 0
                 ? h('.p-top-05em',
                     h('.x-scrollable-table.border-sh',
-                        pager(periodsModel, model),
+                        tableManager(periodsModel, model),
                         h(`table.${pageName}-table`, {
                             id: `data-table-${pageName}`,
                         },
