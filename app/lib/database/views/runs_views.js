@@ -25,11 +25,7 @@ const queryForRunsFields = `
         r.time_trg_start, 
         r.time_trg_end,
         get_center_of_mass_energy(r.energy_per_beam, p.beam_type_id) as center_of_mass_energy, 
-        r.ir, 
-        r.filling_scheme, 
-        r.triggers_conf,
         r.fill_number,
-        r.mu, 
         r.l3_current,
         r.dipole_current
 `;
