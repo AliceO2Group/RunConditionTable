@@ -24,7 +24,7 @@ const {
     },
 } = require('../../database/DatabaseManager');
 const { runAdapter } = require('../../database/adapters');
-const { filterToSequelizeWhereClause } = require('../../server/utilities');
+const { QueryBuilder } = require('../../database/utilities');
 
 class RunService {
     /**
@@ -32,11 +32,8 @@ class RunService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getAll({ filter, page }) {
-        const runs = await RunRepository.findAllWithDetectors({
-            where: filterToSequelizeWhereClause(filter),
-            ...page,
-        });
+    async getAll(query) {
+        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder().addFromHttpRequestQuery(query));
         return runs.map((run) => runAdapter.toEntity(run));
     }
 
@@ -46,14 +43,13 @@ class RunService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getRunsPerPeriod(periodId, { filter, page }) {
-        const runs = await RunRepository.findAllWithDetectors({
+    async getRunsPerPeriod(periodId, query) {
+        const baseClause = {
             where: {
                 period_id: periodId,
-                ...filterToSequelizeWhereClause(filter),
             },
-            ...page,
-        });
+        };
+        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return runs.map((run) => runAdapter.toEntity(run));
     }
 
@@ -63,8 +59,8 @@ class RunService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getRunsPerDataPass(dataPassId, { filter, page }) {
-        const runs = await RunRepository.findAllWithDetectors({
+    async getRunsPerDataPass(dataPassId, query) {
+        const baseClause = {
             include: [
                 {
                     model: DataPass,
@@ -77,11 +73,8 @@ class RunService {
                     },
                 },
             ],
-            where: {
-                ...filterToSequelizeWhereClause(filter),
-            },
-            ...page,
-        });
+        };
+        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return runs.map((run) => runAdapter.toEntity(run));
     }
 
@@ -91,8 +84,8 @@ class RunService {
      * @param {Object} query - Filtering query definiton from http request,... #TODO
      * @returns {Promise<Run[]>} Promise object represents the result of this use case.
      */
-    async getRunsPerSimulationPass(simulationPassId, { filter, page }) {
-        const runs = await RunRepository.findAllWithDetectors({
+    async getRunsPerSimulationPass(simulationPassId, query) {
+        const baseClause = {
             include: [
                 {
                     model: SimulationPass,
@@ -105,11 +98,8 @@ class RunService {
                     },
                 },
             ],
-            where: {
-                ...filterToSequelizeWhereClause(filter),
-            },
-            ...page,
-        });
+        };
+        const runs = await RunRepository.findAllWithDetectors(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return runs.map((run) => runAdapter.toEntity(run));
     }
 

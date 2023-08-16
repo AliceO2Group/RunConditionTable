@@ -17,6 +17,7 @@ const objUtils = require('./obj-utils.js');
 const ResProvider = require('./ResProvider.js');
 const sqlUtils = require('./sql-utils.js');
 const errors = require('./errors.js');
+const deepmerge = require('./deepmerge.js');
 
 module.exports = {
     ResProvider,
@@ -25,4 +26,5 @@ module.exports = {
     ...httpUtils,
     ...objUtils,
     ...errors,
+    ...deepmerge,
 };
