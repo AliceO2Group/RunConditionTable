@@ -33,7 +33,8 @@ export default class PeriodsModel extends Observable {
 
         this._pagination = new PaginationModel(model.userPreferences);
         this._pagination.observe(() => {
-            this.fetchAllPeriods(); this.notify();
+            this.fetchCurrentPagePeriods();
+            this.notify();
         });
 
         this._fields = Object.keys(RCT.fieldNames.periods).map((field) => ({ name: field, visible: true }));
@@ -67,6 +68,37 @@ export default class PeriodsModel extends Observable {
         /**
          * @type {Period[]}
          */
+        this._allPeriods = RemoteData.loading();
+        this.notify();
+
+        this._allPeriods = RemoteData.notAsked();
+
+        const endpoint = '/api/periods';
+        try {
+            const { items, totalCount } = await getRemoteDataSlice(endpoint);
+            this._allPeriods = RemoteData.success([...items]);
+            this._pagination.itemsCount = totalCount;
+        } catch (errors) {
+            this._allPeriods = RemoteData.failure(errors);
+        }
+
+        this.notify();
+    }
+
+    /**
+     * Fetch all the relevant periods from the API
+     *
+     * @return {Promise<void>} void
+     */
+    async fetchCurrentPagePeriods() {
+        /**
+         * @type {Period[]}
+         */
+
+        if (this._allPeriods.kind === 'NotAsked') {
+            await this.fetchAllPeriods();
+        }
+
         this._currentPagePeriods = RemoteData.loading();
         this.notify();
 
@@ -81,7 +113,7 @@ export default class PeriodsModel extends Observable {
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._currentPagePeriods = RemoteData.success([...items]);
-            this._pagination.itemsCount = totalCount;
+            this._pagination.currentPageItemsCount = totalCount;
         } catch (errors) {
             this._currentPagePeriods = RemoteData.failure(errors);
         }

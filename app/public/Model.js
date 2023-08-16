@@ -68,7 +68,7 @@ export default class Model extends Observable {
     async handleLocationChange() {
         switch (this.router.params.page) {
             case pageNames.periods:
-                await this.periods.fetchAllPeriods();
+                await this.periods.fetchCurrentPagePeriods();
                 break;
             default:
                 break;
