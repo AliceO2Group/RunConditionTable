@@ -32,8 +32,9 @@ export default class PeriodsModel extends Observable {
         this.model = model;
 
         this._pagination = new PaginationModel(model.userPreferences);
-        this._pagination.observe(() => this.fetchAllPeriods());
-        this._pagination.itemsPerPageSelector$.observe(() => this.notify());
+        this._pagination.observe(() => {
+            this.fetchAllPeriods(); this.notify();
+        });
 
         this._fields = Object.keys(RCT.fieldNames.periods).map((field) => ({ name: field, visible: true }));
 

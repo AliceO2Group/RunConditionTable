@@ -33,7 +33,7 @@ export default function pageSettings(userPreferences, close) {
             alert('incorrect number of rows on page: must be in range of [1, 200]');
             input.value = userPreferences.rowsOnSite;
         } else {
-            userPreferences.setRowsOnSite(inputValue);
+            userPreferences.setItemsPerPage(inputValue);
         }
         close();
     };
