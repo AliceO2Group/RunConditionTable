@@ -13,7 +13,7 @@
  */
 
 import { h, iconChevronBottom } from '/js/src/index.js';
-import newItemsCounter from './newItemsCounter.js';
+import itemsCounter from './itemsCounter.js';
 
 const columnDisplayOptions = {
     nonEmpty: 'nonEmty',
@@ -59,7 +59,7 @@ export default function pager(periodsModel, model) {
     return h('.flex-row.pager-panel.items-center', [
         h('.flex-wrap.justify-between.items-center',
             h('.flex-wrap.justify-between.items-center.ph3',
-                h('.italic', newItemsCounter(periodsModel.pagination))),
+                h('.italic', itemsCounter(periodsModel.pagination))),
 
             h('button.btn.icon-only-button.m-right-15', {
                 className: periodsModel.sortingRowVisible ? 'btn-primary' : 'btn-secondary',

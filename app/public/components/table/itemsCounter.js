@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-export default function newItemsCounter(paginationModel) {
+export default function itemsCounter(paginationModel) {
     const currentSite = paginationModel.currentPage;
 
     const firstRowIdx = (currentSite - 1) * paginationModel.itemsPerPage + 1;
