@@ -13,12 +13,12 @@
  */
 
 export default function itemsCounter(paginationModel) {
-    const currentSite = paginationModel.currentPage;
+    const { currentPage, itemsPerPage, itemsCount } = paginationModel;
 
-    const firstRowIdx = (currentSite - 1) * paginationModel.itemsPerPage + 1;
-    const lastRowIdx = currentSite * paginationModel.itemsPerPage > paginationModel.itemsCount
-        ? paginationModel.itemsCount
-        : currentSite * paginationModel.itemsPerPage;
+    const firstItemIndex = (currentPage - 1) * itemsPerPage + 1;
+    const lastItemIndex = currentPage * itemsPerPage > itemsCount
+        ? itemsCount
+        : currentPage * itemsPerPage;
 
-    return `${firstRowIdx}-${lastRowIdx} of ${paginationModel.itemsCount}`;
+    return `${firstItemIndex}-${lastItemIndex} of ${itemsCount}`;
 }
