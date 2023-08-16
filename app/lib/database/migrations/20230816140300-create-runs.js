@@ -43,6 +43,10 @@ module.exports = {
                 fill_number: {
                     type: Sequelize.INTEGER,
                 },
+                run_type: {
+                    type: Sequelize.STRING,
+                    allowNull: false,
+                },
                 period_id: {
                     type: Sequelize.INTEGER,
                     allowNull: true,

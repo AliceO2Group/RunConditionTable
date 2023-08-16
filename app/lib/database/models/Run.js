@@ -93,6 +93,10 @@ module.exports = (sequelize) => {
         },
         fillNumber: {
             type: Sequelize.INTEGER,
+        },
+        runType: {
+            type: Sequelize.STRING,
+            allowNull: false
         }
     }, { timestamps: false });
 
