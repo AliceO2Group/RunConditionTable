@@ -159,7 +159,6 @@ drop() {
 create_main() {
   psql -c "set password_encryption='scram-sha-256'; CREATE USER \"$RCT_DB_USERNAME\" WITH ENCRYPTED PASSWORD '$RCT_DB_PASSWORD';"
   psql -c "CREATE DATABASE \"$RCT_DB_NAME\""
-  psql -U $RCT_DB_USERNAME -d $RCT_DB_NAME -a -f $CREATE_TABLES_SQL
 }
 
 create_other() {

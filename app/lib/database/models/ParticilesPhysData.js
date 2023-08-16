@@ -35,7 +35,8 @@ module.exports = (sequelize) => {
             unique: true,
         },
 
-    }, { timestamps: false, tableName: 'particles_phys_data' });
+    }, { timestamps: false, tableName: 'particle_phys_data' });
+
 
     ParticlesPhysData.associate = () => {};
 
