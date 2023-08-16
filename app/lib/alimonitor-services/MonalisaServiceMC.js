@@ -46,10 +46,11 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             EndpointsFormatter.mcRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
-            (r) => {
-                const { anchor_productions, anchor_passes } = r;
-                return r.period.year >= config.dataFromYearIncluding && anchor_productions.length != 0 && anchor_passes.length != 0;
-                // MC not anchored to any production so drop out
+            (simulation_pass) => {
+                const { anchor_productions, anchor_passes } = simulation_pass;
+                return simulation_pass.period.year >= config.dataFromYearIncluding
+                    && anchor_productions.length != 0 && anchor_passes.length != 0;
+                // MC not anchored to any production or pass so drop out
             },
             this.dbAction.bind(this),
         );
@@ -88,11 +89,6 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
     }
 
     async dbAction(dbClient, d) {
-        const { anchor_productions, anchor_passes } = d;
-        if (anchor_productions.length == 0 || anchor_passes.length == 0) {
-            // MC not anchored to any production so drop out
-            return;
-        }
         d = Utils.adjusetObjValuesToSql(d);
         const { period } = d;
         const period_insert =

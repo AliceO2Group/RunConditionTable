@@ -17,10 +17,7 @@ const anchored_per_mc_view = (query) => `
             --dp.id
             dp.name,
             dp.description,
-            dp.jira,
-            dp.ml,
             dp.number_of_events,
-            dp.software_version,
             dp.size
         FROM data_passes AS dp
         INNER JOIN anchored_passes as aps

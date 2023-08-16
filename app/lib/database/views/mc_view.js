@@ -18,7 +18,6 @@ const mc_view = (query) => `
             sp.name,
             sp.description,
             sp.jira,
-            sp.ml,
             sp.pwg,
             sp.number_of_events
         FROM simulation_passes AS sp 
