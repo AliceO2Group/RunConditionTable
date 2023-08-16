@@ -39,17 +39,6 @@ export class PaginationModel extends Observable {
     }
 
     /**
-     * Reset the pagination to its default values
-     *
-     * @return {void}
-     */
-    reset() {
-        this._itemsPerPage = this._userPreferences.rowsOnSite;
-        this._currentPage = DEFAULT_CURRENT_PAGE;
-        this._itemsCount = DEFAULT_ITEMS_COUNT;
-    }
-
-    /**
      * Defines the current page without notifying observers
      *
      * @param {number} page the current page
@@ -61,29 +50,6 @@ export class PaginationModel extends Observable {
             return true;
         }
         return false;
-    }
-
-    /**
-     * If the current page is not the last one, navigate to the next one
-     *
-     * @return {void}
-     */
-    goToNextPage() {
-        if (this._currentPage < this.pagesCount) {
-            this.currentPage = this.currentPage + 1;
-        }
-    }
-
-    /**
-     * Navigate to the target page
-     *
-     * @param {number} page target page
-     * @return {void}
-     */
-    goToPage(page) {
-        if (page < this.pagesCount) {
-            this.currentPage = page;
-        }
     }
 
     /**
@@ -125,7 +91,6 @@ export class PaginationModel extends Observable {
             this._itemsPerPage = amount;
             this._currentPage = DEFAULT_CURRENT_PAGE;
         }
-        this._isAmountDropdownVisible = false;
 
         this.notify();
     }
