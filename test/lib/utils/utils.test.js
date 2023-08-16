@@ -85,16 +85,6 @@ module.exports = () => {
             });
         });
 
-        describe('Delay', () => {
-            it('Waits requested number of miliseconds', async () => {
-                const delayTime = 100;
-                const start = Date.now();
-                await Utils.delay(delayTime);
-                const end = Date.now();
-                assert(start + delayTime <= end);
-            });
-        });
-
         describe('Array to chunks', () => {
             it('Should split an array into chunks', async () => {
                 const array = [1, 2, 3, 4, 5];

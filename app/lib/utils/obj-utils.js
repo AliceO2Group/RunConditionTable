@@ -67,10 +67,6 @@ function switchCase(caseName, cases, opts) {
             opts.default ? opts.default : (() => { throw new Error('not last found option, no case, no default case'); })();
 }
 
-function delay(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
-
 function replaceAll(s, pattern, replace) {
     const p = s.split(pattern);
     return p.join(replace);
@@ -122,7 +118,6 @@ module.exports = {
     reversePrimitiveObject,
     filterObject,
     switchCase,
-    delay,
     replaceAll,
     arrayToChunks,
     applyOptsToObj,
