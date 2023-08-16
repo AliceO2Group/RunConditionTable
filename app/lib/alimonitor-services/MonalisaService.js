@@ -79,10 +79,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
             ${d.name}, 
             ${d.period.name},
             ${d.description}, 
-            ${null},
-            ${null},
             ${d.number_of_events},
-            ${null},
             ${d.size},
             ${d.last_run}
         );`;
