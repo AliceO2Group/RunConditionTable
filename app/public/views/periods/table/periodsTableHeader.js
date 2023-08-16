@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../userView/data/headersSpecials.js';
 
 export default function periodsTableHeader(pageName, visibleFields, data, dataAccessModel) {
-    const columnsHeadersArray = (visibleFields, model) => {
+    const headerColumns = (visibleFields, model) => {
         const dataHeaders = visibleFields.map((field) =>
             h(`th.${pageName}-${field.name}-header`, {
                 scope: 'col',
@@ -28,7 +28,7 @@ export default function periodsTableHeader(pageName, visibleFields, data, dataAc
         return dataHeaders;
     };
 
-    const rowsOptions = (model, data) =>
+    const headerCheckbox = (model, data) =>
         h('th', { scope: 'col' },
             h('.relative',
                 h(`input.checkbox.abs-center${data.every((r) => r.selected) ? '.ticked' : ''}`, {
@@ -43,5 +43,7 @@ export default function periodsTableHeader(pageName, visibleFields, data, dataAc
                 })));
 
     return h('thead.header',
-        h('tr', [rowsOptions(dataAccessModel, data)].concat(columnsHeadersArray(visibleFields, dataAccessModel))));
+        h('tr',
+            headerCheckbox(dataAccessModel, data),
+            headerColumns(visibleFields, dataAccessModel)));
 }
