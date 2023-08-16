@@ -21,7 +21,7 @@ const columnDisplayOptions = {
 };
 
 export default function pager(periodsModel, model) {
-    const columnOptionsSelectId = 'columns-option-select-id';
+    const columnDisplayOptionsSelectId = 'columns-option-select-id';
     const currentSite = periodsModel.pagination.currentPage;
     const sitesNumber = periodsModel.pagination.pagesCount;
 
@@ -36,9 +36,9 @@ export default function pager(periodsModel, model) {
     const moreSitesLeft = currentSite > 2;
     const moreSitesRight = currentSite < sitesNumber - 1;
 
-    function handleOptionChange() {
-        const columnsOptionsSelect = document.getElementById(columnOptionsSelectId);
-        const selectedValue = columnsOptionsSelect.options[columnsOptionsSelect.selectedIndex].value;
+    function handleColumnOptionDisplayChange() {
+        const columnOptionsSelect = document.getElementById(columnDisplayOptionsSelectId);
+        const selectedValue = columnOptionsSelect.options[columnOptionsSelect.selectedIndex].value;
         switch (selectedValue) {
             case columnDisplayOptions.nonEmpty:
                 periodsModel.fields.forEach((field) => {
@@ -67,9 +67,9 @@ export default function pager(periodsModel, model) {
             }, periodsModel.sortingRowVisible ? h('.sorting-20-off-white.abs-center') : h('.sorting-20-primary.abs-center')),
 
             h('select.select.column-options-select', {
-                id: columnOptionsSelectId,
-                name: columnOptionsSelectId,
-                onchange: () => handleOptionChange(),
+                id: columnDisplayOptionsSelectId,
+                name: columnDisplayOptionsSelectId,
+                onchange: () => handleColumnOptionDisplayChange(),
             },
             [
                 h('option', { value: columnDisplayOptions.nonEmpty }, 'Non empty columns'),
