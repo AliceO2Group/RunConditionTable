@@ -15,7 +15,10 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { getReadableFileSizeString } from '../../../utils/utils.js';
 import linkChip from '../../../components/chips/linkChip.js';
+import { getClosestDefinedEnergy } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 const { dataReqParams: DRP, pageNames: PN, outerServices } = RCT;
+const acceptableEnergyValues = RCT.mapping.energy.values;
+const acceptableEnergyMargin = RCT.mapping.energy.acceptableMargin;
 
 /**
  * Configuration what buttons at which cells and which pages are supposed
@@ -67,9 +70,12 @@ pagesCellsSpecials[PN.periods] = {
             )),
     ],
 
-    energy: (model, item) =>
-        `${Number(item.energy).toFixed(2)}`
-    ,
+    avgEnergy: (model, item) =>
+        `${Number(item.avgEnergy).toFixed(2)}`,
+    distinctEnergies: (model, item) =>
+        h('', item.distinctEnergies.map((e) => getClosestDefinedEnergy(e, acceptableEnergyValues, acceptableEnergyMargin))
+            .filter((value, index, array) => array.indexOf(value) === index)
+            .reduce((toDisplay, currentValue) => `${toDisplay ? `${toDisplay}, ` : ''}${currentValue}`, '')),
 };
 
 pagesCellsSpecials[PN.dataPasses] = {
