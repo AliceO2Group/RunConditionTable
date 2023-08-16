@@ -67,18 +67,8 @@ export default class PeriodsModel extends Observable {
         /**
          * @type {Period[]}
          */
-
-        /*
-         * When fetching data, to avoid concurrency issues, save a flag stating if the fetched data should be concatenated with the current one
-         * (infinite scroll) or if they should replace them
-         */
-
-        const shouldKeepExisting = this._pagination.currentPage > 1 && this._pagination.isInfiniteScrollEnabled;
-
-        if (!this._pagination.isInfiniteScrollEnabled) {
-            this._currentPagePeriods = RemoteData.loading();
-            this.notify();
-        }
+        this._currentPagePeriods = RemoteData.loading();
+        this.notify();
 
         const params = {
             'page[offset]': this._pagination.firstItemOffset,
@@ -90,8 +80,7 @@ export default class PeriodsModel extends Observable {
         const endpoint = `/api/periods?${new URLSearchParams(params).toString()}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
-            const concatenateWith = shouldKeepExisting ? this._periods.payload || [] : [];
-            this._currentPagePeriods = RemoteData.success([...concatenateWith, ...items]);
+            this._currentPagePeriods = RemoteData.success([...items]);
             this._pagination.itemsCount = totalCount;
         } catch (errors) {
             this._currentPagePeriods = RemoteData.failure(errors);
