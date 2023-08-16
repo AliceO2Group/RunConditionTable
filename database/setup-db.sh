@@ -25,7 +25,6 @@ Usage:
       1. --main-sql-modify-daemon - run watchdog on db definition in $SCRIPTS_DIR/exported/create-tables.sql, if any change db is recreated
       2. --other-sql-modify-daemon - as upper but on files in $SCRIPTS_DIR/stored-sql-functionalities/
       3. --no-modify-daemon - block modification watcher irregardless to previous flags or env vars
-      4. --export - if specifid before deploying DB update sql db design using pgmodeler design.dbm file
       5. --only-export - do only export
       7. --drop - if specified drop DB before creation
 
