@@ -5,10 +5,6 @@ ORG_ARGS="$*"
 SCRIPTS_DIR=$(dirname $0)
 MAIN_SCRIPT_NAME=$(basename $0)
 
-DESIGN_PNG="$SCRIPTS_DIR/exported/design.png"
-DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
-
-
 STORED_SQL_FUNCTIONALITIES_DIR="$SCRIPTS_DIR/stored-sql-functionalities/"
 
 usage () {
@@ -46,10 +42,6 @@ while [[ $# -gt 0 ]]; do
           ENV_FILE="$2"
           shift 2;
         ;;
-        --main-sql-modify-daemon)
-          MAIN_SQL_MODIFY_DAEMON='true';
-          shift 1;
-        ;;
         --other-sql-modify-daemon)
           OTHER_SQL_MODIFY_DAEMON='true';
           shift 1;
@@ -69,10 +61,6 @@ while [[ $# -gt 0 ]]; do
         ;;
         --drop)
           DROP='true';
-          shift 1;
-        ;;
-        --rerun)
-          RERUN='true';
           shift 1;
         ;;
         -h|--host)
@@ -121,10 +109,9 @@ if [ ! $(whoami) = 'postgres' ]; then
   echo "trying to execute script using sudo..., press any key to continue or crt+C to terminate"
   read
   sudo -H -u postgres LOCAL_USER=$(whoami) \
-    bash -c "$0 $ORG_ARGS --rerun"
+    bash -c "$0 $ORG_ARGS"
   exit 0;
 fi
-
 
 
 # disconnect everyone from database in order to recreate it //if dev locally it might be helpful
@@ -164,21 +151,6 @@ grant
 psql -d $RCT_DB_NAME -c "call insert_period('null', null, null);";
 
 if [ "$NO_MODIFY_DAEMON" != 'true' ]; then
-  if [ "$MAIN_SQL_MODIFY_DAEMON" = 'true' ]; then
-    inotifywait --monitor --recursive --event modify "$SCRIPTS_DIR/exported/" |
-      while read file_path file_event file_name; do 
-        echo ${file_path}${file_name} event: ${file_event}; 
-        SWP_DUMP="/postgres/run/database/cache/dumps/.dump.swp"
-        pg_dump --data-only --format=tar -d $RCT_DB_NAME --file="$SWP_DUMP";
-        psql -c "DROP SCHEME public CASCADE;";
-        psql -c "CREATE SCHEME public;";
-        create_main
-        create_other
-        grant
-        pg_restore --data-only -d $RCT_DB_NAME "$SWP_DUMP";
-        echo ${file_path}${file_name} event: ${file_event}; 
-      done &
-  fi
   if [ "$OTHER_SQL_MODIFY_DAEMON" = 'true' ]; then
     inotifywait --monitor --recursive --event modify $STORED_SQL_FUNCTIONALITIES_DIR |
       while read file_path file_event file_name; do 
