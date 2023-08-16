@@ -29,6 +29,7 @@ export class PaginationModel extends Observable {
         this._userPreferences = userPreferences;
         this._itemsPerPage = userPreferences.rowsOnSite;
         this._currentPage = DEFAULT_CURRENT_PAGE;
+        this._currentPageItemsCount = DEFAULT_ITEMS_COUNT;
         this._itemsCount = DEFAULT_ITEMS_COUNT;
 
         this._userPreferences.observe(() => {
@@ -163,5 +164,23 @@ export class PaginationModel extends Observable {
      */
     set itemsCount(itemsCount) {
         this._itemsCount = itemsCount;
+    }
+
+    /**
+     * Returns the total amount of items paginated
+     *
+     * @return {number} the amount of items
+     */
+    get currentPageItemsCount() {
+        return this._currentPageItemsCount;
+    }
+
+    /**
+     * Define the total amount of items paginated
+     *
+     * @param {number} itemsCount the amount of items
+     */
+    set currentPageItemsCount(itemsCount) {
+        this._currentPageItemsCount = itemsCount;
     }
 }
