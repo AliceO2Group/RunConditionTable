@@ -49,17 +49,6 @@ export default class PeriodsModel extends Observable {
     }
 
     /**
-     * Reset this model to its default
-     *
-     * @returns {void}
-     */
-    reset() {
-        this._periods = RemoteData.NotAsked();
-        this._fields = Object.keys(RCT.fieldNames.periods).map((field) => ({ fieldName: field, marked: true }));
-        this._pagination.reset();
-    }
-
-    /**
      * Fetch all the relevant periods from the API
      *
      * @return {Promise<void>} void
@@ -119,14 +108,6 @@ export default class PeriodsModel extends Observable {
         }
 
         this.notify();
-    }
-
-    /**
-     * Get all the periods
-     * @return {RemoteData} periods
-     */
-    get periods() {
-        return this._periods;
     }
 
     /**
