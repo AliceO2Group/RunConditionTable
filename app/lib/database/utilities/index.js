@@ -11,8 +11,10 @@
  * or submit itself to any jurisdiction.
  */
 
-const PGQueryBuilder = require('./PGQueryBuilder');
+const PGQueryBuilder = require('./PGQueryBuilder.js');
+const QueryBuilder = require('./QueryBuilder.js');
 
 module.exports = {
     PGQueryBuilder,
+    QueryBuilder,
 };
