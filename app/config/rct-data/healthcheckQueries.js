@@ -23,7 +23,7 @@ const checkStaticData = {
     },
     particle: {
         description: 'Particles dict insert',
-        query: Object.entries(physicalParticlesData).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "A", "Z")
+        query: Object.entries(physicalParticlesData).map(([name, d]) => `INSERT INTO particle_phys_data("id", "name", "full_name", "a", "z")
             VALUES (DEFAULT, '${name}', '${d.full_name}', ${d.A}, ${d.Z});`),
     },
     flags: {
