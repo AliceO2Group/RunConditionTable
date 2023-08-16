@@ -55,9 +55,6 @@ export default function obsoletePager(model, data, pagerOnly = true) {
                 }
                 model.notify();
                 break;
-            case '2':
-                /* Customize */
-                break;
             default:
                 break;
         }
@@ -85,7 +82,6 @@ export default function obsoletePager(model, data, pagerOnly = true) {
                         [
                             h('option', { value: 0 }, 'Non empty columns'),
                             h('option', { value: 1 }, 'All columns'),
-                            h('option', { value: 2 }, 'Customize'),
                         ], iconChevronBottom())),
                 ],
 
