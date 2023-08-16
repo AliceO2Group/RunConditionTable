@@ -22,6 +22,10 @@ const periodFieldNames = {
         fieldName: 'Beam',
         filterInput: filterInputTypes.text,
     },
+    year: {
+        fieldName: 'Year',
+        filterInput: filterInputTypes.number,
+    },
     avgEnergy: {
         fieldName: 'Mean energy [GeV]',
         filterInput: filterInputTypes.number,
