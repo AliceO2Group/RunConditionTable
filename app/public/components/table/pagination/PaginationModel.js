@@ -62,7 +62,7 @@ export class PaginationModel extends Observable {
     }
 
     /**
-     * Defines the current page and notify the change to observers
+     * Defines the current page and notifies the observers
      *
      * @param {number} page the current page
      */
@@ -123,7 +123,7 @@ export class PaginationModel extends Observable {
     }
 
     /**
-     * Define the total amount of items paginated
+     * Defines the total amount of items paginated
      *
      * @param {number} itemsCount the amount of items
      */
@@ -141,7 +141,7 @@ export class PaginationModel extends Observable {
     }
 
     /**
-     * Define the total amount of items paginated
+     * Defines the total amount of items paginated
      *
      * @param {number} itemsCount the amount of items
      */
