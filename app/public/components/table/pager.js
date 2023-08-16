@@ -66,7 +66,7 @@ export default function pager(periodsModel, model) {
                 onclick: () => periodsModel.toggleSortingRowVisibility(),
             }, periodsModel.sortingRowVisible ? h('.sorting-20-off-white.abs-center') : h('.sorting-20-primary.abs-center')),
 
-            h('select.select.column-options-select', {
+            h('select.select.column-display-options-select', {
                 id: columnDisplayOptionsSelectId,
                 name: columnDisplayOptionsSelectId,
                 onchange: () => handleColumnOptionDisplayChange(),
