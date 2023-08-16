@@ -21,7 +21,7 @@ const columnDisplayOptions = {
     all: 'all',
 };
 
-export default function tableManager(dataModel, model) {
+export default function tableManager(dataModel) {
     const columnDisplayOptionsSelectId = 'columns-option-select-id';
 
     function handleColumnOptionDisplayChange() {
@@ -36,8 +36,8 @@ export default function tableManager(dataModel, model) {
             case columnDisplayOptions.all:
                 for (const field of dataModel.fields) {
                     dataModel.toggleFieldVisibility(field, true);
+                    dataModel.notify();
                 }
-                model.notify();
                 break;
             default:
                 break;

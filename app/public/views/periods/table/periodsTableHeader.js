@@ -15,7 +15,7 @@
 import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../userView/data/headersSpecials.js';
 
-export default function periodsTableHeader(pageName, visibleFields, data, model) {
+export default function periodsTableHeader(pageName, visibleFields, data, dataAccessModel) {
     const columnsHeadersArray = (visibleFields, model) => {
         const dataHeaders = visibleFields.map((field) =>
             h(`th.${pageName}-${field.name}-header`, {
@@ -43,5 +43,5 @@ export default function periodsTableHeader(pageName, visibleFields, data, model)
                 })));
 
     return h('thead.header',
-        h('tr', [rowsOptions(model.dataAccess, data)].concat(columnsHeadersArray(visibleFields, model.dataAccess))));
+        h('tr', [rowsOptions(dataAccessModel, data)].concat(columnsHeadersArray(visibleFields, dataAccessModel))));
 }
