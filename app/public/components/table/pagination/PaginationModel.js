@@ -34,6 +34,8 @@ export class PaginationModel extends Observable {
         this._currentPage = DEFAULT_CURRENT_PAGE;
         this._itemsCount = DEFAULT_ITEMS_COUNT;
         this._isInfiniteScrollEnabled = ENABLE_INFINITE_MODE_BY_DEFAULT;
+
+        this._itemsPerPageSelector$ = new Observable();
     }
 
     /**
@@ -187,5 +189,14 @@ export class PaginationModel extends Observable {
         this._isAmountDropdownVisible = false;
         this._currentPage = DEFAULT_CURRENT_PAGE;
         this.notify();
+    }
+
+    /**
+     * Observable notified when the item per page selector change (either a custom value is typed, or its visibility change)
+     *
+     * @return {Observable} the selector observable
+     */
+    get itemsPerPageSelector$() {
+        return this._itemsPerPageSelector$;
     }
 }
