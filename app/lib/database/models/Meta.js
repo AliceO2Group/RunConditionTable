@@ -27,7 +27,7 @@ module.exports = (sequelize) => {
             unique: true,
         },
 
-    }, { timestamps: true, tableName: 'meta' });
+    }, { timestamps: true, createdAt: false, tableName: 'meta' });
 
     MetaData.associate = () => {};
 

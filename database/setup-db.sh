@@ -5,7 +5,6 @@ ORG_ARGS="$*"
 SCRIPTS_DIR=$(dirname $0)
 MAIN_SCRIPT_NAME=$(basename $0)
 
-CREATE_TABLES_SQL="$SCRIPTS_DIR/exported/create-tables.sql"
 DESIGN_PNG="$SCRIPTS_DIR/exported/design.png"
 DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
 
@@ -103,25 +102,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-
-
-if [ ! "$RERUN" = 'true' ]; then
-  if [ "$EXPORT" = 'true' ]; then
-    if ! command -v "pgmodeler-cli" &> /dev/null; then
-      echo "Could not find pgmodeler-cli, continuing with existing sql file"
-      sleep 1
-    else 
-      echo 'exporting fresh sql file from design'
-      pgmodeler-cli --input $DESIGN_FILE --export-to-file --output $CREATE_TABLES_SQL \
-          && pgmodeler-cli --input $DESIGN_FILE --export-to-png --output $DESIGN_PNG;
-      PGEXPORT_EXIT_CODE=$?
-    fi
-  fi
-
-  if [ "$ONLY_EXPORT" = 'true' ]; then
-      exit $PGEXPORT_EXIT_CODE;
-  fi
-fi
 
 if [ -n "$ENV_FILE" ]; then
   source "$ENV_FILE"
