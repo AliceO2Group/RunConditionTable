@@ -16,7 +16,7 @@ import { RCT } from '../../../../config.js';
 
 const siteParamName = RCT.dataReqParams.site;
 
-export default function itemsCounter(data) {
+export default function obsoleteItemsCounter(data) {
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
 
     const firstRowIdx = (currentSite - 1) * data.rowsOnSite + 1;
