@@ -6,7 +6,6 @@ create or replace procedure INSERT_mc(
     _anchored_periods varchar[],
     _anchor_passes varchar[],
     _jira text,
-    _ml text,
     _number_of_events  integer,
     _size real)
 LANGUAGE plpgsql
@@ -29,7 +28,6 @@ BEGIN
             name, 
             description, 
             jira, 
-            ml,
             pwg,
             number_of_events,
             size) values (
@@ -37,7 +35,6 @@ BEGIN
                 _name, 
                 _description, 
                 _jira, 
-                _ml, 
                 _pwg,
                 _number_of_events, 
                 _size);

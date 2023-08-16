@@ -108,7 +108,6 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             ${anchord_prod_sql},
             ${anchord_passes_sql},
             ${d.jira},
-            ${null},
             ${d.number_of_events},
             ${d.size}
         ); call insert_mc_details(${d.name}, ${d.runs}::integer[], ${period.name});`;

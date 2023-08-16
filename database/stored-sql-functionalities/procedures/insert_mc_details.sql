@@ -38,7 +38,7 @@ BEGIN
             RAISE EXCEPTION 'nulls %', now();
         END IF;
         IF NOT EXISTS (SELECT * from simulation_passes_runs where run_number = _run_number and simulation_pass_id = prod_id ) then
-            INSERT INTO simulation_passes_runs(run_number, simulation_pass_id, qc) VALUES(_run_number, prod_id, null);
+            INSERT INTO simulation_passes_runs(run_number, simulation_pass_id) VALUES(_run_number, prod_id);
         end if;
     END LOOP;
 END;
