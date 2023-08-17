@@ -55,7 +55,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
             EndpointsFormatter.dataPassesRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
-            (r) => r.period.year >= config.dataFromYearIncluding && r.last_run != this.last_runs[r.name],
+            (r) => r.period.year >= config.dataFromYearIncluding && r.lastRun != this.last_runs[r.name],
             this.dbAction.bind(this),
         );
     }
@@ -71,7 +71,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
 
     dataAdjuster(dp) {
         dp = Utils.filterObject(dp, this.ketpFields);
-        dp.size = Number(dp.size);
+        dp.outputSize = dp.outputSize ? Number(dp.outputSize) : null;
         dp.period = ServicesDataCommons.mapBeamTypeToCommonFormat(this.extractPeriod(dp));
         return dp;
     }
@@ -94,23 +94,25 @@ class MonalisaService extends AbstractServiceSynchronizer {
             ...dataPass,
         }));
 
-        // const { description } = dataPass;
-        // dataPass = Utils.adjusetObjValuesToSql(dataPass);
-        // dataPass.rawDes = description;
-        // const { period } = dataPass;
-        // const period_insert =
-        //     dataPass?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beamType});` : '';
-        // const pgCommand = `${period_insert}; call insert_prod(
-        //     ${dataPass.name}, 
-        //     ${dataPass.period.name},
-        //     ${dataPass.description}, 
-        //     ${dataPass.number_of_events},
-        //     ${dataPass.size},
-        //     ${dataPass.last_run}
-        // );`;
-        // const q1 = await dbClient.query(pgCommand);
-        // const q2 = await this.monalisaServiceDetails.sync(dataPass);
-        // return Promise.all([q1, q2]);
+        /*
+         * Const { description } = dataPass;
+         * dataPass = Utils.adjusetObjValuesToSql(dataPass);
+         * dataPass.rawDes = description;
+         * const { period } = dataPass;
+         * const period_insert =
+         *     dataPass?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beamType});` : '';
+         * const pgCommand = `${period_insert}; call insert_prod(
+         *     ${dataPass.name},
+         *     ${dataPass.period.name},
+         *     ${dataPass.description},
+         *     ${dataPass.number_of_events},
+         *     ${dataPass.size},
+         *     ${dataPass.last_run}
+         * );`;
+         * const q1 = await dbClient.query(pgCommand);
+         * const q2 = await this.monalisaServiceDetails.sync(dataPass);
+         * return Promise.all([q1, q2]);
+         */
     }
 
     extractPeriod(rowData) {
