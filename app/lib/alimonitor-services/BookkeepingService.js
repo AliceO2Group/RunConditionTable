@@ -119,7 +119,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         delete run[polFN];
     }
 
-    async dbAction(dbClient, run) {
+    async dbAction(_, run) {
         const { periodName, detectorNames, detectorQualities, beamType } = run;
         delete run.periodName;
         delete run.detectorNames;
@@ -129,17 +129,17 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const year = ServicesDataCommons.extractPeriodYear(periodName);
         const { detectorsNameToId } = this;
 
-        return await BeamTypeRepository.findOrCreate({
+        return await BeamTypeRepository.T.findOrCreate({
             where: {
                 name: beamType,
             },
-        }).then(async ([beamType, _]) => await PeriodRepository.findOrCreate({
+        }).then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
             where: {
                 name: periodName,
                 year,
                 BeamTypeId: beamType.id,
             },
-        })).then(async ([period, _]) => await RunRepository.findOrCreate({
+        })).then(async ([period, _]) => await RunRepository.T.findOrCreate({
             where: {
                 runNumber: run.runNumber,
             },
@@ -150,36 +150,10 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                 detector_id: detectorsNameToId[detectorName],
                 quality: detectorQualities[i] }));
 
-            await RunDetectorsRepository.bulkCreate(
+            await RunDetectorsRepository.T.bulkCreate(
                 d, { updateOnDublicate: ['quality'] },
             );
         });
-
-        /*
-         * Run = Utils.adjusetObjValuesToSql(run);
-         * const period_insert = run.period ? `call insert_period(${run.period}, ${year}, ${run.beam_type});` : '';
-         */
-
-        /*
-         * Const detectorInSql = `${run.detectorNames}::varchar[]`;
-         * const detectorQualitiesInSql = `${run.detectorQualities}::varchar[]`;
-         * const pgCommand = `${period_insert}; call insert_run (
-         *     ${run.run_number},
-         *     ${run.period},
-         *     ${run.time_trg_start},
-         *     ${run.time_trg_end},
-         *     ${run.time_start},
-         *     ${run.time_end},
-         *     ${run.run_type},
-         *     ${run.fill_number},
-         *     ${run.energy},
-         *     ${detectorInSql},
-         *     ${detectorQualitiesInSql},
-         *     ${run.l3_current},
-         *     ${run.dipole_current}
-         * );`;
-         * return await dbClient.query(pgCommand);
-         */
     }
 
     metaDataHandler(requestJsonResult) {
