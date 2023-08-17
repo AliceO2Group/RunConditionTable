@@ -36,7 +36,7 @@ class Repository {
     /**
      * Creates a new `Repository` instance.
      *
-     * @param {Object} model The database model to use.
+     * @param {Model} model The database model to use.
      */
     constructor(model) {
         this.model = model;
@@ -50,8 +50,8 @@ class Repository {
     /**
      * Returns all entities.
      *
-     * @param {Object} queryBuilder the find query (see sequelize findAll options)
-     * @returns {Promise<array>} Promise object representing the full mock data
+     * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findAll options)
+     * @returns {Promise<Instance>} Promise object representing the full mock data
      */
     async findAll(queryBuilder = new QueryBuilder()) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
@@ -61,8 +61,8 @@ class Repository {
     /**
      * Returns one entity.
      *
-     * @param {Object} queryBuilder the find query (see sequelize findOne options)
-     * @returns {Promise<Object>} Promise object representing the full mock data
+     * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findOne options)
+     * @returns {Promise<Instance>} Promise object representing the full mock data
      */
     async findOne(queryBuilder = {}) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
@@ -73,9 +73,9 @@ class Repository {
     /**
      * Apply a patch on a given dbObject and save the dbObject to the database
      *
-     * @param {Object} dbOject the database object on which to apply the patch
+     * @param {Instance} dbOject the database object on which to apply the patch
      * @param {Object} patch the patch to apply
-     * @return {Promise<void>} promise that resolves when the patch has been applied
+     * @return {Promise<boolean>} promise that resolves when the patch has been applied
      */
     async updateOne(dbOject, patch) {
         return dbOject.update(patch);
@@ -84,10 +84,10 @@ class Repository {
      /**
      * Find a dbObject using query clause, apply given patch to it and save the dbObject to the database
      *
-     * @param {Object} dbOject the database object on which to apply the patch
+     * @param {QueryBuilder|Object} dbOject the database object on which to apply the patch
      * @param {Object} patch the patch to apply
      * @throws {NotFoundEntityError} if cannot find dbObject with given query clause
-     * @return {Promise<void>} promise that resolves when the patch has been applied
+     * @return {Promise<Instance>} promise that resolves when the patch has been applied
      */
     async findOneAndUpdate(queryBuilder, patch) {
         const entity = await this.model.findOne(queryBuilder) ??
@@ -97,20 +97,31 @@ class Repository {
 
     /**
      * Create new object in db
-     * @param {Object} dbObjectParams 
+     * @param {Promise<Instance>} dbObjectParams 
      */
     async create(dbObjectParams) {
         await this.model.create(dbObjectParams);
     }
 
     /**
-     * Create new object in db
-     * @param {Object} queryBuilder
+     * Remove one object from database according search
+     * @param {QueryBuilder|Object} queryBuilder
+     * @return {Promise<boolean>} indicate if model object was deleted from db
      */
     async removeOne(queryBuilder) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
         queryBuilder.add({limit: 1})
-        return await this.model.destroy(queryBuilder.toImplementation());
+        return await this.model.destroy(queryBuilder.toImplementation()) == 1;
+    }
+
+    /**
+     * Find or create model instance in db
+     * @param {QueryBuilder|Object} queryBuilder
+     * @return {Promise<[Instance, boolean]>} 
+     */
+    async findOrCreate(queryBuilder) {
+        queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
+        return await this.model.findOrCreate(queryBuilder.toImplementation());
     }
 
     _asT(customOptions) {
