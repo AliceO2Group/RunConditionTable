@@ -97,7 +97,8 @@ class Repository {
 
     /**
      * Create new object in db
-     * @param {Promise<Model>} dbObjectParams 
+     * @param {Object} dbObjectParams 
+     * @return {Promise<Model>} 
      */
     async create(dbObjectParams, opts) {
         await this.model.create(dbObjectParams, opts);
@@ -122,6 +123,15 @@ class Repository {
     async findOrCreate(queryBuilder) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
         return await this.model.findOrCreate(queryBuilder.toImplementation());
+    }
+
+     /**
+     * Create new objects in db
+     * @param {Array<Object>} dbObjectParams 
+     * @return {Promise<Model>}
+     */
+    async bulkCreate(dbObjectParams, opts) {
+        return await this.model.bulkCreate(dbObjectParams, opts)
     }
 
     _asT(customOptions) {

@@ -144,29 +144,42 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                 runNumber: run.runNumber,
             },
             defaults: { PeriodId: period.id, ...run },
-        }));
+        })).then(async ([run, _]) => {
+            const d = detectorNames?.map((detectorName, i) => ({
+                run_number: run.runNumber,
+                detector_id: detectorsNameToId[detectorName],
+                quality: detectorQualities[i] }));
 
-        // run = Utils.adjusetObjValuesToSql(run);
-        // const period_insert = run.period ? `call insert_period(${run.period}, ${year}, ${run.beam_type});` : '';
+            await RunDetectorsRepository.bulkCreate(
+                d, { updateOnDublicate: ['quality'] },
+            );
+        });
 
-        // const detectorInSql = `${run.detectorNames}::varchar[]`;
-        // const detectorQualitiesInSql = `${run.detectorQualities}::varchar[]`;
-        // const pgCommand = `${period_insert}; call insert_run (
-        //     ${run.run_number},
-        //     ${run.period}, 
-        //     ${run.time_trg_start}, 
-        //     ${run.time_trg_end}, 
-        //     ${run.time_start}, 
-        //     ${run.time_end}, 
-        //     ${run.run_type},
-        //     ${run.fill_number},
-        //     ${run.energy}, 
-        //     ${detectorInSql},
-        //     ${detectorQualitiesInSql},
-        //     ${run.l3_current},
-        //     ${run.dipole_current}
-        // );`;
-        // return await dbClient.query(pgCommand);
+        /*
+         * Run = Utils.adjusetObjValuesToSql(run);
+         * const period_insert = run.period ? `call insert_period(${run.period}, ${year}, ${run.beam_type});` : '';
+         */
+
+        /*
+         * Const detectorInSql = `${run.detectorNames}::varchar[]`;
+         * const detectorQualitiesInSql = `${run.detectorQualities}::varchar[]`;
+         * const pgCommand = `${period_insert}; call insert_run (
+         *     ${run.run_number},
+         *     ${run.period},
+         *     ${run.time_trg_start},
+         *     ${run.time_trg_end},
+         *     ${run.time_start},
+         *     ${run.time_end},
+         *     ${run.run_type},
+         *     ${run.fill_number},
+         *     ${run.energy},
+         *     ${detectorInSql},
+         *     ${detectorQualitiesInSql},
+         *     ${run.l3_current},
+         *     ${run.dipole_current}
+         * );`;
+         * return await dbClient.query(pgCommand);
+         */
     }
 
     metaDataHandler(requestJsonResult) {
