@@ -89,8 +89,9 @@ class MonalisaService extends AbstractServiceSynchronizer {
                 year: period.year,
                 BeamTypeId: beamType.id,
             },
-        })).then(async ([period, _]) => await DataPassRepository.T.findOrCreate({
-            
+        })).then(async ([period, _]) => await DataPassRepository.T.upsert({
+            PeriodId: period.id,
+            ...dataPass,
         }));
 
         // const { description } = dataPass;
