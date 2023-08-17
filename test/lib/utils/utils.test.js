@@ -35,7 +35,7 @@ module.exports = () => {
             });
 
             it('should return an empty object when told to suppress undefined values', () => {
-                assert(Object.keys(Utils.filterObject(objectSample, keptFields, true)).length === 0);
+                assert(Object.keys(Utils.filterObject(objectSample, { noField: 'null' }, true)).length === 0);
             });
         });
 
