@@ -3,10 +3,7 @@ create or replace procedure insert_prod(
     _name varchar, 
     _period varchar,
     _description text, 
-    _jira text,
-    _ml text,
-    _number_of_events  integer,
-    _softwar_version text,
+    _number_of_events integer,
     _size real,
     _last_run integer)
 LANGUAGE plpgsql
@@ -22,28 +19,21 @@ BEGIN
         SELECT id INTO trg_period_id FROM periods WHERE name = _period;
     END IF;
 
-
     SELECT id INTO dp_id from data_passes where name = _name;
     IF dp_id IS NULL THEN
         insert into data_passes(
             id,
-            period_id ,
+            period_id,
             name, 
             description, 
-            jira, 
-            ml, 
             number_of_events, 
-            software_version, 
             size,
             last_run) values (
                 DEFAULT, 
                 trg_period_id,
                 _name, 
-                _description, 
-                _jira, 
-                _ml, 
+                _description,
                 _number_of_events, 
-                _softwar_version, 
                 _size,
                 _last_run);
     ELSE

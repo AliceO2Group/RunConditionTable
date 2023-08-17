@@ -17,10 +17,7 @@ const data_passes_view = (query) => `
             --dp.id
             dp.name,
             dp.description,
-            dp.jira,
-            dp.ml,
             dp.number_of_events,
-            dp.software_version,
             dp.size
         FROM data_passes AS dp
         WHERE dp.period_id = (SELECT id from periods WHERE name ='${query.index}')

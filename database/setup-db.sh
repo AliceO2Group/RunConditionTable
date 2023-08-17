@@ -5,11 +5,6 @@ ORG_ARGS="$*"
 SCRIPTS_DIR=$(dirname $0)
 MAIN_SCRIPT_NAME=$(basename $0)
 
-CREATE_TABLES_SQL="$SCRIPTS_DIR/exported/create-tables.sql"
-DESIGN_PNG="$SCRIPTS_DIR/exported/design.png"
-DESIGN_FILE="$SCRIPTS_DIR/design.dbm"
-
-
 STORED_SQL_FUNCTIONALITIES_DIR="$SCRIPTS_DIR/stored-sql-functionalities/"
 
 usage () {
@@ -30,7 +25,6 @@ Usage:
       1. --main-sql-modify-daemon - run watchdog on db definition in $SCRIPTS_DIR/exported/create-tables.sql, if any change db is recreated
       2. --other-sql-modify-daemon - as upper but on files in $SCRIPTS_DIR/stored-sql-functionalities/
       3. --no-modify-daemon - block modification watcher irregardless to previous flags or env vars
-      4. --export - if specifid before deploying DB update sql db design using pgmodeler design.dbm file
       5. --only-export - do only export
       7. --drop - if specified drop DB before creation
 
@@ -46,10 +40,6 @@ while [[ $# -gt 0 ]]; do
         --env)
           ENV_FILE="$2"
           shift 2;
-        ;;
-        --main-sql-modify-daemon)
-          MAIN_SQL_MODIFY_DAEMON='true';
-          shift 1;
         ;;
         --other-sql-modify-daemon)
           OTHER_SQL_MODIFY_DAEMON='true';
@@ -70,10 +60,6 @@ while [[ $# -gt 0 ]]; do
         ;;
         --drop)
           DROP='true';
-          shift 1;
-        ;;
-        --rerun)
-          RERUN='true';
           shift 1;
         ;;
         -h|--host)
@@ -104,25 +90,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 
-
-if [ ! "$RERUN" = 'true' ]; then
-  if [ "$EXPORT" = 'true' ]; then
-    if ! command -v "pgmodeler-cli" &> /dev/null; then
-      echo "Could not find pgmodeler-cli, continuing with existing sql file"
-      sleep 1
-    else 
-      echo 'exporting fresh sql file from design'
-      pgmodeler-cli --input $DESIGN_FILE --export-to-file --output $CREATE_TABLES_SQL \
-          && pgmodeler-cli --input $DESIGN_FILE --export-to-png --output $DESIGN_PNG;
-      PGEXPORT_EXIT_CODE=$?
-    fi
-  fi
-
-  if [ "$ONLY_EXPORT" = 'true' ]; then
-      exit $PGEXPORT_EXIT_CODE;
-  fi
-fi
-
 if [ -n "$ENV_FILE" ]; then
   source "$ENV_FILE"
 fi
@@ -141,10 +108,9 @@ if [ ! $(whoami) = 'postgres' ]; then
   echo "trying to execute script using sudo..., press any key to continue or crt+C to terminate"
   read
   sudo -H -u postgres LOCAL_USER=$(whoami) \
-    bash -c "$0 $ORG_ARGS --rerun"
+    bash -c "$0 $ORG_ARGS"
   exit 0;
 fi
-
 
 
 # disconnect everyone from database in order to recreate it //if dev locally it might be helpful
@@ -159,7 +125,6 @@ drop() {
 create_main() {
   psql -c "set password_encryption='scram-sha-256'; CREATE USER \"$RCT_DB_USERNAME\" WITH ENCRYPTED PASSWORD '$RCT_DB_PASSWORD';"
   psql -c "CREATE DATABASE \"$RCT_DB_NAME\""
-  psql -d $RCT_DB_NAME -a -f $CREATE_TABLES_SQL
 }
 
 create_other() {
@@ -185,21 +150,6 @@ grant
 psql -d $RCT_DB_NAME -c "call insert_period('null', null, null);";
 
 if [ "$NO_MODIFY_DAEMON" != 'true' ]; then
-  if [ "$MAIN_SQL_MODIFY_DAEMON" = 'true' ]; then
-    inotifywait --monitor --recursive --event modify "$SCRIPTS_DIR/exported/" |
-      while read file_path file_event file_name; do 
-        echo ${file_path}${file_name} event: ${file_event}; 
-        SWP_DUMP="/postgres/run/database/cache/dumps/.dump.swp"
-        pg_dump --data-only --format=tar -d $RCT_DB_NAME --file="$SWP_DUMP";
-        psql -c "DROP SCHEME public CASCADE;";
-        psql -c "CREATE SCHEME public;";
-        create_main
-        create_other
-        grant
-        pg_restore --data-only -d $RCT_DB_NAME "$SWP_DUMP";
-        echo ${file_path}${file_name} event: ${file_event}; 
-      done &
-  fi
   if [ "$OTHER_SQL_MODIFY_DAEMON" = 'true' ]; then
     inotifywait --monitor --recursive --event modify $STORED_SQL_FUNCTIONALITIES_DIR |
       while read file_path file_event file_name; do 

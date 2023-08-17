@@ -71,21 +71,20 @@ Usage:
 
             9. db:attach - run psql on $DB_CONTRAINER_NAME
             10. db:battach - run bash on $DB_CONTRAINER_NAME
-            11. db:(export|ex) - export db sql definition from pgmodeler design $ITWILLBEDELETED
-            12. db:clean | db:truncate - truncate database in db container
-            13. db:ip - print db container ipv4 address
-            14. db:(counts|ct) - print statistics of data in each table in db
+            11. db:clean | db:truncate - truncate database in db container
+            12. db:ip - print db container ipv4 address
+            13. db:(counts|ct) - print statistics of data in each table in db
 
-            15. dump:(make|mk) - make dump of current database (in docker container) data, 
+            14. dump:(make|mk) - make dump of current database (in docker container) data, 
                       need option -F|--dump-file <FILE> to specify dump file relative path
                 e.g.: ./$SCRIPT_NAME dump -F dump_file
-            16. dump:(list|ls) - print list cached dumps
-            17. dump:tree - print tree of cached dumps
-            18. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
-            19. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
+            15. dump:(list|ls) - print list cached dumps
+            16. dump:tree - print tree of cached dumps
+            17. dump:(remove|rm) -F|--dump-file <FILE> - remove dump from cache specified by the flag
+            18. dump:(restore|re) -F|--dump-file <FILE> - restore data from dump specified by the flag
                 e.g.: ./$SCRIPT_NAME restore -F dump_file
-            20. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
-            21. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
+            19. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
+            20. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
         Other options:
             -S|--service <SERVICE>  - flag can be specified for run, follow, stop and prune stages.
@@ -289,9 +288,6 @@ for stage in $STAGES; do
                     docker exec -it $DB_CONTAINER_NAME /bin/bash;
                 ;;
 
-                export|ex)
-                    $PROJECT_DIR/database/setup-db.sh --only-export;
-                ;;
                 clean | truncate)
                     docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:$DB_WORKINGDIR/delete-data.sql" \
                     && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "$DB_WORKINGDIR/delete-data.sql";

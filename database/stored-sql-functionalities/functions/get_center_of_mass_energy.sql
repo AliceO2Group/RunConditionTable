@@ -27,7 +27,7 @@ BEGIN
     end if;
 
     foreach beam_t in array beam_type_split loop
-        SELECT "A", "Z" INTO Av, Zv FROM particle_phys_data WHERE name = beam_t;
+        SELECT a, z INTO Av, Zv FROM particle_phys_data WHERE name = beam_t;
         IF Av is null or Zv is null then
             raise exception 'no defintion for particle of name: "%"', beam_t;
         end if;

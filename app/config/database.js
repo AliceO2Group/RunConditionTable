@@ -11,20 +11,18 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+const { ResProvider } = require('../lib/utils');
 
-const anchored_per_mc_view = (query) => `
-        SELECT 
-            --dp.id
-            dp.name,
-            dp.description,
-            dp.number_of_events,
-            dp.size
-        FROM data_passes AS dp
-        INNER JOIN anchored_passes as aps
-            ON aps.data_pass_id = dp.id
-        INNER JOIN simulation_passes as sp
-            ON sp.id = aps.sim_pass_id
-        WHERE sp.name = '${query.index}'
-    `;
+const legacyConfig = ResProvider.database();
 
-module.exports = anchored_per_mc_view;
+const config = { ...legacyConfig,
+    username: legacyConfig.user, // TEMPORARILY
+    logging: legacyConfig.logging ? this.logger.debug.bind(this.logger) : false,
+    dialect: 'postgres',
+    define: {
+        underscored: true,
+        schema: this.schema,
+    },
+};
+
+module.exports = config;

@@ -6,7 +6,6 @@ done;
 
 FIND_EXCLUDE_PHRASE="$FIND_EXCLUDE_PHRASE -not -path './.git/*'"
 FIND_EXCLUDE_PHRASE="$FIND_EXCLUDE_PHRASE -not -path '*.png'"
-FIND_EXCLUDE_PHRASE="$FIND_EXCLUDE_PHRASE -not -path './database/exported/*'"
 FIND_EXCLUDE_PHRASE="$FIND_EXCLUDE_PHRASE -not -path './app/public/styles/images/favicon/favicon.ico'" # it seems to be binary but for some reason `find ... -type f` finds it 
 FINDCMD="find . -type f $FIND_EXCLUDE_PHRASE"
 

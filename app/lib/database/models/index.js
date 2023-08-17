@@ -23,6 +23,8 @@ const RunDetectors = require('./RunDetectors.js');
 const QualityControlFlag = require('./QualitControlFlag.js');
 const QualityControlFlagVerification = require('./QualityControlFlagVerification.js');
 const FlagType = require('./FlagType.js');
+const ParticlesPhysData = require('./ParticilesPhysData.js');
+const MetaData = require('./Meta.js');
 
 /**
  * 
@@ -41,6 +43,8 @@ const modelsFactory = (sequelize) => {
         QualityControlFlag,
         QualityControlFlagVerification,
         FlagType,
+        ParticlesPhysData,
+        MetaData,
     };
     models = Object.entries(models).map(([modelName, model]) => [modelName, model(sequelize)]); // instantiate models
     models.forEach(([_, modelInstance]) => modelInstance.associate?.(sequelize.models)); // associate models
