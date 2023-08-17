@@ -74,7 +74,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
         d.rawDes = description;
         const { period } = d;
         const period_insert =
-            d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
+            d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beamType});` : '';
         const pgCommand = `${period_insert}; call insert_prod(
             ${d.name}, 
             ${d.period.name},
@@ -100,7 +100,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
                 year += 2000;
             }
             period.year = year;
-            period.beam_type = rowData.beam_type;
+            period.beamType = rowData.beam_type;
 
             return period;
         } catch (e) {

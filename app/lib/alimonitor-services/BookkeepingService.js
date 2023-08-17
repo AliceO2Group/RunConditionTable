@@ -17,6 +17,15 @@ const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
 const ServicesDataCommons = require('./ServicesDataCommons.js');
 const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
+const { databaseManager: {
+    repositories: {
+        RunRepository,
+        DetectorSubsystemRepository,
+        PeriodRepository,
+        BeamTypeRepository,
+        RunDetectorsRepository,
+    },
+} } = require('../database/DatabaseManager.js');
 
 /**
  * BookkeepingService used to synchronize runs
@@ -27,25 +36,28 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         this.batchSize = 100;
 
         this.ketpFields = {
-            id: 'ali-bk-id',
-            runNumber: 'run_number',
-            lhcPeriod: 'period',
-            timeO2Start: 'time_start',
-            timeO2End: 'time_end',
-            timeTrgStart: 'time_trg_start',
-            timeTrgEnd: 'time_trg_end',
-            definition: 'run_type',
-            lhcBeamEnergy: 'energy',
+            runNumber: true,
+            lhcPeriod: 'periodName',
+            timeO2Start: true,
+            timeO2End: true,
+            timeTrgStart: true,
+            timeTrgEnd: true,
+            definition: 'runType',
+            lhcBeamEnergy: true,
             detectorsQualities: 'detectors',
             aliceL3Current: 'l3_current_val',
             aliceL3Polarity: 'l3_current_polarity',
             aliceDipoleCurrent: 'dipole_current_val',
             aliceDipolePolarity: 'dipole_current_polarity',
-            fillNumber: 'fill_number',
-            pdpBeamType: 'beam_type',
+            fillNumber: true,
+            pdpBeamType: 'beamType',
         };
 
-        this.RUN_TYPE_PHYSICS = 'PHYSICS';
+        DetectorSubsystemRepository.findAll({ raw: true }).then((r) => {
+            this.detectorsNameToId = r?.length > 0 ? r :
+                Utils.throwWrapper(new Error('Incorrect setup of database, no detector subsystems data in it'));
+            this.detectorsNameToId = Object.fromEntries(this.detectorsNameToId.map(({ id, name }) => [name, id]));
+        }).catch(this.logger.error);
     }
 
     async sync() {
@@ -80,10 +92,10 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             run.detectorNames = detectors.map(({ name }) => name.trim());
             run.detectorQualities = detectors.map(({ quality }) => quality);
 
-            this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3_current');
-            this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipole_current');
+            this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3CurrentVal');
+            this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipoleCurrentVal');
             ServicesDataCommons.mapBeamTypeToCommonFormat(run);
-            run.fill_number = Number(run.fill_number);
+            run.fillNumber = Number(run.fillNumber);
             return run;
         } catch (e) {
             this.logger.error(e);
@@ -98,37 +110,50 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             } else if (run[polFN] == 'POSITIVE') {
                 run[tFN] = run[valFN];
             } else {
-                throw `incorrect polarity type: '${run[polFN]}' for run: ${run.run_number}`;
+                throw `incorrect polarity type: '${run[polFN]}' for run: ${run.runNumber}`;
             }
         } else {
             run[tFN] = null;
         }
+        delete run[valFN];
+        delete run[polFN];
     }
 
-    async dbAction(dbClient, d) {
-        const { period } = d;
-        const year = ServicesDataCommons.extractPeriodYear(period);
-        d = Utils.adjusetObjValuesToSql(d);
-        const period_insert = d.period ? `call insert_period(${d.period}, ${year}, ${d.beam_type});` : '';
+    async dbAction(_, run) {
+        const { periodName, detectorNames, detectorQualities, beamType } = run;
+        delete run.periodName;
+        delete run.detectorNames;
+        delete run.detectorQualities;
+        delete run.beamType;
 
-        const detectorInSql = `${d.detectorNames}::varchar[]`;
-        const detectorQualitiesInSql = `${d.detectorQualities}::varchar[]`;
-        const pgCommand = `${period_insert}; call insert_run (
-            ${d.run_number},
-            ${d.period}, 
-            ${d.time_trg_start}, 
-            ${d.time_trg_end}, 
-            ${d.time_start}, 
-            ${d.time_end}, 
-            ${d.run_type},
-            ${d.fill_number},
-            ${d.energy}, 
-            ${detectorInSql},
-            ${detectorQualitiesInSql},
-            ${d.l3_current},
-            ${d.dipole_current}
-        );`;
-        return await dbClient.query(pgCommand);
+        const year = ServicesDataCommons.extractPeriodYear(periodName);
+        const { detectorsNameToId } = this;
+
+        return await BeamTypeRepository.T.findOrCreate({
+            where: {
+                name: beamType,
+            },
+        }).then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
+            where: {
+                name: periodName,
+                year,
+                BeamTypeId: beamType.id,
+            },
+        })).then(async ([period, _]) => await RunRepository.T.findOrCreate({
+            where: {
+                runNumber: run.runNumber,
+            },
+            defaults: { PeriodId: period.id, ...run },
+        })).then(async ([run, _]) => {
+            const d = detectorNames?.map((detectorName, i) => ({
+                run_number: run.runNumber,
+                detector_id: detectorsNameToId[detectorName],
+                quality: detectorQualities[i] }));
+
+            await RunDetectorsRepository.T.bulkCreate(
+                d, { updateOnDublicate: ['quality'] },
+            );
+        });
     }
 
     metaDataHandler(requestJsonResult) {

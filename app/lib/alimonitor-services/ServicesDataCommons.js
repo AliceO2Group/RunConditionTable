@@ -23,10 +23,10 @@ const { rctData } = require('../config/configProvider.js');
  * @returns {Object} dataObject
  */
 function mapBeamTypeToCommonFormat(dataObject) {
-    dataObject.beam_type = Utils.switchCase(
-        dataObject.beam_type,
+    dataObject.beamType = Utils.switchCase(
+        dataObject.beamType,
         rctData.mapping.beamType.values,
-        { default: dataObject.beam_type },
+        { default: dataObject.beamType },
     );
     return dataObject;
 }
