@@ -34,8 +34,14 @@ function filterObject(obj, keptFields, suppressUndefined = false) {
     }
     const res = {};
     for (const [nr, nl] of Object.entries(keptFields)) {
-        if (!suppressUndefined || res[nl]) {
-            res[nl] = obj[nr];
+        if (!suppressUndefined || obj[nr]) {
+            if (typeof nl === 'boolean') {
+                if (nl) {
+                    res[nr] = obj[nr];
+                }
+            } else {
+                res[nl] = obj[nr];
+            }
         }
     }
     return res;
