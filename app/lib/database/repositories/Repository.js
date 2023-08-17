@@ -51,7 +51,7 @@ class Repository {
      * Returns all entities.
      *
      * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findAll options)
-     * @returns {Promise<Instance>} Promise object representing the full mock data
+     * @returns {Promise<Model>} Promise object representing the full mock data
      */
     async findAll(queryBuilder = new QueryBuilder()) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
@@ -62,7 +62,7 @@ class Repository {
      * Returns one entity.
      *
      * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findOne options)
-     * @returns {Promise<Instance>} Promise object representing the full mock data
+     * @returns {Promise<Model>} Promise object representing the full mock data
      */
     async findOne(queryBuilder = {}) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
@@ -73,7 +73,7 @@ class Repository {
     /**
      * Apply a patch on a given dbObject and save the dbObject to the database
      *
-     * @param {Instance} dbOject the database object on which to apply the patch
+     * @param {Model} dbOject the database object on which to apply the patch
      * @param {Object} patch the patch to apply
      * @return {Promise<boolean>} promise that resolves when the patch has been applied
      */
@@ -87,7 +87,7 @@ class Repository {
      * @param {QueryBuilder|Object} dbOject the database object on which to apply the patch
      * @param {Object} patch the patch to apply
      * @throws {NotFoundEntityError} if cannot find dbObject with given query clause
-     * @return {Promise<Instance>} promise that resolves when the patch has been applied
+     * @return {Promise<Model>} promise that resolves when the patch has been applied
      */
     async findOneAndUpdate(queryBuilder, patch) {
         const entity = await this.model.findOne(queryBuilder) ??
@@ -97,10 +97,10 @@ class Repository {
 
     /**
      * Create new object in db
-     * @param {Promise<Instance>} dbObjectParams 
+     * @param {Promise<Model>} dbObjectParams 
      */
-    async create(dbObjectParams) {
-        await this.model.create(dbObjectParams);
+    async create(dbObjectParams, opts) {
+        await this.model.create(dbObjectParams, opts);
     }
 
     /**
@@ -117,7 +117,7 @@ class Repository {
     /**
      * Find or create model instance in db
      * @param {QueryBuilder|Object} queryBuilder
-     * @return {Promise<[Instance, boolean]>} 
+     * @return {Promise<[Model, boolean]>} 
      */
     async findOrCreate(queryBuilder) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
