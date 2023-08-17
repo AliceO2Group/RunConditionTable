@@ -36,7 +36,7 @@ class AbstractServiceSynchronizer {
 
         this.opts = this.createHttpOpts();
 
-        this.metaStore = { processedCtr: 0 };
+        this.metaStore = {};
 
         this.errorsLoggingDepth = config.defaultErrorsLogginDepth;
         applyOptsToObj(this, defaultServiceSynchronizerOptions);
@@ -179,8 +179,8 @@ class AbstractServiceSynchronizer {
 
             await Promise.all(promises);
 
-            this.metaStore['processedCtr'] += chunk.length;
-            this.logger.info(`progress of ${this.metaStore['processedCtr']} / ${total}`);
+            this.metaStore.processedCtr += chunk.length;
+            this.logger.info(`progress of ${this.metaStore.processedCtr} / ${total}`);
         }
     }
 
@@ -212,6 +212,7 @@ class AbstractServiceSynchronizer {
     }
 
     async setSyncTask() {
+        this.metaStore.processedCtr = 0;
         this.forceStop = false;
         await this.sync()
             .then(() => {
