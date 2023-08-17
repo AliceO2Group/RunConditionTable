@@ -139,11 +139,9 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                 year,
                 BeamTypeId: beamType.id,
             },
-        })).then(async ([period, _]) => await RunRepository.T.findOrCreate({
-            where: {
-                runNumber: run.runNumber,
-            },
-            defaults: { PeriodId: period.id, ...run },
+        })).then(async ([period, _]) => await RunRepository.T.upsert({
+            PeriodId: period.id,
+            ...run,
         })).then(async ([run, _]) => {
             const d = detectorNames?.map((detectorName, i) => ({
                 run_number: run.runNumber,

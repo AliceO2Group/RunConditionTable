@@ -20,6 +20,14 @@ const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 const MonalisaServiceDetails = require('./MonalisaServiceDetails.js');
 const config = require('../config/configProvider.js');
 
+const { databaseManager: {
+    repositories: {
+        BeamTypeRepository,
+        PeriodRepository,
+        DataPassRepository,
+    },
+} } = require('../database/DatabaseManager.js');
+
 class MonalisaService extends AbstractServiceSynchronizer {
     constructor() {
         super();
@@ -27,11 +35,11 @@ class MonalisaService extends AbstractServiceSynchronizer {
 
         this.ketpFields = {
             name: 'name',
-            reconstructed_events: 'number_of_events',
+            reconstructed_events: 'reconstructedEvents',
             description: 'description',
-            output_size: 'size',
+            output_size: 'outputSize',
             interaction_type: 'beam_type',
-            last_run: 'last_run',
+            last_run: 'lastRun',
         };
 
         this.monalisaServiceDetails = new MonalisaServiceDetails();
@@ -68,24 +76,40 @@ class MonalisaService extends AbstractServiceSynchronizer {
         return dp;
     }
 
-    async dbAction(dbClient, d) {
-        const { description } = d;
-        d = Utils.adjusetObjValuesToSql(d);
-        d.rawDes = description;
-        const { period } = d;
-        const period_insert =
-            d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beamType});` : '';
-        const pgCommand = `${period_insert}; call insert_prod(
-            ${d.name}, 
-            ${d.period.name},
-            ${d.description}, 
-            ${d.number_of_events},
-            ${d.size},
-            ${d.last_run}
-        );`;
-        const q1 = await dbClient.query(pgCommand);
-        const q2 = await this.monalisaServiceDetails.sync(d);
-        return Promise.all([q1, q2]);
+    async dbAction(dbClient, dataPass) {
+        const { period } = dataPass;
+
+        return await BeamTypeRepository.T.findOrCreate({
+            where: {
+                name: period.beamType,
+            },
+        }).then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
+            where: {
+                name: period.name,
+                year: period.year,
+                BeamTypeId: beamType.id,
+            },
+        })).then(async ([period, _]) => await DataPassRepository.T.findOrCreate({
+            
+        }));
+
+        // const { description } = dataPass;
+        // dataPass = Utils.adjusetObjValuesToSql(dataPass);
+        // dataPass.rawDes = description;
+        // const { period } = dataPass;
+        // const period_insert =
+        //     dataPass?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beamType});` : '';
+        // const pgCommand = `${period_insert}; call insert_prod(
+        //     ${dataPass.name}, 
+        //     ${dataPass.period.name},
+        //     ${dataPass.description}, 
+        //     ${dataPass.number_of_events},
+        //     ${dataPass.size},
+        //     ${dataPass.last_run}
+        // );`;
+        // const q1 = await dbClient.query(pgCommand);
+        // const q2 = await this.monalisaServiceDetails.sync(dataPass);
+        // return Promise.all([q1, q2]);
     }
 
     extractPeriod(rowData) {
