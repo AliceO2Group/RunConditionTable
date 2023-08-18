@@ -33,6 +33,7 @@ export default function sidebar(model) {
     modal(modalIds.about.modal),
     modal(modalIds.pageSettings.modal, model),
     modal(modalIds.detectors.modal, model),
+    modal(modalIds.dataExport.modal, model),
     h('.logo.ph3.hide-on-close'),
     h('.flex-column.gap-20',
         h('.sidebar-section',

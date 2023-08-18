@@ -24,7 +24,8 @@ import dataActionButtons, { dataActions } from '../../../components/buttons/data
 const applicableDataActions = {
     [dataActions.hide]: false,
     [dataActions.reload]: true,
-    [dataActions.downloadCSV]: true,
+    [dataActions.obsoleteDownloadCSV]: true,
+    [dataActions.downloadCSV]: false,
     [dataActions.copyLink]: true,
     [dataActions.showFilteringPanel]: false,
 };

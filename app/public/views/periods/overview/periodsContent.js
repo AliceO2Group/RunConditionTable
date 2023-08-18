@@ -34,6 +34,7 @@ const pageName = RCT.pageNames.periods;
 const applicableDataActions = {
     [dataActions.hide]: true,
     [dataActions.reload]: true,
+    [dataActions.obsoleteDownloadCSV]: false,
     [dataActions.downloadCSV]: true,
     [dataActions.copyLink]: true,
     [dataActions.showFilteringPanel]: true,

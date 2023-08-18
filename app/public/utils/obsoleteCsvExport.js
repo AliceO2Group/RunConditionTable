@@ -39,7 +39,7 @@ export const preparedFile = (model) => {
 
 const replacer = (key, value) => value === null ? '' : value;
 
-export default function downloadCSV(model) {
+export default function obsoleteDownloadCSV(model) {
     const file = preparedFile(model);
     const link = document.createElement('a');
     link.setAttribute('href', file.uri);

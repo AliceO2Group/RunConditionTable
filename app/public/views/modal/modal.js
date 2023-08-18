@@ -35,6 +35,10 @@ export const modalIds = {
         modal: 'detectorSettingsModalId',
         content: 'detectorSettingsContentId',
     },
+    dataExport: {
+        modal: 'dataExportModalId',
+        content: 'dataExportContentId',
+    }
 };
 
 const allModals = () => ({
@@ -78,6 +82,12 @@ export const modal = (modalId, model = null) => {
                 }, about()));
         }
         case modalIds.detectors.modal: {
+            return h(`.${modalClassNames.modal}`, { id: modalIds.detectors.modal },
+                h(`.${modalClassNames.content}.abs-center.p3`, {
+                    id: modalIds.detectors.content,
+                }, detectorSettings(model.parent.userPreferences)));
+        }
+        case modalIds.dataExport.modal: {
             return h(`.${modalClassNames.modal}`, { id: modalIds.detectors.modal },
                 h(`.${modalClassNames.content}.abs-center.p3`, {
                     id: modalIds.detectors.content,

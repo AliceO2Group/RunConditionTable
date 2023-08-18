@@ -35,7 +35,8 @@ const { pageNames } = RCT;
 const applicableDataActions = {
     [dataActions.hide]: true,
     [dataActions.reload]: true,
-    [dataActions.downloadCSV]: true,
+    [dataActions.obsoleteDownloadCSV]: true,
+    [dataActions.downloadCSV]: false,
     [dataActions.copyLink]: true,
     [dataActions.showFilteringPanel]: true,
 };

@@ -12,8 +12,8 @@
  */
 
 const req = require('esm')(module)
-const preparedData = req('../../../app/public/utils/csvExport').preparedData;
-const preparedFile = req('../../../app/public/utils/csvExport').preparedFile;
+const preparedData = req('../../../app/public/utils/obsoleteCsvExport').preparedData;
+const preparedFile = req('../../../app/public/utils/obsoleteCsvExport').preparedFile;
 const assert = require('assert');
 
 module.exports = () => {
