@@ -52,15 +52,15 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             fillNumber: true,
             pdpBeamType: 'beamType',
         };
+    }
 
+    async sync() {
         DetectorSubsystemRepository.findAll({ raw: true }).then((r) => {
             this.detectorsNameToId = r?.length > 0 ? r :
                 Utils.throwWrapper(new Error('Incorrect setup of database, no detector subsystems data in it'));
             this.detectorsNameToId = Object.fromEntries(this.detectorsNameToId.map(({ id, name }) => [name, id]));
-        }).catch(this.logger.error);
-    }
+        }).catch(this.logger.error.bind(this.logger));
 
-    async sync() {
         const pendingSyncs = [];
         let state = {
             page: 0,
