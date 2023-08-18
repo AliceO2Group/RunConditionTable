@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const CSVExportSuite = require('./csvExport.test');
+const CSVExportSuite = require('./obsoleteCsvExport.test');
 const dataProcessingSuite = require('./dataProcessing.test');
 const filterUtilsSuite = require('./filterUtils.test');
 const urlUtilsSuite = require('./urlUtils.test');

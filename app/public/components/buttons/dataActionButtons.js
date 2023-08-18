@@ -13,12 +13,14 @@
  */
 
 import { h, iconDataTransferDownload, iconReload } from '/js/src/index.js';
-import downloadCSV from '../../utils/csvExport.js';
+import obsoleteDownloadCSV from '../../utils/obsoleteCsvExport.js';
 import copyLinkButton from './copyLinkButton.js';
+import { modalIds, showModal } from '../../views/modal/modal.js';
 
 export const dataActions = {
     hide: 'Hide',
     reload: 'Reload',
+    obsoleteDownloadCSV: 'Download CSV (obsolete)',
     downloadCSV: 'Download CSV',
     copyLink: 'Copy link',
     showFilteringPanel: 'Filter',
@@ -35,10 +37,18 @@ export default function dataActionButtons(model, applicableDataActions) {
             }, iconReload())
             : '',
 
+        applicableDataActions[dataActions.obsoleteDownloadCSV]
+            ? h('button.btn.btn-secondary.icon-only-button', {
+                onclick: () => {
+                    obsoleteDownloadCSV(model);
+                },
+            }, iconDataTransferDownload())
+            : '',
+
         applicableDataActions[dataActions.downloadCSV]
             ? h('button.btn.btn-secondary.icon-only-button', {
                 onclick: () => {
-                    downloadCSV(model);
+                    showModal(modalIds.dataExport.modal);
                 },
             }, iconDataTransferDownload())
             : '',

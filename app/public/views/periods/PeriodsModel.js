@@ -120,6 +120,28 @@ export default class PeriodsModel extends Observable {
     }
 
     /**
+     * Create the export with the variables set in the model, handling errors appropriately
+     * @param {Object} content The source content.
+     * @param {String} fileName The name of the file including the output format.
+     * @return {void}
+     */
+    async createPeriodsExport(content, fileName) {
+        if (content.length > 0) {
+            this.getSelectedExportType() === 'CSV'
+                ? createCSVExport(content, `${fileName}.csv`, 'text/csv;charset=utf-8;')
+                : createJSONExport(content, `${fileName}.json`, 'application/json');
+        } else {
+            this._currentPageRuns = RemoteData.failure([
+                {
+                    title: 'No data found',
+                    detail: 'No valid runs were found for provided run number(s)',
+                },
+            ]);
+            this.notify();
+        }
+    }
+
+    /**
      * Get current page periods
      * @return {RemoteData} periods in the current page
      */
