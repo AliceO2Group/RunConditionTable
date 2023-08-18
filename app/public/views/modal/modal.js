@@ -16,6 +16,7 @@ import { h } from '/js/src/index.js';
 import pageSettings from '../userView/data/pageSettings/pageSettings.js';
 import about from '../../components/about/about.js';
 import detectorSettings from '../userView/data/detectorSettings/detectorSettings.js';
+import periodsExport from '../periods/overview/periodsExport.js';
 
 export const modalClassNames = {
     modal: 'modal',
@@ -38,7 +39,7 @@ export const modalIds = {
     dataExport: {
         modal: 'dataExportModalId',
         content: 'dataExportContentId',
-    }
+    },
 };
 
 const allModals = () => ({
@@ -88,10 +89,12 @@ export const modal = (modalId, model = null) => {
                 }, detectorSettings(model.parent.userPreferences)));
         }
         case modalIds.dataExport.modal: {
-            return h(`.${modalClassNames.modal}`, { id: modalIds.detectors.modal },
+            return h(`.${modalClassNames.modal}`, { id: modalIds.dataExport.modal },
                 h(`.${modalClassNames.content}.abs-center.p3`, {
-                    id: modalIds.detectors.content,
-                }, detectorSettings(model.parent.userPreferences)));
+                    id: modalIds.dataExport.content,
+                }, periodsExport(model.parent.userPreferences, () => {
+                    document.getElementById(modalIds.dataExport.modal).style.display = 'none';
+                })));
         }
     }
 };
