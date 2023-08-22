@@ -46,7 +46,7 @@ class PassCorrectnessMonitor {
 
         if (incorrect > 0) {
             const logFunc = switchCase(errorsLoggingDepth, config.errorsLoggingDepths);
-            errors.forEach((e) => logFunc(logger, e.stack));
+            errors.forEach((e) => logFunc(logger, e));
             logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
         }
         if (omitted > 0) {
