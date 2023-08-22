@@ -17,29 +17,44 @@ const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 
+const { databaseManager: {
+    repositories: {
+        RunRepository,
+        DataPassRepository,
+    },
+} } = require('../database/DatabaseManager.js');
+
 class MonalisaServiceDetails extends AbstractServiceSynchronizer {
     constructor() {
         super();
         this.batchSize = 5;
 
         this.ketpFields = {
-            run_no: 'run_number',
+            run_no: 'runNumber',
             raw_partition: 'period',
         };
     }
 
     async sync(d) {
         return await this.syncPerEndpoint(
-            EndpointsFormatter.dataPassesDetailed(d.rawDes),
+            EndpointsFormatter.dataPassesDetailed(d.description),
             (raw) => this.responsePreprocess(raw),
-            (v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, this.ketpFields)),
+            (v) => Utils.filterObject(v, this.ketpFields),
             () => true,
             async (dbClient, v) => {
                 v.parentDataUnit = d;
-                const detailsSql = v ?
-                    `call insert_prod_details(${d.name}, ${v.run_number}, ${v.period});`
-                    : '';
-                return await dbClient.query(detailsSql);
+
+                return await RunRepository.T.upsert({ runNumber: v.runNumber })
+                    .then(async ([run, _]) => setTimeout(() => console.log(run.runNumber), 2500));
+
+                    // .then(async () => {
+                    //     DataPassRepository.model.sequelize.models.
+                    // })
+
+                // const detailsSql = v ?
+                //     `call insert_prod_details('${d.name}', ${v.run_number}, '${v.period}');`
+                //     : '';
+                // return await dbClient.query(detailsSql);
             },
         );
     }

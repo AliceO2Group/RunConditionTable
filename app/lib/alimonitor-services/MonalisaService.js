@@ -83,16 +83,32 @@ class MonalisaService extends AbstractServiceSynchronizer {
             where: {
                 name: period.beamType,
             },
-        }).then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
-            where: {
-                name: period.name,
-                year: period.year,
-                BeamTypeId: beamType.id,
-            },
-        })).then(async ([period, _]) => await DataPassRepository.T.upsert({
-            PeriodId: period.id,
-            ...dataPass,
-        }));
+        })
+            .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
+                where: {
+                    name: period.name,
+                    year: period.year,
+                    BeamTypeId: beamType.id,
+                },
+            }))
+            .catch((e) => {
+                throw new Error('Find or create period failed', {
+                    cause: {
+                        error: e.message,
+                        meta: {
+                            explicitValues: {
+                                name: period.name,
+                                year: period.year,
+                            },
+                        },
+                    },
+                });
+            })
+            .then(async ([period, _]) => await DataPassRepository.T.upsert({
+                PeriodId: period.id,
+                ...dataPass,
+            }))
+            .then(async ([dataPass, _]) => await this.monalisaServiceDetails.sync(dataPass));
 
         /*
          * Const { description } = dataPass;
