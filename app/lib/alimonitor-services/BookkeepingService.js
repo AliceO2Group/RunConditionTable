@@ -141,15 +141,17 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             },
         })).catch((e) => {
             throw new Error('Period findOrCreateError', {
-                cause: e,
-                newDataUnit: {
-                    explicitValues: {
-                        name: periodName,
-                        year,
-                        BeamTypeId: beamType.id,
-                    },
-                    impliciteValues: {
-                        BeamType: beamType,
+                cause: {
+                    error: e.message,
+                    meta: {
+                        explicitValues: {
+                            name: periodName,
+                            year,
+                            BeamTypeId: beamType.id,
+                        },
+                        implicitValues: {
+                            BeamType: beamType,
+                        },
                     },
                 },
             });
