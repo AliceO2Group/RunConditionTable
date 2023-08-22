@@ -15,6 +15,8 @@ import { Observable, RemoteData } from '/js/src/index.js';
 import { PaginationModel } from '../../components/table/pagination/PaginationModel.js';
 import { getRemoteDataSlice } from '../../utils/fetch/getRemoteDataSlice.js';
 import { RCT } from '../../config.js';
+import { createCSVExport, createJSONExport } from '../../utils/dataExport/export.js';
+import { exportFormats } from './overview/dataExport.js';
 
 /**
  * Model representing handlers for periods page
@@ -117,6 +119,29 @@ export default class PeriodsModel extends Observable {
      */
     async fetchCurrentPageData() {
         await this.fetchCurrentPagePeriods();
+    }
+
+    /**
+     * Create the export with the variables set in the model, handling errors appropriately
+     * @param {Object} content The source content.
+     * @param {String} fileName The name of the file
+     * @param {String} exportType output data format
+     * @return {void}
+     */
+    async createDataExport(content, fileName, exportType) {
+        if (content.length > 0) {
+            exportType === exportFormats.csv
+                ? createCSVExport(content, `${fileName}.csv`, 'text/csv;charset=utf-8;')
+                : createJSONExport(content, `${fileName}.json`, 'application/json');
+        } else {
+            this._currentPagePeriods = RemoteData.failure([
+                {
+                    title: 'No data found',
+                    detail: 'No valid periods were found',
+                },
+            ]);
+            this.notify();
+        }
     }
 
     /**
