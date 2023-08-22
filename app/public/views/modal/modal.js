@@ -64,7 +64,7 @@ export const showModal = (modalId) => {
     }
 };
 
-export const modal = (modalId, model = null) => {
+export const modal = (modalId, dataModel = null, model = null) => {
     switch (modalId) {
         case modalIds.pageSettings.modal: {
             return model
@@ -94,7 +94,7 @@ export const modal = (modalId, model = null) => {
                     id: modalIds.dataExport.content,
                 }, periodsExport(model.parent.userPreferences, () => {
                     document.getElementById(modalIds.dataExport.modal).style.display = 'none';
-                })));
+                }, dataModel)));
         }
     }
 };
