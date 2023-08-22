@@ -133,48 +133,45 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             where: {
                 name: beamType,
             },
-        }).then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
-            where: {
-                name: periodName,
-                year,
-                BeamTypeId: beamType.id,
-            },
-        })).catch((e) => {
-            throw new Error('Period findOrCreateError', {
-                cause: {
-                    error: e.message,
-                    meta: {
-                        explicitValues: {
-                            name: periodName,
-                            year,
-                            BeamTypeId: beamType.id,
-                        },
-                        implicitValues: {
-                            BeamType: beamType,
+        })
+            .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
+                where: {
+                    name: periodName,
+                    year,
+                    BeamTypeId: beamType.id,
+                },
+            }))
+            .catch((e) => {
+                throw new Error('Find or create period failed', {
+                    cause: {
+                        error: e.message,
+                        meta: {
+                            explicitValues: {
+                                name: periodName,
+                                year,
+                                BeamTypeId: beamType.id,
+                            },
+                            implicitValues: {
+                                BeamType: beamType,
+                            },
                         },
                     },
-                },
-            });
-        })
+                });
+            })
             .then(async ([period, _]) => await RunRepository.T.upsert({
                 PeriodId: period.id,
                 ...run,
-            }));
+            }))
+            .then(async ([run, _]) => {
+                const d = detectorNames?.map((detectorName, i) => ({
+                    run_number: run.runNumber,
+                    detector_id: detectorsNameToId[detectorName],
+                    quality: detectorQualities[i] }));
 
-        /*
-         * .then(async ([run, _]) => {
-         *     const d = detectorNames?.map((detectorName, i) => ({
-         *         run_number: run.runNumber,
-         *         detector_id: detectorsNameToId[detectorName],
-         *         quality: detectorQualities[i] }));
-         */
-
-        /*
-         *     Await RunDetectorsRepository.T.bulkCreate(
-         *         d, { updateOnDublicate: ['quality'] },
-         *     );
-         * });
-         */
+                await RunDetectorsRepository.T.bulkCreate(
+                    d, { updateOnDublicate: ['quality'] },
+                );
+            });
     }
 
     metaDataHandler(requestJsonResult) {
