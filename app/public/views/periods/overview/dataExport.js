@@ -27,7 +27,8 @@ export const exportPreferences = {
     visible: 'visible',
 };
 
-export default function dataExport(userPreferences, close, pageName, dataModel) {
+export default function dataExport(close, dataModel) {
+    const pageName = dataModel.name;
     const rowsPreferenceSelectId = 'rows-preference-selection';
     const columnsPreferenceSelectId = 'columns-preference-selection';
     const exportFormatSelectId = 'export-format-selection';

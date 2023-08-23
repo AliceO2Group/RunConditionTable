@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import pageSettings from '../userView/data/pageSettings/pageSettings.js';
 import about from '../../components/about/about.js';
 import detectorSettings from '../userView/data/detectorSettings/detectorSettings.js';
-import periodsExport from '../periods/overview/periodsExport.js';
+import dataExport from '../periods/overview/dataExport.js';
 
 export const modalClassNames = {
     modal: 'modal',
@@ -95,7 +95,7 @@ export const modal = (modalId, dataModel = null, userPreferences = null) => {
                 ? h(`.${modalClassNames.modal}`, { id: modalIds.dataExport.modal },
                     h(`.${modalClassNames.content}.abs-center.p3`, {
                         id: modalIds.dataExport.content,
-                    }, periodsExport(userPreferences, () => {
+                    }, dataExport(() => {
                         document.getElementById(modalIds.dataExport.modal).style.display = 'none';
                     }, dataModel)))
                 : '';
