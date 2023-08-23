@@ -50,7 +50,7 @@ export const getReadableFileSizeString = (fileSizeInBytes) => {
         i++;
     } while (fileSizeInBytes > 1024);
 
-    return `${Math.max(fileSizeInBytes, 0.1).toFixed(1)}  ${byteUnits[i]}`;
+    return `${Math.max(fileSizeInBytes, 0.1).toFixed(1)} ${byteUnits[i]}`;
 };
 
 export const capitalizeFirstLetter = (text) => text.charAt(0).toUpperCase() + text.slice(1);
