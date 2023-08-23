@@ -13,10 +13,8 @@
  */
 
 export const preparedData = (data) => {
-    let rows = data.payload.rows.filter((item) => item.marked);
-    if (!rows) {
-        ({ rows } = data.payload);
-    }
+    const filteredRows = data.payload.rows.filter((item) => item.marked);
+    const rows = filteredRows.length > 0 ? filteredRows : data.payload.rows;
     const fields = data.payload.fields.filter((item) => item.marked).map((field) => field.name);
 
     let csv = rows.map((row) => fields.map((field) => JSON.stringify(row[field], replacer)).join(','));
