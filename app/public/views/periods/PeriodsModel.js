@@ -32,6 +32,7 @@ export default class PeriodsModel extends Observable {
     constructor(model) {
         super();
         this.model = model;
+        this.name = RCT.pageNames.periods.charAt(0).toUpperCase() + RCT.pageNames.periods.slice(1);
 
         this._pagination = new PaginationModel(model.userPreferences);
         this._pagination.observe(() => {
