@@ -42,7 +42,7 @@ export const rowDisplayStyle = (isMarked, shouldHideMarkedRecords) => isMarked
         : '.row-selected'
     : '.row-not-selected';
 
-export function getReadableFileSizeString(fileSizeInBytes) {
+export const getReadableFileSizeString = (fileSizeInBytes) => {
     let i = -1;
     const byteUnits = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     do {
@@ -51,4 +51,6 @@ export function getReadableFileSizeString(fileSizeInBytes) {
     } while (fileSizeInBytes > 1024);
 
     return `${Math.max(fileSizeInBytes, 0.1).toFixed(1)}  ${byteUnits[i]}`;
-}
+};
+
+export const capitalizeFirstLetter = (text) => text.charAt(0).toUpperCase() + text.slice(1);
