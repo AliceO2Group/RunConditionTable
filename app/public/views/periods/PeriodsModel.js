@@ -17,6 +17,7 @@ import { getRemoteDataSlice } from '../../utils/fetch/getRemoteDataSlice.js';
 import { RCT } from '../../config.js';
 import { createCSVExport, createJSONExport } from '../../utils/dataExport/export.js';
 import { exportFormats } from './overview/dataExport.js';
+import { capitalizeFirstLetter } from '../../utils/dataProcessing/dataProcessingUtils.js';
 
 /**
  * Model representing handlers for periods page
@@ -32,7 +33,7 @@ export default class PeriodsModel extends Observable {
     constructor(model) {
         super();
         this.model = model;
-        this.name = RCT.pageNames.periods.charAt(0).toUpperCase() + RCT.pageNames.periods.slice(1);
+        this.name = capitalizeFirstLetter(RCT.pageNames.periods);
 
         this._pagination = new PaginationModel(model.userPreferences);
         this._pagination.observe(() => {

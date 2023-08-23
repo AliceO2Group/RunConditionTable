@@ -18,7 +18,8 @@ const { extractPeriodName,
         detectorName,
         isDetectorField,
         shouldDisplayDetectorField,
-        rowDisplayStyle } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
+        rowDisplayStyle,
+        capitalizeFirstLetter } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
 
 module.exports = () => {
     describe('Extract period name', () => {
@@ -131,6 +132,20 @@ module.exports = () => {
 
         it('should apply corresponding class to unselected rows', () => {
             assert(rowDisplayStyle(notSelected, shouldHideSelected) === rowNotSelected);
+        });
+    });
+
+    describe('Capitalize the first letter', () => {
+        const sampleString1 = 'periods';
+        const sampleString2 = '0periods';
+        const expectedOutcome1 = 'Periods';
+
+        it('should capitalize the first letter of a given string' , () => {
+            assert(capitalizeFirstLetter(sampleString1) === expectedOutcome1 );
+        });
+
+        it('should not affect the given string if the first char is not a letter' , () => {
+            assert(capitalizeFirstLetter(sampleString2) === sampleString2 );
         });
     });
 };
