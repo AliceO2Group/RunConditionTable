@@ -39,6 +39,13 @@ export const preparedFile = (model) => {
 
 const replacer = (key, value) => value === null ? '' : value;
 
+/**
+ * Uses deprecated data model.
+ * Please use the new csv export with the specific dataModel (e.g. `periodsModel`) instead.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @returns {void} downloads the CSV file with the current data
+ */
 export default function obsoleteDownloadCSV(model) {
     const file = preparedFile(model);
     const link = document.createElement('a');
