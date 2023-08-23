@@ -36,7 +36,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
         };
     }
 
-    async sync(dataPass) {
+    async sync({ dataUnit: dataPass }) {
         return await this.syncPerEndpoint(
             EndpointsFormatter.dataPassesDetailed(dataPass.description),
             (raw) => this.responsePreprocess(raw),

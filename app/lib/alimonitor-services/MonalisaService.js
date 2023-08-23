@@ -120,7 +120,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
                 PeriodId: period.id,
                 ...dataPass,
             }))
-            .then(async ([dataPass, _]) => await this.monalisaServiceDetails.sync(dataPass));
+            .then(async ([dataPass, _]) => await this.monalisaServiceDetails.setSyncTask({ dataUnit: dataPass }));
     }
 
     extractPeriod(rowData) {

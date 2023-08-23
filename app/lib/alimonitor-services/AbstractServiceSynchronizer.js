@@ -178,7 +178,6 @@ class AbstractServiceSynchronizer {
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 
             await Promise.all(promises);
-
             this.metaStore.processedCtr += chunk.length;
             this.logger.info(`progress of ${this.metaStore.processedCtr} / ${total}`);
         }
@@ -211,10 +210,10 @@ class AbstractServiceSynchronizer {
             .catch((e) => this.logger.error(e));
     }
 
-    async setSyncTask() {
+    async setSyncTask(options) {
         this.metaStore.processedCtr = 0;
         this.forceStop = false;
-        await this.sync()
+        await this.sync(options)
             .then(() => {
                 if (this.forceStop) {
                     this.logger.info(`${this.name} forced to stop`);
