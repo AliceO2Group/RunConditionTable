@@ -18,6 +18,15 @@ import { RCT } from '../../config.js';
 
 const { site } = RCT.dataReqParams;
 
+/**
+ * Uses obsolete model.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @param {*} data data
+ * @param {boolean} pagerOnly indicates whether the component should display
+ *        only the pager or sorting row and column display controller as well
+ * @returns {obsoletePager} row with pager and table display properties controllers
+ */
 export default function obsoletePager(model, data, pagerOnly = true) {
     const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
