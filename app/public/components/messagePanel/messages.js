@@ -19,6 +19,13 @@ import spinner from '../common/spinner.js';
 const goBack = 'Go back';
 const nothingFound = 'Nothing found';
 
+/**
+ * Uses deprecated data request.
+ * Please use the `requestButton` with the specific dataModel (e.g. `periodsModel`) instead.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @returns {button} button that enables user to request data
+ */
 const obsoleteRequestButton = (model) => h('button.btn.btn-primary.m3', {
     onclick: () => model.fetchedData.reqForData(true),
 }, 'Reload');
@@ -31,6 +38,14 @@ const removeCurrentDataButton = (model, label) => h('button.btn.btn-primary.m3',
     onclick: () => model.removeCurrentData(),
 }, label);
 
+/**
+ * Uses deprecated `obsoleteRequestButton`.
+ * Please use the `failureWithMessage` with the specific dataModel (e.g. `periodsModel`) and errorObject instead.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @param {number} status request status
+ * @returns {messagePanel} messagePanel informing the user about an unknown error.
+ */
 export const failureWithStatus = (model, status) => messagePanel(
     'no-network-90',
     'Failed to load data',
@@ -48,6 +63,13 @@ export const failureWithMessage = (dataModel, errorObject) => {
     );
 };
 
+/**
+ * Uses deprecated `obsoleteRequestButton`.
+ * Please use the `unknown` with the specific dataModel (e.g. `periodsModel`) instead.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @returns {messagePanel} messagePanel informing the user about an unknown error.
+ */
 export const obsoleteUnknown = (model) => messagePanel(
     'unexpected-90',
     'Unknown error',
@@ -93,6 +115,12 @@ export const noMatchingData = (model, page) => messagePanel(
     ],
 );
 
+/**
+ * Uses deprecated `obsoleteRequestButton`.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @returns {messagePanel} messagePanel informing the user about an unknown error.
+ */
 export const noDataFound = (model) => messagePanel(
     'nothing-found-90',
     nothingFound,

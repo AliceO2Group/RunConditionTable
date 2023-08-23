@@ -23,6 +23,10 @@ const { dataReqParams, pageNames, dataAccess } = RCT;
  * Object of this class provide organization of many FetchedData objects,
  * each is available as ModelFetchedDataStructure_Object[pageName][index]
  * where index is unique identifier of particular data set in chosen page
+ * @deprecated
+ * Please use separate models for each view (e.g. periodsModel).
+ * @param {Router} router parent router
+ * @param {DataAccessModel} model data access model
  */
 export default class FetchedDataManager {
     constructor(router, model) {
