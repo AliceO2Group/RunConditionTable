@@ -50,7 +50,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
         const last_runs_res = await sequelize.query(
             'SELECT name, last_run, max(run_number) as last_run_in_details \
             FROM data_passes AS dp \
-            INNER JOIN data_passes_runs AS dpr \
+            LEFT JOIN data_passes_runs AS dpr \
                 ON dpr.data_pass_id = dp.id \
             GROUP BY name, last_run;',
         );
@@ -64,7 +64,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
             (dataPass) => {
-                const { last_run, last_run_in_details } = this.last_runs[dataPass.name];
+                const { last_run, last_run_in_details } = this.last_runs[dataPass.name] ?? {};
                 return dataPass.period.year >= config.dataFromYearIncluding &&
                     (dataPass.lastRun !== last_run || last_run !== last_run_in_details);
             },
