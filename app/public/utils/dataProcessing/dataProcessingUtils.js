@@ -52,14 +52,3 @@ export function getReadableFileSizeString(fileSizeInBytes) {
 
     return `${Math.max(fileSizeInBytes, 0.1).toFixed(1)}  ${byteUnits[i]}`;
 }
-
-/**
- * Returns an object composed of the picked object properties
- *
- * @param {Object} obj The source object.
- * @param {Array} keys The property paths to pick.
- * @returns {Object} Returns the new object.
- */
-export const pick = (obj, keys) => Object.fromEntries(Object.entries(obj)
-    .filter(([key]) => keys.includes(key)));
-// ToDo: add tests
