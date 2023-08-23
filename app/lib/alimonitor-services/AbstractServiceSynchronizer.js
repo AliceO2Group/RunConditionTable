@@ -29,6 +29,32 @@ const defaultServiceSynchronizerOptions = {
     batchSize: 4,
 };
 
+class ProgressMonitor {
+    constructor({ total, percentageStep, logger }) {
+        this.total = total;
+        this.percentageStep = percentageStep;
+        this.progress = 0;
+        this.lastLogAt = 0;
+        this.logger = logger;
+    }
+
+    update(progress) {
+        this.progress += progress;
+    }
+
+    setTotal(total) {
+        this.total = total;
+    }
+
+    tryLog() {
+        const potentialLogProgress = this.lastLogAt + this.percentageStep * this.total;
+        if (this.progress >= potentialLogProgress || this.progress === this.total) {
+            this.lastLogAt = potentialLogProgress;
+            this.logger(`progress of ${this.progress} / ${this.total}`);
+        }
+    }
+}
+
 class AbstractServiceSynchronizer {
     constructor() {
         this.name = this.constructor.name;
@@ -169,6 +195,7 @@ class AbstractServiceSynchronizer {
     async makeBatchedRequest(data) {
         const rowsChunks = arrayToChunks(data, this.batchSize);
         const total = this.metaStore.totalCount || data.length;
+        this.progressMonitor.setTotal(total);
         for (const chunk of rowsChunks) {
             if (this.forceStop) {
                 return;
@@ -178,8 +205,8 @@ class AbstractServiceSynchronizer {
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 
             await Promise.all(promises);
-            this.metaStore.processedCtr += chunk.length;
-            this.logger.info(`progress of ${this.metaStore.processedCtr} / ${total}`);
+            this.progressMonitor.update(chunk.length);
+            this.progressMonitor.tryLog();
         }
     }
 
@@ -211,7 +238,7 @@ class AbstractServiceSynchronizer {
     }
 
     async setSyncTask(options) {
-        this.metaStore.processedCtr = 0;
+        this.progressMonitor = new ProgressMonitor({})
         this.forceStop = false;
         await this.sync(options)
             .then(() => {
