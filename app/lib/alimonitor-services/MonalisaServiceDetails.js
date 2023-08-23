@@ -20,7 +20,7 @@ const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 const { databaseManager: {
     repositories: {
         RunRepository,
-        DataPassRepository,
+        PeriodRepository,
     },
 } } = require('../database/DatabaseManager.js');
 
@@ -35,26 +35,27 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
         };
     }
 
-    async sync(d) {
+    async sync(dataPass) {
         return await this.syncPerEndpoint(
-            EndpointsFormatter.dataPassesDetailed(d.description),
+            EndpointsFormatter.dataPassesDetailed(dataPass.description),
             (raw) => this.responsePreprocess(raw),
             (v) => Utils.filterObject(v, this.ketpFields),
             () => true,
             async (dbClient, v) => {
-                v.parentDataUnit = d;
+                v.parentDataUnit = dataPass;
 
-                return await RunRepository.T.upsert({ runNumber: v.runNumber })
-                    .then(async ([run, _]) => setTimeout(() => console.log(run.runNumber), 2500));
-
-                    // .then(async () => {
-                    //     DataPassRepository.model.sequelize.models.
-                    // })
-
-                // const detailsSql = v ?
-                //     `call insert_prod_details('${d.name}', ${v.run_number}, '${v.period}');`
-                //     : '';
-                // return await dbClient.query(detailsSql);
+                return await PeriodRepository.T.findOrCreate({
+                    where: {
+                        name: v.period,
+                    },
+                })
+                    .then(async ([period, _]) => await RunRepository.T.findOrCreate({
+                        where: {
+                            runNumber: v.runNumber,
+                            PeriodId: period.id,
+                        },
+                    }))
+                    .then(async ([run, _]) => await run.addDataPasses(dataPass.id));
             },
         );
     }
