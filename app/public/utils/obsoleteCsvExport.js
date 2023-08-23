@@ -35,7 +35,7 @@ export const preparedFile = (model) => {
     return { uri: encodeURI(csvContent), fileName: fileName };
 };
 
-const replacer = (key, value) => value === null ? '' : value;
+const replacer = (_key, value) => value === null ? '' : value;
 
 /**
  * Uses deprecated data model.
