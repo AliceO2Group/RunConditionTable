@@ -13,7 +13,7 @@
  */
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
-import { getReadableFileSizeString } from '../../../utils/utils.js';
+import { getReadableFileSizeString } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 import linkChip from '../../../components/chips/linkChip.js';
 import { getClosestDefinedEnergy } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 const { dataReqParams: DRP, pageNames: PN, outerServices } = RCT;
