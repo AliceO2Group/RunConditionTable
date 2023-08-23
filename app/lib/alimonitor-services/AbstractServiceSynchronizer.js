@@ -238,7 +238,7 @@ class AbstractServiceSynchronizer {
     }
 
     async setSyncTask(options) {
-        this.progressMonitor = new ProgressMonitor({})
+        this.progressMonitor = new ProgressMonitor({ logger: this.logger.info.bind(this.logger), percentageStep: 0.25 });
         this.forceStop = false;
         await this.sync(options)
             .then(() => {
