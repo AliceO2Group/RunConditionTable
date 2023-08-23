@@ -26,6 +26,7 @@ const { databaseManager: {
         PeriodRepository,
         DataPassRepository,
     },
+    sequelize,
 } } = require('../database/DatabaseManager.js');
 
 class MonalisaService extends AbstractServiceSynchronizer {
@@ -46,16 +47,27 @@ class MonalisaService extends AbstractServiceSynchronizer {
     }
 
     async sync() {
-        await this.dbConnect();
-        // const last_runs_res = await this.dbClient.query('SELECT name, last_run from data_passes;');
-        this.last_runs = {};//Object.fromEntries(last_runs_res.rows.map((r) => Object.values(r)));
-        await this.dbDisconnect();
+        const last_runs_res = await sequelize.query(
+            'SELECT name, last_run, max(run_number) as last_run_in_details \
+            FROM data_passes AS dp \
+            INNER JOIN data_passes_runs AS dpr \
+                ON dpr.data_pass_id = dp.id \
+            GROUP BY name, last_run;',
+        );
+        this.last_runs = Object.fromEntries(last_runs_res[0].map((r) => {
+            const { name, last_run, last_run_in_details } = r;
+            return [name, { last_run, last_run_in_details }];
+        }));
 
         return await this.syncPerEndpoint(
             EndpointsFormatter.dataPassesRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
-            (r) => r.period.year >= config.dataFromYearIncluding && r.lastRun != this.last_runs[r.name],
+            (dataPass) => {
+                const { last_run, last_run_in_details } = this.last_runs[dataPass.name];
+                return dataPass.period.year >= config.dataFromYearIncluding &&
+                    (dataPass.lastRun !== last_run || last_run !== last_run_in_details);
+            },
             this.dbAction.bind(this),
         );
     }
