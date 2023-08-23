@@ -22,6 +22,7 @@ const { databaseManager: {
         RunRepository,
         PeriodRepository,
     },
+    sequelize,
 } } = require('../database/DatabaseManager.js');
 
 class MonalisaServiceDetails extends AbstractServiceSynchronizer {
@@ -43,19 +44,39 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
             () => true,
             async (dbClient, v) => {
                 v.parentDataUnit = dataPass;
-
                 return await PeriodRepository.T.findOrCreate({
                     where: {
                         name: v.period,
                     },
                 })
-                    .then(async ([period, _]) => await RunRepository.T.findOrCreate({
-                        where: {
-                            runNumber: v.runNumber,
-                            PeriodId: period.id,
-                        },
-                    }))
-                    .then(async ([run, _]) => await run.addDataPasses(dataPass.id));
+                    .then(async ([period, _]) => {
+                        v.PeriodId = period.id;
+                        return await RunRepository.T.findOrCreate({
+                            where: {
+                                runNumber: v.runNumber,
+                                PeriodId: period.id,
+                            },
+                        });
+                    })
+                    .catch(async (e) => {
+                        throw new Error('Find or create run failed', {
+                            cause: {
+                                error: e.message,
+                                meta: {
+                                    actualValueInDB: await RunRepository.findOne({ where: { runNumber: v.runNumber } }, { raw: true }),
+                                    inQueryValues: {
+                                        runNumber: v.runNumber,
+                                        PeriodId: v.PeriodId,
+                                    },
+                                    sourceValues: {
+                                        runNumber: v.runNumber,
+                                        periodName: v.period,
+                                    },
+                                },
+                            },
+                        });
+                    })
+                    .then(async ([run, _]) => sequelize.transaction((t) => run.addDataPasses(dataPass.id)));
             },
         );
     }

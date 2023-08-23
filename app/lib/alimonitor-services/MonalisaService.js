@@ -47,8 +47,8 @@ class MonalisaService extends AbstractServiceSynchronizer {
 
     async sync() {
         await this.dbConnect();
-        const last_runs_res = await this.dbClient.query('SELECT name, last_run from data_passes;');
-        this.last_runs = Object.fromEntries(last_runs_res.rows.map((r) => Object.values(r)));
+        // const last_runs_res = await this.dbClient.query('SELECT name, last_run from data_passes;');
+        this.last_runs = {};//Object.fromEntries(last_runs_res.rows.map((r) => Object.values(r)));
         await this.dbDisconnect();
 
         return await this.syncPerEndpoint(
