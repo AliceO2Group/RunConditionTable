@@ -64,14 +64,14 @@ export const showModal = (modalId) => {
     }
 };
 
-export const modal = (modalId, dataModel = null, model = null) => {
+export const modal = (modalId, dataModel = null, userPreferences = null) => {
     switch (modalId) {
         case modalIds.pageSettings.modal: {
-            return model
+            return userPreferences
                 ? h(`.${modalClassNames.modal}`, { id: modalIds.pageSettings.modal },
                     h(`.${modalClassNames.content}.abs-center.p3`, {
                         id: modalIds.pageSettings.content,
-                    }, pageSettings(model.parent.userPreferences, () => {
+                    }, pageSettings(userPreferences, () => {
                         document.getElementById(modalIds.pageSettings.modal).style.display = 'none';
                     })))
                 : '';
@@ -83,18 +83,22 @@ export const modal = (modalId, dataModel = null, model = null) => {
                 }, about()));
         }
         case modalIds.detectors.modal: {
-            return h(`.${modalClassNames.modal}`, { id: modalIds.detectors.modal },
-                h(`.${modalClassNames.content}.abs-center.p3`, {
-                    id: modalIds.detectors.content,
-                }, detectorSettings(model.parent.userPreferences)));
+            return userPreferences
+                ? h(`.${modalClassNames.modal}`, { id: modalIds.detectors.modal },
+                    h(`.${modalClassNames.content}.abs-center.p3`, {
+                        id: modalIds.detectors.content,
+                    }, detectorSettings(userPreferences)))
+                : '';
         }
         case modalIds.dataExport.modal: {
-            return h(`.${modalClassNames.modal}`, { id: modalIds.dataExport.modal },
-                h(`.${modalClassNames.content}.abs-center.p3`, {
-                    id: modalIds.dataExport.content,
-                }, periodsExport(model.parent.userPreferences, () => {
-                    document.getElementById(modalIds.dataExport.modal).style.display = 'none';
-                }, dataModel)));
+            return userPreferences
+                ? h(`.${modalClassNames.modal}`, { id: modalIds.dataExport.modal },
+                    h(`.${modalClassNames.content}.abs-center.p3`, {
+                        id: modalIds.dataExport.content,
+                    }, periodsExport(userPreferences, () => {
+                        document.getElementById(modalIds.dataExport.modal).style.display = 'none';
+                    }, dataModel)))
+                : '';
         }
     }
 };
