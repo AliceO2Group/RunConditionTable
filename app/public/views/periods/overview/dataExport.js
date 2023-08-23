@@ -19,18 +19,18 @@ export const exportFormats = {
     json: 'JSON',
 };
 
+export const exportPreferences = {
+    all: 'all',
+    currentPage: 'currentPage',
+    selected: 'selected',
+    notSelected: 'notSelected',
+    visible: 'visible',
+};
+
 export default function dataExport(userPreferences, close, pageName, dataModel) {
     const rowsPreferenceSelectId = 'rows-preference-selection';
     const columnsPreferenceSelectId = 'columns-preference-selection';
     const exportFormatSelectId = 'export-format-selection';
-
-    const exportPreferences = {
-        all: 'all',
-        currentPage: 'currentPage',
-        selected: 'selected',
-        notSelected: 'notSelected',
-        visible: 'visible',
-    };
 
     const title = h('h3.text-primary', `${pageName} export`);
 
