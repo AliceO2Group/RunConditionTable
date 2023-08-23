@@ -109,26 +109,6 @@ class MonalisaService extends AbstractServiceSynchronizer {
                 ...dataPass,
             }))
             .then(async ([dataPass, _]) => await this.monalisaServiceDetails.sync(dataPass));
-
-        /*
-         * Const { description } = dataPass;
-         * dataPass = Utils.adjusetObjValuesToSql(dataPass);
-         * dataPass.rawDes = description;
-         * const { period } = dataPass;
-         * const period_insert =
-         *     dataPass?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beamType});` : '';
-         * const pgCommand = `${period_insert}; call insert_prod(
-         *     ${dataPass.name},
-         *     ${dataPass.period.name},
-         *     ${dataPass.description},
-         *     ${dataPass.number_of_events},
-         *     ${dataPass.size},
-         *     ${dataPass.last_run}
-         * );`;
-         * const q1 = await dbClient.query(pgCommand);
-         * const q2 = await this.monalisaServiceDetails.sync(dataPass);
-         * return Promise.all([q1, q2]);
-         */
     }
 
     extractPeriod(rowData) {
