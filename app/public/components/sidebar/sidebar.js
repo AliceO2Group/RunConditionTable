@@ -27,13 +27,14 @@ const { pageNames } = RCT;
  */
 
 export default function sidebar(model) {
+    const { userPreferences } = model.parent;
     return h('.sidebar.sidebar-collapsible', {
         id: 'sidebar',
     },
     modal(modalIds.about.modal),
-    modal(modalIds.pageSettings.modal, null, model),
-    modal(modalIds.detectors.modal, null, model),
-    modal(modalIds.dataExport.modal, model.parent.periods, model),
+    modal(modalIds.pageSettings.modal, null, userPreferences),
+    modal(modalIds.detectors.modal, null, userPreferences),
+    modal(modalIds.dataExport.modal, model.parent.periods, userPreferences),
     h('.logo.ph3.hide-on-close'),
     h('.flex-column.gap-20',
         h('.sidebar-section',
