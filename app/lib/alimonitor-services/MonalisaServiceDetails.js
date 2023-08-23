@@ -76,7 +76,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
                             },
                         });
                     })
-                    .then(async ([run, _]) => sequelize.transaction((t) => run.addDataPasses(dataPass.id)));
+                    .then(async ([run, _]) => await sequelize.transaction((t) => run.addDataPasses(dataPass.id)));
             },
         );
     }
@@ -86,7 +86,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
         const res = entries.map(([hid, vObj]) => {
             vObj['hid'] = hid.trim();
             return vObj;
-        });
+        }).sort((a, b) => a.run_no - b.run_no);
         return res;
     }
 }
