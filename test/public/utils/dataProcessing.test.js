@@ -19,7 +19,8 @@ const { extractPeriodName,
         isDetectorField,
         shouldDisplayDetectorField,
         rowDisplayStyle,
-        capitalizeFirstLetter } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
+        capitalizeFirstLetter,
+        getReadableFileSizeString } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
 
 module.exports = () => {
     describe('Extract period name', () => {
@@ -146,6 +147,19 @@ module.exports = () => {
 
         it('should not affect the given string if the first char is not a letter' , () => {
             assert(capitalizeFirstLetter(sampleString2) === sampleString2 );
+        });
+    });
+
+    describe('Check the readable file size', () => {
+        const fileSizekB = 1024;
+        const fileSizeGB = 3758096384;
+
+        it('should parse kB correctly' , () => {
+            assert(getReadableFileSizeString(fileSizekB) === '1.0 kB' );
+        });
+
+        it('should parse GB correctly' , () => {
+            assert(getReadableFileSizeString(fileSizeGB) === '3.5 GB' );
         });
     });
 };
