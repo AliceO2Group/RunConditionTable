@@ -42,7 +42,7 @@ export default function dataExport(close, dataModel) {
             NotAsked: () => {},
             Loading: () => {},
             Success: async () => {
-                await dataModel.createDataExport(remoteData.payload, pageName, selectedDataFormat());
+                await dataModel.createDataExport(remoteData.payload, selectedDataFormat());
             },
             Failure: () => {},
         });
