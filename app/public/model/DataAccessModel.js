@@ -21,6 +21,12 @@ import { RCT } from '../config.js';
 const { messageTimeout } = RCT;
 const { states } = RCT.dataAccess;
 
+/**
+ * General class for managing the data access
+ * @deprecated
+ * Please use separate models for each view (e.g. periodsModel).
+ * @param {Model} parent main model
+ */
 export default class DataAccessModel extends Observable {
     constructor(parent) {
         super();

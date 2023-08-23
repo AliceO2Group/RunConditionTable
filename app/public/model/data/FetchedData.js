@@ -23,9 +23,9 @@ const DRF = RCT.dataResponseFields;
  * set of data held in this structure are fully defined by the url given as on of constructor arguments
  * when some filtering parameters are or site, etc. is changed
  * the url is also changed in order to be consistent with data
- *
+ * @deprecated
+ * Please use separate models for each view (e.g. periodsModel).
  */
-
 export default class FetchedData {
     constructor(url, content, userPreferences, totalRecordsNumber = null) {
         this.url = url;

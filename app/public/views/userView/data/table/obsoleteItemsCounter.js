@@ -16,6 +16,12 @@ import { RCT } from '../../../../config.js';
 
 const siteParamName = RCT.dataReqParams.site;
 
+/**
+ * Please use the new items counter instead that uses the paginationModel
+ * @deprecated
+ * @param {*} data data
+ * @returns {string} range of items diplayed on the given page and the total number of fetched records
+ */
 export default function obsoleteItemsCounter(data) {
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
 
