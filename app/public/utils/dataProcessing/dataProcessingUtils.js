@@ -42,15 +42,19 @@ export const rowDisplayStyle = (isMarked, shouldHideMarkedRecords) => isMarked
         : '.row-selected'
     : '.row-not-selected';
 
+/**
+ * Converts bytes into human readable file size string
+ * @param {number} fileSizeInBytes in bytes
+ * @returns string (human readable)
+ */
 export const getReadableFileSizeString = (fileSizeInBytes) => {
-    let i = -1;
     const byteUnits = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    do {
-        fileSizeInBytes /= 1024;
-        i++;
-    } while (fileSizeInBytes > 1024);
 
-    return `${Math.max(fileSizeInBytes, 0.1).toFixed(1)} ${byteUnits[i]}`;
+    const result = byteUnits.reduce((acc, _current) => acc.fileSize > 1024
+        ? { index: acc.index + 1, fileSize: acc.fileSize / 1024 }
+        : acc, { index: 0, fileSize: fileSizeInBytes / 1024 });
+
+    return `${Math.max(result.fileSize, 0.1).toFixed(1)} ${byteUnits[result.index]}`;
 };
 
 export const capitalizeFirstLetter = (text) => text.charAt(0).toUpperCase() + text.slice(1);
