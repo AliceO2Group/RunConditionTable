@@ -39,7 +39,7 @@ const metaObj = {
     },
 };
 
-const queryForName = (name) => `SELECT name, val, extract(epoch from "updated_at") as "udatedAt" FROM meta WHERE name = '${name}'`;
+const queryForName = (name) => `SELECT name, val, extract(epoch from "updated_at") as "updatedAt" FROM meta WHERE name = '${name}'`;
 const updateForName = (name, val) => `INSERT INTO meta (name, val, "updated_at") values ('${name}', '${val}', now()) 
                                         ON conflict (name) do update set val = EXCLUDED.val, "updated_at" = now();`;
 

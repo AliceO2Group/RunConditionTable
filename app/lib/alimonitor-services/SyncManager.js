@@ -44,17 +44,23 @@ class SyncManager {
             await this.services.monalisaService.setSyncTask();
             await this.services.monalisaServiceMC.setSyncTask();
             await this.setInDBSyncOk();
+            this.logger.info('Synchronization completed');
         } catch {
             await this.setInDBSyncFailure();
         }
     }
 
     async setSyncAllTask() {
-        const syncPeriod = 12 * 60 * 60 * 1000; // Twice per day [ms]
-        const last_sync = this.getLastSyncMetadata();
-        const firstSyncDelay = last_sync.val === 'ok' ?
-            syncPeriod - (Date.now() - (last_sync.updatedAt || 0) * 1000)
-            : 1000;// Gives server 1 sec before sync task starts;
+        const { syncPeriod } = config;
+        const last_sync = await this.getLastSyncMetadata();
+        const firstSyncDelay = last_sync?.val === 'ok' ?
+            syncPeriod - (Date.now() - (last_sync?.updatedAt || 0) * 1000)
+            : 3000;// Gives server 1 sec before sync task starts;
+        const hours = Math.floor(firstSyncDelay / 60 / 60 / 1000);
+        const minutes = Math.floor((firstSyncDelay - hours * 60 * 60 * 1000) / 60 / 1000);
+        const seconds = Math.floor((firstSyncDelay - (hours * 60 + minutes) * 60 * 1000) / 1000);
+
+        this.logger.info(`Next synchronization in ${hours} h ${minutes} min ${seconds} sec`);
 
         setTimeout(() => {
             this.syncAll();
