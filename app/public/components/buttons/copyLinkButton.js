@@ -36,7 +36,7 @@ export default function copyLinkButton(url) {
                     snackbar.style.display = 'flex';
 
                     document.addEventListener('click', (event) => {
-                        if (thisButton != event.target && thisButtonContent != event.target) {
+                        if (thisButton !== event.target && thisButtonContent !== event.target) {
                             snackbar.style.display = 'none';
                         }
                     });

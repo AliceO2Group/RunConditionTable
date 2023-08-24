@@ -58,7 +58,7 @@ export default function tablePanel(model, runs) {
         .filter((index) => index !== defaultIndexString)
         .map((index) => indexChip(model, dataPointer.page, index));
 
-    data.rows = data.rows.filter((item) => item.name != 'null');
+    data.rows = data.rows.filter((item) => item.name !== 'null');
 
     const cellsSpecials = pagesCellsSpecials[dataPointer.page];
 
