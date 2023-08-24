@@ -69,6 +69,9 @@ class RunConditionTableApplication {
             await this.databaseManager.migrate();
             await this.httpServer.listen();
             await this.databaseService.healthcheckInsertData();
+            if (config.syncTaskAtStart) {
+                this.syncManager.setSyncAllTask();
+            }
         } catch (error) {
             this.logger.error(`Error while starting RCT app: ${error}`);
             await this.stop();
