@@ -11,16 +11,12 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-import { switchCase } from '/js/src/index.js';
 
 export const sort = (fName, data, model, order) => {
     if (data.sorting.field !== fName) {
         data.sorting.field = fName;
         data.sorting.order = null;
     }
-    data.sorting.order = data.sorting.order = switchCase(order, {
-        1: 1,
-        '-1': -1,
-    }, null);
+    data.sorting.order = order;
     model.fetchedData.changeSorting(data.sorting);
 };
