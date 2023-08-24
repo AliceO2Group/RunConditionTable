@@ -121,19 +121,19 @@ module.exports = () => {
         const shouldNotHideSelected = false;
         
         it('should not display hidden rows', () => {
-            assert(rowDisplayStyle(selected, shouldHideSelected) === displayNone);
+            assert.equal(rowDisplayStyle(selected, shouldHideSelected), displayNone);
         });
 
         it('should apply selection class to selected rows', () => {
-            assert(rowDisplayStyle(selected, shouldNotHideSelected) === rowSelected);
+            assert.equal(rowDisplayStyle(selected, shouldNotHideSelected), rowSelected);
         });
 
         it('should apply corresponding class to unselected rows', () => {
-            assert(rowDisplayStyle(notSelected, shouldNotHideSelected) === rowNotSelected);
+            assert.equal(rowDisplayStyle(notSelected, shouldNotHideSelected), rowNotSelected);
         });
 
         it('should apply corresponding class to unselected rows', () => {
-            assert(rowDisplayStyle(notSelected, shouldHideSelected) === rowNotSelected);
+            assert.equal(rowDisplayStyle(notSelected, shouldHideSelected), rowNotSelected);
         });
     });
 
@@ -142,11 +142,11 @@ module.exports = () => {
         const fileSizeGB = 3758096384;
 
         it('should parse kB correctly' , () => {
-            assert(getReadableFileSizeString(fileSizekB) === '1.0 kB' );
+            assert.equal(getReadableFileSizeString(fileSizekB), '1.0 kB' );
         });
 
         it('should parse GB correctly' , () => {
-            assert(getReadableFileSizeString(fileSizeGB) === '3.5 GB' );
+            assert.equal(getReadableFileSizeString(fileSizeGB), '3.5 GB' );
         });
     });
 

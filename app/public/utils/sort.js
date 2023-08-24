@@ -14,7 +14,7 @@
 import { switchCase } from '/js/src/index.js';
 
 export const sort = (fName, data, model, order) => {
-    if (data.sorting.field != fName) {
+    if (data.sorting.field !== fName) {
         data.sorting.field = fName;
         data.sorting.order = null;
     }

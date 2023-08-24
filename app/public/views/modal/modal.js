@@ -53,7 +53,7 @@ export const showModal = (modalId) => {
         modal.style.display = 'block';
         document.addEventListener('click', (event) => {
             const { modals, contents } = allModals();
-            if (Array.from(contents).find((e) => e != event.target)
+            if (Array.from(contents).find((e) => e !== event.target)
                 && Array.from(modals).find((e) => e == event.target)
                 && document.getElementById(modalId)) {
                 document.getElementById(modalId).style.display = 'none';
