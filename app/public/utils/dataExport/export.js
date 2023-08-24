@@ -49,17 +49,20 @@ const createJSONExport = (content, fileName, contentType) => {
  * @return {void}
  */
 const createCSVExport = (content, fileName, contentType) => {
-    const items = content;
-    const replacer = (_key, value) => value === null ? '' : value;
-    const header = Object.keys(items[0]);
-    let csv = items.map((row) => header.map((fieldName) => JSON.stringify(row[fieldName], replacer)));
-    csv.unshift(header.join(','));
-    csv = csv.join('\r\n');
+    const csv = prepareCSVFile(content);
     downloadFile(csv, fileName, contentType);
 };
 
+const prepareCSVFile = (content) => {
+    const header = Object.keys(content[0]);
+    const csv = content.map((row) => header.map((fieldName) => JSON.stringify(row[fieldName], replacer)));
+    csv.unshift(header.join(','));
+    return csv.join('\r\n');
+};
+
+export const replacer = (_key, value) => value === null ? '' : value;
+
 export {
-    downloadFile,
     createJSONExport,
     createCSVExport,
 };
