@@ -12,7 +12,7 @@
  */
 
 const req = require('esm')(module)
-const { replacer } = req('../../../app/public/utils/dataExport/export');
+const { replacer, prepareCSVContent } = req('../../../app/public/utils/dataExport/export');
 const assert = require('assert');
 
 module.exports = () => {
@@ -41,17 +41,35 @@ module.exports = () => {
             });
         });
 
-        /*
         describe('Check data preparation', () => {
+            const rawData = [
+                {
+                    name: "LHC23zt",
+                    year: 2023,
+                    beamType: "p-p",
+                    avgEnergy: 13595,
+                    distinctEnergies: [6797.04, 6797.52, 6797.64, 6798],
+                },
+                {
+                    name: "LHC23zs",
+                    year: 2023,
+                    beamType: "p-p",
+                    avgEnergy: 13596,
+                    distinctEnergies: [6797.4, 6797.52, 6797.64, 6797.76, 6797.88, 6798, 6798.24, 6799.2],
+                }
+            ];
+
+            const preparedData = 'name,year,beamType,avgEnergy,distinctEnergies\r\n' +
+            `"LHC23zt",2023,"p-p",13595,[6797.04,6797.52,6797.64,6798]\r\n` +
+            `"LHC23zs",2023,"p-p",13596,[6797.4,6797.52,6797.64,6797.76,6797.88,6798,6798.24,6799.2]`;
+            
             it('should not return null', () => {
-                assert(preparedData(dataSample) !== null);
+                assert(prepareCSVContent(rawData) !== null);
             });
 
-            it('should filter values properly', () => {
-                assert(preparedData(dataSample).indexOf('b field') === -1);
-                assert(preparedData(dataSample).indexOf(3) === -1);
+            it('should prepare CSV data content', () => {
+                assert.equal(prepareCSVContent(rawData), preparedData);
             });
         });
-        */
     });
 };
