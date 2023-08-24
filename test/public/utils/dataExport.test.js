@@ -12,7 +12,7 @@
  */
 
 const req = require('esm')(module)
-const replacer = req('../../../app/public/utils/dataExport/export').replacer;
+const { replacer } = req('../../../app/public/utils/dataExport/export');
 const assert = require('assert');
 
 module.exports = () => {
@@ -40,5 +40,18 @@ module.exports = () => {
                 assert.deepEqual(Object.keys(sampleObject).reduce((acc, key) => ({...acc, [key]: replacer(key, sampleObject[key])}), {}), expectedResult);
             });
         });
+
+        /*
+        describe('Check data preparation', () => {
+            it('should not return null', () => {
+                assert(preparedData(dataSample) !== null);
+            });
+
+            it('should filter values properly', () => {
+                assert(preparedData(dataSample).indexOf('b field') === -1);
+                assert(preparedData(dataSample).indexOf(3) === -1);
+            });
+        });
+        */
     });
 };
