@@ -23,6 +23,7 @@ module.exports = Object.freeze({
     winston: ResProvider.winston(),
     database: require('./database.js'),
     syncTaskAtStart: ResProvider.envOrDef('RCT_SYNC_TASK_AT_START', false, Boolean),
+    syncPeriod: ResProvider.envOrDef('RCT_SYNC_PERIOD', 12 * 60 * 60 * 1000, Number),
     rctData: require('./rct-data'),
     public: require('./public.js'),
 

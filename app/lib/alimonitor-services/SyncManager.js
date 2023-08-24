@@ -51,7 +51,7 @@ class SyncManager {
     }
 
     async setSyncAllTask() {
-        const syncPeriod = 12 * 60 * 60 * 1000; // Twice per day [ms]
+        const { syncPeriod } = config;
         const last_sync = await this.getLastSyncMetadata();
         const firstSyncDelay = last_sync?.val === 'ok' ?
             syncPeriod - (Date.now() - (last_sync?.updatedAt || 0) * 1000)
