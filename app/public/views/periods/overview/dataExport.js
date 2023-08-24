@@ -27,85 +27,86 @@ export const exportPreferences = {
     visible: 'visible',
 };
 
+const rowsPreferenceSelectId = 'rows-preference-selection';
+const columnsPreferenceSelectId = 'columns-preference-selection';
+const exportFormatSelectId = 'export-format-selection';
+
+const exportData = async (dataModel, close) => {
+    const remoteData = dataModel.currentPageData;
+
+    remoteData.match({
+        NotAsked: () => {},
+        Loading: () => {},
+        Success: async () => {
+            await dataModel.createDataExport(remoteData.payload, selectedDataFormat());
+        },
+        Failure: () => {},
+    });
+    close();
+};
+
+const handleRowsPreferenceSelection = () => {
+    const exportPreferenceSelection = document.getElementById(rowsPreferenceSelectId);
+    const selectedPreference = exportPreferenceSelection.options[exportPreferenceSelection.selectedIndex].value;
+    switch (selectedPreference) {
+        case exportPreferences.all:
+            /* */
+            break;
+        case exportPreferences.currentPage:
+            /* */
+            break;
+        case exportPreferences.selected:
+            /* */
+            break;
+        case exportPreferences.notSelected:
+            /* */
+            break;
+        case exportPreferences.visible:
+            /* */
+            break;
+        default:
+            break;
+    }
+};
+
+const handleColumnsPreferenceSelection = () => {
+    const exportPreferenceSelection = document.getElementById(columnsPreferenceSelectId);
+    const selectedPreference = exportPreferenceSelection.options[exportPreferenceSelection.selectedIndex].value;
+    switch (selectedPreference) {
+        case exportPreferences.all:
+            /* */
+            break;
+        case exportPreferences.selected:
+            /* */
+            break;
+        case exportPreferences.notSelected:
+            /* */
+            break;
+        case exportPreferences.visible:
+            /* */
+            break;
+        default:
+            break;
+    }
+};
+
+const selectedDataFormat = () => {
+    const exportFormatSelection = document.getElementById(exportFormatSelectId);
+    const selectedFormat = exportFormatSelection.options[exportFormatSelection.selectedIndex].value;
+    switch (selectedFormat) {
+        case exportFormats.csv:
+            return selectedFormat;
+        case exportFormats.json:
+            return selectedFormat;
+        default:
+            return selectedFormat.csv;
+    }
+};
+
 export default function dataExport(close, dataModel) {
     const pageName = dataModel.name;
-    const rowsPreferenceSelectId = 'rows-preference-selection';
-    const columnsPreferenceSelectId = 'columns-preference-selection';
-    const exportFormatSelectId = 'export-format-selection';
 
     const title = h('h3.text-primary', `${pageName} export`);
-
-    const exportData = async () => {
-        const remoteData = dataModel.currentPageData;
-
-        remoteData.match({
-            NotAsked: () => {},
-            Loading: () => {},
-            Success: async () => {
-                await dataModel.createDataExport(remoteData.payload, selectedDataFormat());
-            },
-            Failure: () => {},
-        });
-        close();
-    };
-
-    const handleRowsPreferenceSelection = () => {
-        const exportPreferenceSelection = document.getElementById(rowsPreferenceSelectId);
-        const selectedPreference = exportPreferenceSelection.options[exportPreferenceSelection.selectedIndex].value;
-        switch (selectedPreference) {
-            case exportPreferences.all:
-                /* */
-                break;
-            case exportPreferences.currentPage:
-                /* */
-                break;
-            case exportPreferences.selected:
-                /* */
-                break;
-            case exportPreferences.notSelected:
-                /* */
-                break;
-            case exportPreferences.visible:
-                /* */
-                break;
-            default:
-                break;
-        }
-    };
-
-    const handleColumnsPreferenceSelection = () => {
-        const exportPreferenceSelection = document.getElementById(columnsPreferenceSelectId);
-        const selectedPreference = exportPreferenceSelection.options[exportPreferenceSelection.selectedIndex].value;
-        switch (selectedPreference) {
-            case exportPreferences.all:
-                /* */
-                break;
-            case exportPreferences.selected:
-                /* */
-                break;
-            case exportPreferences.notSelected:
-                /* */
-                break;
-            case exportPreferences.visible:
-                /* */
-                break;
-            default:
-                break;
-        }
-    };
-
-    const selectedDataFormat = () => {
-        const exportFormatSelection = document.getElementById(exportFormatSelectId);
-        const selectedFormat = exportFormatSelection.options[exportFormatSelection.selectedIndex].value;
-        switch (selectedFormat) {
-            case exportFormats.csv:
-                return selectedFormat;
-            case exportFormats.json:
-                return selectedFormat;
-            default:
-                return selectedFormat.csv;
-        }
-    };
 
     return h('.p-1rem', [
         h('.flex.p-bottom-1rem.items-center',
@@ -150,7 +151,7 @@ export default function dataExport(close, dataModel) {
 
         h('.flex-wrap.justify-center.items-center.p-1rem.p-bottom-0',
             h('button.btn.btn-primary', {
-                onclick: async () => await exportData(),
+                onclick: async () => await exportData(dataModel, close),
             }, 'Download file')),
     ]);
 }
