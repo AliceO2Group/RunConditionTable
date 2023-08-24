@@ -14,22 +14,8 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
-const { pageNames } = RCT;
-
-export function pageTitle(page) {
-    switch (page) {
-        case pageNames.periods: return 'Periods';
-        case pageNames.runsPerPeriod: return 'Runs per period';
-        case pageNames.runsPerDataPass: return 'Runs per data pass';
-        case pageNames.dataPasses: return 'Data passes per period';
-        case pageNames.mc: return 'Monte Carlo';
-        case pageNames.flags: return 'Flags';
-        case pageNames.anchoragePerDatapass: return 'Anchorage per data pass';
-        case pageNames.anchoredPerMC: return 'Anchored per MC';
-        default: return page;
-    }
-}
+import { pageTitle } from '../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function title(page) {
-    return h('h3.p-right-15.text-primary', pageTitle(page));
+    return h('h3.p-right-15.text-primary', pageTitle(page, RCT.pageNames));
 }
