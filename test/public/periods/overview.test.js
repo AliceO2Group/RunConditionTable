@@ -16,6 +16,8 @@ const {
     defaultAfter,
 } = require('../defaults');
 
+const assert = require('assert');
+
 module.exports = () => {
     let page;
     let browser;
