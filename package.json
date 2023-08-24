@@ -74,6 +74,8 @@
     "mocha": "^10.1.0",
     "nodemon": "^2.0.20",
     "nyc": "^15.1.0",
+    "puppeteer": "^21.1.0",
+    "puppeteer-to-istanbul": "^1.4.0",
     "run-script-os": "^1.1.6",
     "sequelize-cli": "^6.6.1",
     "sinon": "^14.0.1",
