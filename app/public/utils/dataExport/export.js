@@ -11,6 +11,11 @@
  * or submit itself to any jurisdiction.
  */
 
+const contentTypes = {
+    json: 'application/json',
+    csv: 'text/csv;charset=utf-8;',
+};
+
 /**
  * Download a file
  *
@@ -32,13 +37,11 @@ const downloadFile = (content, fileName, contentType) => {
  *
  * @param {Object} content The source content.
  * @param {String} fileName The name of the file including the output format.
- * @param {String} contentType The content type of the file.
  * @return {void}
  */
 const createJSONExport = (content, fileName) => {
     const json = JSON.stringify(content, null, 2);
-    const contentType = 'application/json';
-    downloadFile(json, `${fileName}.json`, contentType);
+    downloadFile(json, `${fileName}.json`, contentTypes.json);
 };
 
 /**
@@ -46,13 +49,11 @@ const createJSONExport = (content, fileName) => {
  *
  * @param {Object} content The source content.
  * @param {String} fileName The name of the file including the output format.
- * @param {String} contentType The content type of the file.
  * @return {void}
  */
 const createCSVExport = (content, fileName) => {
-    const contentType = 'text/csv;charset=utf-8;';
     const csv = prepareCSVContent(content);
-    downloadFile(csv, `${fileName}.csv`, contentType);
+    downloadFile(csv, `${fileName}.csv`, contentTypes.csv);
 };
 
 const prepareCSVContent = (content) => {
