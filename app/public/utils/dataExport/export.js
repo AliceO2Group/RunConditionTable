@@ -57,11 +57,9 @@ const createCSVExport = (content, fileName) => {
 };
 
 export const prepareCSVContent = (content) => {
-    console.log(content);
     const header = Object.keys(content[0]);
     const csv = content.map((row) => header.map((fieldName) => JSON.stringify(row[fieldName], replacer)));
     csv.unshift(header.join(','));
-    console.log(csv.join('\r\n'));
     return csv.join('\r\n');
 };
 
