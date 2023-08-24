@@ -91,7 +91,7 @@ export const modal = (modalId, dataModel = null, userPreferences = null) => {
                 : '';
         }
         case modalIds.dataExport.modal: {
-            return userPreferences
+            return dataModel
                 ? h(`.${modalClassNames.modal}`, { id: modalIds.dataExport.modal },
                     h(`.${modalClassNames.content}.abs-center.p3`, {
                         id: modalIds.dataExport.content,
