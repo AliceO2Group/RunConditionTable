@@ -35,8 +35,13 @@ module.exports = Object.freeze({
     errorsLoggingDepths: {
         no: () => null,
         message: (logger, er) => logger.error(er.message),
-        stack: (logger, er) => logger.error(er.stack),
-        object: (logger, er) => logger.error(JSON.stringify(er, null, 2)),
+        stack: (logger, er) => logger.error(JSON.stringify({ message: er.message, stack: er.stack }, null, 2)),
+        full: (logger, er) => logger.error(JSON.stringify({
+            message: er.message,
+            stack: er.stack,
+            ...er,
+            cause: er.cause,
+        }, null, 2)),
     },
-    defaultErrorsLogginDepth: ResProvider.envOrDef('RCT_ERR_DEPTH', 'object'),
+    defaultErrorsLogginDepth: ResProvider.envOrDef('RCT_ERR_DEPTH', 'full'),
 });

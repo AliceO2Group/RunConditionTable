@@ -17,29 +17,67 @@ const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 
+const { databaseManager: {
+    repositories: {
+        RunRepository,
+        PeriodRepository,
+    },
+    sequelize,
+} } = require('../database/DatabaseManager.js');
+
 class MonalisaServiceDetails extends AbstractServiceSynchronizer {
     constructor() {
         super();
         this.batchSize = 5;
 
         this.ketpFields = {
-            run_no: 'run_number',
+            run_no: 'runNumber',
             raw_partition: 'period',
         };
     }
 
-    async sync(d) {
+    async sync({ dataUnit: dataPass }) {
         return await this.syncPerEndpoint(
-            EndpointsFormatter.dataPassesDetailed(d.rawDes),
+            EndpointsFormatter.dataPassesDetailed(dataPass.description),
             (raw) => this.responsePreprocess(raw),
-            (v) => Utils.adjusetObjValuesToSql(Utils.filterObject(v, this.ketpFields)),
+            (v) => Utils.filterObject(v, this.ketpFields),
             () => true,
             async (dbClient, v) => {
-                v.parentDataUnit = d;
-                const detailsSql = v ?
-                    `call insert_prod_details(${d.name}, ${v.run_number}, ${v.period});`
-                    : '';
-                return await dbClient.query(detailsSql);
+                v.parentDataUnit = dataPass;
+                return await PeriodRepository.T.findOrCreate({
+                    where: {
+                        name: v.period,
+                    },
+                })
+                    .then(async ([period, _]) => {
+                        v.PeriodId = period.id;
+                        return await RunRepository.T.findOrCreate({
+                            where: {
+                                runNumber: v.runNumber,
+                                PeriodId: period.id,
+                            },
+                        });
+                    })
+                    .catch(async (e) => {
+                        throw new Error('Find or create run failed', {
+                            cause: {
+                                error: e.message,
+                                meta: {
+                                    actualValueInDB: await RunRepository.findOne({ where: { runNumber: v.runNumber } }, { raw: true }),
+                                    inQueryValues: {
+                                        runNumber: v.runNumber,
+                                        PeriodId: v.PeriodId,
+                                    },
+                                    sourceValues: {
+                                        runNumber: v.runNumber,
+                                        periodName: v.period,
+                                    },
+                                },
+                            },
+                        });
+                    })
+                    // eslint-disable-next-line no-unused-vars
+                    .then(async ([run, _]) => await sequelize.transaction((t) => run.addDataPasses(dataPass.id)));
             },
         );
     }
@@ -49,7 +87,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
         const res = entries.map(([hid, vObj]) => {
             vObj['hid'] = hid.trim();
             return vObj;
-        });
+        }).sort((a, b) => a.run_no - b.run_no);
         return res;
     }
 }

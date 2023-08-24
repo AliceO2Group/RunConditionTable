@@ -20,6 +20,15 @@ const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 const MonalisaServiceDetails = require('./MonalisaServiceDetails.js');
 const config = require('../config/configProvider.js');
 
+const { databaseManager: {
+    repositories: {
+        BeamTypeRepository,
+        PeriodRepository,
+        DataPassRepository,
+    },
+    sequelize,
+} } = require('../database/DatabaseManager.js');
+
 class MonalisaService extends AbstractServiceSynchronizer {
     constructor() {
         super();
@@ -27,27 +36,38 @@ class MonalisaService extends AbstractServiceSynchronizer {
 
         this.ketpFields = {
             name: 'name',
-            reconstructed_events: 'number_of_events',
+            reconstructed_events: 'reconstructedEvents',
             description: 'description',
-            output_size: 'size',
+            output_size: 'outputSize',
             interaction_type: 'beam_type',
-            last_run: 'last_run',
+            last_run: 'lastRun',
         };
 
         this.monalisaServiceDetails = new MonalisaServiceDetails();
     }
 
     async sync() {
-        await this.dbConnect();
-        const last_runs_res = await this.dbClient.query('SELECT name, last_run from data_passes;');
-        this.last_runs = Object.fromEntries(last_runs_res.rows.map((r) => Object.values(r)));
-        await this.dbDisconnect();
+        const last_runs_res = await sequelize.query(
+            'SELECT name, last_run, max(run_number) as last_run_in_details \
+            FROM data_passes AS dp \
+            LEFT JOIN data_passes_runs AS dpr \
+                ON dpr.data_pass_id = dp.id \
+            GROUP BY name, last_run;',
+        );
+        this.last_runs = Object.fromEntries(last_runs_res[0].map((r) => {
+            const { name, last_run, last_run_in_details } = r;
+            return [name, { last_run, last_run_in_details }];
+        }));
 
         return await this.syncPerEndpoint(
             EndpointsFormatter.dataPassesRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
-            (r) => r.period.year >= config.dataFromYearIncluding && r.last_run != this.last_runs[r.name],
+            (dataPass) => {
+                const { last_run, last_run_in_details } = this.last_runs[dataPass.name] ?? {};
+                return dataPass.period.year >= config.dataFromYearIncluding &&
+                    (dataPass.lastRun !== last_run || last_run !== last_run_in_details);
+            },
             this.dbAction.bind(this),
         );
     }
@@ -63,29 +83,44 @@ class MonalisaService extends AbstractServiceSynchronizer {
 
     dataAdjuster(dp) {
         dp = Utils.filterObject(dp, this.ketpFields);
-        dp.size = Number(dp.size);
+        dp.outputSize = dp.outputSize ? Number(dp.outputSize) : null;
         dp.period = ServicesDataCommons.mapBeamTypeToCommonFormat(this.extractPeriod(dp));
         return dp;
     }
 
-    async dbAction(dbClient, d) {
-        const { description } = d;
-        d = Utils.adjusetObjValuesToSql(d);
-        d.rawDes = description;
-        const { period } = d;
-        const period_insert =
-            d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beamType});` : '';
-        const pgCommand = `${period_insert}; call insert_prod(
-            ${d.name}, 
-            ${d.period.name},
-            ${d.description}, 
-            ${d.number_of_events},
-            ${d.size},
-            ${d.last_run}
-        );`;
-        const q1 = await dbClient.query(pgCommand);
-        const q2 = await this.monalisaServiceDetails.sync(d);
-        return Promise.all([q1, q2]);
+    async dbAction(dbClient, dataPass) {
+        const { period } = dataPass;
+
+        return await BeamTypeRepository.T.findOrCreate({
+            where: {
+                name: period.beamType,
+            },
+        })
+            .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
+                where: {
+                    name: period.name,
+                    year: period.year,
+                    BeamTypeId: beamType.id,
+                },
+            }))
+            .catch((e) => {
+                throw new Error('Find or create period failed', {
+                    cause: {
+                        error: e.message,
+                        meta: {
+                            explicitValues: {
+                                name: period.name,
+                                year: period.year,
+                            },
+                        },
+                    },
+                });
+            })
+            .then(async ([period, _]) => await DataPassRepository.T.upsert({
+                PeriodId: period.id,
+                ...dataPass,
+            }))
+            .then(async ([dataPass, _]) => await this.monalisaServiceDetails.setSyncTask({ dataUnit: dataPass }));
     }
 
     extractPeriod(rowData) {

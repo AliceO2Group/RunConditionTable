@@ -55,7 +55,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     }
 
     async sync() {
-        DetectorSubsystemRepository.findAll({ raw: true }).then((r) => {
+        await DetectorSubsystemRepository.findAll({ raw: true }).then((r) => {
             this.detectorsNameToId = r?.length > 0 ? r :
                 Utils.throwWrapper(new Error('Incorrect setup of database, no detector subsystems data in it'));
             this.detectorsNameToId = Object.fromEntries(this.detectorsNameToId.map(({ id, name }) => [name, id]));
@@ -133,27 +133,45 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             where: {
                 name: beamType,
             },
-        }).then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
-            where: {
-                name: periodName,
-                year,
-                BeamTypeId: beamType.id,
-            },
-        })).then(async ([period, _]) => await RunRepository.T.findOrCreate({
-            where: {
-                runNumber: run.runNumber,
-            },
-            defaults: { PeriodId: period.id, ...run },
-        })).then(async ([run, _]) => {
-            const d = detectorNames?.map((detectorName, i) => ({
-                run_number: run.runNumber,
-                detector_id: detectorsNameToId[detectorName],
-                quality: detectorQualities[i] }));
+        })
+            .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
+                where: {
+                    name: periodName,
+                    year,
+                    BeamTypeId: beamType.id,
+                },
+            }))
+            .catch((e) => {
+                throw new Error('Find or create period failed', {
+                    cause: {
+                        error: e.message,
+                        meta: {
+                            explicitValues: {
+                                name: periodName,
+                                year,
+                                BeamTypeId: beamType.id,
+                            },
+                            implicitValues: {
+                                BeamType: beamType,
+                            },
+                        },
+                    },
+                });
+            })
+            .then(async ([period, _]) => await RunRepository.T.upsert({
+                PeriodId: period.id,
+                ...run,
+            }))
+            .then(async ([run, _]) => {
+                const d = detectorNames?.map((detectorName, i) => ({
+                    run_number: run.runNumber,
+                    detector_id: detectorsNameToId[detectorName],
+                    quality: detectorQualities[i] }));
 
-            await RunDetectorsRepository.T.bulkCreate(
-                d, { updateOnDublicate: ['quality'] },
-            );
-        });
+                await RunDetectorsRepository.T.bulkCreate(
+                    d, { updateOnDublicate: ['quality'] },
+                );
+            });
     }
 
     metaDataHandler(requestJsonResult) {

@@ -125,13 +125,23 @@ class Repository {
         return await this.model.findOrCreate(queryBuilder.toImplementation());
     }
 
-     /**
+    /**
      * Create new objects in db
      * @param {Array<Object>} dbObjectParams 
      * @return {Promise<Model>}
      */
     async bulkCreate(dbObjectParams, opts) {
         return await this.model.bulkCreate(dbObjectParams, opts)
+    }
+
+    /**
+     * Upsert db object
+     * @param {Object} dbObjectParams 
+     * @param {Promise<Model>} opts 
+     * @returns 
+     */
+    async upsert(dbObjectParams, opts) {
+        return await this.model.upsert(dbObjectParams, opts);
     }
 
     _asT(customOptions) {
