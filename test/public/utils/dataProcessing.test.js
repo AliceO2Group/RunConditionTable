@@ -162,16 +162,36 @@ module.exports = () => {
             flags: 'flags',
         };
 
-        it('should return correct Periods page name' , () => {
+        it('should return Periods page name' , () => {
             assert.equal(pageTitle(pageNames.periods, pageNames), 'Periods');
         });
 
-        it('should return correct Data passes page name' , () => {
+        it('should return Data passes page name' , () => {
             assert.equal(pageTitle(pageNames.dataPasses, pageNames), 'Data passes per period');
         });
 
-        it('should return correct Monte Carlo page name' , () => {
+        it('should return Monte Carlo page name' , () => {
             assert.equal(pageTitle(pageNames.mc, pageNames), 'Monte Carlo');
+        });
+
+        it('should return Anchored per MC page name' , () => {
+            assert.equal(pageTitle(pageNames.anchoredPerMC, pageNames), 'Anchored per MC');
+        });
+
+        it('should return Anchorage per data pass page name' , () => {
+            assert.equal(pageTitle(pageNames.anchoragePerDatapass, pageNames), 'Anchorage per data pass');
+        });
+
+        it('should return Runs per period page name' , () => {
+            assert.equal(pageTitle(pageNames.runsPerPeriod, pageNames), 'Runs per period');
+        });
+
+        it('should return Runs per data pass page name' , () => {
+            assert.equal(pageTitle(pageNames.runsPerDataPass, pageNames), 'Runs per data pass');
+        });
+
+        it('should return Quality flags page name' , () => {
+            assert.equal(pageTitle(pageNames.flags, pageNames), 'Quality flags');
         });
     });
 };
