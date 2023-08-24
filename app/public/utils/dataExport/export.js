@@ -25,11 +25,11 @@ const contentTypes = {
  * @return {void}
  */
 const downloadFile = (content, fileName, contentType) => {
-    const a = document.createElement('a');
+    const link = document.createElement('a');
     const file = new Blob([content], { type: contentType });
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
+    link.href = URL.createObjectURL(file);
+    link.download = fileName;
+    link.click();
 };
 
 /**
