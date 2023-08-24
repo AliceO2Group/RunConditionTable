@@ -35,9 +35,10 @@ const downloadFile = (content, fileName, contentType) => {
  * @param {String} contentType The content type of the file.
  * @return {void}
  */
-const createJSONExport = (content, fileName, contentType) => {
+const createJSONExport = (content, fileName) => {
     const json = JSON.stringify(content, null, 2);
-    downloadFile(json, fileName, contentType);
+    const contentType = 'application/json';
+    downloadFile(json, `${fileName}.json`, contentType);
 };
 
 /**
@@ -48,12 +49,13 @@ const createJSONExport = (content, fileName, contentType) => {
  * @param {String} contentType The content type of the file.
  * @return {void}
  */
-const createCSVExport = (content, fileName, contentType) => {
-    const csv = prepareCSVFile(content);
-    downloadFile(csv, fileName, contentType);
+const createCSVExport = (content, fileName) => {
+    const contentType = 'text/csv;charset=utf-8;';
+    const csv = prepareCSVContent(content);
+    downloadFile(csv, `${fileName}.csv`, contentType);
 };
 
-const prepareCSVFile = (content) => {
+const prepareCSVContent = (content) => {
     const header = Object.keys(content[0]);
     const csv = content.map((row) => header.map((fieldName) => JSON.stringify(row[fieldName], replacer)));
     csv.unshift(header.join(','));

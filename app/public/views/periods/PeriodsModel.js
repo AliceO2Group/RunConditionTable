@@ -132,8 +132,8 @@ export default class PeriodsModel extends Observable {
     async createDataExport(content, exportType) {
         if (content.length > 0) {
             exportType === exportFormats.csv
-                ? createCSVExport(content, `${this.name.toLowerCase()}.csv`, 'text/csv;charset=utf-8;')
-                : createJSONExport(content, `${this.name.toLowerCase()}.json`, 'application/json');
+                ? createCSVExport(content, this.name.toLowerCase())
+                : createJSONExport(content, this.name.toLowerCase());
         } else {
             this._currentPagePeriods = RemoteData.failure([
                 {
