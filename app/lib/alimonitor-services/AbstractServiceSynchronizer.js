@@ -49,7 +49,7 @@ class ProgressMonitor {
     tryLog() {
         const potentialLogProgress = this.lastLogAt + this.percentageStep * this.total;
         if (this.progress >= potentialLogProgress || this.progress === this.total) {
-            this.lastLogAt = potentialLogProgress;
+            this.lastLogAt = this.progress;
             this.logger(`progress of ${this.progress} / ${this.total}`);
         }
     }
