@@ -17,7 +17,7 @@ const preparedFile = req('../../../app/public/utils/obsoleteCsvExport').prepared
 const assert = require('assert');
 
 module.exports = () => {
-    describe('CSV Export', () => {
+    describe('CSV Export (Obsolete)', () => {
         const dataSample = {
             payload: {
                 rows: [
