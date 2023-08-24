@@ -45,7 +45,7 @@ export const rowDisplayStyle = (isMarked, shouldHideMarkedRecords) => isMarked
 /**
  * Converts bytes into human readable file size string
  * @param {number} fileSizeInBytes in bytes
- * @returns string (human readable)
+ * @returns {string} human readable file size
  */
 export const getReadableFileSizeString = (fileSizeInBytes) => {
     const byteUnits = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -57,4 +57,16 @@ export const getReadableFileSizeString = (fileSizeInBytes) => {
     return `${Math.max(result.fileSize, 0.1).toFixed(1)} ${byteUnits[result.index]}`;
 };
 
-export const capitalizeFirstLetter = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+export const pageTitle = (page, pageNames) => {
+    switch (page) {
+        case pageNames.periods: return 'Periods';
+        case pageNames.runsPerPeriod: return 'Runs per period';
+        case pageNames.runsPerDataPass: return 'Runs per data pass';
+        case pageNames.dataPasses: return 'Data passes per period';
+        case pageNames.mc: return 'Monte Carlo';
+        case pageNames.flags: return 'Flags';
+        case pageNames.anchoragePerDatapass: return 'Anchorage per data pass';
+        case pageNames.anchoredPerMC: return 'Anchored per MC';
+        default: return page;
+    }
+};

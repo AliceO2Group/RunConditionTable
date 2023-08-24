@@ -20,7 +20,8 @@ const { extractPeriodName,
         shouldDisplayDetectorField,
         rowDisplayStyle,
         capitalizeFirstLetter,
-        getReadableFileSizeString } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
+        getReadableFileSizeString,
+        pageTitle } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
 
 module.exports = () => {
     describe('Extract period name', () => {
@@ -136,20 +137,6 @@ module.exports = () => {
         });
     });
 
-    describe('Capitalize the first letter', () => {
-        const sampleString1 = 'periods';
-        const sampleString2 = '0periods';
-        const expectedOutcome1 = 'Periods';
-
-        it('should capitalize the first letter of a given string' , () => {
-            assert(capitalizeFirstLetter(sampleString1) === expectedOutcome1 );
-        });
-
-        it('should not affect the given string if the first char is not a letter' , () => {
-            assert(capitalizeFirstLetter(sampleString2) === sampleString2 );
-        });
-    });
-
     describe('Check the readable file size', () => {
         const fileSizekB = 1024;
         const fileSizeGB = 3758096384;
@@ -160,6 +147,31 @@ module.exports = () => {
 
         it('should parse GB correctly' , () => {
             assert(getReadableFileSizeString(fileSizeGB) === '3.5 GB' );
+        });
+    });
+
+    describe('Page title', () => {
+        const pageNames = {
+            periods: 'periods',
+            dataPasses: 'dataPasses',
+            mc: 'mc',
+            anchoredPerMC: 'anchoredPerMC',
+            anchoragePerDatapass: 'anchoragePerDatapass',
+            runsPerPeriod: 'runsPerPeriod',
+            runsPerDataPass: 'runsPerDataPass',
+            flags: 'flags',
+        };
+
+        it('should return correct Periods page name' , () => {
+            assert.equal(pageTitle(pageNames.periods, pageNames), 'Periods');
+        });
+
+        it('should return correct Data passes page name' , () => {
+            assert.equal(pageTitle(pageNames.dataPasses, pageNames), 'Data passes per period');
+        });
+
+        it('should return correct Monte Carlo page name' , () => {
+            assert.equal(pageTitle(pageNames.mc, pageNames), 'Monte Carlo');
         });
     });
 };
