@@ -11,10 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const UtilitiesSuite = require('./utils');
-const ComponentsSuite = require('./components');
+const itemsCounterSuite = require('./itemsCounter.test');
 
 module.exports = () => {
-    describe('Components', ComponentsSuite);
-    describe('Utilities', UtilitiesSuite);
+    describe('Items counter', itemsCounterSuite);
 };
