@@ -63,7 +63,7 @@ export const prepareCSVContent = (content) => {
     return csv.join('\r\n');
 };
 
-export const replacer = (_key, value) => value === null ? '' : value;
+export const replacer = (_key, value) => value || '';
 
 export {
     createJSONExport,
