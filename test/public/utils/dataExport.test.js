@@ -62,10 +62,6 @@ module.exports = () => {
             const preparedData = 'name,year,beamType,avgEnergy,distinctEnergies\r\n' +
             `"LHC23zt",2023,"p-p",13595,[6797.04,6797.52,6797.64,6798]\r\n` +
             `"LHC23zs",2023,"p-p",13596,[6797.4,6797.52,6797.64,6797.76,6797.88,6798,6798.24,6799.2]`;
-            
-            it('should not return null', () => {
-                assert.isNotNull(prepareCSVContent(rawData));
-            });
 
             it('should prepare CSV data content', () => {
                 assert.equal(prepareCSVContent(rawData), preparedData);
