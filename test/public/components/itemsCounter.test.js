@@ -13,7 +13,7 @@
 
 const req = require('esm')(module)
 const itemsCounter = req('../../../app/public/components/table/itemsCounter').default;
-const assert = require('assert');
+const { assert } = require('chai');
 
 module.exports = () => {
     describe('Items counter', () => {
@@ -25,7 +25,7 @@ module.exports = () => {
         const expectedResult = '41-50 of 57';
 
         it('should not return null', () => {
-            assert(itemsCounter(mockPaginationModel) !== null);
+            assert.isNotNull(itemsCounter(mockPaginationModel));
         });
 
         it('should count the items as expected', () => {
