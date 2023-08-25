@@ -11,12 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
+const chai = require('chai');
 const {
     defaultBefore,
     defaultAfter,
+    goToPage
 } = require('../defaults');
-
-const assert = require('assert');
+const { expect, assert } = chai;
 
 module.exports = () => {
     let page;
@@ -38,6 +39,17 @@ module.exports = () => {
     describe('Periods overview', () => {
         it('should pass the test with launched puppeteer', () => {
             assert(true !== null);
+        });
+
+        it('loads the page successfully', async () => {
+            const response = await goToPage(page, 'periods');
+    
+            // We expect the page to return the correct status code, making sure the server is running properly
+            expect(response.status()).to.equal(200);
+    
+            // We expect the page to return the correct title, making sure there isn't another server running on this port
+            const title = await page.title();
+            expect(title).to.equal('RCT prototype');
         });
     });
 };

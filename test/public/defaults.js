@@ -15,7 +15,7 @@ const chai = require('chai');
 const puppeteer = require('puppeteer');
 const pti = require('puppeteer-to-istanbul');
 const { httpServer } = require('../../app/application');
-// const { buildUrl } = require('../../lib/utilities/buildUrl.js');
+const { buildUrl } = require('../../app/public/utils/url/buildUrl');
 
 const { expect } = chai;
 
@@ -99,7 +99,7 @@ module.exports.pressElement = async (page, selector, jsClick = false) => {
  * @param {Page} puppeteerPage Puppeteer page object.
  * @return {Promise} resolves when the page has loaded
  */
-// module.exports.reloadPage = (puppeteerPage) => goTo(puppeteerPage, puppeteerPage.url());
+module.exports.reloadPage = (puppeteerPage) => goTo(puppeteerPage, puppeteerPage.url());
 
 /**
  * Navigates to a specific URL and waits until everything is loaded.
@@ -111,7 +111,6 @@ module.exports.pressElement = async (page, selector, jsClick = false) => {
  * @param {number} [options.redrawDuration] the estimated time to wait for the page to redraw
  * @returns {Promise} resolves with the navigation response
  */
-/*
 const goTo = async (puppeteerPage, url, options) => {
     const { authenticate = true, redrawDuration = 20 } = options ?? {};
 
@@ -121,7 +120,7 @@ const goTo = async (puppeteerPage, url, options) => {
         queryParameters.username = 'anonymous';
         queryParameters.name = 'Anonymous';
         queryParameters.access = 'admin';
-        queryParameters.token = httpServer.http.o2TokenService.generateToken(
+        queryParameters.token = httpServer.o2TokenService.generateToken(
             queryParameters.personid,
             queryParameters.username,
             queryParameters.name,
@@ -133,7 +132,6 @@ const goTo = async (puppeteerPage, url, options) => {
     await puppeteerPage.waitForTimeout(redrawDuration);
     return response;
 };
-*/
 
 /**
  * Goes to a specific page and waits until everything is loaded.
@@ -144,7 +142,6 @@ const goTo = async (puppeteerPage, url, options) => {
  * @param {object} [options.queryParameters] query parameters to add to the page's URL
  * @returns {Promise} Switches the user to the correct page.
  */
-/*
 module.exports.goToPage = (puppeteerPage, pageKey, options) => {
     const { queryParameters = {} } = options || {};
     const url = buildUrl(getUrl(), {
@@ -153,7 +150,7 @@ module.exports.goToPage = (puppeteerPage, pageKey, options) => {
     });
     return goTo(puppeteerPage, url);
 };
-*/
+
 /**
  * Wait for page network idle and add a small timeout to let the page redraw
  *
