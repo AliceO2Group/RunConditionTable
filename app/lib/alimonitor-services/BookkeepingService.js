@@ -169,7 +169,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                     quality: detectorQualities[i] }));
 
                 await RunDetectorsRepository.T.bulkCreate(
-                    d, { updateOnDublicate: ['quality'] },
+                    d, { updateOnDuplicate: ['quality'] },
                 );
             });
     }
