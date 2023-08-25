@@ -11,13 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
-const assert = require('assert');
+const { assert } = require('chai');
 const config = require('../../../app/lib/config/configProvider');
 
 module.exports = () => {
     describe('Config Provider', () => {
         it('should return config file', () => {
-            assert(config !== null);
+            assert.isNotNull(config);
         });
 
         it('should handle loading error properly', () => {
