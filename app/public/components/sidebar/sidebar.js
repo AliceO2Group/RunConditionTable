@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 import sidebarItem from './sidebarItem.js';
 import { modal, modalIds, showModal } from '../../views/modal/modal.js';
-import { pageTitle } from '../../utils/dataProcessing/dataProcessingUtils.js';
+import { pageTitle } from '../common/pageTitle.js';
 const { pageNames } = RCT;
 
 /**

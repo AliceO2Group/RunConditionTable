@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
-import { pageTitle } from '../../utils/dataProcessing/dataProcessingUtils.js';
+import { pageTitle } from '../common/pageTitle.js';
 
 export default function title(page) {
     return h('h3.p-right-15.text-primary', pageTitle(page, RCT.pageNames));

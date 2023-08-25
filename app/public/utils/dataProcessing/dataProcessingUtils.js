@@ -56,17 +56,3 @@ export const getReadableFileSizeString = (fileSizeInBytes) => {
 
     return `${Math.max(result.fileSize, 0.1).toFixed(1)} ${byteUnits[result.index]}`;
 };
-
-export const pageTitle = (page, pageNames) => {
-    switch (page) {
-        case pageNames.periods: return 'Periods';
-        case pageNames.runsPerPeriod: return 'Runs per period';
-        case pageNames.runsPerDataPass: return 'Runs per data pass';
-        case pageNames.dataPasses: return 'Data passes per period';
-        case pageNames.mc: return 'Monte Carlo';
-        case pageNames.flags: return 'Quality flags';
-        case pageNames.anchoragePerDatapass: return 'Anchorage per data pass';
-        case pageNames.anchoredPerMC: return 'Anchored per MC';
-        default: return page;
-    }
-};
