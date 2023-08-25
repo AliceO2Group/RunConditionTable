@@ -10,17 +10,10 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-
-const obsoleteCSVExportSuite = require('./obsoleteCsvExport.test');
-const dataExportSuite = require('./dataExport.test');
-const dataProcessingSuite = require('./dataProcessing.test');
-const filterUtilsSuite = require('./filterUtils.test');
-const urlSuite = require('./url');
+const urlUtils = require('./urlUtils.test');
+const buildUrl = require('./buildUrl.test');
 
 module.exports = () => {
-    describe('CSV Export (Obsolete)', obsoleteCSVExportSuite);
-    describe('Data Export', dataExportSuite);
-    describe('Data processing', dataProcessingSuite);
-    describe('Filter utils', filterUtilsSuite);
-    describe('URL', urlSuite);
+    describe('Build URL', buildUrl);
+    describe('URL utils', urlUtils);
 };

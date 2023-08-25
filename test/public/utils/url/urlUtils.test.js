@@ -13,7 +13,7 @@
 
 const req = require('esm')(module)
 const assert = require('assert');
-const { replaceUrlParams } = req('../../../app/public/utils/url/urlUtils');
+const { replaceUrlParams } = req('../../../../app/public/utils/url/urlUtils');
 
 module.exports = () => {
     const url = new URL('http://localhost:8081/?page=periods&index=_0&rows-on-site=50&site=1');
