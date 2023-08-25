@@ -5,11 +5,12 @@ SCRIPT_NAME="$(basename $0)"
 
 DEV_MODE=dev
 TEST_MODE=test
-APP_CONTAINER_NAME_BASE="o2rct_application"
+O2RCT_ID=o2rct
+APP_CONTAINER_NAME_BASE="$O2RCT_ID""_application"
 APP_CONTAINERS_OPT="$APP_CONTAINER_NAME_BASE-([$DEV_MODE|$TEST_MODE])"
 APP_WORKINGDIR='/opt/RunConditionTable'
 
-DB_CONTAINER_NAME_BASE="o2rct_database"
+DB_CONTAINER_NAME_BASE="$O2RCT_ID""_database"
 DP_CONTAINERS_OPT="$DB_CONTAINER_NAME-($DEV_MODE|$TEST_MODE))"
 DB_WORKINGDIR='/postgres/run'
 
@@ -202,10 +203,10 @@ else
 fi;
 
 export SUBTARGET;
-export APP_CONTAINER_NAME="o2rct_application-$TARGET$SUBTARGET";
-export DB_CONTAINER_NAME="o2rct_database-$TARGET$SUBTARGET";
+export APP_CONTAINER_NAME="$O2RCT_ID""_application-$TARGET$SUBTARGET";
+export DB_CONTAINER_NAME="$O2RCT_ID""_database-$TARGET$SUBTARGET";
 
-DOCKER_COMP_CMD_NO_ENV="docker compose -p $TARGET$SUBTARGET-o2rct 
+DOCKER_COMP_CMD_NO_ENV="docker compose -p $TARGET$SUBTARGET-$O2RCT_ID 
                     -f $MAIN_DOCKER_COMPOSE_YML 
                     -f $DOCKER_DIR/docker-compose-$TARGET.yml
                     -f $DOCKER_DIR/docker-compose-network.yml
@@ -246,11 +247,20 @@ for stage in $STAGES; do
 
     echo " *** do $stage";
     case $stage in
-        rm)
-            $DOCKER_COMP_CMD_NO_ENV rm --stop --force -v $SERVICES && (docker network rm $TARGET$SUBTARGET-o2rct_network || exit_codes_filter 1);
+        prune)
+            # remove contatiner, networks...
+            for TS in $(docker network ls | grep $O2RCT_ID | awk '{ print $2 }' | awk -F- '{print $1}'); do 
+                T=${TS%?}
+                S=${TS: -1};     
+                $0 rm --target $T --subtarget $S;
+            done;
+            # remove images
+            docker rmi $(docker images | grep $O2RCT_ID | awk '{ print $1":"$2 }')
         ;;
 
-
+        rm)
+            $DOCKER_COMP_CMD_NO_ENV rm --stop --force -v $SERVICES && (docker network rm $TARGET$SUBTARGET-$O2RCT_ID""_network || exit_codes_filter 1);
+        ;;
 
         run*)
             RUN_SUBSTATGES=$(echo ${stage#run} | sed -E "s/(\[|\/|\])/ /g");
