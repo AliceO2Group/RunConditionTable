@@ -63,7 +63,7 @@ Usage:
                       ./$SCRIPT_NAME run[up] -t test
 
             2. stop - stop containers                      
-            
+
             3. rm - delete containers, all virtual volumens and virtual network
             4. follow - like docker-compose follow
             5. logs - like docker-compose logs
@@ -89,7 +89,11 @@ Usage:
             19. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
             20. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
+            21. prune - remove everything related to RCT and dockers
+
+
         Other options:
+            -b|--build) - force to build images, even if they exists already
             -S|--service <SERVICE>  - flag can be specified for run, follow, stop and rm stages.
                 <SERVICE> $APP_CONTAINERS_OPT or $DB_CONTAINERS_OPT is the name of the service the stages are performed for.
             -p|--rct-http-port PORT - flag for setting env var RCT_HTTP_PORT
