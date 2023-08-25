@@ -37,10 +37,6 @@ module.exports = () => {
     });
 
     describe('Periods overview', () => {
-        it('should pass the test with launched puppeteer', () => {
-            assert(true !== null);
-        });
-
         it('loads the page successfully', async () => {
             const response = await goToPage(page, 'periods');
     
