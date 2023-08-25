@@ -56,12 +56,14 @@ Usage:
         STAGE can be a:
             1. run|run[RUN_SUBSTATGES] - run application (deploys containers). By defualt 
                     run stage behaves as docker-compose ... up --build.
-                    RUN_SUBSTATGES are colon separated docker-compose tasks like run,create,up,...
+                    RUN_SUBSTATGES are / (slash) separated docker-compose tasks like create,up,...
                 e.g.: ./$SCRIPT_NAME run -t dev
+                      ./$SCRIPT_NAME run[create/up] -t test
                       ./$SCRIPT_NAME run[up] -t test
+
             2. stop - stop containers                      
             
-            3. prune - delete containers, all virtual volumens and virtual network
+            3. rm - delete containers, all virtual volumens and virtual network
             4. follow - like docker-compose follow
             5. logs - like docker-compose logs
 
@@ -87,7 +89,7 @@ Usage:
             20. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
         Other options:
-            -S|--service <SERVICE>  - flag can be specified for run, follow, stop and prune stages.
+            -S|--service <SERVICE>  - flag can be specified for run, follow, stop and rm stages.
                 <SERVICE> $APP_CONTAINERS_OPT or $DB_CONTAINERS_OPT is the name of the service the stages are performed for.
             -p|--rct-http-port PORT - flag for setting env var RCT_HTTP_PORT
             -m|--target-modifier START_TARGET_MODIFIER - add modififying sufix to npm task like start:dev:START_TARGET_MODIFIER or start:test:START_TARGET_MODIFIER, depends on choosen TARGET
@@ -176,6 +178,10 @@ else
                 DB_EXPOSED_PORT=$2;
                 shift 2;
             ;;
+            -b|--build)
+                BUILD='--build';
+                shift 1;
+            ;;
             *)
                 usage "Incorrect flag: $1"
             ;;
@@ -240,16 +246,18 @@ for stage in $STAGES; do
 
     echo " *** do $stage";
     case $stage in
-        prune)
+        rm)
             $DOCKER_COMP_CMD_NO_ENV rm --stop --force -v $SERVICES && (docker network rm $TARGET$SUBTARGET-o2rct_network || exit_codes_filter 1);
         ;;
 
+
+
         run*)
-            RUN_SUBSTATGES=$(echo ${stage#run} | sed -E "s/(\[|\:|\])/ /g");
+            RUN_SUBSTATGES=$(echo ${stage#run} | sed -E "s/(\[|\/|\])/ /g");
             RUN_SUBSTATGES=$(echo $RUN_SUBSTATGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g");
             if [ -z "$RUN_SUBSTATGES" ]; then
-                echo 'default run[run,create,up]; up in detached mode';
-                RUN_SUBSTATGES="run create up";
+                echo 'default run[create/up]; up in detached mode';
+                RUN_SUBSTATGES="create up";
             fi
             echo $RUN_SUBSTATGES;
             for rs in $RUN_SUBSTATGES; do
@@ -260,6 +268,7 @@ for stage in $STAGES; do
                         rs="up --exit-code-from application";
                     fi;
                 fi;
+                rs=$([[ "$rs" == 'create' ]] && echo "$rs $BUILD" || echo "$rs");
                 echo "*** *** do run : $rs";
                 run "$rs";
             done
