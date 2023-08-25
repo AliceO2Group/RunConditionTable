@@ -13,7 +13,7 @@
 
 const req = require('esm')(module)
 const { replacer, prepareCSVContent } = req('../../../app/public/utils/dataExport/export');
-const assert = require('assert');
+const { assert } = require('chai');
 
 module.exports = () => {
     describe('CSV Export', () => {
@@ -64,7 +64,7 @@ module.exports = () => {
             `"LHC23zs",2023,"p-p",13596,[6797.4,6797.52,6797.64,6797.76,6797.88,6798,6798.24,6799.2]`;
             
             it('should not return null', () => {
-                assert(prepareCSVContent(rawData) !== null);
+                assert.isNotNull(prepareCSVContent(rawData));
             });
 
             it('should prepare CSV data content', () => {

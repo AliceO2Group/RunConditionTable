@@ -13,6 +13,7 @@
 
 const req = require('esm')(module)
 const assert = require('assert');
+const { expect } = require('chai');
 const { extractPeriodName,
         getClosestDefinedEnergy,
         detectorName,
@@ -69,7 +70,7 @@ module.exports = () => {
         });
 
         it('should return null when provided field is not a detector field', () => {
-            assert(detectorName(nonDetectorFieldName) === null);
+            expect(detectorName(nonDetectorFieldName)).to.be.null;
         })
     });
 

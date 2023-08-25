@@ -14,7 +14,7 @@
 const req = require('esm')(module)
 const { preparedData } = req('../../../app/public/utils/obsoleteCsvExport');
 const { preparedFile } = req('../../../app/public/utils/obsoleteCsvExport');
-const assert = require('assert');
+const { assert } = require('chai');
 
 module.exports = () => {
     describe('CSV Export (Obsolete)', () => {
@@ -44,12 +44,12 @@ module.exports = () => {
 
         describe('Check data preparation', () => {
             it('should not return null', () => {
-                assert(preparedData(dataSample) !== null);
+                assert.isNotNull(preparedData(dataSample));
             });
 
             it('should filter values properly', () => {
-                assert(preparedData(dataSample).indexOf('b field') === -1);
-                assert(preparedData(dataSample).indexOf(3) === -1);
+                assert.equal(preparedData(dataSample).indexOf('b field'), -1);
+                assert.equal(preparedData(dataSample).indexOf(3), -1);
             });
         });
 
