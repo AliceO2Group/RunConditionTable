@@ -5,11 +5,12 @@ SCRIPT_NAME="$(basename $0)"
 
 DEV_MODE=dev
 TEST_MODE=test
-APP_CONTAINER_NAME_BASE="o2rct_application"
+O2RCT_ID=o2rct
+APP_CONTAINER_NAME_BASE="$O2RCT_ID""_application"
 APP_CONTAINERS_OPT="$APP_CONTAINER_NAME_BASE-([$DEV_MODE|$TEST_MODE])"
 APP_WORKINGDIR='/opt/RunConditionTable'
 
-DB_CONTAINER_NAME_BASE="o2rct_database"
+DB_CONTAINER_NAME_BASE="$O2RCT_ID""_database"
 DP_CONTAINERS_OPT="$DB_CONTAINER_NAME-($DEV_MODE|$TEST_MODE))"
 DB_WORKINGDIR='/postgres/run'
 
@@ -56,12 +57,14 @@ Usage:
         STAGE can be a:
             1. run|run[RUN_SUBSTATGES] - run application (deploys containers). By defualt 
                     run stage behaves as docker-compose ... up --build.
-                    RUN_SUBSTATGES are colon separated docker-compose tasks like run,create,up,...
+                    RUN_SUBSTATGES are / (slash) separated docker-compose tasks like create,up,...
                 e.g.: ./$SCRIPT_NAME run -t dev
+                      ./$SCRIPT_NAME run[create/up] -t test
                       ./$SCRIPT_NAME run[up] -t test
+
             2. stop - stop containers                      
-            
-            3. prune - delete containers, all virtual volumens and virtual network
+
+            3. rm - delete containers, all virtual volumens and virtual network
             4. follow - like docker-compose follow
             5. logs - like docker-compose logs
 
@@ -86,8 +89,12 @@ Usage:
             19. dump:(export|ex) -A|--archive-name <FILE> - export cached dump to tar.gz archive specified by the flag
             20. dump:(import|im) -A|--archive-name <FILE> - import dumps from tar.gz archvie specified by the flag ito cache
 
+            21. prune - remove everything related to RCT and dockers
+
+
         Other options:
-            -S|--service <SERVICE>  - flag can be specified for run, follow, stop and prune stages.
+            -b|--build) - force to build images, even if they exists already
+            -S|--service <SERVICE>  - flag can be specified for run, follow, stop and rm stages.
                 <SERVICE> $APP_CONTAINERS_OPT or $DB_CONTAINERS_OPT is the name of the service the stages are performed for.
             -p|--rct-http-port PORT - flag for setting env var RCT_HTTP_PORT
             -m|--target-modifier START_TARGET_MODIFIER - add modififying sufix to npm task like start:dev:START_TARGET_MODIFIER or start:test:START_TARGET_MODIFIER, depends on choosen TARGET
@@ -176,6 +183,10 @@ else
                 DB_EXPOSED_PORT=$2;
                 shift 2;
             ;;
+            -b|--build)
+                BUILD='--build';
+                shift 1;
+            ;;
             *)
                 usage "Incorrect flag: $1"
             ;;
@@ -196,10 +207,10 @@ else
 fi;
 
 export SUBTARGET;
-export APP_CONTAINER_NAME="o2rct_application-$TARGET$SUBTARGET";
-export DB_CONTAINER_NAME="o2rct_database-$TARGET$SUBTARGET";
+export APP_CONTAINER_NAME="$O2RCT_ID""_application-$TARGET$SUBTARGET";
+export DB_CONTAINER_NAME="$O2RCT_ID""_database-$TARGET$SUBTARGET";
 
-DOCKER_COMP_CMD_NO_ENV="docker compose -p $TARGET$SUBTARGET-o2rct 
+DOCKER_COMP_CMD_NO_ENV="docker compose -p $TARGET$SUBTARGET-$O2RCT_ID 
                     -f $MAIN_DOCKER_COMPOSE_YML 
                     -f $DOCKER_DIR/docker-compose-$TARGET.yml
                     -f $DOCKER_DIR/docker-compose-network.yml
@@ -241,15 +252,26 @@ for stage in $STAGES; do
     echo " *** do $stage";
     case $stage in
         prune)
-            $DOCKER_COMP_CMD_NO_ENV rm --stop --force -v $SERVICES && (docker network rm $TARGET$SUBTARGET-o2rct_network || exit_codes_filter 1);
+            # remove contatiner, networks...
+            for TS in $(docker network ls | grep $O2RCT_ID | awk '{ print $2 }' | awk -F- '{print $1}'); do 
+                T=${TS%?}
+                S=${TS: -1};     
+                $0 rm --target $T --subtarget $S;
+            done;
+            # remove images
+            docker rmi $(docker images | grep $O2RCT_ID | awk '{ print $1":"$2 }')
+        ;;
+
+        rm)
+            $DOCKER_COMP_CMD_NO_ENV rm --stop --force -v $SERVICES && (docker network rm $TARGET$SUBTARGET-$O2RCT_ID""_network || exit_codes_filter 1);
         ;;
 
         run*)
-            RUN_SUBSTATGES=$(echo ${stage#run} | sed -E "s/(\[|\:|\])/ /g");
+            RUN_SUBSTATGES=$(echo ${stage#run} | sed -E "s/(\[|\/|\])/ /g");
             RUN_SUBSTATGES=$(echo $RUN_SUBSTATGES | sed -E "s/(^[[:space:]]*)|([[:space:]]*$)//g");
             if [ -z "$RUN_SUBSTATGES" ]; then
-                echo 'default run[run,create,up]; up in detached mode';
-                RUN_SUBSTATGES="run create up";
+                echo 'default run[create/up]; up in detached mode';
+                RUN_SUBSTATGES="create up";
             fi
             echo $RUN_SUBSTATGES;
             for rs in $RUN_SUBSTATGES; do
@@ -260,6 +282,7 @@ for stage in $STAGES; do
                         rs="up --exit-code-from application";
                     fi;
                 fi;
+                rs=$([[ "$rs" == 'create' ]] && echo "$rs $BUILD" || echo "$rs");
                 echo "*** *** do run : $rs";
                 run "$rs";
             done
