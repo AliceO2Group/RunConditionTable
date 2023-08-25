@@ -15,9 +15,10 @@ const chai = require('chai');
 const {
     defaultBefore,
     defaultAfter,
-    goToPage
+    goToPage,
+    expectInnerText
 } = require('../defaults');
-const { expect, assert } = chai;
+const { expect } = chai;
 
 module.exports = () => {
     let page;
@@ -46,6 +47,8 @@ module.exports = () => {
             // We expect the page to return the correct title, making sure there isn't another server running on this port
             const title = await page.title();
             expect(title).to.equal('RCT prototype');
+
+            await expectInnerText(page, 'h3#page-title', 'Periods');
         });
     });
 };
