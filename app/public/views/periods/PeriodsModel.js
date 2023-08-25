@@ -17,7 +17,7 @@ import { getRemoteDataSlice } from '../../utils/fetch/getRemoteDataSlice.js';
 import { RCT } from '../../config.js';
 import { createCSVExport, createJSONExport } from '../../utils/dataExport/export.js';
 import { exportFormats } from './overview/dataExport.js';
-import { pageTitle } from '../../utils/dataProcessing/dataProcessingUtils.js';
+import { pageTitle } from '../../components/common/pageTitle.js';
 
 /**
  * Model representing handlers for periods page
