@@ -1,31 +1,31 @@
-FROM node:18.16.0-buster as base 
+FROM node:18-alpine3.17 as base
     WORKDIR /opt/RunConditionTable
 
-    RUN apt update -y && apt install -y \
-        netcat \
-        bash
-    
-
-RUN apt-get update && \
-  apt install -y libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libgbm1 libasound2 libpangocairo-1.0-0 libxss1 libgtk-3-0
+RUN apk add --no-cache \
+    bash=5.2.15-r0 \
+    netcat-openbsd
 
 
-# Add user to avoid --no-sandbox (recommended)
-RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
-  && mkdir -p /home/pptruser/Downloads \
-  && chown -R pptruser:pptruser /home/pptruser
+# Installs Git and packages required for Puppeteer
+# https://pkgs.alpinelinux.org/packages
+RUN apk add --no-cache \
+    chromium=112.0.5615.165-r0 \
+    freetype=2.12.1-r0 \
+    freetype-dev=2.12.1-r0 \
+    git=2.38.5-r0 \
+    harfbuzz=5.3.1-r1 \
+    ca-certificates=20230506-r0 \
+    ttf-freefont=20120503-r3
 
-    
-    # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
-    ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-    # ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
     COPY ./package*.json ./
     RUN npm --silent ci
 
 
 FROM base as dev
-    RUN apt update -y && apt install -y \
-        postgresql-client
+    RUN apk add postgresql-client
 
 FROM base as test
