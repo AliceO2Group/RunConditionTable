@@ -44,8 +44,8 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             requested_events: 'requestedEvents',
             collision_system: 'beam_type',
             output_size: 'outputSize',
-            anchor_production: 'anchor_productions',
-            anchor_pass: 'anchor_passes',
+            anchor_production: 'anchoredPeriods',
+            anchor_pass: 'anchoredPasses',
         };
 
         this.monalisaServiceMCDetails = new MonalisaServiceMCDetails();
@@ -57,11 +57,18 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
             (simulationPass) => {
-                simulationPass.anchor_productions = simulationPass.anchor_productions
-                    .filter((periodName) => extractPeriod(periodName).year >= config.dataFromYearIncluding);
+                simulationPass.anchoredPeriods = simulationPass.anchoredPeriods
+                    .filter((periodName) => {
+                        try {
+                            return extractPeriod(periodName).year >= config.dataFromYearIncluding;
+                        } catch (error) {
+                            this.logger.error(error);
+                            return false;
+                        }
+                    });
 
-                const { anchor_productions, anchor_passes } = simulationPass;
-                return anchor_productions.length != 0 && anchor_passes.length != 0;
+                const { anchoredPeriods, anchoredPasses } = simulationPass;
+                return anchoredPeriods.length != 0 && anchoredPasses.length != 0;
                 // MC not anchored to any production or pass so drop out
             },
             this.dbAction.bind(this),
@@ -92,8 +99,8 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
          * there are extra commas at the begining of some samples
          */
 
-        sp.anchor_passes = parseListLikeString(sp.anchor_passes);
-        sp.anchor_productions = parseListLikeString(sp.anchor_productions);
+        sp.anchoredPasses = parseListLikeString(sp.anchoredPasses);
+        sp.anchoredPeriods = parseListLikeString(sp.anchoredPeriods);
         sp.runs = parseListLikeString(sp.runs).map((s) => Number(s));
 
         return sp;
@@ -111,7 +118,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             outputSize: simulationPass.outputSize,
         })
             .then(async ([_simulationPass, _]) => {
-                simulationPass.anchor_productions.map(async (periodName) => await PeriodRepository.T.findOrCreate({
+                simulationPass.anchoredPeriods.map(async (periodName) => await PeriodRepository.T.findOrCreate({
                     where: {
                         name: periodName,
                     },
@@ -131,8 +138,8 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
          */
 
         /*
-         * Const anchord_prod_sql = `${simulationPass.anchor_productions}::varchar[]`;
-         * const anchord_passes_sql = `${simulationPass.anchor_passes}::varchar[]`;
+         * Const anchord_prod_sql = `${simulationPass.anchoredPeriods}::varchar[]`;
+         * const anchord_passes_sql = `${simulationPass.anchoredPasses}::varchar[]`;
          */
 
         /*
