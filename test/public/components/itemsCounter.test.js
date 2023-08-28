@@ -24,10 +24,6 @@ module.exports = () => {
         }
         const expectedResult = '41-50 of 57';
 
-        it('should not return null', () => {
-            assert.isNotNull(itemsCounter(mockPaginationModel));
-        });
-
         it('should count the items as expected', () => {
             assert.equal(itemsCounter(mockPaginationModel), expectedResult);
         });
