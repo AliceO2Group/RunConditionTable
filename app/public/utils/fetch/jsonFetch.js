@@ -18,7 +18,7 @@ import { fetchClient } from '/js/src/index.js';
  *
  * The endpoint is expected to follow some conventions:
  *   - If request is valid but no data must be sent, it must return a 204
- *   - If data must be returned, the json response must contain a top level "data" key
+ *   - If data is returned, the json response should contain a top level "data" key
  *   - If an error occurred, NO "data" key must be present, and there can be one of the following keys:
  *     - errors: a list of errors containing title and detail
  *     - error and message describing the error that occurred
