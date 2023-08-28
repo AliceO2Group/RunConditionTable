@@ -19,6 +19,15 @@ const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 const MonalisaServiceMCDetails = require('./MonalisaServiceMCDetails.js');
 const config = require('../config/configProvider.js');
 
+const { databaseManager: {
+    repositories: {
+        BeamTypeRepository,
+        PeriodRepository,
+        SimulationPassRepository,
+    },
+    sequelize,
+} } = require('../database/DatabaseManager.js');
+
 class MonalisaServiceMC extends AbstractServiceSynchronizer {
     constructor() {
         super();
@@ -29,11 +38,11 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             name: 'name',
             runList: 'runs',
             generator: 'description',
-            jiraID: 'jira',
+            jiraID: 'jiraId',
             PWG: 'pwg',
-            requested_events: 'number_of_events',
+            requested_events: 'requestedEvents',
             collision_system: 'beam_type',
-            output_size: 'size',
+            output_size: 'outputSize',
             anchor_production: 'anchor_productions',
             anchor_pass: 'anchor_passes',
         };
@@ -48,8 +57,8 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             this.dataAdjuster.bind(this),
             (simulation_pass) => {
                 const { anchor_productions, anchor_passes } = simulation_pass;
-                return simulation_pass.period.year >= config.dataFromYearIncluding
-                    && anchor_productions.length != 0 && anchor_passes.length != 0;
+                // simulation_pass.anchor_passes = anchor_passes.filter()
+                return anchor_productions.length != 0 && anchor_passes.length != 0;
                 // MC not anchored to any production or pass so drop out
             },
             this.dbAction.bind(this),
@@ -80,7 +89,6 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
          * there are extra commas at the begining of some samples
          */
 
-        sp.period = this.extractPeriod(sp);
         sp.anchor_passes = parseListLikeString(sp.anchor_passes);
         sp.anchor_productions = parseListLikeString(sp.anchor_productions);
         sp.runs = parseListLikeString(sp.runs).map((s) => Number(s));
@@ -88,48 +96,57 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         return sp;
     }
 
-    async dbAction(dbClient, d) {
-        d = Utils.adjusetObjValuesToSql(d);
-        const { period } = d;
-        const period_insert =
-            d?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
+    async dbAction(dbClient, simulationPass) {
+        const { beam_type } = simulationPass;
 
-        const anchord_prod_sql = `${d.anchor_productions}::varchar[]`;
-        const anchord_passes_sql = `${d.anchor_passes}::varchar[]`;
+        return await SimulationPassRepository.T.upsert({
+            name: simulationPass.name,
+            PWG: simulationPass.pwg,
+            jiraId: simulationPass.jiraId,
+            description: simulationPass.description,
+            requestedEvents: simulationPass.requestedEvents,
+            outputSize: simulationPass.outputSize,
+        })
+            .then(async ([_simulationPass, _]) => {
+                simulationPass.anchor_productions.map(async (periodName) => await PeriodRepository.T.findOrCreate({
+                    where: {
+                        name: periodName,
+                    },
+                    default: beam_type ? {
+                        name: periodName,
+                        BeamTypeId: await BeamTypeRepository.findOrCreate({
+                            name: simulationPass.beam_type,
+                        })[0]?.id,
+                    } : undefined,
+                })).forEach(async ([period, _]) => sequelize.transaction((_t) => _simulationPass.addPeriod(period.id)));
+            });
 
-        const pgCommand = `${period_insert}; call insert_mc(
-            ${d.name}, 
-            ${d.description},
-            ${d.pwg},
-            ${anchord_prod_sql},
-            ${anchord_passes_sql},
-            ${d.jira},
-            ${d.number_of_events},
-            ${d.size}
-        ); call insert_mc_details(${d.name}, ${d.runs}::integer[], ${period.name});`;
-        return await dbClient.query(pgCommand);
+        /*
+         * SimulationPass = Utils.adjusetObjValuesToSql(simulationPass);
+         * const period_insert =
+         *     simulationPass?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
+         */
+
+        /*
+         * Const anchord_prod_sql = `${simulationPass.anchor_productions}::varchar[]`;
+         * const anchord_passes_sql = `${simulationPass.anchor_passes}::varchar[]`;
+         */
+
+        /*
+         * Const pgCommand = `${period_insert}; call insert_mc(
+         *     ${simulationPass.name},
+         *     ${simulationPass.description},
+         *     ${simulationPass.pwg},
+         *     ${anchord_prod_sql},
+         *     ${anchord_passes_sql},
+         *     ${simulationPass.jira},
+         *     ${simulationPass.number_of_events},
+         *     ${simulationPass.size}
+         * ); call insert_mc_details(${simulationPass.name}, ${simulationPass.runs}::integer[], ${period.name});`;
+         * return await dbClient.query(pgCommand);
+         */
         // eslint-disable-next-line capitalized-comments
         // return await Promise.all([dbClient.query(pgCommand), this.monalisaServiceMCDetails.sync(d)]);
-    }
-
-    extractPeriod(rowData) {
-        try {
-            const productionPrefix = rowData.name.slice(0, 6);
-            const period = {};
-            period.name = productionPrefix;
-            let year = parseInt(productionPrefix.slice(3, 5), 10);
-            if (year > 50) {
-                year += 1900;
-            } else {
-                year += 2000;
-            }
-            period.year = year;
-            period.beam_type = rowData.beam_type;
-
-            return period;
-        } catch (e) {
-            return null;
-        }
     }
 }
 
