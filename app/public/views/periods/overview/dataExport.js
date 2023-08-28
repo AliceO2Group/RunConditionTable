@@ -45,51 +45,6 @@ const exportData = async (dataModel, close) => {
     close();
 };
 
-const handleRowsPreferenceSelection = () => {
-    const exportPreferenceSelection = document.getElementById(rowsPreferenceSelectId);
-    const selectedPreference = exportPreferenceSelection.options[exportPreferenceSelection.selectedIndex].value;
-    switch (selectedPreference) {
-        case exportPreferences.all:
-            /* */
-            break;
-        case exportPreferences.currentPage:
-            /* */
-            break;
-        case exportPreferences.selected:
-            /* */
-            break;
-        case exportPreferences.notSelected:
-            /* */
-            break;
-        case exportPreferences.visible:
-            /* */
-            break;
-        default:
-            break;
-    }
-};
-
-const handleColumnsPreferenceSelection = () => {
-    const exportPreferenceSelection = document.getElementById(columnsPreferenceSelectId);
-    const selectedPreference = exportPreferenceSelection.options[exportPreferenceSelection.selectedIndex].value;
-    switch (selectedPreference) {
-        case exportPreferences.all:
-            /* */
-            break;
-        case exportPreferences.selected:
-            /* */
-            break;
-        case exportPreferences.notSelected:
-            /* */
-            break;
-        case exportPreferences.visible:
-            /* */
-            break;
-        default:
-            break;
-    }
-};
-
 const selectedDataFormat = () => {
     const exportFormatSelection = document.getElementById(exportFormatSelectId);
     const selectedFormat = exportFormatSelection.options[exportFormatSelection.selectedIndex].value;
@@ -117,7 +72,6 @@ export default function dataExport(close, dataModel) {
             h('select.select.color-theme', {
                 id: rowsPreferenceSelectId,
                 name: rowsPreferenceSelectId,
-                onchange: () => handleRowsPreferenceSelection(),
             }, [
                 h('option', { value: exportPreferences.all, disabled: true }, 'All'),
                 h('option', { value: exportPreferences.currentPage }, 'Current page'),
@@ -131,7 +85,6 @@ export default function dataExport(close, dataModel) {
             h('select.select.color-theme', {
                 id: rowsPreferenceSelectId,
                 name: rowsPreferenceSelectId,
-                onchange: () => handleColumnsPreferenceSelection(),
             }, [
                 h('option', { value: exportPreferences.all }, 'All'),
                 h('option', { value: exportPreferences.selected, disabled: true }, 'Selected columns'),
