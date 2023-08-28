@@ -41,3 +41,18 @@ export const rowDisplayStyle = (isMarked, shouldHideMarkedRecords) => isMarked
         ? '.none'
         : '.row-selected'
     : '.row-not-selected';
+
+/**
+ * Converts bytes into human readable file size string
+ * @param {number} fileSizeInBytes in bytes
+ * @returns {string} human readable file size
+ */
+export const getReadableFileSizeString = (fileSizeInBytes) => {
+    const byteUnits = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const result = byteUnits.reduce((acc, _current) => acc.fileSize > 1024
+        ? { index: acc.index + 1, fileSize: acc.fileSize / 1024 }
+        : acc, { index: 0, fileSize: fileSizeInBytes / 1024 });
+
+    return `${Math.max(result.fileSize, 0.1).toFixed(1)} ${byteUnits[result.index]}`;
+};

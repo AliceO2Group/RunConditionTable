@@ -16,8 +16,9 @@ import tablePanel from './table/tablePanel.js';
 import flagsPanel from '../../flags/overview/flagsPanel.js';
 import { default as runsPerDataPassPanel } from '../../runs/runsPerDataPass/overview/panel.js';
 import { default as runsPerPeriodPanel } from '../../runs/runsPerPeriod/overview/panel.js';
-import { failure, unknown, waiting } from '../../../components/messagePanel/messages.js';
+import { failureWithStatus, obsoleteUnknown, waiting } from '../../../components/messagePanel/messages.js';
 import { RCT } from '../../../config.js';
+import periodsPanel from '../../periods/overview/periodsPanel.js';
 const { pageNames } = RCT;
 
 /**
@@ -27,24 +28,27 @@ const { pageNames } = RCT;
  */
 
 export default function dataPanel(model, runs, detectors, flags) {
-    const { page, index } = model.getCurrentDataPointer();
-    const data = model.fetchedData[page][index];
+    const { dataAccess, periods } = model;
+    const { page, index } = dataAccess.getCurrentDataPointer();
+    const data = dataAccess.fetchedData[page][index];
 
     return data ? data.match({
-        NotAsked: () => unknown(model),
+        NotAsked: () => obsoleteUnknown(dataAccess),
         Loading: () => waiting(),
         Success: () => {
             switch (page) {
+                case pageNames.periods:
+                    return periodsPanel(periods, model);
                 case pageNames.flags:
-                    return flagsPanel(model, runs, detectors, flags);
+                    return flagsPanel(dataAccess, runs, detectors, flags);
                 case pageNames.runsPerDataPass:
-                    return runsPerDataPassPanel(model, runs, detectors);
+                    return runsPerDataPassPanel(dataAccess, runs, detectors);
                 case pageNames.runsPerPeriod:
-                    return runsPerPeriodPanel(model, runs, detectors);
+                    return runsPerPeriodPanel(dataAccess, runs, detectors);
                 default:
-                    return tablePanel(model, runs);
+                    return tablePanel(dataAccess, runs);
             }
         },
-        Failure: (status) => failure(model, status),
-    }) : unknown(model);
+        Failure: (status) => failureWithStatus(dataAccess, status),
+    }) : obsoleteUnknown(dataAccess);
 }

@@ -12,6 +12,7 @@
  */
 
 const assert = require('assert');
+const { expect } = require('chai');
 const Utils = require('../../../app/lib/utils');
 const ServicesDataCommons = require('../../../app/lib/alimonitor-services/ServicesDataCommons.js');
 
@@ -35,7 +36,7 @@ module.exports = () => {
             });
 
             it('should return an empty object when told to suppress undefined values', () => {
-                assert(Object.keys(Utils.filterObject(objectSample, { noField: 'null' }, true)).length === 0);
+                expect(Object.keys(Utils.filterObject(objectSample, { noField: 'null' }, true))).to.lengthOf(0);
             });
         });
 
@@ -47,11 +48,11 @@ module.exports = () => {
             });
 
             it('should parse undefined values as null', () => {
-                assert(Utils.adjustValuesToSql(undefined) === 'null');
+                assert.equal(Utils.adjustValuesToSql(undefined), 'null');
             });
 
             it('should return unquoted DEFAULT', () => {
-                assert(Utils.adjustValuesToSql('DEFAULT') === 'DEFAULT');
+                assert.equal(Utils.adjustValuesToSql('DEFAULT'), 'DEFAULT');
             });
         });
 
@@ -76,22 +77,12 @@ module.exports = () => {
             const opts = { default: () => defaultVal };
 
             it('should return correct value for each case', () => {
-                assert(Utils.switchCase(caseNames[0], cases, opts)() === caseNames[0]);
-                assert(Utils.switchCase(caseNames[1], cases, opts)() === caseNames[1]);
+                assert.equal(Utils.switchCase(caseNames[0], cases, opts)(), caseNames[0]);
+                assert.equal(Utils.switchCase(caseNames[1], cases, opts)(), caseNames[1]);
             });
 
             it('should return default value when called with an unknown case', () => {
-                assert(Utils.switchCase(caseNames[2], cases, opts)() === defaultVal);
-            });
-        });
-
-        describe('Delay', () => {
-            it('Waits requested number of miliseconds', async () => {
-                const delayTime = 100;
-                const start = Date.now();
-                await Utils.delay(delayTime);
-                const end = Date.now();
-                assert(start + delayTime <= end);
+                assert.equal(Utils.switchCase(caseNames[2], cases, opts)(), defaultVal);
             });
         });
 

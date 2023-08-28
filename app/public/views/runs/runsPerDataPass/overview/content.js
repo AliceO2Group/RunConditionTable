@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import indexChip from '../../../../components/chips/indexChip.js';
-import pager from '../../../../components/table/pager.js';
+import obsoletePager from '../../../../components/table/obsoletePager.js';
 import { defaultIndexString } from '../../../../utils/defaults.js';
 import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
 import pagesCellsSpecials from '../../../userView/data/pagesCellsSpecials.js';
@@ -35,7 +35,8 @@ const { pageNames } = RCT;
 const applicableDataActions = {
     [dataActions.hide]: true,
     [dataActions.reload]: true,
-    [dataActions.downloadCSV]: true,
+    [dataActions.obsoleteDownloadCSV]: true,
+    [dataActions.downloadCSV]: false,
     [dataActions.copyLink]: true,
     [dataActions.showFilteringPanel]: true,
 };
@@ -71,14 +72,14 @@ export default function content(model, runs, detectors) {
                 ? visibleFields.length > 0
                     ? h('.p-top-05em',
                         h('.x-scrollable-table.border-sh',
-                            pager(model, data, false),
+                            obsoletePager(model, data, false),
                             h('table.runs-table', {
                                 id: `data-table-${data.url}`,
                             },
                             header(visibleFields, data, model),
                             model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
                             tableBody(model, visibleFields, data, cellsSpecials, dataPointer.index, runs, detectors)),
-                            data.rows.length > 15 ? pager(model, data) : ''))
+                            data.rows.length > 15 ? obsoletePager(model, data) : ''))
                     : ''
                 : anyFiltersActive(url)
                     ? noMatchingData(model, dataPointer.page)

@@ -12,10 +12,14 @@
  * or submit itself to any jurisdiction.
  */
 
-import { h } from '/js/src/index.js';
-import { RCT } from '../../config.js';
-import { pageTitle } from '../common/pageTitle.js';
+import periodsContent from './periodsContent.js';
+import { waiting, unknown, failureWithMessage } from '../../../components/messagePanel/messages.js';
 
-export default function title(page) {
-    return h('h3.p-right-15.text-primary', pageTitle(page, RCT.pageNames));
+export default function periodsPanel(periodsModel, model) {
+    return periodsModel.currentPagePeriods.match({
+        NotAsked: () => unknown(periodsModel),
+        Loading: () => waiting(),
+        Success: () => periodsContent(periodsModel, model),
+        Failure: (errors) => failureWithMessage(periodsModel, errors),
+    });
 }

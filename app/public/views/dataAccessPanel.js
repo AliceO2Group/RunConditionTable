@@ -25,7 +25,7 @@ export default function dataAccessPanel(model) {
             h('section.flex-grow.relative.user-panel-main-content', [
                 h('.scroll-y.absolute-fill',
                     { id: 'user-panel-main-content' },
-                    dataPanel(dataAccess, runs, detectors, flags)),
+                    dataPanel(model, runs, detectors, flags)),
             ]),
         ]),
     ]);

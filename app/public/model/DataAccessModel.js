@@ -18,10 +18,15 @@ import { defaultIndex, defaultIndexString } from '../utils/defaults.js';
 import Navigation from './navigation/Navigation.js';
 import ServiceUnavailable from './ServiceUnavailable.js';
 import { RCT } from '../config.js';
-import UserPreferences from './UserPreferences.js';
 const { messageTimeout } = RCT;
 const { states } = RCT.dataAccess;
 
+/**
+ * General class for managing the data access
+ * @deprecated
+ * Please use separate models for each view (e.g. periodsModel).
+ * @param {Model} parent main model
+ */
 export default class DataAccessModel extends Observable {
     constructor(parent) {
         super();
@@ -29,7 +34,6 @@ export default class DataAccessModel extends Observable {
         this.parent = parent;
         this.router = this.parent.router;
 
-        this.userPreferences = new UserPreferences(this);
         this.serviceUnavailable = new ServiceUnavailable(parent);
         this.fetchedData = new FetchedDataManager(this.router, this);
 

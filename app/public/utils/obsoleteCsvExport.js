@@ -13,10 +13,8 @@
  */
 
 export const preparedData = (data) => {
-    let rows = data.payload.rows.filter((item) => item.marked);
-    if (!rows) {
-        ({ rows } = data.payload);
-    }
+    const filteredRows = data.payload.rows.filter((item) => item.marked);
+    const rows = filteredRows.length > 0 ? filteredRows : data.payload.rows;
     const fields = data.payload.fields.filter((item) => item.marked).map((field) => field.name);
 
     let csv = rows.map((row) => fields.map((field) => JSON.stringify(row[field], replacer)).join(','));
@@ -37,9 +35,16 @@ export const preparedFile = (model) => {
     return { uri: encodeURI(csvContent), fileName: fileName };
 };
 
-const replacer = (key, value) => value === null ? '' : value;
+const replacer = (_key, value) => value || '';
 
-export default function downloadCSV(model) {
+/**
+ * Uses deprecated data model.
+ * Please use the new csv export with the specific dataModel (e.g. `periodsModel`) instead.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @returns {void} downloads the CSV file with the current data
+ */
+export default function obsoleteDownloadCSV(model) {
     const file = preparedFile(model);
     const link = document.createElement('a');
     link.setAttribute('href', file.uri);

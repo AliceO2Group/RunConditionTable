@@ -18,16 +18,20 @@ const periodFieldNames = {
         fieldName: 'Name',
         filterInput: filterInputTypes.text,
     },
+    beamType: {
+        fieldName: 'Beam',
+        filterInput: filterInputTypes.text,
+    },
     year: {
         fieldName: 'Year',
         filterInput: filterInputTypes.number,
     },
-    beam: {
-        fieldName: 'Beam',
-        filterInput: filterInputTypes.text,
-    },
-    energy: {
+    avgEnergy: {
         fieldName: 'Mean energy [GeV]',
+        filterInput: filterInputTypes.number,
+    },
+    distinctEnergies: {
+        fieldName: 'Run energies [GeV]',
         filterInput: filterInputTypes.number,
     },
 };

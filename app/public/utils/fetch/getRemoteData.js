@@ -11,10 +11,12 @@
  * or submit itself to any jurisdiction.
  */
 
-const UtilitiesSuite = require('./utils');
-const ComponentsSuite = require('./components');
+import { jsonFetch } from './jsonFetch.js';
 
-module.exports = () => {
-    describe('Components', ComponentsSuite);
-    describe('Utilities', UtilitiesSuite);
-};
+/**
+ * Wrapper around {@see jsonFetch} sending GET request
+ *
+ * @param {string} endpoint the remote endpoint to send request to
+ * @return {Promise<*>} resolve with the result of the request or reject with the list of errors if any error occurred
+ */
+export const getRemoteData = (endpoint) => jsonFetch(endpoint, { method: 'GET' });

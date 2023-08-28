@@ -23,6 +23,10 @@ const { dataReqParams, pageNames, dataAccess } = RCT;
  * Object of this class provide organization of many FetchedData objects,
  * each is available as ModelFetchedDataStructure_Object[pageName][index]
  * where index is unique identifier of particular data set in chosen page
+ * @deprecated
+ * Please use separate models for each view (e.g. periodsModel).
+ * @param {Router} router parent router
+ * @param {DataAccessModel} model data access model
  */
 export default class FetchedDataManager {
     constructor(router, model) {
@@ -51,7 +55,7 @@ export default class FetchedDataManager {
         if (url === null) {
             url = this.router.getUrl();
             if (!url.searchParams.has(dataReqParams.rowsOnSite)) {
-                url = new URL(`${url.href}&${dataReqParams.rowsOnSite}=${this.model.userPreferences.rowsOnSite}`);
+                url = new URL(`${url.href}&${dataReqParams.rowsOnSite}=${this.model.parent.userPreferences.rowsOnSite}`);
             }
             if (!url.searchParams.has(dataReqParams.site)) {
                 url = new URL(`${url.href}&${dataReqParams.site}=1`);
@@ -99,7 +103,7 @@ export default class FetchedDataManager {
         await this.model.parent._tokenExpirationHandler(status);
 
         if (ok) {
-            const s = RemoteData.Success(new FetchedData(url, result, this.model.userPreferences, totalRecordsNumber));
+            const s = RemoteData.Success(new FetchedData(url, result, this.model.parent.userPreferences, totalRecordsNumber));
             this[page][index] = s;
             previous?.match({
                 NotAsked: () => {},
@@ -140,7 +144,7 @@ export default class FetchedDataManager {
 
     changeRowsOnSite() {
         const url = this.router.getUrl();
-        const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.model.userPreferences.rowsOnSite });
+        const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.model.parent.userPreferences.rowsOnSite });
         this.router.go(newUrl);
     }
 

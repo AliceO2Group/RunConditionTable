@@ -13,12 +13,21 @@
  */
 
 import { h, iconChevronBottom } from '/js/src/index.js';
-import itemsCounter from '../../views/userView/data/table/items-counter.js';
+import obsoleteItemsCounter from '../../views/userView/data/table/obsoleteItemsCounter.js';
 import { RCT } from '../../config.js';
 
 const { site } = RCT.dataReqParams;
 
-export default function pager(model, data, pagerOnly = true) {
+/**
+ * Uses obsolete model.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @param {*} data data
+ * @param {boolean} pagerOnly indicates whether the component should display
+ *        only the pager or sorting row and column display controller as well
+ * @returns {obsoletePager} row with pager and table display properties controllers
+ */
+export default function obsoletePager(model, data, pagerOnly = true) {
     const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
     const columnOptionsSelectId = 'columns-option-select-id';
@@ -55,9 +64,6 @@ export default function pager(model, data, pagerOnly = true) {
                 }
                 model.notify();
                 break;
-            case '2':
-                /* Customize */
-                break;
             default:
                 break;
         }
@@ -70,14 +76,14 @@ export default function pager(model, data, pagerOnly = true) {
                 : [
                     h('.flex-wrap.justify-between.items-center',
                         h('.flex-wrap.justify-between.items-center.ph3',
-                            h('.italic', itemsCounter(data))),
+                            h('.italic', obsoleteItemsCounter(data))),
 
                         h('button.btn.icon-only-button.m-right-15', {
                             className: model.sortingRowVisible ? 'btn-primary' : 'btn-secondary',
                             onclick: () => model.changeSortingRowVisibility(),
                         }, model.sortingRowVisible ? h('.sorting-20-off-white.abs-center') : h('.sorting-20-primary.abs-center')),
 
-                        h('select.select.column-options-select', {
+                        h('select.select.column-display-options-select', {
                             id: columnOptionsSelectId,
                             name: columnOptionsSelectId,
                             onchange: () => handleOptionChange(),
@@ -85,11 +91,10 @@ export default function pager(model, data, pagerOnly = true) {
                         [
                             h('option', { value: 0 }, 'Non empty columns'),
                             h('option', { value: 1 }, 'All columns'),
-                            h('option', { value: 2 }, 'Customize'),
                         ], iconChevronBottom())),
                 ],
 
-            h('.flex.pager-buttons',
+            h('.flex.m-right-0-3-rem',
                 // Move to the first site
                 currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
                 // Move one site back

@@ -13,9 +13,12 @@
  */
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
-import { getReadableFileSizeString } from '../../../utils/utils.js';
+import { getReadableFileSizeString } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 import linkChip from '../../../components/chips/linkChip.js';
+import { getClosestDefinedEnergy } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 const { dataReqParams: DRP, pageNames: PN, outerServices } = RCT;
+const acceptableEnergyValues = RCT.mapping.energy.values;
+const acceptableEnergyMargin = RCT.mapping.energy.acceptableMargin;
 
 /**
  * Configuration what buttons at which cells and which pages are supposed
@@ -51,25 +54,28 @@ pagesCellsSpecials[PN.periods] = {
                 model.navigation,
                 'runs',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-run_number`,
+                `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-run_number`,
             ),
 
             linkChip(
                 model.navigation,
                 'data passes',
-                `/?page=${PN.dataPasses}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1`,
+                `/?page=${PN.dataPasses}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1`,
             ),
 
             linkChip(
                 model.navigation,
                 'MC',
-                `/?page=${PN.mc}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1`,
+                `/?page=${PN.mc}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1`,
             )),
     ],
 
-    energy: (model, item) =>
-        `${Number(item.energy).toFixed(2)}`
-    ,
+    avgEnergy: (model, item) =>
+        `${Number(item.avgEnergy).toFixed(2)}`,
+    distinctEnergies: (model, item) =>
+        h('', item.distinctEnergies.map((e) => getClosestDefinedEnergy(e, acceptableEnergyValues, acceptableEnergyMargin))
+            .filter((value, index, array) => array.indexOf(value) === index)
+            .reduce((toDisplay, currentValue) => `${toDisplay ? `${toDisplay}, ` : ''}${currentValue}`, '')),
 };
 
 pagesCellsSpecials[PN.dataPasses] = {
@@ -80,14 +86,14 @@ pagesCellsSpecials[PN.dataPasses] = {
                 onclick: async () => {
                     await runs.fetchRunsPerDataPass(item.name);
                     // eslint-disable-next-line max-len
-                    model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-run_number`);
+                    model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-run_number`);
                 },
             }, 'runs'),
             linkChip(
                 model.navigation,
                 'anchorage',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-name`,
+                `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-name`,
             )),
     ],
     size: (model, runs, item) => getReadableFileSizeString(Number(item.size)),
@@ -100,7 +106,7 @@ pagesCellsSpecials[PN.mc] = {
                 model.navigation,
                 'anchored',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.rowsOnSite}=${model.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-name`,
+                `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.rowsOnSite}=${model.parent.userPreferences.rowsOnSite}&${DRP.site}=1&sorting=-name`,
             )),
     ],
 };

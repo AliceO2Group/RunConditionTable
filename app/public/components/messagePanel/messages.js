@@ -19,26 +19,69 @@ import spinner from '../common/spinner.js';
 const goBack = 'Go back';
 const nothingFound = 'Nothing found';
 
-const requestButton = (model) => h('button.btn.btn-primary.m3', {
+/**
+ * Uses deprecated data request.
+ * Please use the `requestButton` with the specific dataModel (e.g. `periodsModel`) instead.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @returns {button} button that enables user to request data
+ */
+const obsoleteRequestButton = (model) => h('button.btn.btn-primary.m3', {
     onclick: () => model.fetchedData.reqForData(true),
+}, 'Reload');
+
+const requestButton = (dataModel) => h('button.btn.btn-primary.m3', {
+    onclick: () => dataModel.fetchCurrentPageData(),
 }, 'Reload');
 
 const removeCurrentDataButton = (model, label) => h('button.btn.btn-primary.m3', {
     onclick: () => model.removeCurrentData(),
 }, label);
 
-export const failure = (model, status) => messagePanel(
+/**
+ * Uses deprecated `obsoleteRequestButton`.
+ * Please use the `failureWithMessage` with the specific dataModel (e.g. `periodsModel`) and errorObject instead.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @param {number} status request status
+ * @returns {messagePanel} messagePanel informing the user about an unknown error.
+ */
+export const failureWithStatus = (model, status) => messagePanel(
     'no-network-90',
     'Failed to load data',
     `The services are unavailable (status: ${status ? status : 'unknown'})`,
-    requestButton(model),
+    obsoleteRequestButton(model),
 );
 
-export const unknown = (model) => messagePanel(
+export const failureWithMessage = (dataModel, errorObject) => {
+    const { detail, title } = errorObject.find((e) => Boolean(e));
+    return messagePanel(
+        'no-network-90',
+        detail,
+        title,
+        requestButton(dataModel),
+    );
+};
+
+/**
+ * Uses deprecated `obsoleteRequestButton`.
+ * Please use the `unknown` with the specific dataModel (e.g. `periodsModel`) instead.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @returns {messagePanel} messagePanel informing the user about an unknown error.
+ */
+export const obsoleteUnknown = (model) => messagePanel(
     'unexpected-90',
     'Unknown error',
     'Request could not be handled properly',
-    requestButton(model),
+    obsoleteRequestButton(model),
+);
+
+export const unknown = (dataModel) => messagePanel(
+    'unexpected-90',
+    'Unknown error',
+    'Request could not be handled properly',
+    requestButton(dataModel),
 );
 
 export const sessionError = (model) => messagePanel(
@@ -72,13 +115,19 @@ export const noMatchingData = (model, page) => messagePanel(
     ],
 );
 
+/**
+ * Uses deprecated `obsoleteRequestButton`.
+ * @deprecated
+ * @param {DataAccessModel} model dataAccessModel
+ * @returns {messagePanel} messagePanel informing the user about an unknown error.
+ */
 export const noDataFound = (model) => messagePanel(
     'nothing-found-90',
     nothingFound,
     'There is no data to be displayed here',
     [
         removeCurrentDataButton(model, goBack),
-        requestButton(model),
+        obsoleteRequestButton(model),
     ],
 );
 

@@ -12,13 +12,12 @@
  */
 
 const req = require('esm')(module)
-const csvExport = req('../../../app/public/utils/csvExport').default;
-const preparedData = req('../../../app/public/utils/csvExport').preparedData;
-const preparedFile = req('../../../app/public/utils/csvExport').preparedFile;
-const assert = require('assert');
+const { preparedData } = req('../../../app/public/utils/obsoleteCsvExport');
+const { preparedFile } = req('../../../app/public/utils/obsoleteCsvExport');
+const { assert } = require('chai');
 
 module.exports = () => {
-    describe('CSV Export', () => {
+    describe('CSV Export (Obsolete)', () => {
         const dataSample = {
             payload: {
                 rows: [
@@ -45,12 +44,12 @@ module.exports = () => {
 
         describe('Check data preparation', () => {
             it('should not return null', () => {
-                assert(preparedData(dataSample) !== null);
+                assert.isNotNull(preparedData(dataSample));
             });
 
             it('should filter values properly', () => {
-                assert(preparedData(dataSample).indexOf('b field') === -1);
-                assert(preparedData(dataSample).indexOf(3) === -1);
+                assert.equal(preparedData(dataSample).indexOf('b field'), -1);
+                assert.equal(preparedData(dataSample).indexOf(3), -1);
             });
         });
 

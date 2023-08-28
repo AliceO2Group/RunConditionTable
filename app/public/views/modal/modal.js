@@ -16,6 +16,7 @@ import { h } from '/js/src/index.js';
 import pageSettings from '../userView/data/pageSettings/pageSettings.js';
 import about from '../../components/about/about.js';
 import detectorSettings from '../userView/data/detectorSettings/detectorSettings.js';
+import dataExport from '../periods/overview/dataExport.js';
 
 export const modalClassNames = {
     modal: 'modal',
@@ -35,6 +36,10 @@ export const modalIds = {
         modal: 'detectorSettingsModalId',
         content: 'detectorSettingsContentId',
     },
+    dataExport: {
+        modal: 'dataExportModalId',
+        content: 'dataExportContentId',
+    },
 };
 
 const allModals = () => ({
@@ -48,7 +53,7 @@ export const showModal = (modalId) => {
         modal.style.display = 'block';
         document.addEventListener('click', (event) => {
             const { modals, contents } = allModals();
-            if (Array.from(contents).find((e) => e != event.target)
+            if (Array.from(contents).find((e) => e !== event.target)
                 && Array.from(modals).find((e) => e == event.target)
                 && document.getElementById(modalId)) {
                 document.getElementById(modalId).style.display = 'none';
@@ -59,14 +64,14 @@ export const showModal = (modalId) => {
     }
 };
 
-export const modal = (modalId, model = null) => {
+export const modal = (modalId, dataModel = null, userPreferences = null) => {
     switch (modalId) {
         case modalIds.pageSettings.modal: {
-            return model
+            return userPreferences
                 ? h(`.${modalClassNames.modal}`, { id: modalIds.pageSettings.modal },
                     h(`.${modalClassNames.content}.abs-center.p3`, {
                         id: modalIds.pageSettings.content,
-                    }, pageSettings(model.userPreferences, () => {
+                    }, pageSettings(userPreferences, () => {
                         document.getElementById(modalIds.pageSettings.modal).style.display = 'none';
                     })))
                 : '';
@@ -78,10 +83,22 @@ export const modal = (modalId, model = null) => {
                 }, about()));
         }
         case modalIds.detectors.modal: {
-            return h(`.${modalClassNames.modal}`, { id: modalIds.detectors.modal },
-                h(`.${modalClassNames.content}.abs-center.p3`, {
-                    id: modalIds.detectors.content,
-                }, detectorSettings(model.userPreferences)));
+            return userPreferences
+                ? h(`.${modalClassNames.modal}`, { id: modalIds.detectors.modal },
+                    h(`.${modalClassNames.content}.abs-center.p3`, {
+                        id: modalIds.detectors.content,
+                    }, detectorSettings(userPreferences)))
+                : '';
+        }
+        case modalIds.dataExport.modal: {
+            return dataModel
+                ? h(`.${modalClassNames.modal}`, { id: modalIds.dataExport.modal },
+                    h(`.${modalClassNames.content}.abs-center.p3`, {
+                        id: modalIds.dataExport.content,
+                    }, dataExport(() => {
+                        document.getElementById(modalIds.dataExport.modal).style.display = 'none';
+                    }, dataModel)))
+                : '';
         }
     }
 };

@@ -39,8 +39,9 @@ export default class UserPreferences extends Observable {
         this.detectorList = RCT.detectors.reduce((acc, detector) => ({ ...acc, [detector]: true }), {});
     }
 
-    setRowsOnSite(rowsOnSite) {
-        this.rowsOnSite = rowsOnSite;
+    setItemsPerPage(itemsPerPage) {
+        this.rowsOnSite = itemsPerPage;
+        this.notify();
         const url = this.parent.router.getUrl();
         const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.rowsOnSite });
         this.parent.router.go(newUrl);

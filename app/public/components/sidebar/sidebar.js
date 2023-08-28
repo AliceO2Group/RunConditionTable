@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 import sidebarItem from './sidebarItem.js';
 import { modal, modalIds, showModal } from '../../views/modal/modal.js';
-import { pageTitle } from '../table/title.js';
+import { pageTitle } from '../common/pageTitle.js';
 const { pageNames } = RCT;
 
 /**
@@ -27,24 +27,26 @@ const { pageNames } = RCT;
  */
 
 export default function sidebar(model) {
+    const { userPreferences } = model.parent;
     return h('.sidebar.sidebar-collapsible', {
         id: 'sidebar',
     },
     modal(modalIds.about.modal),
-    modal(modalIds.pageSettings.modal, model),
-    modal(modalIds.detectors.modal, model),
+    modal(modalIds.pageSettings.modal, null, userPreferences),
+    modal(modalIds.detectors.modal, null, userPreferences),
+    modal(modalIds.dataExport.modal, model.parent.periods, userPreferences),
     h('.logo.ph3.hide-on-close'),
     h('.flex-column.gap-20',
         h('.sidebar-section',
             h('.sidebar-section-title.ph2.hide-on-close', 'Pages'),
-            sidebarItem(model, pageNames.periods, pageTitle(pageNames.periods)),
-            sidebarItem(model, pageNames.dataPasses, pageTitle(pageNames.dataPasses)),
-            sidebarItem(model, pageNames.anchoragePerDatapass, pageTitle(pageNames.anchoragePerDatapass)),
-            sidebarItem(model, pageNames.mc, pageTitle(pageNames.mc)),
-            sidebarItem(model, pageNames.anchoredPerMC, pageTitle(pageNames.anchoredPerMC)),
-            sidebarItem(model, pageNames.runsPerPeriod, pageTitle(pageNames.runsPerPeriod)),
-            sidebarItem(model, pageNames.runsPerDataPass, pageTitle(pageNames.runsPerDataPass)),
-            sidebarItem(model, pageNames.flags, pageTitle(pageNames.flags))),
+            sidebarItem(model, pageNames.periods, pageTitle(pageNames.periods, pageNames)),
+            sidebarItem(model, pageNames.dataPasses, pageTitle(pageNames.dataPasses, pageNames)),
+            sidebarItem(model, pageNames.anchoragePerDatapass, pageTitle(pageNames.anchoragePerDatapass, pageNames)),
+            sidebarItem(model, pageNames.mc, pageTitle(pageNames.mc, pageNames)),
+            sidebarItem(model, pageNames.anchoredPerMC, pageTitle(pageNames.anchoredPerMC, pageNames)),
+            sidebarItem(model, pageNames.runsPerPeriod, pageTitle(pageNames.runsPerPeriod, pageNames)),
+            sidebarItem(model, pageNames.runsPerDataPass, pageTitle(pageNames.runsPerDataPass, pageNames)),
+            sidebarItem(model, pageNames.flags, pageTitle(pageNames.flags, pageNames))),
 
         h('.sidebar-section',
             h('.sidebar-section-title.ph2.hide-on-close', 'Preferences'),

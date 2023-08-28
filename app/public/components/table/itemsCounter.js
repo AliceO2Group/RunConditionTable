@@ -12,15 +12,13 @@
  * or submit itself to any jurisdiction.
  */
 
-export const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i], b[i]]);
+export default function itemsCounter(paginationModel) {
+    const { currentPage, itemsPerPage, itemsCount } = paginationModel;
 
-export function getReadableFileSizeString(fileSizeInBytes) {
-    let i = -1;
-    const byteUnits = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    do {
-        fileSizeInBytes /= 1024;
-        i++;
-    } while (fileSizeInBytes > 1024);
+    const firstItemIndex = (currentPage - 1) * itemsPerPage + 1;
+    const lastItemIndex = currentPage * itemsPerPage > itemsCount
+        ? itemsCount
+        : currentPage * itemsPerPage;
 
-    return `${Math.max(fileSizeInBytes, 0.1).toFixed(1)}  ${byteUnits[i]}`;
+    return `${firstItemIndex}-${lastItemIndex} of ${itemsCount}`;
 }

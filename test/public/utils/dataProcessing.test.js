@@ -13,12 +13,14 @@
 
 const req = require('esm')(module)
 const assert = require('assert');
+const { expect } = require('chai');
 const { extractPeriodName,
         getClosestDefinedEnergy,
         detectorName,
         isDetectorField,
         shouldDisplayDetectorField,
-        rowDisplayStyle } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
+        rowDisplayStyle,
+        getReadableFileSizeString } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
 
 module.exports = () => {
     describe('Extract period name', () => {
@@ -68,7 +70,7 @@ module.exports = () => {
         });
 
         it('should return null when provided field is not a detector field', () => {
-            assert(detectorName(nonDetectorFieldName) === null);
+            expect(detectorName(nonDetectorFieldName)).to.be.null;
         })
     });
 
@@ -118,19 +120,32 @@ module.exports = () => {
         const shouldNotHideSelected = false;
         
         it('should not display hidden rows', () => {
-            assert(rowDisplayStyle(selected, shouldHideSelected) === displayNone);
+            assert.equal(rowDisplayStyle(selected, shouldHideSelected), displayNone);
         });
 
         it('should apply selection class to selected rows', () => {
-            assert(rowDisplayStyle(selected, shouldNotHideSelected) === rowSelected);
+            assert.equal(rowDisplayStyle(selected, shouldNotHideSelected), rowSelected);
         });
 
         it('should apply corresponding class to unselected rows', () => {
-            assert(rowDisplayStyle(notSelected, shouldNotHideSelected) === rowNotSelected);
+            assert.equal(rowDisplayStyle(notSelected, shouldNotHideSelected), rowNotSelected);
         });
 
         it('should apply corresponding class to unselected rows', () => {
-            assert(rowDisplayStyle(notSelected, shouldHideSelected) === rowNotSelected);
+            assert.equal(rowDisplayStyle(notSelected, shouldHideSelected), rowNotSelected);
+        });
+    });
+
+    describe('Check the readable file size', () => {
+        const fileSizekB = 1024;
+        const fileSizeGB = 3758096384;
+
+        it('should parse kB correctly' , () => {
+            assert.equal(getReadableFileSizeString(fileSizekB), '1.0 kB' );
+        });
+
+        it('should parse GB correctly' , () => {
+            assert.equal(getReadableFileSizeString(fileSizeGB), '3.5 GB' );
         });
     });
 };

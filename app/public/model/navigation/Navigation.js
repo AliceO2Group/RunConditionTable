@@ -74,7 +74,7 @@ export default class Navigation extends Observable {
                     this.parent.fetchedData.reqForData(true, dpUrl).then(() => {
                         const runNumbers = this.model.runs.getRunsPerDataPass(dataPassName).map((row) => row.run_number);
                         this.model.runs.fetchFlagsSummary(dataPassName, runNumbers).then(() => {
-                            parent.fetchedData.reqForData();
+                            this.parent.fetchedData.reqForData();
                         }).catch(() => {});
                     });
                 }
@@ -97,12 +97,12 @@ export default class Navigation extends Observable {
     }
 
     siteReqParamsPhrase() {
-        return `&${dataReqParams.rowsOnSite}=${this.parent.userPreferences.rowsOnSite}&${dataReqParams.site}=${this.site}`;
+        return `&${dataReqParams.rowsOnSite}=${this.model.userPreferences.rowsOnSite}&${dataReqParams.site}=${this.site}`;
     }
 
     siteReqParams() {
         return {
-            [dataReqParams.rowsOnSite]: this.parent.userPreferences.rowsOnSite,
+            [dataReqParams.rowsOnSite]: this.model.userPreferences.rowsOnSite,
             [dataReqParams.site]: this.site,
         };
     }
