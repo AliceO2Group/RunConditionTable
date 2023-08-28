@@ -147,7 +147,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                         error: e.message,
                         meta: {
                             explicitValues: {
-                                name: periodName,
+                                name: period.name,
                                 year: period.year,
                                 BeamTypeId: beamType.id,
                             },

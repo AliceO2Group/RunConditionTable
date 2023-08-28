@@ -60,7 +60,7 @@ function extractPeriod(name, beamType) {
         throw new Error(`Incorrect period name ${extractedName} extracted from ${name}`);
     }
     return {
-        extractedName,
+        name: extractedName,
         year: extractPeriodYear(extractedName),
         beamType,
     };
