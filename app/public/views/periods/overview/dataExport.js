@@ -70,8 +70,8 @@ export default function dataExport(close, dataModel) {
         h('.flex-wrap.justify-between.items-center',
             h('.text-dark-blue', 'Rows'),
             h('select.select.color-theme', {
-                id: rowsPreferenceSelectId,
-                name: rowsPreferenceSelectId,
+                id: columnsPreferenceSelectId,
+                name: columnsPreferenceSelectId,
             }, [
                 h('option', { value: exportPreferences.all, disabled: true }, 'All'),
                 h('option', { value: exportPreferences.currentPage }, 'Current page'),
