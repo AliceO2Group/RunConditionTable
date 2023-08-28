@@ -109,7 +109,6 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
 
     async dbAction(dbClient, simulationPass) {
         const { beam_type } = simulationPass;
-        console.log(simulationPass.anchoredPeriods)
 
         return await SimulationPassRepository.T.upsert({
             name: simulationPass.name,
@@ -120,18 +119,21 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             outputSize: simulationPass.outputSize,
         })
             .then(async ([_simulationPass, _]) => {
-                // simulationPass.anchoredPeriods.map(async (periodName) => await PeriodRepository.T.findOrCreate({
-                //     where: {
-                //         name: periodName,
-                //     },
-                //     default: beam_type ? {
-                //         name: periodName,
-                //         BeamTypeId: await BeamTypeRepository.findOrCreate({
-                //             name: simulationPass.beam_type,
-                //         })[0]?.id,
-                //     } : undefined,
-                // }))
-                // .forEach(async ([period, _]) => await sequelize.transaction((_t) => _simulationPass.addPeriod(period.id)));
+                // Insert periods;
+                simulationPass.anchoredPeriods.map(async (periodName) => await PeriodRepository.T.findOrCreate({
+                    where: {
+                        name: periodName,
+                    },
+                    default: beam_type ? {
+                        name: periodName,
+                        BeamTypeId: await BeamTypeRepository.findOrCreate({
+                            where: {
+                                name: simulationPass.beam_type,
+                            },
+                        })[0]?.id,
+                    } : undefined,
+                })
+                    .then(async ([period, _]) => await sequelize.transaction((_t) => _simulationPass.addPeriod(period.id))));
             });
 
         /*
