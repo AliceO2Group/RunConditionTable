@@ -29,14 +29,16 @@ export default function pageSelector(currentPage, pagesCount, onPageChange) {
 
     const morePagesLeft = currentPage > 2;
     const morePagesRight = currentPage < pagesCount - 1;
+    const isFirstPage = currentPage > 1;
+    const isLastPage = currentPage < pagesCount;
 
     return h('.flex.m-right-0-3-rem',
         // Move to the first page
-        currentPage > 1 ? pageIconButton(1, h('.double-left-15-primary')) : '',
-        // Move one site back
-        currentPage > 1 ? pageIconButton(currentPage - 1, h('.back-15-primary')) : '',
+        isFirstPage ? pageIconButton(1, h('.double-left-15-primary')) : '',
+        // Move one page back
+        isFirstPage ? pageIconButton(currentPage - 1, h('.back-15-primary')) : '',
 
-        // Move to the middle of sites range [first, current]
+        // Move to the middle of pages range [first, current]
         morePagesLeft
             ? pageIconButton(
                 Math.floor(currentPage / 2),
@@ -44,11 +46,11 @@ export default function pageSelector(currentPage, pagesCount, onPageChange) {
             )
             : '',
 
-        currentPage > 1 ? pageNumberButton(currentPage - 1) : '',
+        isFirstPage ? pageNumberButton(currentPage - 1) : '',
         pageNumberButton(currentPage),
-        currentPage < pagesCount ? pageNumberButton(currentPage + 1) : '',
+        isLastPage ? pageNumberButton(currentPage + 1) : '',
 
-        // Move to the middle of sites range [current, last]
+        // Move to the middle of pages range [current, last]
         morePagesRight
             ? pageIconButton(
                 currentPage + Math.floor((pagesCount - currentPage) / 2),
@@ -56,16 +58,16 @@ export default function pageSelector(currentPage, pagesCount, onPageChange) {
             )
             : '',
 
-        // Move one site forward
-        currentPage < pagesCount
+        // Move one page forward
+        isLastPage
             ? pageIconButton(
                 currentPage + 1,
                 h('.forward-15-primary'),
             )
             : '',
 
-        // Move to the last site
-        currentPage < pagesCount
+        // Move to the last page
+        isLastPage
             ? pageIconButton(
                 pagesCount,
                 h('.double-right-15-primary'),
