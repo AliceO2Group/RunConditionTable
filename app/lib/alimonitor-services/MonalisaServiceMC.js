@@ -86,7 +86,8 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
 
     dataAdjuster(sp) {
         sp = Utils.filterObject(sp, this.ketpFields);
-        sp.size = Number(sp.size);
+        sp.outputSize = Number(sp.outputSize);
+        sp.requestedEvents = Number(sp.requestedEvents);
 
         const parseListLikeString = (rawString) => Utils
             .replaceAll(rawString, /,|'|;"/, ' ')
@@ -108,6 +109,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
 
     async dbAction(dbClient, simulationPass) {
         const { beam_type } = simulationPass;
+        console.log(simulationPass.anchoredPeriods)
 
         return await SimulationPassRepository.T.upsert({
             name: simulationPass.name,
@@ -118,17 +120,18 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             outputSize: simulationPass.outputSize,
         })
             .then(async ([_simulationPass, _]) => {
-                simulationPass.anchoredPeriods.map(async (periodName) => await PeriodRepository.T.findOrCreate({
-                    where: {
-                        name: periodName,
-                    },
-                    default: beam_type ? {
-                        name: periodName,
-                        BeamTypeId: await BeamTypeRepository.findOrCreate({
-                            name: simulationPass.beam_type,
-                        })[0]?.id,
-                    } : undefined,
-                })).forEach(async ([period, _]) => sequelize.transaction((_t) => _simulationPass.addPeriod(period.id)));
+                // simulationPass.anchoredPeriods.map(async (periodName) => await PeriodRepository.T.findOrCreate({
+                //     where: {
+                //         name: periodName,
+                //     },
+                //     default: beam_type ? {
+                //         name: periodName,
+                //         BeamTypeId: await BeamTypeRepository.findOrCreate({
+                //             name: simulationPass.beam_type,
+                //         })[0]?.id,
+                //     } : undefined,
+                // }))
+                // .forEach(async ([period, _]) => await sequelize.transaction((_t) => _simulationPass.addPeriod(period.id)));
             });
 
         /*
