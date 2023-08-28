@@ -24,6 +24,8 @@ const { databaseManager: {
         BeamTypeRepository,
         PeriodRepository,
         SimulationPassRepository,
+        DataPassRepository,
+        RunRepository,
     },
     sequelize,
 } } = require('../database/DatabaseManager.js');
@@ -119,49 +121,62 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             outputSize: simulationPass.outputSize,
         })
             .then(async ([_simulationPass, _]) => {
-                // Insert periods;
+                // Check periods;
                 simulationPass.anchoredPeriods.map(async (periodName) => await PeriodRepository.T.findOrCreate({
                     where: {
                         name: periodName,
                     },
                     default: beam_type ? {
                         name: periodName,
-                        BeamTypeId: await BeamTypeRepository.findOrCreate({
+                        BeamTypeId: await BeamTypeRepository.T.findOrCreate({
                             where: {
                                 name: simulationPass.beam_type,
                             },
                         })[0]?.id,
                     } : undefined,
                 })
-                    .then(async ([period, _]) => await sequelize.transaction((_t) => _simulationPass.addPeriod(period.id))));
+                    .then(async ([period, _]) => {
+                        // Add anchored period
+                        const periodAddPromise = sequelize.transaction((_t) => _simulationPass.addPeriod(period.id));
+
+                        // Add anchored passes
+                        const dataPassPipelinePromises = simulationPass.anchoredPasses
+                            .map(async (passSuffix) => await DataPassRepository.T.findOrCreate({
+                                where: {
+                                    name: `${period.name}_${passSuffix}`,
+                                },
+                                default: {
+                                    name: `${period.name}_${passSuffix}`,
+                                    PeriodId: period.id,
+                                },
+                            }).then(async ([dataPass, _]) => await sequelize.transaction((_t) => _simulationPass.addDataPass(dataPass.id))));
+
+                        // Add runs
+                        const runsAddPipeline = simulationPass.runs.map(async (runNumber) => {
+                            const run = await RunRepository.T.findOne({ where: { runNumber: runNumber } });
+                            if (!run) {
+                                const insertWithoutPeriod = simulationPass.anchoredPeriods.length > 1;
+                                if (insertWithoutPeriod) {
+                                    this.logger.warn(
+                                        `Neither run {runNumber: ${runNumber}} is found, nor can infer its belonging to period, because multiple 
+                                        periods (${simulationPass.anchoredPeriods}) are anchored to simulation pass ${simulationPass.name}`,
+                                    );
+                                }
+
+                                await RunRepository.T.findOrCreate({
+                                    where: {
+                                        runNumber,
+                                        PeriodId: insertWithoutPeriod ? undefined : period.id,
+                                    },
+                                });
+                            }
+                            return await sequelize.transaction((_t) => _simulationPass.addRun(runNumber, { ignoreDuplicates: true }));
+                        });
+
+                        // Summary
+                        return await Promise.all([periodAddPromise, dataPassPipelinePromises, runsAddPipeline].flat());
+                    }));
             });
-
-        /*
-         * SimulationPass = Utils.adjusetObjValuesToSql(simulationPass);
-         * const period_insert =
-         *     simulationPass?.period?.name ? `call insert_period(${period.name}, ${period.year}, ${period.beam_type});` : '';
-         */
-
-        /*
-         * Const anchord_prod_sql = `${simulationPass.anchoredPeriods}::varchar[]`;
-         * const anchord_passes_sql = `${simulationPass.anchoredPasses}::varchar[]`;
-         */
-
-        /*
-         * Const pgCommand = `${period_insert}; call insert_mc(
-         *     ${simulationPass.name},
-         *     ${simulationPass.description},
-         *     ${simulationPass.pwg},
-         *     ${anchord_prod_sql},
-         *     ${anchord_passes_sql},
-         *     ${simulationPass.jira},
-         *     ${simulationPass.number_of_events},
-         *     ${simulationPass.size}
-         * ); call insert_mc_details(${simulationPass.name}, ${simulationPass.runs}::integer[], ${period.name});`;
-         * return await dbClient.query(pgCommand);
-         */
-        // eslint-disable-next-line capitalized-comments
-        // return await Promise.all([dbClient.query(pgCommand), this.monalisaServiceMCDetails.sync(d)]);
     }
 }
 
