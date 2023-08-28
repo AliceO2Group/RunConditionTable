@@ -99,6 +99,9 @@ class MonalisaService extends AbstractServiceSynchronizer {
             .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
                 where: {
                     name: period.name,
+                },
+                default: {
+                    name: period.name,
                     year: period.year,
                     BeamTypeId: beamType.id,
                 },
