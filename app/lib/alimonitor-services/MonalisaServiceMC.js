@@ -16,7 +16,6 @@
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
-const MonalisaServiceMCDetails = require('./MonalisaServiceMCDetails.js');
 const config = require('../config/configProvider.js');
 
 const { databaseManager: {
@@ -49,8 +48,6 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             anchor_production: 'anchoredPeriods',
             anchor_pass: 'anchoredPasses',
         };
-
-        this.monalisaServiceMCDetails = new MonalisaServiceMCDetails();
     }
 
     sync() {
