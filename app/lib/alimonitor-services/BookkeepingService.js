@@ -15,7 +15,7 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const ServicesDataCommons = require('./ServicesDataCommons.js');
+const { extractPeriod, mapBeamTypeToCommonFormat } = require('./ServicesDataCommons.js');
 const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
 const { databaseManager: {
     repositories: {
@@ -94,7 +94,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
 
             this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3CurrentVal');
             this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipoleCurrentVal');
-            ServicesDataCommons.mapBeamTypeToCommonFormat(run);
+            mapBeamTypeToCommonFormat(run);
             run.fillNumber = Number(run.fillNumber);
             return run;
         } catch (e) {
@@ -126,7 +126,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         delete run.detectorQualities;
         delete run.beamType;
 
-        const year = ServicesDataCommons.extractPeriodYear(periodName);
+        const period = extractPeriod(periodName, beamType);
         const { detectorsNameToId } = this;
 
         return await BeamTypeRepository.T.findOrCreate({
@@ -136,8 +136,8 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         })
             .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
                 where: {
-                    name: periodName,
-                    year,
+                    name: period.name,
+                    year: period.year,
                     BeamTypeId: beamType.id,
                 },
             }))
@@ -148,7 +148,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                         meta: {
                             explicitValues: {
                                 name: periodName,
-                                year,
+                                year: period.year,
                                 BeamTypeId: beamType.id,
                             },
                             implicitValues: {

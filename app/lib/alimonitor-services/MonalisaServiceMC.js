@@ -27,6 +27,7 @@ const { databaseManager: {
     },
     sequelize,
 } } = require('../database/DatabaseManager.js');
+const { extractPeriod } = require('./ServicesDataCommons.js');
 
 class MonalisaServiceMC extends AbstractServiceSynchronizer {
     constructor() {
@@ -55,9 +56,11 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             EndpointsFormatter.mcRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
-            (simulation_pass) => {
-                const { anchor_productions, anchor_passes } = simulation_pass;
-                // simulation_pass.anchor_passes = anchor_passes.filter()
+            (simulationPass) => {
+                simulationPass.anchor_productions = simulationPass.anchor_productions
+                    .filter((periodName) => extractPeriod(periodName).year >= config.dataFromYearIncluding);
+
+                const { anchor_productions, anchor_passes } = simulationPass;
                 return anchor_productions.length != 0 && anchor_passes.length != 0;
                 // MC not anchored to any production or pass so drop out
             },
