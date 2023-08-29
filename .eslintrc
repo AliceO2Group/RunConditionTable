@@ -15,7 +15,6 @@
     "ignorePatterns": [
         "node_modules/",
         "database/",
-        "tests/",
         "tmp/",
         "scratch/"
     ],
