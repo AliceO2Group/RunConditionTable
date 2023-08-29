@@ -33,7 +33,7 @@ class RunRepository extends Repository  {
             }],
             subquery: false
         });
-        return this.model.findAndCountAll(baseClause.add(queryClauses).toImplementation());
+        return this.findAndCountAll(baseClause.add(queryClauses).toImplementation());
     }
 }
 

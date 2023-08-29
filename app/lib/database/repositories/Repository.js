@@ -66,7 +66,7 @@ class Repository {
      */
     async findAndCountAll(queryBuilder = new QueryBuilder()) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
-        const {count, rows} = this.model.findAndCountAll(queryBuilder.toImplementation());
+        const {count, rows} = await this.model.findAndCountAll(queryBuilder.toImplementation());
         return {
             data: rows,
             meta: {
