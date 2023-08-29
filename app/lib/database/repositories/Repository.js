@@ -66,7 +66,14 @@ class Repository {
      */
     async findAndCountAll(queryBuilder = new QueryBuilder()) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
-        return this.model.findAndCountAll(queryBuilder.toImplementation());
+        const {count, rows} = this.model.findAndCountAll(queryBuilder.toImplementation());
+        return {
+            data: rows,
+            meta: {
+                totalCount: count,
+                pageCount: rows.length > 0 ? Math.ceil(count / rows.length) : 0
+            }
+        }
     }
 
     /**
