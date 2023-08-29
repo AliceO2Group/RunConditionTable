@@ -15,7 +15,7 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const ServicesDataCommons = require('./ServicesDataCommons.js');
+const { mapBeamTypeToCommonFormat, extractPeriod } = require('./ServicesDataCommons.js');
 const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
 const MonalisaServiceDetails = require('./MonalisaServiceDetails.js');
 const config = require('../config/configProvider.js');
@@ -84,7 +84,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
     dataAdjuster(dp) {
         dp = Utils.filterObject(dp, this.ketpFields);
         dp.outputSize = dp.outputSize ? Number(dp.outputSize) : null;
-        dp.period = ServicesDataCommons.mapBeamTypeToCommonFormat(this.extractPeriod(dp));
+        dp.period = mapBeamTypeToCommonFormat(extractPeriod(dp.name, dp.beam_type));
         return dp;
     }
 
@@ -98,6 +98,9 @@ class MonalisaService extends AbstractServiceSynchronizer {
         })
             .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
                 where: {
+                    name: period.name,
+                },
+                default: {
                     name: period.name,
                     year: period.year,
                     BeamTypeId: beamType.id,
@@ -121,26 +124,6 @@ class MonalisaService extends AbstractServiceSynchronizer {
                 ...dataPass,
             }))
             .then(async ([dataPass, _]) => await this.monalisaServiceDetails.setSyncTask({ dataUnit: dataPass }));
-    }
-
-    extractPeriod(rowData) {
-        try {
-            const productionPrefix = rowData.name.slice(0, 6);
-            const period = {};
-            period.name = productionPrefix;
-            let year = parseInt(productionPrefix.slice(3, 5), 10);
-            if (year > 50) {
-                year += 1900;
-            } else {
-                year += 2000;
-            }
-            period.year = year;
-            period.beamType = rowData.beam_type;
-
-            return period;
-        } catch (e) {
-            return null;
-        }
     }
 }
 

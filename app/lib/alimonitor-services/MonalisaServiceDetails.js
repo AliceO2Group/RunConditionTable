@@ -44,17 +44,28 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
             () => true,
             async (dbClient, v) => {
                 v.parentDataUnit = dataPass;
-                return await PeriodRepository.T.findOrCreate({
-                    where: {
-                        name: v.period,
-                    },
-                })
+
+                return (async () => {
+                    if (/LHC[0-9]{2}[a-z]+/.test(v.period)) {
+                        return await PeriodRepository.T.findOrCreate({
+                            where: {
+                                name: v.period,
+                            },
+                        });
+                    } else {
+                        this.logger.warn(`Incorrect period from monalisa ${v.period} for run ${v.runNumber} in data pass ${dataPass.name}`);
+                        return [undefined, undefined];
+                    }
+                })()
                     .then(async ([period, _]) => {
-                        v.PeriodId = period.id;
+                        v.PeriodId = period?.id;
                         return await RunRepository.T.findOrCreate({
                             where: {
                                 runNumber: v.runNumber,
-                                PeriodId: period.id,
+                            },
+                            defualt: {
+                                runNumber: v.runNumber,
+                                PeriodId: v.PeriodId,
                             },
                         });
                     })
@@ -77,7 +88,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
                         });
                     })
                     // eslint-disable-next-line no-unused-vars
-                    .then(async ([run, _]) => await sequelize.transaction((t) => run.addDataPasses(dataPass.id)));
+                    .then(async ([run, _]) => await sequelize.transaction((t) => run.addDataPasses(dataPass.id, { ignoreDuplicates: true })));
             },
         );
     }

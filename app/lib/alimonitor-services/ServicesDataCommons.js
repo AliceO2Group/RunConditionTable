@@ -48,7 +48,26 @@ function extractPeriodYear(name) {
     }
 }
 
+/**
+ * Extract period {name, year, beamType} for given data/simulation pass, optional define beamType
+ * @param {string} name name of pass, like LHC22a_apass1, period name is acceptable as well
+ * @param {string|undefined} beamType type of beam, p-p, p-Pb, ...
+ * @returns {Object} period {name, year, beamType}
+ */
+function extractPeriod(name, beamType) {
+    const [extractedName] = name.split('_');
+    if (! /LHC[0-9]{2}[a-z]+/.test(extractedName)) {
+        throw new Error(`Incorrect period name ${extractedName} extracted from ${name}`);
+    }
+    return {
+        name: extractedName,
+        year: extractPeriodYear(extractedName),
+        beamType,
+    };
+}
+
 module.exports = {
     mapBeamTypeToCommonFormat,
     extractPeriodYear,
+    extractPeriod,
 };
