@@ -15,12 +15,12 @@ const obsoleteCSVExportSuite = require('./obsoleteCsvExport.test');
 const dataExportSuite = require('./dataExport.test');
 const dataProcessingSuite = require('./dataProcessing.test');
 const filterUtilsSuite = require('./filterUtils.test');
-const urlUtilsSuite = require('./urlUtils.test');
+const urlSuite = require('./url');
 
 module.exports = () => {
     describe('CSV Export (Obsolete)', obsoleteCSVExportSuite);
     describe('Data Export', dataExportSuite);
     describe('Data processing', dataProcessingSuite);
     describe('Filter utils', filterUtilsSuite);
-    describe('URL utils', urlUtilsSuite);
+    describe('URL', urlSuite);
 };

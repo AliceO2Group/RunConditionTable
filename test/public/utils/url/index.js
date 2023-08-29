@@ -10,13 +10,10 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-
-const UtilitiesSuite = require('./utils');
-const ComponentsSuite = require('./components');
-const PeriodsSuite = require('./periods');
+const urlUtils = require('./urlUtils.test');
+const buildUrl = require('./buildUrl.test');
 
 module.exports = () => {
-    describe('Components', ComponentsSuite);
-    describe('Utilities', UtilitiesSuite);
-    describe('Periods', PeriodsSuite);
+    describe('Build URL', buildUrl);
+    describe('URL utils', urlUtils);
 };

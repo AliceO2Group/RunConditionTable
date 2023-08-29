@@ -16,8 +16,8 @@ const { filterToSequelizeWhereClause } = require('../../../app/lib/server/utilit
 
 module.exports = () => {
     describe('Server utils', () => {
-        describe('Transforming filtes to sequelize where-cluase ', () => {
-            it('should return emty object when provided with undefined or empty object', () => {
+        describe('Transforming filters to sequelize where-cluase ', () => {
+            it('should return empty object when provided with undefined or empty object', () => {
                 assert.deepStrictEqual(filterToSequelizeWhereClause(undefined), {});
                 assert.deepStrictEqual(filterToSequelizeWhereClause({}), {});
             }),
