@@ -29,7 +29,7 @@ sessionService.loadAndHideParameters();
 window.sessionService = sessionService;
 window.RCT = RCT;
 
-const model = new Model();
+const model = new Model(window, document);
 const debug = true; // Shows when redraw is done
 mount(document.body, view, model, debug);
 
