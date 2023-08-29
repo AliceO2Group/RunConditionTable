@@ -23,18 +23,25 @@ import UserPreferences from './model/UserPreferences.js';
 const { roles, dataAccess, pageNames } = RCT;
 
 export default class Model extends Observable {
-    constructor() {
+    constructor(window, document) {
         super();
 
+        // Bind window and document
+        this.document = document;
+        this.window = window;
+
+        // Bind session
         this.session = sessionService.get();
         this.session.personid = parseInt(this.session.personid, 10); // Cast, sessionService has only strings
         // TODO if no personid then it is a computer so we need to parse it respectively
         this.session.roles = this.getRoles();
 
         this.router = new QueryRouter();
+        this.router.observe(this.handleLocationChange.bind(this));
         this.router.bubbleTo(this);
 
         this.loader = new Loader();
+        this.loader.bubbleTo(this);
 
         this.userPreferences = new UserPreferences(this);
         this.userPreferences.bubbleTo(this);
