@@ -35,8 +35,8 @@ module.exports = () => {
         });
 
         it('should not display any pagination buttons when there is only one page', () => {
-            const buttons = pagerButtonConditions(1, 1);
-            assert(!Object.keys(buttons).reduce((acc, curr) => acc || buttons[curr], false));
+            const buttonConditions = pagerButtonConditions(1, 1);
+            assert(!Object.keys(buttonConditions).reduce((acc, curr) => acc || buttonConditions[curr], false));
         });
 
         it('should not display go forward buttons when the user is on the last page', () => {
