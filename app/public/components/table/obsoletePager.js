@@ -15,6 +15,7 @@
 import { h, iconChevronBottom } from '/js/src/index.js';
 import obsoleteItemsCounter from '../../views/userView/data/table/obsoleteItemsCounter.js';
 import { RCT } from '../../config.js';
+import { pageButtonStyle } from './styleUtils.js';
 
 const { pageNumber } = RCT.dataReqParams;
 
@@ -36,11 +37,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
     const isFirstPage = currentPageNumber === 1;
     const isLastPage = currentPageNumber === pagesCount;
 
-    const pageButtonDisplayStyle = (targetPage) => targetPage === currentPageNumber
-        ? '.btn-primary'
-        : '.btn-secondary';
-
-    const pageButton = (targetPage) => h(`button.btn${pageButtonDisplayStyle(targetPage)}.no-text-decoration`, {
+    const pageButton = (targetPage) => h(`button.btn${pageButtonStyle(targetPage, currentPageNumber)}.no-text-decoration`, {
         onclick: () => model.fetchedData.changePage(targetPage),
     }, targetPage);
 

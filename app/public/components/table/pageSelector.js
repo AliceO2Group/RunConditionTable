@@ -12,14 +12,11 @@
  * or submit itself to any jurisdiction.
  */
 
+import { pageButtonStyle } from './styleUtils.js';
 import { h } from '/js/src/index.js';
 
 export default function pageSelector(currentPage, pagesCount, onPageChange) {
-    const pageButtonStyle = (targetPage) => targetPage === currentPage
-        ? '.btn-primary'
-        : '.btn-secondary';
-
-    const pageNumberButton = (targetPage) => h(`button.btn${pageButtonStyle(targetPage)}.no-text-decoration`, {
+    const pageNumberButton = (targetPage) => h(`button.btn${pageButtonStyle(targetPage, currentPage)}.no-text-decoration`, {
         onclick: () => onPageChange(targetPage),
     }, targetPage);
 

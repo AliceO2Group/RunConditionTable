@@ -13,8 +13,10 @@
 
 const itemsCounterSuite = require('./itemsCounter.test');
 const pageTitleSuite = require('./pageTitle.test');
+const styleSuite = require('./styleUtils.test');
 
 module.exports = () => {
     describe('Items counter', itemsCounterSuite);
     describe('Page title', pageTitleSuite);
+    describe('Style utils', styleSuite);
 };
