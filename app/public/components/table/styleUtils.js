@@ -20,3 +20,12 @@ export const buttonClasses = {
 export const pageButtonStyle = (targetPage, currentPage) => targetPage === currentPage
     ? buttonClasses.primary
     : buttonClasses.secondary;
+
+export const pagerButtonConditions = (currentPage, pagesCount) => ({
+    goToFirstPage: currentPage > 1,
+    goOnePageBack: currentPage > 1,
+    goMiddleBack: currentPage > 2,
+    goMiddleForward: currentPage < pagesCount - 1,
+    goOnePageForward: currentPage !== pagesCount,
+    goToLastPage: currentPage !== pagesCount,
+});

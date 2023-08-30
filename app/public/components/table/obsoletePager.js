@@ -15,7 +15,7 @@
 import { h, iconChevronBottom } from '/js/src/index.js';
 import obsoleteItemsCounter from '../../views/userView/data/table/obsoleteItemsCounter.js';
 import { RCT } from '../../config.js';
-import { pageButtonStyle } from './styleUtils.js';
+import { pageButtonStyle, pagerButtonConditions } from './styleUtils.js';
 
 const { pageNumber } = RCT.dataReqParams;
 
@@ -32,10 +32,8 @@ export default function obsoletePager(model, data, pagerOnly = true) {
     const pagesCount = Math.ceil(data.totalRecordsNumber / data.itemsPerPage);
     const currentPageNumber = Number(Object.fromEntries(data.url.searchParams.entries())[pageNumber]);
     const columnOptionsSelectId = 'columns-option-select-id';
-    const morePagesLeft = currentPageNumber > 2;
-    const morePagesRight = currentPageNumber < pagesCount - 1;
-    const isFirstPage = currentPageNumber === 1;
-    const isLastPage = currentPageNumber === pagesCount;
+
+    const buttonConditions = pagerButtonConditions(currentPageNumber, pagesCount);
 
     const pageButton = (targetPage) => h(`button.btn${pageButtonStyle(targetPage, currentPageNumber)}.no-text-decoration`, {
         onclick: () => model.fetchedData.changePage(targetPage),
@@ -97,41 +95,34 @@ export default function obsoletePager(model, data, pagerOnly = true) {
                 ],
 
             h('.flex.m-right-0-3-rem',
-                // Move to the first page
-                !isFirstPage ? pageChangingController(1, h('.double-left-15-primary')) : ' ',
-                // Move one page back
-                !isFirstPage ? pageChangingController(currentPageNumber - 1, h('.back-15-primary')) : ' ',
-
-                // Move to the middle of pages range [first, current]
-                morePagesLeft
+                buttonConditions.goToFirstPage ? pageChangingController(1, h('.double-left-15-primary')) : '',
+                buttonConditions.goOnePageBack ? pageChangingController(currentPageNumber - 1, h('.back-15-primary')) : '',
+                buttonConditions.goMiddleBack
                     ? pageChangingController(
                         Math.floor(currentPageNumber / 2),
                         h('.more-15-primary'),
                     )
                     : '',
 
-                !isFirstPage ? pageButton(currentPageNumber - 1) : '',
+                buttonConditions.goOnePageBack ? pageButton(currentPageNumber - 1) : '',
                 pageButton(currentPageNumber),
-                !isLastPage ? pageButton(currentPageNumber + 1) : '',
+                buttonConditions.goOnePageForward ? pageButton(currentPageNumber + 1) : '',
 
-                // Move to the middle of pages range [current, last]
-                morePagesRight
+                buttonConditions.goMiddleForward
                     ? pageChangingController(
                         currentPageNumber + Math.floor((pagesCount - currentPageNumber) / 2),
                         h('.more-15-primary'),
                     )
                     : '',
 
-                // Move one page forward
-                !isLastPage
+                buttonConditions.goOnePageForward
                     ? pageChangingController(
                         currentPageNumber + 1,
                         h('.forward-15-primary'),
                     )
                     : '',
 
-                // Move to the last page
-                !isLastPage
+                buttonConditions.goToLastPage
                     ? pageChangingController(
                         pagesCount,
                         h('.double-right-15-primary'),

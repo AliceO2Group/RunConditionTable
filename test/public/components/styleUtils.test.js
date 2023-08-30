@@ -13,7 +13,7 @@
 
 const req = require('esm')(module);
 
-const { buttonClasses, pageButtonStyle } = req('../../../app/public/components/table/styleUtils');
+const { buttonClasses, pageButtonStyle, pagerButtonConditions } = req('../../../app/public/components/table/styleUtils');
 const assert = require('assert');
 
 module.exports = () => {
@@ -24,6 +24,21 @@ module.exports = () => {
 
         it('should return secondary style when the target page is the current page', () => {
             assert.equal(pageButtonStyle(3, 35), buttonClasses.secondary);
+        });
+    });
+
+    describe('Page buttons', () => {
+        it('should not display go back buttons when the user is on the first page', () => {
+            assert(!pagerButtonConditions(1, 6).goToFirstPage && !pagerButtonConditions(1, 4).goMiddleBack && !pagerButtonConditions(1, 3).goOnePageBack);
+        });
+
+        it('should not display any pagination buttons when there is only one page', () => {
+            const buttons = pagerButtonConditions(1, 1);
+            assert(!Object.keys(buttons).reduce((acc, curr) => acc || buttons[curr], false));
+        });
+
+        it('should not display go forward buttons when the user is on the last page', () => {
+            assert(!pagerButtonConditions(6, 6).goToLastPage && !pagerButtonConditions(4, 4).goMiddleForward && !pagerButtonConditions(3, 3).goOnePageForward);
         });
     });
 };
