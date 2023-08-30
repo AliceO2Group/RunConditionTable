@@ -14,8 +14,8 @@
 
 export const buttonClasses = {
     primary: '.btn-primary',
-    secondary: '.btn-secondary'
-}
+    secondary: '.btn-secondary',
+};
 
 export const pageButtonStyle = (targetPage, currentPage) => targetPage === currentPage
     ? buttonClasses.primary
