@@ -14,8 +14,8 @@
 const PGQueryBuilder = require('../../../app/lib/database/utilities/PGQueryBuilder');
 const views = require('../../../app/lib/database/views');
 const { databaseService } = require('../../../app/lib/database/DatabaseService');
-const { assert, expect } = require('chai');
-
+const { expect } = require('chai');
+const assert = require('assert');
 
 module.exports = () => {
     describe('DatabaseSuite', () => {
