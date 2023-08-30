@@ -33,7 +33,7 @@ class SimulationPassService {
      */
     async getAll(query) {
         const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder().addFromHttpRequestQuery(query));
-        return { count, rows: rows.map((dataPass) => simulationPassAdapter.toEntity(dataPass)) };
+        return { count, rows: rows.map((simulationPass) => simulationPassAdapter.toEntity(simulationPass)) };
     }
 
     /**
@@ -59,7 +59,7 @@ class SimulationPassService {
         };
 
         const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
-        return { count, rows: rows.map((dataPass) => simulationPassAdapter.toEntity(dataPass)) };
+        return { count, rows: rows.map((simulationPass) => simulationPassAdapter.toEntity(simulationPass)) };
     }
 
     /**
@@ -85,7 +85,7 @@ class SimulationPassService {
         };
 
         const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
-        return { count, rows: rows.map((dataPass) => simulationPassAdapter.toEntity(dataPass)) };
+        return { count, rows: rows.map((simulationPass) => simulationPassAdapter.toEntity(simulationPass)) };
     }
 }
 
