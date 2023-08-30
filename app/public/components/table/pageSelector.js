@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { pageButtonStyle, pagerButtonConditions } from './styleUtils.js';
+import { pageButtonStyle, pagerButtonConditions } from './pagerUtils.js';
 import { h } from '/js/src/index.js';
 
 export default function pageSelector(currentPage, pagesCount, onPageChange) {

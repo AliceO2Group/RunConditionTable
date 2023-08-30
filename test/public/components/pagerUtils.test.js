@@ -13,7 +13,7 @@
 
 const req = require('esm')(module);
 
-const { buttonClasses, pageButtonStyle, pagerButtonConditions } = req('../../../app/public/components/table/styleUtils');
+const { buttonClasses, pageButtonStyle, pagerButtonConditions } = req('../../../app/public/components/table/pagerUtils');
 const assert = require('assert');
 
 module.exports = () => {
