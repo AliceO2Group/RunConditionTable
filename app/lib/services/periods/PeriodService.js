@@ -64,7 +64,7 @@ class PeriodService {
         };
         const { count, rows } = await PeriodRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return {
-            count,
+            count: count.length,
             rows: rows.map((period) => periodAdapter.toEntity(period)),
         };
     }

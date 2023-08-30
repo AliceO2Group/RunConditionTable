@@ -16,6 +16,16 @@ const { makeHttpRequestForJSON, replaceAll } = require('../../../app/lib/utils')
 const assert = require('assert');
 const config = require('../../../app/config');
 
+const Joi = require('joi');
+
+const responseSchema = Joi.object({
+    meta: Joi.object({
+        totalCount: Joi.number().required(),
+        pageCount: Joi.number().required(),
+    }).required(),
+    data: Joi.array().required(),
+});
+
 module.exports = () => {
     describe('WebUiServerSuite', () => {
         describe('Routes definitions', () => {
@@ -38,7 +48,12 @@ module.exports = () => {
                 it(`should fetch from ${path} <${url}> without errors`, async () => {
                     await assert.doesNotReject(makeHttpRequestForJSON(url));
                 });
-                if (url.pathname !== '/api/api-docs') { // Limit/offset are supported for endpoints which controllers base on sequelize
+                if (url.pathname !== '/api/api-docs') {
+                    it(`should fetch from ${path} <${url}> corretly formatted data`, async () => {
+                        await assert.doesNotReject(responseSchema.validateAsync(await makeHttpRequestForJSON(url)));
+                    });
+                }
+                if (url.pathname !== '/api/api-docs') { // Limit/offset are supported for endpoints which controllers based on sequelize
                     url.searchParams.append('page[limit]', 2);
                     url.searchParams.append('page[offset]', 1);
                     it(`should fetch from ${path} <${url}> without errors`, async () => {
