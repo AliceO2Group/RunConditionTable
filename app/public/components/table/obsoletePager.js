@@ -15,8 +15,9 @@
 import { h, iconChevronBottom } from '/js/src/index.js';
 import obsoleteItemsCounter from '../../views/userView/data/table/obsoleteItemsCounter.js';
 import { RCT } from '../../config.js';
+import { pageButtonStyle, pagerButtonConditions } from './pagerUtils.js';
 
-const { site } = RCT.dataReqParams;
+const { pageNumber } = RCT.dataReqParams;
 
 /**
  * Uses obsolete model.
@@ -28,20 +29,19 @@ const { site } = RCT.dataReqParams;
  * @returns {obsoletePager} row with pager and table display properties controllers
  */
 export default function obsoletePager(model, data, pagerOnly = true) {
-    const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
-    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
+    const pagesCount = Math.ceil(data.totalRecordsNumber / data.itemsPerPage);
+    const currentPageNumber = Number(Object.fromEntries(data.url.searchParams.entries())[pageNumber]);
     const columnOptionsSelectId = 'columns-option-select-id';
 
-    const pageButton = (targetSite) => h(`button.btn${targetSite === currentSite ? '.btn-primary' : '.btn-secondary'}.no-text-decoration`, {
-        onclick: () => model.fetchedData.changePage(targetSite),
-    }, targetSite);
+    const buttonConditions = pagerButtonConditions(currentPageNumber, pagesCount);
 
-    const siteChangingController = (targetSite, content) => h('button.btn.btn-secondary.site-changing-controller', {
-        onclick: () => model.fetchedData.changePage(targetSite),
+    const pageButton = (targetPage) => h(`button.btn${pageButtonStyle(targetPage, currentPageNumber)}.no-text-decoration`, {
+        onclick: () => model.fetchedData.changePage(targetPage),
+    }, targetPage);
+
+    const pageChangingController = (targetPage, content) => h('button.btn.btn-secondary.page-changing-controller', {
+        onclick: () => model.fetchedData.changePage(targetPage),
     }, content);
-
-    const moreSitesLeft = currentSite > 2;
-    const moreSitesRight = currentSite < sitesNumber - 1;
 
     function handleOptionChange() {
         const columnsOptionsSelect = document.getElementById(columnOptionsSelectId);
@@ -95,43 +95,36 @@ export default function obsoletePager(model, data, pagerOnly = true) {
                 ],
 
             h('.flex.m-right-0-3-rem',
-                // Move to the first site
-                currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
-                // Move one site back
-                currentSite > 1 ? siteChangingController(currentSite - 1, h('.back-15-primary')) : ' ',
-
-                // Move to the middle of sites range [first, current]
-                moreSitesLeft
-                    ? siteChangingController(
-                        Math.floor(currentSite / 2),
+                buttonConditions.goToFirstPage ? pageChangingController(1, h('.double-left-15-primary')) : '',
+                buttonConditions.goOnePageBack ? pageChangingController(currentPageNumber - 1, h('.back-15-primary')) : '',
+                buttonConditions.goMiddleBack
+                    ? pageChangingController(
+                        Math.floor(currentPageNumber / 2),
                         h('.more-15-primary'),
                     )
                     : '',
 
-                currentSite > 1 ? pageButton(currentSite - 1) : '',
-                pageButton(currentSite),
-                currentSite < sitesNumber ? pageButton(currentSite + 1) : '',
+                buttonConditions.goOnePageBack ? pageButton(currentPageNumber - 1) : '',
+                pageButton(currentPageNumber),
+                buttonConditions.goOnePageForward ? pageButton(currentPageNumber + 1) : '',
 
-                // Move to the middle of sites range [current, last]
-                moreSitesRight
-                    ? siteChangingController(
-                        currentSite + Math.floor((sitesNumber - currentSite) / 2),
+                buttonConditions.goMiddleForward
+                    ? pageChangingController(
+                        currentPageNumber + Math.floor((pagesCount - currentPageNumber) / 2),
                         h('.more-15-primary'),
                     )
                     : '',
 
-                // Move one site forward
-                currentSite < sitesNumber
-                    ? siteChangingController(
-                        currentSite + 1,
+                buttonConditions.goOnePageForward
+                    ? pageChangingController(
+                        currentPageNumber + 1,
                         h('.forward-15-primary'),
                     )
                     : '',
 
-                // Move to the last site
-                currentSite < sitesNumber
-                    ? siteChangingController(
-                        sitesNumber,
+                buttonConditions.goToLastPage
+                    ? pageChangingController(
+                        pagesCount,
                         h('.double-right-15-primary'),
                     )
                     : ''),

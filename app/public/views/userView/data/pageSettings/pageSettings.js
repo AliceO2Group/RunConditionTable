@@ -17,7 +17,7 @@ import quantityInput from '../../../../components/common/quantityInput.js';
 import { RCT } from '../../../../config.js';
 
 export default function pageSettings(userPreferences, close) {
-    const rowsOnSiteInputId = 'rows-per-page-input-id-modal';
+    const itemsPerPageInputId = 'rows-per-page-input-id-modal';
     const themeSelectId = 'theme-selection';
     const sidebarPreferenceSelectId = 'sidebar-selection';
     const sidebarPreferences = {
@@ -27,11 +27,11 @@ export default function pageSettings(userPreferences, close) {
     const title = h('h3.text-primary', 'Page settings');
 
     const onclickApply = (userPreferences) => {
-        const input = document.getElementById(rowsOnSiteInputId);
+        const input = document.getElementById(itemsPerPageInputId);
         const inputValue = input.value === '' ? input.placeholder : input.value;
         if (inputValue < 1 || inputValue > 200) {
             alert('incorrect number of rows on page: must be in range of [1, 200]');
-            input.value = userPreferences.rowsOnSite;
+            input.value = userPreferences.itemsPerPage;
         } else {
             userPreferences.setItemsPerPage(inputValue);
         }
@@ -97,9 +97,9 @@ export default function pageSettings(userPreferences, close) {
             h('.p-left-1rem', title)),
 
         h('.flex-wrap.justify-between.items-center',
-            h('.text-dark-blue', 'Rows on site'),
-            quantityInput(rowsOnSiteInputId,
-                userPreferences.rowsOnSite)),
+            h('.text-dark-blue', 'Items per page'),
+            quantityInput(itemsPerPageInputId,
+                userPreferences.itemsPerPage)),
 
         h('.flex-wrap.justify-between.items-center',
             h('.text-dark-blue', 'UI theme'),

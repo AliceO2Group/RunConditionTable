@@ -17,11 +17,11 @@ const assert = require('assert');
 const { replaceUrlParams } = req('../../../../app/public/utils/url/urlUtils');
 
 module.exports = () => {
-    const url = new URL('http://localhost:8081/?page=periods&index=_0&rows-on-site=50&site=1');
-    const targetUrl = new URL('http://localhost:8081/?page=periods&index=_0&rows-on-site=50&site=2');
+    const url = new URL('http://localhost:8081/?page=periods&index=_0&items-per-page=50&page-number=1');
+    const targetUrl = new URL('http://localhost:8081/?page=periods&index=_0&items-per-page=50&page-number=2');
     describe('Replace URL params', () => {
         it('should return correct value', () => {
-            assert(replaceUrlParams(url, { site: 2 }).href === targetUrl.href);
+            assert(replaceUrlParams(url, { 'page-number': 2 }).href === targetUrl.href);
         });
     });
 };

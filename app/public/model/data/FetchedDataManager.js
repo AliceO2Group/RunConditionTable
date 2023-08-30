@@ -48,17 +48,17 @@ export default class FetchedDataManager {
      * when first after creating object request is performed,
      * to url is added additional param 'count-records',
      * which inform backend to calculate the total number of rows in target view
-     * this information is used to create site navigation
+     * this information is used to create page navigation
      */
 
     async reqForData(force = false, url = null) {
         if (url === null) {
             url = this.router.getUrl();
-            if (!url.searchParams.has(dataReqParams.rowsOnSite)) {
-                url = new URL(`${url.href}&${dataReqParams.rowsOnSite}=${this.model.parent.userPreferences.rowsOnSite}`);
+            if (!url.searchParams.has(dataReqParams.itemsPerPage)) {
+                url = new URL(`${url.href}&${dataReqParams.itemsPerPage}=${this.model.parent.userPreferences.itemsPerPage}`);
             }
-            if (!url.searchParams.has(dataReqParams.site)) {
-                url = new URL(`${url.href}&${dataReqParams.site}=1`);
+            if (!url.searchParams.has(dataReqParams.pageNumber)) {
+                url = new URL(`${url.href}&${dataReqParams.pageNumber}=1`);
             }
         }
         const { page, index } = this.model.getDataPointerFromUrl(url);
@@ -66,7 +66,7 @@ export default class FetchedDataManager {
         if (!data || force) {
             await this.req(true, url);
         } else if (data.payload.url.href !== url.href) {
-            if (this.diffOnlyBySiteAndSorting(url, data.payload.url)) {
+            if (this.diffOnlyByPageNumberAndSorting(url, data.payload.url)) {
                 await this.req(false, url);
             } else {
                 await this.req(true, url);
@@ -74,13 +74,13 @@ export default class FetchedDataManager {
         }
     }
 
-    diffOnlyBySiteAndSorting(url1, url2) {
+    diffOnlyByPageNumberAndSorting(url1, url2) {
         const p1 = Object.fromEntries(new URLSearchParams(url1.search));
         const p2 = Object.fromEntries(new URLSearchParams(url2.search));
-        p1['site'] = undefined;
-        p1['sorting'] = undefined;
-        p2['site'] = undefined;
-        p2['sorting'] = undefined;
+        p1[dataReqParams.pageNumber] = undefined;
+        p1[dataReqParams.sorting] = undefined;
+        p2[dataReqParams.pageNumber] = undefined;
+        p2[dataReqParams.sorting] = undefined;
 
         return JSON.stringify(p1) == JSON.stringify(p2);
     }
@@ -131,7 +131,7 @@ export default class FetchedDataManager {
 
     changePage(pageNumber) {
         const url = this.router.getUrl();
-        const newUrl = replaceUrlParams(url, { [dataReqParams.site]: pageNumber });
+        const newUrl = replaceUrlParams(url, { [dataReqParams.pageNumber]: pageNumber });
         this.router.go(newUrl);
     }
 
@@ -139,12 +139,6 @@ export default class FetchedDataManager {
         const url = this.router.getUrl();
         const { field, order } = sorting;
         const newUrl = replaceUrlParams(url, { sorting: `${order == -1 ? '-' : ''}${field}` });
-        this.router.go(newUrl);
-    }
-
-    changeRowsOnSite() {
-        const url = this.router.getUrl();
-        const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.model.parent.userPreferences.rowsOnSite });
         this.router.go(newUrl);
     }
 

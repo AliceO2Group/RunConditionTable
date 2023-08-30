@@ -17,7 +17,8 @@ import { RCT } from '../../../../config.js';
 const { runBasedQuality } = RCT.quality;
 
 export default function qcTypeSelection(navigation, close, item, index, detectorName, runDetectorId, timeBased) {
-    const flagsUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName}&rows-on-site=50&site=1`;
+    const baseUrl = `/?page=flags&data_pass_name=${index}&run_numbers=${item.run_number}&detector=${detectorName}`;
+    const flagsUrl = `${baseUrl}${navigation.pageNumberReqParamsPhrase()}`;
     const runQualitySelectId = 'run-quality-select';
 
     function handleRunQualityChange() {
