@@ -29,7 +29,9 @@ module.exports = () => {
 
     describe('Page buttons', () => {
         it('should not display go back buttons when the user is on the first page', () => {
-            assert(!pagerButtonConditions(1, 6).goToFirstPage && !pagerButtonConditions(1, 4).goMiddleBack && !pagerButtonConditions(1, 3).goOnePageBack);
+            assert(!pagerButtonConditions(1, 6).goToFirstPage &&
+                !pagerButtonConditions(1, 4).goMiddleBack &&
+                !pagerButtonConditions(1, 3).goOnePageBack);
         });
 
         it('should not display any pagination buttons when there is only one page', () => {
@@ -38,7 +40,9 @@ module.exports = () => {
         });
 
         it('should not display go forward buttons when the user is on the last page', () => {
-            assert(!pagerButtonConditions(6, 6).goToLastPage && !pagerButtonConditions(4, 4).goMiddleForward && !pagerButtonConditions(3, 3).goOnePageForward);
+            assert(!pagerButtonConditions(6, 6).goToLastPage &&
+                !pagerButtonConditions(4, 4).goMiddleForward &&
+                !pagerButtonConditions(3, 3).goOnePageForward);
         });
     });
 };
