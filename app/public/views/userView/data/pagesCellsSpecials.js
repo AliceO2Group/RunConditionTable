@@ -60,6 +60,7 @@ pagesCellsSpecials[PN.periods] = {
             linkChip(
                 model.navigation,
                 'data passes',
+                // eslint-disable-next-line max-len
                 `/?page=${PN.dataPasses}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1`,
             ),
 
