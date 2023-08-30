@@ -21,7 +21,7 @@ module.exports = () => {
     const targetUrl = new URL('http://localhost:8081/?page=periods&index=_0&items-per-page=50&page-number=2');
     describe('Replace URL params', () => {
         it('should return correct value', () => {
-            assert(replaceUrlParams(url, {pageNumber: 2}).href === targetUrl.href);
+            assert(replaceUrlParams(url, { 'page-number': 2 }).href === targetUrl.href);
         });
     });
 };
