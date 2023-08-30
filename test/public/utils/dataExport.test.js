@@ -11,13 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
-const req = require('esm')(module)
+const req = require('esm')(module);
+
 const { replacer, prepareCSVContent } = req('../../../app/public/utils/dataExport/export');
 const { assert } = require('chai');
 
 module.exports = () => {
     describe('CSV Export', () => {
-
         describe('Replacer', () => {
             const sampleObject = {
                 a: 1,
@@ -37,31 +37,34 @@ module.exports = () => {
             };
 
             it('should replace null values with empty string', () => {
-                assert.deepEqual(Object.keys(sampleObject).reduce((acc, key) => ({...acc, [key]: replacer(key, sampleObject[key])}), {}), expectedResult);
+                assert.deepEqual(
+                    Object.keys(sampleObject).reduce((acc, key) => ({ ...acc, [key]: replacer(key, sampleObject[key]) }), {}),
+                    expectedResult,
+                );
             });
         });
 
         describe('Check data preparation', () => {
             const rawData = [
                 {
-                    name: "LHC23zt",
+                    name: 'LHC23zt',
                     year: 2023,
-                    beamType: "p-p",
+                    beamType: 'p-p',
                     avgEnergy: 13595,
                     distinctEnergies: [6797.04, 6797.52, 6797.64, 6798],
                 },
                 {
-                    name: "LHC23zs",
+                    name: 'LHC23zs',
                     year: 2023,
-                    beamType: "p-p",
+                    beamType: 'p-p',
                     avgEnergy: 13596,
                     distinctEnergies: [6797.4, 6797.52, 6797.64, 6797.76, 6797.88, 6798, 6798.24, 6799.2],
-                }
+                },
             ];
 
             const preparedData = 'name,year,beamType,avgEnergy,distinctEnergies\r\n' +
-            `"LHC23zt",2023,"p-p",13595,[6797.04,6797.52,6797.64,6798]\r\n` +
-            `"LHC23zs",2023,"p-p",13596,[6797.4,6797.52,6797.64,6797.76,6797.88,6798,6798.24,6799.2]`;
+            '"LHC23zt",2023,"p-p",13595,[6797.04,6797.52,6797.64,6798]\r\n' +
+            '"LHC23zs",2023,"p-p",13596,[6797.4,6797.52,6797.64,6797.76,6797.88,6798,6798.24,6799.2]';
 
             it('should prepare CSV data content', () => {
                 assert.equal(prepareCSVContent(rawData), preparedData);

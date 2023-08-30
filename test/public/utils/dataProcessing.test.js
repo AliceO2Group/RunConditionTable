@@ -11,22 +11,23 @@
  * or submit itself to any jurisdiction.
  */
 
-const req = require('esm')(module)
+const req = require('esm')(module);
 const assert = require('assert');
 const { expect } = require('chai');
+
 const { extractPeriodName,
-        getClosestDefinedEnergy,
-        detectorName,
-        isDetectorField,
-        shouldDisplayDetectorField,
-        rowDisplayStyle,
-        getReadableFileSizeString } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
+    getClosestDefinedEnergy,
+    detectorName,
+    isDetectorField,
+    shouldDisplayDetectorField,
+    rowDisplayStyle,
+    getReadableFileSizeString } = req('../../../app/public/utils/dataProcessing/dataProcessingUtils');
 
 module.exports = () => {
     describe('Extract period name', () => {
         const dataPassName = 'LHC18q_calo_cluster_pass3';
         const expectedPeriodName = 'LHC18q';
-        
+
         it('should return correct value', () => {
             assert(extractPeriodName(dataPassName) === expectedPeriodName);
         });
@@ -34,10 +35,10 @@ module.exports = () => {
 
     describe('Get closest defined energy', () => {
         const definedEnergyValues = {
-            "450": 450,
-            "6800": 6800,
-            "7000": 7000,
-            "5360/2": 2680
+            450: 450,
+            6800: 6800,
+            7000: 7000,
+            '5360/2': 2680,
         };
         it('should return the input energy if nothing is withing the acceptable margin', () => {
             const energy = 6900;
@@ -48,14 +49,14 @@ module.exports = () => {
         it('should resolve edge cases', () => {
             const energy = 6900;
             const acceptableMargin = 100;
-            const expectedOutcome = "6800";
+            const expectedOutcome = '6800';
             assert(getClosestDefinedEnergy(energy, definedEnergyValues, acceptableMargin) === expectedOutcome);
         });
 
         it('should return the key energy', () => {
             const energy = 2680;
             const acceptableMargin = 1;
-            const expectedOutcome = "5360/2";
+            const expectedOutcome = '5360/2';
             assert(getClosestDefinedEnergy(energy, definedEnergyValues, acceptableMargin) === expectedOutcome);
         });
     });
@@ -64,27 +65,27 @@ module.exports = () => {
         const detectorFieldName = 'cpv_detector';
         const nonDetectorFieldName = 'name';
         const expectedOutcome = 'CPV';
-        
+
         it('should extract detector name from the field name', () => {
             assert(detectorName(detectorFieldName) === expectedOutcome);
         });
 
         it('should return null when provided field is not a detector field', () => {
             expect(detectorName(nonDetectorFieldName)).to.be.null;
-        })
+        });
     });
 
     describe('Check if the field is detector field', () => {
         const detectorFieldName = 'cpv_detector';
         const nonDetectorFieldName = 'name';
-        
+
         it('should recognize detector field', () => {
             assert(isDetectorField(detectorFieldName));
         });
 
         it('should recognize non-detector field', () => {
             assert(!isDetectorField(nonDetectorFieldName));
-        })
+        });
     });
 
     describe('Check if detector field should be displayed', () => {
@@ -94,8 +95,8 @@ module.exports = () => {
         const detectorList = {
             CPV: false,
             PHS: true,
-        }
-        
+        };
+
         it('should recognize non-displayable detector field', () => {
             assert(!shouldDisplayDetectorField(cpvFieldName, detectorList));
         });
@@ -118,7 +119,7 @@ module.exports = () => {
         const notSelected = false;
         const shouldHideSelected = true;
         const shouldNotHideSelected = false;
-        
+
         it('should not display hidden rows', () => {
             assert.equal(rowDisplayStyle(selected, shouldHideSelected), displayNone);
         });
@@ -140,12 +141,12 @@ module.exports = () => {
         const fileSizekB = 1024;
         const fileSizeGB = 3758096384;
 
-        it('should parse kB correctly' , () => {
-            assert.equal(getReadableFileSizeString(fileSizekB), '1.0 kB' );
+        it('should parse kB correctly', () => {
+            assert.equal(getReadableFileSizeString(fileSizekB), '1.0 kB');
         });
 
-        it('should parse GB correctly' , () => {
-            assert.equal(getReadableFileSizeString(fileSizeGB), '3.5 GB' );
+        it('should parse GB correctly', () => {
+            assert.equal(getReadableFileSizeString(fileSizeGB), '3.5 GB');
         });
     });
 };

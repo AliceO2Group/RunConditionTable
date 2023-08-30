@@ -11,7 +11,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const req = require('esm')(module)
+const req = require('esm')(module);
+
 const itemsCounter = req('../../../app/public/components/table/itemsCounter').default;
 const { assert } = require('chai');
 
@@ -21,7 +22,7 @@ module.exports = () => {
             currentPage: 5,
             itemsPerPage: 10,
             itemsCount: 57,
-        }
+        };
         const expectedResult = '41-50 of 57';
 
         it('should count the items as expected', () => {

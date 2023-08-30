@@ -16,8 +16,9 @@ const {
     defaultBefore,
     defaultAfter,
     goToPage,
-    expectInnerText
+    expectInnerText,
 } = require('../defaults');
+
 const { expect } = chai;
 
 module.exports = () => {
@@ -40,10 +41,10 @@ module.exports = () => {
     describe('Periods overview', () => {
         it('loads the page successfully', async () => {
             const response = await goToPage(page, 'periods');
-    
+
             // We expect the page to return the correct status code, making sure the server is running properly
             expect(response.status()).to.equal(200);
-    
+
             // We expect the page to return the correct title, making sure there isn't another server running on this port
             const title = await page.title();
             expect(title).to.equal('RCT prototype');
