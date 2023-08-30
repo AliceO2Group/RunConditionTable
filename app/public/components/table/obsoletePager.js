@@ -44,7 +44,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
         onclick: () => model.fetchedData.changePage(targetSite),
     }, targetSite);
 
-    const siteChangingController = (targetSite, content) => h('button.btn.btn-secondary.site-changing-controller', {
+    const pageChangingController = (targetSite, content) => h('button.btn.btn-secondary.site-changing-controller', {
         onclick: () => model.fetchedData.changePage(targetSite),
     }, content);
 
@@ -101,13 +101,13 @@ export default function obsoletePager(model, data, pagerOnly = true) {
 
             h('.flex.m-right-0-3-rem',
                 // Move to the first site
-                !isFirstPage ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
+                !isFirstPage ? pageChangingController(1, h('.double-left-15-primary')) : ' ',
                 // Move one site back
-                !isFirstPage ? siteChangingController(currentPageNumber - 1, h('.back-15-primary')) : ' ',
+                !isFirstPage ? pageChangingController(currentPageNumber - 1, h('.back-15-primary')) : ' ',
 
                 // Move to the middle of sites range [first, current]
                 morePagesLeft
-                    ? siteChangingController(
+                    ? pageChangingController(
                         Math.floor(currentPageNumber / 2),
                         h('.more-15-primary'),
                     )
@@ -119,7 +119,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
 
                 // Move to the middle of sites range [current, last]
                 morePagesRight
-                    ? siteChangingController(
+                    ? pageChangingController(
                         currentPageNumber + Math.floor((pagesCount - currentPageNumber) / 2),
                         h('.more-15-primary'),
                     )
@@ -127,7 +127,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
 
                 // Move one site forward
                 !isLastPage
-                    ? siteChangingController(
+                    ? pageChangingController(
                         currentPageNumber + 1,
                         h('.forward-15-primary'),
                     )
@@ -135,7 +135,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
 
                 // Move to the last site
                 !isLastPage
-                    ? siteChangingController(
+                    ? pageChangingController(
                         pagesCount,
                         h('.double-right-15-primary'),
                     )
