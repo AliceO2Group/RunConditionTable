@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const defaultSite = 1;
+const defaultPageNumber = 1;
 
 import { RCT } from '../../../config.js';
 import { shouldDisplayDetectorField } from '../../utils/dataProcessing/dataProcessingUtils.js';
@@ -52,7 +52,7 @@ export default class FetchedData {
         const params = Object.fromEntries(url.searchParams.entries());
         const DRP = RCT.dataReqParams;
         this.itemsPerPage = params['items-per-page'] ?? this.itemsPerPage;
-        this.site = params[DRP.site] ? params[DRP.site] : defaultSite;
+        this.site = params[DRP.site] ? params[DRP.site] : defaultPageNumber;
         if (params['sorting']) {
             const { sorting } = params;
             if (sorting.startsWith('-')) {
