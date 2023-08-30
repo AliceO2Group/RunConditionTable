@@ -15,6 +15,7 @@ const { dataPassService } = require('../../services/dataPasses/DataPassService')
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
 const Joi = require('joi');
+const { adaptFindAndCountAllInService } = require('../../utils');
 
 /**
  * List All data passes in db
@@ -26,10 +27,8 @@ const Joi = require('joi');
 const listDataPassesHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
-        const runs = await dataPassService.getAll(validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        const dataPasses = await dataPassService.getAll(validatedDTO.query);
+        res.json(adaptFindAndCountAllInService(dataPasses));
     }
 };
 
@@ -44,10 +43,8 @@ const listDataPassesPerPeriodHandler = async (req, res, next) => {
     const customDTO = stdDataRequestDTO.concat(Joi.object({ params: { id: Joi.number() } }));
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
-        const runs = await dataPassService.getDataPassesPerPeriod(validatedDTO.params.id, validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        const dataPasses = await dataPassService.getDataPassesPerPeriod(validatedDTO.params.id, validatedDTO.query);
+        res.json(adaptFindAndCountAllInService(dataPasses));
     }
 };
 
@@ -62,10 +59,8 @@ const listAnchoredToSimulationPass = async (req, res, next) => {
     const customDTO = stdDataRequestDTO.concat(Joi.object({ params: { id: Joi.number() } }));
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
-        const runs = await dataPassService.getAnchoredToSimulationPass(validatedDTO.params.id, validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        const dataPasses = await dataPassService.getAnchoredToSimulationPass(validatedDTO.params.id, validatedDTO.query);
+        res.json(adaptFindAndCountAllInService(dataPasses));
     }
 };
 
