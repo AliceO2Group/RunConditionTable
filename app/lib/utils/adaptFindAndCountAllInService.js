@@ -11,7 +11,7 @@
  * or submit itself to any jurisdiction.
  */
 
-function adaptFindAndCountAllInService(dbResponse, adapter) {
+function adaptFindAndCountAllInService(dbResponse) {
     const { count, rows } = dbResponse;
 
     return {
@@ -19,7 +19,7 @@ function adaptFindAndCountAllInService(dbResponse, adapter) {
             totalCount: count,
             pageCount: rows.length > 0 ? Math.ceil(count / rows.length) : 0,
         },
-        data: rows.map((row) => adapter.toEntity(row)),
+        data: rows,
     };
 }
 
