@@ -23,7 +23,7 @@ export default function pageSelector(currentPage, pagesCount, onPageChange) {
         onclick: () => onPageChange(targetPage),
     }, targetPage);
 
-    const pageIconButton = (targetPage, content) => h('button.btn.btn-secondary.site-changing-controller', {
+    const pageIconButton = (targetPage, content) => h('button.btn.btn-secondary.page-changing-controller', {
         onclick: () => onPageChange(targetPage),
     }, content);
 

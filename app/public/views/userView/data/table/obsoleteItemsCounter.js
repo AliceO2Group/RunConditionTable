@@ -14,7 +14,7 @@
 
 import { RCT } from '../../../../config.js';
 
-const siteParamName = RCT.dataReqParams.site;
+const pageNumber = RCT.dataReqParams.site;
 
 /**
  * Please use the new items counter instead that uses the paginationModel
@@ -23,7 +23,7 @@ const siteParamName = RCT.dataReqParams.site;
  * @returns {string} range of items diplayed on the given page and the total number of fetched records
  */
 export default function obsoleteItemsCounter(data) {
-    const currentPageNumber = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
+    const currentPageNumber = Number(Object.fromEntries(data.url.searchParams.entries())[pageNumber]);
 
     const firstRowIdx = (currentPageNumber - 1) * data.itemsPerPage + 1;
     const lastRowIdx = currentPageNumber * data.itemsPerPage > data.totalRecordsNumber

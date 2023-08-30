@@ -44,7 +44,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
         onclick: () => model.fetchedData.changePage(targetPage),
     }, targetPage);
 
-    const pageChangingController = (targetPage, content) => h('button.btn.btn-secondary.site-changing-controller', {
+    const pageChangingController = (targetPage, content) => h('button.btn.btn-secondary.page-changing-controller', {
         onclick: () => model.fetchedData.changePage(targetPage),
     }, content);
 
