@@ -15,6 +15,7 @@ const { simulationPassService } = require('../../services/simulationPasses/Simul
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
 const Joi = require('joi');
+const { adaptFindAndCountAllInService } = require('../../utils');
 
 /**
  * List All simulation passes in db
@@ -26,10 +27,8 @@ const Joi = require('joi');
 const listSimulationPassesHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
-        const runs = await simulationPassService.getAll(validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        const simulationPasses = await simulationPassService.getAll(validatedDTO.query);
+        res.json(adaptFindAndCountAllInService(simulationPasses));
     }
 };
 
@@ -44,10 +43,8 @@ const listSimulationPassesPerPeriodHandler = async (req, res, next) => {
     const customDTO = stdDataRequestDTO.concat(Joi.object({ params: { id: Joi.number() } }));
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
-        const runs = await simulationPassService.getSimulationPassesPerPeriod(validatedDTO.params.id, validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        const simulationPasses = await simulationPassService.getSimulationPassesPerPeriod(validatedDTO.params.id, validatedDTO.query);
+        res.json(adaptFindAndCountAllInService(simulationPasses));
     }
 };
 
@@ -62,10 +59,8 @@ const listAnchorageForDataPassHandler = async (req, res, next) => {
     const customDTO = stdDataRequestDTO.concat(Joi.object({ params: { id: Joi.number() } }));
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
-        const runs = await simulationPassService.getAnchorageForDataPass(validatedDTO.params.id, validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        const simulationPasses = await simulationPassService.getAnchorageForDataPass(validatedDTO.params.id, validatedDTO.query);
+        res.json(adaptFindAndCountAllInService(simulationPasses));
     }
 };
 
