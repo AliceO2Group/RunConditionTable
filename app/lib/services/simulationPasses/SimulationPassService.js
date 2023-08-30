@@ -32,8 +32,8 @@ class SimulationPassService {
      * @returns {Promise<SimulationPass[]>} Promise object represents the result of this use case.
      */
     async getAll(query) {
-        const periods = await SimulationPassRepository.findAndCountAll(new QueryBuilder().addFromHttpRequestQuery(query));
-        return periods.map((dataPass) => simulationPassAdapter.toEntity(dataPass));
+        const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder().addFromHttpRequestQuery(query));
+        return { count, rows: rows.map((dataPass) => simulationPassAdapter.toEntity(dataPass)) };
     }
 
     /**
@@ -58,8 +58,8 @@ class SimulationPassService {
             ],
         };
 
-        const runs = await SimulationPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
-        return runs.map((dataPass) => simulationPassAdapter.toEntity(dataPass));
+        const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
+        return { count, rows: rows.map((dataPass) => simulationPassAdapter.toEntity(dataPass)) };
     }
 
     /**
@@ -84,8 +84,8 @@ class SimulationPassService {
             ],
         };
 
-        const runs = await SimulationPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
-        return runs.map((dataPass) => simulationPassAdapter.toEntity(dataPass));
+        const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
+        return { count, rows: rows.map((dataPass) => simulationPassAdapter.toEntity(dataPass)) };
     }
 }
 
