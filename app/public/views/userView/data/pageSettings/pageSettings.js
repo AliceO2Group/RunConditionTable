@@ -97,7 +97,7 @@ export default function pageSettings(userPreferences, close) {
             h('.p-left-1rem', title)),
 
         h('.flex-wrap.justify-between.items-center',
-            h('.text-dark-blue', 'Rows on site'),
+            h('.text-dark-blue', 'Items per page'),
             quantityInput(itemsPerPageInputId,
                 userPreferences.itemsPerPage)),
 

@@ -142,12 +142,6 @@ export default class FetchedDataManager {
         this.router.go(newUrl);
     }
 
-    changeRowsOnSite() {
-        const url = this.router.getUrl();
-        const newUrl = replaceUrlParams(url, { [dataReqParams.itemsPerPage]: this.model.parent.userPreferences.itemsPerPage });
-        this.router.go(newUrl);
-    }
-
     changeItemStatus(item) {
         item.marked = arguments[1] !== undefined
             ? arguments[1]
