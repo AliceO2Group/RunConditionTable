@@ -17,7 +17,7 @@ import { replaceUrlParams } from '../utils/url/urlUtils.js';
 import { RCT } from '../config.js';
 const { dataReqParams } = RCT;
 
-const defaultRowsOnSite = 50;
+const defaultItemsPerPage = 50;
 
 export const sidebarPreferences = {
     visible: 'visible',
@@ -33,7 +33,7 @@ export default class UserPreferences extends Observable {
     constructor(parent) {
         super();
         this.parent = parent;
-        this.itemsPerPage = defaultRowsOnSite;
+        this.itemsPerPage = defaultItemsPerPage;
         this.uiTheme = RCT.themes.rct;
         this.sidebarPreference = sidebarPreferences.collapsible;
         this.detectorList = RCT.detectors.reduce((acc, detector) => ({ ...acc, [detector]: true }), {});
