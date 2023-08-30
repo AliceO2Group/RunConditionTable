@@ -14,8 +14,8 @@
 const PGQueryBuilder = require('../../../app/lib/database/utilities/PGQueryBuilder');
 const views = require('../../../app/lib/database/views');
 const { databaseService } = require('../../../app/lib/database/DatabaseService');
-const { assert, expect } = require('chai');
-
+const { expect } = require('chai');
+const assert = require('assert');
 
 module.exports = () => {
     describe('DatabaseSuite', () => {
@@ -48,7 +48,7 @@ module.exports = () => {
                     'beam-match': 'p-p',
                 };
 
-                assert.doesNotThrow( async () => {
+                await assert.doesNotReject( async () => {
                     const q = PGQueryBuilder.buildSelect(filteringParams);
                     await databaseService.pgExec(q);
                 });
@@ -68,7 +68,7 @@ module.exports = () => {
                     'year-between': ['2022,', '2222,2555', ',2055']
                 };
 
-                assert.doesNotThrow( async () => {
+                await assert.doesNotReject( async () => {
                     const q = PGQueryBuilder.buildSelect(filteringParams);
                     await databaseService.pgExec(q);
                 });
@@ -90,7 +90,7 @@ module.exports = () => {
 
                 };
 
-                assert.doesNotThrow( async () => {
+                await assert.doesNotReject( async () => {
                     const q = PGQueryBuilder.buildSelect(filteringParams);
                     await databaseService.pgExec(q);
                 });

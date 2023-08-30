@@ -11,22 +11,23 @@
  * or submit itself to any jurisdiction.
  */
 
-const req = require('esm')(module)
+const req = require('esm')(module);
 const assert = require('assert');
+
 const { filterField, filterType } = req('../../../app/public/utils/filtering/filterUtils');
 
 module.exports = () => {
-    const filterString='name-match=%LHC%';
+    const filterString = 'name-match=%LHC%';
 
     describe('Filter field', () => {
         it('should return correct value', () => {
-            assert(filterField(filterString) === "name");
+            assert(filterField(filterString) === 'name');
         });
     });
 
     describe('Filter type', () => {
         it('should return correct value', () => {
-            assert(filterType(filterString) === "match");
+            assert(filterType(filterString) === 'match');
         });
     });
 };

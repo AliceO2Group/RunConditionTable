@@ -17,7 +17,6 @@ const { expect } = require('chai');
 
 module.exports = async () => {
     describe('Get requests', () => {
-        
         it('should be protected by a Json Web Token', async () => {
             const response = await request(httpServer)
                 .get('/api/date');

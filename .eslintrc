@@ -15,9 +15,14 @@
     "ignorePatterns": [
         "node_modules/",
         "database/",
-        "tests/",
         "tmp/",
-        "scratch/"
+        "scratch/",
+        "security",
+        "hooks/",
+        "docs/",
+        "scripts/",
+        "reports/",
+        "notes/"
     ],
     "rules": {
         "array-bracket-newline": [
