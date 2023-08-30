@@ -33,17 +33,17 @@ export default class UserPreferences extends Observable {
     constructor(parent) {
         super();
         this.parent = parent;
-        this.rowsOnSite = defaultRowsOnSite;
+        this.itemsPerPage = defaultRowsOnSite;
         this.uiTheme = RCT.themes.rct;
         this.sidebarPreference = sidebarPreferences.collapsible;
         this.detectorList = RCT.detectors.reduce((acc, detector) => ({ ...acc, [detector]: true }), {});
     }
 
     setItemsPerPage(itemsPerPage) {
-        this.rowsOnSite = itemsPerPage;
+        this.itemsPerPage = itemsPerPage;
         this.notify();
         const url = this.parent.router.getUrl();
-        const newUrl = replaceUrlParams(url, { [dataReqParams.rowsOnSite]: this.rowsOnSite });
+        const newUrl = replaceUrlParams(url, { [dataReqParams.itemsPerPage]: this.itemsPerPage });
         this.parent.router.go(newUrl);
     }
 

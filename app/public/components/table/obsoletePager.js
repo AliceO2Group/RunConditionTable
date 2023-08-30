@@ -28,7 +28,7 @@ const { site } = RCT.dataReqParams;
  * @returns {obsoletePager} row with pager and table display properties controllers
  */
 export default function obsoletePager(model, data, pagerOnly = true) {
-    const sitesNumber = Math.ceil(data.totalRecordsNumber / data.rowsOnSite);
+    const sitesNumber = Math.ceil(data.totalRecordsNumber / data.itemsPerPage);
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
     const columnOptionsSelectId = 'columns-option-select-id';
 

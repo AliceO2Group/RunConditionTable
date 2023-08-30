@@ -25,10 +25,10 @@ const siteParamName = RCT.dataReqParams.site;
 export default function obsoleteItemsCounter(data) {
     const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
 
-    const firstRowIdx = (currentSite - 1) * data.rowsOnSite + 1;
-    const lastRowIdx = currentSite * data.rowsOnSite > data.totalRecordsNumber
+    const firstRowIdx = (currentSite - 1) * data.itemsPerPage + 1;
+    const lastRowIdx = currentSite * data.itemsPerPage > data.totalRecordsNumber
         ? data.totalRecordsNumber
-        : currentSite * data.rowsOnSite;
+        : currentSite * data.itemsPerPage;
 
     return `${firstRowIdx}-${lastRowIdx} of ${data.totalRecordsNumber}`;
 }

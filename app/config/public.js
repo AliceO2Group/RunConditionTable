@@ -44,12 +44,12 @@ module.exports = { // Properties that will be provided to frontend in the public
     dataReqParams: {
         countRecords: 'count-records',
         site: 'site',
-        rowsOnSite: 'rows-on-site',
+        itemsPerPage: 'items-per-page',
     },
 
     defaultDataReqParams: {
         site: 1,
-        rowsOnSite: 50,
+        itemsPerPage: 50,
     },
 
     dataResponseFields: {

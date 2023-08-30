@@ -27,13 +27,13 @@ export class PaginationModel extends Observable {
         super();
 
         this._userPreferences = userPreferences;
-        this._itemsPerPage = userPreferences.rowsOnSite;
+        this._itemsPerPage = userPreferences.itemsPerPage;
         this._currentPage = DEFAULT_CURRENT_PAGE;
         this._currentPageItemsCount = DEFAULT_ITEMS_COUNT;
         this._itemsCount = DEFAULT_ITEMS_COUNT;
 
         this._userPreferences.observe(() => {
-            this._itemsPerPage = this._userPreferences.rowsOnSite;
+            this._itemsPerPage = this._userPreferences.itemsPerPage;
             this.notify();
         });
     }

@@ -127,8 +127,8 @@ class DatabaseService {
 
             if (req.query[DRP.countRecords] === 'true') {
                 data[DRF.totalRowsCount] = rows.length;
-                const offset = params[DRP.rowsOnSite] * (params[DRP.site] - 1);
-                const limit = params[DRP.rowsOnSite];
+                const offset = params[DRP.itemsPerPage] * (params[DRP.site] - 1);
+                const limit = params[DRP.itemsPerPage];
                 rows = rows.slice(offset, offset + limit);
             }
 

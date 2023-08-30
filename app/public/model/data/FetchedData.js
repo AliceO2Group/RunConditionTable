@@ -29,7 +29,7 @@ const DRF = RCT.dataResponseFields;
 export default class FetchedData {
     constructor(url, content, userPreferences, totalRecordsNumber = null) {
         this.url = url;
-        this.rowsOnSite = userPreferences.rowsOnSite;
+        this.itemsPerPage = userPreferences.itemsPerPage;
         this.detectorList = userPreferences.detectorList;
 
         this.sorting = {
@@ -51,7 +51,7 @@ export default class FetchedData {
     useUrlParams(url) {
         const params = Object.fromEntries(url.searchParams.entries());
         const DRP = RCT.dataReqParams;
-        this.rowsOnSite = params['rows-on-site'] ?? this.rowsOnSite;
+        this.itemsPerPage = params['items-per-page'] ?? this.itemsPerPage;
         this.site = params[DRP.site] ? params[DRP.site] : defaultSite;
         if (params['sorting']) {
             const { sorting } = params;

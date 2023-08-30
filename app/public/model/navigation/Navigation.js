@@ -97,12 +97,12 @@ export default class Navigation extends Observable {
     }
 
     siteReqParamsPhrase() {
-        return `&${dataReqParams.rowsOnSite}=${this.model.userPreferences.rowsOnSite}&${dataReqParams.site}=${this.site}`;
+        return `&${dataReqParams.itemsPerPage}=${this.model.userPreferences.itemsPerPage}&${dataReqParams.site}=${this.site}`;
     }
 
     siteReqParams() {
         return {
-            [dataReqParams.rowsOnSite]: this.model.userPreferences.rowsOnSite,
+            [dataReqParams.itemsPerPage]: this.model.userPreferences.itemsPerPage,
             [dataReqParams.site]: this.site,
         };
     }

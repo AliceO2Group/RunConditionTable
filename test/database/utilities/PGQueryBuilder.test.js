@@ -41,7 +41,7 @@ module.exports = () => {
 
                 const filteringParams = {
                     page: 'periods',
-                    'rows-on-site': '50',
+                    'items-per-page': '50',
                     site: '1',
                     sorting: '-name',
                     'name-match': ['%c%,%a', '%C%C'],
@@ -59,7 +59,7 @@ module.exports = () => {
 
                 const filteringParams = {
                     page: 'periods',
-                    'rows-on-site': '2',
+                    'items-per-page': '2',
                     site: '2',
                     sorting: '-name',
                     'name-match': '%c%',
@@ -79,7 +79,7 @@ module.exports = () => {
 
                 const filteringParams = {
                     page: 'periods',
-                    'rows-on-site': '2',
+                    'items-per-page': '2',
                     site: '2',
                     sorting: '-name',
                     'name-match': '%c%',
@@ -100,7 +100,7 @@ module.exports = () => {
 
                 const filteringParams = {
                     page: 'periods',
-                    'rows-on-site': '2',
+                    'items-per-page': '2',
                     site: '2',
                     sorting: '-name',
                     'year-between': [',,2022,'],

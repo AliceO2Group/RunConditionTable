@@ -113,7 +113,7 @@ class PGQueryBuilder {
 
     static buildSelect(params) {
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
-            `LIMIT ${params[DRP.rowsOnSite]} OFFSET ${params[DRP.rowsOnSite] * (params[DRP.site] - 1)}`;
+            `LIMIT ${params[DRP.itemsPerPage]} OFFSET ${params[DRP.itemsPerPage] * (params[DRP.site] - 1)}`;
 
         const orderingPart = (params) => {
             if (!params['sorting']) {
