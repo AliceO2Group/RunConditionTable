@@ -36,16 +36,16 @@ export default function obsoletePager(model, data, pagerOnly = true) {
     const isFirstPage = currentPageNumber === 1;
     const isLastPage = currentPageNumber === pagesCount;
 
-    const pageButtonDisplayStyle = (targetSite) => targetSite === currentPageNumber
+    const pageButtonDisplayStyle = (targetPage) => targetPage === currentPageNumber
         ? '.btn-primary'
         : '.btn-secondary';
 
-    const pageButton = (targetSite) => h(`button.btn${pageButtonDisplayStyle(targetSite)}.no-text-decoration`, {
-        onclick: () => model.fetchedData.changePage(targetSite),
-    }, targetSite);
+    const pageButton = (targetPage) => h(`button.btn${pageButtonDisplayStyle(targetPage)}.no-text-decoration`, {
+        onclick: () => model.fetchedData.changePage(targetPage),
+    }, targetPage);
 
-    const pageChangingController = (targetSite, content) => h('button.btn.btn-secondary.site-changing-controller', {
-        onclick: () => model.fetchedData.changePage(targetSite),
+    const pageChangingController = (targetPage, content) => h('button.btn.btn-secondary.site-changing-controller', {
+        onclick: () => model.fetchedData.changePage(targetPage),
     }, content);
 
     function handleOptionChange() {
