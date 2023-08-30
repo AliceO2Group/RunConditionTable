@@ -18,7 +18,7 @@
     "test": "test"
   },
   "scripts": {
-    "eslint": "eslint app --ext .js --format html --output-file ./reports/static/static-analysis.html",
+    "eslint": "eslint app test --ext .js --format html --output-file ./reports/static/static-analysis.html",
     "eslint:fix": "npm run eslint -- --fix",
     "eslint:show": "run-script-os",
     "eslint:show:linux": "npm run eslint; firefox ./reports/static/static-analysis.html",

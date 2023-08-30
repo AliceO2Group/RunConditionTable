@@ -16,7 +16,13 @@
         "node_modules/",
         "database/",
         "tmp/",
-        "scratch/"
+        "scratch/",
+        "security",
+        "hooks/",
+        "docs/",
+        "scripts/",
+        "reports/",
+        "notes/"
     ],
     "rules": {
         "array-bracket-newline": [
