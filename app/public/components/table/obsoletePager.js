@@ -16,7 +16,7 @@ import { h, iconChevronBottom } from '/js/src/index.js';
 import obsoleteItemsCounter from '../../views/userView/data/table/obsoleteItemsCounter.js';
 import { RCT } from '../../config.js';
 
-const { site } = RCT.dataReqParams;
+const { pageNumber } = RCT.dataReqParams;
 
 /**
  * Uses obsolete model.
@@ -29,7 +29,7 @@ const { site } = RCT.dataReqParams;
  */
 export default function obsoletePager(model, data, pagerOnly = true) {
     const pagesCount = Math.ceil(data.totalRecordsNumber / data.itemsPerPage);
-    const currentPageNumber = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
+    const currentPageNumber = Number(Object.fromEntries(data.url.searchParams.entries())[pageNumber]);
     const columnOptionsSelectId = 'columns-option-select-id';
     const morePagesLeft = currentPageNumber > 2;
     const morePagesRight = currentPageNumber < pagesCount - 1;
@@ -100,12 +100,12 @@ export default function obsoletePager(model, data, pagerOnly = true) {
                 ],
 
             h('.flex.m-right-0-3-rem',
-                // Move to the first site
+                // Move to the first page
                 !isFirstPage ? pageChangingController(1, h('.double-left-15-primary')) : ' ',
-                // Move one site back
+                // Move one page back
                 !isFirstPage ? pageChangingController(currentPageNumber - 1, h('.back-15-primary')) : ' ',
 
-                // Move to the middle of sites range [first, current]
+                // Move to the middle of pages range [first, current]
                 morePagesLeft
                     ? pageChangingController(
                         Math.floor(currentPageNumber / 2),
@@ -117,7 +117,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
                 pageButton(currentPageNumber),
                 !isLastPage ? pageButton(currentPageNumber + 1) : '',
 
-                // Move to the middle of sites range [current, last]
+                // Move to the middle of pages range [current, last]
                 morePagesRight
                     ? pageChangingController(
                         currentPageNumber + Math.floor((pagesCount - currentPageNumber) / 2),
@@ -125,7 +125,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
                     )
                     : '',
 
-                // Move one site forward
+                // Move one page forward
                 !isLastPage
                     ? pageChangingController(
                         currentPageNumber + 1,
@@ -133,7 +133,7 @@ export default function obsoletePager(model, data, pagerOnly = true) {
                     )
                     : '',
 
-                // Move to the last site
+                // Move to the last page
                 !isLastPage
                     ? pageChangingController(
                         pagesCount,

@@ -14,7 +14,7 @@
 
 import { RCT } from '../../../../config.js';
 
-const pageNumber = RCT.dataReqParams.site;
+const { pageNumber } = RCT.dataReqParams;
 
 /**
  * Please use the new items counter instead that uses the paginationModel

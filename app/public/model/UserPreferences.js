@@ -26,7 +26,7 @@ export const sidebarPreferences = {
 
 /**
  * Observable responsible for handling and providing user preferences:
- * number of rows on site, UI theme, sidebar preferenes, detector list and predefined filters
+ * number of items per page, UI theme, sidebar preferenes, detector list and predefined filters
  */
 
 export default class UserPreferences extends Observable {

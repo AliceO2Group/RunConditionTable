@@ -34,7 +34,7 @@ const acceptableEnergyMargin = RCT.mapping.energy.acceptableMargin;
  *          return viewButton(model, item.period, (e) =>
  *                  handleClick(model, e), '',
  *                  TODO : this pattern is deprecated
- *              `/?page=runsPerPeriod&index=${item.period}&period=${item.period}&itemsPerPage=50&site=1`);
+ *              `/?page=runsPerPeriod&index=${item.period}&period=${item.period}&itemsPerPage=50&page-number=1`);
  *      },
  *  },
  *  // ...,
@@ -54,19 +54,19 @@ pagesCellsSpecials[PN.periods] = {
                 model.navigation,
                 'runs',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.site}=1&sorting=-run_number`,
+                `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-run_number`,
             ),
 
             linkChip(
                 model.navigation,
                 'data passes',
-                `/?page=${PN.dataPasses}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.site}=1`,
+                `/?page=${PN.dataPasses}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1`,
             ),
 
             linkChip(
                 model.navigation,
                 'MC',
-                `/?page=${PN.mc}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.site}=1`,
+                `/?page=${PN.mc}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1`,
             )),
     ],
 
@@ -86,14 +86,14 @@ pagesCellsSpecials[PN.dataPasses] = {
                 onclick: async () => {
                     await runs.fetchRunsPerDataPass(item.name);
                     // eslint-disable-next-line max-len
-                    model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.site}=1&sorting=-run_number`);
+                    model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-run_number`);
                 },
             }, 'runs'),
             linkChip(
                 model.navigation,
                 'anchorage',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.site}=1&sorting=-name`,
+                `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-name`,
             )),
     ],
     size: (model, runs, item) => getReadableFileSizeString(Number(item.size)),
@@ -106,7 +106,7 @@ pagesCellsSpecials[PN.mc] = {
                 model.navigation,
                 'anchored',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.site}=1&sorting=-name`,
+                `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-name`,
             )),
     ],
 };

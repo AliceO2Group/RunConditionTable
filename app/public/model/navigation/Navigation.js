@@ -37,7 +37,7 @@ export default class Navigation extends Observable {
         this.router.observe(this.routerCallback);
         this.router.bubbleTo(this);
 
-        this.site = defaultDataReqParams.site;
+        this.pageNumber = defaultDataReqParams.pageNumber;
 
         this.handleLocationChange();
     }
@@ -48,7 +48,7 @@ export default class Navigation extends Observable {
         switch (url.pathname) {
             case '/': {
                 if (! page) {
-                    this.router.go(`/?page=${pageNames.periods}${this.siteReqParamsPhrase()}&sorting=-name`);
+                    this.router.go(`/?page=${pageNames.periods}${this.pageNumberReqParamsPhrase()}&sorting=-name`);
                 } else {
                     await this.pageNavigation(url, page);
                     this.parent.fetchedData.reqForData()
@@ -70,7 +70,7 @@ export default class Navigation extends Observable {
                     await this.model.runs.fetchRunsPerDataPass(dataPassName).then(() => {}).catch(() => {});
 
                     const dpSearchParams = `?page=${pageNames.runsPerDataPass}&index=${dataPassName}`;
-                    const dpUrl = new URL(url.origin + url.pathname + dpSearchParams + this.siteReqParamsPhrase());
+                    const dpUrl = new URL(url.origin + url.pathname + dpSearchParams + this.pageNumberReqParamsPhrase());
                     this.parent.fetchedData.reqForData(true, dpUrl).then(() => {
                         const runNumbers = this.model.runs.getRunsPerDataPass(dataPassName).map((row) => row.run_number);
                         this.model.runs.fetchFlagsSummary(dataPassName, runNumbers).then(() => {
@@ -91,19 +91,19 @@ export default class Navigation extends Observable {
 
     goToDefaultPageUrl(page) {
         const url = page === pageNames.flags
-            ? `/?page=${page}&run_numbers=${noRunNumbers}${this.siteReqParamsPhrase()}`
-            : `/?page=${page}${this.siteReqParamsPhrase()}`;
+            ? `/?page=${page}&run_numbers=${noRunNumbers}${this.pageNumberReqParamsPhrase()}`
+            : `/?page=${page}${this.pageNumberReqParamsPhrase()}`;
         this.router.go(url);
     }
 
-    siteReqParamsPhrase() {
-        return `&${dataReqParams.itemsPerPage}=${this.model.userPreferences.itemsPerPage}&${dataReqParams.site}=${this.site}`;
+    pageNumberReqParamsPhrase() {
+        return `&${dataReqParams.itemsPerPage}=${this.model.userPreferences.itemsPerPage}&${dataReqParams.pageNumber}=${this.pageNumber}`;
     }
 
-    siteReqParams() {
+    pageNumberReqParams() {
         return {
             [dataReqParams.itemsPerPage]: this.model.userPreferences.itemsPerPage,
-            [dataReqParams.site]: this.site,
+            [dataReqParams.pageNumber]: this.pageNumber,
         };
     }
 
@@ -119,6 +119,6 @@ export default class Navigation extends Observable {
      * @returns {void}
      */
     go(targetPage, targetIndex) {
-        this.router.go(`/?page=${targetPage}&index=${targetIndex}${this.siteReqParamsPhrase()}`);
+        this.router.go(`/?page=${targetPage}&index=${targetIndex}${this.pageNumberReqParamsPhrase()}`);
     }
 }

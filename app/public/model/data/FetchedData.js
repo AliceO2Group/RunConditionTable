@@ -52,7 +52,7 @@ export default class FetchedData {
         const params = Object.fromEntries(url.searchParams.entries());
         const DRP = RCT.dataReqParams;
         this.itemsPerPage = params['items-per-page'] ?? this.itemsPerPage;
-        this.site = params[DRP.site] ? params[DRP.site] : defaultPageNumber;
+        this.pageNumber = params[DRP.pageNumber] ? params[DRP.pageNumber] : defaultPageNumber;
         if (params['sorting']) {
             const { sorting } = params;
             if (sorting.startsWith('-')) {
