@@ -31,19 +31,22 @@ export default function obsoletePager(model, data, pagerOnly = true) {
     const pagesCount = Math.ceil(data.totalRecordsNumber / data.itemsPerPage);
     const currentPageNumber = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
     const columnOptionsSelectId = 'columns-option-select-id';
+    const morePagesLeft = currentPageNumber > 2;
+    const morePagesRight = currentPageNumber < pagesCount - 1;
+    const isFirstPage = currentPageNumber === 1;
+    const isLastPage = currentPageNumber === pagesCount;
 
-    const pageButton = (targetSite) => h(`button.btn${targetSite === currentPageNumber ? '.btn-primary' : '.btn-secondary'}.no-text-decoration`, {
+    const pageButtonDisplayStyle = (targetSite) => targetSite === currentPageNumber
+        ? '.btn-primary'
+        : '.btn-secondary';
+
+    const pageButton = (targetSite) => h(`button.btn${pageButtonDisplayStyle(targetSite)}.no-text-decoration`, {
         onclick: () => model.fetchedData.changePage(targetSite),
     }, targetSite);
 
     const siteChangingController = (targetSite, content) => h('button.btn.btn-secondary.site-changing-controller', {
         onclick: () => model.fetchedData.changePage(targetSite),
     }, content);
-
-    const morePagesLeft = currentPageNumber > 2;
-    const morePagesRight = currentPageNumber < pagesCount - 1;
-    const isFirstPage = currentPageNumber === 1;
-    const isLastPage = currentPageNumber === pagesCount;
 
     function handleOptionChange() {
         const columnsOptionsSelect = document.getElementById(columnOptionsSelectId);
