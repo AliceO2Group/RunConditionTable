@@ -23,12 +23,12 @@ const siteParamName = RCT.dataReqParams.site;
  * @returns {string} range of items diplayed on the given page and the total number of fetched records
  */
 export default function obsoleteItemsCounter(data) {
-    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
+    const currentPageNumber = Number(Object.fromEntries(data.url.searchParams.entries())[siteParamName]);
 
-    const firstRowIdx = (currentSite - 1) * data.itemsPerPage + 1;
-    const lastRowIdx = currentSite * data.itemsPerPage > data.totalRecordsNumber
+    const firstRowIdx = (currentPageNumber - 1) * data.itemsPerPage + 1;
+    const lastRowIdx = currentPageNumber * data.itemsPerPage > data.totalRecordsNumber
         ? data.totalRecordsNumber
-        : currentSite * data.itemsPerPage;
+        : currentPageNumber * data.itemsPerPage;
 
     return `${firstRowIdx}-${lastRowIdx} of ${data.totalRecordsNumber}`;
 }

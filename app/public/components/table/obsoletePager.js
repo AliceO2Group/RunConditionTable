@@ -28,11 +28,11 @@ const { site } = RCT.dataReqParams;
  * @returns {obsoletePager} row with pager and table display properties controllers
  */
 export default function obsoletePager(model, data, pagerOnly = true) {
-    const sitesNumber = Math.ceil(data.totalRecordsNumber / data.itemsPerPage);
-    const currentSite = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
+    const pagesCount = Math.ceil(data.totalRecordsNumber / data.itemsPerPage);
+    const currentPageNumber = Number(Object.fromEntries(data.url.searchParams.entries())[site]);
     const columnOptionsSelectId = 'columns-option-select-id';
 
-    const pageButton = (targetSite) => h(`button.btn${targetSite === currentSite ? '.btn-primary' : '.btn-secondary'}.no-text-decoration`, {
+    const pageButton = (targetSite) => h(`button.btn${targetSite === currentPageNumber ? '.btn-primary' : '.btn-secondary'}.no-text-decoration`, {
         onclick: () => model.fetchedData.changePage(targetSite),
     }, targetSite);
 
@@ -40,8 +40,10 @@ export default function obsoletePager(model, data, pagerOnly = true) {
         onclick: () => model.fetchedData.changePage(targetSite),
     }, content);
 
-    const moreSitesLeft = currentSite > 2;
-    const moreSitesRight = currentSite < sitesNumber - 1;
+    const morePagesLeft = currentPageNumber > 2;
+    const morePagesRight = currentPageNumber < pagesCount - 1;
+    const isFirstPage = currentPageNumber === 1;
+    const isLastPage = currentPageNumber === pagesCount;
 
     function handleOptionChange() {
         const columnsOptionsSelect = document.getElementById(columnOptionsSelectId);
@@ -96,42 +98,42 @@ export default function obsoletePager(model, data, pagerOnly = true) {
 
             h('.flex.m-right-0-3-rem',
                 // Move to the first site
-                currentSite > 1 ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
+                !isFirstPage ? siteChangingController(1, h('.double-left-15-primary')) : ' ',
                 // Move one site back
-                currentSite > 1 ? siteChangingController(currentSite - 1, h('.back-15-primary')) : ' ',
+                !isFirstPage ? siteChangingController(currentPageNumber - 1, h('.back-15-primary')) : ' ',
 
                 // Move to the middle of sites range [first, current]
-                moreSitesLeft
+                morePagesLeft
                     ? siteChangingController(
-                        Math.floor(currentSite / 2),
+                        Math.floor(currentPageNumber / 2),
                         h('.more-15-primary'),
                     )
                     : '',
 
-                currentSite > 1 ? pageButton(currentSite - 1) : '',
-                pageButton(currentSite),
-                currentSite < sitesNumber ? pageButton(currentSite + 1) : '',
+                !isFirstPage ? pageButton(currentPageNumber - 1) : '',
+                pageButton(currentPageNumber),
+                !isLastPage ? pageButton(currentPageNumber + 1) : '',
 
                 // Move to the middle of sites range [current, last]
-                moreSitesRight
+                morePagesRight
                     ? siteChangingController(
-                        currentSite + Math.floor((sitesNumber - currentSite) / 2),
+                        currentPageNumber + Math.floor((pagesCount - currentPageNumber) / 2),
                         h('.more-15-primary'),
                     )
                     : '',
 
                 // Move one site forward
-                currentSite < sitesNumber
+                !isLastPage
                     ? siteChangingController(
-                        currentSite + 1,
+                        currentPageNumber + 1,
                         h('.forward-15-primary'),
                     )
                     : '',
 
                 // Move to the last site
-                currentSite < sitesNumber
+                !isLastPage
                     ? siteChangingController(
-                        sitesNumber,
+                        pagesCount,
                         h('.double-right-15-primary'),
                     )
                     : ''),
