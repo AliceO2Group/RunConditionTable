@@ -28,7 +28,7 @@ const { pageNames } = RCT;
  */
 
 export default function dataPanel(model, runs, detectors, flags) {
-    const { dataAccess, periods, runsPerPeriod } = model;
+    const { dataAccess, periods } = model;
     const { page, index } = dataAccess.getCurrentDataPointer();
     const data = dataAccess.fetchedData[page][index];
 
