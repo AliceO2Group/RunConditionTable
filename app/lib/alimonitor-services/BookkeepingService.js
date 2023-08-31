@@ -15,8 +15,8 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const { extractPeriod, mapBeamTypeToCommonFormat } = require('./ServicesDataCommons.js');
-const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
+const { ServicesEndpointsFormatter, ServicesDataCommons: { extractPeriod, mapBeamTypeToCommonFormat } } = require('./helpers');
+
 const { databaseManager: {
     repositories: {
         RunRepository,
@@ -68,7 +68,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         };
         while (!this.syncTraversStop(state)) {
             const prom = this.syncPerEndpoint(
-                EndpintFormatter.bookkeeping(state['page'], state['limit']),
+                ServicesEndpointsFormatter.bookkeeping(state['page'], state['limit']),
                 (res) => res.data,
                 this.dataAdjuster.bind(this),
                 () => true,

@@ -18,9 +18,7 @@ const { SocksProxyAgent } = require('socks-proxy-agent');
 const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
 const { ResProvider, makeHttpRequestForJSON, arrayToChunks, applyOptsToObj, throwNotImplemented } = require('../utils');
-const Cacher = require('./Cacher.js');
-const PassCorrectnessMonitor = require('./PassCorrectnessMonitor.js');
-const ProgressMonitor = require('./ProgressMonitor.js');
+const { Cacher, PassCorrectnessMonitor, ProgressMonitor } = require('./helpers');
 
 const defaultServiceSynchronizerOptions = {
     forceStop: false,

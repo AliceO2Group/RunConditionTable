@@ -15,7 +15,7 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
+const { ServicesEndpointsFormatter } = require('./helpers');
 
 const { databaseManager: {
     repositories: {
@@ -38,7 +38,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
 
     async sync({ dataUnit: dataPass }) {
         return await this.syncPerEndpoint(
-            EndpointsFormatter.dataPassesDetailed(dataPass.description),
+            ServicesEndpointsFormatter.dataPassesDetailed(dataPass.description),
             (raw) => this.responsePreprocess(raw),
             (v) => Utils.filterObject(v, this.ketpFields),
             () => true,

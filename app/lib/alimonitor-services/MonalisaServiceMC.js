@@ -15,7 +15,8 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
+const { ServicesEndpointsFormatter, ServicesDataCommons: { extractPeriod } } = require('./helpers');
+
 const config = require('../config/configProvider.js');
 
 const { databaseManager: {
@@ -28,7 +29,6 @@ const { databaseManager: {
     },
     sequelize,
 } } = require('../database/DatabaseManager.js');
-const { extractPeriod } = require('./ServicesDataCommons.js');
 
 class MonalisaServiceMC extends AbstractServiceSynchronizer {
     constructor() {
@@ -52,7 +52,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
 
     sync() {
         return this.syncPerEndpoint(
-            EndpointsFormatter.mcRaw(),
+            ServicesEndpointsFormatter.mcRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
             (simulationPass) => {

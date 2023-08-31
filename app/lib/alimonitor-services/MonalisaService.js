@@ -15,8 +15,7 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const { mapBeamTypeToCommonFormat, extractPeriod } = require('./ServicesDataCommons.js');
-const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
+const { ServicesEndpointsFormatter, ServicesDataCommons: { mapBeamTypeToCommonFormat, extractPeriod } } = require('./helpers');
 const MonalisaServiceDetails = require('./MonalisaServiceDetails.js');
 const config = require('../config/configProvider.js');
 
@@ -60,7 +59,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
         }));
 
         return await this.syncPerEndpoint(
-            EndpointsFormatter.dataPassesRaw(),
+            ServicesEndpointsFormatter.dataPassesRaw(),
             this.responsePreprocess.bind(this),
             this.dataAdjuster.bind(this),
             (dataPass) => {

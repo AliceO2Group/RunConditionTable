@@ -13,8 +13,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const { switchCase } = require('../utils');
-const config = require('../config/configProvider');
+const { switchCase } = require('../../utils');
+const config = require('../../config/configProvider');
 
 class PassCorrectnessMonitor {
     constructor(logger, errorsLoggingDepth) {

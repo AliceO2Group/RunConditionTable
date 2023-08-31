@@ -13,7 +13,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { services } = require('../config/configProvider.js');
+const { services } = require('../../config/configProvider.js');
 
 class ServicesEnpointsFormatter {
     static bookkeeping(page, limit) {
