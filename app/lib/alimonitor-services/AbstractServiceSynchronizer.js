@@ -130,9 +130,7 @@ class AbstractServiceSynchronizer {
         metaDataHandler = null,
     ) {
         try {
-            await this.dbConnect();
-
-            this.dbAction = dbAction; //TODO
+            this.dbAction = dbAction;
             this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
 
             const rawResponse = await this.getRawResponse(endpoint);
@@ -168,7 +166,7 @@ class AbstractServiceSynchronizer {
             if (this.forceStop) {
                 return;
             }
-            const promises = chunk.map((dataUnit) => this.dbAction(this.dbClient, dataUnit)
+            const promises = chunk.map((dataUnit) => this.dbAction(dataUnit)
                 .then(() => this.monitor.handleCorrect())
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 

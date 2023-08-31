@@ -106,7 +106,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         return sp;
     }
 
-    async dbAction(dbClient, simulationPass) {
+    async dbAction(simulationPass) {
         const { beam_type } = simulationPass;
 
         return await SimulationPassRepository.T.upsert({

@@ -42,7 +42,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
             (raw) => this.responsePreprocess(raw),
             (v) => Utils.filterObject(v, this.ketpFields),
             () => true,
-            async (dbClient, v) => {
+            async (v) => {
                 v.parentDataUnit = dataPass;
 
                 return (async () => {

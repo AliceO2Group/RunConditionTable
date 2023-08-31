@@ -87,7 +87,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
         return dp;
     }
 
-    async dbAction(dbClient, dataPass) {
+    async dbAction(dataPass) {
         const { period } = dataPass;
 
         return await BeamTypeRepository.T.findOrCreate({
