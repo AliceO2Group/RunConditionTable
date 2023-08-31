@@ -96,18 +96,6 @@ class RunConditionTableApplication {
         }
     }
 
-    static isInTestMode() {
-        return process.env.ENV_MODE === 'test';
-    }
-
-    static isInDevMode() {
-        return process.env.ENV_MODE === 'dev';
-    }
-
-    static getEnvMode() {
-        return process.env.ENV_MODE;
-    }
-
     get httpServer() {
         return this.webUiServer.httpServer;
     }
