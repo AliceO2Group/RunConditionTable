@@ -17,6 +17,9 @@
     border-radius: 15px;
     justify-content: space-between;
     font-size: xx-small;
+    position: sticky !important;
+    width: 100% !important;
+    left: 0;
 }
 
 .rct .rows-per-page {
