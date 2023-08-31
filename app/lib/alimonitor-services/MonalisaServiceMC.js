@@ -163,6 +163,9 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                                 await RunRepository.T.findOrCreate({
                                     where: {
                                         runNumber,
+                                    },
+                                    default: {
+                                        runNumber,
                                         PeriodId: insertWithoutPeriod ? undefined : period.id,
                                     },
                                 });
