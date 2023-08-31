@@ -136,15 +136,15 @@ class DatabaseService {
 
         const dbResErrorHandler = (e) => {
             this.logger.error(e.message + ' :: ' + e.stack)
-            this.responseWithStatus(res, 500, e.code);
+            this.responseWithStatus(res, 400, e.message);
         }
 
         try {
             const query = PGQueryBuilder.buildSelect(params);
             await this.pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler);
         } catch (e) {
-            this.logger.error(e.stack)
-            this.responseWithStatus(res, 400, e)
+            this.logger.error(e.message + " :: " + e.stack)
+            this.responseWithStatus(res, 500)
         }
     }
 
@@ -158,10 +158,10 @@ class DatabaseService {
         }
         const dbResErrorHandler = (e) => {
             this.logger.error(e.message + ' :: ' + e.stack)
-            this.responseWithStatus(res, 500, e.code);
+            this.responseWithStatus(res, 400, e.message);
         }
         const connectErrorHandler = (connectErr) => {
-            this.logger.error('Error acquiring client:: ' + connectErr.stack)
+            this.logger.error('Error acquiring client:: ' + connectErr.message)
             this.responseWithStatus(res, 500, connectErr.message);
         }
         
@@ -172,8 +172,8 @@ class DatabaseService {
                 dbResponseHandler, 
                 dbResErrorHandler);
         } catch (e) {
-            this.logger.error(e.stack)
-            this.responseWithStatus(res, 400, e)
+            this.logger.error(e.message + ' :: ' + e.stack)
+            this.responseWithStatus(res, 400, e.message)
         }
     }
 
