@@ -59,7 +59,7 @@ export default class RunsPerPeriodModel extends Observable {
             this._selectedPeriod = RemoteData.failure(errors);
         }
 
-        await this.fetchAllRunsPerPeriod(periodId);
+        await this.fetchCurrentPageData(periodId);
 
         this.notify();
     }
@@ -69,19 +69,18 @@ export default class RunsPerPeriodModel extends Observable {
      * @param {string} periodId id of the period that the runs are anchored to
      * @return {Promise<void>} void
      */
-    async fetchAllRunsPerPeriod(periodId) {
+    async fetchCurrentPageRunsPerPeriod(periodId) {
         this._allRuns[periodId] = new RunsModel(this.model, this._selectedPeriod.payload.find((e) => e));
-        await this._allRuns[periodId].fetchAllRuns();
-        // Console.log(this._allRuns[periodId].allRuns);
+        await this._allRuns[periodId].fetchCurrentPageRuns();
     }
 
     /**
      * Fetch all the relevant data from the API
-     *
+     * @param {string} periodId id of the period that the runs are anchored to
      * @return {Promise<void>} void
      */
-    async fetchCurrentPageData() {
-        await this.fetchCurrentPageRuns();
+    async fetchCurrentPageData(periodId) {
+        await this.fetchCurrentPageRunsPerPeriod(periodId);
     }
 
     get selectedPeriod() {

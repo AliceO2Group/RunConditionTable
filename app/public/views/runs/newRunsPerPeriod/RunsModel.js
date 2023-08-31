@@ -93,7 +93,7 @@ export default class RunsModel extends Observable {
             'page[limit]': this._pagination.itemsPerPage,
         };
 
-        this._allRuns = RemoteData.notAsked();
+        this._currentPageRuns = RemoteData.notAsked();
 
         const endpoint = `/api/periods/${this.period.id}/runs/?${new URLSearchParams(params).toString()}`;
         try {
