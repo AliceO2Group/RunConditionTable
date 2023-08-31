@@ -53,28 +53,10 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
     sync() {
         return this.syncPerEndpoint(
             ServicesEndpointsFormatter.mcRaw(),
-            this.responsePreprocess.bind(this),
-            this.dataAdjuster.bind(this),
-            (simulationPass) => {
-                simulationPass.anchoredPeriods = simulationPass.anchoredPeriods
-                    .filter((periodName) => {
-                        try {
-                            return extractPeriod(periodName).year >= config.dataFromYearIncluding;
-                        } catch (error) {
-                            this.logger.error(error);
-                            return false;
-                        }
-                    });
-
-                const { anchoredPeriods, anchoredPasses } = simulationPass;
-                return anchoredPeriods.length != 0 && anchoredPasses.length != 0;
-                // MC not anchored to any production or pass so drop out
-            },
-            this.executeDbAction.bind(this),
         );
     }
 
-    responsePreprocess(d) {
+    processRawResponse(d) {
         const entries = Object.entries(d);
         const aaa = entries.map(([prodName, vObj]) => {
             vObj['name'] = prodName.trim();
@@ -83,7 +65,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         return aaa;
     }
 
-    dataAdjuster(sp) {
+    adjustData(sp) {
         sp = Utils.filterObject(sp, this.ketpFields);
         sp.outputSize = Number(sp.outputSize);
         sp.requestedEvents = Number(sp.requestedEvents);
@@ -104,6 +86,22 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         sp.runs = parseListLikeString(sp.runs).map((s) => Number(s));
 
         return sp;
+    }
+
+    isDataUnitValid(simulationPass) {
+        simulationPass.anchoredPeriods = simulationPass.anchoredPeriods
+            .filter((periodName) => {
+                try {
+                    return extractPeriod(periodName).year >= config.dataFromYearIncluding;
+                } catch (error) {
+                    this.logger.error(error);
+                    return false;
+                }
+            });
+
+        const { anchoredPeriods, anchoredPasses } = simulationPass;
+        return anchoredPeriods.length != 0 && anchoredPasses.length != 0;
+        // MC not anchored to any production or pass so drop out
     }
 
     async executeDbAction(simulationPass) {
