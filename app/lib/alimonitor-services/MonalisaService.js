@@ -60,18 +60,16 @@ class MonalisaService extends AbstractServiceSynchronizer {
 
         return await this.syncPerEndpoint(
             ServicesEndpointsFormatter.dataPassesRaw(),
-            this.responsePreprocess.bind(this),
-            this.dataAdjuster.bind(this),
-            (dataPass) => {
-                const { last_run, last_run_in_details } = this.last_runs[dataPass.name] ?? {};
-                return dataPass.period.year >= config.dataFromYearIncluding &&
-                    (dataPass.lastRun !== last_run || last_run !== last_run_in_details);
-            },
-            this.executeDbAction.bind(this),
         );
     }
 
-    responsePreprocess(res) {
+    isDataUnitValid(dataPass) {
+        const { last_run, last_run_in_details } = this.last_runs[dataPass.name] ?? {};
+        return dataPass.period.year >= config.dataFromYearIncluding &&
+            (dataPass.lastRun !== last_run || last_run !== last_run_in_details);
+    }
+
+    processRawResponse(res) {
         const entries = Object.entries(res);
         const preprocesed = entries.map(([prodName, vObj]) => {
             vObj['name'] = prodName.trim();
@@ -80,7 +78,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
         return preprocesed;
     }
 
-    dataAdjuster(dp) {
+    adjustData(dp) {
         dp = Utils.filterObject(dp, this.ketpFields);
         dp.outputSize = dp.outputSize ? Number(dp.outputSize) : null;
         dp.period = mapBeamTypeToCommonFormat(extractPeriod(dp.name, dp.beam_type));
@@ -122,7 +120,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
                 PeriodId: period.id,
                 ...dataPass,
             }))
-            .then(async ([dataPass, _]) => await this.monalisaServiceDetails.setSyncTask({ dataUnit: dataPass }));
+            .then(async ([dataPass, _]) => await this.monalisaServiceDetails.setSyncTask({ parentDataUnit: dataPass }));
     }
 }
 

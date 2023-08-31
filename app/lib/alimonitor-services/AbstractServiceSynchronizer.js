@@ -38,7 +38,7 @@ class AbstractServiceSynchronizer {
 
         this.opts = this.createHttpOpts();
 
-        this.metaStore = {};
+        this.metaStore = { perUrl: {} };
 
         this.errorsLoggingDepth = config.defaultErrorsLogginDepth;
         applyOptsToObj(this, defaultServiceSynchronizerOptions);
@@ -144,7 +144,7 @@ class AbstractServiceSynchronizer {
                     return f;
                 });
 
-            await this.makeBatchedRequest(data);
+            await this.makeBatchedRequest(data, endpoint);
 
             this.monitor.logResults();
             return true;
@@ -155,7 +155,7 @@ class AbstractServiceSynchronizer {
         }
     }
 
-    async makeBatchedRequest(data) {
+    async makeBatchedRequest(data, endpoint) {
         const rowsChunks = arrayToChunks(data, this.batchSize);
         const total = this.metaStore.totalCount || data.length;
         this.progressMonitor.setTotal(total);
@@ -163,7 +163,7 @@ class AbstractServiceSynchronizer {
             if (this.forceStop) {
                 return;
             }
-            const promises = chunk.map((dataUnit) => this.executeDbAction(dataUnit)
+            const promises = chunk.map((dataUnit) => this.executeDbAction(dataUnit, this.metaStore.perUrl[endpoint])
                 .then(() => this.monitor.handleCorrect())
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 

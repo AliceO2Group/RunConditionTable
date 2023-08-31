@@ -36,69 +36,75 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
         };
     }
 
-    async sync({ dataUnit: dataPass }) {
-        return await this.syncPerEndpoint(
-            ServicesEndpointsFormatter.dataPassesDetailed(dataPass.description),
-            (raw) => this.responsePreprocess(raw),
-            (v) => Utils.filterObject(v, this.ketpFields),
-            () => true,
-            async (v) => {
-                v.parentDataUnit = dataPass;
-
-                return (async () => {
-                    if (/LHC[0-9]{2}[a-z]+/.test(v.period)) {
-                        return await PeriodRepository.T.findOrCreate({
-                            where: {
-                                name: v.period,
-                            },
-                        });
-                    } else {
-                        this.logger.warn(`Incorrect period from monalisa ${v.period} for run ${v.runNumber} in data pass ${dataPass.name}`);
-                        return [undefined, undefined];
-                    }
-                })()
-                    .then(async ([period, _]) => {
-                        v.PeriodId = period?.id;
-                        return await RunRepository.T.findOrCreate({
-                            where: {
-                                runNumber: v.runNumber,
-                            },
-                            defualt: {
-                                runNumber: v.runNumber,
-                                PeriodId: v.PeriodId,
-                            },
-                        });
-                    })
-                    .catch(async (e) => {
-                        throw new Error('Find or create run failed', {
-                            cause: {
-                                error: e.message,
-                                meta: {
-                                    actualValueInDB: await RunRepository.findOne({ where: { runNumber: v.runNumber } }, { raw: true }),
-                                    inQueryValues: {
-                                        runNumber: v.runNumber,
-                                        PeriodId: v.PeriodId,
-                                    },
-                                    sourceValues: {
-                                        runNumber: v.runNumber,
-                                        periodName: v.period,
-                                    },
-                                },
-                            },
-                        });
-                    })
-                    .then(async ([run, _]) => await sequelize.transaction(() => run.addDataPasses(dataPass.id, { ignoreDuplicates: true })));
-            },
-        );
+    async sync({ parentDataUnit: dataPass }) {
+        const url = ServicesEndpointsFormatter.dataPassesDetailed(dataPass.description);
+        this.metaStore.perUrl[url] = { parentDataUnit: dataPass };
+        return await this.syncPerEndpoint(url);
     }
 
-    responsePreprocess(d) {
+    processRawResponse(d) {
         const entries = Object.entries(d);
         const res = entries.map(([hid, vObj]) => {
             vObj['hid'] = hid.trim();
             return vObj;
         }).sort((a, b) => a.run_no - b.run_no);
         return res;
+    }
+
+    adjustData(dataPassDetails) {
+        return Utils.filterObject(dataPassDetails, this.ketpFields);
+    }
+
+    isDataUnitValid() {
+        return true;
+    }
+
+    executeDbAction(dataPassDetails, perUrl) {
+        const { parentDataUnit: dataPass } = perUrl;
+        return (async () => {
+            if (/LHC[0-9]{2}[a-z]+/.test(dataPassDetails.period)) {
+                return await PeriodRepository.T.findOrCreate({
+                    where: {
+                        name: dataPassDetails.period,
+                    },
+                });
+            } else {
+                // eslint-disable-next-line max-len
+                this.logger.warn(`Incorrect period from monalisa ${dataPassDetails.period} for run ${dataPassDetails.runNumber} in data pass ${dataPass.name}`);
+                return [undefined, undefined];
+            }
+        })()
+            .then(async ([period, _]) => {
+                dataPassDetails.PeriodId = period?.id;
+                return await RunRepository.T.findOrCreate({
+                    where: {
+                        runNumber: dataPassDetails.runNumber,
+                    },
+                    defualt: {
+                        runNumber: dataPassDetails.runNumber,
+                        PeriodId: dataPassDetails.PeriodId,
+                    },
+                });
+            })
+            .catch(async (e) => {
+                throw new Error('Find or create run failed', {
+                    cause: {
+                        error: e.message,
+                        meta: {
+                            actualValueInDB: await RunRepository.findOne({ where: { runNumber: dataPassDetails.runNumber } }, { raw: true }),
+                            inQueryValues: {
+                                runNumber: dataPassDetails.runNumber,
+                                PeriodId: dataPassDetails.PeriodId,
+                            },
+                            sourceValues: {
+                                runNumber: dataPassDetails.runNumber,
+                                periodName: dataPassDetails.period,
+                            },
+                        },
+                    },
+                });
+            })
+            .then(async ([run, _]) => await sequelize.transaction(() => run.addDataPasses(dataPass.id, { ignoreDuplicates: true })));
     }
 }
 
