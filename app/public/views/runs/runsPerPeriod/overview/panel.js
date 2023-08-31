@@ -15,11 +15,11 @@
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
 import content from './content.js';
 
-export default function panel(model, runs, detectors, _runsPerPeriodModel) {
+export default function panel(model, runs, detectors) {
     const urlParams = model.router.getUrl().searchParams;
-    const periodId = urlParams.get('periodId');
+    const index = urlParams.get('index');
 
-    return periodId
+    return index
         ? content(model, runs, detectors)
         : noSubPageSelected(model);
 }

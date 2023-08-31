@@ -44,7 +44,7 @@ export default function dataPanel(model, runs, detectors, flags) {
                 case pageNames.runsPerDataPass:
                     return runsPerDataPassPanel(dataAccess, runs, detectors);
                 case pageNames.runsPerPeriod:
-                    return runsPerPeriodPanel(dataAccess, runs, detectors, runsPerPeriod);
+                    return runsPerPeriodPanel(dataAccess, runs, detectors);
                 default:
                     return tablePanel(dataAccess, runs);
             }
