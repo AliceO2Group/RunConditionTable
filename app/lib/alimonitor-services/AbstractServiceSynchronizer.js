@@ -45,7 +45,7 @@ class AbstractServiceSynchronizer {
     createHttpOpts() {
         let opts = this.getHttpOptsBasic();
         opts = this.setSLLForHttpOpts(opts);
-        opts = this.setHttpProxy(opts);
+        opts = this.setHttpSocksProxy(opts);
         return opts;
     }
 
