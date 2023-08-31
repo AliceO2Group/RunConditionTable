@@ -17,6 +17,7 @@ const { qualityControlService } = require('../../services/qualityControl/Quality
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
 const Joi = require('joi');
+const { adaptFindAndCountAllInService } = require('../../utils');
 
 /**
  * List All time based qualities / flags in db including their verification
@@ -29,9 +30,7 @@ const listAllTimeBasedFlagsHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
         const flags = await qualityControlService.getAllTimeBasedFlags(validatedDTO.query);
-        res.json({
-            data: flags,
-        });
+        res.json(adaptFindAndCountAllInService(flags));
     }
 };
 

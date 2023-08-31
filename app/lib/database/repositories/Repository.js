@@ -59,6 +59,17 @@ class Repository {
     }
 
     /**
+     * Returns all entities and its quantity.
+     *
+     * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findAndCountAll options)
+     * @returns {Promise<Model>} Promise object representing the full mock data
+     */
+    async findAndCountAll(queryBuilder = new QueryBuilder()) {
+        queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
+        return await this.model.findAndCountAll(queryBuilder.toImplementation());
+    }
+
+    /**
      * Returns one entity.
      *
      * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findOne options)

@@ -52,8 +52,8 @@ class QualityControlService {
             ],
         };
 
-        const qualityFlags = await QualityControlFlagRepository.findAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
-        return qualityFlags.map((qualityFlags) => qualityControlFlagAdapter.toEntity(qualityFlags));
+        const { count, rows } = await QualityControlFlagRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
+        return { count, rows: rows.map((qualityFlags) => qualityControlFlagAdapter.toEntity(qualityFlags)) };
     }
 
     /**

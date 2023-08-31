@@ -14,6 +14,7 @@
 const { periodService } = require('../../services/periods/PeriodService');
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
+const { adaptFindAndCountAllInService } = require('../../utils');
 
 /**
  * List All runs in db
@@ -25,10 +26,8 @@ const { validateDtoOrRepondOnFailure } = require('../utilities');
 const listPeriodsHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
-        const runs = await periodService.getAll(validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        const periods = await periodService.getAll(validatedDTO.query);
+        res.json(adaptFindAndCountAllInService(periods));
     }
 };
 

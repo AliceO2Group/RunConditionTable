@@ -15,6 +15,7 @@ const { runService } = require('../../services/runs/RunService');
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
 const Joi = require('joi');
+const { adaptFindAndCountAllInService } = require('../../utils');
 
 /**
  * List All runs in db
@@ -27,9 +28,7 @@ const listRunsHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(stdDataRequestDTO, req, res);
     if (validatedDTO) {
         const runs = await runService.getAll(validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        res.json(adaptFindAndCountAllInService(runs));
     }
 };
 
@@ -45,9 +44,7 @@ const listRunsPerPeriodHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
         const runs = await runService.getRunsPerPeriod(validatedDTO.params.id, validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        res.json(adaptFindAndCountAllInService(runs));
     }
 };
 
@@ -63,9 +60,7 @@ const listRunsPerDataPass = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
         const runs = await runService.getRunsPerDataPass(validatedDTO.params.id, validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        res.json(adaptFindAndCountAllInService(runs));
     }
 };
 
@@ -81,9 +76,7 @@ const listRunsPerSimulationPassHandler = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
         const runs = await runService.getRunsPerSimulationPass(validatedDTO.params.id, validatedDTO.query);
-        res.json({
-            data: runs,
-        });
+        res.json(adaptFindAndCountAllInService(runs));
     }
 };
 

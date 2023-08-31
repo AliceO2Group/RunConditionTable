@@ -24,15 +24,16 @@ class RunRepository extends Repository  {
      * @param {Object} queryClauses the find query (see sequelize findAll options) or a find query builder
      * @returns {Promise<Run[]>} Promise object representing the full mock data
      */
-    async findAllWithDetectors(queryClauses = new QueryBuilder()) {
+    async findAndCountAllWithDetectors(queryClauses = new QueryBuilder()) {
         const baseClause = new QueryBuilder({
             include: [{
                 model: this.model.sequelize.models.DetectorSubsystem,
                 raw:true,
                 required: true,
             }],
+            subquery: false
         });
-        return this.model.findAll(baseClause.add(queryClauses).toImplementation());
+        return this.findAndCountAll(baseClause.add(queryClauses).toImplementation());
     }
 }
 
