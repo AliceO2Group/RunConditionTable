@@ -20,6 +20,7 @@ const config = require('../config/configProvider.js');
 const { ResProvider, makeHttpRequestForJSON, arrayToChunks, applyOptsToObj, throwNotImplemented } = require('../utils');
 const Cacher = require('./Cacher.js');
 const PassCorrectnessMonitor = require('./PassCorrectnessMonitor.js');
+const ProgressMonitor = require('./ProgressMonitor.js');
 
 const defaultServiceSynchronizerOptions = {
     forceStop: false,
@@ -28,32 +29,6 @@ const defaultServiceSynchronizerOptions = {
     omitWhenCached: process.env['RCT_DEV_OMIT_WHEN_CACHED'] === 'true' ? true : false,
     batchSize: 4,
 };
-
-class ProgressMonitor {
-    constructor({ total, percentageStep, logger }) {
-        this.total = total;
-        this.percentageStep = percentageStep;
-        this.progress = 0;
-        this.lastLogAt = 0;
-        this.logger = logger;
-    }
-
-    update(progress) {
-        this.progress += progress;
-    }
-
-    setTotal(total) {
-        this.total = total;
-    }
-
-    tryLog() {
-        const potentialLogProgress = this.lastLogAt + this.percentageStep * this.total;
-        if (this.progress >= potentialLogProgress || this.progress === this.total) {
-            this.lastLogAt = this.progress;
-            this.logger(`progress of ${this.progress} / ${this.total}`);
-        }
-    }
-}
 
 class AbstractServiceSynchronizer {
     constructor() {
