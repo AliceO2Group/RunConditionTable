@@ -21,7 +21,7 @@ const { dataReqParams: DRP } = RCT;
  *
  * @implements {OverviewModel}
  */
-export default class Runs extends Observable {
+export default class OldRuns extends Observable {
     /**
      * The constructor of the Overview model object
      *

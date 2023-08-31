@@ -54,14 +54,14 @@ pagesCellsSpecials[PN.periods] = {
                 model.navigation,
                 'runs',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-run_number`,
+                `/?page=${PN.runsPerPeriod}&periodId=${item.id}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-run_number`,
             ),
 
             linkChip(
                 model.navigation,
                 'data passes',
                 // eslint-disable-next-line max-len
-                `/?page=${PN.dataPasses}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1`,
+                `/?page=${PN.dataPasses}&index=${item.id}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1`,
             ),
 
             linkChip(

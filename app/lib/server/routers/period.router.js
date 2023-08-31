@@ -15,7 +15,7 @@ const { PeriodController, RunController, DataPassController } = require('../cont
 
 module.exports = {
     path: '/periods',
-    args: { public: false },
+    args: { public: true },
     children: [
         {
             method: 'get',

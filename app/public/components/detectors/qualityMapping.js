@@ -12,15 +12,10 @@
  * or submit itself to any jurisdiction.
  */
 
-import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
-import content from './content.js';
-
-export default function panel(model, runs, detectors, runsPerPeriodModel) {
-    const urlParams = model.router.getUrl().searchParams;
-    const periodId = urlParams.get('periodId');
-    console.log(periodId);
-
-    return periodId
-        ? content(model, runs, detectors)
-        : noSubPageSelected(model);
+export const qualityMapping = (qualityNumber, runBasedQualities) => {
+    switch(qualityNumber) {
+        case '0': return runBasedQualities.good;
+        case '1': return runBasedQualities.bad;
+        default: return null;
+    }
 }

@@ -28,7 +28,7 @@ const { pageNames } = RCT;
  */
 
 export default function dataPanel(model, runs, detectors, flags) {
-    const { dataAccess, periods } = model;
+    const { dataAccess, periods, runsPerPeriod } = model;
     const { page, index } = dataAccess.getCurrentDataPointer();
     const data = dataAccess.fetchedData[page][index];
 
@@ -44,7 +44,7 @@ export default function dataPanel(model, runs, detectors, flags) {
                 case pageNames.runsPerDataPass:
                     return runsPerDataPassPanel(dataAccess, runs, detectors);
                 case pageNames.runsPerPeriod:
-                    return runsPerPeriodPanel(dataAccess, runs, detectors);
+                    return runsPerPeriodPanel(dataAccess, runs, detectors, runsPerPeriod);
                 default:
                     return tablePanel(dataAccess, runs);
             }
