@@ -87,8 +87,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
                             },
                         });
                     })
-                    // eslint-disable-next-line no-unused-vars
-                    .then(async ([run, _]) => await sequelize.transaction((t) => run.addDataPasses(dataPass.id, { ignoreDuplicates: true })));
+                    .then(async ([run, _]) => await sequelize.transaction(() => run.addDataPasses(dataPass.id, { ignoreDuplicates: true })));
             },
         );
     }
