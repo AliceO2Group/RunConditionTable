@@ -81,7 +81,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             state = this.nextState(state);
         }
 
-        await Promise.all(pendingSyncs);
+        return (await Promise.all(pendingSyncs)).flat().every((_) => _);
     }
 
     dataAdjuster(run) {

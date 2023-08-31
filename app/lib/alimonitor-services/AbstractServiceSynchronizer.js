@@ -117,7 +117,9 @@ class AbstractServiceSynchronizer {
      * @param {CallableFunction} dbAction logic for inserting data to database
      * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
      * like total pages to see etc., on the whole might be used to any custom logic
-     * @returns {*} void
+     * @returns {boolean} - true if process was finalized without major errors and with/without minor errors, otherwise false,
+     * Major errors are understood as ones indicating that further synchronization is purposeless: e.g. due to networ error, invalid certificate.
+     * Minor errors are understood as e.g. managable ambiguities in data.
      */
     async syncPerEndpoint(
         endpoint,
@@ -150,9 +152,11 @@ class AbstractServiceSynchronizer {
             await this.makeBatchedRequest(data);
 
             this.monitor.logResults();
+            return true;
         } catch (fatalError) {
             this.logger.error(fatalError);
             await this.interrtuptSyncTask();
+            return false;
         }
     }
 
@@ -187,10 +191,19 @@ class AbstractServiceSynchronizer {
         return await makeHttpRequestForJSON(endpoint, this.opts, this.logger, onSucces);
     }
 
+    /**
+     * Start process of synchroniztion with particular external system,
+     * it depends on custom configuration of class inheriting from the AbstractServiceSynchronizer
+     * @param {Object} options - customize sync procedure,
+     * e.g. some custom class may required some context to start process, e.g. some data unit,
+     * @return {boolean} - true if process was finalized without major errors and with/without minor errors, otherwise false,
+     * Major errors are understood as ones indicating that further synchronization is purposeless: e.g. due to networ error, invalid certificate.
+     * Minor errors are understood as e.g. managable ambiguities in data.
+     */
     async setSyncTask(options) {
         this.progressMonitor = new ProgressMonitor({ logger: this.logger.info.bind(this.logger), percentageStep: 0.25 });
         this.forceStop = false;
-        await this.sync(options)
+        return await this.sync(options)
             .then(() => {
                 if (this.forceStop) {
                     this.logger.info(`${this.name} forced to stop`);
