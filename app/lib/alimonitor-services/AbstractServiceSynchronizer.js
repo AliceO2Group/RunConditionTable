@@ -159,9 +159,7 @@ class AbstractServiceSynchronizer {
             this.monitor.logResults();
         } catch (fatalError) {
             this.logger.error(fatalError);
-            thi;
-        } finally {
-            await this.dbDisconnect();
+            await this.interrtuptSyncTask();
         }
     }
 
@@ -207,7 +205,13 @@ class AbstractServiceSynchronizer {
             });
     }
 
-    async clearSyncTask() {
+    /**
+     * Interrupt sync task, so dbAction or syncPerEndpoint methods,
+     * which is subsequent towards one being executed, will not be called.
+     * It will NOT interrupt any sequelize call being executed.
+     * @return {void}
+     */
+    async interrtuptSyncTask() {
         this.forceStop = true;
     }
 }
