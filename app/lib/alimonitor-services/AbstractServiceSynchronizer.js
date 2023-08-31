@@ -21,7 +21,7 @@ const { Cacher, PassCorrectnessMonitor, ProgressMonitor } = require('./helpers')
 
 const defaultServiceSynchronizerOptions = {
     forceStop: false,
-    rawCacheUse: process.env['RCT_DEV_USE_CACHE'] === 'false' ? false : true,
+    cacheRawResponse: process.env['RCT_DEV_USE_CACHE'] === 'false' ? false : true,
     useCacheJsonInsteadIfPresent: process.env['RCT_DEV_USE_CACHE_INSTEAD'] === 'true' ? true : false,
     batchSize: 4,
 };
@@ -45,7 +45,7 @@ class AbstractServiceSynchronizer {
     createHttpOpts() {
         let opts = this.getHttpOptsBasic();
         opts = this.setSLLForHttpOpts(opts);
-        opts = this.setHttpSocket(opts);
+        opts = this.setHttpProxy(opts);
         return opts;
     }
 
@@ -85,7 +85,7 @@ class AbstractServiceSynchronizer {
         return opts;
     }
 
-    setHttpSocket(opts) {
+    setHttpSocksProxy(opts) {
         const proxy = ResProvider.socksProvider();
         if (proxy?.length > 0) {
             this.logger.info(`using proxy/socks '${proxy}' to CERN network`);
@@ -180,7 +180,7 @@ class AbstractServiceSynchronizer {
             return Cacher.getJsonSync(this.name, endpoint);
         }
         const onSucces = (endpoint, data) => {
-            if (this.rawCacheUse) {
+            if (this.cacheRawResponse) {
                 Cacher.cache(this.name, endpoint, data);
             }
         };
