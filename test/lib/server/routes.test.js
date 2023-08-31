@@ -46,7 +46,7 @@ module.exports = () => {
         describe('Endpoints for fetching data', () => {
             routes.filter(({ method }) => method === 'get').map(async ({ path }) => {
                 // eslint-disable-next-line max-len
-                const url = new URL(`${getSelfLink}/api${replaceAll(path, /:[^/]+/, '0')}`);
+                const url = new URL(`${getSelfLink()}/api${replaceAll(path, /:[^/]+/, '0')}`);
                 it(`should fetch from ${path} <${url}> without errors`, async () => {
                     await assert.doesNotReject(makeHttpRequestForJSON(url));
                 });
