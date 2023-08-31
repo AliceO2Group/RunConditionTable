@@ -118,7 +118,6 @@ class AbstractServiceSynchronizer {
      * @param {CallableFunction} metaDataHandler used if synchronization requires handling some meta data.
      * like total pages to see etc., on the whole might be used to any custom logic
      * Besides given arguemnts the method depends on following
-     * @abstractMethod executeDbAction - logic for inserting data to database
      * @returns {boolean} - true if process was finalized without major errors and with/without minor errors, otherwise false,
      * Major errors are understood as ones indicating that further synchronization is purposeless: e.g. due to networ error, invalid certificate.
      * Minor errors are understood as e.g. managable ambiguities in data.
@@ -236,7 +235,14 @@ class AbstractServiceSynchronizer {
         throwNotImplemented();
     }
 
-    async executeDbAction() {
+    /**
+     * Implements logic for inserting/updating database data
+     * @abstractMethod
+     * @param {*} _dataUnit - data unit some db action is to be performed on
+     * @param {*|undefined} _options - some meta data, e.g. some context required execute db action
+     * @return {void}
+     */
+    async executeDbAction(_dataUnit, _options) {
         throwNotImplemented();
     }
 }
