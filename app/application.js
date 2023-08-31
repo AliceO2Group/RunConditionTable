@@ -24,6 +24,7 @@ const { databaseService } = require('./lib/database/DatabaseService.js');
 
 // Server
 const { webUiServer } = require('./lib/server/WebUiServer.js');
+const { isInDevMode } = require('./lib/utils/env-utils.js');
 
 // Extract important
 const EP = config.public.endpoints;
@@ -53,10 +54,8 @@ class RunConditionTableApplication {
 
         httpServer.post(EP.login, (req, res) => databaseService.loginSession(req, res));
         httpServer.post(EP.logout, (req, res) => databaseService.logoutSession(req, res));
-        httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res),
-            { public: RunConditionTableApplication.isInDevMode() });
-        httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res),
-            { public: RunConditionTableApplication.isInDevMode() });
+        httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res), { public: isInDevMode() });
+        httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res), { public: isInDevMode() });
         httpServer.get(EP.sync, async (_req, _res) => this.syncManager.syncAll());
     }
 
