@@ -5,9 +5,9 @@ CREATE or REPLACE FUNCTION get_run_det_data(
     returns varchar
 LANGUAGE plpgsql
 AS $body$ 
-DECLARE ret integer:= null;
+DECLARE ret varchar:= null;
 BEGIN
-    SELECT 0 INTO ret -- TODO
+    SELECT rd.quality INTO ret -- TODO
         FROM runs_detectors AS rd 
         INNER JOIN detectors_subsystems AS ds 
             ON rd.detector_id = ds.id
