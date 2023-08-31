@@ -26,6 +26,8 @@ const responseSchema = Joi.object({
     data: Joi.array().required(),
 });
 
+const getSelfLink = () => `${config.http.tls ? 'https' : 'http'}://localhost:${config.http.port}`;
+
 module.exports = () => {
     describe('WebUiServerSuite', () => {
         describe('Routes definitions', () => {
@@ -44,7 +46,7 @@ module.exports = () => {
         describe('Endpoints for fetching data', () => {
             routes.filter(({ method }) => method === 'get').map(async ({ path }) => {
                 // eslint-disable-next-line max-len
-                const url = new URL(`${config.http.tls ? 'https' : 'http'}://localhost:${config.http.port}/api${replaceAll(path, /:[^/]+/, '0')}`);
+                const url = new URL(`${getSelfLink}/api${replaceAll(path, /:[^/]+/, '0')}`);
                 it(`should fetch from ${path} <${url}> without errors`, async () => {
                     await assert.doesNotReject(makeHttpRequestForJSON(url));
                 });
@@ -60,6 +62,27 @@ module.exports = () => {
                         await assert.doesNotReject(makeHttpRequestForJSON(url));
                     });
                 }
+            });
+        });
+
+        describe('Legacy endpoints for fetching data', () => {
+            const params = {
+                periods: {},
+                dataPasses: { index: 'LHC22o' },
+                mc: { index: 'LHC22o' },
+                anchoredPerMC: { index: 'LHC22h1c2' },
+                anchoragePerDatapass: { index: 'LHC22t_apass4' },
+                runsPerPeriod: { index: 'LHC22t' },
+                runsPerDataPass: { index: 'LHC22t_apass4' },
+                flags: { run_numbers: 123456, detector: 'CPV', data_pass_name: 'LHC22t_apass4' },
+            };
+            Object.entries(params).map(([pageKey, seachQueryParams]) => {
+                const url = new URL(`${getSelfLink()}/api${config.public.endpoints.rctData}?page=${config.public.pageNames[pageKey]}`);
+                Object.entries(seachQueryParams).forEach(([k, v]) => url.searchParams.set(k, v));
+
+                it(`should fetch from legacy endpoint ${url} without errors`, async () => {
+                    await assert.doesNotReject(makeHttpRequestForJSON(url));
+                });
             });
         });
     });
