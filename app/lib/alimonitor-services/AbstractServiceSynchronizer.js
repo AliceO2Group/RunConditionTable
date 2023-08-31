@@ -158,8 +158,8 @@ class AbstractServiceSynchronizer {
 
             this.monitor.logResults();
         } catch (fatalError) {
-            this.logger.error(fatalError.stack);
-            throw fatalError;
+            this.logger.error(fatalError);
+            thi;
         } finally {
             await this.dbDisconnect();
         }
@@ -185,7 +185,6 @@ class AbstractServiceSynchronizer {
 
     async getRawResponse(endpoint) {
         if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint)) {
-            // eslint-disable-next-line capitalized-comments
             this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return Cacher.getJsonSync(this.name, endpoint);
         }
@@ -195,19 +194,6 @@ class AbstractServiceSynchronizer {
             }
         };
         return await makeHttpRequestForJSON(endpoint, this.opts, this.logger, onSucces);
-    }
-
-    async dbConnect() {
-        this.dbClient = new Client(config.database);
-        this.dbClient.on('error', (e) => this.logger.error(e));
-
-        return await this.dbClient.connect()
-            .catch((e) => this.logger.error(e));
-    }
-
-    async dbDisconnect() {
-        return await this.dbClient.end()
-            .catch((e) => this.logger.error(e));
     }
 
     async setSyncTask(options) {
@@ -223,10 +209,6 @@ class AbstractServiceSynchronizer {
 
     async clearSyncTask() {
         this.forceStop = true;
-    }
-
-    isConnected() {
-        return this.dbClient?._connected;
     }
 }
 
