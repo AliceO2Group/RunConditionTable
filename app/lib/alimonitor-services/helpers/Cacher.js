@@ -15,6 +15,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const config = require('../../config/configProvider');
 
 class Cacher {
     static cache(synchronizerName, endpoint, data) {
@@ -58,14 +59,7 @@ class Cacher {
 
     static serviceCacheDir(synchronizerName) {
         return path.join(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            '..',
-            'database',
-            'cache',
-            'rawJson',
+            config.services.rawJsonCachePath,
             synchronizerName,
         );
     }

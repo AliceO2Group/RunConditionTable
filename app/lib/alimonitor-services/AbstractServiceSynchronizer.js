@@ -148,7 +148,7 @@ class AbstractServiceSynchronizer {
             this.monitor.logResults();
             return true;
         } catch (fatalError) {
-            this.logger.error(fatalError);
+            this.logger.error(fatalError.message + fatalError.stack);
             await this.interrtuptSyncTask();
             return false;
         }

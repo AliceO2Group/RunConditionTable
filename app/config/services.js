@@ -14,11 +14,11 @@
  */
 
 const { ResProvider } = require('../lib/utils');
+const path = require('path');
 
 const services = {
     bookkeeping: {
         url: {
-            rct: 'http://rct-bookkeeping.cern.ch:4000/api/runs',
             ali: ResProvider.getServiceEndpoint('BK_RUNS'),
         },
     },
@@ -36,22 +36,15 @@ const services = {
     batchSize: {
         ML: ResProvider.envOrDef('RCT_ML_BATCH_SIZE', 1),
     },
+
+    rawJsonCachePath: process.env.RAW_JSON_CACHE_PATH ? path.resolve(process.env.RAW_JSON_CACHE_PATH) : path.join(
+        __dirname,
+        '..',
+        '..',
+        'database',
+        'cache',
+        'rawJson',
+    ),
 };
-
-/*
- * Endpoints bases
- * ali: 'https://ali-bookkeeping.cern.ch/api/runs?filter[definitions]=PHYSICS',
- * dataPassesRaw: 'https://alimonitor.cern.ch/production/raw.jsp?res_path=json',
- * dataPassesDetailed: 'https://alimonitor.cern.ch/raw/raw_details.jsp?timesel=0&res_path=json',
- * mcRaw: 'https://alimonitor.cern.ch/MC/?res_path=json',
- * mcDetailed: 'https://alimonitor.cern.ch/job_events.jsp?timesel=0&res_path=json',
- * mcDetTag: 'https://alimonitor.cern.ch/MC/prodDetails.jsp?res_path=json',
- */
-
-// LHC21i3f3
-// eslint-disable-next-line max-len
-//E rawDataDetalied: 'https://alimonitor.cern.ch/production/raw_details.jsp?timesel=0&filter_jobtype=OCT+-+async+production+for+pilot+beam+pass+3%2C+O2-2763&res_path=json',
-// eslint-disable-next-line max-len
-//E mcRawDataDetailed: 'https://alimonitor.cern.ch/job_events.jsp?timesel=0&owner=aliprod&filter_jobtype=Pb-Pb%2C+5.02+TeV+-+HIJING+%2B+nuclei+Geant4+with+modified+material+budget+%2B4.5%+(Pb-Pb+Pass3)%2C+50-90%+centrality%2C+ALIROOT-8784&res_path=json',
 
 module.exports = services;
