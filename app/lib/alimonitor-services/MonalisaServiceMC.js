@@ -57,12 +57,12 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
     }
 
     processRawResponse(d) {
-        const entries = Object.entries(d);
-        const aaa = entries.map(([prodName, vObj]) => {
+        return Object.entries(d).map(([prodName, vObj]) => {
             vObj['name'] = prodName.trim();
             return vObj;
-        }).filter((r) => r.name?.match(/^LHC\d\d.*$/));
-        return aaa;
+        })
+            .filter((r) => r.name?.match(/^LHC\d\d.*$/))
+            .map(this.adjustData.bind(this));
     }
 
     adjustData(sp) {

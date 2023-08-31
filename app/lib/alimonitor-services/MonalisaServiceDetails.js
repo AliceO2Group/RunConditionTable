@@ -43,12 +43,12 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
     }
 
     processRawResponse(d) {
-        const entries = Object.entries(d);
-        const res = entries.map(([hid, vObj]) => {
+        return Object.entries(d).map(([hid, vObj]) => {
             vObj['hid'] = hid.trim();
             return vObj;
-        }).sort((a, b) => a.run_no - b.run_no);
-        return res;
+        })
+            .sort((a, b) => a.run_no - b.run_no)
+            .map(this.adjustData.bind(this));
     }
 
     adjustData(dataPassDetails) {

@@ -81,7 +81,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     }
 
     processRawResponse(rawResponse) {
-        return rawResponse.data;
+        return rawResponse.data.map(this.adjustData.bind(this));
     }
 
     isDataUnitValid() {
@@ -89,22 +89,17 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     }
 
     adjustData(run) {
-        try {
-            run = Utils.filterObject(run, this.ketpFields);
-            const { detectors } = run;
-            delete run.detectors;
-            run.detectorNames = detectors.map(({ name }) => name.trim());
-            run.detectorQualities = detectors.map(({ quality }) => quality);
+        run = Utils.filterObject(run, this.ketpFields);
+        const { detectors } = run;
+        delete run.detectors;
+        run.detectorNames = detectors.map(({ name }) => name.trim());
+        run.detectorQualities = detectors.map(({ quality }) => quality);
 
-            this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3CurrentVal');
-            this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipoleCurrentVal');
-            mapBeamTypeToCommonFormat(run);
-            run.fillNumber = Number(run.fillNumber);
-            return run;
-        } catch (e) {
-            this.logger.error(e);
-            return null;
-        }
+        this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3CurrentVal');
+        this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipoleCurrentVal');
+        mapBeamTypeToCommonFormat(run);
+        run.fillNumber = Number(run.fillNumber);
+        return run;
     }
 
     coilsCurrentsFieldsParsing(run, valFN, polFN, tFN) {

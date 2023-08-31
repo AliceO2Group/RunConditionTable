@@ -75,7 +75,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
             vObj['name'] = prodName.trim();
             return vObj;
         }).filter((r) => r.name?.match(/^LHC\d\d[a-zA-Z]_.*$/));
-        return preprocesed;
+        return preprocesed.map(this.adjustData.bind(this));
     }
 
     adjustData(dp) {

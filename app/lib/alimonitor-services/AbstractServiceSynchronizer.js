@@ -134,7 +134,6 @@ class AbstractServiceSynchronizer {
                 metaDataHandler(rawResponse);
             }
             const data = this.processRawResponse(rawResponse)
-                .map((r) => this.adjustData(r))
                 .filter((r) => {
                     const f = r && this.isDataUnitValid(r);
                     if (!f) {
