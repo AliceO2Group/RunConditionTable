@@ -132,7 +132,9 @@ class AbstractServiceSynchronizer {
             this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
 
             const rawResponse = await this.getRawResponse(endpoint);
-            await metaDataHandler?.call(rawResponse);
+            if (metaDataHandler) {
+                await metaDataHandler(rawResponse);
+            }
 
             const data = this.processRawResponse(rawResponse)
                 .filter((r) => {
