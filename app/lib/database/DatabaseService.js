@@ -106,13 +106,9 @@ class DatabaseService {
     }
 
     async pgExecFetchData(req, res) {
-        const userData = this.loggedUsers.tokenToUserData[req.query.token];
-        if (!userData && !(isInDevMode() || isInTestMode())) {
-            const mess = 'SESSION_ERROR:: no user with such token';
-            this.logger.error(mess, req.query);
-            this.responseWithStatus(res, 400, mess);
+        if (!this.checkToken(req, res)) {
             return;
-        }
+        };
 
         const params = {...req.query, ...req.params}
 
@@ -154,7 +150,9 @@ class DatabaseService {
 
 
     async pgExecDataInsert(req, res) {
-        this.checkToken(req, res);
+        if (!this.checkToken(req, res)) {
+            return;
+        };
         const dbResponseHandler = (dbRes) => {
             return res.json({data: dbRes})
         }
@@ -177,6 +175,17 @@ class DatabaseService {
             this.logger.error(e.stack)
             this.responseWithStatus(res, 400, e)
         }
+    }
+
+    checkToken(req, res) {
+        const userData = this.loggedUsers.tokenToUserData[req.query.token];
+        if (!userData && !(isInDevMode() || isInTestMode())) {
+            const mess = 'SESSION_ERROR:: no user with such token';
+            this.logger.error(mess, req.query);
+            this.responseWithStatus(res, 400, mess);
+            return false;
+        }
+        return true;
     }
 
     responseWithStatus(res, status, message) {
