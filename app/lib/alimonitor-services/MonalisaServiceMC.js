@@ -56,19 +56,19 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         );
     }
 
-    processRawResponse(d) {
-        return Object.entries(d).map(([prodName, vObj]) => {
-            vObj['name'] = prodName.trim();
-            return vObj;
+    processRawResponse(rawResponse) {
+        return Object.entries(rawResponse).map(([simPassName, simPassAttributes]) => {
+            simPassAttributes['name'] = simPassName.trim();
+            return simPassAttributes;
         })
-            .filter((r) => r.name?.match(/^LHC\d\d.*$/))
-            .map(this.adjustData.bind(this));
+            .filter((simulationPass) => simulationPass.name?.match(/^LHC\d\d.*$/))
+            .map(this.adjustDataUnit.bind(this));
     }
 
-    adjustData(sp) {
-        sp = Utils.filterObject(sp, this.ketpFields);
-        sp.outputSize = Number(sp.outputSize);
-        sp.requestedEvents = Number(sp.requestedEvents);
+    adjustDataUnit(simulationPass) {
+        simulationPass = Utils.filterObject(simulationPass, this.ketpFields);
+        simulationPass.outputSize = Number(simulationPass.outputSize);
+        simulationPass.requestedEvents = Number(simulationPass.requestedEvents);
 
         const parseListLikeString = (rawString) => Utils
             .replaceAll(rawString, /,|'|;"/, ' ')
@@ -81,11 +81,11 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
          * there are extra commas at the begining of some samples
          */
 
-        sp.anchoredPasses = parseListLikeString(sp.anchoredPasses);
-        sp.anchoredPeriods = parseListLikeString(sp.anchoredPeriods);
-        sp.runs = parseListLikeString(sp.runs).map((s) => Number(s));
+        simulationPass.anchoredPasses = parseListLikeString(simulationPass.anchoredPasses);
+        simulationPass.anchoredPeriods = parseListLikeString(simulationPass.anchoredPeriods);
+        simulationPass.runs = parseListLikeString(simulationPass.runs).map((s) => Number(s));
 
-        return sp;
+        return simulationPass;
     }
 
     isDataUnitValid(simulationPass) {

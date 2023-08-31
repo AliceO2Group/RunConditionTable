@@ -42,16 +42,16 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
         return await this.syncPerEndpoint(url);
     }
 
-    processRawResponse(d) {
-        return Object.entries(d).map(([hid, vObj]) => {
-            vObj['hid'] = hid.trim();
-            return vObj;
+    processRawResponse(rawResponse) {
+        return Object.entries(rawResponse).map(([id, dataPassDetailsAttributes]) => {
+            dataPassDetailsAttributes['hid'] = id.trim();
+            return dataPassDetailsAttributes;
         })
             .sort((a, b) => a.run_no - b.run_no)
-            .map(this.adjustData.bind(this));
+            .map(this.adjustDataUnit.bind(this));
     }
 
-    adjustData(dataPassDetails) {
+    adjustDataUnit(dataPassDetails) {
         return Utils.filterObject(dataPassDetails, this.ketpFields);
     }
 
@@ -59,8 +59,8 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
         return true;
     }
 
-    executeDbAction(dataPassDetails, perUrl) {
-        const { parentDataUnit: dataPass } = perUrl;
+    async executeDbAction(dataPassDetails, forUrlMetaStore) {
+        const { parentDataUnit: dataPass } = forUrlMetaStore;
         return (async () => {
             if (/LHC[0-9]{2}[a-z]+/.test(dataPassDetails.period)) {
                 return await PeriodRepository.T.findOrCreate({

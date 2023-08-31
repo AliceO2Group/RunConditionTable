@@ -111,13 +111,15 @@ class AbstractServiceSynchronizer {
     }
 
     /**
-     * Combine logic of fetching data from service
-     * like bookkeeping and processing
-     * and inserting to local database
-     * @param {URL} endpoint endpoint to fetch data
+     * Combine logic of fetching data from service like bookkeeping, processing and inserting to database
+     * @param {URL} endpoint endpoint to fetch data from
      * @param {CallableFunction} metaDataHandler used if synchronization requires handling some meta data.
      * like total pages to see etc., on the whole might be used to any custom logic
-     * Besides given arguemnts the method depends on following
+     * Besides given arguemnts the method depends on three abstract methods to be overriden
+     * @see AbstractServiceSynchronizer.processRawResponse
+     * @see AbstractServiceSynchronizer.isDataUnitValid
+     * @see AbstractServiceSynchronizer.executeDbAction
+     *
      * @returns {boolean} - true if process was finalized without major errors and with/without minor errors, otherwise false,
      * Major errors are understood as ones indicating that further synchronization is purposeless: e.g. due to networ error, invalid certificate.
      * Minor errors are understood as e.g. managable ambiguities in data.
@@ -130,9 +132,8 @@ class AbstractServiceSynchronizer {
             this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
 
             const rawResponse = await this.getRawResponse(endpoint);
-            if (metaDataHandler) {
-                metaDataHandler(rawResponse);
-            }
+            await metaDataHandler?.call(rawResponse);
+
             const data = this.processRawResponse(rawResponse)
                 .filter((r) => {
                     const f = r && this.isDataUnitValid(r);
@@ -186,7 +187,7 @@ class AbstractServiceSynchronizer {
 
     /**
      * Start process of synchroniztion with particular external system,
-     * it depends on custom configuration of class inheriting from the AbstractServiceSynchronizer
+     * it depends on custom configuration of class inheriting from this class
      * @param {Object} options - customize sync procedure,
      * e.g. some custom class may required some context to start process, e.g. some data unit,
      * @return {boolean} - true if process was finalized without major errors and with/without minor errors, otherwise false,
@@ -212,6 +213,10 @@ class AbstractServiceSynchronizer {
      */
     async interrtuptSyncTask() {
         this.forceStop = true;
+    }
+
+    isStopped() {
+        return this.forceStop;
     }
 
     /**

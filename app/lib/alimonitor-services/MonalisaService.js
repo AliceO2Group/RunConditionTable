@@ -46,16 +46,16 @@ class MonalisaService extends AbstractServiceSynchronizer {
     }
 
     async sync() {
-        const last_runs_res = await sequelize.query(
+        const lastRunsRes = await sequelize.query(
             'SELECT name, last_run, max(run_number) as last_run_in_details \
             FROM data_passes AS dp \
             LEFT JOIN data_passes_runs AS dpr \
                 ON dpr.data_pass_id = dp.id \
             GROUP BY name, last_run;',
         );
-        this.last_runs = Object.fromEntries(last_runs_res[0].map((r) => {
-            const { name, last_run, last_run_in_details } = r;
-            return [name, { last_run, last_run_in_details }];
+        this.lastRuns = Object.fromEntries(lastRunsRes[0].map((lastRunData) => {
+            const { name, last_run: lastRun, last_run_in_details: lastRunInDetails } = lastRunData;
+            return [name, { lastRun, lastRunInDetails }];
         }));
 
         return await this.syncPerEndpoint(
@@ -64,9 +64,9 @@ class MonalisaService extends AbstractServiceSynchronizer {
     }
 
     isDataUnitValid(dataPass) {
-        const { last_run, last_run_in_details } = this.last_runs[dataPass.name] ?? {};
+        const { lastRun, lastRunInDetails } = this.lastRuns[dataPass.name] ?? {};
         return dataPass.period.year >= config.dataFromYearIncluding &&
-            (dataPass.lastRun !== last_run || last_run !== last_run_in_details);
+            (dataPass.lastRun !== lastRun || lastRun !== lastRunInDetails);
     }
 
     processRawResponse(res) {
@@ -75,14 +75,14 @@ class MonalisaService extends AbstractServiceSynchronizer {
             vObj['name'] = prodName.trim();
             return vObj;
         }).filter((r) => r.name?.match(/^LHC\d\d[a-zA-Z]_.*$/));
-        return preprocesed.map(this.adjustData.bind(this));
+        return preprocesed.map(this.adjustDataUnit.bind(this));
     }
 
-    adjustData(dp) {
-        dp = Utils.filterObject(dp, this.ketpFields);
-        dp.outputSize = dp.outputSize ? Number(dp.outputSize) : null;
-        dp.period = mapBeamTypeToCommonFormat(extractPeriod(dp.name, dp.beam_type));
-        return dp;
+    adjustDataUnit(dataPass) {
+        dataPass = Utils.filterObject(dataPass, this.ketpFields);
+        dataPass.outputSize = dataPass.outputSize ? Number(dataPass.outputSize) : null;
+        dataPass.period = mapBeamTypeToCommonFormat(extractPeriod(dataPass.name, dataPass.beam_type));
+        return dataPass;
     }
 
     async executeDbAction(dataPass) {

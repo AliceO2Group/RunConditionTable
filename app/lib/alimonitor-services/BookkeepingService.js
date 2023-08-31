@@ -61,34 +61,33 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             this.detectorsNameToId = Object.fromEntries(this.detectorsNameToId.map(({ id, name }) => [name, id]));
         }).catch(this.logger.error.bind(this.logger));
 
-        const pendingSyncs = [];
+        const results = [];
         let state = {
             page: 0,
             limit: 100,
         };
         while (!this.syncTraversStop(state)) {
-            const prom = this.syncPerEndpoint(
+            const partialResult = await this.syncPerEndpoint(
                 ServicesEndpointsFormatter.bookkeeping(state['page'], state['limit']),
                 this.metaDataHandler.bind(this),
             );
-            pendingSyncs.push(prom);
-            await prom;
+            results.push(partialResult);
             this.logger.info(`progress of ${state['page']} to ${this.metaStore['pageCount']}`);
             state = this.nextState(state);
         }
 
-        return (await Promise.all(pendingSyncs)).flat().every((_) => _);
+        return results.flat().every((_) => _);
     }
 
     processRawResponse(rawResponse) {
-        return rawResponse.data.map(this.adjustData.bind(this));
+        return rawResponse.data.map(this.adjustDataUnit.bind(this));
     }
 
     isDataUnitValid() {
         return true;
     }
 
-    adjustData(run) {
+    adjustDataUnit(run) {
         run = Utils.filterObject(run, this.ketpFields);
         const { detectors } = run;
         delete run.detectors;
@@ -173,18 +172,19 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             });
     }
 
-    metaDataHandler(requestJsonResult) {
-        const { page } = requestJsonResult['meta'];
+    async metaDataHandler(rawResponse) {
+        const { page } = rawResponse['meta'];
         if (!page || !page['pageCount']) {
-            this.logger.error(`No metadata found in Bookkeeping for the requested page: ${JSON.stringify(requestJsonResult)}`);
-            this.forceStop = true;
+            this.logger.error(`No metadata found in Bookkeeping for the requested page: ${JSON.stringify(rawResponse)}`);
+            await this.interrtuptSyncTask();
+            return;
         }
         this.metaStore['pageCount'] = page['pageCount'];
         this.metaStore['totalCount'] = page['totalCount'];
     }
 
-    syncTraversStop(state) {
-        return this.forceStop || state['page'] > this.metaStore['pageCount'];
+    syncTraversStop(currentState) {
+        return this.isStopped() || currentState['page'] > this.metaStore['pageCount'];
     }
 
     nextState(state) {
