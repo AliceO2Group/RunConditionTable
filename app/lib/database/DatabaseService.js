@@ -107,7 +107,7 @@ class DatabaseService {
 
     async pgExecFetchData(req, res) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token];
-        if (!userData) {
+        if (!userData && process.env.ENV_MODE !== 'dev') {
             const mess = 'SESSION_ERROR:: no user with such token';
             this.logger.error(mess, req.query);
             this.responseWithStatus(res, 400, mess);

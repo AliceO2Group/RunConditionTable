@@ -29,6 +29,8 @@ pageToViewName[PN.anchoragePerDatapass] = 'anchorage_per_data_pass_view'
 pageToViewName[PN.mc] = 'mc_view'
 pageToViewName[PN.anchoredPerMC] = 'anchored_per_mc_view'
 pageToViewName[PN.flags] = 'flags_view'
+
+const DEFUALT_LIMIT=50;
 /**
  * Class responsible for parsing url params, payloads of client request to sql queries
  */
@@ -113,7 +115,7 @@ class PGQueryBuilder {
 
     static buildSelect(params) {
         const dataSubsetQueryPart = (params) => params[DRP.countRecords] === 'true' ? '' :
-            `LIMIT ${params[DRP.itemsPerPage]} OFFSET ${params[DRP.itemsPerPage] * (params[DRP.pageNumber] - 1)}`;
+            `LIMIT ${params[DRP.itemsPerPage] || DEFUALT_LIMIT} OFFSET ${params[DRP.itemsPerPage] * (params[DRP.pageNumber] - 1) || 1}`;
 
         const orderingPart = (params) => {
             if (!params['sorting']) {
