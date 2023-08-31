@@ -32,8 +32,6 @@ export default class RunsPerPeriodModel extends Observable {
         this.model = model;
         this.name = pageTitle(RCT.pageNames.runsPerPeriod, RCT.pageNames);
 
-        this._sortingRowVisible = false;
-
         this._selectedPeriod = RemoteData.notAsked();
         this._periods = null;
     }
