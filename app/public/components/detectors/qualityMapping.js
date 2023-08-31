@@ -13,9 +13,9 @@
  */
 
 export const qualityMapping = (qualityNumber, runBasedQualities) => {
-    switch(qualityNumber) {
+    switch (qualityNumber) {
         case '0': return runBasedQualities.good;
         case '1': return runBasedQualities.bad;
         default: return null;
     }
-}
+};

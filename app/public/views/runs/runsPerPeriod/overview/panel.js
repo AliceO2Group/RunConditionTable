@@ -15,10 +15,9 @@
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
 import content from './content.js';
 
-export default function panel(model, runs, detectors, runsPerPeriodModel) {
+export default function panel(model, runs, detectors, _runsPerPeriodModel) {
     const urlParams = model.router.getUrl().searchParams;
     const periodId = urlParams.get('periodId');
-    console.log(periodId);
 
     return periodId
         ? content(model, runs, detectors)

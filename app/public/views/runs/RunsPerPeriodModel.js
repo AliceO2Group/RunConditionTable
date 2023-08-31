@@ -52,7 +52,7 @@ export default class RunsPerPeriodModel extends Observable {
 
     /**
      * Fetch all the relevant runs from the API
-     *
+     * @param {string} periodId period id
      * @return {Promise<void>} void
      */
     async fetchAllRuns(periodId) {
@@ -78,7 +78,7 @@ export default class RunsPerPeriodModel extends Observable {
 
     /**
      * Fetch all the relevant runs from the API
-     *
+     * @param {string} periodId period id
      * @return {Promise<void>} void
      */
     async fetchCurrentPageRuns(periodId) {
@@ -114,11 +114,11 @@ export default class RunsPerPeriodModel extends Observable {
 
     /**
      * Fetch all the relevant data from the API
-     *
+     * @param {string} periodId period id
      * @return {Promise<void>} void
      */
-    async fetchCurrentPageData() {
-        await this.fetchCurrentPageRuns();
+    async fetchCurrentPageData(periodId) {
+        await this.fetchCurrentPageRuns(periodId);
     }
 
     /**

@@ -85,6 +85,7 @@ export default class Model extends Observable {
                 if (this.router.params.periodId) {
                     await this.runsPerPeriod.fetchCurrentPageRuns(this.router.params.periodId);
                 }
+                break;
             default:
                 break;
         }
