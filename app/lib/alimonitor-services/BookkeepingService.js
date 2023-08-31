@@ -72,7 +72,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                 (res) => res.data,
                 this.dataAdjuster.bind(this),
                 () => true,
-                this.dbAction.bind(this),
+                this.executeDbAction.bind(this),
                 this.metaDataHandler.bind(this),
             );
             pendingSyncs.push(prom);
@@ -119,7 +119,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         delete run[polFN];
     }
 
-    async dbAction(_, run) {
+    async executeDbAction(_, run) {
         const { periodName, detectorNames, detectorQualities, beamType } = run;
         delete run.periodName;
         delete run.detectorNames;

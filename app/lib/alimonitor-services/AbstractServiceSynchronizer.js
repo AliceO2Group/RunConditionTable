@@ -110,10 +110,10 @@ class AbstractServiceSynchronizer {
      * like bookkeeping and processing
      * and inserting to local database
      * @param {URL} endpoint endpoint to fetch data
-     * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
-     * @param {CallableFunction} dataAdjuster logic for processing data
+     * @param {CallableFunction} processRawResponse used to preprocess response to objects list
+     * @param {CallableFunction} adjustData logic for processing data
      * before inserting to database (also adjusting data to sql foramt) - should returns null if error occured
-     * @param {CallableFunction} filterer filter rows
+     * @param {CallableFunction} filterData filter rows
      * @param {CallableFunction} dbAction logic for inserting data to database
      * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
      * like total pages to see etc., on the whole might be used to any custom logic
@@ -123,9 +123,9 @@ class AbstractServiceSynchronizer {
      */
     async syncPerEndpoint(
         endpoint,
-        responsePreprocess,
-        dataAdjuster,
-        filterer,
+        processRawResponse,
+        adjustData,
+        filterData,
         dbAction,
         metaDataHandler = null,
     ) {
@@ -137,10 +137,10 @@ class AbstractServiceSynchronizer {
             if (metaDataHandler) {
                 metaDataHandler(rawResponse);
             }
-            const data = responsePreprocess(rawResponse)
-                .map((r) => dataAdjuster(r))
+            const data = processRawResponse(rawResponse)
+                .map((r) => adjustData(r))
                 .filter((r) => {
-                    const f = r && filterer(r);
+                    const f = r && filterData(r);
                     if (!f) {
                         this.monitor.handleOmitted();
                     }
@@ -166,7 +166,7 @@ class AbstractServiceSynchronizer {
             if (this.forceStop) {
                 return;
             }
-            const promises = chunk.map((dataUnit) => this.dbAction(dataUnit)
+            const promises = chunk.map((dataUnit) => this.executeDbAction(dataUnit)
                 .then(() => this.monitor.handleCorrect())
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 
@@ -217,6 +217,22 @@ class AbstractServiceSynchronizer {
      */
     async interrtuptSyncTask() {
         this.forceStop = true;
+    }
+
+    async processRawResponse() {
+        throwNotImplemented();
+    }
+
+    async adjustData() {
+        throwNotImplemented();
+    }
+
+    async filterData() {
+        throwNotImplemented();
+    }
+
+    async executeDbAction() {
+        throwNotImplemented();
     }
 }
 

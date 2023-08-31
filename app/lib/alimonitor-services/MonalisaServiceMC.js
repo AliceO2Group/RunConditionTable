@@ -70,7 +70,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                 return anchoredPeriods.length != 0 && anchoredPasses.length != 0;
                 // MC not anchored to any production or pass so drop out
             },
-            this.dbAction.bind(this),
+            this.executeDbAction.bind(this),
         );
     }
 
@@ -106,7 +106,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         return sp;
     }
 
-    async dbAction(simulationPass) {
+    async executeDbAction(simulationPass) {
         const { beam_type } = simulationPass;
 
         return await SimulationPassRepository.T.upsert({

@@ -67,7 +67,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
                 return dataPass.period.year >= config.dataFromYearIncluding &&
                     (dataPass.lastRun !== last_run || last_run !== last_run_in_details);
             },
-            this.dbAction.bind(this),
+            this.executeDbAction.bind(this),
         );
     }
 
@@ -87,7 +87,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
         return dp;
     }
 
-    async dbAction(dataPass) {
+    async executeDbAction(dataPass) {
         const { period } = dataPass;
 
         return await BeamTypeRepository.T.findOrCreate({
