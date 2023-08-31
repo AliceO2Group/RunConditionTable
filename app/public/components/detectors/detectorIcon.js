@@ -16,11 +16,13 @@ import qcTypeSelection from '../../views/runs/runsPerDataPass/overview/qcTypeSel
 import { h } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 import { showModal } from '../../views/modal/modal.js';
+import { qualityMapping } from './qualityMapping.js';
 const { runBasedQuality } = RCT.quality;
 
 export default function detectorIcon(navigation, item, index, detectorName, timeBased = false, qualityChangePossible = false) {
     const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
     const runBasedQcModalId = `${runDetectorId}-qc-modal`;
+    const runDetectorQuality = qualityMapping(item[`${detectorName.toLowerCase()}_detector`], runBasedQuality);
     return [
         qualityChangePossible
             ? h('.modal', { id: runBasedQcModalId },
@@ -30,7 +32,8 @@ export default function detectorIcon(navigation, item, index, detectorName, time
                     document.getElementById(runBasedQcModalId).style.display = 'none';
                 }, item, index, detectorName, runDetectorId, timeBased)))
             : '',
-        h('button.btn.pointer.run-quality.good', {
+
+        h(`button.btn.pointer.run-quality.${runDetectorQuality}`, {
             id: runDetectorId,
             onclick: () => {
                 if (qualityChangePossible) {
@@ -38,6 +41,6 @@ export default function detectorIcon(navigation, item, index, detectorName, time
                 }
             },
         },
-        runBasedQuality.good),
+        runDetectorQuality),
     ];
 }
