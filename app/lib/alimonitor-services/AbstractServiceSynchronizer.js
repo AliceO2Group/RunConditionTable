@@ -26,6 +26,11 @@ const defaultServiceSynchronizerOptions = {
     batchSize: 4,
 };
 
+/**
+ * AbstractServiceSynchronizer
+ * The class provides schema for excecuting process of data synchronization with external service (fetching from it)
+ * Its behaviour can be customized with overriding abstract methods
+ */
 class AbstractServiceSynchronizer {
     constructor() {
         this.name = this.constructor.name;
@@ -110,37 +115,29 @@ class AbstractServiceSynchronizer {
      * like bookkeeping and processing
      * and inserting to local database
      * @param {URL} endpoint endpoint to fetch data
-     * @param {CallableFunction} processRawResponse used to preprocess response to objects list
-     * @param {CallableFunction} adjustData logic for processing data
-     * before inserting to database (also adjusting data to sql foramt) - should returns null if error occured
-     * @param {CallableFunction} filterData filter rows
-     * @param {CallableFunction} dbAction logic for inserting data to database
-     * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
+     * @param {CallableFunction} metaDataHandler used if synchronization requires handling some meta data.
      * like total pages to see etc., on the whole might be used to any custom logic
+     * Besides given arguemnts the method depends on following
+     * @abstractMethod executeDbAction - logic for inserting data to database
      * @returns {boolean} - true if process was finalized without major errors and with/without minor errors, otherwise false,
      * Major errors are understood as ones indicating that further synchronization is purposeless: e.g. due to networ error, invalid certificate.
      * Minor errors are understood as e.g. managable ambiguities in data.
      */
     async syncPerEndpoint(
         endpoint,
-        processRawResponse,
-        adjustData,
-        filterData,
-        dbAction,
         metaDataHandler = null,
     ) {
         try {
-            this.dbAction = dbAction;
             this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
 
             const rawResponse = await this.getRawResponse(endpoint);
             if (metaDataHandler) {
                 metaDataHandler(rawResponse);
             }
-            const data = processRawResponse(rawResponse)
-                .map((r) => adjustData(r))
+            const data = this.processRawResponse(rawResponse)
+                .map((r) => this.adjustData(r))
                 .filter((r) => {
-                    const f = r && filterData(r);
+                    const f = r && this.isDataUnitValid(r);
                     if (!f) {
                         this.monitor.handleOmitted();
                     }
@@ -219,15 +216,23 @@ class AbstractServiceSynchronizer {
         this.forceStop = true;
     }
 
-    async processRawResponse() {
+    /**
+     * ProcessRawResponse - used to preprocess response to custom format
+     * @abstractMethod
+     * @param {*} _rawResponse - raw data acquired from external service
+     * @return {*} adjusted data
+     */
+    async processRawResponse(_rawResponse) {
         throwNotImplemented();
     }
 
-    async adjustData() {
-        throwNotImplemented();
-    }
-
-    async filterData() {
+    /**
+     * Check if data unit is valid; should be filterd out or not, may handle reason for rejecting some data unit
+     * @abstractMethod
+     * @param {*} _dataUnit - data portion to be filterd out or left in set of valid data
+     * @return {boolean} - true if dataUnit is valid
+     */
+    async isDataUnitValid(_dataUnit) {
         throwNotImplemented();
     }
 

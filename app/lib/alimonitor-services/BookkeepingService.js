@@ -69,10 +69,6 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         while (!this.syncTraversStop(state)) {
             const prom = this.syncPerEndpoint(
                 ServicesEndpointsFormatter.bookkeeping(state['page'], state['limit']),
-                (res) => res.data,
-                this.dataAdjuster.bind(this),
-                () => true,
-                this.executeDbAction.bind(this),
                 this.metaDataHandler.bind(this),
             );
             pendingSyncs.push(prom);
@@ -84,7 +80,15 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         return (await Promise.all(pendingSyncs)).flat().every((_) => _);
     }
 
-    dataAdjuster(run) {
+    processRawResponse(rawResponse) {
+        return rawResponse.data;
+    }
+
+    isDataUnitValid() {
+        return true;
+    }
+
+    adjustData(run) {
         try {
             run = Utils.filterObject(run, this.ketpFields);
             const { detectors } = run;
@@ -119,7 +123,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         delete run[polFN];
     }
 
-    async executeDbAction(_, run) {
+    async executeDbAction(run) {
         const { periodName, detectorNames, detectorQualities, beamType } = run;
         delete run.periodName;
         delete run.detectorNames;
