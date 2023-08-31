@@ -22,7 +22,7 @@ const { runBasedQuality } = RCT.quality;
 export default function detectorIcon(navigation, item, index, detectorName, timeBased = false, qualityChangePossible = false) {
     const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
     const runBasedQcModalId = `${runDetectorId}-qc-modal`;
-    const runDetectorQuality = qualityMapping(item[`${detectorName.toLowerCase()}_detector`], runBasedQuality);
+    const runDetectorQuality = item[`${detectorName.toLowerCase()}_detector`];
     return [
         qualityChangePossible
             ? h('.modal', { id: runBasedQcModalId },
