@@ -17,7 +17,7 @@ const config = require('./lib/config/configProvider.js');
 const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
 
 // Services
-const alimonitorServices = require('./lib/alimonitor-services');
+const { syncManager } = require('./lib/alimonitor-services/SyncManager.js');
 // Database
 const { databaseManager } = require('./lib/database/DatabaseManager.js');
 const { databaseService } = require('./lib/database/DatabaseService.js');
@@ -42,7 +42,7 @@ class RunConditionTableApplication {
         this.webUiServer = webUiServer;
         this.databaseService = databaseService;
         this.databaseManager = databaseManager;
-        this.syncManager = alimonitorServices.syncManager;
+        this.syncManager = syncManager;
         this.defineEndpoints();
 
         buildPublicConfig(config);
