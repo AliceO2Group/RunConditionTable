@@ -20,7 +20,7 @@ import Detectors from './views/detectors/Detectors.js';
 import Runs from './views/runs/Runs.js';
 import PeriodsModel from './views/periods/PeriodsModel.js';
 import UserPreferences from './model/UserPreferences.js';
-import RunsPerPeriodModel from './views/runs/RunsPerPeriodModel.js';
+import RunsPerPeriodModel from './views/runs/newRunsPerPeriod/RunsPerPeriodModel.js';
 const { roles, dataAccess, pageNames } = RCT;
 
 export default class Model extends Observable {
@@ -81,11 +81,10 @@ export default class Model extends Observable {
             case pageNames.periods:
                 await this.periods.fetchCurrentPagePeriods();
                 break;
-            case pageNames.runsPerPeriod:
-                if (this.router.params.periodId) {
-                    await this.runsPerPeriod.fetchCurrentPageRuns(this.router.params.periodId);
-                }
+            case pageNames.runsPerPeriod: {
+                await this.runsPerPeriod.fetchSelectedPeriod(this.router.params.periodId);
                 break;
+            }
             default:
                 break;
         }

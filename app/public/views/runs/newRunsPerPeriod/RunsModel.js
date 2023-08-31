@@ -11,27 +11,27 @@
  * or submit itself to any jurisdiction.
  */
 
+import { PaginationModel } from '../../../components/table/pagination/PaginationModel';
+import { RCT } from '../../../config';
+import { getRemoteDataSlice } from '../../../utils/fetch/getRemoteDataSlice';
 import { Observable, RemoteData } from '/js/src/index.js';
-import { PaginationModel } from '../../components/table/pagination/PaginationModel.js';
-import { getRemoteDataSlice } from '../../utils/fetch/getRemoteDataSlice.js';
-import { RCT } from '../../config.js';
-import { pageTitle } from '../../components/common/pageTitle.js';
 
 /**
- * Model representing handlers for runs per period page
+ * Model representing handlers for periods page
  *
- * @implements {OverviewModel}
+ * @implements {Observable}
  */
-export default class RunsPerPeriodModel extends Observable {
+export default class RunsModel extends Observable {
     /**
      * The constructor of the Overview model object
      * @param {Model} model Pass the model to access the defined functions
+     * @param {RemoteData} period period that the runs are anchored to
      * @returns {Object} Constructs the Overview model
      */
-    constructor(model) {
+    constructor(model, period) {
         super();
         this.model = model;
-        this.name = pageTitle(RCT.pageNames.runsPerPeriod, RCT.pageNames);
+        this.period = period;
 
         this._pagination = new PaginationModel(model.userPreferences);
         this._pagination.observe(() => {
@@ -39,23 +39,19 @@ export default class RunsPerPeriodModel extends Observable {
             this.notify();
         });
 
-        this._fields = Object.keys(RCT.fieldNames.runs).map((field) => ({ name: field, visible: true }));
+        this.fields = Object.keys(RCT.fieldNames.runs).map((field) => ({ name: field, visible: true }));
 
-        this._hideSelectedRunss = false;
         this._sortingRowVisible = false;
 
-        this._currentPageRuns = RemoteData.notAsked();
         this._allRuns = RemoteData.notAsked();
-
-        this._runs = RemoteData.NotAsked();
+        this._currentPageRuns = RemoteData.notAsked();
     }
 
     /**
      * Fetch all the relevant runs from the API
-     * @param {string} periodId period id
      * @return {Promise<void>} void
      */
-    async fetchAllRuns(periodId) {
+    async fetchAllRuns() {
         /**
          * @type {Run[]}
          */
@@ -64,7 +60,7 @@ export default class RunsPerPeriodModel extends Observable {
 
         this._allRuns = RemoteData.notAsked();
 
-        const endpoint = `/api/periods/${periodId}/runs`;
+        const endpoint = `/api/periods/${this.period.id}/runs`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._allRuns = RemoteData.success([...items]);
@@ -78,16 +74,15 @@ export default class RunsPerPeriodModel extends Observable {
 
     /**
      * Fetch all the relevant runs from the API
-     * @param {string} periodId period id
      * @return {Promise<void>} void
      */
-    async fetchCurrentPageRuns(periodId) {
+    async fetchCurrentPageRuns() {
         /**
          * @type {Run[]}
          */
 
         if (this._allRuns.kind === 'NotAsked') {
-            await this.fetchAllRuns(periodId);
+            await this.fetchAllRuns();
         }
 
         this._currentPageRuns = RemoteData.loading();
@@ -100,7 +95,7 @@ export default class RunsPerPeriodModel extends Observable {
 
         this._allRuns = RemoteData.notAsked();
 
-        const endpoint = `/api/periods/${periodId}/runs/?${new URLSearchParams(params).toString()}`;
+        const endpoint = `/api/periods/${this.period.id}/runs/?${new URLSearchParams(params).toString()}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._currentPagePeriods = RemoteData.success([...items]);
@@ -114,65 +109,14 @@ export default class RunsPerPeriodModel extends Observable {
 
     /**
      * Fetch all the relevant data from the API
-     * @param {string} periodId period id
+     *
      * @return {Promise<void>} void
      */
-    async fetchCurrentPageData(periodId) {
-        await this.fetchCurrentPageRuns(periodId);
-    }
-
-    /**
-     * Get current page runs
-     * @return {RemoteData} runs in the current page
-     */
-    get currentPageRuns() {
-        return this._currentPageRuns;
-    }
-
-    /**
-     * Get current page data
-     * @return {RemoteData} runs in the current page
-     */
-    get currentPageData() {
-        return this._currentPageRuns;
-    }
-
-    get visibleFields() {
-        return this._fields.filter((field) => field.visible);
+    async fetchCurrentPageData() {
+        await this.fetchCurrentPageRuns();
     }
 
     get fields() {
         return this._fields;
-    }
-
-    get pagination() {
-        return this._pagination;
-    }
-
-    get hideSelectedRuns() {
-        return this._hideSelectedRuns;
-    }
-
-    get sortingRowVisible() {
-        return this._sortingRowVisible;
-    }
-
-    toggleSelection(run) {
-        run.selected = !run.selected;
-        this.notify();
-    }
-
-    toggleSortingRowVisibility() {
-        this._sortingRowVisible = !this._sortingRowVisible;
-        this.notify();
-    }
-
-    toggleFieldVisibility(targetField) {
-        const targetFieldIndex = this._fields.findIndex((f) => f.name === targetField.name);
-        const targetState = arguments[1] !== undefined
-            ? arguments[1]
-            : !this._fields[targetFieldIndex].visible;
-        this._fields[targetFieldIndex].visible = targetState;
-        this.notify();
     }
 }
