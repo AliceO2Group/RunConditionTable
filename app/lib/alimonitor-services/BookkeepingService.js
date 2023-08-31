@@ -172,6 +172,11 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             });
     }
 
+    /**
+     * It is used for managing fetching runs data from Bkp due to limits for rows per request in Bkp
+     * @param {*} rawResponse - raw response from Bookkeeping endpoint
+     * @returns {void}
+     */
     async metaDataHandler(rawResponse) {
         const { page } = rawResponse['meta'];
         if (!page || !page['pageCount']) {
