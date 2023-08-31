@@ -14,10 +14,7 @@
 
 import qcTypeSelection from '../../views/runs/runsPerDataPass/overview/qcTypeSelection.js';
 import { h } from '/js/src/index.js';
-import { RCT } from '../../config.js';
 import { showModal } from '../../views/modal/modal.js';
-import { qualityMapping } from './qualityMapping.js';
-const { runBasedQuality } = RCT.quality;
 
 export default function detectorIcon(navigation, item, index, detectorName, timeBased = false, qualityChangePossible = false) {
     const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
