@@ -19,6 +19,7 @@ const dataPassRouter = require('./dataPass.router.js');
 const docsRouter = require('./docs.router.js');
 const simulationPassRouter = require('./simulationPass.router.js');
 const qualityControlRouter = require('./qualityControl.router.js');
+const { isInDevMode, isInTestMode } = require('../../utils');
 
 const routeTrees = [
     docsRouter,
@@ -45,7 +46,7 @@ function buildRoute(controllerTree) {
 
         const { method, controller, description } = constrollerSubtree;
         if (constrollerSubtree.method && constrollerSubtree.controller) {
-            if (process.env.ENV_MODE === 'test' || process.env.ENV_MODE === 'dev') {
+            if (isInDevMode() || isInTestMode()) {
                 args.public = true;
             }
             routesStack.push({ method, path, controller: controllerHandlerWrapper(controller), args, description });

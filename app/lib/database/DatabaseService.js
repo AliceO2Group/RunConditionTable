@@ -16,7 +16,7 @@ const { Log } = require('@aliceo2/web-ui');
 const { Pool } = require('pg');
 const { PGQueryBuilder } = require('./utilities');
 const config = require('./../config/configProvider.js');
-const {distinct} = require('../utils')
+const {distinct, isInDevMode, isInTestMode} = require('../utils')
 
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataResponseFields;
@@ -107,7 +107,7 @@ class DatabaseService {
 
     async pgExecFetchData(req, res) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token];
-        if (!userData && process.env.ENV_MODE !== 'dev') {
+        if (!userData && !(isInDevMode() || isInTestMode())) {
             const mess = 'SESSION_ERROR:: no user with such token';
             this.logger.error(mess, req.query);
             this.responseWithStatus(res, 400, mess);
