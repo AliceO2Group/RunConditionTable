@@ -13,7 +13,6 @@
  * or submit itself to any jurisdiction.
  */
 
-const { Client } = require('pg');
 const { SocksProxyAgent } = require('socks-proxy-agent');
 const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
@@ -24,7 +23,6 @@ const defaultServiceSynchronizerOptions = {
     forceStop: false,
     rawCacheUse: process.env['RCT_DEV_USE_CACHE'] === 'false' ? false : true,
     useCacheJsonInsteadIfPresent: process.env['RCT_DEV_USE_CACHE_INSTEAD'] === 'true' ? true : false,
-    omitWhenCached: process.env['RCT_DEV_OMIT_WHEN_CACHED'] === 'true' ? true : false,
     batchSize: 4,
 };
 
@@ -129,11 +127,6 @@ class AbstractServiceSynchronizer {
         dbAction,
         metaDataHandler = null,
     ) {
-        if (this.omitWhenCached && Cacher.isCached(this.name, endpoint)) {
-            this.logger.info(`omitting cached json at :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
-            return;
-        }
-
         try {
             await this.dbConnect();
 
