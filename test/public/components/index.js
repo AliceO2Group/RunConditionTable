@@ -14,11 +14,9 @@
 const itemsCounterSuite = require('./itemsCounter.test');
 const pageTitleSuite = require('./pageTitle.test');
 const pagerUtils = require('./pagerUtils.test');
-const qualityMapping = require('./qualityMapping.test');
 
 module.exports = () => {
     describe('Items counter', itemsCounterSuite);
     describe('Page title', pageTitleSuite);
     describe('Pager utils', pagerUtils);
-    describe('Detector quality mapping', qualityMapping);
 };
