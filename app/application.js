@@ -24,6 +24,7 @@ const { databaseService } = require('./lib/database/DatabaseService.js');
 
 // Server
 const { webUiServer } = require('./lib/server/WebUiServer.js');
+const { isInDevMode, isInTestMode } = require('./lib/utils/env-utils.js');
 
 // Extract important
 const EP = config.public.endpoints;
@@ -53,8 +54,8 @@ class RunConditionTableApplication {
 
         httpServer.post(EP.login, (req, res) => databaseService.loginSession(req, res));
         httpServer.post(EP.logout, (req, res) => databaseService.logoutSession(req, res));
-        httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res));
-        httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res));
+        httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res), { public: isInDevMode() || isInTestMode() });
+        httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res), { public: isInDevMode() || isInTestMode() });
         httpServer.get(EP.sync, async (_req, _res) => this.syncManager.syncAll());
     }
 
@@ -92,18 +93,6 @@ class RunConditionTableApplication {
         } else {
             this.logger.info('Stopping already...');
         }
-    }
-
-    static isInTestMode() {
-        return process.env.ENV_MODE === 'test';
-    }
-
-    static isInDevMode() {
-        return process.env.ENV_MODE === 'dev';
-    }
-
-    static getEnvMode() {
-        return process.env.ENV_MODE;
     }
 
     get httpServer() {

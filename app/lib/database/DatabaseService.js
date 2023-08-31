@@ -16,7 +16,7 @@ const { Log } = require('@aliceo2/web-ui');
 const { Pool } = require('pg');
 const { PGQueryBuilder } = require('./utilities');
 const config = require('./../config/configProvider.js');
-const {distinct} = require('../utils')
+const {distinct, isInDevMode, isInTestMode} = require('../utils')
 
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataResponseFields;
@@ -106,13 +106,9 @@ class DatabaseService {
     }
 
     async pgExecFetchData(req, res) {
-        const userData = this.loggedUsers.tokenToUserData[req.query.token];
-        if (!userData) {
-            const mess = 'SESSION_ERROR:: no user with such token';
-            this.logger.error(mess, req.query);
-            this.responseWithStatus(res, 400, mess);
+        if (!this.checkToken(req, res)) {
             return;
-        }
+        };
 
         const params = {...req.query, ...req.params}
 
@@ -140,30 +136,32 @@ class DatabaseService {
 
         const dbResErrorHandler = (e) => {
             this.logger.error(e.message + ' :: ' + e.stack)
-            this.responseWithStatus(res, 500, e.code);
+            this.responseWithStatus(res, 400, e.message);
         }
 
         try {
             const query = PGQueryBuilder.buildSelect(params);
             await this.pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler);
         } catch (e) {
-            this.logger.error(e.stack)
-            this.responseWithStatus(res, 400, e)
+            this.logger.error(e.message + " :: " + e.stack)
+            this.responseWithStatus(res, 500)
         }
     }
 
 
     async pgExecDataInsert(req, res) {
-        this.checkToken(req, res);
+        if (!this.checkToken(req, res)) {
+            return;
+        };
         const dbResponseHandler = (dbRes) => {
             return res.json({data: dbRes})
         }
         const dbResErrorHandler = (e) => {
             this.logger.error(e.message + ' :: ' + e.stack)
-            this.responseWithStatus(res, 500, e.code);
+            this.responseWithStatus(res, 400, e.message);
         }
         const connectErrorHandler = (connectErr) => {
-            this.logger.error('Error acquiring client:: ' + connectErr.stack)
+            this.logger.error('Error acquiring client:: ' + connectErr.message)
             this.responseWithStatus(res, 500, connectErr.message);
         }
         
@@ -174,9 +172,20 @@ class DatabaseService {
                 dbResponseHandler, 
                 dbResErrorHandler);
         } catch (e) {
-            this.logger.error(e.stack)
-            this.responseWithStatus(res, 400, e)
+            this.logger.error(e.message + ' :: ' + e.stack)
+            this.responseWithStatus(res, 400, e.message)
         }
+    }
+
+    checkToken(req, res) {
+        const userData = this.loggedUsers.tokenToUserData[req.query.token];
+        if (!userData && !(isInDevMode() || isInTestMode())) {
+            const mess = 'SESSION_ERROR:: no user with such token';
+            this.logger.error(mess, req.query);
+            this.responseWithStatus(res, 400, mess);
+            return false;
+        }
+        return true;
     }
 
     responseWithStatus(res, status, message) {
