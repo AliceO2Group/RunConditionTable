@@ -11,10 +11,10 @@
  * or submit itself to any jurisdiction.
  */
 
-import { PaginationModel } from '../../../components/table/pagination/PaginationModel';
-import { RCT } from '../../../config';
-import { getRemoteDataSlice } from '../../../utils/fetch/getRemoteDataSlice';
 import { Observable, RemoteData } from '/js/src/index.js';
+import { PaginationModel } from '../../../components/table/pagination/PaginationModel.js';
+import { RCT } from '../../../config.js';
+import { getRemoteDataSlice } from '../../../utils/fetch/getRemoteDataSlice.js';
 
 /**
  * Model representing handlers for periods page
@@ -39,7 +39,7 @@ export default class RunsModel extends Observable {
             this.notify();
         });
 
-        this.fields = Object.keys(RCT.fieldNames.runs).map((field) => ({ name: field, visible: true }));
+        this._fields = Object.keys(RCT.fieldNames.runs).map((field) => ({ name: field, visible: true }));
 
         this._sortingRowVisible = false;
 
@@ -118,5 +118,9 @@ export default class RunsModel extends Observable {
 
     get fields() {
         return this._fields;
+    }
+
+    get allRuns() {
+        return this._allRuns;
     }
 }

@@ -15,6 +15,7 @@ import { Observable, RemoteData } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { pageTitle } from '../../../components/common/pageTitle.js';
 import { getRemoteDataSlice } from '../../../utils/fetch/getRemoteDataSlice.js';
+import RunsModel from './RunsModel.js';
 
 /**
  * Model representing handlers for periods page
@@ -33,7 +34,8 @@ export default class RunsPerPeriodModel extends Observable {
         this.name = pageTitle(RCT.pageNames.runsPerPeriod, RCT.pageNames);
 
         this._selectedPeriod = RemoteData.notAsked();
-        this._periods = null;
+        this._periods = {};
+        this._allRuns = {};
     }
 
     /**
@@ -51,20 +53,26 @@ export default class RunsPerPeriodModel extends Observable {
         try {
             const { items } = await getRemoteDataSlice(endpoint);
             this._selectedPeriod = RemoteData.success([...items]);
+            this._periods[periodId] = this._selectedPeriod.payload.find((e) => Boolean(e));
+            // Console.log(this._periods);
         } catch (errors) {
             this._selectedPeriod = RemoteData.failure(errors);
         }
+
+        await this.fetchAllRunsPerPeriod(periodId);
 
         this.notify();
     }
 
     /**
      * Fetch all the relevant periods from the API
-     * @param {string} _periodId id of the period that the runs are anchored to
+     * @param {string} periodId id of the period that the runs are anchored to
      * @return {Promise<void>} void
      */
-    async fetchAllRunsPerPeriod(_periodId) {
-        // This[period.id] =
+    async fetchAllRunsPerPeriod(periodId) {
+        this._allRuns[periodId] = new RunsModel(this.model, this._selectedPeriod.payload.find((e) => e));
+        await this._allRuns[periodId].fetchAllRuns();
+        // Console.log(this._allRuns[periodId].allRuns);
     }
 
     /**
@@ -82,5 +90,9 @@ export default class RunsPerPeriodModel extends Observable {
 
     get periods() {
         return this._periods;
+    }
+
+    get allRuns() {
+        return this._allRuns;
     }
 }
