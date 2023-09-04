@@ -12,8 +12,10 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+
 const path = require('path');
 const fs = require('fs');
+const config = require('../../config/configProvider');
 
 class Cacher {
     static cache(synchronizerName, endpoint, data) {
@@ -57,13 +59,7 @@ class Cacher {
 
     static serviceCacheDir(synchronizerName) {
         return path.join(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'database',
-            'cache',
-            'rawJson',
+            config.services.rawJsonCachePath,
             synchronizerName,
         );
     }

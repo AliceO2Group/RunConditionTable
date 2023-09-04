@@ -15,7 +15,7 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const EndpointsFormatter = require('./ServicesEndpointsFormatter.js');
+const { ServicesEndpointsFormatter } = require('./helpers');
 
 const { databaseManager: {
     repositories: {
@@ -36,70 +36,75 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
         };
     }
 
-    async sync({ dataUnit: dataPass }) {
-        return await this.syncPerEndpoint(
-            EndpointsFormatter.dataPassesDetailed(dataPass.description),
-            (raw) => this.responsePreprocess(raw),
-            (v) => Utils.filterObject(v, this.ketpFields),
-            () => true,
-            async (dbClient, v) => {
-                v.parentDataUnit = dataPass;
-
-                return (async () => {
-                    if (/LHC[0-9]{2}[a-z]+/.test(v.period)) {
-                        return await PeriodRepository.T.findOrCreate({
-                            where: {
-                                name: v.period,
-                            },
-                        });
-                    } else {
-                        this.logger.warn(`Incorrect period from monalisa ${v.period} for run ${v.runNumber} in data pass ${dataPass.name}`);
-                        return [undefined, undefined];
-                    }
-                })()
-                    .then(async ([period, _]) => {
-                        v.PeriodId = period?.id;
-                        return await RunRepository.T.findOrCreate({
-                            where: {
-                                runNumber: v.runNumber,
-                            },
-                            defualt: {
-                                runNumber: v.runNumber,
-                                PeriodId: v.PeriodId,
-                            },
-                        });
-                    })
-                    .catch(async (e) => {
-                        throw new Error('Find or create run failed', {
-                            cause: {
-                                error: e.message,
-                                meta: {
-                                    actualValueInDB: await RunRepository.findOne({ where: { runNumber: v.runNumber } }, { raw: true }),
-                                    inQueryValues: {
-                                        runNumber: v.runNumber,
-                                        PeriodId: v.PeriodId,
-                                    },
-                                    sourceValues: {
-                                        runNumber: v.runNumber,
-                                        periodName: v.period,
-                                    },
-                                },
-                            },
-                        });
-                    })
-                    // eslint-disable-next-line no-unused-vars
-                    .then(async ([run, _]) => await sequelize.transaction((t) => run.addDataPasses(dataPass.id, { ignoreDuplicates: true })));
-            },
-        );
+    async sync({ parentDataUnit: dataPass }) {
+        const url = ServicesEndpointsFormatter.dataPassesDetailed(dataPass.description);
+        this.metaStore.perUrl[url] = { parentDataUnit: dataPass };
+        return await this.syncPerEndpoint(url);
     }
 
-    responsePreprocess(d) {
-        const entries = Object.entries(d);
-        const res = entries.map(([hid, vObj]) => {
-            vObj['hid'] = hid.trim();
-            return vObj;
-        }).sort((a, b) => a.run_no - b.run_no);
-        return res;
+    processRawResponse(rawResponse) {
+        return Object.entries(rawResponse).map(([id, dataPassDetailsAttributes]) => {
+            dataPassDetailsAttributes['hid'] = id.trim();
+            return dataPassDetailsAttributes;
+        })
+            .sort((a, b) => a.run_no - b.run_no)
+            .map(this.adjustDataUnit.bind(this));
+    }
+
+    adjustDataUnit(dataPassDetails) {
+        return Utils.filterObject(dataPassDetails, this.ketpFields);
+    }
+
+    isDataUnitValid() {
+        return true;
+    }
+
+    async executeDbAction(dataPassDetails, forUrlMetaStore) {
+        const { parentDataUnit: dataPass } = forUrlMetaStore;
+        return (async () => {
+            if (/LHC[0-9]{2}[a-z]+/.test(dataPassDetails.period)) {
+                return await PeriodRepository.T.findOrCreate({
+                    where: {
+                        name: dataPassDetails.period,
+                    },
+                });
+            } else {
+                // eslint-disable-next-line max-len
+                this.logger.warn(`Incorrect period from monalisa ${dataPassDetails.period} for run ${dataPassDetails.runNumber} in data pass ${dataPass.name}`);
+                return [undefined, undefined];
+            }
+        })()
+            .then(async ([period, _]) => {
+                dataPassDetails.PeriodId = period?.id;
+                return await RunRepository.T.findOrCreate({
+                    where: {
+                        runNumber: dataPassDetails.runNumber,
+                    },
+                    defualt: {
+                        runNumber: dataPassDetails.runNumber,
+                        PeriodId: dataPassDetails.PeriodId,
+                    },
+                });
+            })
+            .catch(async (e) => {
+                throw new Error('Find or create run failed', {
+                    cause: {
+                        error: e.message,
+                        meta: {
+                            actualValueInDB: await RunRepository.findOne({ where: { runNumber: dataPassDetails.runNumber } }, { raw: true }),
+                            inQueryValues: {
+                                runNumber: dataPassDetails.runNumber,
+                                PeriodId: dataPassDetails.PeriodId,
+                            },
+                            sourceValues: {
+                                runNumber: dataPassDetails.runNumber,
+                                periodName: dataPassDetails.period,
+                            },
+                        },
+                    },
+                });
+            })
+            .then(async ([run, _]) => await sequelize.transaction(() => run.addDataPasses(dataPass.id, { ignoreDuplicates: true })));
     }
 }
 

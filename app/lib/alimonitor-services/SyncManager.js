@@ -97,4 +97,7 @@ class SyncManager {
     }
 }
 
-module.exports = new SyncManager();
+module.exports = {
+    SyncManager,
+    syncManager: new SyncManager(),
+};

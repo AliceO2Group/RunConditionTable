@@ -14,7 +14,7 @@
 const assert = require('assert');
 const { expect } = require('chai');
 const Utils = require('../../../app/lib/utils');
-const ServicesDataCommons = require('../../../app/lib/alimonitor-services/ServicesDataCommons.js');
+const { ServicesDataCommons } = require('../../../app/lib/alimonitor-services/helpers');
 
 module.exports = () => {
     describe('Utils', () => {

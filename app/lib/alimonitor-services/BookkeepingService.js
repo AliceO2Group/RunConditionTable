@@ -15,8 +15,8 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const { extractPeriod, mapBeamTypeToCommonFormat } = require('./ServicesDataCommons.js');
-const EndpintFormatter = require('./ServicesEndpointsFormatter.js');
+const { ServicesEndpointsFormatter, ServicesDataCommons: { extractPeriod, mapBeamTypeToCommonFormat } } = require('./helpers');
+
 const { databaseManager: {
     repositories: {
         RunRepository,
@@ -61,46 +61,44 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             this.detectorsNameToId = Object.fromEntries(this.detectorsNameToId.map(({ id, name }) => [name, id]));
         }).catch(this.logger.error.bind(this.logger));
 
-        const pendingSyncs = [];
+        const results = [];
         let state = {
             page: 0,
             limit: 100,
         };
         while (!this.syncTraversStop(state)) {
-            const prom = this.syncPerEndpoint(
-                EndpintFormatter.bookkeeping(state['page'], state['limit']),
-                (res) => res.data,
-                this.dataAdjuster.bind(this),
-                () => true,
-                this.dbAction.bind(this),
+            const partialResult = await this.syncPerEndpoint(
+                ServicesEndpointsFormatter.bookkeeping(state['page'], state['limit']),
                 this.metaDataHandler.bind(this),
             );
-            pendingSyncs.push(prom);
-            await prom;
+            results.push(partialResult);
             this.logger.info(`progress of ${state['page']} to ${this.metaStore['pageCount']}`);
             state = this.nextState(state);
         }
 
-        await Promise.all(pendingSyncs);
+        return results.flat().every((_) => _);
     }
 
-    dataAdjuster(run) {
-        try {
-            run = Utils.filterObject(run, this.ketpFields);
-            const { detectors } = run;
-            delete run.detectors;
-            run.detectorNames = detectors.map(({ name }) => name.trim());
-            run.detectorQualities = detectors.map(({ quality }) => quality);
+    processRawResponse(rawResponse) {
+        return rawResponse.data.map(this.adjustDataUnit.bind(this));
+    }
 
-            this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3CurrentVal');
-            this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipoleCurrentVal');
-            mapBeamTypeToCommonFormat(run);
-            run.fillNumber = Number(run.fillNumber);
-            return run;
-        } catch (e) {
-            this.logger.error(e);
-            return null;
-        }
+    isDataUnitValid() {
+        return true;
+    }
+
+    adjustDataUnit(run) {
+        run = Utils.filterObject(run, this.ketpFields);
+        const { detectors } = run;
+        delete run.detectors;
+        run.detectorNames = detectors.map(({ name }) => name.trim());
+        run.detectorQualities = detectors.map(({ quality }) => quality);
+
+        this.coilsCurrentsFieldsParsing(run, 'l3_current_val', 'l3_current_polarity', 'l3CurrentVal');
+        this.coilsCurrentsFieldsParsing(run, 'dipole_current_val', 'dipole_current_polarity', 'dipoleCurrentVal');
+        mapBeamTypeToCommonFormat(run);
+        run.fillNumber = Number(run.fillNumber);
+        return run;
     }
 
     coilsCurrentsFieldsParsing(run, valFN, polFN, tFN) {
@@ -119,7 +117,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         delete run[polFN];
     }
 
-    async dbAction(_, run) {
+    async executeDbAction(run) {
         const { periodName, detectorNames, detectorQualities, beamType } = run;
         delete run.periodName;
         delete run.detectorNames;
@@ -174,18 +172,24 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             });
     }
 
-    metaDataHandler(requestJsonResult) {
-        const { page } = requestJsonResult['meta'];
+    /**
+     * It is used for managing fetching runs data from Bkp due to limits for rows per request in Bkp
+     * @param {*} rawResponse - raw response from Bookkeeping endpoint
+     * @returns {void}
+     */
+    async metaDataHandler(rawResponse) {
+        const { page } = rawResponse['meta'];
         if (!page || !page['pageCount']) {
-            this.logger.error(`No metadata found in Bookkeeping for the requested page: ${JSON.stringify(requestJsonResult)}`);
-            this.forceStop = true;
+            this.logger.error(`No metadata found in Bookkeeping for the requested page: ${JSON.stringify(rawResponse)}`);
+            await this.interrtuptSyncTask();
+            return;
         }
         this.metaStore['pageCount'] = page['pageCount'];
         this.metaStore['totalCount'] = page['totalCount'];
     }
 
-    syncTraversStop(state) {
-        return this.forceStop || state['page'] > this.metaStore['pageCount'];
+    syncTraversStop(currentState) {
+        return this.isStopped() || currentState['page'] > this.metaStore['pageCount'];
     }
 
     nextState(state) {

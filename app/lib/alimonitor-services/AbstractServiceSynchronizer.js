@@ -13,48 +13,24 @@
  * or submit itself to any jurisdiction.
  */
 
-const { Client } = require('pg');
 const { SocksProxyAgent } = require('socks-proxy-agent');
 const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
 const { ResProvider, makeHttpRequestForJSON, arrayToChunks, applyOptsToObj, throwNotImplemented } = require('../utils');
-const Cacher = require('./Cacher.js');
-const PassCorrectnessMonitor = require('./PassCorrectnessMonitor.js');
+const { Cacher, PassCorrectnessMonitor, ProgressMonitor } = require('./helpers');
 
 const defaultServiceSynchronizerOptions = {
     forceStop: false,
-    rawCacheUse: process.env['RCT_DEV_USE_CACHE'] === 'false' ? false : true,
+    cacheRawResponse: process.env['RCT_DEV_USE_CACHE'] === 'false' ? false : true,
     useCacheJsonInsteadIfPresent: process.env['RCT_DEV_USE_CACHE_INSTEAD'] === 'true' ? true : false,
-    omitWhenCached: process.env['RCT_DEV_OMIT_WHEN_CACHED'] === 'true' ? true : false,
     batchSize: 4,
 };
 
-class ProgressMonitor {
-    constructor({ total, percentageStep, logger }) {
-        this.total = total;
-        this.percentageStep = percentageStep;
-        this.progress = 0;
-        this.lastLogAt = 0;
-        this.logger = logger;
-    }
-
-    update(progress) {
-        this.progress += progress;
-    }
-
-    setTotal(total) {
-        this.total = total;
-    }
-
-    tryLog() {
-        const potentialLogProgress = this.lastLogAt + this.percentageStep * this.total;
-        if (this.progress >= potentialLogProgress || this.progress === this.total) {
-            this.lastLogAt = this.progress;
-            this.logger(`progress of ${this.progress} / ${this.total}`);
-        }
-    }
-}
-
+/**
+ * AbstractServiceSynchronizer
+ * The class provides schema for excecuting process of data synchronization with external service (fetching from it)
+ * Its behaviour can be customized with overriding abstract methods
+ */
 class AbstractServiceSynchronizer {
     constructor() {
         this.name = this.constructor.name;
@@ -62,7 +38,7 @@ class AbstractServiceSynchronizer {
 
         this.opts = this.createHttpOpts();
 
-        this.metaStore = {};
+        this.metaStore = { perUrl: {} };
 
         this.errorsLoggingDepth = config.defaultErrorsLogginDepth;
         applyOptsToObj(this, defaultServiceSynchronizerOptions);
@@ -74,7 +50,7 @@ class AbstractServiceSynchronizer {
     createHttpOpts() {
         let opts = this.getHttpOptsBasic();
         opts = this.setSLLForHttpOpts(opts);
-        opts = this.setHttpSocket(opts);
+        opts = this.setHttpSocksProxy(opts);
         return opts;
     }
 
@@ -114,7 +90,7 @@ class AbstractServiceSynchronizer {
         return opts;
     }
 
-    setHttpSocket(opts) {
+    setHttpSocksProxy(opts) {
         const proxy = ResProvider.socksProvider();
         if (proxy?.length > 0) {
             this.logger.info(`using proxy/socks '${proxy}' to CERN network`);
@@ -135,64 +111,52 @@ class AbstractServiceSynchronizer {
     }
 
     /**
-     * Combine logic of fetching data from service
-     * like bookkeeping and processing
-     * and inserting to local database
-     * @param {URL} endpoint endpoint to fetch data
-     * @param {CallableFunction} responsePreprocess used to preprocess response to objects list
-     * @param {CallableFunction} dataAdjuster logic for processing data
-     * before inserting to database (also adjusting data to sql foramt) - should returns null if error occured
-     * @param {CallableFunction} filterer filter rows
-     * @param {CallableFunction} dbAction logic for inserting data to database
-     * @param {CallableFunction} metaDataHandler used to handle logic of hanling data
+     * Combine logic of fetching data from service like bookkeeping, processing and inserting to database
+     * @param {URL} endpoint endpoint to fetch data from
+     * @param {CallableFunction} metaDataHandler used if synchronization requires handling some meta data.
      * like total pages to see etc., on the whole might be used to any custom logic
-     * @returns {*} void
+     * Besides given arguemnts the method depends on three abstract methods to be overriden
+     * @see AbstractServiceSynchronizer.processRawResponse
+     * @see AbstractServiceSynchronizer.isDataUnitValid
+     * @see AbstractServiceSynchronizer.executeDbAction
+     *
+     * @returns {boolean} - true if process was finalized without major errors and with/without minor errors, otherwise false,
+     * Major errors are understood as ones indicating that further synchronization is purposeless: e.g. due to networ error, invalid certificate.
+     * Minor errors are understood as e.g. managable ambiguities in data.
      */
     async syncPerEndpoint(
         endpoint,
-        responsePreprocess,
-        dataAdjuster,
-        filterer,
-        dbAction,
         metaDataHandler = null,
     ) {
-        if (this.omitWhenCached && Cacher.isCached(this.name, endpoint)) {
-            this.logger.info(`omitting cached json at :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
-            return;
-        }
-
         try {
-            await this.dbConnect();
-
-            this.dbAction = dbAction; //TODO
             this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
 
             const rawResponse = await this.getRawResponse(endpoint);
             if (metaDataHandler) {
-                metaDataHandler(rawResponse);
+                await metaDataHandler(rawResponse);
             }
-            const data = responsePreprocess(rawResponse)
-                .map((r) => dataAdjuster(r))
+
+            const data = this.processRawResponse(rawResponse)
                 .filter((r) => {
-                    const f = r && filterer(r);
+                    const f = r && this.isDataUnitValid(r);
                     if (!f) {
                         this.monitor.handleOmitted();
                     }
                     return f;
                 });
 
-            await this.makeBatchedRequest(data);
+            await this.makeBatchedRequest(data, endpoint);
 
             this.monitor.logResults();
+            return true;
         } catch (fatalError) {
-            this.logger.error(fatalError.stack);
-            throw fatalError;
-        } finally {
-            await this.dbDisconnect();
+            this.logger.error(fatalError.message + fatalError.stack);
+            await this.interrtuptSyncTask();
+            return false;
         }
     }
 
-    async makeBatchedRequest(data) {
+    async makeBatchedRequest(data, endpoint) {
         const rowsChunks = arrayToChunks(data, this.batchSize);
         const total = this.metaStore.totalCount || data.length;
         this.progressMonitor.setTotal(total);
@@ -200,7 +164,7 @@ class AbstractServiceSynchronizer {
             if (this.forceStop) {
                 return;
             }
-            const promises = chunk.map((dataUnit) => this.dbAction(this.dbClient, dataUnit)
+            const promises = chunk.map((dataUnit) => this.executeDbAction(dataUnit, this.metaStore.perUrl[endpoint])
                 .then(() => this.monitor.handleCorrect())
                 .catch((e) => this.monitor.handleIncorrect(e, { dataUnit: dataUnit })));
 
@@ -212,35 +176,30 @@ class AbstractServiceSynchronizer {
 
     async getRawResponse(endpoint) {
         if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint)) {
-            // eslint-disable-next-line capitalized-comments
             this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return Cacher.getJsonSync(this.name, endpoint);
         }
         const onSucces = (endpoint, data) => {
-            if (this.rawCacheUse) {
+            if (this.cacheRawResponse) {
                 Cacher.cache(this.name, endpoint, data);
             }
         };
         return await makeHttpRequestForJSON(endpoint, this.opts, this.logger, onSucces);
     }
 
-    async dbConnect() {
-        this.dbClient = new Client(config.database);
-        this.dbClient.on('error', (e) => this.logger.error(e));
-
-        return await this.dbClient.connect()
-            .catch((e) => this.logger.error(e));
-    }
-
-    async dbDisconnect() {
-        return await this.dbClient.end()
-            .catch((e) => this.logger.error(e));
-    }
-
+    /**
+     * Start process of synchroniztion with particular external system,
+     * it depends on custom configuration of class inheriting from this class
+     * @param {Object} options - customize sync procedure,
+     * e.g. some custom class may required some context to start process, e.g. some data unit,
+     * @return {boolean} - true if process was finalized without major errors and with/without minor errors, otherwise false,
+     * Major errors are understood as ones indicating that further synchronization is purposeless: e.g. due to networ error, invalid certificate.
+     * Minor errors are understood as e.g. managable ambiguities in data.
+     */
     async setSyncTask(options) {
         this.progressMonitor = new ProgressMonitor({ logger: this.logger.info.bind(this.logger), percentageStep: 0.25 });
         this.forceStop = false;
-        await this.sync(options)
+        return await this.sync(options)
             .then(() => {
                 if (this.forceStop) {
                     this.logger.info(`${this.name} forced to stop`);
@@ -248,12 +207,49 @@ class AbstractServiceSynchronizer {
             });
     }
 
-    async clearSyncTask() {
+    /**
+     * Interrupt sync task, so dbAction or syncPerEndpoint methods,
+     * which is subsequent towards one being executed, will not be called.
+     * It will NOT interrupt any sequelize call being executed.
+     * @return {void}
+     */
+    async interrtuptSyncTask() {
         this.forceStop = true;
     }
 
-    isConnected() {
-        return this.dbClient?._connected;
+    isStopped() {
+        return this.forceStop;
+    }
+
+    /**
+     * ProcessRawResponse - used to preprocess response to custom format
+     * @abstractMethod
+     * @param {*} _rawResponse - raw data acquired from external service
+     * @return {*} adjusted data
+     */
+    async processRawResponse(_rawResponse) {
+        throwNotImplemented();
+    }
+
+    /**
+     * Check if data unit is valid; should be filterd out or not, may handle reason for rejecting some data unit
+     * @abstractMethod
+     * @param {*} _dataUnit - data portion to be filterd out or left in set of valid data
+     * @return {boolean} - true if dataUnit is valid
+     */
+    async isDataUnitValid(_dataUnit) {
+        throwNotImplemented();
+    }
+
+    /**
+     * Implements logic for inserting/updating database data
+     * @abstractMethod
+     * @param {*} _dataUnit - data unit some db action is to be performed on
+     * @param {*|undefined} _options - some meta data, e.g. some context required execute db action
+     * @return {void}
+     */
+    async executeDbAction(_dataUnit, _options) {
+        throwNotImplemented();
     }
 }
 

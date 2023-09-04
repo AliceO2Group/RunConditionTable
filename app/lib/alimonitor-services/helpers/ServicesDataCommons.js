@@ -13,8 +13,8 @@
  * or submit itself to any jurisdiction.
  */
 
-const Utils = require('../utils');
-const { rctData } = require('../config/configProvider.js');
+const Utils = require('../../utils');
+const { rctData } = require('../../config/configProvider.js');
 
 /**
  * Update objectData.beam_type to valid format if mapping is provided with app config

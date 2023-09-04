@@ -1,4 +1,5 @@
 /**
+ *
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
  * See http://alice-o2.web.cern.ch/copyright for details of the copyright holders.
@@ -12,8 +13,16 @@
  * or submit itself to any jurisdiction.
  */
 
-const syncManager = require('./SyncManager');
+const Cacher = require('./Cacher.js');
+const PassCorrectnessMonitor = require('./PassCorrectnessMonitor.js');
+const ProgressMonitor = require('./ProgressMonitor.js');
+const ServicesEndpointsFormatter = require('./ServicesEndpointsFormatter.js');
+const ServicesDataCommons = require('./ServicesDataCommons.js');
 
 module.exports = {
-    syncManager,
+    Cacher,
+    PassCorrectnessMonitor,
+    ProgressMonitor,
+    ServicesEndpointsFormatter,
+    ServicesDataCommons,
 };
