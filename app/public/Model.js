@@ -20,6 +20,7 @@ import Detectors from './views/detectors/Detectors.js';
 import Runs from './views/runs/Runs.js';
 import PeriodsModel from './views/periods/PeriodsModel.js';
 import UserPreferences from './model/UserPreferences.js';
+import RunsPerPeriodModel from './views/runs/newRunsPerPeriod/RunsPerPeriodModel.js';
 const { roles, dataAccess, pageNames } = RCT;
 
 export default class Model extends Observable {
@@ -49,6 +50,9 @@ export default class Model extends Observable {
         this.periods = new PeriodsModel(this);
         this.periods.bubbleTo(this);
 
+        this.runsPerPeriod = new RunsPerPeriodModel(this);
+        this.runsPerPeriod.bubbleTo(this);
+
         this.runs = new Runs(this);
         this.runs.bubbleTo(this);
 
@@ -76,6 +80,11 @@ export default class Model extends Observable {
         switch (this.router.params.page) {
             case pageNames.periods:
                 await this.periods.fetchCurrentPagePeriods();
+                break;
+            case pageNames.runsPerPeriod:
+                if (this.router.params.periodId) {
+                    await this.runsPerPeriod.fetchSelectedPeriod(this.router.params.periodId);
+                }
                 break;
             default:
                 break;

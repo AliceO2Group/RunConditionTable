@@ -100,7 +100,7 @@ export default class PeriodsModel extends Observable {
             'page[limit]': this._pagination.itemsPerPage,
         };
 
-        this._allPeriods = RemoteData.notAsked();
+        this._currentPagePeriods = RemoteData.notAsked();
 
         const endpoint = `/api/periods?${new URLSearchParams(params).toString()}`;
         try {
