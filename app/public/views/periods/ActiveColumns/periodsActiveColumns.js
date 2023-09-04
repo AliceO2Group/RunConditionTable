@@ -23,6 +23,11 @@ const acceptableEnergyMargin = RCT.mapping.energy.acceptableMargin;
  * List of active columns for a generic periods table
  */
 export const periodsActiveColumns = {
+    id: {
+        name: 'Id',
+        visible: false,
+    },
+
     name: {
         name: 'Name',
         visible: true,
