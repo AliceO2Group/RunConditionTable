@@ -21,6 +21,7 @@ import Runs from './views/runs/Runs.js';
 import PeriodsModel from './views/periods/PeriodsModel.js';
 import UserPreferences from './model/UserPreferences.js';
 import RunsPerPeriodModel from './views/runs/newRunsPerPeriod/RunsPerPeriodModel.js';
+import Navigation from './model/navigation/Navigation.js';
 const { roles, dataAccess, pageNames } = RCT;
 
 export default class Model extends Observable {
@@ -40,6 +41,9 @@ export default class Model extends Observable {
         this.router = new QueryRouter();
         this.router.observe(this.handleLocationChange.bind(this));
         this.router.bubbleTo(this);
+
+        this.navigation = new Navigation(this.router);
+        this.navigation.bubbleTo(this);
 
         this.loader = new Loader();
         this.loader.bubbleTo(this);

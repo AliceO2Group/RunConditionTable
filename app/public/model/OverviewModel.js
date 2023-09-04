@@ -11,24 +11,12 @@
  * or submit itself to any jurisdiction.
  */
 
-import { Observable } from '/js/src/index.js';
+/**
+ * Interface of a model representing an overview page state
+ *
+ * @interface OverviewModel
+ */
 
 /**
- * Model representing navigation - aimed to use for url related tasks
+ * @property {PaginationModel} OverviewModel#pagination pagination model of the overview
  */
-export default class Navigation extends Observable {
-    /**
-     * The constructor of the Navigation object
-     *
-     * @param {QueryRouter} router main model router
-     */
-    constructor(router) {
-        super();
-        this.router = router;
-    }
-
-    handleLinkEvent(e) {
-        this.router.handleLinkEvent(e);
-        this.notify();
-    }
-}
