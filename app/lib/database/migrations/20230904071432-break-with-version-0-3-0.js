@@ -3,20 +3,11 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
+    if (process.env.npm_package_version === '0.2.0') {
+      await queryInterface.bulkDelete('periods', {}, {truncate: true, cascade: true});
+    }
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
-  }
+
+  async down (queryInterface, Sequelize) { }
 };
