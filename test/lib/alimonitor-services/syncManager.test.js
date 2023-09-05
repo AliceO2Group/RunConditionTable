@@ -13,9 +13,14 @@
  */
 
 const { syncManager } = require('../../../app/lib/alimonitor-services/SyncManager.js');
+const { generateRandomBookkeepingCachedRawJsons } = require('./testutil/cache-for-test.js');
 const assert = require('assert');
 
 module.exports = () => describe('SyncManager suite', () => {
+    before(() => {
+        generateRandomBookkeepingCachedRawJsons();
+    });
+
     describe('BookkeepingService suite', () => {
         it('should performe sync with random data withour errors', async () => {
             await assert.doesNotReject(syncManager.services.bookkeepingService.setSyncTask());
