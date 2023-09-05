@@ -14,14 +14,25 @@
 const req = require('esm')(module);
 const assert = require('assert');
 
-const { replaceUrlParams } = req('../../../../app/public/utils/url/urlUtils');
+const { replaceUrlParams, formatParameter } = req('../../../../app/public/utils/url/urlUtils');
 
 module.exports = () => {
-    const url = new URL('http://localhost:8081/?page=periods&index=_0&items-per-page=50&page-number=1');
-    const targetUrl = new URL('http://localhost:8081/?page=periods&index=_0&items-per-page=50&page-number=2');
     describe('Replace URL params', () => {
-        it('should return correct value', () => {
+        const url = new URL('http://localhost:8081/?page=periods&index=_0&items-per-page=50&page-number=1');
+        const targetUrl = new URL('http://localhost:8081/?page=periods&index=_0&items-per-page=50&page-number=2');
+
+        it('should replace the page-number param', () => {
             assert(replaceUrlParams(url, { 'page-number': 2 }).href === targetUrl.href);
+        });
+    });
+
+    describe('Format parameter', () => {
+        const key = 'page';
+        const value = 'periods';
+        const expectedOutcome = 'page=periods';
+
+        it('should format the [key, value] pair in the URL style', () => {
+            assert(formatParameter(key, value) === expectedOutcome);
         });
     });
 };
