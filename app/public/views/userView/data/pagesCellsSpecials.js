@@ -72,7 +72,7 @@ pagesCellsSpecials[PN.dataPasses] = {
                 }),
             )),
     ],
-    size: (_model, _runs, item) => getReadableFileSizeString(Number(item.size)),
+    size: (_, _runs, item) => getReadableFileSizeString(Number(item.size)),
 };
 pagesCellsSpecials[PN.mc] = {
     name: (model, item) => [
@@ -101,12 +101,12 @@ const dateFormatter = (sec) => {
 };
 
 pagesCellsSpecials[PN.runsPerPeriod] = {
-    run_number: (_model, item) => h('.thick', item.run_number),
-    time_start: (_model, item) => dateFormatter(item.time_start),
-    time_end: (_model, item) => dateFormatter(item.time_end),
-    time_trg_start: (_model, item) => dateFormatter(item.time_trg_start),
-    time_trg_end: (_model, item) => dateFormatter(item.time_trg_end),
-    fill_number: (_model, item) => h('a', {
+    run_number: (_, item) => h('.thick', item.run_number),
+    time_start: (_, item) => dateFormatter(item.time_start),
+    time_end: (_, item) => dateFormatter(item.time_end),
+    time_trg_start: (_, item) => dateFormatter(item.time_trg_start),
+    time_trg_end: (_, item) => dateFormatter(item.time_trg_end),
+    fill_number: (_, item) => h('a', {
         href: `${outerServices.bookkeeping.lhcFills.url}&${outerServices.bookkeeping.lhcFills.params.fillNumber}=${item.fill_number}`,
         target: '_blank',
     }, item.fill_number, h('.external-link-15-blue')),
