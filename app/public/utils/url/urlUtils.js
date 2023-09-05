@@ -28,3 +28,15 @@ export function urlSearchToParamsObject(search) {
     }
     return Object.fromEntries(search.slice(2).split('&').map((ent) => ent.split('=')));
 }
+
+export const formatParameter = (key, value) => `${key}=${value}`;
+
+/**
+ * Prepares the href for the link components
+ * @param {Object} parameters list of query parameters, as an object
+ * @returns {string} href ready to be used in link components
+ */
+export const buildHref = (parameters) => {
+    const paramEntries = Object.entries(parameters);
+    return `?${paramEntries.map(([key, value]) => formatParameter(key, value)).join('&')}`;
+};

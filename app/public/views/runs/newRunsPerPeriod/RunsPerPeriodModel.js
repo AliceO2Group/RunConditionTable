@@ -18,9 +18,7 @@ import { getRemoteDataSlice } from '../../../utils/fetch/getRemoteDataSlice.js';
 import RunsModel from './RunsModel.js';
 
 /**
- * Model representing handlers for periods page
- *
- * @implements {OverviewModel}
+ * Model representing handlers for runs per period page
  */
 export default class RunsPerPeriodModel extends Observable {
     /**

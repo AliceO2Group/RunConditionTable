@@ -14,6 +14,16 @@
 
 import { h } from '/js/src/index.js';
 
+/**
+ * Return a component representing a link in a form of a chip
+ *
+ * @param {Navigation} navigation the content of the link displayed to the user
+ * @param {string} label displayed chip name
+ * @param {string} href the absolute URL targeted by the link
+ *
+ * @return {vnode} the linkChip component
+ */
+
 export default function linkChip(navigation, label, href) {
     return h('a.btn.chip.m1.no-text-decoration', {
         onclick: (e) => navigation.handleLinkEvent(e),

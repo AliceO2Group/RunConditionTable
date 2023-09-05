@@ -17,7 +17,7 @@ import { RCT } from '../../../config.js';
 import { getRemoteDataSlice } from '../../../utils/fetch/getRemoteDataSlice.js';
 
 /**
- * Model representing handlers for periods page
+ * Model representing handlers for runs per period page
  *
  * @implements {Observable}
  */

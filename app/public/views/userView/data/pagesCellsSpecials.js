@@ -15,10 +15,8 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { getReadableFileSizeString } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 import linkChip from '../../../components/chips/linkChip.js';
-import { getClosestDefinedEnergy } from '../../../utils/dataProcessing/dataProcessingUtils.js';
+import { buildHref } from '../../../utils/url/urlUtils.js';
 const { dataReqParams: DRP, pageNames: PN, outerServices } = RCT;
-const acceptableEnergyValues = RCT.mapping.energy.values;
-const acceptableEnergyMargin = RCT.mapping.energy.acceptableMargin;
 
 /**
  * Configuration what buttons at which cells and which pages are supposed
@@ -46,39 +44,6 @@ const acceptableEnergyMargin = RCT.mapping.energy.acceptableMargin;
 
 const pagesCellsSpecials = {};
 
-pagesCellsSpecials[PN.periods] = {
-    name: (model, item) => [
-        h('td.text-ellipsis', item.name),
-        h('td',
-            linkChip(
-                model.navigation,
-                'runs',
-                // eslint-disable-next-line max-len
-                `/?page=${PN.runsPerPeriod}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-run_number`,
-            ),
-
-            linkChip(
-                model.navigation,
-                'data passes',
-                // eslint-disable-next-line max-len
-                `/?page=${PN.dataPasses}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1`,
-            ),
-
-            linkChip(
-                model.navigation,
-                'MC',
-                `/?page=${PN.mc}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1`,
-            )),
-    ],
-
-    avgEnergy: (model, item) =>
-        `${Number(item.avgEnergy).toFixed(2)}`,
-    distinctEnergies: (model, item) =>
-        h('', item.distinctEnergies.map((e) => getClosestDefinedEnergy(e, acceptableEnergyValues, acceptableEnergyMargin))
-            .filter((value, index, array) => array.indexOf(value) === index)
-            .reduce((toDisplay, currentValue) => `${toDisplay ? `${toDisplay}, ` : ''}${currentValue}`, '')),
-};
-
 pagesCellsSpecials[PN.dataPasses] = {
     name: (model, runs, item) => [
         h('td.text-ellipsis', item.name),
@@ -86,18 +51,30 @@ pagesCellsSpecials[PN.dataPasses] = {
             h('button.btn.chip.m1', {
                 onclick: async () => {
                     await runs.fetchRunsPerDataPass(item.name);
-                    // eslint-disable-next-line max-len
-                    model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-run_number`);
+                    model.router.go(
+                        buildHref({
+                            page: PN.runsPerDataPass,
+                            index: item.name,
+                            [DRP.itemsPerPage]: model.parent.userPreferences.itemsPerPage,
+                            [DRP.pageNumber]: 1,
+                            sorting: '-run_number',
+                        }),
+                    );
                 },
             }, 'runs'),
             linkChip(
                 model.navigation,
                 'anchorage',
-                // eslint-disable-next-line max-len
-                `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-name`,
+                buildHref({
+                    page: PN.anchoragePerDatapass,
+                    index: item.name,
+                    [DRP.itemsPerPage]: model.parent.userPreferences.itemsPerPage,
+                    [DRP.pageNumber]: 1,
+                    sorting: '-name',
+                }),
             )),
     ],
-    size: (model, runs, item) => getReadableFileSizeString(Number(item.size)),
+    size: (_, _runs, item) => getReadableFileSizeString(Number(item.size)),
 };
 pagesCellsSpecials[PN.mc] = {
     name: (model, item) => [
@@ -106,8 +83,13 @@ pagesCellsSpecials[PN.mc] = {
             linkChip(
                 model.navigation,
                 'anchored',
-                // eslint-disable-next-line max-len
-                `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-name`,
+                buildHref({
+                    page: PN.anchoredPerMC,
+                    index: item.name,
+                    [DRP.itemsPerPage]: model.parent.userPreferences.itemsPerPage,
+                    [DRP.pageNumber]: 1,
+                    sorting: '-name',
+                }),
             )),
     ],
 };
@@ -122,12 +104,12 @@ const dateFormatter = (sec) => {
 };
 
 pagesCellsSpecials[PN.runsPerPeriod] = {
-    run_number: (model, item) => h('.thick', item.run_number),
-    time_start: (model, item) => dateFormatter(item.time_start),
-    time_end: (model, item) => dateFormatter(item.time_end),
-    time_trg_start: (model, item) => dateFormatter(item.time_trg_start),
-    time_trg_end: (model, item) => dateFormatter(item.time_trg_end),
-    fill_number: (model, item) => h('a', {
+    run_number: (_, item) => h('.thick', item.run_number),
+    time_start: (_, item) => dateFormatter(item.time_start),
+    time_end: (_, item) => dateFormatter(item.time_end),
+    time_trg_start: (_, item) => dateFormatter(item.time_trg_start),
+    time_trg_end: (_, item) => dateFormatter(item.time_trg_end),
+    fill_number: (_, item) => h('a', {
         href: `${outerServices.bookkeeping.lhcFills.url}&${outerServices.bookkeeping.lhcFills.params.fillNumber}=${item.fill_number}`,
         target: '_blank',
     }, item.fill_number, h('.external-link-15-blue')),

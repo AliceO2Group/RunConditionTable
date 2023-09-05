@@ -13,18 +13,17 @@
  */
 
 import { h } from '/js/src/index.js';
-import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../userView/data/headersSpecials.js';
+import { RCT } from '../../../config.js';
+const { fieldNames } = RCT;
 
-export default function periodsTableHeader(periodsModel, pageName, visibleFields, data, dataAccessModel) {
-    const headerColumns = (model, visibleFields) => {
+export default function periodsTableHeader(periodsModel, pageName, visibleFields, data) {
+    const periodFields = Object.keys(fieldNames.periods).reduce((acc, field) => ({ ...acc, [field]: fieldNames.periods[field].fieldName }), {});
+
+    const headerColumns = (visibleFields) => {
         const dataHeaders = visibleFields.map((field) =>
             h(`th.${pageName}-${field.name}-header`, {
                 scope: 'col',
-            }, h('.relative', [
-                headerSpecPresent(model, field) !== nonDisplayable
-                    ? h('.inline', getHeaderSpecial(model, field))
-                    : '',
-            ])));
+            }, h('.relative', h('.inline', periodFields[field.name]))));
         return dataHeaders;
     };
 
@@ -45,5 +44,5 @@ export default function periodsTableHeader(periodsModel, pageName, visibleFields
     return h('thead.header',
         h('tr',
             headerCheckbox(periodsModel, data),
-            headerColumns(dataAccessModel, visibleFields)));
+            headerColumns(visibleFields)));
 }

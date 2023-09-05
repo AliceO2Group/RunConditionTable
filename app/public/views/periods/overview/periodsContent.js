@@ -42,7 +42,7 @@ const applicableDataActions = {
 
 export default function periodsContent(periodsModel, model) {
     const periods = periodsModel.currentPagePeriods.payload;
-    const { dataAccess } = model;
+    const { navigation, dataAccess } = model;
 
     const url = model.router.getUrl();
 
@@ -63,10 +63,10 @@ export default function periodsContent(periodsModel, model) {
                         h(`table.${pageName}-table`, {
                             id: `data-table-${pageName}`,
                         },
-                        periodsTableHeader(periodsModel, pageName, periodsModel.visibleFields, periods, dataAccess),
+                        periodsTableHeader(periodsModel, pageName, periodsModel.visibleFields, periods),
                         h('tbody', { id: `table-body-${pageName}` },
                             periods.map((period) => periodsTableRow(
-                                period, periodsModel.visibleFields, dataAccess, periodsModel,
+                                period, periodsModel.visibleFields, navigation, periodsModel,
                             ))))))
                 : ''
             : anyFiltersActive(url)

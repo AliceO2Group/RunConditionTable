@@ -17,8 +17,6 @@ import { RCT } from '../../../config.js';
 import { isDetectorField } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 const { fieldNames: fN } = RCT;
 
-const periodFields = Object.keys(fN.periods).reduce((acc, field) => ({ ...acc, [field]: fN.periods[field].fieldName }), {});
-
 const runFields = {
     name: 'Name',
     run_number: 'Run',
@@ -67,7 +65,6 @@ const flagFields = {
 };
 
 const headersSpecials = {
-    periods: periodFields,
     runsPerPeriod: runFields,
     mc: mcFields,
     dataPasses: dpFields,
@@ -82,7 +79,6 @@ const dpFieldNames = Object.keys(fN.dataPasses).reduce((acc, field) => ({ ...acc
 const mcFieldNames = Object.keys(fN.mc).reduce((acc, field) => ({ ...acc, [field]: fN.mc[field].fieldName }), {});
 
 const fieldNames = {
-    periods: periodFields,
     runsPerPeriod: runFieldNames,
     mc: mcFieldNames,
     dataPasses: dpFieldNames,
