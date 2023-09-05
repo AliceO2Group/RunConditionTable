@@ -14,6 +14,7 @@
 import { Observable } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 import { noRunNumbers } from '../../utils/defaults.js';
+import { href } from '../../utils/url/urlUtils.js';
 const { pageNames, dataReqParams, defaultDataReqParams } = RCT;
 
 /**
@@ -49,7 +50,12 @@ export default class Navigation extends Observable {
         switch (url.pathname) {
             case '/': {
                 if (! page) {
-                    this.router.go(`/?page=${pageNames.periods}${this.pageNumberReqParamsPhrase()}&sorting=-name`);
+                    this.router.go(
+                        href(pageNames.periods, {
+                            sorting: '-name',
+                            ...this.pageNumberReqParams(),
+                        }),
+                    );
                 } else {
                     await this.pageNavigation(url, page);
                     this.parent.fetchedData.reqForData()
@@ -70,8 +76,11 @@ export default class Navigation extends Observable {
                 if (dataPassName) {
                     await this.model.runs.fetchRunsPerDataPass(dataPassName).then(() => {}).catch(() => {});
 
-                    const dpSearchParams = `?page=${pageNames.runsPerDataPass}&index=${dataPassName}`;
-                    const dpUrl = new URL(url.origin + url.pathname + dpSearchParams + this.pageNumberReqParamsPhrase());
+                    const dpSearchParams = href(pageNames.runsPerDataPass, {
+                        index: dataPassName,
+                        ...this.pageNumberReqParams(),
+                    });
+                    const dpUrl = new URL(url.origin + url.pathname + dpSearchParams);
                     this.parent.fetchedData.reqForData(true, dpUrl).then(() => {
                         const runNumbers = this.model.runs.getRunsPerDataPass(dataPassName).map((row) => row.run_number);
                         this.model.runs.fetchFlagsSummary(dataPassName, runNumbers).then(() => {
@@ -92,13 +101,12 @@ export default class Navigation extends Observable {
 
     goToDefaultPageUrl(page) {
         const url = page === pageNames.flags
-            ? `/?page=${page}&run_numbers=${noRunNumbers}${this.pageNumberReqParamsPhrase()}`
-            : `/?page=${page}${this.pageNumberReqParamsPhrase()}`;
+            ? href(page, {
+                ['run_numbers']: noRunNumbers,
+                ...this.pageNumberReqParams(),
+            })
+            : href(page, this.pageNumberReqParams());
         this.router.go(url);
-    }
-
-    pageNumberReqParamsPhrase() {
-        return `&${dataReqParams.itemsPerPage}=${this.model.userPreferences.itemsPerPage}&${dataReqParams.pageNumber}=${this.pageNumber}`;
     }
 
     pageNumberReqParams() {
@@ -120,6 +128,11 @@ export default class Navigation extends Observable {
      * @returns {void}
      */
     go(targetPage, targetIndex) {
-        this.router.go(`/?page=${targetPage}&index=${targetIndex}${this.pageNumberReqParamsPhrase()}`);
+        this.router.go(
+            href(targetPage, {
+                index: targetIndex,
+                ...this.pageNumberReqParams(),
+            }),
+        );
     }
 }
