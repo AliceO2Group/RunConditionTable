@@ -60,6 +60,7 @@ class Cacher {
     static serviceCacheDir(synchronizerName) {
         return path.join(
             config.services.rawJsonCachePath,
+            'rawJson',
             synchronizerName,
         );
     }
