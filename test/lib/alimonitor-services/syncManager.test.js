@@ -13,17 +13,24 @@
  */
 
 const { syncManager } = require('../../../app/lib/alimonitor-services/SyncManager.js');
+const { databaseManager } = require('../../../app/lib/database/DatabaseManager.js');
 const { generateRandomBookkeepingCachedRawJsons } = require('./testutil/cache-for-test.js');
 const assert = require('assert');
 
 module.exports = () => describe('SyncManager suite', () => {
-    before(() => {
-        generateRandomBookkeepingCachedRawJsons();
-    });
-
     describe('BookkeepingService suite', () => {
-        it('should performe sync with random data withour errors', async () => {
-            await assert.doesNotReject(syncManager.services.bookkeepingService.setSyncTask());
+        before(() => {
+            generateRandomBookkeepingCachedRawJsons();
+        });
+
+        after(async () => {
+            await databaseManager.repositories.RunRepository
+                .findAll({ raw: true })
+                .then((data) => assert(data.length > 0));
+        });
+
+        it('should performe sync with random data withour major errors', async () => {
+            assert.strictEqual(await syncManager.services.bookkeepingService.setSyncTask(), true);
         });
     });
 });

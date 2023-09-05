@@ -192,7 +192,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     }
 
     syncTraversStop(currentState) {
-        return this.isStopped() || currentState['page'] > this.metaStore['pageCount'];
+        return this.isStopped() || currentState['page'] >= this.metaStore['pageCount'];
     }
 
     nextState(state) {
