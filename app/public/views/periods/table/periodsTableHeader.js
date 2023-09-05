@@ -13,17 +13,13 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../../config.js';
-const { fieldNames } = RCT;
 
-export default function periodsTableHeader(periodsModel, pageName, visibleFields, data) {
-    const periodFields = Object.keys(fieldNames.periods).reduce((acc, field) => ({ ...acc, [field]: fieldNames.periods[field].fieldName }), {});
-
+export default function periodsTableHeader(periodsModel, pageName, data) {
     const headerColumns = (visibleFields) => {
-        const dataHeaders = visibleFields.map((field) =>
+        const dataHeaders = visibleFields.map((field, index) =>
             h(`th.${pageName}-${field.name}-header`, {
                 scope: 'col',
-            }, h('.relative', h('.inline', periodFields[field.name]))));
+            }, h('.relative', h('.inline', visibleFields[index].header))));
         return dataHeaders;
     };
 
@@ -44,5 +40,5 @@ export default function periodsTableHeader(periodsModel, pageName, visibleFields
     return h('thead.header',
         h('tr',
             headerCheckbox(periodsModel, data),
-            headerColumns(visibleFields)));
+            headerColumns(periodsModel.visibleFields)));
 }

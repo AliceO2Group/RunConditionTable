@@ -15,15 +15,14 @@
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { rowDisplayStyle } from '../../../utils/dataProcessing/dataProcessingUtils.js';
-import { periodsActiveColumns } from '../ActiveColumns/periodsActiveColumns.js';
 
-export default function periodsTableRow(periodData, visibleFields, navigation, periodsModel) {
+export default function periodsTableRow(periodData, navigation, periodsModel) {
     const pageName = RCT.pageNames.periods;
 
-    const dataCells = visibleFields.map((field) =>
+    const dataCells = periodsModel.visibleFields.map((field, index) =>
         h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
             periodData[field.name]
-                ? periodsActiveColumns[field.name].format(navigation, periodData)
+                ? periodsModel.visibleFields[index].format(navigation, periodData)
                 : ''));
 
     const checkbox = h('td.relative.track',

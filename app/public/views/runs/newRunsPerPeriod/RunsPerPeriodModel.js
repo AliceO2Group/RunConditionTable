@@ -52,7 +52,6 @@ export default class RunsPerPeriodModel extends Observable {
             const { items } = await getRemoteDataSlice(endpoint);
             this._selectedPeriod = RemoteData.success([...items]);
             this._periods[periodId] = this._selectedPeriod.payload.find((e) => Boolean(e));
-            // Console.log(this._periods);
         } catch (errors) {
             this._selectedPeriod = RemoteData.failure(errors);
         }

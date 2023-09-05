@@ -16,22 +16,26 @@ import linkChip from '../../../components/chips/linkChip.js';
 import { RCT } from '../../../config.js';
 import { getClosestDefinedEnergy } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 import { buildHref } from '../../../utils/url/urlUtils.js';
-const { dataReqParams: DRP, pageNames: PN } = RCT;
+const { dataReqParams: DRP, pageNames: PN, fieldNames: FN } = RCT;
 const acceptableEnergyValues = RCT.mapping.energy.values;
 const acceptableEnergyMargin = RCT.mapping.energy.acceptableMargin;
+const fieldNames = FN.periods;
 
 /**
  * List of active columns for a generic periods table
  */
 export const periodsActiveColumns = {
     id: {
-        name: 'Id',
+        name: 'id',
         visible: false,
     },
 
     name: {
-        name: 'Name',
+        name: 'name',
         visible: true,
+        header: fieldNames.name.fieldName,
+        fieldName: fieldNames.name.fieldName,
+        filterInput: fieldNames.name.filterInput,
         format: (navigation, period) => [
             h('td.text-ellipsis', period.name),
             h('td',
@@ -72,26 +76,38 @@ export const periodsActiveColumns = {
     },
 
     beamType: {
-        name: 'Beam',
+        name: 'beamType',
         visible: true,
+        header: fieldNames.beamType.fieldName,
+        fieldName: fieldNames.beamType.fieldName,
+        filterInput: fieldNames.beamType.filterInput,
         format: (_, period) => period.beamType,
     },
 
     year: {
-        name: 'Year',
+        name: 'year',
         visible: true,
+        header: fieldNames.year.fieldName,
+        fieldName: fieldNames.year.fieldName,
+        filterInput: fieldNames.year.filterInput,
         format: (_, period) => period.year,
     },
 
     avgEnergy: {
-        name: 'Mean energy',
+        name: 'avgEnergy',
         visible: true,
+        header: fieldNames.avgEnergy.fieldName,
+        fieldName: fieldNames.avgEnergy.fieldName,
+        filterInput: fieldNames.avgEnergy.filterInput,
         format: (_, period) => `${Number(period.avgEnergy).toFixed(2)}`,
     },
 
     distinctEnergies: {
-        name: 'Distinct energies',
+        name: 'distinctEnergies',
         visible: true,
+        header: h('.center-of-mass-energy'),
+        fieldName: fieldNames.distinctEnergies.fieldName,
+        filterInput: fieldNames.distinctEnergies.filterInput,
         format: (_, period) =>
             h('', period.distinctEnergies.map((e) => getClosestDefinedEnergy(e, acceptableEnergyValues, acceptableEnergyMargin))
                 .filter((value, index, array) => array.indexOf(value) === index)
