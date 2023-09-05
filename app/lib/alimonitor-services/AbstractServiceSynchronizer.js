@@ -18,7 +18,6 @@ const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
 const { ResProvider, makeHttpRequestForJSON, arrayToChunks, applyOptsToObj, throwNotImplemented } = require('../utils');
 const { Cacher, PassCorrectnessMonitor, ProgressMonitor } = require('./helpers');
-const { rawJsonCachePath } = require('../../config/services.js');
 
 const defaultServiceSynchronizerOptions = {
     forceStop: false,
@@ -153,7 +152,7 @@ class AbstractServiceSynchronizer {
             .catch(async (fatalError) => {
                 this.logger.error(fatalError.message + fatalError.stack);
                 this.interrtuptSyncTask();
-                return false;
+                return false; // Major error occurred
             });
     }
 
@@ -201,8 +200,9 @@ class AbstractServiceSynchronizer {
         this.progressMonitor = new ProgressMonitor({ logger: this.logger.info.bind(this.logger), percentageStep: 0.25 });
         this.forceStop = false;
         return await this.sync(options)
-            .catch((error) => {
-                this.logger.error(`critical error ${error.message}}`);
+            .catch((fatalError) => {
+                this.logger.error(`${fatalError.message} :: ${fatalError.stack}`);
+                return false;
             });
     }
 
