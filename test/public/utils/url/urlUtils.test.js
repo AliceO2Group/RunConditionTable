@@ -14,7 +14,7 @@
 const req = require('esm')(module);
 const assert = require('assert');
 
-const { replaceUrlParams, formatParameter } = req('../../../../app/public/utils/url/urlUtils');
+const { replaceUrlParams, formatParameter, href } = req('../../../../app/public/utils/url/urlUtils');
 
 module.exports = () => {
     describe('Replace URL params', () => {
@@ -33,6 +33,20 @@ module.exports = () => {
 
         it('should format the [key, value] pair in the URL style', () => {
             assert(formatParameter(key, value) === expectedOutcome);
+        });
+    });
+
+    describe('Href builder', () => {
+        const page = 'runsPerPeriod';
+        const parameters = {
+            periodId: '12',
+            ['items-per-page']: 16,
+            ['page-number']: 3,
+        };
+        const expectedOutcome = `?page=${page}&periodId=12&items-per-page=16&page-number=3`;
+
+        it('should prepare correct href', () => {
+            assert(href(page, parameters) === expectedOutcome);
         });
     });
 };
