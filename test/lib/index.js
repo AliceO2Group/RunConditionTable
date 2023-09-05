@@ -16,6 +16,7 @@ const ResProviderSuite = require('./utils/resProvider.test');
 const ConfigSuite = require('./config');
 const ServerSuite = require('./server');
 const ServicesSuite = require('./services.test');
+const SyncManagerSuite = require('./alimonitor-services/syncManager.test');
 
 module.exports = () => {
     describe('Utilities', UtilitiesSuite);
@@ -23,4 +24,5 @@ module.exports = () => {
     describe('Config', ConfigSuite);
     describe('Server', ServerSuite);
     ServicesSuite();
+    SyncManagerSuite();
 };
