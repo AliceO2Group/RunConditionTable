@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 
 /**
  * View aimed to display the applicaton details
- * @return {vnode} application view to be drawn according to model
+ * @return {vnode} appliaction details presentation
  */
 export default function about() {
     const title = h('h3.text-primary', 'About');
