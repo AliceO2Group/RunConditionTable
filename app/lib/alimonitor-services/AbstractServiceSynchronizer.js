@@ -18,6 +18,7 @@ const { Log } = require('@aliceo2/web-ui');
 const config = require('../config/configProvider.js');
 const { ResProvider, makeHttpRequestForJSON, arrayToChunks, applyOptsToObj, throwNotImplemented } = require('../utils');
 const { Cacher, PassCorrectnessMonitor, ProgressMonitor } = require('./helpers');
+const { rawJsonCachePath } = require('../../config/services.js');
 
 const defaultServiceSynchronizerOptions = {
     forceStop: false,
@@ -128,32 +129,32 @@ class AbstractServiceSynchronizer {
         endpoint,
         metaDataHandler = null,
     ) {
-        try {
-            this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
-
-            const rawResponse = await this.getRawResponse(endpoint);
-            if (metaDataHandler) {
-                await metaDataHandler(rawResponse);
-            }
-
-            const data = this.processRawResponse(rawResponse)
+        this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
+        return await this.getRawResponse(endpoint)
+            .then(async (rawResponse) => {
+                if (metaDataHandler) {
+                    await metaDataHandler(rawResponse);
+                }
+                return rawResponse;
+            })
+            .then(async (rawResponse) => this.processRawResponse(rawResponse)
                 .filter((r) => {
                     const f = r && this.isDataUnitValid(r);
                     if (!f) {
                         this.monitor.handleOmitted();
                     }
                     return f;
-                });
-
-            await this.makeBatchedRequest(data, endpoint);
-
-            this.monitor.logResults();
-            return true;
-        } catch (fatalError) {
-            this.logger.error(fatalError.message + fatalError.stack);
-            await this.interrtuptSyncTask();
-            return false;
-        }
+                }))
+            .then(async (data) => await this.makeBatchedRequest(data, endpoint))
+            .then(() => {
+                this.monitor.logResults();
+                return true; // Passed without major errors
+            })
+            .catch(async (fatalError) => {
+                this.logger.error(fatalError.message + fatalError.stack);
+                this.interrtuptSyncTask();
+                return false;
+            });
     }
 
     async makeBatchedRequest(data, endpoint) {
@@ -200,10 +201,8 @@ class AbstractServiceSynchronizer {
         this.progressMonitor = new ProgressMonitor({ logger: this.logger.info.bind(this.logger), percentageStep: 0.25 });
         this.forceStop = false;
         return await this.sync(options)
-            .then(() => {
-                if (this.forceStop) {
-                    this.logger.info(`${this.name} forced to stop`);
-                }
+            .catch((error) => {
+                this.logger.error(`critical error ${error.message}}`);
             });
     }
 
@@ -213,7 +212,7 @@ class AbstractServiceSynchronizer {
      * It will NOT interrupt any sequelize call being executed.
      * @return {void}
      */
-    async interrtuptSyncTask() {
+    interrtuptSyncTask() {
         this.forceStop = true;
     }
 

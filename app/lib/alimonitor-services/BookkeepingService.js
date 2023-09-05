@@ -184,7 +184,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const { page } = rawResponse['meta'];
         if (!page || !page['pageCount']) {
             this.logger.error(`No metadata found in Bookkeeping for the requested page: ${JSON.stringify(rawResponse)}`);
-            await this.interrtuptSyncTask();
+            this.interrtuptSyncTask();
             return;
         }
         this.metaStore['pageCount'] = page['pageCount'];
@@ -192,7 +192,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     }
 
     syncTraversStop(currentState) {
-        return this.isStopped() || currentState['page'] >= this.metaStore['pageCount'];
+        return this.isStopped() || currentState['page'] > this.metaStore['pageCount'];
     }
 
     nextState(state) {
