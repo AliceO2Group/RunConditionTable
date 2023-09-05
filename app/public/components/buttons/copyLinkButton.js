@@ -17,7 +17,7 @@ import snackBar from '../snackBars/snackBar.js';
 
 /**
  * @param {string} url - url that will be returned to the user
- * @returns a button that once clicked will add the url to the user's clipboard
+ * @returns {vnode} a button that once clicked will add the url to the user's clipboard
  */
 
 export default function copyLinkButton(url) {

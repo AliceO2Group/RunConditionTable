@@ -20,7 +20,7 @@ const { pageNames } = RCT;
  * @param {Observable} model - provides a set of functions
  * @param {string} pageName - name of the page
  * @param {string} index - index of the item on page
- * @returns - button that navigates user to the related (page, index) view
+ * @returns {vnode} button that navigates user to the related (page, index) view
  */
 
 export default function indexChip(model, pageName, index) {
