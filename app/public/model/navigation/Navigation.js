@@ -20,11 +20,12 @@ export default class Navigation extends Observable {
     /**
      * The constructor of the Navigation object
      *
-     * @param {QueryRouter} router main model router
+     * @param {Model} model main model
      */
-    constructor(router) {
+    constructor(model) {
         super();
-        this.router = router;
+        this.model = model;
+        this.router = model.router;
     }
 
     handleLinkEvent(e) {

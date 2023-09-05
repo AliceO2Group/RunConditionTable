@@ -18,7 +18,7 @@ const { fieldNames } = RCT;
 
 export default function periodsTableHeader(periodsModel, pageName, visibleFields, data) {
     const periodFields = Object.keys(fieldNames.periods).reduce((acc, field) => ({ ...acc, [field]: fieldNames.periods[field].fieldName }), {});
-    
+
     const headerColumns = (visibleFields) => {
         const dataHeaders = visibleFields.map((field) =>
             h(`th.${pageName}-${field.name}-header`, {

@@ -42,7 +42,7 @@ export default class Model extends Observable {
         this.router.observe(this.handleLocationChange.bind(this));
         this.router.bubbleTo(this);
 
-        this.navigation = new Navigation(this.router);
+        this.navigation = new Navigation(this);
         this.navigation.bubbleTo(this);
 
         this.loader = new Loader();

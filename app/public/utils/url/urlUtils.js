@@ -28,3 +28,10 @@ export function urlSearchToParamsObject(search) {
     }
     return Object.fromEntries(search.slice(2).split('&').map((ent) => ent.split('=')));
 }
+
+export const formatParameter = (key, value) => `${key}=${value}`;
+
+export const href = (page, parameters) => {
+    const paramEntries = Object.entries(parameters);
+    return `?${[['page', page], ...paramEntries].map(([key, value]) => formatParameter(key, value)).join('&')}`;
+};

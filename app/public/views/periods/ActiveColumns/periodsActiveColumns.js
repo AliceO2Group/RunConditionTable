@@ -15,6 +15,7 @@ import { h } from '/js/src/index.js';
 import linkChip from '../../../components/chips/linkChip.js';
 import { RCT } from '../../../config.js';
 import { getClosestDefinedEnergy } from '../../../utils/dataProcessing/dataProcessingUtils.js';
+import { href } from '../../../utils/url/urlUtils.js';
 const { dataReqParams: DRP, pageNames: PN } = RCT;
 const acceptableEnergyValues = RCT.mapping.energy.values;
 const acceptableEnergyMargin = RCT.mapping.energy.acceptableMargin;
@@ -37,21 +38,32 @@ export const periodsActiveColumns = {
                 linkChip(
                     navigation,
                     'runs',
-                    // eslint-disable-next-line max-len
-                    `/?page=${PN.runsPerPeriod}&index=${period.name}&${DRP.itemsPerPage}=${model.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-run_number`,
+                    href(PN.runsPerPeriod, {
+                        index: period.name,
+                        [DRP.itemsPerPage]: navigation.model.userPreferences.itemsPerPage,
+                        [DRP.pageNumber]: 1,
+                        sorting: '-run_number',
+                    }),
                 ),
 
                 linkChip(
                     navigation,
                     'data passes',
-                    // eslint-disable-next-line max-len
-                    `/?page=${PN.dataPasses}&index=${period.name}&${DRP.itemsPerPage}=${model.userPreferences.itemsPerPage}&${DRP.pageNumber}=1`,
+                    href(PN.dataPasses, {
+                        index: period.name,
+                        [DRP.itemsPerPage]: navigation.model.userPreferences.itemsPerPage,
+                        [DRP.pageNumber]: 1,
+                    }),
                 ),
 
                 linkChip(
                     navigation,
                     'MC',
-                    `/?page=${PN.mc}&index=${period.name}&${DRP.itemsPerPage}=${model.userPreferences.itemsPerPage}&${DRP.pageNumber}=1`,
+                    href(PN.mc, {
+                        index: period.name,
+                        [DRP.itemsPerPage]: navigation.model.userPreferences.itemsPerPage,
+                        [DRP.pageNumber]: 1,
+                    }),
                 )),
         ],
     },
