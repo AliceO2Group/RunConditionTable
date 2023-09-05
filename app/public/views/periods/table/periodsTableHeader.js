@@ -15,7 +15,6 @@
 import { h } from '/js/src/index.js';
 
 export default function periodsTableHeader(periodsModel, pageName, data) {
-    
     const headerColumns = (visibleFields) => {
         const dataHeaders = visibleFields.map((field, index) =>
             h(`th.${pageName}-${field.name}-header`, {

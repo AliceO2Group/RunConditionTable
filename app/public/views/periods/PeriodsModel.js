@@ -163,7 +163,7 @@ export default class PeriodsModel extends Observable {
     }
 
     get visibleFields() {
-        return Object.keys(this._fields).map(field => ({...this._fields[field]})).filter((field) => field.visible);
+        return Object.keys(this._fields).map((field) => ({ ...this._fields[field] })).filter((field) => field.visible);
     }
 
     get fields() {
