@@ -71,25 +71,25 @@ export const periodsActiveColumns = {
     beamType: {
         name: 'Beam',
         visible: true,
-        format: (_model, period) => period.beamType,
+        format: (_, period) => period.beamType,
     },
 
     year: {
         name: 'Year',
         visible: true,
-        format: (_model, period) => period.year,
+        format: (_, period) => period.year,
     },
 
     avgEnergy: {
         name: 'Mean energy',
         visible: true,
-        format: (_model, period) => `${Number(period.avgEnergy).toFixed(2)}`,
+        format: (_, period) => `${Number(period.avgEnergy).toFixed(2)}`,
     },
 
     distinctEnergies: {
         name: 'Distinct energies',
         visible: true,
-        format: (_model, period) =>
+        format: (_, period) =>
             h('', period.distinctEnergies.map((e) => getClosestDefinedEnergy(e, acceptableEnergyValues, acceptableEnergyMargin))
                 .filter((value, index, array) => array.indexOf(value) === index)
                 .reduce((toDisplay, currentValue) => `${toDisplay ? `${toDisplay}, ` : ''}${currentValue}`, '')),

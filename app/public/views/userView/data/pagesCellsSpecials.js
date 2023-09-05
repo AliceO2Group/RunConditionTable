@@ -15,6 +15,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { getReadableFileSizeString } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 import linkChip from '../../../components/chips/linkChip.js';
+import { href } from '../../../utils/url/urlUtils.js';
 const { dataReqParams: DRP, pageNames: PN, outerServices } = RCT;
 
 /**
@@ -50,15 +51,25 @@ pagesCellsSpecials[PN.dataPasses] = {
             h('button.btn.chip.m1', {
                 onclick: async () => {
                     await runs.fetchRunsPerDataPass(item.name);
-                    // eslint-disable-next-line max-len
-                    model.router.go(`/?page=${PN.runsPerDataPass}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-run_number`);
+                    model.router.go(
+                        href(PN.runsPerDataPass, {
+                            index: item.name,
+                            [DRP.itemsPerPage]: model.parent.userPreferences.itemsPerPage,
+                            [DRP.pageNumber]: 1,
+                            sorting: '-run_number',
+                        }),
+                    );
                 },
             }, 'runs'),
             linkChip(
                 model.navigation,
                 'anchorage',
-                // eslint-disable-next-line max-len
-                `/?page=${PN.anchoragePerDatapass}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-name`,
+                href(PN.anchoragePerDatapass, {
+                    index: item.name,
+                    [DRP.itemsPerPage]: model.parent.userPreferences.itemsPerPage,
+                    [DRP.pageNumber]: 1,
+                    sorting: '-name',
+                }),
             )),
     ],
     size: (_model, _runs, item) => getReadableFileSizeString(Number(item.size)),
@@ -70,8 +81,12 @@ pagesCellsSpecials[PN.mc] = {
             linkChip(
                 model.navigation,
                 'anchored',
-                // eslint-disable-next-line max-len
-                `/?page=${PN.anchoredPerMC}&index=${item.name}&${DRP.itemsPerPage}=${model.parent.userPreferences.itemsPerPage}&${DRP.pageNumber}=1&sorting=-name`,
+                href(PN.anchoredPerMC, {
+                    index: item.name,
+                    [DRP.itemsPerPage]: model.parent.userPreferences.itemsPerPage,
+                    [DRP.pageNumber]: 1,
+                    sorting: '-name',
+                }),
             )),
     ],
 };
