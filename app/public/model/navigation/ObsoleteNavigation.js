@@ -14,7 +14,7 @@
 import { Observable } from '/js/src/index.js';
 import { RCT } from '../../config.js';
 import { noRunNumbers } from '../../utils/defaults.js';
-import { href } from '../../utils/url/urlUtils.js';
+import { buildHref } from '../../utils/url/urlUtils.js';
 const { pageNames, dataReqParams, defaultDataReqParams } = RCT;
 
 /**
@@ -51,7 +51,8 @@ export default class Navigation extends Observable {
             case '/': {
                 if (! page) {
                     this.router.go(
-                        href(pageNames.periods, {
+                        buildHref({
+                            page: pageNames.periods,
                             sorting: '-name',
                             ...this.pageNumberReqParams(),
                         }),
@@ -76,7 +77,8 @@ export default class Navigation extends Observable {
                 if (dataPassName) {
                     await this.model.runs.fetchRunsPerDataPass(dataPassName).then(() => {}).catch(() => {});
 
-                    const dpSearchParams = href(pageNames.runsPerDataPass, {
+                    const dpSearchParams = buildHref({
+                        page: pageNames.runsPerDataPass,
                         index: dataPassName,
                         ...this.pageNumberReqParams(),
                     });
@@ -101,11 +103,15 @@ export default class Navigation extends Observable {
 
     goToDefaultPageUrl(page) {
         const url = page === pageNames.flags
-            ? href(page, {
+            ? buildHref({
+                page: page,
                 ['run_numbers']: noRunNumbers,
                 ...this.pageNumberReqParams(),
             })
-            : href(page, this.pageNumberReqParams());
+            : buildHref({
+                page: page,
+                ...this.pageNumberReqParams(),
+            });
         this.router.go(url);
     }
 
@@ -129,7 +135,8 @@ export default class Navigation extends Observable {
      */
     go(targetPage, targetIndex) {
         this.router.go(
-            href(targetPage, {
+            buildHref({
+                page: targetPage,
                 index: targetIndex,
                 ...this.pageNumberReqParams(),
             }),

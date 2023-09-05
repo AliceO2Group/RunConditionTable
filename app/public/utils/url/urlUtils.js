@@ -31,7 +31,12 @@ export function urlSearchToParamsObject(search) {
 
 export const formatParameter = (key, value) => `${key}=${value}`;
 
-export const href = (page, parameters) => {
+/**
+ * Prepares the href for the link components
+ * @param {Object} parameters list of query parameters, as an object
+ * @returns {string} href ready to be used in link components
+ */
+export const buildHref = (parameters) => {
     const paramEntries = Object.entries(parameters);
-    return `?${[['page', page], ...paramEntries].map(([key, value]) => formatParameter(key, value)).join('&')}`;
+    return `?${paramEntries.map(([key, value]) => formatParameter(key, value)).join('&')}`;
 };

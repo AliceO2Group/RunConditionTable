@@ -14,11 +14,12 @@
 
 import { h, iconChevronBottom } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
-import { href } from '../../../../utils/url/urlUtils.js';
+import { buildHref } from '../../../../utils/url/urlUtils.js';
 const { runBasedQuality } = RCT.quality;
 
 export default function qcTypeSelection(navigation, close, item, index, detectorName, runDetectorId, timeBased) {
-    const flagsUrl = href(RCT.pageNames.flags, {
+    const flagsUrl = buildHref({
+        page: RCT.pageNames.flags,
         ['data_pass_name']: index,
         ['run_numbers']: item.run_number,
         detector: detectorName,

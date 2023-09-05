@@ -15,7 +15,7 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import { getReadableFileSizeString } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 import linkChip from '../../../components/chips/linkChip.js';
-import { href } from '../../../utils/url/urlUtils.js';
+import { buildHref } from '../../../utils/url/urlUtils.js';
 const { dataReqParams: DRP, pageNames: PN, outerServices } = RCT;
 
 /**
@@ -52,7 +52,8 @@ pagesCellsSpecials[PN.dataPasses] = {
                 onclick: async () => {
                     await runs.fetchRunsPerDataPass(item.name);
                     model.router.go(
-                        href(PN.runsPerDataPass, {
+                        buildHref({
+                            page: PN.runsPerDataPass,
                             index: item.name,
                             [DRP.itemsPerPage]: model.parent.userPreferences.itemsPerPage,
                             [DRP.pageNumber]: 1,
@@ -64,7 +65,8 @@ pagesCellsSpecials[PN.dataPasses] = {
             linkChip(
                 model.navigation,
                 'anchorage',
-                href(PN.anchoragePerDatapass, {
+                buildHref({
+                    page: PN.anchoragePerDatapass,
                     index: item.name,
                     [DRP.itemsPerPage]: model.parent.userPreferences.itemsPerPage,
                     [DRP.pageNumber]: 1,
@@ -81,7 +83,8 @@ pagesCellsSpecials[PN.mc] = {
             linkChip(
                 model.navigation,
                 'anchored',
-                href(PN.anchoredPerMC, {
+                buildHref({
+                    page: PN.anchoredPerMC,
                     index: item.name,
                     [DRP.itemsPerPage]: model.parent.userPreferences.itemsPerPage,
                     [DRP.pageNumber]: 1,
