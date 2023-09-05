@@ -28,6 +28,7 @@ updates:
         - "eslint-output"
         - "run-script-os"
         - "socks-proxy-agent"
+        - "supertest"
   open-pull-requests-limit: 10
   versioning-strategy: increase
   ignore:
