@@ -16,8 +16,6 @@
 const http = require('http');
 const https = require('https');
 const { Log } = require('@aliceo2/web-ui');
-const path = require('path');
-const fs = require('fs');
 
 const logger = new Log('Utils');
 
