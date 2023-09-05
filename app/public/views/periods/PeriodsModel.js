@@ -18,6 +18,7 @@ import { RCT } from '../../config.js';
 import { createCSVExport, createJSONExport } from '../../utils/dataExport/export.js';
 import { exportFormats } from './overview/dataExport.js';
 import { pageTitle } from '../../components/common/pageTitle.js';
+import { periodsActiveColumns } from './ActiveColumns/periodsActiveColumns.js';
 
 /**
  * Model representing handlers for periods page
@@ -41,7 +42,7 @@ export default class PeriodsModel extends Observable {
             this.notify();
         });
 
-        this._fields = Object.keys(RCT.fieldNames.periods).map((field) => ({ name: field, visible: true }));
+        this._fields = periodsActiveColumns;
 
         this._hideSelectedPeriods = false;
         this._sortingRowVisible = false;
@@ -162,7 +163,7 @@ export default class PeriodsModel extends Observable {
     }
 
     get visibleFields() {
-        return this._fields.filter((field) => field.visible);
+        return Object.keys(this._fields).map(field => ({...this._fields[field]})).filter((field) => field.visible);
     }
 
     get fields() {
