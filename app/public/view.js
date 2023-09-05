@@ -16,6 +16,11 @@ import dataAccessPanel from './views/dataAccessPanel.js';
 import { switchCase } from '/js/src/index.js';
 import { serviceUnavailable, sessionError, waiting } from './components/messagePanel/messages.js';
 
+/**
+ * Main view layout
+ * @param {Model} model - representing current application state
+ * @return {vnode} application view to be drawn according to model
+ */
 export default function view(model) {
     const { state } = model.dataAccess;
 
