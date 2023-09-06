@@ -19,10 +19,11 @@ const { filterTypes } = RCT;
 
 /**
  * Filtering panel
- * @param {OverviewModel} _model model implementing the OverviewModel interface (e.g. PeriodsModel)
+ * @param {OverviewModel} model model implementing the OverviewModel interface (e.g. PeriodsModel)
  * @returns {vnode} filter panel
  */
-export default function filteringPanel(_model) {
+export default function filteringPanel(model) {
+    const fields = model.visibleFields;
     const aggregatedFiltersTypes = `${filterTypes.match}-${filterTypes.exclude}`;
 
     return h('.font-size-small', [
@@ -43,6 +44,7 @@ export default function filteringPanel(_model) {
                         disabled: true,
                         hidden: true,
                     }, 'Field'),
+                    fields.map((field) => h('option', { value: field.name }, field.fieldName)),
                 ], h('.close-10-primary')),
 
                 h('select.select', {
