@@ -18,7 +18,7 @@ import row from './row.js';
 import pagesCellsSpecials from '../pagesCellsSpecials.js';
 import obsoletePager from '../../../../components/table/obsoletePager.js';
 
-import filter from './filtering/filter.js';
+import filter from './filtering/obsoleteFilter.js';
 import activeFilters from './filtering/activeFilters.js';
 import { noDataFound, noMatchingData } from '../../../../components/messagePanel/messages.js';
 
@@ -38,7 +38,7 @@ const applicableDataActions = {
     [dataActions.obsoleteDownloadCSV]: true,
     [dataActions.downloadCSV]: false,
     [dataActions.copyLink]: true,
-    [dataActions.showFilteringPanel]: true,
+    [dataActions.obsoleteShowFilteringPanel]: true,
 };
 
 /**

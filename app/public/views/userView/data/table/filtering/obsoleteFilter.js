@@ -19,6 +19,12 @@ import { RCT } from '../../../../../config.js';
 import { wrappedUserInput } from '../../../../../utils/filtering/filterUtils.js';
 const { filterTypes } = RCT;
 
+/**
+ * Filtering panel
+ * @param {DataAccessModel} model deprecated data access model
+ * @returns {vnode} filter panel
+ * @deprecated
+ */
 export default function filter(model) {
     const dataPointer = model.getCurrentDataPointer();
     const { page } = dataPointer;

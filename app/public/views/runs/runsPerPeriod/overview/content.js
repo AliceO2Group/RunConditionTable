@@ -21,7 +21,7 @@ import pagesCellsSpecials from '../../../userView/data/pagesCellsSpecials.js';
 import title from '../../../../components/table/title.js';
 import header from '../table/header.js';
 import row from '../table/row.js';
-import filter from '../../../userView/data/table/filtering/filter.js';
+import filter from '../../../userView/data/table/filtering/obsoleteFilter.js';
 import activeFilters from '../../../userView/data/table/filtering/activeFilters.js';
 import sortingRow from '../../../userView/data/table/sortingRow.js';
 import { noMatchingData, noDataFound } from '../../../../components/messagePanel/messages.js';
@@ -36,7 +36,7 @@ const applicableDataActions = {
     [dataActions.obsoleteDownloadCSV]: true,
     [dataActions.downloadCSV]: false,
     [dataActions.copyLink]: true,
-    [dataActions.showFilteringPanel]: true,
+    [dataActions.obsoleteShowFilteringPanel]: true,
 };
 
 export default function content(model, runs, detectors) {

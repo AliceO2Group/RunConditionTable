@@ -28,7 +28,6 @@
  * @function
  * @field {} ffg
  * sortingRowVisible
- * hideSelectedPeriods
  * toggleSelection
  *
  *  toggleSortingRowVisibility
