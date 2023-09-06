@@ -183,6 +183,10 @@ export default class PeriodsModel extends Observable {
         return this._hideSelectedPeriods;
     }
 
+    get hideSelectedRows() {
+        return this._hideSelectedPeriods;
+    }
+
     get sortingRowVisible() {
         return this._sortingRowVisible;
     }

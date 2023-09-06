@@ -25,6 +25,7 @@ export const dataActions = {
     downloadCSV: 'Download CSV',
     copyLink: 'Copy link',
     showFilteringPanel: 'Filter',
+    obsoleteShowFilteringPanel: 'Filter (obsolete)',
 };
 
 /**
@@ -77,17 +78,24 @@ export default function dataActionButtons(model, applicableDataActions, dataMode
 
         applicableDataActions[dataActions.hide] && dataModel
             ? h('button.btn.icon-only-button', {
-                className: model.hideCurrentPageMarkedRows ? 'btn-primary' : 'btn-secondary',
+                className: dataModel.hideSelectedRows ? 'btn-primary' : 'btn-secondary',
                 onclick: () => {
                     dataModel.toggleSelectedRowsVisibility();
                 },
-            }, dataModel.hideSelectedPeriods ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
+            }, dataModel.hideSelectedRows ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
             : '',
 
-        applicableDataActions[dataActions.showFilteringPanel]
+        applicableDataActions[dataActions.obsoleteShowFilteringPanel]
             ? h('button.btn.icon-only-button', {
                 className: model.showFilteringPanel ? 'btn-primary' : 'btn-secondary',
                 onclick: () => model.changeSearchFieldsVisibility(),
             }, model.showFilteringPanel ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center'))
+            : '',
+
+        applicableDataActions[dataActions.showFilteringPanel] && dataModel
+            ? h('button.btn.icon-only-button', {
+                className: dataModel.filterPanelVisible ? 'btn-primary' : 'btn-secondary',
+                onclick: () => dataModel.toggleFilterPanelVisibility(),
+            }, dataModel.filterPanelVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center'))
             : '');
 }
