@@ -19,6 +19,7 @@ import { modalIds, showModal } from '../../views/modal/modal.js';
 
 export const dataActions = {
     hide: 'Hide',
+    obsoleteHide: 'Hide (obsolete)',
     reload: 'Reload',
     obsoleteDownloadCSV: 'Download CSV (obsolete)',
     downloadCSV: 'Download CSV',
@@ -65,18 +66,22 @@ export default function dataActionButtons(model, applicableDataActions, dataMode
             ? copyLinkButton(model.router.getUrl().toString())
             : '',
 
-        applicableDataActions[dataActions.hide]
+        applicableDataActions[dataActions.obsoleteHide]
             ? h('button.btn.icon-only-button', {
                 className: model.hideCurrentPageMarkedRows ? 'btn-primary' : 'btn-secondary',
                 onclick: () => {
                     model.changeMarkedRowsVisibility();
-                    if (dataModel) {
-                        dataModel.toggleSelectedRowsVisibility();
-                    }
                 },
-            }, dataModel
-                ? dataModel.hideSelectedPeriods ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center')
-                : model.hideCurrentPageMarkedRows ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
+            }, model.hideCurrentPageMarkedRows ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
+            : '',
+        
+        applicableDataActions[dataActions.hide] && dataModel
+            ? h('button.btn.icon-only-button', {
+                className: model.hideCurrentPageMarkedRows ? 'btn-primary' : 'btn-secondary',
+                onclick: () => {
+                    dataModel.toggleSelectedRowsVisibility();
+                },
+            }, dataModel.hideSelectedPeriods ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
             : '',
 
         applicableDataActions[dataActions.showFilteringPanel]

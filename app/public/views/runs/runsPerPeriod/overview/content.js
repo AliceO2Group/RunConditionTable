@@ -31,7 +31,7 @@ import { RCT } from '../../../../config.js';
 const { pageNames } = RCT;
 
 const applicableDataActions = {
-    [dataActions.hide]: true,
+    [dataActions.obsoleteHide]: true,
     [dataActions.reload]: true,
     [dataActions.obsoleteDownloadCSV]: true,
     [dataActions.downloadCSV]: false,

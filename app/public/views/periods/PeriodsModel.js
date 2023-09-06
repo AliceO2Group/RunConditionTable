@@ -44,6 +44,7 @@ export default class PeriodsModel extends Observable {
 
         this._fields = periodsActiveColumns;
 
+        this._filterPanelVisible = false;
         this._hideSelectedPeriods = false;
         this._sortingRowVisible = false;
 
@@ -166,6 +167,10 @@ export default class PeriodsModel extends Observable {
         return Object.keys(this._fields).map((field) => ({ ...this._fields[field] })).filter((field) => field.visible);
     }
 
+    get filterPanelVisible() {
+        return this._filterPanelVisible;
+    }
+
     get fields() {
         return this._fields;
     }
@@ -182,6 +187,11 @@ export default class PeriodsModel extends Observable {
         return this._sortingRowVisible;
     }
 
+    toggleFilterPanelVisibility() {
+        this._filterPanelVisible = !this._filterPanelVisible;
+        this.notify();
+    }
+    
     toggleSelection(period) {
         period.selected = !period.selected;
         this.notify();
