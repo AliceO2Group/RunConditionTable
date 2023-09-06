@@ -56,10 +56,10 @@ export default class PeriodsModel extends Observable {
 
     /**
      * Fetch all the relevant periods from the API
-     *
+     * @param {Object} filterObject object that defines requested filtering
      * @return {Promise<void>} void
      */
-    async fetchAllPeriods() {
+    async fetchAllPeriods(filterObject = undefined) {
         /**
          * @type {Period[]}
          */
@@ -68,7 +68,7 @@ export default class PeriodsModel extends Observable {
 
         this._allPeriods = RemoteData.notAsked();
 
-        const endpoint = '/api/periods';
+        const endpoint = `/api/periods/?${new URLSearchParams(filterObject).toString()}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._allPeriods = RemoteData.success([...items]);
@@ -82,10 +82,10 @@ export default class PeriodsModel extends Observable {
 
     /**
      * Fetch all the relevant periods from the API
-     *
+     * @param {Object} filterObject object that defines requested filtering
      * @return {Promise<void>} void
      */
-    async fetchCurrentPagePeriods() {
+    async fetchCurrentPagePeriods(filterObject = undefined) {
         /**
          * @type {Period[]}
          */
@@ -104,7 +104,7 @@ export default class PeriodsModel extends Observable {
 
         this._currentPagePeriods = RemoteData.notAsked();
 
-        const endpoint = `/api/periods?${new URLSearchParams(params).toString()}`;
+        const endpoint = `/api/periods?${[new URLSearchParams(params).toString(), new URLSearchParams(filterObject).toString()].join('&')}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._currentPagePeriods = RemoteData.success([...items]);

@@ -36,6 +36,17 @@ export default function filteringPanel(model) {
         [leftFilterPlaceholder.innerHTML, rightFilterPlaceholder.innerHTML] = types;
     };
 
+    const clearUserInput = () => {
+        document.getElementById('show-options-field').value = '';
+        document.getElementById('filters-opts-select').value = '';
+        document.getElementById('left-filter-input').value = '';
+        document.getElementById('right-filter-input').value = '';
+    };
+
+    const onFilterSubmit = () => {
+        clearUserInput();
+    };
+
     return h('.font-size-small', [
         h('.flex-wrap.justify-between.items-center',
             h('.flex-wrap.justify-between.items-center',
@@ -90,11 +101,11 @@ export default function filteringPanel(model) {
                     h('span.placeholder', { id: 'right-filter-placeholder' }, 'to/exclude')),
 
                 h('button.btn.btn-primary', {
-                    onclick: () => {},
+                    onclick: () => onFilterSubmit(),
                 }, 'Filter'),
 
                 h('button.btn.btn-secondary.icon-only-button', {
-                    onclick: () => {},
+                    onclick: () => onFilterSubmit(),
                 }, h('.save-20-primary')))),
     ]);
 }
