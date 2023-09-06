@@ -200,4 +200,9 @@ export default class PeriodsModel extends Observable {
         this._fields[targetFieldIndex].visible = targetState;
         this.notify();
     }
+
+    toggleSelectedRowsVisibility() {
+        this._hideSelectedPeriods = !this._hideSelectedPeriods;
+        this.notify();
+    }
 }

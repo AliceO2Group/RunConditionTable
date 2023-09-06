@@ -50,7 +50,7 @@ export default function periodsContent(periodsModel, model) {
         h('.flex-wrap.justify-between.items-center',
             h('.flex-wrap.justify-between.items-center',
                 title(pageName)),
-            dataActionButtons(dataAccess, applicableDataActions)),
+            dataActionButtons(dataAccess, applicableDataActions, periodsModel)),
 
         model.showFilteringPanel ? filter(dataAccess) : '',
         anyFiltersActive(url) ? activeFilters(dataAccess, url) : '',

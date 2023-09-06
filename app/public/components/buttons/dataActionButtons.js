@@ -26,7 +26,15 @@ export const dataActions = {
     showFilteringPanel: 'Filter',
 };
 
-export default function dataActionButtons(model, applicableDataActions) {
+/**
+ *
+ * @param {DataAccessModel} model data access model (obsolete)
+ * @param {Object} applicableDataActions object
+ * @param {OverviewModel} dataModel - data model (e.g. periodsModel)
+ * @returns {vnode}
+ */
+
+export default function dataActionButtons(model, applicableDataActions, dataModel = null) {
     return h('.btn-group',
         applicableDataActions[dataActions.reload]
             ? h('button.btn.btn-secondary.icon-only-button', {
@@ -60,8 +68,15 @@ export default function dataActionButtons(model, applicableDataActions) {
         applicableDataActions[dataActions.hide]
             ? h('button.btn.icon-only-button', {
                 className: model.hideCurrentPageMarkedRows ? 'btn-primary' : 'btn-secondary',
-                onclick: () => model.changeMarkedRowsVisibility(),
-            }, model.hideCurrentPageMarkedRows ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
+                onclick: () => {
+                    model.changeMarkedRowsVisibility();
+                    if (dataModel) {
+                        dataModel.toggleSelectedRowsVisibility();
+                    }
+                },
+            }, dataModel
+                ? dataModel.hideSelectedPeriods ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center')
+                : model.hideCurrentPageMarkedRows ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
             : '',
 
         applicableDataActions[dataActions.showFilteringPanel]

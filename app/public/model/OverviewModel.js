@@ -19,4 +19,20 @@
 
 /**
  * @property {PaginationModel} OverviewModel#pagination pagination model of the overview
+ * @property {RemoteData} currentPageData
+ * @property {*} fields
+ * @property {*} visibleFields
+ * @function fetchCurrentPageData
+ * @function createDataExport
+ * @function
+ * @field {} ffg
+ * sortingRowVisible
+ * hideSelectedPeriods
+ * toggleSelection
+ *
+ *  toggleSortingRowVisibility
+ *
+ *  toggleFieldVisibility
+ *
+ *  toggleSelectedRowsVisibility
  */
