@@ -26,6 +26,16 @@ export default function filteringPanel(model) {
     const fields = model.visibleFields;
     const aggregatedFiltersTypes = `${filterTypes.match}-${filterTypes.exclude}`;
 
+    const onFilteringTypeChange = () => {
+        const filteringTypeSelect = document.getElementById('filters-opts-select');
+        const selectedType = filteringTypeSelect.options[filteringTypeSelect.selectedIndex].value;
+        const types = selectedType == filterTypes.between ? ['from', 'to'] : [filterTypes.match, filterTypes.exclude];
+
+        const leftFilterPlaceholder = document.getElementById('left-filter-placeholder');
+        const rightFilterPlaceholder = document.getElementById('right-filter-placeholder');
+        [leftFilterPlaceholder.innerHTML, rightFilterPlaceholder.innerHTML] = types;
+    };
+
     return h('.font-size-small', [
         h('.flex-wrap.justify-between.items-center',
             h('.flex-wrap.justify-between.items-center',
@@ -50,7 +60,7 @@ export default function filteringPanel(model) {
                 h('select.select', {
                     id: 'filters-opts-select',
                     name: 'showOptions',
-                    onchange: () => {},
+                    onchange: () => onFilteringTypeChange(),
                 }, [
                     h('option', { value: '', selected: true, disabled: true, hidden: true }, 'Filtering type'),
                     h('option', { value: aggregatedFiltersTypes }, aggregatedFiltersTypes),
