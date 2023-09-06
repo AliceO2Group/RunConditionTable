@@ -19,6 +19,7 @@ import { createCSVExport, createJSONExport } from '../../utils/dataExport/export
 import { exportFormats } from './overview/dataExport.js';
 import { pageTitle } from '../../components/common/pageTitle.js';
 import { periodsActiveColumns } from './ActiveColumns/periodsActiveColumns.js';
+import { buildFilterPhrase } from '../../utils/filtering/filterUtils.js';
 
 /**
  * Model representing handlers for periods page
@@ -59,7 +60,7 @@ export default class PeriodsModel extends Observable {
      * @param {Object} filterObject object that defines requested filtering
      * @return {Promise<void>} void
      */
-    async fetchAllPeriods(filterObject = undefined) {
+    async fetchAllPeriods(filterObject = {}) {
         /**
          * @type {Period[]}
          */
@@ -85,13 +86,15 @@ export default class PeriodsModel extends Observable {
      * @param {Object} filterObject object that defines requested filtering
      * @return {Promise<void>} void
      */
-    async fetchCurrentPagePeriods(filterObject = undefined) {
+    async fetchCurrentPagePeriods(filterObject = {}) {
         /**
          * @type {Period[]}
          */
 
+        const filterPhrase = buildFilterPhrase('name', 'LHC%', 'like');
+
         if (this._allPeriods.kind === 'NotAsked') {
-            await this.fetchAllPeriods();
+            await this.fetchAllPeriods(filterObject);
         }
 
         this._currentPagePeriods = RemoteData.loading();
@@ -104,7 +107,8 @@ export default class PeriodsModel extends Observable {
 
         this._currentPagePeriods = RemoteData.notAsked();
 
-        const endpoint = `/api/periods?${[new URLSearchParams(params).toString(), new URLSearchParams(filterObject).toString()].join('&')}`;
+        const endpoint = `/api/periods?${[new URLSearchParams(params).toString(), filterPhrase].join('&')}`;
+
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._currentPagePeriods = RemoteData.success([...items]);
