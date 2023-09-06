@@ -3,8 +3,7 @@ const path = require('path');
 const { Cacher } = require('../../../../app/lib/alimonitor-services/helpers');
 const { rctData: { detectors } } = require('../../../../app/lib/config/configProvider.js');
 
-const randint = (min = 0, max = 0) => Math.round(Math.random() * (max - min) + min);
-const choice = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const { randint, choice } = require('./common.js');
 
 const ketpFields = {
     runNumber: () => randint(1000000, 9000000),
