@@ -65,6 +65,11 @@ const generateRandomBookkeepingCachedRawJsons = () => genRunsBatch(100, bkpSourc
         );
     });
 
+const cleanCachedBkpData = () => {
+    fs.rmSync(Cacher.serviceCacheDir('BookkeepingService'), { recursive: true, force: true });
+};
+
 module.exports = {
     generateRandomBookkeepingCachedRawJsons,
+    cleanCachedBkpData,
 };

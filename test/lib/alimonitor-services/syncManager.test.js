@@ -20,7 +20,7 @@ const { databaseManager: { repositories: {
     DetectorSubsystemRepository,
 },
 } } = require('../../../app/lib/database/DatabaseManager.js');
-const { generateRandomBookkeepingCachedRawJsons } = require('./testutil/cache-for-test.js');
+const { generateRandomBookkeepingCachedRawJsons, cleanCachedBkpData } = require('./testutil/cache-for-test.js');
 const assert = require('assert');
 
 module.exports = () => describe('SyncManager suite', () => {
@@ -30,22 +30,34 @@ module.exports = () => describe('SyncManager suite', () => {
         .then((detectoSubsystemNames) => assert.deepStrictEqual(detectoSubsystemNames.sort(), detectors.sort())));
 
     describe('BookkeepingService suite', () => {
-        before(() => {
-            generateRandomBookkeepingCachedRawJsons();
+        describe('with artificial cache data', () => {
+            before(() => {
+                generateRandomBookkeepingCachedRawJsons();
+            });
+
+            after(() => {
+                cleanCachedBkpData();
+            });
+
+            it('should performe sync with random data withour major errors', async () => {
+                assert.strictEqual(await syncManager.services.bookkeepingService.setSyncTask(), true);
+            });
+
+            it('should fetch some run data directly from DB', async () =>
+                await RunRepository
+                    .findAll({ raw: true })
+                    .then((data) => assert(data.length > 0)));
+
+            it('should fetch some run_detector data directly from DB', async () =>
+                await RunDetectorsRepository
+                    .findAll({ raw: true })
+                    .then((data) => assert(data.length > 0)));
         });
 
-        it('should performe sync with random data withour major errors', async () => {
-            assert.strictEqual(await syncManager.services.bookkeepingService.setSyncTask(), true);
+        describe('without artificial cache data', () => {
+            it('should performe sync with major error', async () => {
+                assert.strictEqual(await syncManager.services.bookkeepingService.setSyncTask(), false);
+            });
         });
-
-        it('should fetch some run data directly from DB', async () =>
-            await RunRepository
-                .findAll({ raw: true })
-                .then((data) => assert(data.length > 0)));
-
-        it('should fetch some run_detector data directly from DB', async () =>
-            await RunDetectorsRepository
-                .findAll({ raw: true })
-                .then((data) => assert(data.length > 0)));
     });
 });
