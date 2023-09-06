@@ -55,6 +55,14 @@ module.exports = () => describe('SyncManager suite', () => {
         });
 
         describe('without artificial cache data', () => {
+            before(() => {
+                syncManager.services.bookkeepingService.forceToUseOnlyCache = true;
+            });
+
+            after(() => {
+                syncManager.services.bookkeepingService.forceToUseOnlyCache = false;
+            });
+
             it('should performe sync with major error', async () => {
                 assert.strictEqual(await syncManager.services.bookkeepingService.setSyncTask(), false);
             });

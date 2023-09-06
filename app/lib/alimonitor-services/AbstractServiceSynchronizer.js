@@ -23,6 +23,7 @@ const defaultServiceSynchronizerOptions = {
     forceStop: false,
     cacheRawResponse: process.env['RCT_DEV_USE_CACHE'] === 'false' ? false : true,
     useCacheJsonInsteadIfPresent: process.env['RCT_DEV_USE_CACHE_INSTEAD'] === 'true' ? true : false,
+    forceToUseOnlyCache: process.env['RCT_DEV_FORCE_CACHE_USAGE'] === 'true' ? true : false,
     batchSize: 4,
 };
 
@@ -175,7 +176,7 @@ class AbstractServiceSynchronizer {
     }
 
     async getRawResponse(endpoint) {
-        if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint)) {
+        if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint) || this.forceToUseOnlyCache) {
             this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return Cacher.getJsonSync(this.name, endpoint);
         }
