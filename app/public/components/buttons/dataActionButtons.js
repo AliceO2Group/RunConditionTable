@@ -74,7 +74,7 @@ export default function dataActionButtons(model, applicableDataActions, dataMode
                 },
             }, model.hideCurrentPageMarkedRows ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
             : '',
-        
+
         applicableDataActions[dataActions.hide] && dataModel
             ? h('button.btn.icon-only-button', {
                 className: model.hideCurrentPageMarkedRows ? 'btn-primary' : 'btn-secondary',

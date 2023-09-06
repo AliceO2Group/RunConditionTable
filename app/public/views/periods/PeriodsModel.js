@@ -191,7 +191,7 @@ export default class PeriodsModel extends Observable {
         this._filterPanelVisible = !this._filterPanelVisible;
         this.notify();
     }
-    
+
     toggleSelection(period) {
         period.selected = !period.selected;
         this.notify();
