@@ -1,28 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const { Cacher } = require('../../../../app/lib/alimonitor-services/helpers');
+const { rctData: { detectors } } = require('../../../../app/lib/config/configProvider.js');
 
 const randint = (min = 0, max = 0) => Math.round(Math.random() * (max - min) + min);
 const choice = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-const detectors = [
-    'CPV',
-    'EMC',
-    'FDD',
-    'FT0',
-    'FV0',
-    'ITS',
-    'HMP',
-    'MCH',
-    'MFT',
-    'MID',
-    'PHS',
-    'TOF',
-    'TPC',
-    'TRD',
-    'TST',
-    'ZDC',
-];
 
 const ketpFields = {
     runNumber: () => randint(1000000, 9000000),
@@ -42,7 +24,10 @@ const ketpFields = {
     pdpBeamType: () => choice(['pp', 'PbPb', 'pPb']),
 };
 
-const genRun = () => Object.fromEntries(Object.entries(ketpFields).map(([k, v]) => [k, v()]));
+const genSingleRunData = () => Object.fromEntries(
+    Object.entries(ketpFields)
+        .map(([runField, fieldDataGenerator]) => [runField, fieldDataGenerator()]),
+);
 
 const genRunsBatch = (size, files) => {
     const filesN = files.length;
@@ -52,7 +37,7 @@ const genRunsBatch = (size, files) => {
             files[pageIndex],
             {
                 data: [...new Array(size)]
-                    .map(() => genRun()),
+                    .map(() => genSingleRunData()),
                 meta: {
                     page: { pageCount: filesN, totalCount },
                 },

@@ -150,7 +150,7 @@ class AbstractServiceSynchronizer {
                 return true; // Passed without major errors
             })
             .catch(async (fatalError) => {
-                this.logger.error(fatalError.message + fatalError.stack);
+                this.logger.error(`${fatalError.message} :: ${fatalError.stack}`);
                 this.interrtuptSyncTask();
                 return false; // Major error occurred
             });
