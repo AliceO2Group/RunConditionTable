@@ -20,7 +20,7 @@ const { databaseManager: { repositories: {
     DetectorSubsystemRepository,
 },
 } } = require('../../../app/lib/database/DatabaseManager.js');
-const { generateRandomBookkeepingCachedRawJsons, cleanCachedBkpData } = require('./testutil/cache-for-test.js');
+const { generateRandomBookkeepingCachedRawJsons, cleanCachedBkpData } = require('./testutil/bookkeeping-cache-test-data.js');
 const assert = require('assert');
 
 module.exports = () => describe('SyncManager suite', () => {
