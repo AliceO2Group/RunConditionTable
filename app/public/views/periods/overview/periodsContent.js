@@ -15,13 +15,13 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import title from '../../../components/table/title.js';
 import dataActionButtons, { dataActions } from '../../../components/buttons/dataActionButtons.js';
-import filter from '../../userView/data/table/filtering/obsoleteFilter.js';
 import { anyFiltersActive } from '../../../utils/filtering/filterUtils.js';
 import activeFilters from '../../userView/data/table/filtering/activeFilters.js';
 import { noDataFound, noMatchingData } from '../../../components/messagePanel/messages.js';
 import periodsTableHeader from '../table/periodsTableHeader.js';
 import periodsTableRow from '../table/periodsTableRow.js';
 import tableManager from '../../../components/table/tableManager.js';
+import filteringPanel from '../../../components/filter/filteringPanel.js';
 const pageName = RCT.pageNames.periods;
 
 /**
@@ -51,7 +51,7 @@ export default function periodsContent(periodsModel, model) {
                 title(pageName)),
             dataActionButtons(dataAccess, applicableDataActions, periodsModel)),
 
-        periodsModel.filterPanelVisible ? filter(dataAccess) : '',
+        periodsModel.filterPanelVisible ? filteringPanel(periodsModel) : '',
         anyFiltersActive(url) ? activeFilters(dataAccess, url) : '',
 
         periods.length > 0
