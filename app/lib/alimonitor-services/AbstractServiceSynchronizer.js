@@ -23,6 +23,7 @@ const defaultServiceSynchronizerOptions = {
     forceStop: false,
     cacheRawResponse: process.env['RCT_DEV_USE_CACHE'] === 'false' ? false : true,
     useCacheJsonInsteadIfPresent: process.env['RCT_DEV_USE_CACHE_INSTEAD'] === 'true' ? true : false,
+    forceToUseOnlyCache: process.env['RCT_DEV_FORCE_CACHE_USAGE'] === 'true' ? true : false,
     batchSize: 4,
 };
 
@@ -128,32 +129,32 @@ class AbstractServiceSynchronizer {
         endpoint,
         metaDataHandler = null,
     ) {
-        try {
-            this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
-
-            const rawResponse = await this.getRawResponse(endpoint);
-            if (metaDataHandler) {
-                await metaDataHandler(rawResponse);
-            }
-
-            const data = this.processRawResponse(rawResponse)
+        this.monitor = new PassCorrectnessMonitor(this.logger, this.errorsLoggingDepth);
+        return await this.getRawResponse(endpoint)
+            .then(async (rawResponse) => {
+                if (metaDataHandler) {
+                    await metaDataHandler(rawResponse);
+                }
+                return rawResponse;
+            })
+            .then(async (rawResponse) => this.processRawResponse(rawResponse)
                 .filter((r) => {
                     const f = r && this.isDataUnitValid(r);
                     if (!f) {
                         this.monitor.handleOmitted();
                     }
                     return f;
-                });
-
-            await this.makeBatchedRequest(data, endpoint);
-
-            this.monitor.logResults();
-            return true;
-        } catch (fatalError) {
-            this.logger.error(fatalError.message + fatalError.stack);
-            await this.interrtuptSyncTask();
-            return false;
-        }
+                }))
+            .then(async (data) => await this.makeBatchedRequest(data, endpoint))
+            .then(() => {
+                this.monitor.logResults();
+                return true; // Passed without major errors
+            })
+            .catch(async (fatalError) => {
+                this.logger.error(`${fatalError.message} :: ${fatalError.stack}`);
+                this.interrtuptSyncTask();
+                return false; // Major error occurred
+            });
     }
 
     async makeBatchedRequest(data, endpoint) {
@@ -175,7 +176,7 @@ class AbstractServiceSynchronizer {
     }
 
     async getRawResponse(endpoint) {
-        if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint)) {
+        if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint) || this.forceToUseOnlyCache) {
             this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return Cacher.getJsonSync(this.name, endpoint);
         }
@@ -200,10 +201,9 @@ class AbstractServiceSynchronizer {
         this.progressMonitor = new ProgressMonitor({ logger: this.logger.info.bind(this.logger), percentageStep: 0.25 });
         this.forceStop = false;
         return await this.sync(options)
-            .then(() => {
-                if (this.forceStop) {
-                    this.logger.info(`${this.name} forced to stop`);
-                }
+            .catch((fatalError) => {
+                this.logger.error(`${fatalError.message} :: ${fatalError.stack}`);
+                return false;
             });
     }
 
@@ -213,7 +213,7 @@ class AbstractServiceSynchronizer {
      * It will NOT interrupt any sequelize call being executed.
      * @return {void}
      */
-    async interrtuptSyncTask() {
+    interrtuptSyncTask() {
         this.forceStop = true;
     }
 

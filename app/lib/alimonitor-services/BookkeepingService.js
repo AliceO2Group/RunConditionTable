@@ -135,6 +135,9 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
                 where: {
                     name: period.name,
+                },
+                default: {
+                    name: period.name,
                     year: period.year,
                     BeamTypeId: beamType.id,
                 },
@@ -181,7 +184,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const { page } = rawResponse['meta'];
         if (!page || !page['pageCount']) {
             this.logger.error(`No metadata found in Bookkeeping for the requested page: ${JSON.stringify(rawResponse)}`);
-            await this.interrtuptSyncTask();
+            this.interrtuptSyncTask();
             return;
         }
         this.metaStore['pageCount'] = page['pageCount'];
@@ -189,7 +192,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
     }
 
     syncTraversStop(currentState) {
-        return this.isStopped() || currentState['page'] > this.metaStore['pageCount'];
+        return this.isStopped() || currentState['page'] >= this.metaStore['pageCount'];
     }
 
     nextState(state) {

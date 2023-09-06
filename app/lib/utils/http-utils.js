@@ -16,8 +16,6 @@
 const http = require('http');
 const https = require('https');
 const { Log } = require('@aliceo2/web-ui');
-const path = require('path');
-const fs = require('fs');
 
 const logger = new Log('Utils');
 
@@ -38,7 +36,7 @@ function checkClientType(endpoint) {
 function makeHttpRequestForJSON(url, opts, logger, onSuccess, onFailure) {
     url = new URL(url);
     return new Promise((resolve, reject) => {
-        let rawData = '';
+        let rawDataAccumulator = '';
         const req = checkClientType(url).request(url, opts, async (res) => {
             const { statusCode } = res;
             const contentType = res.headers['content-type'];
@@ -46,13 +44,12 @@ function makeHttpRequestForJSON(url, opts, logger, onSuccess, onFailure) {
             let error;
             let redirect = false;
             if (statusCode == 302 || statusCode == 301) {
-                const mess = `Redirect. Status Code: ${statusCode}; red. to ${res.headers.location}`;
+                const mess = `Redirect. Status Code: ${statusCode}; red. to ${res.headers.location} from ${url.href}`;
                 if (opts.allowRedirects) {
                     redirect = true;
                     logger.warn(mess);
                     const nextHop = new URL(url.origin + res.headers.location);
                     nextHop.searchParams.set('res_path', 'json');
-                    logger.warn(`from ${url.href} to ${nextHop.href}`);
                     resolve(await makeHttpRequestForJSON(nextHop));
                 } else {
                     throw new Error(mess);
@@ -63,58 +60,36 @@ function makeHttpRequestForJSON(url, opts, logger, onSuccess, onFailure) {
                 error = new Error(`Invalid content-type. Expected application/json but received ${contentType}`);
             }
             if (error) {
-                logger.error(error.message);
-                res.resume();
-                return;
+                reject(error);
             }
 
             res.on('data', (chunk) => {
-                rawData += chunk;
-            });
-
-            req.on('error', (e) => {
-                logger.error(`ERROR httpGet: ${e}`);
-                if (onFailure) {
-                    onFailure(url, e);
-                }
-                reject(e);
+                rawDataAccumulator += chunk;
             });
 
             res.on('end', () => {
                 try {
                     if (!redirect) {
-                        /*
-                         * TMP incorrect format handling
-                         * if (/: *,/.test(rawData)) {
-                         *     rawData = rawData.replaceAll(/: *,/ig, ':"",');
-                         * }
-                         */
-
-                        const data = JSON.parse(rawData);
+                        const data = JSON.parse(rawDataAccumulator);
                         if (onSuccess) {
                             onSuccess(url, data);
                         }
                         resolve(data);
                     }
                 } catch (e) {
-                    logger.error(`${e.message} for endpoint: ${url.href}`);
-                    const fp = path.join(
-                        __dirname,
-                        '..',
-                        '..',
-                        '..',
-                        'database',
-                        'cache',
-                        'rawJson',
-                        'failing-endpoints.txt',
-                    );
-                    fs.appendFileSync(fp, `${url.href}\n     ${e.message}\n`);
                     if (onFailure) {
                         onFailure(url, e);
                     }
                     reject(e);
                 }
             });
+        });
+
+        req.on('error', (e) => {
+            if (onFailure) {
+                onFailure(url, e);
+            }
+            reject(e);
         });
 
         req.end();
