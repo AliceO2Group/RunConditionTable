@@ -36,24 +36,32 @@ const genDataPassesBatch = (size) => [...new Array(size)].map(genSingleDataPass)
 const monalisaTargetFileName = 'res_path=json.json';
 
 const MonalisaServiceName = 'MonalisaService';
+const MonalisaServiceDetailsName = 'MonalisaServiceDetails';
 
 const exDet = {
-    1365095595: {
-        run_no: 284581,
-        processed_chunks: 204,
-        number_of_chunks: 204,
-        reconstructed_events: 0,
-        raw_partition: 'LHC18a',
-        lpm_pass: 34,
-        outputdir: '/alice/data/2018/LHC18a/000284581/cosmics_pass1',
-        comment: '',
-        wall_time: '184.88637',
-        saving_time: '10.757226',
-        output_size: 6400139892,
-        packages: 'AliDPG::prod-201901-01-1, AliPhysics::v5-09-45-01-1',
-    },
+    [Symbol(() => randint(1000000000, 2000000000))]: () => ({
+        run_no: randint(1000000, 9000000),
+    }),
 };
 
+const universalUnitGenerator = (unitGenerator) => {
+    if (typeof unitGenerator === 'function') {
+        return unitGenerator();
+    }
+    if (typeof unitGenerator === 'object') {
+        if (Array.isArray(unitGenerator)) {
+            throw new Error('unitGenerator cannot be array');
+        }
+        // First generation pass (object names only)
+        const partialResult = Object.fromEntries(
+            ...Object.entries(unitGenerator).map(([k, v]) => [k, universalUnitGenerator(v)]),
+            ...Object.getOwnPropertySymbols((symbol) => [eval(symbol.description)(), universalUnitGenerator(unitGenerator[symbol])]),
+        )
+    }
+}
+const universalArrayDataGenerator = (size, unitGenerator) => {
+
+}
 
 
 const generateRandomMonalisaCachedRawJsons = () => {
