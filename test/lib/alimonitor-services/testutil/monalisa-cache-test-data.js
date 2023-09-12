@@ -14,10 +14,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const { Cacher } = require('../../../../app/lib/alimonitor-services/helpers');
-const { randint, choice } = require('./common.js');
+const { Cacher, ServicesEndpointsFormatter } = require('../../../../app/lib/alimonitor-services/helpers');
+const { randint, choice, universalNoncontextualArrayDataGenerator } = require('./common.js');
 
-const keptFields = {
+const dataPassUnitGenerator = {
     name: () => `LHC${choice([18, 22, 23])}_${choice('acxcvbadtqehgnvbs')}pass${choice('123456789')}`,
     reconstructed_events: () => randint(49412, 1251796425),
     description: () => [...new Array(randint(4, 255))].map(() => choice(['SOME', 'random', ' DESCRIPTION', 'FOR', 'data', 'PASS'])).join(' '),
@@ -26,62 +26,49 @@ const keptFields = {
     last_run: () => randint(500000, 600000),
 };
 
-const genSingleDataPass = () => Object.fromEntries(
-    Object.entries(keptFields)
-        .map(([runField, fieldDataGenerator]) => [runField, fieldDataGenerator()]),
-);
-
-const genDataPassesBatch = (size) => [...new Array(size)].map(genSingleDataPass);
-
 const monalisaTargetFileName = 'res_path=json.json';
 
 const MonalisaServiceName = 'MonalisaService';
 const MonalisaServiceDetailsName = 'MonalisaServiceDetails';
 
-const exDet = {
+const dataPassdetailsUnitGereator = {
     [Symbol(() => randint(1000000000, 2000000000))]: () => ({
         run_no: randint(1000000, 9000000),
     }),
 };
 
-const universalUnitGenerator = (unitGenerator) => {
-    if (typeof unitGenerator === 'function') {
-        return unitGenerator();
-    } else if (typeof unitGenerator === 'object') {
-        return Array.isArray(unitGenerator) ?
-            unitGenerator.map((subUnitGenerator) => universalArrayDataGenerator(subUnitGenerator))
-            : Object.fromEntries([
-                ...Object.entries(unitGenerator).map(([keyName, subUnitGenerator]) => [keyName, universalUnitGenerator(subUnitGenerator)]),
-                ...Object.getOwnPropertySymbols(unitGenerator)
-                    .map((symbol) => [
-                        eval(symbol.description)(),
-                        universalUnitGenerator(unitGenerator[symbol]),
-                    ]),
-            ]);
-    } else {
-        // Assume some primitive type
-        return unitGenerator;
-    }
-};
-
-const universalArrayDataGenerator = (size, unitGenerator) => [...new Array(size)].map(() => universalUnitGenerator(unitGenerator));
-
 const generateRandomMonalisaCachedRawJsons = () => {
-    const dataPasses = genDataPassesBatch(100);
-    const cacheDir = Cacher.serviceCacheDir(MonalisaServiceName);
+    // Generate data passes
+    const dataPasses = universalNoncontextualArrayDataGenerator(100, dataPassUnitGenerator);
+    let cacheDir = Cacher.serviceCacheDir(MonalisaServiceName);
     if (!fs.existsSync(cacheDir)) {
         fs.mkdirSync(cacheDir, { recursive: true });
     }
     fs.writeFileSync(path.join(cacheDir, monalisaTargetFileName), JSON.stringify(dataPasses, null, 2));
+
+    // --------
+
+    cacheDir = Cacher.serviceCacheDir(MonalisaServiceDetailsName);
+    if (!fs.existsSync(cacheDir)) {
+        fs.mkdirSync(cacheDir, { recursive: true });
+    }
+    // Generate data passes details
+    for (const dataPass of dataPasses) {
+        const { description } = dataPass;
+        const dataPassDetails = universalNoncontextualArrayDataGenerator(randint(1, 50), dataPassdetailsUnitGereator);
+        fs.writeFileSync(
+            Cacher.cachedFilePath(MonalisaServiceDetailsName, ServicesEndpointsFormatter.dataPassesDetailed(description)),
+            JSON.stringify(dataPassDetails, null, 2),
+        );
+    }
 };
 
 const cleanCachedMonalisaData = () => {
     fs.rmSync(Cacher.serviceCacheDir(MonalisaServiceName), { recursive: true, force: true });
+    fs.rmSync(Cacher.serviceCacheDir(MonalisaServiceDetailsName), { recursive: true, force: true });
 };
 
 module.exports = {
     generateRandomMonalisaCachedRawJsons,
     cleanCachedMonalisaData,
-    universalUnitGenerator,
-    universalArrayDataGenerator,
 };

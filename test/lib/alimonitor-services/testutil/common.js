@@ -15,7 +15,33 @@
 const randint = (min = 0, max = 0) => Math.round(Math.random() * (max - min) + min);
 const choice = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
+const universalNoncontextualDataUnitGenerator = (unitGenerator) => {
+    if (typeof unitGenerator === 'function') {
+        return unitGenerator();
+    } else if (typeof unitGenerator === 'object') {
+        return Array.isArray(unitGenerator) ?
+            unitGenerator.map((subUnitGenerator) => universalNoncontextualArrayDataGenerator(subUnitGenerator))
+            : Object.fromEntries([
+                ...Object.entries(unitGenerator).map(([keyName, subUnitGenerator]) =>
+                    [keyName, universalNoncontextualDataUnitGenerator(subUnitGenerator)]),
+                ...Object.getOwnPropertySymbols(unitGenerator)
+                    .map((symbol) => [
+                        eval(symbol.description)(),
+                        universalNoncontextualDataUnitGenerator(unitGenerator[symbol]),
+                    ]),
+            ]);
+    } else {
+        // Assume some primitive type
+        return unitGenerator;
+    }
+};
+
+const universalNoncontextualArrayDataGenerator = (size, unitGenerator) =>
+    [...new Array(size)].map(() => universalNoncontextualDataUnitGenerator(unitGenerator));
+
 module.exports = {
     randint,
     choice,
+    universalNoncontextualDataUnitGenerator,
+    universalNoncontextualArrayDataGenerator,
 };
