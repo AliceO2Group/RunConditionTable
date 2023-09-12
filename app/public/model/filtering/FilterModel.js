@@ -20,7 +20,7 @@ import { Observable } from '/js/src/index.js';
 export default class FilterModel extends Observable {
     constructor() {
         super();
-        this._filterObject = {};
+        this._activeFilters = {};
     }
 
     addFilter(field, value, type) {
@@ -33,6 +33,7 @@ export default class FilterModel extends Observable {
     }
 
     buildFilterPhrase(field, value, type = null) {
+        console.log(Object.keys(this._activeFilters));
         return `filter[${field}]${type ? `[${type}]` : ''}=${value}`;
     }
 }

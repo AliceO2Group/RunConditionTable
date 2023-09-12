@@ -19,7 +19,7 @@ import { createCSVExport, createJSONExport } from '../../utils/dataExport/export
 import { exportFormats } from './overview/dataExport.js';
 import { pageTitle } from '../../components/common/pageTitle.js';
 import { periodsActiveColumns } from './ActiveColumns/periodsActiveColumns.js';
-import { buildFilterPhrase } from '../../utils/filtering/filterUtils.js';
+import FilterModel from '../../model/filtering/FilterModel.js';
 
 /**
  * Model representing handlers for periods page
@@ -49,6 +49,8 @@ export default class PeriodsModel extends Observable {
         this._hideSelectedPeriods = false;
         this._sortingRowVisible = false;
 
+        this._filtering = new FilterModel();
+
         this._currentPagePeriods = RemoteData.notAsked();
         this._allPeriods = RemoteData.notAsked();
 
@@ -60,7 +62,7 @@ export default class PeriodsModel extends Observable {
      * @param {Object} filterObject object that defines requested filtering
      * @return {Promise<void>} void
      */
-    async fetchAllPeriods(filterObject = {}) {
+    async fetchAllPeriods() {
         /**
          * @type {Period[]}
          */
@@ -69,7 +71,7 @@ export default class PeriodsModel extends Observable {
 
         this._allPeriods = RemoteData.notAsked();
 
-        const endpoint = `/api/periods/?${new URLSearchParams(filterObject).toString()}`;
+        const endpoint = `/api/periods/?${new URLSearchParams(this._filtering.filterObject).toString()}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._allPeriods = RemoteData.success([...items]);
@@ -86,15 +88,15 @@ export default class PeriodsModel extends Observable {
      * @param {Object} filterObject object that defines requested filtering
      * @return {Promise<void>} void
      */
-    async fetchCurrentPagePeriods(filterObject = {}) {
+    async fetchCurrentPagePeriods() {
         /**
          * @type {Period[]}
          */
 
-        const filterPhrase = buildFilterPhrase('name', 'LHC%', 'like');
+        const filterPhrase = this._filtering.buildFilterPhrase('name', 'LHC%', 'like');
 
         if (this._allPeriods.kind === 'NotAsked') {
-            await this.fetchAllPeriods(filterObject);
+            await this.fetchAllPeriods();
         }
 
         this._currentPagePeriods = RemoteData.loading();
@@ -193,6 +195,10 @@ export default class PeriodsModel extends Observable {
 
     get sortingRowVisible() {
         return this._sortingRowVisible;
+    }
+
+    get filtering() {
+        return this._filtering;
     }
 
     toggleFilterPanelVisibility() {
