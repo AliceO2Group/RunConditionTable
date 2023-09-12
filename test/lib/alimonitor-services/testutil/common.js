@@ -20,7 +20,7 @@ const universalNoncontextualDataUnitGenerator = (unitGenerator) => {
         return unitGenerator();
     } else if (typeof unitGenerator === 'object') {
         return Array.isArray(unitGenerator) ?
-            unitGenerator.map((subUnitGenerator) => universalNoncontextualArrayDataGenerator(subUnitGenerator))
+            unitGenerator.map((subUnitGenerator) => universalNoncontextualDataUnitGenerator(subUnitGenerator))
             : Object.fromEntries([
                 ...Object.entries(unitGenerator).map(([keyName, subUnitGenerator]) =>
                     [keyName, universalNoncontextualDataUnitGenerator(subUnitGenerator)]),
