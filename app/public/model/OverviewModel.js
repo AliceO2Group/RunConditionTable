@@ -25,14 +25,4 @@
  * @property {Boolean} hideSelectedRows
  * @function fetchCurrentPageData
  * @function createDataExport
- * @function
- * @field {} ffg
- * sortingRowVisible
- * toggleSelection
- *
- *  toggleSortingRowVisibility
- *
- *  toggleFieldVisibility
- *
- *  toggleSelectedRowsVisibility
  */
