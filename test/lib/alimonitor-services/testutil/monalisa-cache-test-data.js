@@ -17,21 +17,24 @@ const path = require('path');
 const { Cacher, ServicesEndpointsFormatter } = require('../../../../app/lib/alimonitor-services/helpers');
 const { randint, choice, universalNoncontextualArrayDataGenerator } = require('./common.js');
 
-const dataPassUnitGenerator = {
-    name: () => `LHC${choice([18, 22, 23])}_${choice('acxcvbadtqehgnvbs')}pass${choice('123456789')}`,
-    reconstructed_events: () => randint(49412, 1251796425),
-    description: () => [...new Array(randint(4, 255))].map(() => choice(['SOME', 'random', ' DESCRIPTION', 'FOR', 'data', 'PASS'])).join(' '),
-    output_size: () => randint(3.6597765e+09, 1.38163905e+14),
-    interaction_type: () => choice(['pp', 'PbPb', 'pPb']),
-    last_run: () => randint(500000, 600000),
-};
+const dataPassUnitGenerator = [
+    () => `LHC${choice([18, 22, 23])}${choice('acxcvbadtqehgnvbs')}_${choice('acxcvbadtqehgnvbs')}pass${choice('123456789')}`,
+    {
+        reconstructed_events: () => randint(49412, 1251796425),
+        description: () => [...new Array(randint(4, 255))]
+            .map(() => choice(['SOME', 'random', ' DESCRIPTION', 'FOR', 'data', 'PASS'])).join(' '),
+        output_size: () => randint(3.6597765e+09, 1.38163905e+14),
+        interaction_type: () => choice(['pp', 'PbPb', 'pPb']),
+        last_run: () => randint(500000, 600000),
+    },
+];
 
 const monalisaTargetFileName = 'res_path=json.json';
 
 const MonalisaServiceName = 'MonalisaService';
 const MonalisaServiceDetailsName = 'MonalisaServiceDetails';
 
-const dataPassdetailsUnitGereator = {
+const dataPassDetailsUnitGenerator = {
     [Symbol(() => randint(1000000000, 2000000000))]: () => ({
         run_no: randint(1000000, 9000000),
     }),
@@ -39,7 +42,7 @@ const dataPassdetailsUnitGereator = {
 
 const generateRandomMonalisaCachedRawJsons = () => {
     // Generate data passes
-    const dataPasses = universalNoncontextualArrayDataGenerator(100, dataPassUnitGenerator);
+    const dataPasses = Object.fromEntries(universalNoncontextualArrayDataGenerator(10, dataPassUnitGenerator));
     let cacheDir = Cacher.serviceCacheDir(MonalisaServiceName);
     if (!fs.existsSync(cacheDir)) {
         fs.mkdirSync(cacheDir, { recursive: true });
@@ -53,9 +56,9 @@ const generateRandomMonalisaCachedRawJsons = () => {
         fs.mkdirSync(cacheDir, { recursive: true });
     }
     // Generate data passes details
-    for (const dataPass of dataPasses) {
-        const { description } = dataPass;
-        const dataPassDetails = universalNoncontextualArrayDataGenerator(randint(1, 50), dataPassdetailsUnitGereator);
+    for (const dataPassName in dataPasses) {
+        const { description } = dataPasses[dataPassName];
+        const dataPassDetails = universalNoncontextualArrayDataGenerator(randint(1, 50), dataPassDetailsUnitGenerator);
         fs.writeFileSync(
             Cacher.cachedFilePath(MonalisaServiceDetailsName, ServicesEndpointsFormatter.dataPassesDetailed(description)),
             JSON.stringify(dataPassDetails, null, 2),
