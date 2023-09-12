@@ -20,7 +20,17 @@ const { createHash } = require('crypto');
 
 const maxSystemFileNameLength = process.env.MAX_FILE_NAME_LENGTH || 255;
 
+/**
+ * Class providing utitlities for caching data fetched from external services
+ */
 class Cacher {
+    /**
+     * Store data
+     * @param {String} synchronizerName name of service used to fetch data
+     * @param {URL} endpoint data were fetched from
+     * @param {Object} data to be stringified
+     * @return {void}
+     */
     static cache(synchronizerName, endpoint, data) {
         const cacheDir = Cacher.serviceCacheDir(synchronizerName);
         if (!fs.existsSync(cacheDir)) {
@@ -32,19 +42,43 @@ class Cacher {
         );
     }
 
+    /**
+     * Check if data from given endpoint are cached
+     * @param {String} synchronizerName name of synchronized
+     * @param {URL} endpoint data were fetched from
+     * @return {Boolean} true if cached false otherwise
+     */
     static isCached(synchronizerName, endpoint) {
         return fs.existsSync(Cacher.cachedFilePath(synchronizerName, endpoint));
     }
 
+    /**
+     * Get cached data
+     * @param {String} synchronizerName name of synchronized
+     * @param {URL} endpoint data were fetched from
+     * @return {JSON} data
+     */
     static getJsonSync(synchronizerName, endpoint) {
         return JSON.parse(fs.readFileSync(Cacher.cachedFilePath(synchronizerName, endpoint)));
     }
 
+    /**
+     * Get cached data
+     * @param {String} synchronizerName name of synchronized
+     * @param {URL} endpoint data were fetched from
+     * @return {Promise<JSON>} data
+     */
     static async getJson(synchronizerName, endpoint) {
         return await fs.readFile(Cacher.cachedFilePath(synchronizerName, endpoint))
             .then((r) => JSON.parse(r));
     }
 
+    /**
+     * Return path to data given via endpoint they were fetched from and synchronizer name
+     * @param {String} synchronizerName name of synchronized
+     * @param {URL} endpoint data were fetched from
+     * @return {String} path
+     */
     static cachedFilePath(synchronizerName, endpoint) {
         return path.join(
             Cacher.serviceCacheDir(synchronizerName),
@@ -52,7 +86,13 @@ class Cacher {
         );
     }
 
-
+    /**
+     * Return name of file to store json data based on searchParans of endpoint they were fetched from
+     * In case file name is too long, it is cut to appropriate length and
+     * sifixed with '#' character and hash of origina NON-shortened file name
+     * @param {URL} endpoint endpoint data was fetched from
+     * @returns {String} file name
+     */
     static cachedFileName(endpoint) {
         const fileExtension = '.json';
         const maxFilenameLength = maxSystemFileNameLength - fileExtension.length;
@@ -65,6 +105,12 @@ class Cacher {
         return `${fileName}${fileExtension}`;
     }
 
+    /**
+     * Return path to director where data from given synchronizer will be stored
+     * @param {String} synchronizerName name of synchronized
+     * @param {URL} endpoint data were fetched from
+     * @return {String} path
+     */
     static serviceCacheDir(synchronizerName) {
         return path.join(
             config.services.rawJsonCachePath,
