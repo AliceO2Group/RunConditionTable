@@ -34,15 +34,16 @@ const monalisaTargetFileName = 'res_path=json.json';
 const MonalisaServiceName = 'MonalisaService';
 const MonalisaServiceDetailsName = 'MonalisaServiceDetails';
 
-const dataPassDetailsUnitGenerator = {
-    [Symbol(() => randint(1000000000, 2000000000))]: () => ({
+const dataPassDetailsUnitGenerator = [
+    () => randint(1000000000, 2000000000),
+    () => ({
         run_no: randint(1000000, 9000000),
     }),
-};
+];
 
-const generateRandomMonalisaCachedRawJsons = () => {
+const generateRandomMonalisaCachedRawJsons = (size, detailsMin, detialsMax) => {
     // Generate data passes
-    const dataPasses = Object.fromEntries(universalNoncontextualArrayDataGenerator(10, dataPassUnitGenerator));
+    const dataPasses = Object.fromEntries(universalNoncontextualArrayDataGenerator(size, dataPassUnitGenerator));
     let cacheDir = Cacher.serviceCacheDir(MonalisaServiceName);
     if (!fs.existsSync(cacheDir)) {
         fs.mkdirSync(cacheDir, { recursive: true });
@@ -58,7 +59,9 @@ const generateRandomMonalisaCachedRawJsons = () => {
     // Generate data passes details
     for (const dataPassName in dataPasses) {
         const { description } = dataPasses[dataPassName];
-        const dataPassDetails = universalNoncontextualArrayDataGenerator(randint(1, 50), dataPassDetailsUnitGenerator);
+        const dataPassDetails = Object.fromEntries(
+            universalNoncontextualArrayDataGenerator(randint(detailsMin, detialsMax), dataPassDetailsUnitGenerator),
+        );
         fs.writeFileSync(
             Cacher.cachedFilePath(MonalisaServiceDetailsName, ServicesEndpointsFormatter.dataPassesDetailed(description)),
             JSON.stringify(dataPassDetails, null, 2),
