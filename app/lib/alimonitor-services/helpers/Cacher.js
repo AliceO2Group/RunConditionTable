@@ -16,6 +16,9 @@
 const path = require('path');
 const fs = require('fs');
 const config = require('../../config/configProvider');
+const { createHash } = require('crypto');
+
+const maxSystemFileNameLength = process.env.MAX_FILE_NAME_LENGTH || 255;
 
 class Cacher {
     static cache(synchronizerName, endpoint, data) {
@@ -43,18 +46,23 @@ class Cacher {
     }
 
     static cachedFilePath(synchronizerName, endpoint) {
-        const maxSystemFilenameLength = 255;
-        if (endpoint.length > maxSystemFilenameLength) {
-            endpoint = endpoint.slice(0, maxSystemFilenameLength); // TODO better solution
-        }
         return path.join(
             Cacher.serviceCacheDir(synchronizerName),
             Cacher.cachedFileName(endpoint),
         );
     }
 
+
     static cachedFileName(endpoint) {
-        return `${endpoint.searchParams.toString()}.json`;
+        const fileExtension = '.json';
+        const maxFilenameLength = maxSystemFileNameLength - fileExtension.length;
+        let fileName = endpoint.searchParams.toString();
+        if (fileName.length > maxFilenameLength) {
+            const hash = createHash('md5').update(fileName).digest('hex');
+            fileName = fileName.slice(0, maxFilenameLength - (hash.length + 1));
+            fileName += `#${hash}`;
+        }
+        return `${fileName}${fileExtension}`;
     }
 
     static serviceCacheDir(synchronizerName) {
