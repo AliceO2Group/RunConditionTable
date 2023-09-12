@@ -47,22 +47,24 @@ const exDet = {
 const universalUnitGenerator = (unitGenerator) => {
     if (typeof unitGenerator === 'function') {
         return unitGenerator();
+    } else if (typeof unitGenerator === 'object') {
+        return Array.isArray(unitGenerator) ?
+            unitGenerator.map((subUnitGenerator) => universalArrayDataGenerator(subUnitGenerator))
+            : Object.fromEntries([
+                ...Object.entries(unitGenerator).map(([keyName, subUnitGenerator]) => [keyName, universalUnitGenerator(subUnitGenerator)]),
+                ...Object.getOwnPropertySymbols(unitGenerator)
+                    .map((symbol) => [
+                        eval(symbol.description)(),
+                        universalUnitGenerator(unitGenerator[symbol]),
+                    ]),
+            ]);
+    } else {
+        // Assume some primitive type
+        return unitGenerator;
     }
-    if (typeof unitGenerator === 'object') {
-        if (Array.isArray(unitGenerator)) {
-            throw new Error('unitGenerator cannot be array');
-        }
-        // First generation pass (object names only)
-        const partialResult = Object.fromEntries(
-            ...Object.entries(unitGenerator).map(([k, v]) => [k, universalUnitGenerator(v)]),
-            ...Object.getOwnPropertySymbols((symbol) => [eval(symbol.description)(), universalUnitGenerator(unitGenerator[symbol])]),
-        )
-    }
-}
-const universalArrayDataGenerator = (size, unitGenerator) => {
+};
 
-}
-
+const universalArrayDataGenerator = (size, unitGenerator) => [...new Array(size)].map(() => universalUnitGenerator(unitGenerator));
 
 const generateRandomMonalisaCachedRawJsons = () => {
     const dataPasses = genDataPassesBatch(100);
@@ -80,4 +82,6 @@ const cleanCachedMonalisaData = () => {
 module.exports = {
     generateRandomMonalisaCachedRawJsons,
     cleanCachedMonalisaData,
+    universalUnitGenerator,
+    universalArrayDataGenerator,
 };
