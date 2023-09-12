@@ -36,9 +36,11 @@ const { generateRandomMonalisaCachedRawJsons, cleanCachedMonalisaData } = requir
 const assert = require('assert');
 const { expect } = require('chai');
 
+const generatedCachedRunsPerFile = 100;
+
 module.exports = () => describe('SyncManager suite', () => {
     before(() => {
-        generateRandomBookkeepingCachedRawJsons();
+        generateRandomBookkeepingCachedRawJsons(generatedCachedRunsPerFile, 2);
         generateRandomMonalisaCachedRawJsons();
     });
 
