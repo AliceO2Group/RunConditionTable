@@ -228,7 +228,7 @@ class TransformHelper {
  *       "lt": "3",
  *       "_goperator": "or"
  *     },
- *     "fiedl2": {
+ *     "field2": {
  *       "like": "LHC_%pass",
  *       "notLike": "LHC_c%"
  *     }
