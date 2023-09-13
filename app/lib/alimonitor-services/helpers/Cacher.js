@@ -106,8 +106,8 @@ class Cacher {
     }
 
     /**
-     * Return path to director where data from given synchronizer will be stored
-     * @param {String} synchronizerName name of synchronized
+     * Return path to directory where data from given synchronizer will be stored
+     * @param {String} synchronizerName name of synchronizer
      * @param {URL} endpoint data were fetched from
      * @return {String} path
      */
