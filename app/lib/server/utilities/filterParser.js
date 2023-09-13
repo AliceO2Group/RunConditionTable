@@ -35,6 +35,8 @@ const reservedNames = new Set([...relationalOperators, ...logicalOperators, ...[
 
 const transformationSentinel = 'and';
 
+const arrayElementIdentifierRegExp = /\$(0)|([1-9]+[0-9]*)/;
+
 class TransformHelper {
     constructor(opts) {
         this.opts = opts;
@@ -65,18 +67,15 @@ class TransformHelper {
 
     handleArray(relationOperator, group) {
         const groupValues = group.map((val) => this.handleDelimiterSeparatedValues(val)).flat();
-        const checkValue = () => {
-            if (patternRelationalOperartors.has(relationOperator)) {
-                return groupValues.join('|');
-            } else if (arrayRelationalConditions.has(relationOperator)) {
-                return groupValues;
-            } else {
-                throw new Error(
-                    `Array values can be handled only be ${[...patternRelationalOperartors, ...arrayRelationalConditions]} operator`,
-                );
-            }
-        };
-        return [Op[relationOperator], checkValue()];
+        if (patternRelationalOperartors.has(relationOperator)) {
+            return [Op[relationOperator.startsWith('not') ? 'and' : 'or'], groupValues.map((v) => ({ [Op[relationOperator]]: v })) ];
+        } else if (arrayRelationalConditions.has(relationOperator)) {
+            return [Op[relationOperator], groupValues];
+        } else {
+            throw new Error(
+                `Array values can be handled only be ${[...patternRelationalOperartors, ...arrayRelationalConditions]} operator`,
+            );
+        }
     }
 
     pullGroupOperator(group) {
@@ -87,7 +86,13 @@ class TransformHelper {
     }
 
     transformHelper(filter) {
-        return Object.fromEntries(Object.entries(filter)
+        const allAreArraysElement = Object.keys(filter).every((k) => arrayElementIdentifierRegExp.test(k)) && Object.entries(filter).length > 0;
+        const someAreArraysElement = Object.keys(filter).some((k) => arrayElementIdentifierRegExp.test(k));
+        if (someAreArraysElement && !allAreArraysElement) {
+            throw new Error('Cannot combine syntax for arrays and object groups');
+        }
+
+        const processedFilterEntries = Object.entries(filter)
             .map(([k, group]) => {
                 const groupOperator = this.pullGroupOperator(group);
                 if (Array.isArray(group)) { // If group is array it is assumed that it is terminal value
@@ -108,7 +113,9 @@ class TransformHelper {
                             : this.handleIntermidiateFilterNode(group, groupOperator),
                     ];
                 }
-            }));
+            });
+
+        return allAreArraysElement ? processedFilterEntries.map(([_k, group]) => group) : Object.fromEntries(processedFilterEntries);
     }
 
     transform(filter) {
