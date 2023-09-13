@@ -41,6 +41,10 @@ class TransformHelper {
     }
 
     handleIntermidiateFilterNode(group, groupOperator) {
+        if (typeof group !== 'object') {
+            return group;
+        }
+
         const transformedSubfilter = this.transformHelper(group);
         return this.opts.pruneRedundantANDOperator && groupOperator === defaultGroupOperator ?
             transformedSubfilter :
@@ -49,17 +53,6 @@ class TransformHelper {
 
     handleArrayValues(val) {
         return val.split(/,/).map((v) => v.trim());
-    }
-
-    handelFieldFilterTail(fieldGroup, groupOperator) {
-        const transformedFieldGroup = Object.fromEntries(Object.entries(fieldGroup)
-            .map(([relOp, val]) => [
-                Op[relOp] ?? throwWrapper(new Error(`No relational operator <${relOp}>, only <${[...relationalOperators]}> are allowed`)),
-                arrayRelationalConditions.has(relOp) ? this.handleArrayValues(val) : val,
-            ]));
-        return this.opts.pruneRedundantANDOperator && groupOperator === defaultGroupOperator ?
-            transformedFieldGroup :
-            { [Op[groupOperator]]: transformedFieldGroup };
     }
 
     pullGroupOperator(group) {
@@ -75,14 +68,16 @@ class TransformHelper {
                 const groupOperator = this.pullGroupOperator(group);
                 if (!reservedNames.has(k)) { // Assumes that k is field from db view
                     if (typeof group === 'object') {
-                        return [k, this.handelFieldFilterTail(group, groupOperator)];
+                        return [k, this.handleIntermidiateFilterNode(group, groupOperator)];
                     } else {
                         return [k, group]; // Assumes that there is not relation operator
                     }
-                } else { // Then k stands for logical operator
+                } else { // Then k stands for operator
                     return [
-                        Op[k] ?? throwWrapper(new Error(`No logical operator <${k}>, only <${[...logicalOperators]}> are allowed`)),
-                        this.handleIntermidiateFilterNode(group, groupOperator),
+                        Op[k] ?? throwWrapper(new Error(`No operator <${k}> is allowed, only <${[...reservedNames]}> are allowed`)),
+                        arrayRelationalConditions.has(k) ?
+                            this.handleArrayValues(group)
+                            : this.handleIntermidiateFilterNode(group, groupOperator),
                     ];
                 }
             }));
