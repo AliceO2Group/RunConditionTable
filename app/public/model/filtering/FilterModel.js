@@ -50,7 +50,7 @@ export default class FilterModel extends Observable {
 
     filterTypesMapping(filterType, value) {
         switch (filterType) {
-            case 'match': return `[like]=%${value}%`;
+            case 'match': return `[or][like]=%${value}%`;
             case 'exclude': return `[notLike]='%${value}%'`;
             case 'from': return `[gte]=${value}`;
             case 'to': return `[lte]=${value}`;
