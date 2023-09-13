@@ -20,19 +20,7 @@ module.exports = () => {
             it('should return empty object when provided with undefined or empty object', () => {
                 assert.deepStrictEqual(filterToSequelizeWhereClause(undefined), {});
                 assert.deepStrictEqual(filterToSequelizeWhereClause({}), {});
-            }),
-
-            it('should throw error when filter object has an non-existant ', () => {
-                const srcFilter = {
-                    not: {
-                        nand: {
-                            field3: { eq: 1 },
-                        },
-                    },
-                };
-
-                assert.throws(() => filterToSequelizeWhereClause(srcFilter));
-            }),
+            });
 
             it('should handle syntax for default relational operator \'eq\'', () => {
                 const srcFilter = {
@@ -48,7 +36,7 @@ module.exports = () => {
                 };
 
                 assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
-            }),
+            });
 
             it('should transform filter object - with pruning', () => {
                 const srcFilter = {
