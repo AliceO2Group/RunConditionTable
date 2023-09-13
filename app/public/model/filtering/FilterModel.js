@@ -66,13 +66,10 @@ export default class FilterModel extends Observable {
         }
         this._activeFilters[field][type].push(value);
         this.notify();
-        console.log(this.filterObjects);
     }
 
     removeFilter(field, value, type) {
-        if (this._activeFilters[field][type]) {
-            delete this._activeFilters[field][type];
-        }
+        this._activeFilters[field][type] = this._activeFilters[field][type].filter((element) => element !== value);
         this.notify();
     }
 
@@ -91,24 +88,15 @@ export default class FilterModel extends Observable {
     }
 
     get filterObjects() {
-        console.log(this._activeFilters);
-
-        const fields = Object.keys(this._activeFilters);
-        
-        console.log(fields);
-
-        const result = fields.map((field) => {
-            const types = Object.keys(this._activeFilters[field]);
-            return types.reduce((typeAcc, currentType) => {
-                const values = this._activeFilters[field][currentType];
-                values.forEach((value) => typeAcc.push({
+        const result = Object.keys(this._activeFilters).map((field) =>
+            Object.keys(this._activeFilters[field]).reduce((typeAcc, currentType) => {
+                this._activeFilters[field][currentType].forEach((value) => typeAcc.push({
                     field: field,
                     type: currentType,
                     value: value,
                 }));
                 return typeAcc;
-            }, []);
-        });
+            }, []));
         return result.flat();
     }
 
