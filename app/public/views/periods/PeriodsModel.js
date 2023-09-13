@@ -42,7 +42,6 @@ export default class PeriodsModel extends Observable {
             this.fetchCurrentPagePeriods();
             this.notify();
         });
-
         this._fields = periodsActiveColumns;
 
         this._filterPanelVisible = false;
@@ -50,6 +49,10 @@ export default class PeriodsModel extends Observable {
         this._sortingRowVisible = false;
 
         this._filtering = new FilterModel();
+        this._filtering.observe(() => {
+            this.fetchCurrentPagePeriods();
+            this.notify();
+        })
 
         this._currentPagePeriods = RemoteData.notAsked();
         this._allPeriods = RemoteData.notAsked();
@@ -72,7 +75,8 @@ export default class PeriodsModel extends Observable {
 
         this._allPeriods = RemoteData.notAsked();
 
-        const endpoint = `/api/periods/?${this._filtering.buildFilterPhrase()}`;
+        const endpoint = `/api/periods/?${encodeURI(this._filtering.buildFilterPhrase())}`;
+        console.log(endpoint);
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._allPeriods = RemoteData.success([...items]);
@@ -110,7 +114,7 @@ export default class PeriodsModel extends Observable {
 
         this._currentPagePeriods = RemoteData.notAsked();
 
-        const endpoint = `/api/periods?${[new URLSearchParams(params).toString(), filterPhrase].join('&')}`;
+        const endpoint = `/api/periods?${[new URLSearchParams(params).toString(), encodeURI(filterPhrase)].join('&')}`;
 
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);

@@ -22,6 +22,7 @@ import periodsTableHeader from '../table/periodsTableHeader.js';
 import periodsTableRow from '../table/periodsTableRow.js';
 import tableManager from '../../../components/table/tableManager.js';
 import filteringPanel from '../../../components/filter/filteringPanel.js';
+import activeFilters from '../../../components/filter/activeFilters.js';
 const pageName = RCT.pageNames.periods;
 
 /**
@@ -52,7 +53,7 @@ export default function periodsContent(periodsModel, model) {
             dataActionButtons(dataAccess, applicableDataActions, periodsModel)),
 
         periodsModel.filterPanelVisible ? filteringPanel(periodsModel) : '',
-        anyFiltersActive(url) ? obsoleteActiveFilters(dataAccess, url) : '',
+        periodsModel.filtering.isAnyFilterActive() ? activeFilters(periodsModel.filtering) : '',
 
         periods.length > 0
             ? periodsModel.visibleFields.length > 0

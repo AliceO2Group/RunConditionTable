@@ -13,29 +13,19 @@
  */
 
 import { h } from '/js/src/index.js';
-import { filterField, filterType, filterSearch, isFilterExpression, filtersFromUrl } from '../../../../../utils/filtering/filterUtils.js';
 
 /**
  * Component responsible for displaying active filters
- * @param {*} model dataAccessModel
- * @param {*} url current url
+ * @param {FilterModel} model model repsonsible for filter management for the current model
  * @returns {vnode}
  */
-
-export default function activeFilters(model, url) {
-    const dataPointer = model.getCurrentDataPointer();
-
-    function onClearAll() {
-        model.navigation.go(dataPointer.page, dataPointer.index);
+export default function activeFilters(model) {
+    const onClearAll = () => {
+        model.reset();
     }
 
-    function onClearFilter(filter) {
-        const filterExpressions = url.href.split('&').filter((item) => isFilterExpression(item));
-        const newUrl = url.href.replace(`&${filterExpressions.filter((item) =>
-            filterField(item) === filter.field &&
-            filterType(item) === filter.type &&
-            filterSearch(item) === filter.search)}`, '');
-        model.router.go(newUrl);
+    const onClearFilter = (filter) => {
+        model.removeFilter(filter.field, filter.value, filter.type);
     }
 
     return [
@@ -46,7 +36,8 @@ export default function activeFilters(model, url) {
                     onclick: () => onClearAll(),
                 }, 'Clear all'))),
         h('.flex-wrap.items-center.chips',
-            filtersFromUrl(url).map((filter) => [
+            /*
+            model.filterObjects.map((filter) => [
                 h('.chip.filter-chip.inline',
                     h('.filter-field.inline', filter.field),
                     h('.filter-type.inline', filter.type),
@@ -56,6 +47,7 @@ export default function activeFilters(model, url) {
                             onClearFilter(filter);
                         },
                     }, h('.close-10-primary'))),
-            ])),
+            ])*/
+            ),
     ];
 }

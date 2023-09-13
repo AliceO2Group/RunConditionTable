@@ -23,23 +23,37 @@ export default class FilterModel extends Observable {
         this._activeFilters = {};
     }
 
+    reset() {
+        this._activeFilters = {};
+        this.notify();
+    }
+
     addFilter(field, value, type) {
         Object.assign(this._activeFilters,
             this._activeFilters[field]
                 ? { [field]: {
                     ...this._activeFilters[field],
-                    [type]: value } }
+                    [type]: []} }
                 : { [field]: {
-                    [type]: value } });
+                    [type]: []} });
+        this._activeFilters[field][type].push(value);
+        this.notify();
+        console.log(this.filterObjects);
+    }
+
+    removeFilter(field, value, type) {
+        if (this._activeFilters[field][type]) {
+            delete this._activeFilters[field][type];
+        }
         this.notify();
     }
 
     filterTypesMapping(filterType, value) {
         switch (filterType) {
             case 'match': return `[like]=%${value}%`;
-            case 'exclude': return `[notLike]=%${value}%`;
-            case 'from': return `[gt]=${value}`;
-            case 'to': return `[lt]=${value}`;
+            case 'exclude': return `[notLike]='%${value}%'`;
+            case 'from': return `[gte]=${value}`;
+            case 'to': return `[lte]=${value}`;
             default: return `=${value}`;
         }
     }
@@ -48,13 +62,38 @@ export default class FilterModel extends Observable {
         return this._activeFilters;
     }
 
+    get filterObjects() {
+        console.log(this._activeFilters);
+        const result = Object.keys(this._activeFilters).reduce((fieldAcc, currentField) => {
+            Object.keys(this._activeFilters[currentField]).reduce((typeAcc, currentType) => {
+                typeAcc.push(this._activeFilters[currentField][currentType]);
+            })
+
+
+            /*
+            acc.push({
+                field: currentField,
+                type: 'sd',
+                search: ,
+            })
+            */
+        }, []);
+        console.log(result);
+        return result;
+    }
+
+    isAnyFilterActive() {
+        return Object.keys(this._activeFilters).length > 0;
+    }
+
     buildFilterPhrase() {
         let filterPhrase = '';
         for (const [field, typeValues] of Object.entries(this._activeFilters)) {
-            for (const [type, value] of Object.entries(typeValues)) {
-                filterPhrase += `${filterPhrase.length ? '&' : ''}filter[${field}]${this.filterTypesMapping(type, value)}`;
+            for (const [type, values] of Object.entries(typeValues)) {
+                values.forEach((value) => filterPhrase += `${filterPhrase.length ? '&' : ''}filter[${field}]${this.filterTypesMapping(type, value)}`);
             }
         }
+        console.log(filterPhrase);
         return filterPhrase;
     }
 }
