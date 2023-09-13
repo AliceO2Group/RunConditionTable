@@ -52,7 +52,7 @@ export default class PeriodsModel extends Observable {
         this._filtering.observe(() => {
             this.fetchCurrentPagePeriods();
             this.notify();
-        })
+        });
 
         this._currentPagePeriods = RemoteData.notAsked();
         this._allPeriods = RemoteData.notAsked();
@@ -76,7 +76,6 @@ export default class PeriodsModel extends Observable {
         this._allPeriods = RemoteData.notAsked();
 
         const endpoint = `/api/periods/?${encodeURI(this._filtering.buildFilterPhrase())}`;
-        console.log(endpoint);
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._allPeriods = RemoteData.success([...items]);

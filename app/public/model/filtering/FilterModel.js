@@ -39,6 +39,7 @@ export default class FilterModel extends Observable {
             case 'to': {
                 this._activeFilters[field][type] = [];
                 this._activeFilters[field][type].push(value);
+                break;
             }
             default: break;
         }
@@ -52,7 +53,7 @@ export default class FilterModel extends Observable {
         if (!this._activeFilters.hasOwnProperty(field)) {
             this._activeFilters[field] = {
                 [type]: [],
-            }
+            };
         }
         if (!this._activeFilters[field].hasOwnProperty(type)) {
             this.resetFilterValue(field, type);
@@ -108,10 +109,10 @@ export default class FilterModel extends Observable {
         let filterPhrase = '';
         for (const [field, typeValues] of Object.entries(this._activeFilters)) {
             for (const [type, values] of Object.entries(typeValues)) {
-                values.forEach((value) => filterPhrase += `${filterPhrase.length ? '&' : ''}filter[${field}]${this.filterTypesMapping(type, value)}`);
+                values.forEach((value) =>
+                    filterPhrase += `${filterPhrase.length ? '&' : ''}filter[${field}]${this.filterTypesMapping(type, value)}`);
             }
         }
-        console.log(filterPhrase);
         return filterPhrase;
     }
 }

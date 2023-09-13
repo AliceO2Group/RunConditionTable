@@ -17,16 +17,16 @@ import { h } from '/js/src/index.js';
 /**
  * Component responsible for displaying active filters
  * @param {FilterModel} model model repsonsible for filter management for the current model
- * @returns {vnode}
+ * @returns {vnode} active filters chips
  */
 export default function activeFilters(model) {
     const onClearAll = () => {
         model.reset();
-    }
+    };
 
     const onClearFilter = (filter) => {
         model.removeFilter(filter.field, filter.value, filter.type);
-    }
+    };
 
     return [
         h('.flex-wrap.justify-between.items-center',
