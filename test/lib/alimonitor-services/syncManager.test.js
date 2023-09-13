@@ -42,7 +42,7 @@ const artficialDataSizes = {
         filesNo: 2,
     },
     monalisaService: {
-        size: 50,
+        size: 10,
         minDetailsPerOneDataPass: 1,
         maxDailsPerOneDataPass: 10,
     },
