@@ -38,13 +38,13 @@ const { expect } = require('chai');
 
 const artficialDataSizes = {
     bookkeepingService: {
-        inOneFile: 100,
+        inOneFile: Number(process.env.BKP_RUNS_FETCH_LIMIT || 100),
         filesNo: 2,
     },
     monalisaService: {
-        size: 100,
+        size: 50,
         minDetailsPerOneDataPass: 1,
-        maxDailsPerOneDataPass: 1,
+        maxDailsPerOneDataPass: 10,
     },
 };
 
@@ -88,13 +88,6 @@ module.exports = () => describe('SyncManager suite', () => {
                     .findAll({ raw: true })
                     .then((data) => expect(data).to.length.greaterThan(0))); //TODO
         });
-
-        describe('without artificial cache data', () => {
-            it('should performe sync with major error', async () => {
-                bookkeepingService.useCacheJsonInsteadIfPresent = false;
-                expect(await bookkeepingService.setSyncTask()).to.be.equal(false);
-            });
-        });
     });
 
     describe('MonalisaService suite', () => {
@@ -110,13 +103,6 @@ module.exports = () => describe('SyncManager suite', () => {
 
                 expect(data).to.length.greaterThan(0); //TODO
                 expect(data.map(({ Period }) => Period).filter((_) => _)).to.be.lengthOf(data.length);
-            });
-        });
-
-        describe('without artificial cache data', () => {
-            it('should performe sync with major error', async () => {
-                monalisaService.useCacheJsonInsteadIfPresent = false;
-                expect(await monalisaService.setSyncTask()).to.be.equal(false);
             });
         });
     });

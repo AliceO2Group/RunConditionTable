@@ -64,7 +64,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const results = [];
         let state = {
             page: 0,
-            limit: 100,
+            limit: process.env.BKP_RUNS_FETCH_LIMIT || 100,
         };
         while (!this.syncTraversStop(state)) {
             const partialResult = await this.syncPerEndpoint(
@@ -72,7 +72,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                 this.metaDataHandler.bind(this),
             );
             results.push(partialResult);
-            this.logger.info(`progress of ${state['page']} to ${this.metaStore['pageCount']}`);
+            this.logger.info(`processed ${state['page']} pages of ${this.metaStore['pageCount']}`);
             state = this.nextState(state);
         }
 
