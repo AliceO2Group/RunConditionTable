@@ -38,26 +38,26 @@ const { expect } = require('chai');
 
 const artficialDataSizes = {
     bookkeepingService: {
-        inOneFile: Number(process.env.BKP_RUNS_FETCH_LIMIT || 100),
+        runsInOneFile: Number(process.env.BKP_RUNS_FETCH_LIMIT || 100),
         filesNo: 2,
     },
     monalisaService: {
-        size: 10,
+        dataPassesNo: 10,
         minDetailsPerOneDataPass: 1,
-        maxDailsPerOneDataPass: 10,
+        maxDetailsPerOneDataPass: 10,
     },
 };
 
 module.exports = () => describe('SyncManager suite', () => {
     before(() => {
         generateRandomBookkeepingCachedRawJsons(
-            artficialDataSizes.bookkeepingService.inOneFile,
+            artficialDataSizes.bookkeepingService.runsInOneFile,
             artficialDataSizes.bookkeepingService.filesNo,
         );
         generateRandomMonalisaCachedRawJsons(
-            artficialDataSizes.monalisaService.size,
+            artficialDataSizes.monalisaService.dataPassesNo,
             artficialDataSizes.monalisaService.minDetailsPerOneDataPass,
-            artficialDataSizes.monalisaService.maxDailsPerOneDataPass,
+            artficialDataSizes.monalisaService.maxDetailsPerOneDataPass,
         );
     });
 
@@ -68,8 +68,8 @@ module.exports = () => describe('SyncManager suite', () => {
 
     it('should fetch detectors data from DB the same as in config', async () => await DetectorSubsystemRepository
         .findAll({ raw: true })
-        .then((detectoSubsystemData) => detectoSubsystemData.map(({ name }) => name))
-        .then((detectoSubsystemNames) => expect(detectoSubsystemNames).to.have.same.members(detectors)));
+        .then((detectorSubsystemData) => detectorSubsystemData.map(({ name }) => name))
+        .then((detectorSubsystemNames) => expect(detectorSubsystemNames).to.have.same.members(detectors)));
 
     describe('BookkeepingService suite', () => {
         describe('with artificial cache data', () => {
