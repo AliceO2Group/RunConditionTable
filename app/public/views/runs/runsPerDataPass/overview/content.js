@@ -23,7 +23,7 @@ import header from '../table/header.js';
 import row from '../table/row.js';
 
 import filter from '../../../userView/data/table/filtering/obsoleteFilter.js';
-import activeFilters from '../../../userView/data/table/filtering/activeFilters.js';
+import obsoleteActiveFilters from '../../../userView/data/table/filtering/obsoleteActiveFilters.js';
 import sortingRow from '../../../userView/data/table/sortingRow.js';
 import { noMatchingData, noDataFound } from '../../../../components/messagePanel/messages.js';
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
@@ -66,7 +66,7 @@ export default function content(model, runs, detectors) {
 
                 dataActionButtons(model, applicableDataActions)),
             model.showFilteringPanel ? filter(model) : '',
-            anyFiltersActive(url) ? activeFilters(model, url) : '',
+            anyFiltersActive(url) ? obsoleteActiveFilters(model, url) : '',
 
             data.rows?.length > 0
                 ? visibleFields.length > 0

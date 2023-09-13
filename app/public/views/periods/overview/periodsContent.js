@@ -16,7 +16,7 @@ import { RCT } from '../../../config.js';
 import title from '../../../components/table/title.js';
 import dataActionButtons, { dataActions } from '../../../components/buttons/dataActionButtons.js';
 import { anyFiltersActive } from '../../../utils/filtering/filterUtils.js';
-import activeFilters from '../../userView/data/table/filtering/activeFilters.js';
+import obsoleteActiveFilters from '../../userView/data/table/filtering/obsoleteActiveFilters.js';
 import { noDataFound, noMatchingData } from '../../../components/messagePanel/messages.js';
 import periodsTableHeader from '../table/periodsTableHeader.js';
 import periodsTableRow from '../table/periodsTableRow.js';
@@ -52,7 +52,7 @@ export default function periodsContent(periodsModel, model) {
             dataActionButtons(dataAccess, applicableDataActions, periodsModel)),
 
         periodsModel.filterPanelVisible ? filteringPanel(periodsModel) : '',
-        anyFiltersActive(url) ? activeFilters(dataAccess, url) : '',
+        anyFiltersActive(url) ? obsoleteActiveFilters(dataAccess, url) : '',
 
         periods.length > 0
             ? periodsModel.visibleFields.length > 0

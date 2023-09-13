@@ -19,7 +19,7 @@ import pagesCellsSpecials from '../pagesCellsSpecials.js';
 import obsoletePager from '../../../../components/table/obsoletePager.js';
 
 import filter from './filtering/obsoleteFilter.js';
-import activeFilters from './filtering/activeFilters.js';
+import obsoleteActiveFilters from './filtering/obsoleteActiveFilters.js';
 import { noDataFound, noMatchingData } from '../../../../components/messagePanel/messages.js';
 
 import sortingRow from './sortingRow.js';
@@ -74,7 +74,7 @@ export default function tablePanel(model, runs) {
 
                 dataActionButtons(model, applicableDataActions)),
             model.showFilteringPanel ? filter(model) : '',
-            anyFiltersActive(url) ? activeFilters(model, url) : '',
+            anyFiltersActive(url) ? obsoleteActiveFilters(model, url) : '',
 
             data.rows?.length > 0
                 ? visibleFields.length > 0
