@@ -18,11 +18,11 @@ import { filterField, filterType, filterSearch, isFilterExpression, filtersFromU
 /**
  * Component responsible for displaying active filters
  * @deprecated
+ * Please use the new activeFilters component
  * @param {*} model dataAccessModel
  * @param {*} url current url
- * @returns {vnode}
+ * @returns {vnode} active filters chips
  */
-
 export default function obsoleteActiveFilters(model, url) {
     const dataPointer = model.getCurrentDataPointer();
 

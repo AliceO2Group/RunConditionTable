@@ -21,9 +21,9 @@ const { filterTypes } = RCT;
 
 /**
  * Filtering panel
+ * @deprecated
  * @param {DataAccessModel} model deprecated data access model
  * @returns {vnode} filter panel
- * @deprecated
  */
 export default function filter(model) {
     const dataPointer = model.getCurrentDataPointer();
