@@ -38,6 +38,8 @@ export default class FilterModel extends Observable {
         switch (filterType) {
             case 'match': return `[like]=%${value}%`;
             case 'exclude': return `[notLike]=%${value}%`;
+            case 'from': return `[gt]=${value}`;
+            case 'to': return `[lt]=${value}`;
             default: return `=${value}`;
         }
     }
@@ -50,7 +52,7 @@ export default class FilterModel extends Observable {
         let filterPhrase = '';
         for (const [field, typeValues] of Object.entries(this._activeFilters)) {
             for (const [type, value] of Object.entries(typeValues)) {
-                filterPhrase += `${filterPhrase.length ? '&' : ''}filter[${field}]${this.filterTypesMapping(type, value)}`;
+                filterPhrase += `${filterPhrase.length ? '&' : ''}filter[or][${field}]${this.filterTypesMapping(type, value)}`;
             }
         }
         return filterPhrase;
