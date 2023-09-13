@@ -15,9 +15,17 @@ const { Op } = require('sequelize');
 const { throwWrapper } = require('../../utils');
 
 // eslint-disable-next-line max-len
-const unitaryRelationalOperators = new Set(['gt', 'gte', 'lt', 'lte', 'ne', 'like', 'notLike', 'iLike', 'notILike', 'regexp', 'notRegexp', 'iRegexp', 'notIRegexp']);
-const arrayRelationalConditions = new Set(['between', 'notBetween', 'in', 'notIn']);
-const relationalOperators = new Set([...arrayRelationalConditions, ...unitaryRelationalOperators]);
+const patternRelationalOperartors = new Set(['like', 'notLike', 'iLike', 'notILike', 'regexp', 'notRegexp', 'iRegexp', 'notIRegexp']);
+const unitaryRelationalOperators = new Set(['gt', 'gte', 'lt', 'lte', 'ne']);
+const arrayRelationalConditions = new Set(['in', 'notIn']);
+const twoElemTupleRelationalConditions = new Set(['between', 'notBetween']);
+
+const relationalOperators = new Set([
+    ...arrayRelationalConditions,
+    ...unitaryRelationalOperators,
+    ...twoElemTupleRelationalConditions,
+    ...patternRelationalOperartors,
+]);
 const logicalOperators = new Set(['not', 'and', 'or']);
 
 const _groupOperatorName = '_goperator';
@@ -51,8 +59,24 @@ class TransformHelper {
             { [Op[groupOperator]]: transformedSubfilter };
     }
 
-    handleArrayValues(val) {
-        return val.split(/,/).map((v) => v.trim());
+    handleDelimiterSeparatedValues(val, delimiter = ',') {
+        return val.split(new RegExp(delimiter)).map((v) => v.trim());
+    }
+
+    handleArray(relationOperator, group) {
+        const groupValues = group.map((val) => this.handleDelimiterSeparatedValues(val)).flat();
+        const checkValue = () => {
+            if (patternRelationalOperartors.has(relationOperator)) {
+                return groupValues.join('|');
+            } else if (arrayRelationalConditions.has(relationOperator)) {
+                return groupValues;
+            } else {
+                throw new Error(
+                    `Array values can be handled only be ${[...patternRelationalOperartors, ...arrayRelationalConditions]} operator`,
+                );
+            }
+        };
+        return [Op[relationOperator], checkValue()];
     }
 
     pullGroupOperator(group) {
@@ -66,6 +90,10 @@ class TransformHelper {
         return Object.fromEntries(Object.entries(filter)
             .map(([k, group]) => {
                 const groupOperator = this.pullGroupOperator(group);
+                if (Array.isArray(group)) { // If group is array it is assumed that it is terminal value
+                    return this.handleArray(k, group);
+                }
+
                 if (!reservedNames.has(k)) { // Assumes that k is field from db view
                     if (typeof group === 'object') {
                         return [k, this.handleIntermidiateFilterNode(group, groupOperator)];
@@ -76,7 +104,7 @@ class TransformHelper {
                     return [
                         Op[k] ?? throwWrapper(new Error(`No operator <${k}> is allowed, only <${[...reservedNames]}> are allowed`)),
                         arrayRelationalConditions.has(k) ?
-                            this.handleArrayValues(group)
+                            this.handleDelimiterSeparatedValues(group)
                             : this.handleIntermidiateFilterNode(group, groupOperator),
                     ];
                 }
@@ -90,6 +118,7 @@ class TransformHelper {
         filter = this.insertSentinel(filter);
         filter = this.transformHelper(filter);
         filter = this.removeSentinel(filter);
+        console.log(filter)
         return filter;
     }
 }
