@@ -40,7 +40,7 @@ export default function activeFilters(model) {
                 h('.chip.filter-chip.inline',
                     h('.filter-field.inline', filter.field),
                     h('.filter-type.inline', filter.type),
-                    h('.filter-input.inline', filter.search),
+                    h('.filter-input.inline', filter.value),
                     h('button.btn.icon-only-button.transparent', {
                         onclick: () => {
                             onClearFilter(filter);

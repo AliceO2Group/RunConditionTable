@@ -109,7 +109,7 @@ export default class FilterModel extends Observable {
                 return typeAcc;
             }, []);
         });
-        return result;
+        return result.flat();
     }
 
     isAnyFilterActive() {
