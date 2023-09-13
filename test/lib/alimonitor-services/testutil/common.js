@@ -14,6 +14,7 @@
 
 const randint = (min = 0, max = 0) => Math.round(Math.random() * (max - min) + min);
 const choice = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const randomPeriodName = () => `LHC${choice([22, 18])}${choice('abceadbfarebivaavgauvgzxvcm')}`;
 
 /**
  * Generate random data with structure defined in given argument
@@ -65,6 +66,7 @@ const universalNoncontextualArrayDataGenerator = (size, unitDefinition) =>
 module.exports = {
     randint,
     choice,
+    randomPeriodName,
     universalNoncontextualDataUnitGenerator,
     universalNoncontextualArrayDataGenerator,
 };
