@@ -22,7 +22,7 @@ const randomPeriodName = () => `LHC${choice([22, 18])}${choice('abceadbfarebivaa
  * @return {*} data
  * UnitGenerator can be any strcture, primitive value, function or their composition
  * How does the function work can be described via produtions:
- * if unitDefinition is ... then the function (abbr. here to U) returns ...:
+ * if unitDefinition is of type ... then the function (abbr. here to U) returns type ...:
  *  U: PRIMITIVE_VALUE -> PRIMITIVE_VALUE
  *  U: FUNCTION -> FUNCTION()
  *  U: ARRAY<SUB_UNIT_DEFINITION> -> ARRAY<U(SUB_UNIT_DEFINITION)>
