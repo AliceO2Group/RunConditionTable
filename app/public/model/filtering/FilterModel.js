@@ -50,12 +50,12 @@ export default class FilterModel extends Observable {
     }
 
     prepareObjectStructure(field, type) {
-        if (!this._activeFilters.hasOwnProperty(field)) {
+        if (! Object.prototype.hasOwnProperty.call(this._activeFilters.hasOwnProperty, field)) {
             this._activeFilters[field] = {
                 [type]: [],
             };
         }
-        if (!this._activeFilters[field].hasOwnProperty(type)) {
+        if (! Object.prototype.hasOwnProperty.call(this._activeFilters[field].hasOwnProperty, type)) {
             this.resetFilterValue(field, type);
         }
     }
@@ -106,7 +106,7 @@ export default class FilterModel extends Observable {
     }
 
     buildFilterPhrase() {
-        let filterPhrase = '';
+        const filterPhrase = '';
         for (const [field, typeValues] of Object.entries(this._activeFilters)) {
             for (const [type, values] of Object.entries(typeValues)) {
                 values.reduce((acc, value) => `${acc.length ? '&' : ''}filter[${field}]${this.filterTypesMapping(type, value)}`, filterPhrase);
