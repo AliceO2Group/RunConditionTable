@@ -13,58 +13,96 @@
  */
 
 const { rctData: { detectors } } = require('../../../app/lib/config/configProvider.js');
-const { syncManager } = require('../../../app/lib/alimonitor-services/SyncManager.js');
-const { databaseManager: { repositories: {
-    RunRepository,
-    RunDetectorsRepository,
-    DetectorSubsystemRepository,
-},
+const { syncManager: {
+    services: {
+        bookkeepingService,
+        monalisaService,
+    },
+} } = require('../../../app/lib/alimonitor-services/SyncManager.js');
+const { databaseManager: {
+    repositories: {
+        RunRepository,
+        RunDetectorsRepository,
+        DetectorSubsystemRepository,
+        DataPassRepository,
+    },
+    models: {
+        Run,
+        Period,
+    },
 } } = require('../../../app/lib/database/DatabaseManager.js');
-const { generateRandomBookkeepingCachedRawJsons, cleanCachedBkpData } = require('./testutil/cache-for-test.js');
+const { generateRandomBookkeepingCachedRawJsons, cleanCachedBkpData } = require('./testutil/bookkeeping-cache-test-data.js');
+const { generateRandomMonalisaCachedRawJsons, cleanCachedMonalisaData } = require('./testutil/monalisa-cache-test-data.js');
 const assert = require('assert');
+const { expect } = require('chai');
+
+const artficialDataSizes = {
+    bookkeepingService: {
+        runsInOneFile: Number(process.env.BKP_RUNS_FETCH_LIMIT || 100),
+        filesNo: 2,
+    },
+    monalisaService: {
+        dataPassesNo: 10,
+        minDetailsPerOneDataPass: 1,
+        maxDetailsPerOneDataPass: 10,
+    },
+};
 
 module.exports = () => describe('SyncManager suite', () => {
-    before('should fetch detectors data from DB the same as in config', async () => await DetectorSubsystemRepository
+    before(() => {
+        generateRandomBookkeepingCachedRawJsons(
+            artficialDataSizes.bookkeepingService.runsInOneFile,
+            artficialDataSizes.bookkeepingService.filesNo,
+        );
+        generateRandomMonalisaCachedRawJsons(
+            artficialDataSizes.monalisaService.dataPassesNo,
+            artficialDataSizes.monalisaService.minDetailsPerOneDataPass,
+            artficialDataSizes.monalisaService.maxDetailsPerOneDataPass,
+        );
+    });
+
+    after(() => {
+        cleanCachedBkpData();
+        cleanCachedMonalisaData();
+    });
+
+    it('should fetch detectors data from DB the same as in config', async () => await DetectorSubsystemRepository
         .findAll({ raw: true })
-        .then((detectoSubsystemData) => detectoSubsystemData.map(({ name }) => name))
-        .then((detectoSubsystemNames) => assert.deepStrictEqual(detectoSubsystemNames.sort(), detectors.sort())));
+        .then((detectorSubsystemData) => detectorSubsystemData.map(({ name }) => name))
+        .then((detectorSubsystemNames) => expect(detectorSubsystemNames).to.have.same.members(detectors)));
 
     describe('BookkeepingService suite', () => {
         describe('with artificial cache data', () => {
-            before(() => {
-                generateRandomBookkeepingCachedRawJsons();
-            });
-
-            after(() => {
-                cleanCachedBkpData();
-            });
-
             it('should performe sync with random data withour major errors', async () => {
-                assert.strictEqual(await syncManager.services.bookkeepingService.setSyncTask(), true);
+                bookkeepingService.useCacheJsonInsteadIfPresent = true;
+                expect(await bookkeepingService.setSyncTask()).to.be.equal(true);
             });
 
             it('should fetch some run data directly from DB', async () =>
                 await RunRepository
                     .findAll({ raw: true })
-                    .then((data) => assert(data.length > 0)));
+                    .then((data) => expect(data).to.length.greaterThan(0))); //TODO
 
             it('should fetch some run_detector data directly from DB', async () =>
                 await RunDetectorsRepository
                     .findAll({ raw: true })
-                    .then((data) => assert(data.length > 0)));
+                    .then((data) => expect(data).to.length.greaterThan(0))); //TODO
         });
+    });
 
-        describe('without artificial cache data', () => {
-            before(() => {
-                syncManager.services.bookkeepingService.forceToUseOnlyCache = true;
+    describe('MonalisaService suite', () => {
+        describe('with artificial cache data', () => {
+            it('should performe sync with random data without major errors', async () => {
+                monalisaService.useCacheJsonInsteadIfPresent = true;
+                assert.strictEqual(await monalisaService.setSyncTask(), true);
             });
 
-            after(() => {
-                syncManager.services.bookkeepingService.forceToUseOnlyCache = false;
-            });
+            it('should fetch some data passes with associated Period and Runs directly from DB', async () => {
+                const data = await DataPassRepository
+                    .findAll({ include: [Run, Period] });
 
-            it('should performe sync with major error', async () => {
-                assert.strictEqual(await syncManager.services.bookkeepingService.setSyncTask(), false);
+                expect(data).to.length.greaterThan(0); //TODO
+                expect(data.map(({ Period }) => Period).filter((_) => _)).to.be.lengthOf(data.length);
             });
         });
     });

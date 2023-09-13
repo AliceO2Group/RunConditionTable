@@ -1,5 +1,6 @@
 networks:
   network:
+    internal: "${DOCKER_NETWORK_INTERNAL:-false}"
     driver: bridge
     ipam:
       driver: default

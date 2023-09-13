@@ -99,7 +99,9 @@ Usage:
             -p|--rct-http-port PORT - flag for setting env var RCT_HTTP_PORT
             -m|--target-modifier START_TARGET_MODIFIER - add modififying sufix to npm task like start:dev:START_TARGET_MODIFIER or start:test:START_TARGET_MODIFIER, depends on choosen TARGET
                 In case of dev mode modifier ND cause running node instead of nodemon.
-
+            -M|--mocha <MOCHA OPTIONS> - pass flags/options to mocha when running tests (see mocha documentation)
+                e.g.: ./$SCRIPT_NAME run --target test --mocha '--grep SomeTestsDescriptor'
+                
     
 $ERROR_MESSAGE_PRINT
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -186,6 +188,10 @@ else
             -b|--build)
                 BUILD='--build';
                 shift 1;
+            ;;
+            -M|--mocha)
+                export MOCHA_OPTIONS="$2";
+                shift 2;
             ;;
             *)
                 usage "Incorrect flag: $1"
