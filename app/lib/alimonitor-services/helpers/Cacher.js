@@ -75,7 +75,7 @@ class Cacher {
 
     /**
      * Return path to data given via endpoint they were fetched from and synchronizer name
-     * @param {String} synchronizerName name of synchronized
+     * @param {String} synchronizerName name of synchronizer
      * @param {URL} endpoint data were fetched from
      * @return {String} path
      */
@@ -89,7 +89,7 @@ class Cacher {
     /**
      * Return name of file to store json data based on searchParans of endpoint they were fetched from
      * In case file name is too long, it is cut to appropriate length and
-     * sifixed with '#' character and hash of origina NON-shortened file name
+     * sufixed with '#' character and hash of origina, NON-shortened file name
      * @param {URL} endpoint endpoint data was fetched from
      * @returns {String} file name
      */
