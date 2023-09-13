@@ -28,14 +28,42 @@ export default class FilterModel extends Observable {
         this.notify();
     }
 
+    handleValueChange(field, type, value) {
+        switch (type) {
+            case 'match':
+            case 'exclude': {
+                this._activeFilters[field][type].push(value);
+                break;
+            }
+            case 'from':
+            case 'to': {
+                this._activeFilters[field][type] = [];
+                this._activeFilters[field][type].push(value);
+            }
+            default: break;
+        }
+    }
+
+    resetFilterValue(field, type) {
+        this._activeFilters[field][type] = [];
+    }
+
+    prepareObjectStructure(field, type) {
+        if (!this._activeFilters.hasOwnProperty(field)) {
+            this._activeFilters[field] = {
+                [type]: [],
+            }
+        }
+        if (!this._activeFilters[field].hasOwnProperty(type)) {
+            this.resetFilterValue(field, type);
+        }
+    }
+
     addFilter(field, value, type) {
-        Object.assign(this._activeFilters,
-            this._activeFilters[field]
-                ? { [field]: {
-                    ...this._activeFilters[field],
-                    [type]: []} }
-                : { [field]: {
-                    [type]: []} });
+        this.prepareObjectStructure(field, type);
+        if (['from', 'to'].includes(type)) {
+            this.resetFilterValue(field, type);
+        }
         this._activeFilters[field][type].push(value);
         this.notify();
         console.log(this.filterObjects);
@@ -51,7 +79,7 @@ export default class FilterModel extends Observable {
     filterTypesMapping(filterType, value) {
         switch (filterType) {
             case 'match': return `[or][like]=%${value}%`;
-            case 'exclude': return `[notLike]='%${value}%'`;
+            case 'exclude': return `[and][notLike]='%${value}%'`;
             case 'from': return `[gte]=${value}`;
             case 'to': return `[lte]=${value}`;
             default: return `=${value}`;
@@ -64,21 +92,23 @@ export default class FilterModel extends Observable {
 
     get filterObjects() {
         console.log(this._activeFilters);
-        const result = Object.keys(this._activeFilters).reduce((fieldAcc, currentField) => {
-            Object.keys(this._activeFilters[currentField]).reduce((typeAcc, currentType) => {
-                typeAcc.push(this._activeFilters[currentField][currentType]);
-            })
 
+        const fields = Object.keys(this._activeFilters);
+        
+        console.log(fields);
 
-            /*
-            acc.push({
-                field: currentField,
-                type: 'sd',
-                search: ,
-            })
-            */
-        }, []);
-        console.log(result);
+        const result = fields.map((field) => {
+            const types = Object.keys(this._activeFilters[field]);
+            return types.reduce((typeAcc, currentType) => {
+                const values = this._activeFilters[field][currentType];
+                values.forEach((value) => typeAcc.push({
+                    field: field,
+                    type: currentType,
+                    value: value,
+                }));
+                return typeAcc;
+            }, []);
+        });
         return result;
     }
 

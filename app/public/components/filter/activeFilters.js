@@ -36,7 +36,6 @@ export default function activeFilters(model) {
                     onclick: () => onClearAll(),
                 }, 'Clear all'))),
         h('.flex-wrap.items-center.chips',
-            /*
             model.filterObjects.map((filter) => [
                 h('.chip.filter-chip.inline',
                     h('.filter-field.inline', filter.field),
@@ -47,7 +46,6 @@ export default function activeFilters(model) {
                             onClearFilter(filter);
                         },
                     }, h('.close-10-primary'))),
-            ])*/
-            ),
+            ])),
     ];
 }
