@@ -3,11 +3,11 @@ const path = require('path');
 const { Cacher } = require('../../../../app/lib/alimonitor-services/helpers');
 const { rctData: { detectors } } = require('../../../../app/lib/config/configProvider.js');
 
-const { randint, choice, universalNoncontextualArrayDataGenerator } = require('./common.js');
+const { randint, choice, universalNoncontextualArrayDataGenerator, randomPeriodName } = require('./common.js');
 
 const dataUnitDefinition = {
     runNumber: () => randint(1000000, 9000000),
-    lhcPeriod: () => `LHC${choice([22, 18])}${choice('abceadbfarebivaavgauvgzxvcm')}`,
+    lhcPeriod: () => randomPeriodName(),
     timeO2Start: () => randint(100000000, 200000000),
     timeO2End: () => randint(100000000, 200000000),
     timeTrgStart: () => randint(200000000, 300000000),

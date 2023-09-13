@@ -15,10 +15,10 @@
 const fs = require('fs');
 const path = require('path');
 const { Cacher, ServicesEndpointsFormatter } = require('../../../../app/lib/alimonitor-services/helpers');
-const { randint, choice, universalNoncontextualArrayDataGenerator } = require('./common.js');
+const { randint, choice, randomPeriodName, universalNoncontextualArrayDataGenerator } = require('./common.js');
 
 const dataPassUnitGenerator = [
-    () => `LHC${choice([18, 22, 23])}${choice('acxcvbadtqehgnvbs')}_${choice('acxcvbadtqehgnvbs')}pass${choice('123456789')}`,
+    () => `${randomPeriodName()}_${choice('acxcvbadtqehgnvbs')}pass${choice('123456789')}`,
     {
         reconstructed_events: () => randint(49412, 1251796425),
         description: () => [...new Array(randint(4, 255))]
@@ -38,6 +38,7 @@ const dataPassDetailsUnitGenerator = [
     () => randint(1000000000, 2000000000),
     () => ({
         run_no: randint(1000000, 9000000),
+        raw_partition: randomPeriodName(),
     }),
 ];
 
