@@ -44,7 +44,7 @@ class Cacher {
 
     /**
      * Check if data from given endpoint are cached
-     * @param {String} synchronizerName name of synchronized
+     * @param {String} synchronizerName name of synchronizer
      * @param {URL} endpoint data were fetched from
      * @return {Boolean} true if cached false otherwise
      */
@@ -54,7 +54,7 @@ class Cacher {
 
     /**
      * Get cached data
-     * @param {String} synchronizerName name of synchronized
+     * @param {String} synchronizerName name of synchronizer
      * @param {URL} endpoint data were fetched from
      * @return {JSON} data
      */
@@ -64,7 +64,7 @@ class Cacher {
 
     /**
      * Get cached data
-     * @param {String} synchronizerName name of synchronized
+     * @param {String} synchronizerName name of synchronizer
      * @param {URL} endpoint data were fetched from
      * @return {Promise<JSON>} data
      */
