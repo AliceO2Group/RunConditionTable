@@ -24,16 +24,35 @@ export default class FilterModel extends Observable {
     }
 
     addFilter(field, value, type) {
-        this._filterObject[field][type] = value;
+        Object.assign(this._activeFilters,
+            this._activeFilters[field]
+                ? { [field]: {
+                    ...this._activeFilters[field],
+                    [type]: value } }
+                : { [field]: {
+                    [type]: value } });
         this.notify();
     }
 
-    get filterObject() {
-        return this._filterObject;
+    filterTypesMapping(filterType, value) {
+        switch (filterType) {
+            case 'match': return `[like]=%${value}%`;
+            case 'exclude': return `[notLike]=%${value}%`;
+            default: return `=${value}`;
+        }
     }
 
-    buildFilterPhrase(field, value, type = null) {
-        console.log(Object.keys(this._activeFilters));
-        return `filter[${field}]${type ? `[${type}]` : ''}=${value}`;
+    get activeFilters() {
+        return this._activeFilters;
+    }
+
+    buildFilterPhrase() {
+        let filterPhrase = '';
+        for (const [field, typeValues] of Object.entries(this._activeFilters)) {
+            for (const [type, value] of Object.entries(typeValues)) {
+                filterPhrase += `${filterPhrase.length ? '&' : ''}filter[${field}]${this.filterTypesMapping(type, value)}`;
+            }
+        }
+        return filterPhrase;
     }
 }

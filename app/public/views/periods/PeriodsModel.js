@@ -93,7 +93,7 @@ export default class PeriodsModel extends Observable {
          * @type {Period[]}
          */
 
-        const filterPhrase = this._filtering.buildFilterPhrase('name', 'LHC%', 'like');
+        const filterPhrase = this._filtering.buildFilterPhrase();
 
         if (this._allPeriods.kind === 'NotAsked') {
             await this.fetchAllPeriods();

@@ -43,8 +43,27 @@ export default function filteringPanel(model) {
         document.getElementById('right-filter-input').value = '';
     };
 
-    const onFilterSubmit = () => {
+    const onFilterSubmit = async () => {
+        const fieldNameSelect = document.getElementById('show-options-field');
+        const fieldNameValue = fieldNameSelect.options[fieldNameSelect.selectedIndex].value;
+
+        const leftFilterType = document.getElementById('left-filter-placeholder').innerHTML;
+        const rightFilterType = document.getElementById('right-filter-placeholder').innerHTML;
+
+        const leftFilterInput = document.getElementById('left-filter-input').value;
+        const rightFilterInput = document.getElementById('right-filter-input').value;
+
+        if (rightFilterInput) {
+            model.filtering.addFilter(fieldNameValue, rightFilterInput, rightFilterType);
+        }
+
+        if (leftFilterInput) {
+            model.filtering.addFilter(fieldNameValue, leftFilterInput, leftFilterType);
+        }
+
         clearUserInput();
+
+        await model.fetchCurrentPageData();
     };
 
     return h('.font-size-small', [
