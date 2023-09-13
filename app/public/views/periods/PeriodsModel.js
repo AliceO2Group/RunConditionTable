@@ -66,12 +66,13 @@ export default class PeriodsModel extends Observable {
         /**
          * @type {Period[]}
          */
+
         this._allPeriods = RemoteData.loading();
         this.notify();
 
         this._allPeriods = RemoteData.notAsked();
 
-        const endpoint = `/api/periods/?${new URLSearchParams(this._filtering.filterObject).toString()}`;
+        const endpoint = `/api/periods/?${this._filtering.buildFilterPhrase()}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._allPeriods = RemoteData.success([...items]);
