@@ -217,23 +217,6 @@ class TransformHelper {
  *          .../?filter[field1][gt]=10&filter[field][lt]=3&filter[field1][_fgoperator]=or
  *
  * Example:
- * 1` URL is: .../?filter[or][field1][gt]=10&filter[or][field1][lt]=3&filter[or][field1][_goperator]=or ...
- *              ... &filter[or][field2][like]=LHC_%pass&filter[or][field2][notLike]=LHC_c%
- * 2` The url will be parsed by qs in express to:
- * const query = {
- * "filter": {
- *   "or": {
- *     "field1": {
- *       "gt": "10",
- *       "lt": "3",
- *       "_goperator": "or"
- *     },
- *     "field2": {
- *       "like": "LHC_%pass",
- *       "notLike": "LHC_c%"
- *     }
- *   }
- * }
  *
  * 1 URL search params are:
  *
@@ -302,15 +285,6 @@ class TransformHelper {
  *            }
  *         ]
  *      }
- *    },
- *    field2: {
- *      [Symbol(and)]: {
- *        [Symbol(like)]: 'LHC_%pass',
- *        [Symbol(notLike)]: 'LHC_c%'
- *      }
- *    }
- *  }
- * }
  *
  * What is equivalent to sql:
  *
