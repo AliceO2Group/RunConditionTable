@@ -60,7 +60,7 @@ export default function filteringPanel(model) {
         if (leftFilterInput) {
             model.filtering.addFilter(fieldNameValue, leftFilterInput, leftFilterType);
         }
-        
+
         clearUserInput();
     };
 
