@@ -50,12 +50,12 @@ export default class FilterModel extends Observable {
     }
 
     prepareObjectStructure(field, type) {
-        if (! Object.prototype.hasOwnProperty.call(this._activeFilters.hasOwnProperty, field)) {
+        if (! Object.prototype.hasOwnProperty.call(this._activeFilters, field)) {
             this._activeFilters[field] = {
                 [type]: [],
             };
         }
-        if (! Object.prototype.hasOwnProperty.call(this._activeFilters[field].hasOwnProperty, type)) {
+        if (! Object.prototype.hasOwnProperty.call(this._activeFilters[field], type)) {
             this.resetFilterValue(field, type);
         }
     }

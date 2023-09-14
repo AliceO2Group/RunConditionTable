@@ -115,6 +115,8 @@ export default class PeriodsModel extends Observable {
 
         const endpoint = `/api/periods?${[new URLSearchParams(params).toString(), encodeURI(filterPhrase)].join('&')}`;
 
+        console.log(endpoint);
+
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._currentPagePeriods = RemoteData.success([...items]);
