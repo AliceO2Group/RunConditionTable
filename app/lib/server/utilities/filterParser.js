@@ -173,7 +173,6 @@ class TransformHelper {
  * it can be
  *
  *          .../?filter[field1][gt]=10&filter[field][lt]=3&filter[field1][_fgoperator]=or
- * GROUP_OPERATOR can be ommited, its default value is an 'and'.
  *
  * Example:
  *
@@ -214,7 +213,7 @@ class TransformHelper {
  *        }
  *      }
  *
- * 3 query.filter is being passed as an argument to filterToSequelizeWhereClause function
+ * 3 query.filter is passed as an argument to filterToSequelizeWhereClause function
  * which returns sequelize-compatible where-clause
  *
  *      {
