@@ -194,6 +194,29 @@ module.exports = () => {
 
                 assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
             });
+
+            /**
+             * @see filterToSequelizeWhereClause#workaroundForSequlizeBug
+             */
+            it('test workaround for sequelize misbehaviour', () => {
+                const srcFilter = {
+                    name: {
+                        and: { f1: 1 },
+                        or: { f2: 2 },
+                    },
+                };
+
+                const expectedFilter = {
+                    name: {
+                        [Op.and]: {
+                            [Op.and]: { f1: 1 },
+                            [Op.or]: { f2: 2 },
+                        },
+                    },
+                };
+
+                assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
+            });
         });
     });
 };
