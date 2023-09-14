@@ -70,7 +70,7 @@ class TransformHelper {
     handleArray(relationOperator, group) {
         const groupValues = group.map((val) => this.handleDelimiterSeparatedValues(val)).flat();
         if (patternRelationalOperartors.has(relationOperator)) {
-            return [Op[relationOperator.startsWith('not') ? 'and' : 'or'], groupValues.map((v) => ({ [Op[relationOperator]]: v })) ];
+            return [Op[relationOperator.startsWith('not') ? 'and' : 'or'], groupValues.map((v) => ({ [Op[relationOperator]]: v }))];
         } else if (arrayRelationalConditions.has(relationOperator)) {
             return [Op[relationOperator], groupValues];
         } else {
