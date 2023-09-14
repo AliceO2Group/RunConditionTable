@@ -27,6 +27,7 @@ const relationalOperators = new Set([
     ...twoElemTupleRelationalConditions,
     ...patternRelationalOperartors,
 ]);
+
 const logicalOperators = new Set(['not', 'and', 'or']);
 
 const _groupOperatorName = '_goperator';
