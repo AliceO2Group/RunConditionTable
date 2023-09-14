@@ -17,8 +17,9 @@ const { throwWrapper } = require('../../utils');
 // eslint-disable-next-line max-len
 const patternRelationalOperartors = new Set(['like', 'notLike', 'iLike', 'notILike', 'regexp', 'notRegexp', 'iRegexp', 'notIRegexp']);
 const unitaryRelationalOperators = new Set(['gt', 'gte', 'lt', 'lte', 'ne']);
-const arrayRelationalConditions = new Set(['in', 'notIn']);
 const twoElemTupleRelationalConditions = new Set(['between', 'notBetween']);
+const arrayRelationalConditions = new Set(['in', 'notIn']);
+const complexValuesRelationalConditions = new Set([...twoElemTupleRelationalConditions, ...arrayRelationalConditions]);
 
 const relationalOperators = new Set([
     ...arrayRelationalConditions,
@@ -35,7 +36,7 @@ const reservedNames = new Set([...relationalOperators, ...logicalOperators, ...[
 
 const transformationSentinel = 'and';
 
-const arrayElementIdentifierRegExp = /\$(0)|([1-9]+[0-9]*)/;
+const arrayElementIdentifierRegExp = /^\$((0)|([1-9]+[0-9]*))/;
 
 class TransformHelper {
     constructor(opts) {
@@ -108,7 +109,7 @@ class TransformHelper {
                 } else { // Then k stands for operator
                     return [
                         Op[k] ?? throwWrapper(new Error(`No operator <${k}> is allowed, only <${[...reservedNames]}> are allowed`)),
-                        arrayRelationalConditions.has(k) ?
+                        complexValuesRelationalConditions.has(k) ?
                             this.handleDelimiterSeparatedValues(group)
                             : this.handleIntermidiateFilterNode(group, groupOperator),
                     ];
@@ -125,7 +126,6 @@ class TransformHelper {
         filter = this.insertSentinel(filter);
         filter = this.transformHelper(filter);
         filter = this.removeSentinel(filter);
-        console.log(filter)
         return filter;
     }
 }
