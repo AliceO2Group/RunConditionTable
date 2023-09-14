@@ -87,6 +87,47 @@ class TransformHelper {
         return groupOperator;
     }
 
+    // eslint-disable-next-line valid-jsdoc
+    /**
+     * Object like this is missinterpreted by sequelize (seems to be a bug)
+     *
+     *      {
+     *          name: {
+     *              [Symbol(or)]: { [Symbol(like)]: '%22%' },
+     *              [Symbol(and)]: { [Symbol(notLike)]: '%t%' }
+     *          }
+     *      }
+     *
+     * it is treated as:
+     *
+     *      {
+     *          name: {
+     *              [Symbol(or)]: {
+     *                   [Symbol(like)]: '%22%',
+     *                   [Symbol(notLike)]: '%t%'
+     *              }
+     *          }
+     *      }
+     *
+     * but insertion sentinel 'and' prevent that behaviour
+     *
+     *      {
+     *          name: {
+     *              [Symbol(and)]: {
+     *                  [Symbol(or)]: { [Symbol(like)]: '%22%' },
+     *                  [Symbol(and)]: { [Symbol(notLike)]: '%t%' }
+     *              }
+     *          }
+     *      }
+     */
+    workaroundForSequlizeBug(processedFilterEntries) {
+        if (processedFilterEntries.length > 1 && processedFilterEntries.every(([key, _]) => logicalOperators.has(key?.description))) {
+            return { [Op.and]: Object.fromEntries(processedFilterEntries) };
+        } else {
+            return Object.fromEntries(processedFilterEntries);
+        }
+    }
+
     transformHelper(filter) {
         const allAreArraysElement = Object.keys(filter).every((k) => arrayElementIdentifierRegExp.test(k)) && Object.entries(filter).length > 0;
         const someAreArraysElement = Object.keys(filter).some((k) => arrayElementIdentifierRegExp.test(k));
@@ -117,7 +158,8 @@ class TransformHelper {
                 }
             });
 
-        return allAreArraysElement ? processedFilterEntries.map(([_k, group]) => group) : Object.fromEntries(processedFilterEntries);
+        return allAreArraysElement ? processedFilterEntries.map(([_k, group]) => group)
+            : this.workaroundForSequlizeBug(processedFilterEntries);
     }
 
     transform(filter) {
