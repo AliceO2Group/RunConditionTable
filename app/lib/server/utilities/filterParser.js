@@ -64,7 +64,7 @@ class TransformHelper {
     }
 
     handleDelimiterSeparatedValues(val, delimiter = ',') {
-        return val.split(new RegExp(delimiter)).map((v) => v.trim());
+        return String(val).split(new RegExp(delimiter)).map((v) => v.trim());
     }
 
     handleArray(relationOperator, group) {
