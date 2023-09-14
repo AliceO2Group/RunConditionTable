@@ -33,7 +33,7 @@ class ResProvider {
      * @param {Object} objDefinition define mapping of env vars names to local nodejs process names
      * @param {CallableFunction} failurePredicate func(res, objDefinition) that get res - object with read env vars values and objDefinition
      * and examine if combination of read env vars fulfil some requirements - default check if all fildes are set
-     * @param {CallableFunction|String} onFailureAction action on failure - defualt throw error with message about unset fileds
+     * @param {CallableFunction|String} onFailureAction action on failure - defualt throw error with message about unset fields
      * can be string: warn just log warning, error: log error and throw error,
      * @returns {Object} desired env vars stored in object under names defined by mapping
      */
