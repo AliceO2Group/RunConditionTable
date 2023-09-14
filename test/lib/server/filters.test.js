@@ -125,6 +125,75 @@ module.exports = () => {
 
                 assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
             });
+
+            it('should transform filter object with array syntax', () => {
+                const srcFilter = {
+                    or: {
+                        $1: {
+                            field1: {
+                                in: '1,2,4,5      ,1',
+                            },
+                        },
+                        $2: {
+                            filed2: {
+                                notBetween: '-123,1.1',
+                            },
+                        },
+                    },
+                };
+
+                const expectedFilter = {
+                    [Op.or]: [
+                        { field1: {
+                            [Op.in]: ['1', '2', '4', '5', '1'],
+                        } },
+
+                        { filed2: {
+                            [Op.notBetween]: ['-123', '1.1'],
+                        } },
+                    ],
+                };
+
+                assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
+            });
+
+            it('should throw an error when combining array and object syntax infiltering', () => {
+                const srcFilter = {
+                    or: {
+                        $1: {
+                            field1: {
+                                in: '1,2,4,5      ,1',
+                            },
+                        },
+                        filed2: {
+                            notBetween: '-123,1.1',
+                        },
+                    },
+                };
+
+                assert.throws(() => filterToSequelizeWhereClause(srcFilter));
+            });
+
+            it('should handle goperator within array syntax', () => {
+                const srcFilter = {
+                    $1: {
+                        field1: 'asdf',
+                    },
+                    $2: {
+                        field1: 'asdf',
+                    },
+                    _goperator: 'or',
+                };
+
+                const expectedFilter = {
+                    [Op.or]: [
+                        { field1: 'asdf' },
+                        { field1: 'asdf' },
+                    ],
+                };
+
+                assert.deepStrictEqual(expectedFilter, filterToSequelizeWhereClause(srcFilter));
+            });
         });
     });
 };
