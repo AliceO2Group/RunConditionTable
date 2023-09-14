@@ -60,10 +60,8 @@ export default function filteringPanel(model) {
         if (leftFilterInput) {
             model.filtering.addFilter(fieldNameValue, leftFilterInput, leftFilterType);
         }
-
+        
         clearUserInput();
-
-        await model.fetchCurrentPageData();
     };
 
     return h('.font-size-small', [

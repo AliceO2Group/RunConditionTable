@@ -106,10 +106,10 @@ export default class FilterModel extends Observable {
     }
 
     buildFilterPhrase() {
-        const filterPhrase = '';
+        let filterPhrase = '';
         for (const [field, typeValues] of Object.entries(this._activeFilters)) {
             for (const [type, values] of Object.entries(typeValues)) {
-                values.reduce((acc, value) => `${acc.length ? '&' : ''}filter[${field}]${this.filterTypesMapping(type, value)}`, filterPhrase);
+                filterPhrase = values.reduce((acc, value) => `${acc.length ? '&' : ''}filter[${field}]${this.filterTypesMapping(type, value)}`, filterPhrase);
             }
         }
         return filterPhrase;
