@@ -15,8 +15,16 @@ const UtilitiesSuite = require('./utils');
 const ComponentsSuite = require('./components');
 const PeriodsSuite = require('./periods');
 
+const assert = require('assert');
+
 module.exports = () => {
     describe('Components', ComponentsSuite);
     describe('Utilities', UtilitiesSuite);
     describe('Periods', PeriodsSuite);
+    describe('EXPERIMENT', () => {
+        it('should import frontend dependencies with path /js/src/index.js', () => {
+            assert.doesNotThrow(() => require('esm-wallaby')(module)('../../app/public/view.js'));
+            assert.doesNotThrow(() => require('esm-wallaby')(module)('../../app/public/Model.js'));
+        });
+    });
 };
