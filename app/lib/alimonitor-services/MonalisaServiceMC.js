@@ -132,23 +132,27 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                 })
                     .then(async ([period, _]) => {
                         // Add anchored period
-                        const periodAddPromise = sequelize.transaction((_t) => _simulationPass.addPeriod(period.id));
+                        const periodAddPromise = sequelize.transaction((_t) => _simulationPass.addPeriod(period.id,
+                            { ignoreDuplicates: true }));
 
                         // Add anchored passes
                         const dataPassPipelinePromises = simulationPass.anchoredPasses
-                            .map(async (passSuffix) => await DataPassRepository.T.findOrCreate({
-                                where: {
-                                    name: `${period.name}_${passSuffix}`,
-                                },
-                                default: {
-                                    name: `${period.name}_${passSuffix}`,
-                                    PeriodId: period.id,
-                                },
-                            }).then(async ([dataPass, _]) => await sequelize.transaction((_t) => _simulationPass.addDataPass(dataPass.id))));
+                            .map(async (passSuffix) => sequelize.transaction(
+                                async () => await DataPassRepository.findOrCreate({
+                                    where: {
+                                        name: `${period.name}_${passSuffix}`,
+                                    },
+                                    default: {
+                                        name: `${period.name}_${passSuffix}`,
+                                        PeriodId: period.id,
+                                    },
+                                }).then(async ([dataPass, _]) => await _simulationPass.addDataPass(dataPass.id,
+                                    { ignoreDuplicates: true })),
+                            ));
 
                         // Add runs
-                        const runsAddPipeline = simulationPass.runs.map(async (runNumber) => {
-                            const run = await RunRepository.T.findOne({ where: { runNumber: runNumber } });
+                        const runsAddPipeline = simulationPass.runs.map(async (runNumber) => sequelize.transaction(async () => {
+                            const run = await RunRepository.findOne({ where: { runNumber: runNumber } });
                             if (!run) {
                                 const insertWithoutPeriod = simulationPass.anchoredPeriods.length > 1;
                                 if (insertWithoutPeriod) {
@@ -158,18 +162,13 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                                     );
                                 }
 
-                                await RunRepository.T.findOrCreate({
-                                    where: {
-                                        runNumber,
-                                    },
-                                    default: {
-                                        runNumber,
-                                        PeriodId: insertWithoutPeriod ? undefined : period.id,
-                                    },
+                                await RunRepository.create({
+                                    runNumber,
+                                    PeriodId: insertWithoutPeriod ? undefined : period.id,
                                 });
                             }
-                            return await sequelize.transaction((_t) => _simulationPass.addRun(runNumber, { ignoreDuplicates: true }));
-                        });
+                            return await _simulationPass.addRun(runNumber, { ignoreDuplicates: true });
+                        }));
 
                         // Summary
                         return await Promise.all([periodAddPromise, dataPassPipelinePromises, runsAddPipeline].flat());

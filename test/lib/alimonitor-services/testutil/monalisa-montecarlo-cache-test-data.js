@@ -19,7 +19,7 @@ const { randint, choice, randomPeriodName, universalNoncontextualArrayDataGenera
 const simulationPassUnitGenerator = [
     () => `${randomPeriodName()}_${choice('acxcvbadtqehgnvbs')}pass${choice('123456789')}`,
     () => ({
-        runList: universalNoncontextualArrayDataGenerator(randint(1, 10), randomRunNumber()),
+        runList: [...new Set(universalNoncontextualArrayDataGenerator(randint(1, 10), randomRunNumber))].join(', '),
         generator: universalNoncontextualArrayDataGenerator(
             randint(4, 255),
             () => choice(['SOME', 'random', ' DESCRIPTION', 'FOR', 'monte', 'CARLO', 'production']),
@@ -29,8 +29,8 @@ const simulationPassUnitGenerator = [
         requested_events: randint(1000000, 2000000),
         collision_system: randomBeamType,
         output_size: randint(3000000000000, 9000000000000),
-        anchor_production: universalNoncontextualArrayDataGenerator(randint(1, 2), randomPeriodName),
-        anchor_pass: universalNoncontextualArrayDataGenerator(randint(1, 5), `apass${randint(1, 5)}`),
+        anchor_production: [...new Set(universalNoncontextualArrayDataGenerator(choice([1, 1, 1, 2]), randomPeriodName))].join(', '),
+        anchor_pass: [...new Set(universalNoncontextualArrayDataGenerator(randint(1, 5), `apass${randint(1, 5)}`))].join(', '),
     }),
 ];
 

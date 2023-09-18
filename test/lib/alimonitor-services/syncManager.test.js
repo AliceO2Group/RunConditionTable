@@ -31,6 +31,7 @@ const { databaseManager: {
     models: {
         Run,
         Period,
+        DataPass,
     },
 } } = require('../../../app/lib/database/DatabaseManager.js');
 const { generateRandomBookkeepingCachedRawJsons, cleanCachedBkpData } = require('./testutil/bookkeeping-cache-test-data.js');
@@ -58,18 +59,18 @@ const artficialDataSizes = {
 
 module.exports = () => describe('SyncManager suite', () => {
     before(() => {
-        generateRandomBookkeepingCachedRawJsons(
-            artficialDataSizes.bookkeepingService.runsInOneFile,
-            artficialDataSizes.bookkeepingService.filesNo,
-        );
-        generateRandomMonalisaCachedRawJsons(
-            artficialDataSizes.monalisaService.dataPassesNo,
-            artficialDataSizes.monalisaService.minDetailsPerOneDataPass,
-            artficialDataSizes.monalisaService.maxDetailsPerOneDataPass,
-        );
-        generateRandomMonalisaMontecarloCachedRawJsons(
-            artficialDataSizes.monalisaServiceMC.simulationPassesNo,
-        );
+        // generateRandomBookkeepingCachedRawJsons(
+        //     artficialDataSizes.bookkeepingService.runsInOneFile,
+        //     artficialDataSizes.bookkeepingService.filesNo,
+        // );
+        // generateRandomMonalisaCachedRawJsons(
+        //     artficialDataSizes.monalisaService.dataPassesNo,
+        //     artficialDataSizes.monalisaService.minDetailsPerOneDataPass,
+        //     artficialDataSizes.monalisaService.maxDetailsPerOneDataPass,
+        // );
+        // generateRandomMonalisaMontecarloCachedRawJsons(
+        //     artficialDataSizes.monalisaServiceMC.simulationPassesNo,
+        // );
     });
 
     after(() => {
@@ -126,12 +127,15 @@ module.exports = () => describe('SyncManager suite', () => {
                 assert.strictEqual(await monalisaServiceMC.setSyncTask(), true);
             });
 
-            it('should fetch some simulation passes passes with associated Period and Runs directly from DB', async () => {
+            it('should fetch some simulation passes with associated Periods, Runs and DataPasses directly from DB', async () => {
                 const data = await SimulationPassRepository
-                    .findAll({ include: [Run, Period] });
+                    .findAll({ include: [Run, Period, DataPass] });
 
                 expect(data).to.length.greaterThan(0); //TODO
-                expect(data.map(({ Period }) => Period).filter((_) => _)).to.be.lengthOf(data.length);
+                console.log(data.map(({name, Periods }) => [name, Periods.map(p => p.name)]))
+                expect(data.map(({ Periods }) => Periods).filter((Periods) => Periods?.length > 0)).to.be.lengthOf(data.length);
+                expect(data.map(({ DataPasses }) => DataPasses).filter((DataPasses) => DataPasses?.length > 0)).to.be.lengthOf(data.length);
+                expect(data.map(({ Runs }) => Runs).filter((Runs) => Runs?.length > 0)).to.be.lengthOf(data.length);
             });
         });
     });
