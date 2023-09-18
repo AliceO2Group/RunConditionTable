@@ -17,6 +17,7 @@ const { syncManager: {
     services: {
         bookkeepingService,
         monalisaService,
+        monalisaServiceMC,
     },
 } } = require('../../../app/lib/alimonitor-services/SyncManager.js');
 const { databaseManager: {
@@ -25,6 +26,7 @@ const { databaseManager: {
         RunDetectorsRepository,
         DetectorSubsystemRepository,
         DataPassRepository,
+        SimulationPassRepository,
     },
     models: {
         Run,
@@ -33,6 +35,9 @@ const { databaseManager: {
 } } = require('../../../app/lib/database/DatabaseManager.js');
 const { generateRandomBookkeepingCachedRawJsons, cleanCachedBkpData } = require('./testutil/bookkeeping-cache-test-data.js');
 const { generateRandomMonalisaCachedRawJsons, cleanCachedMonalisaData } = require('./testutil/monalisa-cache-test-data.js');
+const { generateRandomMonalisaMontecarloCachedRawJsons, cleanCachedMonalisaMontecarloData } =
+    require('./testutil/monalisa-montecarlo-cache-test-data.js');
+
 const assert = require('assert');
 const { expect } = require('chai');
 
@@ -45,6 +50,9 @@ const artficialDataSizes = {
         dataPassesNo: 10,
         minDetailsPerOneDataPass: 1,
         maxDetailsPerOneDataPass: 10,
+    },
+    monalisaServiceMC: {
+        simulationPassesNo: 10,
     },
 };
 
@@ -59,11 +67,15 @@ module.exports = () => describe('SyncManager suite', () => {
             artficialDataSizes.monalisaService.minDetailsPerOneDataPass,
             artficialDataSizes.monalisaService.maxDetailsPerOneDataPass,
         );
+        generateRandomMonalisaMontecarloCachedRawJsons(
+            artficialDataSizes.monalisaServiceMC.simulationPassesNo,
+        );
     });
 
     after(() => {
-        cleanCachedBkpData();
-        cleanCachedMonalisaData();
+        // cleanCachedBkpData();
+        // cleanCachedMonalisaData();
+        // cleanCachedMonalisaMontecarloData();
     });
 
     it('should fetch detectors data from DB the same as in config', async () => await DetectorSubsystemRepository
@@ -73,7 +85,7 @@ module.exports = () => describe('SyncManager suite', () => {
 
     describe('BookkeepingService suite', () => {
         describe('with artificial cache data', () => {
-            it('should performe sync with random data withour major errors', async () => {
+            it('should performe sync of runs with random data withour major errors', async () => {
                 bookkeepingService.useCacheJsonInsteadIfPresent = true;
                 expect(await bookkeepingService.setSyncTask()).to.be.equal(true);
             });
@@ -92,13 +104,30 @@ module.exports = () => describe('SyncManager suite', () => {
 
     describe('MonalisaService suite', () => {
         describe('with artificial cache data', () => {
-            it('should performe sync with random data without major errors', async () => {
+            it('should performe sync od data passes with random data without major errors', async () => {
                 monalisaService.useCacheJsonInsteadIfPresent = true;
                 assert.strictEqual(await monalisaService.setSyncTask(), true);
             });
 
             it('should fetch some data passes with associated Period and Runs directly from DB', async () => {
                 const data = await DataPassRepository
+                    .findAll({ include: [Run, Period] });
+
+                expect(data).to.length.greaterThan(0); //TODO
+                expect(data.map(({ Period }) => Period).filter((_) => _)).to.be.lengthOf(data.length);
+            });
+        });
+    });
+
+    describe('MonalisaServiceMC suite', () => {
+        describe('with artificial cache data', () => {
+            it('should performe sync of simulation passes with random data without major errors', async () => {
+                monalisaServiceMC.useCacheJsonInsteadIfPresent = true;
+                assert.strictEqual(await monalisaServiceMC.setSyncTask(), true);
+            });
+
+            it('should fetch some simulation passes passes with associated Period and Runs directly from DB', async () => {
+                const data = await SimulationPassRepository
                     .findAll({ include: [Run, Period] });
 
                 expect(data).to.length.greaterThan(0); //TODO

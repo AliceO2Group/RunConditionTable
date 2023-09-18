@@ -13,7 +13,6 @@
  */
 
 const fs = require('fs');
-const path = require('path');
 const { Cacher, ServicesEndpointsFormatter } = require('../../../../app/lib/alimonitor-services/helpers');
 const { randint, choice, randomPeriodName, universalNoncontextualArrayDataGenerator, randomRunNumber, randomBeamType } = require('./common.js');
 
@@ -46,11 +45,11 @@ const generateRandomMonalisaMontecarloCachedRawJsons = (size) => {
     Cacher.cache(MonalisaServiceMCName, ServicesEndpointsFormatter.mcRaw(), simulationPass);
 };
 
-const cleanCachedMonalisaData = () => {
+const cleanCachedMonalisaMontecarloData = () => {
     fs.rmSync(Cacher.serviceCacheDir(MonalisaServiceMCName), { recursive: true, force: true });
 };
 
 module.exports = {
     generateRandomMonalisaMontecarloCachedRawJsons,
-    cleanCachedMonalisaData,
+    cleanCachedMonalisaMontecarloData,
 };
