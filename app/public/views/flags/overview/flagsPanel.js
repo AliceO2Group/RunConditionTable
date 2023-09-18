@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-import { noRunNumbers } from '../../../../utils/defaults.js';
+import { noRunNumbers } from '../../../utils/defaults.js';
 import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
 import flagsContent from './flagsContent.js';
 

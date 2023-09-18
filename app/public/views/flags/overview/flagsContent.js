@@ -16,8 +16,8 @@ import { h } from '/js/src/index.js';
 import filter from '../../userView/data/table/filtering/filter.js';
 import flagsVisualization from '../../../components/flags/flagsVisualization.js';
 import flagsTable from './flagsTable.js';
-import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
-import { noRunNumbers } from '../../../../utils/defaults.js';
+import flagBreadCrumbs from '../../../components/flags/flagBreadcrumbs.js';
+import { noRunNumbers } from '../../../utils/defaults.js';
 import noSubPageSelected from '../../userView/data/table/noSubPageSelected.js';
 import dataActionButtons, { dataActions } from '../../../components/buttons/dataActionButtons.js';
 
