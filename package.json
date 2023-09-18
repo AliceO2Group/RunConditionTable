@@ -24,7 +24,7 @@
     "eslint:show:linux": "npm run eslint; firefox ./reports/static/static-analysis.html",
     "eslint:show:macos": "npm run eslint; open -a firefox ./reports/static/static-analysis.html",
     "static": "npm run eslint",
-    "coverage:test": "mocha --exit test/* $MOCHA_OPTIONS",
+    "coverage:test": "bash -c \"$( echo \"mocha --exit test/* $MOCHA_OPTIONS\" )\" ",
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run coverage:test && npm run coverage:report",
     "start:test": "npm run coverage",
