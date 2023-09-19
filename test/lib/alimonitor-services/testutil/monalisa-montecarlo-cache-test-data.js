@@ -27,7 +27,7 @@ const simulationPassUnitGenerator = [
         jiraID: `ALIROOT-${randint(1000, 9999)}`,
         PWG: `PWG${choice('ANVTUAILNY')}${choice('ANNVIVFCQWPRQ')}`,
         requested_events: randint(1000000, 2000000),
-        collision_system: randomBeamType,
+        collision_system: randomBeamType(),
         output_size: randint(3000000000000, 9000000000000),
         anchor_production: [...new Set(universalNoncontextualArrayDataGenerator(choice([1, 1, 1, 2]), randomPeriodName))].join(', '),
         anchor_pass: [...new Set(universalNoncontextualArrayDataGenerator(randint(1, 5), `apass${randint(1, 5)}`))].join(', '),
