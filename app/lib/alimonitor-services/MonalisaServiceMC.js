@@ -125,11 +125,11 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                         defaults: {
                             name: periodName,
                             year: periodYear,
-                            BeamTypeId: !beam_type ? undefined : await BeamTypeRepository.T.findOrCreate({
+                            BeamTypeId: !beam_type ? undefined : (await BeamTypeRepository.T.findOrCreate({
                                 where: {
                                     name: simulationPass.beam_type,
                                 },
-                            })[0]?.id,
+                            }))[0]?.id,
                         },
                     })
                         .then(async ([period, _]) => {

@@ -54,7 +54,7 @@ function extractPeriodYear(name) {
  * @param {string|undefined} beamType type of beam, p-p, p-Pb, ...
  * @returns {Object} period {name, year, beamType}
  */
-function extractPeriod(name, beamType) {
+function extractPeriod(name, beamType = undefined) {
     const [extractedName] = name.split('_');
     if (! /LHC[0-9]{2}[a-z]+/.test(extractedName)) {
         throw new Error(`Incorrect period name ${extractedName} extracted from ${name}`);
