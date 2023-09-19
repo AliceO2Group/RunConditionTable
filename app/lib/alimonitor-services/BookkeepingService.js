@@ -136,7 +136,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                 where: {
                     name: period.name,
                 },
-                default: {
+                defaults: {
                     name: period.name,
                     year: period.year,
                     BeamTypeId: beamType.id,
