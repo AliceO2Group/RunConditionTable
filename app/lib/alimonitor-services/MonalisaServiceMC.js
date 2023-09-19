@@ -16,7 +16,6 @@
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
 const { ServicesEndpointsFormatter, ServicesDataCommons: { extractPeriod } } = require('./helpers');
-
 const config = require('../config/configProvider.js');
 
 const { databaseManager: {
@@ -106,7 +105,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
     }
 
     async executeDbAction(simulationPass) {
-        return await SimulationPassRepository.T.upsert({
+        return await SimulationPassRepository.upsert({
             name: simulationPass.name,
             PWG: simulationPass.pwg,
             jiraId: simulationPass.jiraId,
@@ -128,20 +127,20 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
     }
 
     async findOrCreatePeriod({ name: periodName, year: periodYear, beamType }) {
-        return await PeriodRepository.T.findOrCreate({
+        return await sequelize.transaction(async () => PeriodRepository.findOrCreate({
             where: {
                 name: periodName,
             },
             defaults: {
                 name: periodName,
                 year: periodYear,
-                BeamTypeId: !beamType ? undefined : (await BeamTypeRepository.T.findOrCreate({
+                BeamTypeId: !beamType ? undefined : (await BeamTypeRepository.findOrCreate({
                     where: {
                         name: beamType,
                     },
                 }))[0]?.id,
             },
-        });
+        }));
     }
 
     async findOrCreateAndAddDataPasses(simulationPass, simulationPassDBInstance, period) {
@@ -163,22 +162,17 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
 
     async findOrCreateAndAddRuns(simulationPass, simulationPassDBInstance, period) {
         const promises = simulationPass.runs.map((runNumber) => sequelize.transaction(async () => {
-            const run = await RunRepository.findOne({ where: { runNumber: runNumber } });
-            if (!run) {
-                const insertWithoutPeriod = simulationPass.anchoredPeriods.length > 1;
-                if (insertWithoutPeriod) {
-                    this.logger.warn(
-                        `Neither run {runNumber: ${runNumber}} is found, nor can infer its belonging to period,
-                         because multiple periods (${simulationPass.anchoredPeriods}) are 
-                         anchored to simulation pass ${simulationPass.name}`,
-                    );
-                }
-
-                await RunRepository.create({
+            const insertWithoutPeriod = simulationPass.anchoredPeriods.length > 1;
+            await RunRepository.findOrCreate({
+                where: {
+                    runNumber,
+                },
+                defaults: {
                     runNumber,
                     PeriodId: insertWithoutPeriod ? undefined : period.id,
-                });
-            }
+                },
+            });
+
             return await simulationPassDBInstance.addRun(runNumber, { ignoreDuplicates: true });
         }));
 
