@@ -28,7 +28,7 @@
     "coverage:report": "nyc report --report=html --report=json",
     "coverage": "nyc npm run coverage:test && npm run coverage:report",
     "setup:test": "./scripts/setup-frontend-on-mocha-tests-environemt.sh",
-    "start:test": "npm run setup:test ; npm run coverage",
+    "start:test": "npm run setup:test && npm run coverage",
     "reports:show": "open ./reports/**/*.html",
     "reports:clean": "rm -rf ./reports; rm -rf .nyc_output",
     "start:dev": "nodemon app/main.js --watch main.js --watch app --ignore app/public",
