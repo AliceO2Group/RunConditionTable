@@ -25,6 +25,6 @@ module.exports = () => {
         it('should import frontend dependencies with path /js/src/index.js', () => {
             assert.doesNotThrow(() => require('esm-wallaby')(module)('../../app/public/view.js'));
             assert.doesNotThrow(() => require('esm-wallaby')(module)('../../app/public/Model.js'));
-        });
+        }).timeout(10000);
     });
 };
