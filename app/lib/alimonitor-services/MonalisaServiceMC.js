@@ -82,7 +82,8 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
          */
 
         simulationPass.anchoredPasses = parseListLikeString(simulationPass.anchoredPasses);
-        simulationPass.anchoredPeriods = parseListLikeString(simulationPass.anchoredPeriods).map((periodName) => extractPeriod(periodName));
+        simulationPass.anchoredPeriods = parseListLikeString(simulationPass.anchoredPeriods).map((periodName) =>
+            extractPeriod(periodName, simulationPass.beam_type));
         simulationPass.runs = parseListLikeString(simulationPass.runs).map((s) => Number(s));
 
         return simulationPass;
@@ -105,8 +106,6 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
     }
 
     async executeDbAction(simulationPass) {
-        const { beam_type } = simulationPass;
-
         return await SimulationPassRepository.T.upsert({
             name: simulationPass.name,
             PWG: simulationPass.pwg,
@@ -115,68 +114,75 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             requestedEvents: simulationPass.requestedEvents,
             outputSize: simulationPass.outputSize,
         })
-            .then(async ([_simulationPass, _]) => {
-                // Check periods;
-                simulationPass.anchoredPeriods.map(async ({ name: periodName, year: periodYear }) =>
-                    await PeriodRepository.T.findOrCreate({
-                        where: {
-                            name: periodName,
-                        },
-                        defaults: {
-                            name: periodName,
-                            year: periodYear,
-                            BeamTypeId: !beam_type ? undefined : (await BeamTypeRepository.T.findOrCreate({
-                                where: {
-                                    name: simulationPass.beam_type,
-                                },
-                            }))[0]?.id,
-                        },
-                    })
+            .then(async ([simulationPassDBInstance, _]) => {
+                await Promise.all(simulationPass.anchoredPeriods.map(async (period) =>
+                    this.findOrCreatePeriod(period)
                         .then(async ([period, _]) => {
-                        // Add anchored period
-                            const periodAddPromise = sequelize.transaction((_t) => _simulationPass.addPeriod(period.id,
-                                { ignoreDuplicates: true }));
+                            const periodAddPromise = simulationPassDBInstance.addPeriod(period.id, { ignoreDuplicates: true });
+                            const dataPassPipelinePromises = this.findOrCreateAndAddDataPasses(simulationPass, simulationPassDBInstance, period);
+                            const runsAddPipeline = this.findOrCreateAndAddRuns(simulationPass, simulationPassDBInstance, period);
 
-                            // Add anchored passes
-                            const dataPassPipelinePromises = simulationPass.anchoredPasses
-                                .map(async (passSuffix) => sequelize.transaction(
-                                    async () => await DataPassRepository.findOrCreate({
-                                        where: {
-                                            name: `${period.name}_${passSuffix}`,
-                                        },
-                                        defaults: {
-                                            name: `${period.name}_${passSuffix}`,
-                                            PeriodId: period.id,
-                                        },
-                                    }).then(async ([dataPass, _]) => await _simulationPass.addDataPass(dataPass.id,
-                                        { ignoreDuplicates: true })),
-                                ));
-
-                            // Add runs
-                            const runsAddPipeline = simulationPass.runs.map(async (runNumber) => sequelize.transaction(async () => {
-                                const run = await RunRepository.findOne({ where: { runNumber: runNumber } });
-                                if (!run) {
-                                    const insertWithoutPeriod = simulationPass.anchoredPeriods.length > 1;
-                                    if (insertWithoutPeriod) {
-                                        this.logger.warn(
-                                            `Neither run {runNumber: ${runNumber}} is found, nor can infer its belonging to period,
-                                             because multiple periods (${simulationPass.anchoredPeriods}) are 
-                                             anchored to simulation pass ${simulationPass.name}`,
-                                        );
-                                    }
-
-                                    await RunRepository.create({
-                                        runNumber,
-                                        PeriodId: insertWithoutPeriod ? undefined : period.id,
-                                    });
-                                }
-                                return await _simulationPass.addRun(runNumber, { ignoreDuplicates: true });
-                            }));
-
-                            // Summary
-                            return await Promise.all([periodAddPromise, dataPassPipelinePromises, runsAddPipeline].flat());
-                        }));
+                            await Promise.all([periodAddPromise, dataPassPipelinePromises, runsAddPipeline]);
+                        })));
             });
+    }
+
+    async findOrCreatePeriod({ name: periodName, year: periodYear, beamType }) {
+        return await PeriodRepository.T.findOrCreate({
+            where: {
+                name: periodName,
+            },
+            defaults: {
+                name: periodName,
+                year: periodYear,
+                BeamTypeId: !beamType ? undefined : (await BeamTypeRepository.T.findOrCreate({
+                    where: {
+                        name: beamType,
+                    },
+                }))[0]?.id,
+            },
+        });
+    }
+
+    async findOrCreateAndAddDataPasses(simulationPass, simulationPassDBInstance, period) {
+        const promises = simulationPass.anchoredPasses
+            .map((passSuffix) => sequelize.transaction(
+                () => DataPassRepository.findOrCreate({
+                    where: {
+                        name: `${period.name}_${passSuffix}`,
+                    },
+                    defaults: {
+                        name: `${period.name}_${passSuffix}`,
+                        PeriodId: period.id,
+                    },
+                }).then(([dataPass, _]) => simulationPassDBInstance.addDataPass(dataPass.id,
+                    { ignoreDuplicates: true })),
+            ));
+        return await Promise.all(promises);
+    }
+
+    async findOrCreateAndAddRuns(simulationPass, simulationPassDBInstance, period) {
+        const promises = simulationPass.runs.map((runNumber) => sequelize.transaction(async () => {
+            const run = await RunRepository.findOne({ where: { runNumber: runNumber } });
+            if (!run) {
+                const insertWithoutPeriod = simulationPass.anchoredPeriods.length > 1;
+                if (insertWithoutPeriod) {
+                    this.logger.warn(
+                        `Neither run {runNumber: ${runNumber}} is found, nor can infer its belonging to period,
+                         because multiple periods (${simulationPass.anchoredPeriods}) are 
+                         anchored to simulation pass ${simulationPass.name}`,
+                    );
+                }
+
+                await RunRepository.create({
+                    runNumber,
+                    PeriodId: insertWithoutPeriod ? undefined : period.id,
+                });
+            }
+            return await simulationPassDBInstance.addRun(runNumber, { ignoreDuplicates: true });
+        }));
+
+        return await Promise.all(promises);
     }
 }
 

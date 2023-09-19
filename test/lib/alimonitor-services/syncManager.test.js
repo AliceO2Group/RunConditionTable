@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 /**
  * @license
  * Copyright 2019-2020 CERN and copyright holders of ALICE O2.
@@ -36,13 +34,13 @@ const { databaseManager: {
         DataPass,
     },
 } } = require('../../../app/lib/database/DatabaseManager.js');
-const { generateRandomBookkeepingCachedRawJsons, cleanCachedBkpData } = require('./testutil/bookkeeping-cache-test-data.js');
-const { generateRandomMonalisaCachedRawJsons, cleanCachedMonalisaData } = require('./testutil/monalisa-cache-test-data.js');
-const { generateRandomMonalisaMontecarloCachedRawJsons, cleanCachedMonalisaMontecarloData } =
-    require('./testutil/monalisa-montecarlo-cache-test-data.js');
+const { generateRandomBookkeepingCachedRawJsons } = require('./testutil/bookkeeping-cache-test-data.js');
+const { generateRandomMonalisaCachedRawJsons } = require('./testutil/monalisa-cache-test-data.js');
+const { generateRandomMonalisaMontecarloCachedRawJsons } = require('./testutil/monalisa-montecarlo-cache-test-data.js');
 
 const assert = require('assert');
 const { expect } = require('chai');
+const { truncateDatabase } = require('./testutil/db-utils.js');
 
 const artficialDataSizes = {
     bookkeepingService: {
@@ -60,7 +58,8 @@ const artficialDataSizes = {
 };
 
 module.exports = () => describe('SyncManager suite', () => {
-    before(() => {
+    before(async () => {
+        await truncateDatabase();
         generateRandomBookkeepingCachedRawJsons(
             artficialDataSizes.bookkeepingService.runsInOneFile,
             artficialDataSizes.bookkeepingService.filesNo,
@@ -73,12 +72,6 @@ module.exports = () => describe('SyncManager suite', () => {
         generateRandomMonalisaMontecarloCachedRawJsons(
             artficialDataSizes.monalisaServiceMC.simulationPassesNo,
         );
-    });
-
-    after(() => {
-        cleanCachedBkpData();
-        cleanCachedMonalisaData();
-        cleanCachedMonalisaMontecarloData();
     });
 
     it('should fetch detectors data from DB the same as in config', async () => await DetectorSubsystemRepository
@@ -135,7 +128,7 @@ module.exports = () => describe('SyncManager suite', () => {
 
                 expect(data).to.length.greaterThan(0); //TODO
 
-                /** 
+                /**
                  * Check if all simulation passes have associations with some periods and some data passes
                  * Each simulation pass has to have association with at least one data pass and with at least one period,
                  * The opposite means error in logic of the service;
@@ -143,12 +136,12 @@ module.exports = () => describe('SyncManager suite', () => {
                 expect(data.map(({ Periods }) => Periods).filter((Periods) => Periods?.length > 0)).to.be.lengthOf(data.length);
                 expect(data.map(({ DataPasses }) => DataPasses).filter((DataPasses) => DataPasses?.length > 0)).to.be.lengthOf(data.length);
 
-                /** 
-                 * Runs associated with one simulation pass, 
-                 * should be noticed in database regardless 
-                 * to their presence in the Bookkeeping 
+                /**
+                 * Runs associated with one simulation pass,
+                 * should be noticed in database regardless
+                 * to their presence in the Bookkeeping
                  * or lack of important features
-                 */ 
+                 */
                 expect(data.map(({ Runs }) => Runs).filter((Runs) => Runs?.length > 0)).to.be.lengthOf(data.length);
             });
         });
