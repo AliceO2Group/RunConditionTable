@@ -25,10 +25,6 @@ module.exports = {
                     type: Sequelize.STRING,
                     allowNull: false,
                 },
-                verification_time: {
-                    type: Sequelize.DATE,
-                    allowNull: false,
-                },
                 qcf_id: {
                     type: Sequelize.INTEGER,
                     allowNull: true,
@@ -36,6 +32,16 @@ module.exports = {
                         model: 'quality_control_flags',
                         key: 'id',
                     },
+                },
+                created_at: {
+                    allowNull: false,
+                    type: Sequelize.DATE,
+                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+                },
+                updated_at: {
+                    allowNull: false,
+                    type: Sequelize.DATE,
+                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
                 },
             },
         )

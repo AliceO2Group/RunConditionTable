@@ -21,8 +21,7 @@ module.exports = (sequelize) => {
         },
     }, { 
         tableName: 'verifications',
-        timestamps: true, 
-        createdAt: 'verification_time', 
+        createdAt: true, 
         updatedAt: false,
     });
 
