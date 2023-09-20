@@ -23,7 +23,7 @@ module.exports = (sequelize) => {
         year: {
             type: Sequelize.INTEGER,
         },
-    }, { timestamps: false });
+    });
 
     Period.associate = (models) => {
         Period.hasMany(models.Run);
