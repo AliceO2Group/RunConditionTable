@@ -97,7 +97,7 @@ module.exports = (sequelize) => {
         runType: {
             type: Sequelize.STRING,
         },
-    }, { timestamps: false });
+    });
 
     
     Run.associate = (models) => {
