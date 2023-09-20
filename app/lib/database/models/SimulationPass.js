@@ -38,7 +38,7 @@ module.exports = (sequelize) => {
             type: Sequelize.REAL,
             field: 'size',
         },
-    }, { timestamps: false });
+    });
 
     SimulationPass.associate = (models) => {
         SimulationPass.belongsToMany(models.Period, {
