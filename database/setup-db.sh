@@ -15,7 +15,14 @@ It requires 5 parameters provided via argument, env file, env vars (descending p
 It must be run as postgres or using 'sudo -H -u postgres bash -c "$MAIN_SCRIPT_NAME [ARGS]"'
 Usage:
 
-    ./$MAIN_SCRIPT_NAME [--env <ENV_FILE>] [--host|-h <RCT_DB_HOST>] [--port|-p <RCT_DB_PORT>] [--database|-d <RCT_DB_NAME>] [--username|-u <RCT_DB_USERNAME>] [--password|-P <RCT_DB_PASSWORD>] [<OTHER_OPTS>]
+    ./$MAIN_SCRIPT_NAME 
+        [--env <ENV_FILE>] 
+        [--host|-h <RCT_DB_HOST>] 
+        [--port|-p <RCT_DB_PORT>] 
+        [--database|-d <RCT_DB_NAME>] 
+        [--username|-u <RCT_DB_USERNAME>] 
+        [--password|-P <RCT_DB_PASSWORD>] 
+        [<OTHER_OPTS>]
 
     Possibile env vars (also in env file) have to be named exactly the same as upper placeholders. 
     Parameters specified via script arguments override those specified via env vars.
