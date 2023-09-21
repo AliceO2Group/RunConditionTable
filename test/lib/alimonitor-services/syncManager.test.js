@@ -139,7 +139,7 @@ module.exports = () => describe('SyncManager suite', () => {
                 /**
                  * Runs associated with one simulation pass,
                  * should be noticed in database regardless
-                 * to their presence in the Bookkeeping
+                 * of their presence in the Bookkeeping
                  * or lack of important features
                  */
                 expect(data.map(({ Runs }) => Runs).filter((Runs) => Runs?.length > 0)).to.be.lengthOf(data.length);
