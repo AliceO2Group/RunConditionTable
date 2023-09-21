@@ -22,11 +22,8 @@ Usage:
     Default values for 'host' is 'localhost' and for 'port' is '5432'
 
     <OTHER_OPTS> can be:
-      1. --main-sql-modify-daemon - run watchdog on db definition in $SCRIPTS_DIR/exported/create-tables.sql, if any change db is recreated
-      2. --other-sql-modify-daemon - as upper but on files in $SCRIPTS_DIR/stored-sql-functionalities/
-      3. --no-modify-daemon - block modification watcher irregardless to previous flags or env vars
-      5. --only-export - do only export
-      7. --drop - if specified drop DB before creation
+      1. --other-sql-modify-daemon - as upper but on files in $SCRIPTS_DIR/stored-sql-functionalities/
+      2. --no-modify-daemon - block modification watcher irregardless to previous flags or env vars
 
 USAGE
 exit 1;
@@ -47,19 +44,6 @@ while [[ $# -gt 0 ]]; do
         ;;
         --no-modify-daemon)
           NO_MODIFY_DAEMON='true';
-          shift 1;
-        ;;
-        --export)
-            EXPORT='true';
-            shift 1;
-        ;;
-        --only-export)
-          ONLY_EXPORT='true';
-          EXPORT='true';
-          shift 1;
-        ;;
-        --drop)
-          DROP='true';
           shift 1;
         ;;
         -h|--host)
@@ -117,10 +101,6 @@ fi
 terminate() {
   psql -c "select pg_terminate_backend(pid) from pg_stat_activity where datname='$RCT_DB_NAME';"
 }
-drop() {
-  psql -c "DROP DATABASE IF EXISTS \"$RCT_DB_NAME\""
-  psql -c "DROP USER IF EXISTS \"$RCT_DB_USERNAME\""
-}
 
 create_main() {
   psql -c "set password_encryption='scram-sha-256'; CREATE USER \"$RCT_DB_USERNAME\" WITH ENCRYPTED PASSWORD '$RCT_DB_PASSWORD';"
@@ -141,13 +121,9 @@ grant() {
 
 
 terminate
-if [ "$DROP" = 'true' ]; then
-  drop
-fi
 create_main
 create_other
 grant
-psql -d $RCT_DB_NAME -c "call insert_period('null', null, null);";
 
 if [ "$NO_MODIFY_DAEMON" != 'true' ]; then
   if [ "$OTHER_SQL_MODIFY_DAEMON" = 'true' ]; then
