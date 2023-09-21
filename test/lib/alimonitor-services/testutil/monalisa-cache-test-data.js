@@ -15,16 +15,18 @@
 const fs = require('fs');
 const path = require('path');
 const { Cacher, ServicesEndpointsFormatter } = require('../../../../app/lib/alimonitor-services/helpers');
-const { randint, choice, randomPeriodName, universalNoncontextualArrayDataGenerator } = require('./common.js');
+const { randint, choice, randomPeriodName, universalNoncontextualArrayDataGenerator, randomBeamType } = require('./common.js');
 
 const dataPassUnitGenerator = [
     () => `${randomPeriodName()}_${choice('acxcvbadtqehgnvbs')}pass${choice('123456789')}`,
     {
         reconstructed_events: () => randint(49412, 1251796425),
-        description: () => [...new Array(randint(4, 255))]
-            .map(() => choice(['SOME', 'random', ' DESCRIPTION', 'FOR', 'data', 'PASS'])).join(' '),
+        description: () => universalNoncontextualArrayDataGenerator(
+            randint(4, 255),
+            () => choice(['SOME', 'random', ' DESCRIPTION', 'FOR', 'data', 'PASS']),
+        ).join(' '),
         output_size: () => randint(3.6597765e+09, 1.38163905e+14),
-        interaction_type: () => choice(['pp', 'PbPb', 'pPb']),
+        interaction_type: randomBeamType,
         last_run: () => randint(500000, 600000),
     },
 ];
