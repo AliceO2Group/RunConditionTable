@@ -56,7 +56,7 @@ module.exports = () => {
         const filterModel = new FilterModel();
         filterModel.addFilter('name', 'LHC', 'match');
         filterModel.addFilter('name', 'zt', 'exclude');
-        
+
         it('should reset the filter model', () => {
             filterModel.reset();
             assert.equal(filterModel.isAnyFilterActive, false);
@@ -66,17 +66,11 @@ module.exports = () => {
     describe('Building filter phrases', () => {
         const filterModel = new FilterModel();
         filterModel.addFilter('year', '2020', 'from');
-        
+
         const expectedFilterPhrase = 'filter[year][gte]=2020';
 
         it('should build a correct filter phrase', () => {
             assert.equal(filterModel.filterPhrase, expectedFilterPhrase);
-        });
-    });
-
-    describe('Filter objects', () => {
-        it('should add a new filter', () => {
-            assert.equal(false, false);
         });
     });
 };
