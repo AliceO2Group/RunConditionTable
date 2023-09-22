@@ -15,7 +15,7 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const { ServicesEndpointsFormatter, ServicesDataCommons: { extractPeriod } } = require('./helpers');
+const { ServicesEndpointsFormatter, ServicesDataCommons: { extractPeriod, PERIOD_NAME_REGEX } } = require('./helpers');
 const config = require('../config/configProvider.js');
 
 const { databaseManager: {
@@ -60,7 +60,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             simPassAttributes['name'] = simPassName.trim();
             return simPassAttributes;
         })
-            .filter((simulationPass) => simulationPass.name?.match(/^LHC\d\d.*$/))
+            .filter((simulationPass) => simulationPass.name?.match(PERIOD_NAME_REGEX.rightExtend('.*')))
             .map(this.adjustDataUnit.bind(this));
     }
 
@@ -81,8 +81,9 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
          */
 
         simulationPass.anchoredPasses = parseListLikeString(simulationPass.anchoredPasses);
-        simulationPass.anchoredPeriods = parseListLikeString(simulationPass.anchoredPeriods).map((periodName) =>
-            extractPeriod(periodName, simulationPass.beam_type));
+        simulationPass.anchoredPeriods = parseListLikeString(simulationPass.anchoredPeriods)
+            .filter((periodName) => PERIOD_NAME_REGEX.test(periodName))
+            .map((periodName) => extractPeriod(periodName, simulationPass.beam_type));
         simulationPass.runs = parseListLikeString(simulationPass.runs).map((s) => Number(s));
 
         return simulationPass;

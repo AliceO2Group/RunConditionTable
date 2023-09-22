@@ -403,8 +403,7 @@ for stage in $STAGES; do
                     if [ -z "$DUMP_FILE" ]; then
                         usage "Dump file name unspecified, use flag -F|--dump-file <FILE>";
                     fi
-                    docker cp "$PROJECT_DIR/database/utils/delete-data.sql" "$DB_CONTAINER_NAME:$DB_WORKINGDIR/delete-data.sql" \
-                    && docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "$DB_WORKINGDIR/delete-data.sql" \
+                    docker exec $DB_CONTAINER_NAME psql -U $RCT_DB_USER -d $RCT_DB_NAME -f "$DB_WORKINGDIR/database/utils/delete-data.sql" \
                     && docker exec $DB_CONTAINER_NAME pg_restore --data-only -U $RCT_DB_USER -d $RCT_DB_NAME $CONTAINER_DUMP_PATH;
                 ;;
 

@@ -17,6 +17,22 @@ const Utils = require('../../utils');
 const { rctData } = require('../../config/configProvider.js');
 
 /**
+ * PERIOD_NAME_REGEX is a regular expression for examining
+ * whether given string can be considered period name, e.g. LHC22o is a period name.
+ * It is defined as ^LHC\d\d[a-zA-Z]+
+ * The regex can be (right) extended in order to match e.g.:
+ * 1. data passes, e.g. LHC22o_apass1 can be matched with PERIOD_NAME_REGEX.rightExtend('_apass\\d');
+ * 2. simulation passes, e.g. LHC21i12 can be matched with PERIOD_NAME_REGEX.rightExtend('.*');
+ */
+const PERIOD_NAME_REGEX = /^LHC\d\d[a-zA-Z]+/;
+const rightExtendRegEx = (srcRegEx, suffix) => {
+    const extenedRegex = RegExp(srcRegEx.source + suffix);
+    extenedRegex.rightExtend = (_suffix) => rightExtendRegEx(extenedRegex, _suffix);
+    return extenedRegex;
+};
+PERIOD_NAME_REGEX.rightExtend = (suffix) => rightExtendRegEx(PERIOD_NAME_REGEX, suffix);
+
+/**
  * Update objectData.beam_type to valid format if mapping is provided with app config
  * if not there is assumption that in other scenerio name is consistant with foramt '<typeA>-<typeB>'
  * @param {Object} dataObject o
@@ -56,7 +72,7 @@ function extractPeriodYear(name) {
  */
 function extractPeriod(name, beamType = undefined) {
     const [extractedName] = name.split('_');
-    if (! /LHC[0-9]{2}[a-z]+/.test(extractedName)) {
+    if (! PERIOD_NAME_REGEX.test(extractedName)) {
         throw new Error(`Incorrect period name ${extractedName} extracted from ${name}`);
     }
     return {
@@ -70,4 +86,5 @@ module.exports = {
     mapBeamTypeToCommonFormat,
     extractPeriodYear,
     extractPeriod,
+    PERIOD_NAME_REGEX,
 };
