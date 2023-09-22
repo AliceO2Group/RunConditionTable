@@ -15,18 +15,24 @@ It requires 5 parameters provided via argument, env file, env vars (descending p
 It must be run as postgres or using 'sudo -H -u postgres bash -c "$MAIN_SCRIPT_NAME [ARGS]"'
 Usage:
 
-    ./$MAIN_SCRIPT_NAME [--env <ENV_FILE>] [--host|-h <RCT_DB_HOST>] [--port|-p <RCT_DB_PORT>] [--database|-d <RCT_DB_NAME>] [--username|-u <RCT_DB_USERNAME>] [--password|-P <RCT_DB_PASSWORD>] [<OTHER_OPTS>]
+    ./$MAIN_SCRIPT_NAME 
+        [--env <ENV_FILE>] 
+        [--host|-h <RCT_DB_HOST>] 
+        [--port|-p <RCT_DB_PORT>] 
+        [--database|-d <RCT_DB_NAME>] 
+        [--username|-u <RCT_DB_USERNAME>] 
+        [--password|-P <RCT_DB_PASSWORD>] 
+        [<OTHER_OPTS>]
 
     Possibile env vars (also in env file) have to be named exactly the same as upper placeholders. 
     Parameters specified via script arguments override those specified via env vars.
     Default values for 'host' is 'localhost' and for 'port' is '5432'
 
     <OTHER_OPTS> can be:
-      1. --main-sql-modify-daemon - run watchdog on db definition in $SCRIPTS_DIR/exported/create-tables.sql, if any change db is recreated
-      2. --other-sql-modify-daemon - as upper but on files in $SCRIPTS_DIR/stored-sql-functionalities/
-      3. --no-modify-daemon - block modification watcher irregardless to previous flags or env vars
-      5. --only-export - do only export
-      7. --drop - if specified drop DB before creation
+      1. --sql-src-modify-daemon - setup watchdog over sql scripts in $SCRIPTS_DIR/stored-sql-functionalities/**
+                                   any change in those files causes reinvocation of the sql scripts.
+                                   Also achievable by setting env var SQL_SCR_MODIFY_DAEMON=true 
+                                   !!! It works only in dev environment (env var ENV_MODE=dev );
 
 USAGE
 exit 1;
@@ -41,25 +47,8 @@ while [[ $# -gt 0 ]]; do
           ENV_FILE="$2"
           shift 2;
         ;;
-        --other-sql-modify-daemon)
-          OTHER_SQL_MODIFY_DAEMON='true';
-          shift 1;
-        ;;
-        --no-modify-daemon)
-          NO_MODIFY_DAEMON='true';
-          shift 1;
-        ;;
-        --export)
-            EXPORT='true';
-            shift 1;
-        ;;
-        --only-export)
-          ONLY_EXPORT='true';
-          EXPORT='true';
-          shift 1;
-        ;;
-        --drop)
-          DROP='true';
+        --sql-src-modify-daemon)
+          SQL_SCR_MODIFY_DAEMON='true';
           shift 1;
         ;;
         -h|--host)
@@ -82,7 +71,10 @@ while [[ $# -gt 0 ]]; do
             __RCT_DB_PASSWORD="$2";
             shift 2;
         ;;
-
+        -t|--terminate)
+            TERMINATE=true;
+            shift 1;
+        ;;
         *)
             usage;
         ;;
@@ -117,45 +109,67 @@ fi
 terminate() {
   psql -c "select pg_terminate_backend(pid) from pg_stat_activity where datname='$RCT_DB_NAME';"
 }
-drop() {
-  psql -c "DROP DATABASE IF EXISTS \"$RCT_DB_NAME\""
-  psql -c "DROP USER IF EXISTS \"$RCT_DB_USERNAME\""
+
+create_db() {
+  CREATE_DATABASE_CMD=$(psql -t -c "select 
+    'CREATE DATABASE \"$RCT_DB_NAME\"' as cmd 
+    where not exists(
+      select datname from pg_database where datname = '$RCT_DB_NAME')";);
+
+  CREATE_DATABASE_CMD=${CREATE_DATABASE_CMD:-"
+    DO \$\$ 
+    BEGIN 
+      raise notice 'database % already exists', '$RCT_DB_NAME'; 
+    END; 
+    \$\$;"};
+  psql -c "$CREATE_DATABASE_CMD";
 }
 
-create_main() {
-  psql -c "set password_encryption='scram-sha-256'; CREATE USER \"$RCT_DB_USERNAME\" WITH ENCRYPTED PASSWORD '$RCT_DB_PASSWORD';"
-  psql -c "CREATE DATABASE \"$RCT_DB_NAME\""
-}
-
-create_other() {
-  for p in $(find "$STORED_SQL_FUNCTIONALITIES_DIR" -name "*.sql") ; do
-    echo "use of $p"
-    psql -d $RCT_DB_NAME -a -f $p
+create_stored_functionalities() {
+  for path in $(find "$STORED_SQL_FUNCTIONALITIES_DIR" -name "*.sql") ; do
+    echo "use of $path"
+    psql -d $RCT_DB_NAME -a -f $path;
   done;
 }
 
-grant() {
-  psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
-  psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
+create_user() {
+  CREATE_USER_CMD="
+    DO 
+    \$\$
+    BEGIN
+      IF not exists(select usename from pg_user where usename = '$RCT_DB_USERNAME') THEN
+        SET password_encryption='scram-sha-256'; 
+        CREATE USER \"$RCT_DB_USERNAME\" WITH ENCRYPTED PASSWORD '$RCT_DB_PASSWORD';
+
+        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"$RCT_DB_USERNAME\";
+        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$RCT_DB_USERNAME\";
+      ELSE
+        raise notice 'user % already exists', '$RCT_DB_USERNAME';
+      END IF;
+    END;
+    \$\$
+  ";
+  psql -d $RCT_DB_NAME -c "$CREATE_USER_CMD";
 }
 
-
-terminate
-if [ "$DROP" = 'true' ]; then
-  drop
-fi
-create_main
-create_other
-grant
-psql -d $RCT_DB_NAME -c "call insert_period('null', null, null);";
-
-if [ "$NO_MODIFY_DAEMON" != 'true' ]; then
-  if [ "$OTHER_SQL_MODIFY_DAEMON" = 'true' ]; then
-    inotifywait --monitor --recursive --event modify $STORED_SQL_FUNCTIONALITIES_DIR |
-      while read file_path file_event file_name; do 
-        echo ${file_path}${file_name} event: ${file_event}; 
-        psql -d $RCT_DB_NAME -a -f "${file_path}${file_name}";
-        echo ${file_path}${file_name} event: ${file_event}; 
-      done &
+setup_dev_modification_watchers() {
+  if [ "$ENV_MODE" == 'dev' ]; then
+    if [ "$SQL_SCR_MODIFY_DAEMON" = 'true' ]; then
+      inotifywait --monitor --recursive --event modify $STORED_SQL_FUNCTIONALITIES_DIR |
+        while read file_path file_event file_name; do 
+          echo ${file_path}${file_name} event: ${file_event}; 
+          psql -d $RCT_DB_NAME -a -f "${file_path}${file_name}";
+          echo ${file_path}${file_name} event: ${file_event}; 
+        done &
+    fi
   fi
-fi
+}
+
+if [ "$TERMINATE" == 'true ']; then
+  terminate;
+fi;
+
+create_db;
+create_user;
+create_stored_functionalities;
+setup_dev_modification_watchers;

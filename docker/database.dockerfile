@@ -5,6 +5,7 @@ FROM base as dev
         apt install -y \
         sudo \
         procps \
-        inotify-tools
+        inotify-tools \
+        vim
 
 FROM base as test

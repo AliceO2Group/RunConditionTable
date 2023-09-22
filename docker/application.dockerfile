@@ -3,7 +3,8 @@ FROM node:18-alpine3.17 as base
 
 RUN apk add --no-cache \
     bash=5.2.15-r0 \
-    netcat-openbsd
+    netcat-openbsd \
+    vim
 
 
 # Installs Git and packages required for Puppeteer
