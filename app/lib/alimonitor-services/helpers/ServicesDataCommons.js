@@ -17,8 +17,8 @@ const Utils = require('../../utils');
 const { rctData } = require('../../config/configProvider.js');
 
 /**
- * PERIOD_NAME_REGEX is regualar expersion for examining
- * whether given string can be considerd as period name, e.g. LHC22o is period name.
+ * PERIOD_NAME_REGEX is a regular expression for examining
+ * whether given string can be considered period name, e.g. LHC22o is a period name.
  * It is defined as ^LHC\d\d[a-zA-Z]+
  * The regex can be (right) extended in order to match e.g.:
  * 1. data passes, e.g. LHC22o_apass1 can be matched with PERIOD_NAME_REGEX.rightExtend('_apass\\d');
