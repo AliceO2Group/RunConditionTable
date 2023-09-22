@@ -44,7 +44,7 @@ export default class PeriodsModel extends Observable {
         });
         this._fields = periodsActiveColumns;
 
-        this._filterPanelVisible = false;
+        this._isFilterPanelVisible = false;
         this._shouldHideSelectedPeriods = false;
         this._sortingRowVisible = false;
 
@@ -75,7 +75,7 @@ export default class PeriodsModel extends Observable {
 
         this._allPeriods = RemoteData.notAsked();
 
-        const endpoint = `/api/periods/?${encodeURI(this._filtering.buildFilterPhrase())}`;
+        const endpoint = `/api/periods/?${encodeURI(this._filtering.filterPhrase)}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._allPeriods = RemoteData.success([...items]);
@@ -97,7 +97,7 @@ export default class PeriodsModel extends Observable {
          * @type {Period[]}
          */
 
-        const filterPhrase = this._filtering.buildFilterPhrase();
+        const { filterPhrase } = this._filtering;
 
         if (this._allPeriods.kind === 'NotAsked') {
             await this.fetchAllPeriods();
@@ -177,8 +177,8 @@ export default class PeriodsModel extends Observable {
         return Object.keys(this._fields).map((field) => ({ ...this._fields[field] })).filter((field) => field.visible);
     }
 
-    get filterPanelVisible() {
-        return this._filterPanelVisible;
+    get isFilterPanelVisible() {
+        return this._isFilterPanelVisible;
     }
 
     get fields() {
@@ -202,7 +202,7 @@ export default class PeriodsModel extends Observable {
     }
 
     toggleFilterPanelVisibility() {
-        this._filterPanelVisible = !this._filterPanelVisible;
+        this._isFilterPanelVisible = !this._isFilterPanelVisible;
         this.notify();
     }
 

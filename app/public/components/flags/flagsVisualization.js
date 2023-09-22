@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import flagVisualization from './flagVisualization.js';
-import { RCT } from '../../../../config.js';
+import { RCT } from '../../config.js';
 const { flagReasonColors } = RCT.quality;
 
 function filterDistinct(a) {
