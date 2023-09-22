@@ -23,13 +23,13 @@ class QualityControlFlagVerificationAdapter {
         const {
             id,
             verifiedBy,
-            created_at,
+            createdAt,
         } = databaseObject;
 
         return {
             id,
             verifiedBy,
-            created_at,
+            createdAt,
         }
     }
 
@@ -43,13 +43,13 @@ class QualityControlFlagVerificationAdapter {
         const {
             id,
             verifiedBy,
-            created_at,
+            createdAt,
         } = entityObject;
 
         return {
             id,
             verifiedBy,
-            created_at,
+            createdAt,
         };
     }
 }
