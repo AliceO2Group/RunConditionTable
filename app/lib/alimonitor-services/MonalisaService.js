@@ -15,7 +15,13 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const { ServicesEndpointsFormatter, ServicesDataCommons: { mapBeamTypeToCommonFormat, extractPeriod } } = require('./helpers');
+const { ServicesEndpointsFormatter,
+    ServicesDataCommons: {
+        mapBeamTypeToCommonFormat,
+        extractPeriod,
+        PERIOD_NAME_REGEX,
+    },
+} = require('./helpers');
 const MonalisaServiceDetails = require('./MonalisaServiceDetails.js');
 const config = require('../config/configProvider.js');
 
@@ -74,7 +80,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
         const preprocesed = entries.map(([prodName, vObj]) => {
             vObj['name'] = prodName.trim();
             return vObj;
-        }).filter((r) => r.name?.match(/^LHC\d\d[a-zA-Z]_.*$/));
+        }).filter((r) => r.name?.match(PERIOD_NAME_REGEX.rightExtend('_.*$')));
         return preprocesed.map(this.adjustDataUnit.bind(this));
     }
 
