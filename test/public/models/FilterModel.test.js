@@ -11,14 +11,16 @@
  * or submit itself to any jurisdiction.
  */
 
-const UtilitiesSuite = require('./utils');
-const ComponentsSuite = require('./components');
-const PeriodsSuite = require('./periods');
-const ModelsSuite = require('./models');
+const req = require('esm-wallaby')(module);
+const assert = require('assert');
+
+const FilterModel = req('../../../app/public/model/filtering/FilterModel.js').default;
 
 module.exports = () => {
-    describe('Components', ComponentsSuite);
-    describe('Utilities', UtilitiesSuite);
-    describe('Periods', PeriodsSuite);
-    describe('Models', ModelsSuite);
+    describe('Filter model', () => {
+        const fModel = new FilterModel();
+        it('should instantialte the class with no active filters', () => {
+            assert.equal(fModel.isAnyFilterActive(), false);
+        });
+    });
 };
