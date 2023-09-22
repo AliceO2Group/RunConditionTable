@@ -22,7 +22,7 @@
  * @property {RemoteData} currentPageData
  * @property {*} fields
  * @property {*} visibleFields
- * @property {Boolean} hideSelectedRows
+ * @property {Boolean} shouldHideSelectedRows
  * @function fetchCurrentPageData
  * @function createDataExport
  */

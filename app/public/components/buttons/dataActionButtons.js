@@ -78,11 +78,11 @@ export default function dataActionButtons(model, applicableDataActions, dataMode
 
         applicableDataActions[dataActions.hide] && dataModel
             ? h('button.btn.icon-only-button', {
-                className: dataModel.hideSelectedRows ? 'btn-primary' : 'btn-secondary',
+                className: dataModel.shouldHideSelectedRows ? 'btn-primary' : 'btn-secondary',
                 onclick: () => {
                     dataModel.toggleSelectedRowsVisibility();
                 },
-            }, dataModel.hideSelectedRows ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
+            }, dataModel.shouldHideSelectedRows ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
             : '',
 
         applicableDataActions[dataActions.obsoleteShowFilteringPanel]

@@ -45,7 +45,7 @@ export default class PeriodsModel extends Observable {
         this._fields = periodsActiveColumns;
 
         this._filterPanelVisible = false;
-        this._hideSelectedPeriods = false;
+        this._shouldHideSelectedPeriods = false;
         this._sortingRowVisible = false;
 
         this._filtering = new FilterModel();
@@ -189,12 +189,8 @@ export default class PeriodsModel extends Observable {
         return this._pagination;
     }
 
-    get hideSelectedPeriods() {
-        return this._hideSelectedPeriods;
-    }
-
-    get hideSelectedRows() {
-        return this._hideSelectedPeriods;
+    get shouldHideSelectedRows() {
+        return this._shouldHideSelectedPeriods;
     }
 
     get sortingRowVisible() {
@@ -230,7 +226,7 @@ export default class PeriodsModel extends Observable {
     }
 
     toggleSelectedRowsVisibility() {
-        this._hideSelectedPeriods = !this._hideSelectedPeriods;
+        this._shouldHideSelectedPeriods = !this._shouldHideSelectedPeriods;
         this.notify();
     }
 }
