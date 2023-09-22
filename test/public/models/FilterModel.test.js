@@ -17,15 +17,15 @@ const assert = require('assert');
 const FilterModel = req('../../../app/public/model/filtering/FilterModel.js').default;
 
 module.exports = () => {
-    const filterModel = new FilterModel();
-
     describe('Class instance creation', () => {
+        const filterModel = new FilterModel();
         it('should instantiate the class with no active filters', () => {
             assert.equal(filterModel.isAnyFilterActive, false);
         });
     });
 
     describe('Adding a new filter', () => {
+        const filterModel = new FilterModel();
         it('should add a new filter', () => {
             filterModel.addFilter('name', 'LHC', 'match');
             filterModel.addFilter('name', 'zt', 'exclude');
@@ -40,6 +40,10 @@ module.exports = () => {
     });
 
     describe('Removing filters', () => {
+        const filterModel = new FilterModel();
+        filterModel.addFilter('name', 'LHC', 'match');
+        filterModel.addFilter('name', 'zt', 'exclude');
+
         it('should remove a specified filter', () => {
             filterModel.removeFilter('name', 'zt', 'exclude');
 
@@ -49,6 +53,10 @@ module.exports = () => {
     });
 
     describe('Reseting', () => {
+        const filterModel = new FilterModel();
+        filterModel.addFilter('name', 'LHC', 'match');
+        filterModel.addFilter('name', 'zt', 'exclude');
+        
         it('should reset the filter model', () => {
             filterModel.reset();
             assert.equal(filterModel.isAnyFilterActive, false);
@@ -56,8 +64,13 @@ module.exports = () => {
     });
 
     describe('Building filter phrases', () => {
-        it('should add a new filter', () => {
-            assert.equal(false, false);
+        const filterModel = new FilterModel();
+        filterModel.addFilter('year', '2020', 'from');
+        
+        const expectedFilterPhrase = 'filter[year][gte]=2020';
+
+        it('should build a correct filter phrase', () => {
+            assert.equal(filterModel.filterPhrase, expectedFilterPhrase);
         });
     });
 
