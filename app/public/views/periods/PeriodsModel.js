@@ -75,7 +75,7 @@ export default class PeriodsModel extends Observable {
 
         this._allPeriods = RemoteData.notAsked();
 
-        const endpoint = `/api/periods/?${encodeURI(this._filtering.buildFilterPhrase())}`;
+        const endpoint = `/api/periods/?${encodeURI(this._filtering.filterPhrase)}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._allPeriods = RemoteData.success([...items]);
@@ -97,7 +97,7 @@ export default class PeriodsModel extends Observable {
          * @type {Period[]}
          */
 
-        const filterPhrase = this._filtering.buildFilterPhrase();
+        const filterPhrase = this._filtering.filterPhrase;
 
         if (this._allPeriods.kind === 'NotAsked') {
             await this.fetchAllPeriods();

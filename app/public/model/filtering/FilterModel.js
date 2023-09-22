@@ -67,6 +67,10 @@ export default class FilterModel extends Observable {
         }
     }
 
+    buildSingleFilterPhrase(field, type, value) {
+        return `filter[${field}]${this.buildOperatorPhrase(type, value)}`;
+    }
+
     get filterObjects() {
         return Object.entries(this._activeFilters)
             .map(([field, typeToValues]) =>
@@ -78,11 +82,7 @@ export default class FilterModel extends Observable {
         return Object.keys(this._activeFilters).length > 0;
     }
 
-    buildSingleFilterPhrase(field, type, value) {
-        return `filter[${field}]${this.buildOperatorPhrase(type, value)}`;
-    }
-
-    buildFilterPhrase() {
+    get filterPhrase() {
         return this.filterObjects.map(({ field, type, value }) => this.buildSingleFilterPhrase(field, type, value)).join('&');
     }
 }

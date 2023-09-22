@@ -17,10 +17,42 @@ const assert = require('assert');
 const FilterModel = req('../../../app/public/model/filtering/FilterModel.js').default;
 
 module.exports = () => {
+    const filterModel = new FilterModel();
+
     describe('Class instance creation', () => {
-        const fModel = new FilterModel();
         it('should instantiate the class with no active filters', () => {
-            assert.equal(fModel.isAnyFilterActive, false);
+            assert.equal(filterModel.isAnyFilterActive, false);
+        });
+    });
+
+    describe('Adding a new filter', () => {
+        it('should add a new filter', () => {
+            filterModel.addFilter('name', 'LHC', 'like');
+            assert.equal(filterModel.isAnyFilterActive, true);
+        });
+    });
+
+    describe('Removing filters', () => {
+        it('should add a new filter', () => {
+            assert.equal(false, false);
+        });
+    });
+
+    describe('Reseting', () => {
+        it('should add a new filter', () => {
+            assert.equal(false, false);
+        });
+    });
+
+    describe('Building filter phrases', () => {
+        it('should add a new filter', () => {
+            assert.equal(false, false);
+        });
+    });
+
+    describe('Filter objects', () => {
+        it('should add a new filter', () => {
+            assert.equal(false, false);
         });
     });
 };
