@@ -37,8 +37,8 @@ class QualityControlFlagAdapter {
             timeEnd,
             comment,
             addedBy,
-            additionTime,
-            lastModificationTime,
+            createdAt,
+            updatedAt,
             FlagType: flagType,
             QualityControlFlagVerifications: verifications,
         } = databaseObject;
@@ -52,8 +52,8 @@ class QualityControlFlagAdapter {
             timeEnd,
             comment,
             addedBy,
-            additionTime: Number(additionTime),
-            lastModificationTime: Number(lastModificationTime),
+            createdAt: Number(createdAt),
+            updatedAt: Number(updatedAt),
             flagType: this.flagTypeAdapter.toEntity(flagType),
             verifications: verifications.map((verification) => this.qualityControlFlagVerificationAdapter.toEntity(verification)),
         }
@@ -75,8 +75,8 @@ class QualityControlFlagAdapter {
             timeEnd,
             comment,
             addedBy,
-            additionTime,
-            lastModificationTime,
+            createdAt,
+            updatedAt,
             flagType: FlagType,
             verifications,
         } = entityObject;
@@ -90,8 +90,8 @@ class QualityControlFlagAdapter {
             timeEnd,
             comment,
             addedBy,
-            additionTime,
-            lastModificationTime,
+            createdAt,
+            updatedAt,
             FlagType: this.flagTypeAdapter.toDatabase(FlagType),
             QualityControlFlagVerifications: verifications.map((verification) => this.qualityControlFlagVerificationAdapter.toDatabase(verification)),
         };

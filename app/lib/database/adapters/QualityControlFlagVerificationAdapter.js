@@ -29,7 +29,7 @@ class QualityControlFlagVerificationAdapter {
         return {
             id,
             verifiedBy,
-            verifiedAt: created_at,
+            created_at,
         }
     }
 
@@ -43,7 +43,7 @@ class QualityControlFlagVerificationAdapter {
         const {
             id,
             verifiedBy,
-            verifiedAt: created_at,
+            created_at,
         } = entityObject;
 
         return {
