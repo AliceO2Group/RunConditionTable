@@ -39,7 +39,7 @@ const flags_view = (query) => {
         r.run_number,
         ds.name as detector,
         array_agg(v.verified_by) as by,
-        array_agg(v.verification_time) as ver_time
+        array_agg(v.created_at) as ver_time
 
 
         FROM quality_control_flags AS qcf

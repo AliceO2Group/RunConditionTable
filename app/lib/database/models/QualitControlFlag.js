@@ -36,23 +36,7 @@ module.exports = (sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
-    }, { 
-        timestamps: true, 
-        createdAt: 'additionTime', 
-        updatedAt: 'lastModificationTime',
     });
-
-    const QualityControlFlagVerification = sequelize.define('QualityControlFlagVerification', {
-        verifiedBy: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-    }, { 
-        timestamps: true, 
-        createdAt: 'verification_time', 
-        updatedAt: false,
-    });
-
 
     QualityControlFlag.associate = (models) => { 
         QualityControlFlag.belongsTo(models.Run, {foreignKey: 'run_number'});
@@ -60,11 +44,6 @@ module.exports = (sequelize) => {
         QualityControlFlag.belongsTo(models.DetectorSubsystem, {foreignKey: 'detector_id'});
         QualityControlFlag.belongsTo(models.FlagType, {foreignKey: 'flag_type_id'});
         QualityControlFlag.hasMany(models.QualityControlFlagVerification, {foreignKey: 'qcf_id'});
-    };
-
-
-    QualityControlFlagVerification.associate = (models) => {
-        QualityControlFlagVerification.belongsTo(models.QualityControlFlag, {foreignKey: 'qcf_id'});
     };
 
     return QualityControlFlag;

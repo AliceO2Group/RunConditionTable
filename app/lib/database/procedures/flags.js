@@ -58,7 +58,7 @@ const verification_insert = (query) => `
 DO                            
 $do$
 BEGIN
-    INSERT INTO verifications (qcf_id, verification_time, verified_by)
+    INSERT INTO verifications (qcf_id, created_at, verified_by)
     VALUES(${query.qcf_id}, now(), '${query.by}');
 END
 $do$;

@@ -36,14 +36,6 @@ module.exports = {
                     type: Sequelize.STRING,
                     allowNull: false,
                 },
-                addition_time: {
-                    type: Sequelize.DATE,
-                    allowNull: false,
-                },
-                last_modification_time: {
-                    type: Sequelize.DATE,
-                    allowNull: false,
-                },
                 run_number: {
                     type: Sequelize.INTEGER,
                     allowNull: true,
@@ -75,6 +67,16 @@ module.exports = {
                         model: 'flag_types_dictionary',
                         key: 'id',
                     },
+                },
+                created_at: {
+                    allowNull: false,
+                    type: Sequelize.DATE,
+                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+                },
+                updated_at: {
+                    allowNull: false,
+                    type: Sequelize.DATE,
+                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
                 },
             },
         )

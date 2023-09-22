@@ -33,7 +33,7 @@ module.exports = (sequelize) => {
         lastRun: {
             type: Sequelize.INTEGER,
         },
-    }, { timestamps: false });
+    });
     DataPass.associate = (models) => {
         DataPass.belongsTo(models.Period);
         DataPass.belongsToMany(models.Run, {

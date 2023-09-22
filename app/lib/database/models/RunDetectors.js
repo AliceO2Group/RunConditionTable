@@ -18,7 +18,7 @@ module.exports = (sequelize) => {
         quality: {
             type: Sequelize.STRING,
         },
-    }, { timestamps: false, tableName: 'runs_detectors' });
+    }, { tableName: 'runs_detectors' });
     
     return RunDetectors;
 };
