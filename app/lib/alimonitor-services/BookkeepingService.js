@@ -21,11 +21,10 @@ const { databaseManager: {
     repositories: {
         RunRepository,
         DetectorSubsystemRepository,
-        PeriodRepository,
-        BeamTypeRepository,
         RunDetectorsRepository,
     },
 } } = require('../database/DatabaseManager.js');
+const { upsertOrCreatePeriod } = require('../services/periods/findOrCreatePeriod.js');
 
 /**
  * BookkeepingService used to synchronize runs
@@ -127,40 +126,9 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const period = extractPeriod(periodName, beamType);
         const { detectorsNameToId } = this;
 
-        return await BeamTypeRepository.T.findOrCreate({
-            where: {
-                name: beamType,
-            },
-        })
-            .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
-                where: {
-                    name: period.name,
-                },
-                defaults: {
-                    name: period.name,
-                    year: period.year,
-                    BeamTypeId: beamType.id,
-                },
-            }))
-            .catch((e) => {
-                throw new Error('Find or create period failed', {
-                    cause: {
-                        error: e.message,
-                        meta: {
-                            explicitValues: {
-                                name: period.name,
-                                year: period.year,
-                                BeamTypeId: beamType.id,
-                            },
-                            implicitValues: {
-                                BeamType: beamType,
-                            },
-                        },
-                    },
-                });
-            })
-            .then(async ([period, _]) => await RunRepository.T.upsert({
-                PeriodId: period.id,
+        return upsertOrCreatePeriod(period)
+            .then(async (dbPeriod) => await RunRepository.T.upsert({
+                PeriodId: dbPeriod.id,
                 ...run,
             }))
             .then(async ([run, _]) => {
