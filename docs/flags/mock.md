@@ -31,7 +31,7 @@ VALUES
 (14, 526689, 1, 10, 1664895906000, 1664898405000, 'me', now(), 'idę ć kawę')
 ;
 
-insert into verifications(qcf_id, verification_time, verified_by)
+insert into verifications(qcf_id, created_at, verified_by)
 VALUES 
 (2, now(), 'PH1'),
 (2, now(), 'PH2'),
@@ -49,7 +49,7 @@ VALUES
     r.run_number,
     ds.name,
     array_agg(v.verified_by) as by,
-    array_agg(v.verification_time) as ver_time
+    array_agg(v.created_at) as ver_time
 
 
     FROM quality_control_flags AS qcf
