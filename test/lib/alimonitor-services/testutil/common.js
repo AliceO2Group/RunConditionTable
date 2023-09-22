@@ -11,10 +11,19 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+const { rctData: {
+    mapping: {
+        beamType: {
+            values: beamTypes,
+        },
+    },
+} } = require('../../../../app/lib/config/configProvider.js');
 
 const randint = (min = 0, max = 0) => Math.round(Math.random() * (max - min) + min);
 const choice = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const randomPeriodName = () => `LHC${choice([22, 18])}${choice('abceadbfarebivaavgauvgzxvcm')}`;
+const randomRunNumber = () => randint(1000000, 9000000);
+const randomBeamType = () => choice(Object.values(beamTypes));
 
 /**
  * Generate random data with structure defined in given argument
@@ -67,6 +76,8 @@ module.exports = {
     randint,
     choice,
     randomPeriodName,
+    randomRunNumber,
+    randomBeamType,
     universalNoncontextualDataUnitGenerator,
     universalNoncontextualArrayDataGenerator,
 };
