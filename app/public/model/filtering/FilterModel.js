@@ -74,7 +74,7 @@ export default class FilterModel extends Observable {
         this.notify();
     }
 
-    filterTypesMapping(filterType, value) {
+    buildOperatorPhrase(filterType, value) {
         switch (filterType) {
             case 'match': return `[or][like]=%${value}%`;
             case 'exclude': return `[and][notLike]=%${value}%`;
@@ -102,7 +102,7 @@ export default class FilterModel extends Observable {
     }
 
     buildSingleFilterPhrase(field, type, value) {
-        return `filter[${field}]${this.filterTypesMapping(type, value)}`;
+        return `filter[${field}]${this.buildOperatorPhrase(type, value)}`;
     }
 
     buildFilterPhrase() {
