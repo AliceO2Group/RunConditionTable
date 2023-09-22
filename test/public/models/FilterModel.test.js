@@ -27,8 +27,15 @@ module.exports = () => {
 
     describe('Adding a new filter', () => {
         it('should add a new filter', () => {
-            filterModel.addFilter('name', 'LHC', 'like');
+            filterModel.addFilter('name', 'LHC', 'match');
+            filterModel.addFilter('name', 'zt', 'exclude');
+
+            const expectedFilterObjects = [
+                { field: 'name', type: 'match', value: 'LHC' },
+                { field: 'name', type: 'exclude', value: 'zt' },
+            ];
             assert.equal(filterModel.isAnyFilterActive, true);
+            assert.deepEqual(filterModel.filterObjects, expectedFilterObjects);
         });
     });
 
