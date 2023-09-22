@@ -40,14 +40,18 @@ module.exports = () => {
     });
 
     describe('Removing filters', () => {
-        it('should add a new filter', () => {
-            assert.equal(false, false);
+        it('should remove a specified filter', () => {
+            filterModel.removeFilter('name', 'zt', 'exclude');
+
+            const expectedFilterObjects = [{ field: 'name', type: 'match', value: 'LHC' }];
+            assert.deepEqual(filterModel.filterObjects, expectedFilterObjects);
         });
     });
 
     describe('Reseting', () => {
-        it('should add a new filter', () => {
-            assert.equal(false, false);
+        it('should reset the filter model', () => {
+            filterModel.reset();
+            assert.equal(filterModel.isAnyFilterActive, false);
         });
     });
 
