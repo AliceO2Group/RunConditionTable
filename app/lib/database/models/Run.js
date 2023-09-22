@@ -21,29 +21,25 @@ module.exports = (sequelize) => {
             field: 'run_number',
         },
         timeO2Start: {
-            type: Sequelize.BIGINT,
-            field: 'time_start',
+            type: Sequelize.DATE,
             get() {
                 return Number(this.getDataValue('timeO2Start'))
             }
         },
         timeO2End: {
-            type: Sequelize.BIGINT,
-            field: 'time_end',
+            type: Sequelize.DATE,
             get() {
                 return Number(this.getDataValue('timeO2End'))
             }
         },
         timeTrgStart: {
-            type: Sequelize.BIGINT,
-            field: 'time_trg_start',
+            type: Sequelize.DATE,
             get() {
                 return Number(this.getDataValue('timeTrgStart'))
             }
         },
         timeTrgEnd: {
-            type: Sequelize.BIGINT,
-            field: 'time_trg_end',
+            type: Sequelize.DATE,
             get() {
                 return Number(this.getDataValue('timeTrgEnd'))
             }

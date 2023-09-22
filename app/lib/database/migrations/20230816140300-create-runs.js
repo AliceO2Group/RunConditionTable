@@ -19,17 +19,17 @@ module.exports = {
                     type: Sequelize.INTEGER,
                     primaryKey: true,
                 },
-                time_start: {
-                    type: Sequelize.BIGINT,
+                time_o2_start: {
+                    type: Sequelize.DATE,
                 },
-                time_end: {
-                    type: Sequelize.BIGINT,
+                time_o2_end: {
+                    type: Sequelize.DATE,
                 },
                 time_trg_start: {
-                    type: Sequelize.BIGINT,
+                    type: Sequelize.DATE,
                 },
                 time_trg_end: {
-                    type: Sequelize.BIGINT,
+                    type: Sequelize.DATE,
                 },
                 energy_per_beam: {
                     type: Sequelize.FLOAT,
