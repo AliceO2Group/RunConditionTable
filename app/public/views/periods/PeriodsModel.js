@@ -97,7 +97,7 @@ export default class PeriodsModel extends Observable {
          * @type {Period[]}
          */
 
-        const filterPhrase = this._filtering.filterPhrase;
+        const { filterPhrase } = this._filtering;
 
         if (this._allPeriods.kind === 'NotAsked') {
             await this.fetchAllPeriods();
