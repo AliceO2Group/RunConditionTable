@@ -84,10 +84,6 @@ export default class FilterModel extends Observable {
         }
     }
 
-    get activeFilters() {
-        return this._activeFilters;
-    }
-
     get filterObjects() {
         const result = Object.keys(this._activeFilters).map((field) =>
             Object.keys(this._activeFilters[field]).reduce((typeAcc, currentType) => {
