@@ -53,4 +53,4 @@ export const filtersFromUrl = (url) => url.href.split('&').filter((item) => isFi
     search: filterSearch(item),
 }));
 
-export const buildFilterPhrase = (field, value, type = null) => `filter[${field}]${type ? `[${type}]` : ''}=${value}`;
+export const buildFilterPhrase = (field, value, operator = null) => `filter[${field}]${operator ? `[${operator}]` : ''}=${value}`;
