@@ -28,28 +28,11 @@ export default class FilterModel extends Observable {
         this.notify();
     }
 
-    handleValueChange(field, type, value) {
-        switch (type) {
-            case 'match':
-            case 'exclude': {
-                this._activeFilters[field][type].push(value);
-                break;
-            }
-            case 'from':
-            case 'to': {
-                this._activeFilters[field][type] = [];
-                this._activeFilters[field][type].push(value);
-                break;
-            }
-            default: break;
-        }
-    }
-
     resetFilterValue(field, type) {
         this._activeFilters[field][type] = [];
     }
 
-    prepareObjectStructure(field, type) {
+    resetObjectStructure(field, type) {
         if (! Object.prototype.hasOwnProperty.call(this._activeFilters, field)) {
             this._activeFilters[field] = {
                 [type]: [],
@@ -61,7 +44,7 @@ export default class FilterModel extends Observable {
     }
 
     addFilter(field, value, type) {
-        this.prepareObjectStructure(field, type);
+        this.resetObjectStructure(field, type);
         if (['from', 'to'].includes(type)) {
             this.resetFilterValue(field, type);
         }
