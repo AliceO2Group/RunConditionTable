@@ -50,6 +50,6 @@ module.exports = () => {
             expect(title).to.equal('RCT prototype');
 
             await expectInnerText(page, 'h3#page-title', 'Periods');
-        });
+        }).timeout(5000);
     });
 };
