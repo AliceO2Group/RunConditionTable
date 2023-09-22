@@ -101,17 +101,11 @@ export default class FilterModel extends Observable {
         return Object.keys(this._activeFilters).length > 0;
     }
 
-    addSingleFilterPhrase(filterPhrase, field, type, value) {
-        return `${filterPhrase}${filterPhrase.length ? '&' : ''}filter[${field}]${this.filterTypesMapping(type, value)}`;
+    buildSingleFilterPhrase(field, type, value) {
+        return `filter[${field}]${this.filterTypesMapping(type, value)}`;
     }
 
     buildFilterPhrase() {
-        let filterPhrase = '';
-        for (const [field, typeValues] of Object.entries(this._activeFilters)) {
-            for (const [type, values] of Object.entries(typeValues)) {
-                filterPhrase = values.reduce((acc, value) => this.addSingleFilterPhrase(acc, field, type, value), filterPhrase);
-            }
-        }
-        return filterPhrase;
+        return this.filterObjects.map(({ field, type, value }) => this.buildSingleFilterPhrase(field, type, value)).join('&');
     }
 }
