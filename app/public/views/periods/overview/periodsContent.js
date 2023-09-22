@@ -52,7 +52,7 @@ export default function periodsContent(periodsModel, model) {
             dataActionButtons(dataAccess, applicableDataActions, periodsModel)),
 
         periodsModel.isFilterPanelVisible ? filteringPanel(periodsModel) : '',
-        periodsModel.filtering.isAnyFilterActive() ? activeFilters(periodsModel.filtering) : '',
+        periodsModel.filtering.isAnyFilterActive ? activeFilters(periodsModel.filtering) : '',
 
         periods.length > 0
             ? periodsModel.visibleFields.length > 0

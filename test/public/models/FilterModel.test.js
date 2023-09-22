@@ -20,7 +20,7 @@ module.exports = () => {
     describe('Class instance creation', () => {
         const fModel = new FilterModel();
         it('should instantiate the class with no active filters', () => {
-            assert.equal(fModel.isAnyFilterActive(), false);
+            assert.equal(fModel.isAnyFilterActive, false);
         });
     });
 };

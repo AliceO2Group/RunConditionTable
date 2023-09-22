@@ -74,7 +74,7 @@ export default class FilterModel extends Observable {
                     .map(([type, values]) => values.map((value) => ({ field, type, value })))).flat(2);
     }
 
-    isAnyFilterActive() {
+    get isAnyFilterActive() {
         return Object.keys(this._activeFilters).length > 0;
     }
 
