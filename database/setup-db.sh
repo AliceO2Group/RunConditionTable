@@ -29,8 +29,9 @@ Usage:
     Default values for 'host' is 'localhost' and for 'port' is '5432'
 
     <OTHER_OPTS> can be:
-      1. --other-sql-modify-daemon - as upper but on files in $SCRIPTS_DIR/stored-sql-functionalities/
-      2. --no-modify-daemon - block modification watcher irregardless to previous flags or env vars
+      1. --sql-src-modify-daemon - setup watchdog over sql scripts in $SCRIPTS_DIR/stored-sql-functionalities/**
+                                   any change in those files cause reinvocation of the sql scripts.
+                                   !!! It works only in dev environment (env var ENV_MODE=dev );
 
 USAGE
 exit 1;
@@ -45,12 +46,8 @@ while [[ $# -gt 0 ]]; do
           ENV_FILE="$2"
           shift 2;
         ;;
-        --other-sql-modify-daemon)
-          OTHER_SQL_MODIFY_DAEMON='true';
-          shift 1;
-        ;;
-        --no-modify-daemon)
-          NO_MODIFY_DAEMON='true';
+        --sql-src-modify-daemon)
+          SQL_SCR_MODIFY_DAEMON='true';
           shift 1;
         ;;
         -h|--host)
@@ -73,7 +70,10 @@ while [[ $# -gt 0 ]]; do
             __RCT_DB_PASSWORD="$2";
             shift 2;
         ;;
-
+        -t|--terminate)
+            TERMINATE=true;
+            shift 1;
+        ;;
         *)
             usage;
         ;;
@@ -109,36 +109,66 @@ terminate() {
   psql -c "select pg_terminate_backend(pid) from pg_stat_activity where datname='$RCT_DB_NAME';"
 }
 
-create_main() {
-  psql -c "set password_encryption='scram-sha-256'; CREATE USER \"$RCT_DB_USERNAME\" WITH ENCRYPTED PASSWORD '$RCT_DB_PASSWORD';"
-  psql -c "CREATE DATABASE \"$RCT_DB_NAME\""
+create_db() {
+  CREATE_DATABASE_CMD=$(psql -t -c "select 
+    'CREATE DATABASE \"$RCT_DB_NAME\"' as cmd 
+    where not exists(
+      select datname from pg_database where datname = '$RCT_DB_NAME')";);
+
+  CREATE_DATABASE_CMD=${CREATE_DATABASE_CMD:-"
+    DO \$\$ 
+    BEGIN 
+      raise notice 'database % already exists', '$RCT_DB_NAME'; 
+    END; 
+    \$\$;"};
+  psql -c "$CREATE_DATABASE_CMD";
 }
 
-create_other() {
-  for p in $(find "$STORED_SQL_FUNCTIONALITIES_DIR" -name "*.sql") ; do
-    echo "use of $p"
-    psql -d $RCT_DB_NAME -a -f $p
+create_stored_functionalities() {
+  for path in $(find "$STORED_SQL_FUNCTIONALITIES_DIR" -name "*.sql") ; do
+    echo "use of $path"
+    psql -d $RCT_DB_NAME -a -f $path;
   done;
 }
 
-grant() {
-  psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
-  psql -d $RCT_DB_NAME -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$RCT_DB_USERNAME\""
+create_user() {
+  CREATE_USER_CMD="
+    DO 
+    \$\$
+    BEGIN
+      IF not exists(select usename from pg_user where usename = '$RCT_DB_USERNAME') THEN
+        SET password_encryption='scram-sha-256'; 
+        CREATE USER \"$RCT_DB_USERNAME\" WITH ENCRYPTED PASSWORD '$RCT_DB_PASSWORD';
+
+        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"$RCT_DB_USERNAME\";
+        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"$RCT_DB_USERNAME\";
+      ELSE
+        raise notice 'user % already exists', '$RCT_DB_USERNAME';
+      END IF;
+    END;
+    \$\$
+  ";
+  psql -d $RCT_DB_NAME -c "$CREATE_USER_CMD";
 }
 
-
-terminate
-create_main
-create_other
-grant
-
-if [ "$NO_MODIFY_DAEMON" != 'true' ]; then
-  if [ "$OTHER_SQL_MODIFY_DAEMON" = 'true' ]; then
-    inotifywait --monitor --recursive --event modify $STORED_SQL_FUNCTIONALITIES_DIR |
-      while read file_path file_event file_name; do 
-        echo ${file_path}${file_name} event: ${file_event}; 
-        psql -d $RCT_DB_NAME -a -f "${file_path}${file_name}";
-        echo ${file_path}${file_name} event: ${file_event}; 
-      done &
+setup_dev_modification_watchers() {
+  if [ "$ENV_MODE" == 'dev' ]; then
+    if [ "$SQL_SCR_MODIFY_DAEMON" = 'true' ]; then
+      inotifywait --monitor --recursive --event modify $STORED_SQL_FUNCTIONALITIES_DIR |
+        while read file_path file_event file_name; do 
+          echo ${file_path}${file_name} event: ${file_event}; 
+          psql -d $RCT_DB_NAME -a -f "${file_path}${file_name}";
+          echo ${file_path}${file_name} event: ${file_event}; 
+        done &
+    fi
   fi
-fi
+}
+
+if [ "$TERMINATE" == 'true ']; then
+  terminate;
+fi;
+
+create_db;
+create_user;
+create_stored_functionalities;
+setup_dev_modification_watchers;
