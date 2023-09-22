@@ -19,7 +19,18 @@ import { RCT } from '../../../../../config.js';
 import { wrappedUserInput } from '../../../../../utils/filtering/filterUtils.js';
 const { filterTypes } = RCT;
 
+/**
+ * Filtering panel
+ * @deprecated
+ * @param {DataAccessModel} model deprecated data access model
+ * @returns {vnode} filter panel
+ */
 export default function filter(model) {
+    const fieldSelectId = 'filter-field-select';
+    const typeSelectId = 'filter-type-select';
+    const leftInputId = 'filter-left-input';
+    const rightInputId = 'filter-right-input';
+
     const dataPointer = model.getCurrentDataPointer();
     const { page } = dataPointer;
     const data = model.getCurrentData();
@@ -27,7 +38,7 @@ export default function filter(model) {
     const url = model.router.getUrl();
 
     function onFilteringTypeChange() {
-        const filteringTypeSelect = document.getElementById('filters-opts-select');
+        const filteringTypeSelect = document.getElementById(typeSelectId);
         const selectedType = filteringTypeSelect.options[filteringTypeSelect.selectedIndex].value;
         const types = selectedType == filterTypes.between ? ['from', 'to'] : [filterTypes.match, filterTypes.exclude];
 
@@ -37,24 +48,24 @@ export default function filter(model) {
     }
 
     function clearUserInput() {
-        document.getElementById('show-options-field').value = '';
-        document.getElementById('filters-opts-select').value = '';
-        document.getElementById('left-filter-input').value = '';
-        document.getElementById('right-filter-input').value = '';
+        document.getElementById(fieldSelectId).value = '';
+        document.getElementById(typeSelectId).value = '';
+        document.getElementById(leftInputId).value = '';
+        document.getElementById(rightInputId).value = '';
     }
 
     function onFilterSubmit() {
-        const filteringTypeSelect = document.getElementById('filters-opts-select');
+        const filteringTypeSelect = document.getElementById(typeSelectId);
         const selectedType = filteringTypeSelect.options[filteringTypeSelect.selectedIndex].value;
 
-        const fieldNameSelect = document.getElementById('show-options-field');
+        const fieldNameSelect = document.getElementById(fieldSelectId);
         const fieldNameValue = fieldNameSelect.options[fieldNameSelect.selectedIndex].value;
 
         const leftFilterType = document.getElementById('left-filter-placeholder').innerHTML;
         const rightFilterType = document.getElementById('right-filter-placeholder').innerHTML;
 
-        const leftFilterInput = document.getElementById('left-filter-input').value;
-        const rightFilterInput = document.getElementById('right-filter-input').value;
+        const leftFilterInput = document.getElementById(leftInputId).value;
+        const rightFilterInput = document.getElementById(rightInputId).value;
 
         let filterPhrase = '';
         if (selectedType == filterTypes.between) {
@@ -99,7 +110,7 @@ export default function filter(model) {
         h('.flex-wrap.justify-between.items-center',
             h('.flex-wrap.justify-between.items-center',
                 h('select.select', {
-                    id: 'show-options-field',
+                    id: fieldSelectId,
                     name: 'showOptions' }, [
                     h('option', { value: '', selected: true, disabled: true, hidden: true }, 'Field'),
                     fields.filter((field) => getFieldName(model, field))
@@ -107,7 +118,7 @@ export default function filter(model) {
                 ], h('.close-10-primary')),
 
                 h('select.select', {
-                    id: 'filters-opts-select',
+                    id: typeSelectId,
                     name: 'showOptions',
                     onchange: () => onFilteringTypeChange(),
                 }, [
@@ -120,9 +131,9 @@ export default function filter(model) {
                     h('input.form-control.relative', {
                         style: 'width:120px',
                         type: 'text',
-                        value: document.getElementById('filters-opts-select')?.options[Selection.selectedIndex]?.value,
+                        value: document.getElementById(typeSelectId)?.options[Selection.selectedIndex]?.value,
                         disabled: false,
-                        id: 'left-filter-input',
+                        id: leftInputId,
                         required: true,
                         // TODO: pattern
                     }),
@@ -134,7 +145,7 @@ export default function filter(model) {
                         type: 'text',
                         value: '',
                         disabled: false,
-                        id: 'right-filter-input',
+                        id: rightInputId,
                         required: true,
                         // TODO: pattern
                     }),

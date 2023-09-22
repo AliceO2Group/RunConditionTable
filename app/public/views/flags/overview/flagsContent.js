@@ -13,7 +13,6 @@
  */
 
 import { h } from '/js/src/index.js';
-import filter from '../../userView/data/table/filtering/filter.js';
 import flagsVisualization from '../../../components/flags/flagsVisualization.js';
 import flagsTable from './flagsTable.js';
 import flagBreadCrumbs from '../../../../components/flags/flagBreadcrumbs.js';
@@ -48,7 +47,6 @@ export default function flagsContent(model, runs, detectors, flags) {
                     flagBreadCrumbs(model, dataPassName, runNumber, detectorName)),
 
                 dataActionButtons(model, applicableDataActions)),
-            model.showFilteringPanel ? filter(model) : '',
 
             flagsVisualization(runData, flagsData),
             flagsTable(model, flagsData),

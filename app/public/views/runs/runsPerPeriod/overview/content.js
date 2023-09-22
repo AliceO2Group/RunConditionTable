@@ -21,8 +21,8 @@ import pagesCellsSpecials from '../../../userView/data/pagesCellsSpecials.js';
 import title from '../../../../components/table/title.js';
 import header from '../table/header.js';
 import row from '../table/row.js';
-import filter from '../../../userView/data/table/filtering/filter.js';
-import activeFilters from '../../../userView/data/table/filtering/activeFilters.js';
+import filter from '../../../userView/data/table/filtering/obsoleteFilter.js';
+import obsoleteActiveFilters from '../../../userView/data/table/filtering/obsoleteActiveFilters.js';
 import sortingRow from '../../../userView/data/table/sortingRow.js';
 import { noMatchingData, noDataFound } from '../../../../components/messagePanel/messages.js';
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
@@ -31,12 +31,12 @@ import { RCT } from '../../../../config.js';
 const { pageNames } = RCT;
 
 const applicableDataActions = {
-    [dataActions.hide]: true,
+    [dataActions.obsoleteHide]: true,
     [dataActions.reload]: true,
     [dataActions.obsoleteDownloadCSV]: true,
     [dataActions.downloadCSV]: false,
     [dataActions.copyLink]: true,
-    [dataActions.showFilteringPanel]: true,
+    [dataActions.obsoleteShowFilteringPanel]: true,
 };
 
 export default function content(model, runs, detectors) {
@@ -63,7 +63,7 @@ export default function content(model, runs, detectors) {
 
                 dataActionButtons(model, applicableDataActions)),
             model.showFilteringPanel ? filter(model) : '',
-            anyFiltersActive(url) ? activeFilters(model, url) : '',
+            anyFiltersActive(url) ? obsoleteActiveFilters(model, url) : '',
 
             data.rows?.length > 0
                 ? visibleFields.length > 0

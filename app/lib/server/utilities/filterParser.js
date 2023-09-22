@@ -221,7 +221,7 @@ class TransformHelper {
  * 1 URL search params are:
  *
  *        .../?filter[or][field1][gt]=10&filter[or][field1][lt]=3&filter[or][field1][_goperator]=or
- *            &filter[or][filed2][like]=LHC_%25pass&filter[or][filed2][notLike]=LHC_c%25
+ *            &filter[or][field2][like]=LHC_%25pass&filter[or][field2][notLike]=LHC_c%25
  *            &filter[and][$1][or][f1]=1&filter[and][$1][or][f2]=2&filter[and][$2][or][f3]=3&filter[and][$2][or][f4]=5
  *
  * 2 The url will be parsed by qs in express to:
@@ -234,7 +234,7 @@ class TransformHelper {
  *            "lt": "3",
  *            "_goperator": "or"
  *          },
- *          "filed2": {
+ *          "field2": {
  *            "like": "LHC_%pass",
  *            "notLike": "LHC_c%"
  *          }
@@ -266,7 +266,7 @@ class TransformHelper {
  *               [Symbol(lt)]: '3'
  *             }
  *           },
- *           filed2: {
+ *           field2: {
  *             [Symbol(and)]: {
  *               [Symbol(like)]: 'LHC_%pass',
  *               [Symbol(notLike)]: 'LHC_c%'

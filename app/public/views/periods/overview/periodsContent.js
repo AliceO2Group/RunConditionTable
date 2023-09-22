@@ -15,13 +15,13 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
 import title from '../../../components/table/title.js';
 import dataActionButtons, { dataActions } from '../../../components/buttons/dataActionButtons.js';
-import filter from '../../userView/data/table/filtering/filter.js';
 import { anyFiltersActive } from '../../../utils/filtering/filterUtils.js';
-import activeFilters from '../../userView/data/table/filtering/activeFilters.js';
 import { noDataFound, noMatchingData } from '../../../components/messagePanel/messages.js';
 import periodsTableHeader from '../table/periodsTableHeader.js';
 import periodsTableRow from '../table/periodsTableRow.js';
 import tableManager from '../../../components/table/tableManager.js';
+import filteringPanel from '../../../components/filter/filteringPanel.js';
+import activeFilters from '../../../components/filter/activeFilters.js';
 const pageName = RCT.pageNames.periods;
 
 /**
@@ -34,7 +34,6 @@ const pageName = RCT.pageNames.periods;
 const applicableDataActions = {
     [dataActions.hide]: true,
     [dataActions.reload]: true,
-    [dataActions.obsoleteDownloadCSV]: false,
     [dataActions.downloadCSV]: true,
     [dataActions.copyLink]: true,
     [dataActions.showFilteringPanel]: true,
@@ -50,10 +49,10 @@ export default function periodsContent(periodsModel, model) {
         h('.flex-wrap.justify-between.items-center',
             h('.flex-wrap.justify-between.items-center',
                 title(pageName)),
-            dataActionButtons(dataAccess, applicableDataActions)),
+            dataActionButtons(dataAccess, applicableDataActions, periodsModel)),
 
-        model.showFilteringPanel ? filter(dataAccess) : '',
-        anyFiltersActive(url) ? activeFilters(dataAccess, url) : '',
+        periodsModel.filterPanelVisible ? filteringPanel(periodsModel) : '',
+        periodsModel.filtering.isAnyFilterActive() ? activeFilters(periodsModel.filtering) : '',
 
         periods.length > 0
             ? periodsModel.visibleFields.length > 0

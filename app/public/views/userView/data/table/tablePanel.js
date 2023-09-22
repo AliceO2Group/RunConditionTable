@@ -18,8 +18,8 @@ import row from './row.js';
 import pagesCellsSpecials from '../pagesCellsSpecials.js';
 import obsoletePager from '../../../../components/table/obsoletePager.js';
 
-import filter from './filtering/filter.js';
-import activeFilters from './filtering/activeFilters.js';
+import filter from './filtering/obsoleteFilter.js';
+import obsoleteActiveFilters from './filtering/obsoleteActiveFilters.js';
 import { noDataFound, noMatchingData } from '../../../../components/messagePanel/messages.js';
 
 import sortingRow from './sortingRow.js';
@@ -33,12 +33,12 @@ import { RCT } from '../../../../config.js';
 const { pageNames } = RCT;
 
 const applicableDataActions = {
-    [dataActions.hide]: true,
+    [dataActions.obsoleteHide]: true,
     [dataActions.reload]: true,
     [dataActions.obsoleteDownloadCSV]: true,
     [dataActions.downloadCSV]: false,
     [dataActions.copyLink]: true,
-    [dataActions.showFilteringPanel]: true,
+    [dataActions.obsoleteShowFilteringPanel]: true,
 };
 
 /**
@@ -74,7 +74,7 @@ export default function tablePanel(model, runs) {
 
                 dataActionButtons(model, applicableDataActions)),
             model.showFilteringPanel ? filter(model) : '',
-            anyFiltersActive(url) ? activeFilters(model, url) : '',
+            anyFiltersActive(url) ? obsoleteActiveFilters(model, url) : '',
 
             data.rows?.length > 0
                 ? visibleFields.length > 0

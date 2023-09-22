@@ -20,7 +20,6 @@ const { pageNames, dataReqParams, defaultDataReqParams } = RCT;
 /**
  * Model representing handlers for navigation change
  *
- * @implements {OverviewModel}
  * @deprecated
  */
 export default class Navigation extends Observable {

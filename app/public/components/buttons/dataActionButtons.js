@@ -19,14 +19,24 @@ import { modalIds, showModal } from '../../views/modal/modal.js';
 
 export const dataActions = {
     hide: 'Hide',
+    obsoleteHide: 'Hide (obsolete)',
     reload: 'Reload',
     obsoleteDownloadCSV: 'Download CSV (obsolete)',
     downloadCSV: 'Download CSV',
     copyLink: 'Copy link',
     showFilteringPanel: 'Filter',
+    obsoleteShowFilteringPanel: 'Filter (obsolete)',
 };
 
-export default function dataActionButtons(model, applicableDataActions) {
+/**
+ *
+ * @param {DataAccessModel} model data access model (obsolete)
+ * @param {Object} applicableDataActions object
+ * @param {OverviewModel} dataModel - data model (e.g. periodsModel)
+ * @returns {vnode}
+ */
+
+export default function dataActionButtons(model, applicableDataActions, dataModel = null) {
     return h('.btn-group',
         applicableDataActions[dataActions.reload]
             ? h('button.btn.btn-secondary.icon-only-button', {
@@ -57,17 +67,35 @@ export default function dataActionButtons(model, applicableDataActions) {
             ? copyLinkButton(model.router.getUrl().toString())
             : '',
 
-        applicableDataActions[dataActions.hide]
+        applicableDataActions[dataActions.obsoleteHide]
             ? h('button.btn.icon-only-button', {
                 className: model.hideCurrentPageMarkedRows ? 'btn-primary' : 'btn-secondary',
-                onclick: () => model.changeMarkedRowsVisibility(),
+                onclick: () => {
+                    model.changeMarkedRowsVisibility();
+                },
             }, model.hideCurrentPageMarkedRows ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
             : '',
 
-        applicableDataActions[dataActions.showFilteringPanel]
+        applicableDataActions[dataActions.hide] && dataModel
+            ? h('button.btn.icon-only-button', {
+                className: dataModel.shouldHideSelectedRows ? 'btn-primary' : 'btn-secondary',
+                onclick: () => {
+                    dataModel.toggleSelectedRowsVisibility();
+                },
+            }, dataModel.shouldHideSelectedRows ? h('.hide-20-off-white.abs-center') : h('.hide-20-primary.abs-center'))
+            : '',
+
+        applicableDataActions[dataActions.obsoleteShowFilteringPanel]
             ? h('button.btn.icon-only-button', {
                 className: model.showFilteringPanel ? 'btn-primary' : 'btn-secondary',
                 onclick: () => model.changeSearchFieldsVisibility(),
             }, model.showFilteringPanel ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center'))
+            : '',
+
+        applicableDataActions[dataActions.showFilteringPanel] && dataModel
+            ? h('button.btn.icon-only-button', {
+                className: dataModel.filterPanelVisible ? 'btn-primary' : 'btn-secondary',
+                onclick: () => dataModel.toggleFilterPanelVisibility(),
+            }, dataModel.filterPanelVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center'))
             : '');
 }

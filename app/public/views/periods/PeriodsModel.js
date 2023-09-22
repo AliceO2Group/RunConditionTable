@@ -19,6 +19,7 @@ import { createCSVExport, createJSONExport } from '../../utils/dataExport/export
 import { exportFormats } from './overview/dataExport.js';
 import { pageTitle } from '../../components/common/pageTitle.js';
 import { periodsActiveColumns } from './ActiveColumns/periodsActiveColumns.js';
+import FilterModel from '../../model/filtering/FilterModel.js';
 
 /**
  * Model representing handlers for periods page
@@ -41,11 +42,17 @@ export default class PeriodsModel extends Observable {
             this.fetchCurrentPagePeriods();
             this.notify();
         });
-
         this._fields = periodsActiveColumns;
 
-        this._hideSelectedPeriods = false;
+        this._filterPanelVisible = false;
+        this._shouldHideSelectedPeriods = false;
         this._sortingRowVisible = false;
+
+        this._filtering = new FilterModel();
+        this._filtering.observe(() => {
+            this.fetchCurrentPageData();
+            this.notify();
+        });
 
         this._currentPagePeriods = RemoteData.notAsked();
         this._allPeriods = RemoteData.notAsked();
@@ -55,19 +62,20 @@ export default class PeriodsModel extends Observable {
 
     /**
      * Fetch all the relevant periods from the API
-     *
+     * @param {Object} filterObject object that defines requested filtering
      * @return {Promise<void>} void
      */
     async fetchAllPeriods() {
         /**
          * @type {Period[]}
          */
+
         this._allPeriods = RemoteData.loading();
         this.notify();
 
         this._allPeriods = RemoteData.notAsked();
 
-        const endpoint = '/api/periods';
+        const endpoint = `/api/periods/?${encodeURI(this._filtering.buildFilterPhrase())}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._allPeriods = RemoteData.success([...items]);
@@ -81,13 +89,15 @@ export default class PeriodsModel extends Observable {
 
     /**
      * Fetch all the relevant periods from the API
-     *
+     * @param {Object} filterObject object that defines requested filtering
      * @return {Promise<void>} void
      */
     async fetchCurrentPagePeriods() {
         /**
          * @type {Period[]}
          */
+
+        const filterPhrase = this._filtering.buildFilterPhrase();
 
         if (this._allPeriods.kind === 'NotAsked') {
             await this.fetchAllPeriods();
@@ -103,7 +113,8 @@ export default class PeriodsModel extends Observable {
 
         this._currentPagePeriods = RemoteData.notAsked();
 
-        const endpoint = `/api/periods?${new URLSearchParams(params).toString()}`;
+        const endpoint = `/api/periods?${[new URLSearchParams(params).toString(), encodeURI(filterPhrase)].join('&')}`;
+
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._currentPagePeriods = RemoteData.success([...items]);
@@ -166,6 +177,10 @@ export default class PeriodsModel extends Observable {
         return Object.keys(this._fields).map((field) => ({ ...this._fields[field] })).filter((field) => field.visible);
     }
 
+    get filterPanelVisible() {
+        return this._filterPanelVisible;
+    }
+
     get fields() {
         return this._fields;
     }
@@ -174,12 +189,21 @@ export default class PeriodsModel extends Observable {
         return this._pagination;
     }
 
-    get hideSelectedPeriods() {
-        return this._hideSelectedPeriods;
+    get shouldHideSelectedRows() {
+        return this._shouldHideSelectedPeriods;
     }
 
     get sortingRowVisible() {
         return this._sortingRowVisible;
+    }
+
+    get filtering() {
+        return this._filtering;
+    }
+
+    toggleFilterPanelVisibility() {
+        this._filterPanelVisible = !this._filterPanelVisible;
+        this.notify();
     }
 
     toggleSelection(period) {
@@ -198,6 +222,11 @@ export default class PeriodsModel extends Observable {
             ? arguments[1]
             : !this._fields[targetFieldIndex].visible;
         this._fields[targetFieldIndex].visible = targetState;
+        this.notify();
+    }
+
+    toggleSelectedRowsVisibility() {
+        this._shouldHideSelectedPeriods = !this._shouldHideSelectedPeriods;
         this.notify();
     }
 }

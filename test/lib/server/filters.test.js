@@ -46,7 +46,7 @@ module.exports = () => {
                             lt: '3',
                             _goperator: 'or',
                         },
-                        filed2: {
+                        field2: {
                             like: 'LHC_%pass',
                             notLike: 'LHC_c%',
                         },
@@ -61,7 +61,7 @@ module.exports = () => {
                                 [Op.lt]: '3',
                             },
                         },
-                        filed2: {
+                        field2: {
                             [Op.like]: 'LHC_%pass',
                             [Op.notLike]: 'LHC_c%',
                         },
@@ -78,7 +78,7 @@ module.exports = () => {
                         lt: '3',
                         _goperator: 'or',
                     },
-                    filed2: {
+                    field2: {
                         like: 'LHC_%pass',
                         notLike: 'LHC_c%',
                     },
@@ -92,7 +92,7 @@ module.exports = () => {
                                 [Op.lt]: '3',
                             },
                         },
-                        filed2: {
+                        field2: {
                             [Op.and]: {
                                 [Op.like]: 'LHC_%pass',
                                 [Op.notLike]: 'LHC_c%',
@@ -109,7 +109,7 @@ module.exports = () => {
                     field1: {
                         in: '1,2,4,5      ,1',
                     },
-                    filed2: {
+                    field2: {
                         notBetween: '-123,1.1',
                     },
                 };
@@ -118,7 +118,7 @@ module.exports = () => {
                     field1: {
                         [Op.in]: ['1', '2', '4', '5', '1'],
                     },
-                    filed2: {
+                    field2: {
                         [Op.notBetween]: ['-123', '1.1'],
                     },
                 };
@@ -135,7 +135,7 @@ module.exports = () => {
                             },
                         },
                         $2: {
-                            filed2: {
+                            field2: {
                                 notBetween: '-123,1.1',
                             },
                         },
@@ -148,7 +148,7 @@ module.exports = () => {
                             [Op.in]: ['1', '2', '4', '5', '1'],
                         } },
 
-                        { filed2: {
+                        { field2: {
                             [Op.notBetween]: ['-123', '1.1'],
                         } },
                     ],
@@ -165,7 +165,7 @@ module.exports = () => {
                                 in: '1,2,4,5      ,1',
                             },
                         },
-                        filed2: {
+                        field2: {
                             notBetween: '-123,1.1',
                         },
                     },

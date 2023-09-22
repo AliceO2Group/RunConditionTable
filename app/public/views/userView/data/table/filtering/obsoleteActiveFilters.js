@@ -15,7 +15,15 @@
 import { h } from '/js/src/index.js';
 import { filterField, filterType, filterSearch, isFilterExpression, filtersFromUrl } from '../../../../../utils/filtering/filterUtils.js';
 
-export default function activeFilters(model, url) {
+/**
+ * Component responsible for displaying active filters
+ * @deprecated
+ * Please use the new activeFilters component
+ * @param {*} model dataAccessModel
+ * @param {*} url current url
+ * @returns {vnode} active filters chips
+ */
+export default function obsoleteActiveFilters(model, url) {
     const dataPointer = model.getCurrentDataPointer();
 
     function onClearAll() {

@@ -34,7 +34,7 @@ export default function periodsTableRow(periodData, navigation, periodsModel) {
             },
         }));
 
-    return h(`tr.track${rowDisplayStyle(periodData.selected, periodsModel.hideMarkedRecords)}`,
+    return h(`tr.track${rowDisplayStyle(periodData.selected, periodsModel.shouldHideSelectedRows)}`,
         checkbox,
         dataCells);
 }

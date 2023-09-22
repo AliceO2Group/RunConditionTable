@@ -19,4 +19,10 @@
 
 /**
  * @property {PaginationModel} OverviewModel#pagination pagination model of the overview
+ * @property {RemoteData} currentPageData
+ * @property {*} fields
+ * @property {*} visibleFields
+ * @property {Boolean} shouldHideSelectedRows
+ * @function fetchCurrentPageData
+ * @function createDataExport
  */
