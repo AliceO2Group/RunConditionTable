@@ -132,7 +132,7 @@ export default function filteringPanel(model) {
                 }, 'Filter'),
 
                 h('button.btn.btn-secondary.icon-only-button', {
-                    disabled: true
+                    disabled: true,
                 }, h('.save-20-primary')))),
     ]);
 }
