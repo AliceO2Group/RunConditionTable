@@ -113,6 +113,14 @@ export default function filteringPanel(model) {
         }),
         h('span.placeholder', { id: 'right-filter-placeholder' }, 'to/exclude'));
 
+    const submitFilterButton = h('button.btn.btn-primary', {
+        onclick: () => onFilterSubmit(),
+    }, 'Filter');
+
+    const saveFilterButton = h('button.btn.btn-secondary.icon-only-button', {
+        disabled: true,
+    }, h('.save-20-primary'));
+
     return h('.font-size-small', [
         h('.flex-wrap.justify-between.items-center',
             h('.flex-wrap.justify-between.items-center',
@@ -127,12 +135,7 @@ export default function filteringPanel(model) {
                 leftInput,
                 rightInput,
 
-                h('button.btn.btn-primary', {
-                    onclick: () => onFilterSubmit(),
-                }, 'Filter'),
-
-                h('button.btn.btn-secondary.icon-only-button', {
-                    disabled: true,
-                }, h('.save-20-primary')))),
+                submitFilterButton,
+                saveFilterButton)),
     ]);
 }
