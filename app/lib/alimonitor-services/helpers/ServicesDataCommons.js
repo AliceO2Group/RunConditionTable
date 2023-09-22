@@ -26,9 +26,9 @@ const { rctData } = require('../../config/configProvider.js');
  */
 const PERIOD_NAME_REGEX = /^LHC\d\d[a-zA-Z]+/;
 const rightExtendRegEx = (srcRegEx, suffix) => {
-    const nR = RegExp(srcRegEx.source + suffix);
-    nR.rightExtend = (_suffix) => rightExtendRegEx(nR, _suffix);
-    return nR;
+    const newRegex = RegExp(srcRegEx.source + suffix);
+    newRegex.rightExtend = (_suffix) => rightExtendRegEx(newRegex, _suffix);
+    return newRegex;
 };
 PERIOD_NAME_REGEX.rightExtend = (suffix) => rightExtendRegEx(PERIOD_NAME_REGEX, suffix);
 
