@@ -14,5 +14,5 @@
 const filterSuite = require('./FilterModel.test');
 
 module.exports = () => {
-    describe('Filter', filterSuite);
+    describe('Filter model', filterSuite);
 };

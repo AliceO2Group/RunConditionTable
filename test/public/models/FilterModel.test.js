@@ -17,9 +17,9 @@ const assert = require('assert');
 const FilterModel = req('../../../app/public/model/filtering/FilterModel.js').default;
 
 module.exports = () => {
-    describe('Filter model', () => {
+    describe('Class instance creation', () => {
         const fModel = new FilterModel();
-        it('should instantialte the class with no active filters', () => {
+        it('should instantiate the class with no active filters', () => {
             assert.equal(fModel.isAnyFilterActive(), false);
         });
     });

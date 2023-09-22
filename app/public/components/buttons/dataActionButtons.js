@@ -94,8 +94,8 @@ export default function dataActionButtons(model, applicableDataActions, dataMode
 
         applicableDataActions[dataActions.showFilteringPanel] && dataModel
             ? h('button.btn.icon-only-button', {
-                className: dataModel.filterPanelVisible ? 'btn-primary' : 'btn-secondary',
+                className: dataModel.isFilterPanelVisible ? 'btn-primary' : 'btn-secondary',
                 onclick: () => dataModel.toggleFilterPanelVisibility(),
-            }, dataModel.filterPanelVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center'))
+            }, dataModel.isFilterPanelVisible ? h('.slider-20-off-white.abs-center') : h('.slider-20-primary.abs-center'))
             : '');
 }
