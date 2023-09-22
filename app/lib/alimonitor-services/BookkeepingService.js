@@ -24,7 +24,7 @@ const { databaseManager: {
         RunDetectorsRepository,
     },
 } } = require('../database/DatabaseManager.js');
-const { upsertOrCreatePeriod } = require('../services/periods/findOrCreatePeriod.js');
+const { upsertOrCreatePeriod } = require('../services/periods/findOrUpsertOrCreatePeriod.js');
 
 /**
  * BookkeepingService used to synchronize runs

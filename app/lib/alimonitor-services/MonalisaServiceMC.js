@@ -20,14 +20,13 @@ const config = require('../config/configProvider.js');
 
 const { databaseManager: {
     repositories: {
-        BeamTypeRepository,
-        PeriodRepository,
         SimulationPassRepository,
         DataPassRepository,
         RunRepository,
     },
     sequelize,
 } } = require('../database/DatabaseManager.js');
+const { findOrCreatePeriod } = require('../services/periods/findOrUpsertOrCreatePeriod.js');
 
 class MonalisaServiceMC extends AbstractServiceSynchronizer {
     constructor() {
@@ -116,7 +115,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
         })
             .then(async ([simulationPassDBInstance, _]) => {
                 await Promise.all(simulationPass.anchoredPeriods.map(async (period) =>
-                    this.findOrCreatePeriod(period)
+                    findOrCreatePeriod(period)
                         .then(async ([period, _]) => {
                             const periodAddPromise = simulationPassDBInstance.addPeriod(period.id, { ignoreDuplicates: true });
                             const dataPassPipelinePromises = this.findOrCreateAndAddDataPasses(simulationPass, simulationPassDBInstance, period);
@@ -125,23 +124,6 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                             await Promise.all([periodAddPromise, dataPassPipelinePromises, runsAddPipeline]);
                         })));
             });
-    }
-
-    async findOrCreatePeriod({ name: periodName, year: periodYear, beamType }) {
-        return await sequelize.transaction(async () => PeriodRepository.findOrCreate({
-            where: {
-                name: periodName,
-            },
-            defaults: {
-                name: periodName,
-                year: periodYear,
-                BeamTypeId: !beamType ? undefined : (await BeamTypeRepository.findOrCreate({
-                    where: {
-                        name: beamType,
-                    },
-                }))[0]?.id,
-            },
-        }));
     }
 
     async findOrCreateAndAddDataPasses(simulationPass, simulationPassDBInstance, period) {

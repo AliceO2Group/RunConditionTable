@@ -27,12 +27,11 @@ const config = require('../config/configProvider.js');
 
 const { databaseManager: {
     repositories: {
-        BeamTypeRepository,
-        PeriodRepository,
         DataPassRepository,
     },
     sequelize,
 } } = require('../database/DatabaseManager.js');
+const { findOrCreatePeriod } = require('../services/periods/findOrUpsertOrCreatePeriod.js');
 
 class MonalisaService extends AbstractServiceSynchronizer {
     constructor() {
@@ -93,35 +92,7 @@ class MonalisaService extends AbstractServiceSynchronizer {
 
     async executeDbAction(dataPass) {
         const { period } = dataPass;
-
-        return await BeamTypeRepository.T.findOrCreate({
-            where: {
-                name: period.beamType,
-            },
-        })
-            .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
-                where: {
-                    name: period.name,
-                },
-                defaults: {
-                    name: period.name,
-                    year: period.year,
-                    BeamTypeId: beamType.id,
-                },
-            }))
-            .catch((e) => {
-                throw new Error('Find or create period failed', {
-                    cause: {
-                        error: e.message,
-                        meta: {
-                            explicitValues: {
-                                name: period.name,
-                                year: period.year,
-                            },
-                        },
-                    },
-                });
-            })
+        return findOrCreatePeriod(period)
             .then(async ([period, _]) => await DataPassRepository.T.upsert({
                 PeriodId: period.id,
                 ...dataPass,
