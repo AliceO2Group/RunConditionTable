@@ -31,6 +31,7 @@ Usage:
     <OTHER_OPTS> can be:
       1. --sql-src-modify-daemon - setup watchdog over sql scripts in $SCRIPTS_DIR/stored-sql-functionalities/**
                                    any change in those files cause reinvocation of the sql scripts.
+                                   Also achievable by setting env var SQL_SCR_MODIFY_DAEMON=true 
                                    !!! It works only in dev environment (env var ENV_MODE=dev );
 
 USAGE
