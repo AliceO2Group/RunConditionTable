@@ -126,7 +126,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const period = extractPeriod(periodName, beamType);
         const { detectorsNameToId } = this;
 
-        return upsertOrCreatePeriod(period)
+        return await upsertOrCreatePeriod(period)
             .then(async (dbPeriod) => await RunRepository.T.upsert({
                 PeriodId: dbPeriod.id,
                 ...run,
