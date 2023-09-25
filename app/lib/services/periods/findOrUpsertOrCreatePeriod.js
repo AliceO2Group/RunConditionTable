@@ -74,7 +74,7 @@ const findOrCreatePeriod = async (period) =>
             defaults: {
                 name: period.name,
                 year: period.year,
-                BeamTypeId: dbBeamType.id,
+                BeamTypeId: dbBeamType?.id,
             },
         }))
         .catch(periodErrorHandlerFactory(period));
@@ -91,9 +91,9 @@ const upsertOrCreatePeriod = async (period) => {
         .then(async ([dbBeamType, _]) => [dbBeamType, await PeriodRepository.findOne({ where: { name } })])
         .then(([dbBeamType, dbPeriod]) => {
             if (dbPeriod) {
-                return PeriodRepository.updateOne(dbPeriod, { year, BeamTypeId: dbBeamType.id });
+                return PeriodRepository.updateOne(dbPeriod, { year, BeamTypeId: dbBeamType?.id });
             } else {
-                return PeriodRepository.create({ name, year, BeamTypeId: dbBeamType.id });
+                return PeriodRepository.create({ name, year, BeamTypeId: dbBeamType?.id });
             }
         })
         .catch(periodErrorHandlerFactory(period));
