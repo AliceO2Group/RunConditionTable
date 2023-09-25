@@ -26,7 +26,7 @@ const { databaseManager: {
     },
     sequelize,
 } } = require('../database/DatabaseManager.js');
-const { findOrCreatePeriod } = require('../services/periods/findOrUpsertOrCreatePeriod.js');
+const { findOrCreatePeriod } = require('../services/periods/findOrUpdateOrCreatePeriod.js');
 
 class MonalisaServiceMC extends AbstractServiceSynchronizer {
     constructor() {

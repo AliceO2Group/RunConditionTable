@@ -90,7 +90,7 @@ const findOrCreatePeriod = async (period) =>
  * @param {Period} period as {name, year, beamType}
  * @returns {[SequelizePeriod, boolean]} result of sequelize.Model.findOrCreate
  */
-const upsertOrCreatePeriod = async (period) => {
+const createOrForceUpdate = async (period) => {
     const { year } = period;
     return await findOrCreatePeriod(period)
         .then(async ([dbPeriod, _]) => [dbPeriod, await PeriodRepository.updateOne(dbPeriod, { year })])
@@ -99,5 +99,5 @@ const upsertOrCreatePeriod = async (period) => {
 
 module.exports = {
     findOrCreatePeriod,
-    upsertOrCreatePeriod,
+    createOrForceUpdate,
 };

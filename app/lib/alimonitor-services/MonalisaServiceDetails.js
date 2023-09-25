@@ -16,7 +16,7 @@
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
 const { ServicesEndpointsFormatter, ServicesDataCommons: { PERIOD_NAME_REGEX } } = require('./helpers');
-const { findOrCreatePeriod } = require('../services/periods/findOrUpsertOrCreatePeriod.js');
+const { findOrCreatePeriod } = require('../services/periods/findOrUpdateOrCreatePeriod.js');
 
 const { databaseManager: {
     repositories: {

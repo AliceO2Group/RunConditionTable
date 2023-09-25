@@ -25,7 +25,7 @@ const { databaseManager: {
     },
     sequelize,
 } } = require('../database/DatabaseManager.js');
-const { upsertOrCreatePeriod } = require('../services/periods/findOrUpsertOrCreatePeriod.js');
+const { createOrForceUpdate } = require('../services/periods/findOrUpdateOrCreatePeriod.js');
 
 /**
  * BookkeepingService used to synchronize runs
@@ -143,7 +143,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             );
         };
 
-        const pipeline = async () => await upsertOrCreatePeriod(period)
+        const pipeline = async () => await createOrForceUpdate(period)
             .then(upsertRun)
             .then(bulkCreateRunDetectors);
 
