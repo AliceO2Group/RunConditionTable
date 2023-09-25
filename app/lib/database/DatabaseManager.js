@@ -27,8 +27,8 @@ class DatabaseManager {
     constructor() {
         this.logger = new Log(DatabaseManager.name);
         this.schema = 'public';
-        const o2rct_namespace = cls.createNamespace('o2rct-namespace');
-        Sequelize.useCLS(o2rct_namespace);
+        this.o2rct_namespace = cls.createNamespace('o2rct-namespace');
+        Sequelize.useCLS(this.o2rct_namespace);
 
         this.sequelize = new Sequelize({
             ...config.database,

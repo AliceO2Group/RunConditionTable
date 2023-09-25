@@ -22,7 +22,6 @@ const { databaseManager: {
     repositories: {
         RunRepository,
     },
-    sequelize,
 } } = require('../database/DatabaseManager.js');
 const { extractPeriod } = require('./helpers/ServicesDataCommons.js');
 
@@ -65,7 +64,8 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
 
     async executeDbAction(dataPassDetails, forUrlMetaStore) {
         const { parentDataUnit: dbDataPass } = forUrlMetaStore;
-        return (async () => {
+
+        const getPotentialPeriod = async () => {
             if (dataPassDetails.period) {
                 return await findOrCreatePeriod(dataPassDetails.period);
             } else {
@@ -73,45 +73,53 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
                     for run ${dataPassDetails.runNumber} in detials of data pass ${dbDataPass.name}`);
                 return [undefined, undefined];
             }
-        })()
-            .then(async ([dbPeriod, _]) => {
-                dataPassDetails.PeriodId = dbPeriod?.id;
-                return await RunRepository.T.findOrCreate({
-                    where: {
-                        runNumber: dataPassDetails.runNumber,
-                    },
-                    defualt: {
-                        runNumber: dataPassDetails.runNumber,
-                        PeriodId: dataPassDetails.PeriodId,
-                    },
-                });
-            })
-            .catch(async (e) => {
-                throw new Error('Find or create run failed', {
-                    cause: {
-                        error: {
-                            error: e.message,
-                            cause: e.cause,
-                        },
-                        meta: {
-                            actualValueInDB: await RunRepository.findOne(
-                                { where: { runNumber: dataPassDetails.runNumber } },
-                                { raw: true },
-                            ).catch((error) => `ERROR RETRIVING ADDITIONAL INFO FROM DB: ${error.message}`),
+        };
 
-                            inQueryValues: {
-                                runNumber: dataPassDetails.runNumber,
-                                PeriodId: dataPassDetails.PeriodId,
+        const findOrCreateRun = async ([dbPeriod, _]) => {
+            dataPassDetails.PeriodId = dbPeriod?.id;
+            return await RunRepository.findOrCreate({
+                where: {
+                    runNumber: dataPassDetails.runNumber,
+                },
+                defualt: {
+                    runNumber: dataPassDetails.runNumber,
+                    PeriodId: dataPassDetails.PeriodId,
+                },
+            })
+                .catch(async (e) => {
+                    throw new Error('Find or create run failed', {
+                        cause: {
+                            error: {
+                                error: e.message,
+                                cause: e.cause,
                             },
-                            sourceValues: {
-                                runNumber: dataPassDetails.runNumber,
-                                periodName: dataPassDetails.period,
+                            meta: {
+                                actualValueInDB: await RunRepository.findOne(
+                                    { where: { runNumber: dataPassDetails.runNumber } },
+                                    { raw: true },
+                                ).catch((error) => `ERROR RETRIVING ADDITIONAL INFO FROM DB: ${error.message}`),
+
+                                inQueryValues: {
+                                    runNumber: dataPassDetails.runNumber,
+                                    PeriodId: dataPassDetails.PeriodId,
+                                },
+                                sourceValues: {
+                                    runNumber: dataPassDetails.runNumber,
+                                    periodName: dataPassDetails.period,
+                                },
                             },
                         },
-                    },
+                    });
                 });
-            })
-            .then(async ([dbRun, _]) => await sequelize.transaction(() => dbRun.addDataPasses(dbDataPass.id, { ignoreDuplicates: true })));
+        };
+
+        const addRunToDataPass = async ([dbRun, _]) => await dbRun.addDataPasses(dbDataPass.id, { ignoreDuplicates: true });
+
+        const pipeline = async () => await getPotentialPeriod()
+            .then(findOrCreateRun)
+            .then(addRunToDataPass);
+
+        return await pipeline();
     }
 }
 

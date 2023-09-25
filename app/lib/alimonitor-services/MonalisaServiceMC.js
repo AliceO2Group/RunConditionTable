@@ -113,20 +113,20 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             requestedEvents: simulationPass.requestedEvents,
             outputSize: simulationPass.outputSize,
         })
-            .then(async ([simulationPassDBInstance, _]) => {
+            .then(async ([dbDimulationPass, _]) => {
                 await Promise.all(simulationPass.anchoredPeriods.map(async (period) =>
                     findOrCreatePeriod(period)
                         .then(async ([period, _]) => {
-                            const periodAddPromise = simulationPassDBInstance.addPeriod(period.id, { ignoreDuplicates: true });
-                            const dataPassPipelinePromises = this.findOrCreateAndAddDataPasses(simulationPass, simulationPassDBInstance, period);
-                            const runsAddPipeline = this.findOrCreateAndAddRuns(simulationPass, simulationPassDBInstance, period);
+                            const periodAddPromise = dbDimulationPass.addPeriod(period.id, { ignoreDuplicates: true });
+                            const dataPassPipelinePromises = this.findOrCreateAndAddDataPasses(simulationPass, dbDimulationPass, period);
+                            const runsAddPipeline = this.findOrCreateAndAddRuns(simulationPass, dbDimulationPass, period);
 
                             await Promise.all([periodAddPromise, dataPassPipelinePromises, runsAddPipeline]);
                         })));
             });
     }
 
-    async findOrCreateAndAddDataPasses(simulationPass, simulationPassDBInstance, period) {
+    async findOrCreateAndAddDataPasses(simulationPass, dbDimulationPass, period) {
         const promises = simulationPass.anchoredPasses
             .map((passSuffix) => sequelize.transaction(
                 () => DataPassRepository.findOrCreate({
@@ -137,13 +137,13 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                         name: `${period.name}_${passSuffix}`,
                         PeriodId: period.id,
                     },
-                }).then(([dataPass, _]) => simulationPassDBInstance.addDataPass(dataPass.id,
+                }).then(([dataPass, _]) => dbDimulationPass.addDataPass(dataPass.id,
                     { ignoreDuplicates: true })),
             ));
         return await Promise.all(promises);
     }
 
-    async findOrCreateAndAddRuns(simulationPass, simulationPassDBInstance, period) {
+    async findOrCreateAndAddRuns(simulationPass, dbSimulationPass, period) {
         const promises = simulationPass.runs.map((runNumber) => sequelize.transaction(async () => {
             const insertWithoutPeriod = simulationPass.anchoredPeriods.length > 1;
             await RunRepository.findOrCreate({
@@ -156,7 +156,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                 },
             });
 
-            return await simulationPassDBInstance.addRun(runNumber, { ignoreDuplicates: true });
+            return await dbSimulationPass.addRun(runNumber, { ignoreDuplicates: true });
         }));
 
         return await Promise.all(promises);

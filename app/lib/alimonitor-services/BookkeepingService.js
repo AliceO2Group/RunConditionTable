@@ -23,6 +23,7 @@ const { databaseManager: {
         DetectorSubsystemRepository,
         RunDetectorsRepository,
     },
+    sequelize,
 } } = require('../database/DatabaseManager.js');
 const { upsertOrCreatePeriod } = require('../services/periods/findOrUpsertOrCreatePeriod.js');
 
@@ -126,21 +127,27 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const period = extractPeriod(periodName, beamType);
         const { detectorsNameToId } = this;
 
-        return await upsertOrCreatePeriod(period)
-            .then(async (dbPeriod) => await RunRepository.T.upsert({
-                PeriodId: dbPeriod.id,
-                ...run,
-            }))
-            .then(async ([run, _]) => {
-                const d = detectorNames?.map((detectorName, i) => ({
-                    run_number: run.runNumber,
-                    detector_id: detectorsNameToId[detectorName],
-                    quality: detectorQualities[i] }));
+        const upsertRun = async ([dbPeriod, _]) => await RunRepository.upsert({
+            PeriodId: dbPeriod.id,
+            ...run,
+        });
 
-                await RunDetectorsRepository.T.bulkCreate(
-                    d, { updateOnDuplicate: ['quality'] },
-                );
-            });
+        const bulkCreateRunDetectors = async ([run, _]) => {
+            const d = detectorNames?.map((detectorName, i) => ({
+                run_number: run.runNumber,
+                detector_id: detectorsNameToId[detectorName],
+                quality: detectorQualities[i] }));
+
+            await RunDetectorsRepository.bulkCreate(
+                d, { updateOnDuplicate: ['quality'] },
+            );
+        };
+
+        const pipeline = async () => await upsertOrCreatePeriod(period)
+            .then(upsertRun)
+            .then(bulkCreateRunDetectors);
+
+        return await sequelize.transaction(async () => await pipeline());
     }
 
     /**

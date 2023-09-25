@@ -34,7 +34,7 @@ const findOrCreateBeamType = async (beamType) => ! beamType ? [undefined, undefi
                 cause: {
                     error: {
                         error: e.message,
-                        cause: e.cause,
+                        cause: e.original,
                     },
                     meta: {
                         explicitValues: {
@@ -50,7 +50,7 @@ const periodErrorHandlerFactory = ({ name, year, beamType, BeamTypeId }) => (e) 
         cause: {
             error: {
                 error: e.message,
-                cause: e.cause,
+                cause: e.original,
             },
             meta: {
                 explicitValues: {
@@ -91,17 +91,9 @@ const findOrCreatePeriod = async (period) =>
  * @returns {[SequelizePeriod, boolean]} result of sequelize.Model.findOrCreate
  */
 const upsertOrCreatePeriod = async (period) => {
-    const { name, year, beamType } = period;
-
-    return await findOrCreateBeamType(beamType)
-        .then(async ([dbBeamType, _]) => [dbBeamType, await PeriodRepository.findOne({ where: { name } })])
-        .then(([dbBeamType, dbPeriod]) => {
-            if (dbPeriod) {
-                return PeriodRepository.updateOne(dbPeriod, { year, BeamTypeId: dbBeamType?.id });
-            } else {
-                return PeriodRepository.create({ name, year, BeamTypeId: dbBeamType?.id });
-            }
-        })
+    const { year } = period;
+    return await findOrCreatePeriod(period)
+        .then(async ([dbPeriod, _]) => [dbPeriod, await PeriodRepository.updateOne(dbPeriod, { year })])
         .catch(periodErrorHandlerFactory(period));
 };
 

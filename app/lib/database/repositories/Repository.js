@@ -89,7 +89,7 @@ class Repository {
      * @return {Promise<boolean>} promise that resolves when the patch has been applied
      */
     async updateOne(dbOject, patch) {
-        return dbOject.update(patch);
+        return await dbOject.update(patch);
     }
 
      /**

@@ -92,12 +92,14 @@ class MonalisaService extends AbstractServiceSynchronizer {
 
     async executeDbAction(dataPass) {
         const { period } = dataPass;
-        return findOrCreatePeriod(period)
-            .then(async ([period, _]) => await DataPassRepository.T.upsert({
+        const act = async () => findOrCreatePeriod(period)
+            .then(async ([period, _]) => await DataPassRepository.upsert({
                 PeriodId: period.id,
                 ...dataPass,
             }))
-            .then(async ([dataPass, _]) => await this.monalisaServiceDetails.setSyncTask({ parentDataUnit: dataPass }));
+            .then(async ([dbDataPass, _]) => await this.monalisaServiceDetails.setSyncTask({ parentDataUnit: dbDataPass }));
+
+        return await sequelize.transaction(async (_t1) => await act());
     }
 }
 
