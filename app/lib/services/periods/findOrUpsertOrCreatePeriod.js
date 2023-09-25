@@ -18,11 +18,29 @@ const { databaseManager: {
     },
 } } = require('../../database/DatabaseManager');
 
-const findOrCreateBeamType = async (beamType) => await BeamTypeRepository.findOrCreate({
-    where: {
-        name: beamType,
-    },
-});
+/**
+ * Find or create beam type
+ * @param {String} beamType beam type e.g. p-p, p-Pb, ...
+ * @returns {[SequelizeBeamType, boolean]} result of sequelize.Model.findOrCreate
+ */
+const findOrCreateBeamType = async (beamType) =>
+    await BeamTypeRepository.findOrCreate({
+        where: {
+            name: beamType,
+        },
+    })
+        .catch((e) => {
+            throw new Error('Find or create beam type failed', {
+                cause: {
+                    error: e.message,
+                    meta: {
+                        explicitValues: {
+                            name: beamType,
+                        },
+                    },
+                },
+            });
+        });
 
 const periodErrorHandlerFactory = ({ name, year, beamType, BeamTypeId }) => (e) => {
     throw new Error('Find/Upsert or create period with given beam type failed', {
@@ -42,19 +60,6 @@ const periodErrorHandlerFactory = ({ name, year, beamType, BeamTypeId }) => (e) 
     });
 };
 
-const beamTypeErrorHandlerFactory = (beamType) => (e) => {
-    throw new Error('Find or create beam type failed', {
-        cause: {
-            error: e.message,
-            meta: {
-                explicitValues: {
-                    name: beamType,
-                },
-            },
-        },
-    });
-};
-
 /**
  * Find or create period with given parameters
  * @param {Period} period as {name, year, beamType}
@@ -62,7 +67,7 @@ const beamTypeErrorHandlerFactory = (beamType) => (e) => {
  */
 const findOrCreatePeriod = async (period) =>
     await findOrCreateBeamType(period.beamType)
-        .then((dbBeamType) => PeriodRepository.findOrCreate({
+        .then(async ([dbBeamType, _]) => await PeriodRepository.findOrCreate({
             where: {
                 name: period.name,
             },
@@ -83,8 +88,7 @@ const upsertOrCreatePeriod = async (period) => {
     const { name, year, beamType } = period;
 
     return await findOrCreateBeamType(beamType)
-        .then(async (beamType) => [beamType, await PeriodRepository.findOne({ where: { name } })])
-        .catch(beamTypeErrorHandlerFactory(beamType))
+        .then(async ([dbBeamType, _]) => [dbBeamType, await PeriodRepository.findOne({ where: { name } })])
         .then(([dbBeamType, dbPeriod]) => {
             if (dbPeriod) {
                 return PeriodRepository.updateOne(dbPeriod, { year, BeamTypeId: dbBeamType.id });
