@@ -113,20 +113,20 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             requestedEvents: simulationPass.requestedEvents,
             outputSize: simulationPass.outputSize,
         })
-            .then(async ([dbDimulationPass, _]) => {
+            .then(async ([dbSimulationPass, _]) => {
                 await Promise.all(simulationPass.anchoredPeriods.map(async (period) =>
                     findOrCreatePeriod(period)
                         .then(async ([period, _]) => {
-                            const periodAddPromise = dbDimulationPass.addPeriod(period.id, { ignoreDuplicates: true });
-                            const dataPassPipelinePromises = this.findOrCreateAndAddDataPasses(simulationPass, dbDimulationPass, period);
-                            const runsAddPipeline = this.findOrCreateAndAddRuns(simulationPass, dbDimulationPass, period);
+                            const periodAddPromise = dbSimulationPass.addPeriod(period.id, { ignoreDuplicates: true });
+                            const dataPassPipelinePromises = this.findOrCreateAndAddDataPasses(simulationPass, dbSimulationPass, period);
+                            const runsAddPipeline = this.findOrCreateAndAddRuns(simulationPass, dbSimulationPass, period);
 
                             await Promise.all([periodAddPromise, dataPassPipelinePromises, runsAddPipeline]);
                         })));
             });
     }
 
-    async findOrCreateAndAddDataPasses(simulationPass, dbDimulationPass, period) {
+    async findOrCreateAndAddDataPasses(simulationPass, dbSimulationPass, period) {
         const promises = simulationPass.anchoredPasses
             .map((passSuffix) => sequelize.transaction(
                 () => DataPassRepository.findOrCreate({
@@ -137,7 +137,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                         name: `${period.name}_${passSuffix}`,
                         PeriodId: period.id,
                     },
-                }).then(([dataPass, _]) => dbDimulationPass.addDataPass(dataPass.id,
+                }).then(([dataPass, _]) => dbSimulationPass.addDataPass(dataPass.id,
                     { ignoreDuplicates: true })),
             ));
         return await Promise.all(promises);
