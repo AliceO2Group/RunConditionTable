@@ -20,10 +20,10 @@ const { databaseManager: {
 
 /**
  * Find or create beam type
- * @param {String} beamType beam type e.g. p-p, p-Pb, ...
- * @returns {[SequelizeBeamType, boolean]} result of sequelize.Model.findOrCreate
+ * @param {String|undefined} beamType beam type e.g. p-p, p-Pb, ...
+ * @returns {[SequelizeBeamType, boolean]|undefined} result of sequelize.Model.findOrCreate
  */
-const findOrCreateBeamType = async (beamType) =>
+const findOrCreateBeamType = async (beamType) => ! beamType ? undefined :
     await BeamTypeRepository.findOrCreate({
         where: {
             name: beamType,
