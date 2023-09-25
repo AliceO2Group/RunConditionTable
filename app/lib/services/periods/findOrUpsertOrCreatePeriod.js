@@ -21,9 +21,9 @@ const { databaseManager: {
 /**
  * Find or create beam type
  * @param {String|undefined} beamType beam type e.g. p-p, p-Pb, ...
- * @returns {[SequelizeBeamType, boolean]|undefined} result of sequelize.Model.findOrCreate
+ * @returns {[SequelizeBeamType, boolean]|[undefined, undefined]} result of sequelize.Model.findOrCreate
  */
-const findOrCreateBeamType = async (beamType) => ! beamType ? undefined :
+const findOrCreateBeamType = async (beamType) => ! beamType ? [undefined, undefined] :
     await BeamTypeRepository.findOrCreate({
         where: {
             name: beamType,
@@ -32,7 +32,10 @@ const findOrCreateBeamType = async (beamType) => ! beamType ? undefined :
         .catch((e) => {
             throw new Error('Find or create beam type failed', {
                 cause: {
-                    error: e.message,
+                    error: {
+                        error: e.message,
+                        cause: e.cause,
+                    },
                     meta: {
                         explicitValues: {
                             name: beamType,
@@ -45,7 +48,10 @@ const findOrCreateBeamType = async (beamType) => ! beamType ? undefined :
 const periodErrorHandlerFactory = ({ name, year, beamType, BeamTypeId }) => (e) => {
     throw new Error('Find/Upsert or create period with given beam type failed', {
         cause: {
-            error: e.message,
+            error: {
+                error: e.message,
+                cause: e.cause,
+            },
             meta: {
                 explicitValues: {
                     name,
