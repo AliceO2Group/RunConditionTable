@@ -23,7 +23,7 @@ export default function runsPerPeriodTableRow(runData, navigation, runsModel) {
         h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
             runData[field.name]
                 ? runsModel.visibleFields[index].format(navigation, runData)
-                : 'hello'));
+                : ''));
 
     const checkbox = h('td.relative.track',
         h(`input.checkbox.abs-center${runData.selected ? '.ticked' : ''}`, {
