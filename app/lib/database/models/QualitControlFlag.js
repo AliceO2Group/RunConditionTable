@@ -21,14 +21,14 @@ module.exports = (sequelize) => {
         },
         timeStart: {
             type: Sequelize.DATE,
-            allowNull: false,
+            allowNull: true,
             get() {
                 return Number(this.getDataValue('timeStart'))
             }
         },
         timeEnd: {
             type: Sequelize.DATE,
-            allowNull: false,
+            allowNull: true,
             get() {
                 return Number(this.getDataValue('timeEnd'))
             }
