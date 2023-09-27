@@ -22,12 +22,20 @@ const runFieldNames = {
         fieldName: 'Run',
         filterInput: filterInputTypes.number,
     },
-    time_o2_start: {
+    start_time: {
         fieldName: 'Start time',
         filterInput: filterInputTypes.date,
     },
-    time_o2_end: {
+    end_time: {
         fieldName: 'End time',
+        filterInput: filterInputTypes.date,
+    },
+    time_o2_start: {
+        fieldName: 'O2 start time',
+        filterInput: filterInputTypes.date,
+    },
+    time_o2_end: {
+        fieldName: 'O2 end time',
         filterInput: filterInputTypes.date,
     },
     time_trg_start: {

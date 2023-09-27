@@ -56,3 +56,12 @@ export const getReadableFileSizeString = (fileSizeInBytes) => {
 
     return `${Math.max(result.fileSize, 0.1).toFixed(1)} ${byteUnits[result.index]}`;
 };
+
+export const dateFormatter = (sec) => {
+    const cestOffset = 2 * 60 * 60 * 1000;
+    const localOffset = new Date().getTimezoneOffset() * 60 * 1000;
+    const d = new Date(Number(sec) + cestOffset + localOffset);
+    const dateString = d.toLocaleDateString();
+    const timeString = d.toLocaleTimeString();
+    return { dateString, timeString };
+};

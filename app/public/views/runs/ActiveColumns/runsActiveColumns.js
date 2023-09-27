@@ -13,6 +13,7 @@
 
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
+import { dateFormatter } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 const { fieldNames: FN } = RCT;
 const fieldNames = FN.runs;
 
@@ -32,6 +33,28 @@ export const runsActiveColumns = {
         fieldName: fieldNames.run_number.fieldName,
         filterInput: fieldNames.run_number.filterInput,
         format: (_, run) => run.runNumber,
+    },
+
+    startTime: {
+        name: 'startTime',
+        visible: true,
+        header: fieldNames.start_time.fieldName,
+        fieldName: fieldNames.start_time.fieldName,
+        filterInput: fieldNames.start_time.filterInput,
+        format: (_, run) => h('',
+            h('.skinny', dateFormatter(run.startTime).dateString),
+            dateFormatter(run.startTime).timeString),
+    },
+
+    endTime: {
+        name: 'endTime',
+        visible: true,
+        header: fieldNames.end_time.fieldName,
+        fieldName: fieldNames.end_time.fieldName,
+        filterInput: fieldNames.end_time.filterInput,
+        format: (_, run) => h('',
+            h('.skinny', dateFormatter(run.endTime).dateString),
+            dateFormatter(run.endTime).timeString),
     },
 
     timeO2Start: {
@@ -80,15 +103,10 @@ export const runsActiveColumns = {
     },
 };
 /*
+center of mass energy??
+IR ??
+
 const runFieldNames = {
-    center_of_mass_energy: {
-        fieldName: 'Center of mass energy',
-        filterInput: filterInputTypes.number,
-    }, ??
-    ir: {
-        fieldName: 'IR [Hz]',
-        filterInput: filterInputTypes.number,
-    },
     filling_scheme: {
         fieldName: 'Filling scheme',
         filterInput: filterInputTypes.text,
@@ -111,10 +129,6 @@ const runFieldNames = {
     },
     l3_current: {
         fieldName: 'L3 current [A]',
-        filterInput: filterInputTypes.number,
-    },
-    dipole_current: {
-        fieldName: 'Dipole current [A]',
         filterInput: filterInputTypes.number,
     },
 };
