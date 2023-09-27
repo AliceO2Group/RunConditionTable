@@ -52,6 +52,7 @@ const createTimeBasedQualityControlFlag = async (req, res, next) => {
             run_number: Joi.number().required(),
             detector_id: Joi.number().required(),
             flag_type_id: Joi.number().required(),
+            comment: Joi.string().optional(),
         },
     }));
 
@@ -65,6 +66,7 @@ const createTimeBasedQualityControlFlag = async (req, res, next) => {
             run_number,
             detector_id,
             flag_type_id,
+            comment,
         } = validatedDTO.query;
 
         const entityParams = {
@@ -76,6 +78,7 @@ const createTimeBasedQualityControlFlag = async (req, res, next) => {
             run_number,
             detector_id,
             flag_type_id,
+            comment,
         };
         await qualityControlService.createTimeBasedQualityControlFlag(entityParams);
         res.sendStatus(201);
