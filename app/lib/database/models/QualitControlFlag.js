@@ -15,6 +15,10 @@ const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
     const QualityControlFlag = sequelize.define('QualityControlFlag', {
+        entire: {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+        },
         timeStart: {
             type: Sequelize.DATE,
             allowNull: false,
