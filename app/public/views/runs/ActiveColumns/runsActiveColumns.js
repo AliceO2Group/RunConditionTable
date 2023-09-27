@@ -25,7 +25,7 @@ export const runsActiveColumns = {
         visible: false,
     },
 
-    run_number: {
+    runNumber: {
         name: 'runNumber',
         visible: true,
         header: fieldNames.run_number.fieldName,
@@ -33,4 +33,89 @@ export const runsActiveColumns = {
         filterInput: fieldNames.run_number.filterInput,
         format: (_, run) => run.runNumber,
     },
+
+    timeO2Start: {
+        name: 'timeO2Start',
+        visible: true,
+        header: fieldNames.time_o2_start.fieldName,
+        fieldName: fieldNames.time_o2_start.fieldName,
+        filterInput: fieldNames.time_o2_start.filterInput,
+        format: (_, run) => run.timeO2Start,
+    },
+
+    timeO2End: {
+        name: 'timeO2End',
+        visible: true,
+        header: fieldNames.time_o2_end.fieldName,
+        fieldName: fieldNames.time_o2_end.fieldName,
+        filterInput: fieldNames.time_o2_end.filterInput,
+        format: (_, run) => run.timeO2End,
+    },
+
+    timeTrgStart: {
+        name: 'timeTrgStart',
+        visible: true,
+        header: fieldNames.time_trg_start.fieldName,
+        fieldName: fieldNames.time_trg_start.fieldName,
+        filterInput: fieldNames.time_trg_start.filterInput,
+        format: (_, run) => run.timeTrgStart,
+    },
+
+    timeTrgEnd: {
+        name: 'timeTrgEnd',
+        visible: true,
+        header: fieldNames.time_trg_end.fieldName,
+        fieldName: fieldNames.time_trg_end.fieldName,
+        filterInput: fieldNames.time_trg_end.filterInput,
+        format: (_, run) => run.timeTrgEnd,
+    },
+
+    dipoleCurrentVal: {
+        name: 'dipoleCurrentVal',
+        visible: true,
+        header: fieldNames.dipole_current.fieldName,
+        fieldName: fieldNames.dipole_current.fieldName,
+        filterInput: fieldNames.dipole_current.filterInput,
+        format: (_, run) => run.dipoleCurrentVal,
+    },
 };
+/*
+const runFieldNames = {
+    center_of_mass_energy: {
+        fieldName: 'Center of mass energy',
+        filterInput: filterInputTypes.number,
+    }, ??
+    ir: {
+        fieldName: 'IR [Hz]',
+        filterInput: filterInputTypes.number,
+    },
+    filling_scheme: {
+        fieldName: 'Filling scheme',
+        filterInput: filterInputTypes.text,
+    },
+    triggers_conf: {
+        fieldName: 'Triggers configuration',
+        filterInput: filterInputTypes.text,
+    },
+    fill_number: {
+        fieldName: 'Fill number',
+        filterInput: filterInputTypes.number,
+    },
+    run_type: {
+        fieldName: 'Run type',
+        filterInput: filterInputTypes.text,
+    },
+    mu: {
+        fieldName: '\u03BC',
+        filterInput: filterInputTypes.number,
+    },
+    l3_current: {
+        fieldName: 'L3 current [A]',
+        filterInput: filterInputTypes.number,
+    },
+    dipole_current: {
+        fieldName: 'Dipole current [A]',
+        filterInput: filterInputTypes.number,
+    },
+};
+*/

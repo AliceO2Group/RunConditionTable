@@ -66,6 +66,8 @@ export default class RunsModel extends Observable {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
             this._allRuns = RemoteData.success([...items]);
             this._pagination.itemsCount = totalCount;
+
+            console.log(this._allRuns.payload);
         } catch (errors) {
             this._allRuns = RemoteData.failure(errors);
         }
