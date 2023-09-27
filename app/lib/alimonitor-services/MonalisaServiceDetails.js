@@ -15,15 +15,15 @@
 
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
-const { ServicesEndpointsFormatter } = require('./helpers');
+const { ServicesEndpointsFormatter, ServicesDataCommons: { PERIOD_NAME_REGEX } } = require('./helpers');
+const { findOrCreatePeriod } = require('../services/periods/findOrUpdateOrCreatePeriod.js');
 
 const { databaseManager: {
     repositories: {
         RunRepository,
-        PeriodRepository,
     },
-    sequelize,
 } } = require('../database/DatabaseManager.js');
+const { extractPeriod } = require('./helpers/ServicesDataCommons.js');
 
 class MonalisaServiceDetails extends AbstractServiceSynchronizer {
     constructor() {
@@ -32,7 +32,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
 
         this.ketpFields = {
             run_no: 'runNumber',
-            raw_partition: 'period',
+            raw_partition: 'periodName',
         };
     }
 
@@ -52,7 +52,10 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
     }
 
     adjustDataUnit(dataPassDetails) {
-        return Utils.filterObject(dataPassDetails, this.ketpFields);
+        dataPassDetails = Utils.filterObject(dataPassDetails, this.ketpFields);
+        const { periodName } = dataPassDetails;
+        dataPassDetails.period = PERIOD_NAME_REGEX.test(periodName) ? extractPeriod(periodName) : undefined;
+        return dataPassDetails;
     }
 
     isDataUnitValid() {
@@ -60,51 +63,63 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
     }
 
     async executeDbAction(dataPassDetails, forUrlMetaStore) {
-        const { parentDataUnit: dataPass } = forUrlMetaStore;
-        return (async () => {
-            if (/LHC[0-9]{2}[a-z]+/.test(dataPassDetails.period)) {
-                return await PeriodRepository.T.findOrCreate({
-                    where: {
-                        name: dataPassDetails.period,
-                    },
-                });
+        const { parentDataUnit: dbDataPass } = forUrlMetaStore;
+
+        const getPresumedPeriod = async () => {
+            if (dataPassDetails.period) {
+                return await findOrCreatePeriod(dataPassDetails.period);
             } else {
-                // eslint-disable-next-line max-len
-                this.logger.warn(`Incorrect period from monalisa ${dataPassDetails.period} for run ${dataPassDetails.runNumber} in data pass ${dataPass.name}`);
+                this.logger.warn(`Incorrect period name from monalisa ${dataPassDetails.periodName} 
+                    for run ${dataPassDetails.runNumber} in details of data pass ${dbDataPass.name}`);
                 return [undefined, undefined];
             }
-        })()
-            .then(async ([period, _]) => {
-                dataPassDetails.PeriodId = period?.id;
-                return await RunRepository.T.findOrCreate({
-                    where: {
-                        runNumber: dataPassDetails.runNumber,
-                    },
-                    defualt: {
-                        runNumber: dataPassDetails.runNumber,
-                        PeriodId: dataPassDetails.PeriodId,
-                    },
-                });
+        };
+
+        const findOrCreateRun = async ([dbPeriod, _]) => {
+            dataPassDetails.PeriodId = dbPeriod?.id;
+            return await RunRepository.findOrCreate({
+                where: {
+                    runNumber: dataPassDetails.runNumber,
+                },
+                defualt: {
+                    runNumber: dataPassDetails.runNumber,
+                    PeriodId: dataPassDetails.PeriodId,
+                },
             })
-            .catch(async (e) => {
-                throw new Error('Find or create run failed', {
-                    cause: {
-                        error: e.message,
-                        meta: {
-                            actualValueInDB: await RunRepository.findOne({ where: { runNumber: dataPassDetails.runNumber } }, { raw: true }),
-                            inQueryValues: {
-                                runNumber: dataPassDetails.runNumber,
-                                PeriodId: dataPassDetails.PeriodId,
+                .catch(async (e) => {
+                    throw new Error('Find or create run failed', {
+                        cause: {
+                            error: {
+                                error: e.message,
+                                cause: e.cause,
                             },
-                            sourceValues: {
-                                runNumber: dataPassDetails.runNumber,
-                                periodName: dataPassDetails.period,
+                            meta: {
+                                actualValueInDB: await RunRepository.findOne(
+                                    { where: { runNumber: dataPassDetails.runNumber } },
+                                    { raw: true },
+                                ).catch((error) => `ERROR RETRIVING ADDITIONAL INFO FROM DB: ${error.message}`),
+
+                                inQueryValues: {
+                                    runNumber: dataPassDetails.runNumber,
+                                    PeriodId: dataPassDetails.PeriodId,
+                                },
+                                sourceValues: {
+                                    runNumber: dataPassDetails.runNumber,
+                                    periodName: dataPassDetails.period,
+                                },
                             },
                         },
-                    },
+                    });
                 });
-            })
-            .then(async ([run, _]) => await sequelize.transaction(() => run.addDataPasses(dataPass.id, { ignoreDuplicates: true })));
+        };
+
+        const addRunToDataPass = async ([dbRun, _]) => await dbRun.addDataPasses(dbDataPass.id, { ignoreDuplicates: true });
+
+        const pipeline = async () => await getPresumedPeriod()
+            .then(findOrCreateRun)
+            .then(addRunToDataPass);
+
+        return await pipeline();
     }
 }
 

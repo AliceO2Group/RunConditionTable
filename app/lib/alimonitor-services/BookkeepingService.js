@@ -21,11 +21,11 @@ const { databaseManager: {
     repositories: {
         RunRepository,
         DetectorSubsystemRepository,
-        PeriodRepository,
-        BeamTypeRepository,
         RunDetectorsRepository,
     },
+    sequelize,
 } } = require('../database/DatabaseManager.js');
+const { createOrForceUpdate } = require('../services/periods/findOrUpdateOrCreatePeriod.js');
 
 /**
  * BookkeepingService used to synchronize runs
@@ -127,52 +127,27 @@ class BookkeepingService extends AbstractServiceSynchronizer {
         const period = extractPeriod(periodName, beamType);
         const { detectorsNameToId } = this;
 
-        return await BeamTypeRepository.T.findOrCreate({
-            where: {
-                name: beamType,
-            },
-        })
-            .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
-                where: {
-                    name: period.name,
-                },
-                defaults: {
-                    name: period.name,
-                    year: period.year,
-                    BeamTypeId: beamType.id,
-                },
-            }))
-            .catch((e) => {
-                throw new Error('Find or create period failed', {
-                    cause: {
-                        error: e.message,
-                        meta: {
-                            explicitValues: {
-                                name: period.name,
-                                year: period.year,
-                                BeamTypeId: beamType.id,
-                            },
-                            implicitValues: {
-                                BeamType: beamType,
-                            },
-                        },
-                    },
-                });
-            })
-            .then(async ([period, _]) => await RunRepository.T.upsert({
-                PeriodId: period.id,
-                ...run,
-            }))
-            .then(async ([run, _]) => {
-                const d = detectorNames?.map((detectorName, i) => ({
-                    run_number: run.runNumber,
-                    detector_id: detectorsNameToId[detectorName],
-                    quality: detectorQualities[i] }));
+        const upsertRun = async ([dbPeriod, _]) => await RunRepository.upsert({
+            PeriodId: dbPeriod.id,
+            ...run,
+        });
 
-                await RunDetectorsRepository.T.bulkCreate(
-                    d, { updateOnDuplicate: ['quality'] },
-                );
-            });
+        const bulkCreateRunDetectors = async ([run, _]) => {
+            const d = detectorNames?.map((detectorName, i) => ({
+                run_number: run.runNumber,
+                detector_id: detectorsNameToId[detectorName],
+                quality: detectorQualities[i] }));
+
+            await RunDetectorsRepository.bulkCreate(
+                d, { updateOnDuplicate: ['quality'] },
+            );
+        };
+
+        const pipeline = async () => await createOrForceUpdate(period)
+            .then(upsertRun)
+            .then(bulkCreateRunDetectors);
+
+        return await sequelize.transaction(async () => await pipeline());
     }
 
     /**

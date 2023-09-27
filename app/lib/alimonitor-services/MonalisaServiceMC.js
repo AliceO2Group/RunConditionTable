@@ -20,14 +20,13 @@ const config = require('../config/configProvider.js');
 
 const { databaseManager: {
     repositories: {
-        BeamTypeRepository,
-        PeriodRepository,
         SimulationPassRepository,
         DataPassRepository,
         RunRepository,
     },
     sequelize,
 } } = require('../database/DatabaseManager.js');
+const { findOrCreatePeriod } = require('../services/periods/findOrUpdateOrCreatePeriod.js');
 
 class MonalisaServiceMC extends AbstractServiceSynchronizer {
     constructor() {
@@ -114,37 +113,20 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
             requestedEvents: simulationPass.requestedEvents,
             outputSize: simulationPass.outputSize,
         })
-            .then(async ([simulationPassDBInstance, _]) => {
+            .then(async ([dbSimulationPass, _]) => {
                 await Promise.all(simulationPass.anchoredPeriods.map(async (period) =>
-                    this.findOrCreatePeriod(period)
+                    findOrCreatePeriod(period)
                         .then(async ([period, _]) => {
-                            const periodAddPromise = simulationPassDBInstance.addPeriod(period.id, { ignoreDuplicates: true });
-                            const dataPassPipelinePromises = this.findOrCreateAndAddDataPasses(simulationPass, simulationPassDBInstance, period);
-                            const runsAddPipeline = this.findOrCreateAndAddRuns(simulationPass, simulationPassDBInstance, period);
+                            const periodAddPromise = dbSimulationPass.addPeriod(period.id, { ignoreDuplicates: true });
+                            const dataPassPipelinePromises = this.findOrCreateAndAddDataPasses(simulationPass, dbSimulationPass, period);
+                            const runsAddPipeline = this.findOrCreateAndAddRuns(simulationPass, dbSimulationPass, period);
 
                             await Promise.all([periodAddPromise, dataPassPipelinePromises, runsAddPipeline]);
                         })));
             });
     }
 
-    async findOrCreatePeriod({ name: periodName, year: periodYear, beamType }) {
-        return await sequelize.transaction(async () => PeriodRepository.findOrCreate({
-            where: {
-                name: periodName,
-            },
-            defaults: {
-                name: periodName,
-                year: periodYear,
-                BeamTypeId: !beamType ? undefined : (await BeamTypeRepository.findOrCreate({
-                    where: {
-                        name: beamType,
-                    },
-                }))[0]?.id,
-            },
-        }));
-    }
-
-    async findOrCreateAndAddDataPasses(simulationPass, simulationPassDBInstance, period) {
+    async findOrCreateAndAddDataPasses(simulationPass, dbSimulationPass, period) {
         const promises = simulationPass.anchoredPasses
             .map((passSuffix) => sequelize.transaction(
                 () => DataPassRepository.findOrCreate({
@@ -155,13 +137,13 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                         name: `${period.name}_${passSuffix}`,
                         PeriodId: period.id,
                     },
-                }).then(([dataPass, _]) => simulationPassDBInstance.addDataPass(dataPass.id,
+                }).then(([dataPass, _]) => dbSimulationPass.addDataPass(dataPass.id,
                     { ignoreDuplicates: true })),
             ));
         return await Promise.all(promises);
     }
 
-    async findOrCreateAndAddRuns(simulationPass, simulationPassDBInstance, period) {
+    async findOrCreateAndAddRuns(simulationPass, dbSimulationPass, period) {
         const promises = simulationPass.runs.map((runNumber) => sequelize.transaction(async () => {
             const insertWithoutPeriod = simulationPass.anchoredPeriods.length > 1;
             await RunRepository.findOrCreate({
@@ -174,7 +156,7 @@ class MonalisaServiceMC extends AbstractServiceSynchronizer {
                 },
             });
 
-            return await simulationPassDBInstance.addRun(runNumber, { ignoreDuplicates: true });
+            return await dbSimulationPass.addRun(runNumber, { ignoreDuplicates: true });
         }));
 
         return await Promise.all(promises);

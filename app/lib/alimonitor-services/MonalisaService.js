@@ -27,12 +27,11 @@ const config = require('../config/configProvider.js');
 
 const { databaseManager: {
     repositories: {
-        BeamTypeRepository,
-        PeriodRepository,
         DataPassRepository,
     },
     sequelize,
 } } = require('../database/DatabaseManager.js');
+const { findOrCreatePeriod } = require('../services/periods/findOrUpdateOrCreatePeriod.js');
 
 class MonalisaService extends AbstractServiceSynchronizer {
     constructor() {
@@ -93,40 +92,14 @@ class MonalisaService extends AbstractServiceSynchronizer {
 
     async executeDbAction(dataPass) {
         const { period } = dataPass;
-
-        return await BeamTypeRepository.T.findOrCreate({
-            where: {
-                name: period.beamType,
-            },
-        })
-            .then(async ([beamType, _]) => await PeriodRepository.T.findOrCreate({
-                where: {
-                    name: period.name,
-                },
-                defaults: {
-                    name: period.name,
-                    year: period.year,
-                    BeamTypeId: beamType.id,
-                },
-            }))
-            .catch((e) => {
-                throw new Error('Find or create period failed', {
-                    cause: {
-                        error: e.message,
-                        meta: {
-                            explicitValues: {
-                                name: period.name,
-                                year: period.year,
-                            },
-                        },
-                    },
-                });
-            })
-            .then(async ([period, _]) => await DataPassRepository.T.upsert({
+        const act = async () => findOrCreatePeriod(period)
+            .then(async ([period, _]) => await DataPassRepository.upsert({
                 PeriodId: period.id,
                 ...dataPass,
             }))
-            .then(async ([dataPass, _]) => await this.monalisaServiceDetails.setSyncTask({ parentDataUnit: dataPass }));
+            .then(async ([dbDataPass, _]) => await this.monalisaServiceDetails.setSyncTask({ parentDataUnit: dbDataPass }));
+
+        return await sequelize.transaction(async (_t1) => await act());
     }
 }
 
