@@ -45,7 +45,7 @@ const listAllTimeBasedFlagsHandler = async (req, res, next) => {
 const createTimeBasedQualityControlFlag = async (req, res, next) => {
     const customDTO = stdDataRequestDTO.concat(Joi.object({
         query: {
-            entrie: Joi.boolean().required(),
+            entire: Joi.boolean().required(),
             time_end: Joi.number().optional(),
             time_start: Joi.number().optional(),
             data_pass_id: Joi.number().required(),
@@ -58,7 +58,7 @@ const createTimeBasedQualityControlFlag = async (req, res, next) => {
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
         const {
-            entrie,
+            entire,
             time_end,
             time_start,
             data_pass_id,
@@ -68,7 +68,7 @@ const createTimeBasedQualityControlFlag = async (req, res, next) => {
         } = validatedDTO.query;
 
         const entityParams = {
-            entrie,
+            entire,
             timeEnd: time_end,
             timeStart: time_start,
             addedBy: getUser(req.session),
