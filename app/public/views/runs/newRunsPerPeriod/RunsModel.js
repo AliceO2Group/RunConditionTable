@@ -13,8 +13,8 @@
 
 import { Observable, RemoteData } from '/js/src/index.js';
 import { PaginationModel } from '../../../components/table/pagination/PaginationModel.js';
-import { RCT } from '../../../config.js';
 import { getRemoteDataSlice } from '../../../utils/fetch/getRemoteDataSlice.js';
+import { runsActiveColumns } from '../ActiveColumns/runsActiveColumns.js';
 
 /**
  * Model representing handlers for runs per period page
@@ -39,7 +39,8 @@ export default class RunsModel extends Observable {
             this.notify();
         });
 
-        this._fields = Object.keys(RCT.fieldNames.runs).map((field) => ({ name: field, visible: true }));
+        this._fields = runsActiveColumns;
+        // this._fields = Object.keys(RCT.fieldNames.runs).map((field) => ({ name: field, visible: true }));
 
         this._sortingRowVisible = false;
 
@@ -114,6 +115,10 @@ export default class RunsModel extends Observable {
      */
     async fetchCurrentPageData() {
         await this.fetchCurrentPageRuns();
+    }
+
+    get visibleFields() {
+        return Object.keys(this._fields).map((field) => ({ ...this._fields[field] })).filter((field) => field.visible);
     }
 
     get fields() {

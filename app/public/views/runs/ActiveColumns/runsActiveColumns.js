@@ -31,6 +31,6 @@ export const runsActiveColumns = {
         header: fieldNames.run_number.fieldName,
         fieldName: fieldNames.run_number.fieldName,
         filterInput: fieldNames.run_number.filterInput,
-        format: (run) => h('td.text-ellipsis', run.run_number),
+        format: (_, run) => run.runNumber,
     },
 };

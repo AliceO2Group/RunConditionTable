@@ -88,11 +88,7 @@ export default class Model extends Observable {
                 break;
             case pageNames.runsPerPeriod:
             if (this.router.params['periodId']) {
-                console.log('period ID');
-                console.log(this.router.params.periodId);    
                 await this.runsPerPeriod.fetchSelectedPeriod(this.router.params.periodId);
-                console.log('all runs');
-                console.log(this.runsPerPeriod.allRuns[this.router.params['periodId']]);
                 }
                 break;
             default:

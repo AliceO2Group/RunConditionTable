@@ -16,26 +16,25 @@ import { h } from '/js/src/index.js';
 import { RCT } from '../../../../config.js';
 import { rowDisplayStyle } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
-export default function periodsTableRow(periodData, navigation, periodsModel) {
-    const pageName = RCT.pageNames.periods;
-    console.log(periodData);
+export default function runsPerPeriodTableRow(runData, navigation, runsModel) {
+    const pageName = RCT.pageNames.runsPerPeriod;
 
-    const dataCells = periodsModel.fields.map((field, index) =>
+    const dataCells = runsModel.visibleFields.map((field, index) =>
         h(`td.${pageName}-${field.name}-cell.text-ellipsis`,
-            periodData[field.name]
-                ? periodsModel.fields[index].format(navigation, periodData)
+            runData[field.name]
+                ? runsModel.visibleFields[index].format(navigation, runData)
                 : 'hello'));
 
     const checkbox = h('td.relative.track',
-        h(`input.checkbox.abs-center${periodData.selected ? '.ticked' : ''}`, {
+        h(`input.checkbox.abs-center${runData.selected ? '.ticked' : ''}`, {
             type: 'checkbox',
-            checked: periodData.selected,
+            checked: runData.selected,
             onclick: () => {
-                periodsModel.toggleSelection(periodData);
+                runsModel.toggleSelection(runData);
             },
         }));
 
-    return h(`tr.track${rowDisplayStyle(periodData.selected, periodsModel.shouldHideSelectedRows)}`,
+    return h(`tr.track${rowDisplayStyle(runData.selected, runsModel.shouldHideSelectedRows)}`,
         checkbox,
         dataCells);
 }
