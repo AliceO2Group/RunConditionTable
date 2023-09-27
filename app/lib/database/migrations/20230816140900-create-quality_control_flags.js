@@ -29,6 +29,10 @@ module.exports = {
                     type: Sequelize.DATE,
                     allowNull: false,
                 },
+                entire: {
+                    type: Sequelize.BOOLEAN,
+                    allowNull: false,
+                },
                 comment: {
                     type: Sequelize.TEXT,
                 },
