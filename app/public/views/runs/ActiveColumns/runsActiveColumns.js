@@ -109,6 +109,15 @@ export const runsActiveColumns = {
         filterInput: fieldNames.dipole_current.filterInput,
         format: (_, run) => run.dipoleCurrentVal,
     },
+
+    runDuration: {
+        name: 'runDuration',
+        visible: true,
+        header: fieldNames.run_duration.fieldName,
+        fieldName: fieldNames.run_duration.fieldName,
+        filterInput: fieldNames.run_duration.filterInput,
+        format: (_, run) => run.runDuration,
+    },
 };
 /*
 center of mass energy??

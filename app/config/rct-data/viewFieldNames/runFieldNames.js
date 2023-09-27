@@ -82,6 +82,10 @@ const runFieldNames = {
         fieldName: 'Dipole current [A]',
         filterInput: filterInputTypes.number,
     },
+    run_duration: {
+        fieldName: 'Run duration',
+        filterInput: filterInputTypes.number,
+    },
 };
 
 module.exports = runFieldNames;
