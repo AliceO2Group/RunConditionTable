@@ -28,7 +28,7 @@ import { noMatchingData, noDataFound } from '../../../../components/messagePanel
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
 import dataActionButtons, { dataActions } from '../../../../components/buttons/dataActionButtons.js';
 import { RCT } from '../../../../config.js';
-const { pageNames } = RCT;
+const pageName = RCT.pageNames.runsPerPeriod;
 
 const applicableDataActions = {
     [dataActions.obsoleteHide]: true,
@@ -39,56 +39,47 @@ const applicableDataActions = {
     [dataActions.obsoleteShowFilteringPanel]: true,
 };
 
-export default function content(model, runs, detectors) {
-    const dataPointer = model.getCurrentDataPointer();
-    const data = model.fetchedData[dataPointer.page][dataPointer.index].payload;
-    const { url } = data;
+export default function runsPerPeriodContent(runsPerPeriodModel, model, runsModel, detectors, periodId, fullModel) {
+    const runs = runsPerPeriodModel.allRuns[periodId].currentPageRuns.payload;
+    const { navigation } = fullModel;
+    const url = fullModel.router.getUrl();
 
-    const chips = model.getSubPages(dataPointer.page)
-        .filter((index) => index !== defaultIndexString)
-        .map((index) => indexChip(model, dataPointer.page, index));
+    const { fields } = runsPerPeriodModel.allRuns[periodId];
+    // const visibleFields = fields.filter((f) => f.marked);
 
-    const cellsSpecials = pagesCellsSpecials[dataPointer.page];
-
-    const { fields } = data;
-    const visibleFields = fields.filter((f) => f.marked);
-
-    return dataPointer.index === defaultIndexString
-        ? noSubPageSelected(model)
-        : h('.p-1rem', [
+    return h('.p-1rem', [
             h('.flex-wrap.justify-between.items-center',
                 h('.flex-wrap.justify-between.items-center',
-                    title(pageNames.runsPerPeriod),
-                    chips),
+                    title(pageName),
+                    //chips
+                    ),
 
                 dataActionButtons(model, applicableDataActions)),
-            model.showFilteringPanel ? filter(model) : '',
-            anyFiltersActive(url) ? obsoleteActiveFilters(model, url) : '',
+            // model.showFilteringPanel ? filter(model) : '',
+            // anyFiltersActive(url) ? obsoleteActiveFilters(model, url) : '',
 
-            data.rows?.length > 0
-                ? visibleFields.length > 0
+            runs?.length > 0
+                // ? visibleFields.length > 0
                     ? h('.p-top-05em',
                         h('.x-scrollable-table.border-sh',
-                            obsoletePager(model, data, false),
+                            // obsoletePager(model, data, false),
                             h('table.runs-table', {
                                 id: `data-table-${url}`,
                             },
-                            header(visibleFields, data, model),
-                            model.sortingRowVisible ? sortingRow(visibleFields, data, model) : '',
-                            tableBody(model, visibleFields, data, cellsSpecials, dataPointer.index, runs, detectors)),
-                            data.rows.length > 15 ? obsoletePager(model, data) : ''))
+                            // header(runsPerPeriodModel.allRuns[periodId], pageName, runs),
+                            // model.sortingRowVisible ? sortingRow(fields, runs, model) : '',
+                            
+                            h('tbody', { id: `table-body-${pageName}` },
+                                runs.map((run) => row(
+                                run, navigation, runsPerPeriodModel.allRuns[periodId],
+                            ))))))
+                            // tableBody(model, fields, runs, periodId, runsModel, detectors))))
+                            // runs.rows.length > 15 ? obsoletePager(model, data) : ''))
                     : ''
+                /*
                 : anyFiltersActive(url)
                     ? noMatchingData(model, dataPointer.page)
                     : noDataFound(model),
+                    */
         ]);
-}
-
-function tableBody(
-    model, visibleFields, data, cellsSpecials, index, runs, detectors,
-) {
-    return h('tbody', { id: `table-body-${data.url}` },
-        data.rows.map((item) => row(
-            model, visibleFields, data, item, cellsSpecials, index, runs, detectors,
-        )));
 }

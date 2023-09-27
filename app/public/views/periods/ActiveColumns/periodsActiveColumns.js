@@ -28,7 +28,7 @@ export const periodsActiveColumns = {
     id: {
         name: 'id',
         visible: false,
-    },
+    }, 
 
     name: {
         name: 'name',
@@ -44,7 +44,7 @@ export const periodsActiveColumns = {
                     'runs',
                     buildHref({
                         page: PN.runsPerPeriod,
-                        index: period.name,
+                        periodId: period.id,
                         [DRP.itemsPerPage]: navigation.model.userPreferences.itemsPerPage,
                         [DRP.pageNumber]: 1,
                         sorting: '-run_number',

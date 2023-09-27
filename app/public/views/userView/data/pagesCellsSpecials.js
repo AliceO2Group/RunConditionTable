@@ -105,8 +105,8 @@ const dateFormatter = (sec) => {
 
 pagesCellsSpecials[PN.runsPerPeriod] = {
     run_number: (_, item) => h('.thick', item.run_number),
-    time_start: (_, item) => dateFormatter(item.time_start),
-    time_end: (_, item) => dateFormatter(item.time_end),
+    time_o2_start: (_, item) => dateFormatter(item.time_o2_start),
+    time_o2_end: (_, item) => dateFormatter(item.time_end),
     time_trg_start: (_, item) => dateFormatter(item.time_trg_start),
     time_trg_end: (_, item) => dateFormatter(item.time_trg_end),
     fill_number: (_, item) => h('a', {

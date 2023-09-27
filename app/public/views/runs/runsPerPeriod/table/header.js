@@ -17,45 +17,32 @@ import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../../us
 import { RCT } from '../../../../config.js';
 import { isDetectorField, shouldDisplayDetectorField } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
-export default function header(visibleFields, data, model) {
-    const pageName = RCT.pageNames.runsPerPeriod;
-    const columnsHeadersArray = (visibleFields, model) => {
-        const dataHeaders = visibleFields.filter((field) => !isDetectorField(field.name)).map((field) =>
+export default function runsPerPeriodTableHeader(runsPerPeriodModel, pageName, data) {
+    const headerColumns = (visibleFields) => {
+        console.log(visibleFields);
+        const dataHeaders = visibleFields.map((field, index) =>
             h(`th.${pageName}-${field.name}-header`, {
                 scope: 'col',
-            }, h('.relative', [
-                headerSpecPresent(model, field) !== nonDisplayable
-                    ? h('.inline', getHeaderSpecial(model, field))
-                    : '',
-            ])));
-
-        const detectorHeaders = visibleFields.filter((field) =>
-            shouldDisplayDetectorField(field.name, model.parent.userPreferences.detectorList)).map((field) =>
-            h(`th.${pageName}-detector-header`, {
-                scope: 'col',
-            }, h('.relative', [
-                headerSpecPresent(model, field) !== nonDisplayable
-                    ? h('.inline', getHeaderSpecial(model, field))
-                    : '',
-            ])));
-
-        return dataHeaders.concat(detectorHeaders);
+            }, h('.relative', h('.inline', visibleFields[index].header))));
+        return dataHeaders;
     };
 
-    const rowsOptions = (model, data) =>
+    const headerCheckbox = (model, data) =>
         h('th', { scope: 'col' },
             h('.relative',
-                h(`input.checkbox.abs-center${data.rows.every((r) => r.marked) ? '.ticked' : ''}`, {
+                h(`input.checkbox.abs-center${data.every((r) => r.selected) ? '.ticked' : ''}`, {
                     type: 'checkbox',
                     onclick: (e) => {
-                        for (const row of data.rows) {
-                            row.marked = e.target.checked;
+                        for (const row of data) {
+                            row.selected = e.target.checked;
                         }
                         model.notify();
                     },
-                    checked: data.rows.every((r) => r.marked),
+                    checked: data.every((r) => r.selected),
                 })));
 
     return h('thead.header',
-        h('tr', [rowsOptions(model, data)].concat(columnsHeadersArray(visibleFields, model))));
+        h('tr',
+            headerCheckbox(runsPerPeriodModel, data),
+            headerColumns(runsPerPeriodModel.visibleFields)));
 }

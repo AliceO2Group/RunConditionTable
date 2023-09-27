@@ -13,13 +13,13 @@
  */
 
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
-import content from './content.js';
+import runsPerPeriodContent from './runsPerPeriodContent.js';
 
-export default function panel(model, runs, detectors) {
-    const urlParams = model.router.getUrl().searchParams;
-    const index = urlParams.get('index');
+export default function runsPerPeriodPanel(runsPerPeriod, runs, detectors, model) {
+    const urlParams = model.dataAccess.router.getUrl().searchParams;
+    const periodId = urlParams.get('periodId');
 
-    return index
-        ? content(model, runs, detectors)
-        : noSubPageSelected(model);
+    return periodId
+        ? runsPerPeriodContent(runsPerPeriod, model.dataAccess, runs, detectors, periodId, model)
+        : noSubPageSelected(model.dataAccess);
 }

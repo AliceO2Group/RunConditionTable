@@ -98,10 +98,10 @@ export default class RunsModel extends Observable {
         const endpoint = `/api/periods/${this.period.id}/runs/?${new URLSearchParams(params).toString()}`;
         try {
             const { items, totalCount } = await getRemoteDataSlice(endpoint);
-            this._currentPagePeriods = RemoteData.success([...items]);
+            this._currentPageRuns = RemoteData.success([...items]);
             this._pagination.currentPageItemsCount = totalCount;
         } catch (errors) {
-            this._currentPagePeriods = RemoteData.failure(errors);
+            this._currentPageRuns = RemoteData.failure(errors);
         }
 
         this.notify();
@@ -122,5 +122,9 @@ export default class RunsModel extends Observable {
 
     get allRuns() {
         return this._allRuns;
+    }
+
+    get currentPageRuns() {
+        return this._currentPageRuns;
     }
 }
