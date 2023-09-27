@@ -65,7 +65,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
     async executeDbAction(dataPassDetails, forUrlMetaStore) {
         const { parentDataUnit: dbDataPass } = forUrlMetaStore;
 
-        const getPotentialPeriod = async () => {
+        const getPresumedPeriod = async () => {
             if (dataPassDetails.period) {
                 return await findOrCreatePeriod(dataPassDetails.period);
             } else {
@@ -115,7 +115,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
 
         const addRunToDataPass = async ([dbRun, _]) => await dbRun.addDataPasses(dbDataPass.id, { ignoreDuplicates: true });
 
-        const pipeline = async () => await getPotentialPeriod()
+        const pipeline = async () => await getPresumedPeriod()
             .then(findOrCreateRun)
             .then(addRunToDataPass);
 
