@@ -70,7 +70,7 @@ class MonalisaServiceDetails extends AbstractServiceSynchronizer {
                 return await findOrCreatePeriod(dataPassDetails.period);
             } else {
                 this.logger.warn(`Incorrect period name from monalisa ${dataPassDetails.periodName} 
-                    for run ${dataPassDetails.runNumber} in detials of data pass ${dbDataPass.name}`);
+                    for run ${dataPassDetails.runNumber} in details of data pass ${dbDataPass.name}`);
                 return [undefined, undefined];
             }
         };
