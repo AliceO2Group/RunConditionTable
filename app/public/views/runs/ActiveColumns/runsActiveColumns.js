@@ -101,6 +101,15 @@ export const runsActiveColumns = {
             dateFormatter(run.timeTrgEnd).timeString),
     },
 
+    runDuration: {
+        name: 'runDuration',
+        visible: true,
+        header: fieldNames.run_duration.fieldName,
+        fieldName: fieldNames.run_duration.fieldName,
+        filterInput: fieldNames.run_duration.filterInput,
+        format: (_, run) => run.runDuration,
+    },
+
     dipoleCurrentVal: {
         name: 'dipoleCurrentVal',
         visible: true,
@@ -110,13 +119,31 @@ export const runsActiveColumns = {
         format: (_, run) => run.dipoleCurrentVal,
     },
 
-    runDuration: {
-        name: 'runDuration',
+    lhcBeamEnergy: {
+        name: 'lhcBeamEnergy',
         visible: true,
-        header: fieldNames.run_duration.fieldName,
-        fieldName: fieldNames.run_duration.fieldName,
-        filterInput: fieldNames.run_duration.filterInput,
-        format: (_, run) => run.runDuration,
+        header: fieldNames.lhc_beam_energy.fieldName,
+        fieldName: fieldNames.lhc_beam_energy.fieldName,
+        filterInput: fieldNames.lhc_beam_energy.filterInput,
+        format: (_, run) => run.lhcBeamEnergy,
+    },
+
+    l3CurrentVal: {
+        name: 'l3CurrentVal',
+        visible: true,
+        header: fieldNames.l3_current_val.fieldName,
+        fieldName: fieldNames.l3_current_val.fieldName,
+        filterInput: fieldNames.l3_current_val.filterInput,
+        format: (_, run) => run.l3CurrentVal,
+    },
+
+    fillNumber: {
+        name: 'fillNumber',
+        visible: true,
+        header: fieldNames.fill_number.fieldName,
+        fieldName: fieldNames.fill_number.fieldName,
+        filterInput: fieldNames.fill_number.filterInput,
+        format: (_, run) => run.fillNumber,
     },
 };
 /*

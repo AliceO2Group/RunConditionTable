@@ -86,6 +86,14 @@ const runFieldNames = {
         fieldName: 'Run duration',
         filterInput: filterInputTypes.number,
     },
+    lhc_beam_energy: {
+        fieldName: 'Beam energy',
+        filterInput: filterInputTypes.number,
+    },
+    l3_current_val: {
+        fieldName: 'L3 current [A]',
+        filterInput: filterInputTypes.number,
+    },
 };
 
 module.exports = runFieldNames;
