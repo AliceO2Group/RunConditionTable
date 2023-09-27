@@ -63,7 +63,9 @@ export const runsActiveColumns = {
         header: fieldNames.time_o2_start.fieldName,
         fieldName: fieldNames.time_o2_start.fieldName,
         filterInput: fieldNames.time_o2_start.filterInput,
-        format: (_, run) => run.timeO2Start,
+        format: (_, run) => h('',
+        h('.skinny', dateFormatter(run.timeO2Start).dateString),
+        dateFormatter(run.timeO2Start).timeString),
     },
 
     timeO2End: {
@@ -72,7 +74,9 @@ export const runsActiveColumns = {
         header: fieldNames.time_o2_end.fieldName,
         fieldName: fieldNames.time_o2_end.fieldName,
         filterInput: fieldNames.time_o2_end.filterInput,
-        format: (_, run) => run.timeO2End,
+        format: (_, run) => h('',
+            h('.skinny', dateFormatter(run.timeO2End).dateString),
+            dateFormatter(run.timeO2End).timeString),
     },
 
     timeTrgStart: {
@@ -81,7 +85,9 @@ export const runsActiveColumns = {
         header: fieldNames.time_trg_start.fieldName,
         fieldName: fieldNames.time_trg_start.fieldName,
         filterInput: fieldNames.time_trg_start.filterInput,
-        format: (_, run) => run.timeTrgStart,
+        format: (_, run) => h('',
+            h('.skinny', dateFormatter(run.timeTrgStart).dateString),
+            dateFormatter(run.timeTrgStart).timeString),
     },
 
     timeTrgEnd: {
@@ -90,7 +96,9 @@ export const runsActiveColumns = {
         header: fieldNames.time_trg_end.fieldName,
         fieldName: fieldNames.time_trg_end.fieldName,
         filterInput: fieldNames.time_trg_end.filterInput,
-        format: (_, run) => run.timeTrgEnd,
+        format: (_, run) => h('',
+            h('.skinny', dateFormatter(run.timeTrgEnd).dateString),
+            dateFormatter(run.timeTrgEnd).timeString),
     },
 
     dipoleCurrentVal: {
