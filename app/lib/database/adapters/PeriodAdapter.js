@@ -27,7 +27,10 @@ class PeriodAdapter {
             BeamTypeId,
             BeamType,
             avgEnergy,
-            distinctEnergies
+            distinctEnergies,
+            runsCount,
+            dataPassesCount,
+            simulationPassesCount,
         } = databaseObject.dataValues; // TODO strange behaviour when using custom column (energy as result as function) without acces dataValues
 
         return {
@@ -38,6 +41,9 @@ class PeriodAdapter {
             beamType: BeamType?.name,
             avgEnergy,
             distinctEnergies : distinctEnergies.filter((_) => (_)),
+            runsCount: Number(runsCount),
+            dataPassesCount: Number(dataPassesCount),
+            simulationPassesCount: Number(simulationPassesCount),
         }
     }
 
@@ -54,6 +60,9 @@ class PeriodAdapter {
             year,
             beamTypeId,
             beamTypeName,
+            runsCount,
+            dataPassesCount,
+            simulationPassesCount,
         } = entityObject;
 
         return {
@@ -64,7 +73,10 @@ class PeriodAdapter {
             BeamType: {
                 id: beamTypeId,
                 name: beamTypeName,
-            }
+            },
+            runsCount,
+            dataPassesCount,
+            simulationPassesCount,
         }
     }
 }

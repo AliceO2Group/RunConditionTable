@@ -21,6 +21,8 @@ const {
         models: {
             BeamType,
             Run,
+            DataPass,
+            SimulationPass,
         },
     },
 } = require('../../database/DatabaseManager');
@@ -39,9 +41,20 @@ class PeriodService {
                 {
                     model: BeamType,
                     required: true,
-                }, {
+                },
+                {
                     model: Run,
                     required: true,
+                    attributes: [],
+                },
+                {
+                    model: DataPass,
+                    required: false,
+                    attributes: [],
+                },
+                {
+                    model: SimulationPass,
+                    required: false,
                     attributes: [],
                 },
             ],
@@ -58,8 +71,19 @@ class PeriodService {
                     Sequelize.fn('array_agg', Sequelize.fn('DISTINCT', Sequelize.col('Runs.energy_per_beam'))),
                     'distinctEnergies',
                 ],
+                [Sequelize.fn('count', Sequelize.col('Runs.run_number')), 'runsCount'],
+                [Sequelize.fn('count', Sequelize.col('DataPasses.id')), 'dataPassesCount'],
+                [Sequelize.fn('count', Sequelize.col('SimulationPasses.id')), 'simulationPassesCount'],
             ],
-            group: ['Period.id', 'BeamType.id'],
+
+            group: [
+                'Period.id',
+                'BeamType.id',
+                'DataPasses.id',
+                'SimulationPasses.id',
+                'SimulationPasses->anchored_periods.period_id',
+                'SimulationPasses->anchored_periods.sim_pass_id',
+            ],
             subQuery: false,
         };
         const { count, rows } = await PeriodRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
