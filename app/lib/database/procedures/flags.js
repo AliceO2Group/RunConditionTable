@@ -32,7 +32,7 @@ const flag_insert = (query) => `
 `;
 
 const flag_update = (query) => {
-    return 'NOT IMPLEMENTED PLEASE REMOVE OLD FLAG INSTANCE';
+    throw 'NOT IMPLEMENTED PLEASE REMOVE OLD FLAG INSTANCE';
     `
     DO                            
     $do$
