@@ -115,10 +115,14 @@ pagesCellsSpecials[PN.runsPerPeriod] = {
     }, item.fill_number, h('.external-link-15-blue')),
 };
 
+const linerUnderVerifier = '--------';
 pagesCellsSpecials[PN.flags] = {
     time_start: (item) => dateFormatter(item.time_start),
     time_end: (item) => dateFormatter(item.time_end),
-    ver_time: (item) => item.ver_time.isEmpty
+    by: (item) => ! item.by?.length
+        ? 'unverified'
+        : item.by.map((verifier) => h('', verifier, h('.skinny', linerUnderVerifier))),
+    ver_time: (item) => ! item.ver_time?.length
         ? 'unverified'
         : item.ver_time.map((e) => {
             if (!e) {
