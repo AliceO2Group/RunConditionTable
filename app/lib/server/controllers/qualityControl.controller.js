@@ -18,7 +18,8 @@ const Joi = require('joi');
 const { adaptFindAndCountAllInService, isInDevMode, isInTestMode, throwWrapper } = require('../../utils');
 
 const getUser = (session) => session?.username ??
-    (isInDevMode() || isInTestMode() ? 'dev/test-anonymous' : throwWrapper('No req.session.username nor in dev or test mode'));
+    (isInDevMode() || isInTestMode() ? 'dev/test-anonymous' :
+        throwWrapper('Neither req.session.username is provided nor app is in dev or test mode'));
 
 /**
  * List All time based qualities / flags in db including their verification
