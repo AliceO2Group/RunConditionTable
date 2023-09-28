@@ -13,12 +13,12 @@
  */
 
 
-const handleArray = (data, field) => {
+const handleArray = (data, field, escape) => {
     let sqlLogicClause = undefined;
     if (Array.isArray(data)) {
-        sqlLogicClause = data.join(',');
+        sqlLogicClause = data.map((d) => escape ? `'${d}'` : d).join(',');
     } else if (typeof(data) === 'string' || !data) {
-        sqlLogicClause = data;
+        sqlLogicClause = escape ? `'${data}'` : data;
     } else {
         throw `incorrect format <${data}> for ${field}`;
     }
@@ -29,7 +29,7 @@ const handleArray = (data, field) => {
 
 const flags_view = (query) => {
     run_selection_sql = handleArray(query.run_numbers, 'r.run_number')
-    detector_selection_sql = handleArray(query.detector, 'ds.name')
+    detector_selection_sql = handleArray(query.detector, 'ds.name', true)
 
     const data_pass_sql = `dp.name = '${query.data_pass_name}'`;
     const whereClause = [data_pass_sql, run_selection_sql, detector_selection_sql]
