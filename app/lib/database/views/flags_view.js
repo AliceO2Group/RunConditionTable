@@ -12,35 +12,41 @@
  * or submit itself to any jurisdiction.
  */
 
-const flags_view = (query) => {
-    
-    rn = query.run_numbers;
-    let rn_sql = "";
-    if (typeof(rn) === 'object') {
-        rn_sql = rn.join(",");
-    } else if (typeof(rn) === 'string') {
-        rn_sql = rn
-    } else {
-        throw `run_numbers seems to be incorrect ${rn}`
-    }
 
-    let det_sql = "";
-    if (query.detector) {
-        det_sql = `AND ds.name = '${query.detector}'`
+const handleArray = (data, field) => {
+    let sqlLogicClause = undefined;
+    if (Array.isArray(data)) {
+        sqlLogicClause = data.join(',');
+    } else if (typeof(data) === 'string' || !data) {
+        sqlLogicClause = data;
+    } else {
+        throw `incorrect format <${data}> for ${field}`;
     }
+    sqlLogicClause = sqlLogicClause ? `${field} in (${sqlLogicClause})` : undefined;
+
+    return sqlLogicClause;
+}
+
+const flags_view = (query) => {
+    run_selection_sql = handleArray(query.run_numbers, 'r.run_number')
+    detector_selection_sql = handleArray(query.detector, 'ds.name')
+
+    const data_pass_sql = `dp.name = '${query.data_pass_name}'`;
+    const whereClause = [data_pass_sql, run_selection_sql, detector_selection_sql]
+        .filter(_ => _)
+        .join(' AND ');
     
     return `
     SELECT
-        qcf.id, 
+        qcf.id,
+        qcf.entire,
         qcf.time_start, 
         qcf.time_end, 
         ftd.name as flag_reason, 
         qcf.comment,
         r.run_number,
         ds.name as detector,
-        array_agg(v.verified_by) as by,
-        array_agg(v.created_at) as ver_time
-
+        get_verifications(qcf.id) as verifications
 
         FROM quality_control_flags AS qcf
         INNER JOIN data_passes as dp
@@ -54,9 +60,7 @@ const flags_view = (query) => {
         LEFT OUTER JOIN verifications as v
             ON qcf.id = v.qcf_id
 
-        WHERE r.run_number in (${rn_sql}) AND 
-            dp.name = '${query.data_pass_name}'
-            ${det_sql}
+        WHERE ${whereClause}
         GROUP BY qcf.id, qcf.time_start, qcf.time_end, ftd.name, qcf.comment, r.run_number, ds.name
 
     `;
