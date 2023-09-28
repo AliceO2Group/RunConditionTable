@@ -12,8 +12,8 @@
  * or submit itself to any jurisdiction.
  */
  const config = require('../../config/configProvider.js');
- const run_detectors_field_in_sql_query = config.rctData.detectors
-     .map(d => `(SELECT get_run_det_data(r.run_number, '${d.toUpperCase()}')) as ${d.toUpperCase()}_detector`)
+ const run_detectors_field_in_sql_query_factory = (dataPassName = null) => config.rctData.detectors
+     .map(d => `(SELECT get_run_det_data(r.run_number, '${d.toUpperCase()}', '${dataPassName}')) as ${d.toUpperCase()}_detector`)
      .join(',\n')
  
 
@@ -34,7 +34,7 @@ const queryForRunsFields = `
 const runs_per_period_view = (query) => `
         SELECT
             ${queryForRunsFields},
-            ${run_detectors_field_in_sql_query}
+            ${run_detectors_field_in_sql_query_factory()}
         FROM runs AS r
         INNER JOIN periods AS p
             ON p.id = r.period_id
@@ -49,7 +49,7 @@ const runs_per_period_view = (query) => `
 const runs_per_data_pass_view = (query) => `
         SELECT
         ${queryForRunsFields},
-        ${run_detectors_field_in_sql_query}
+        ${run_detectors_field_in_sql_query_factory(query.index)}
         FROM data_passes AS dp
         INNER JOIN data_passes_runs AS dpr
             ON dp.id=dpr.data_pass_id
