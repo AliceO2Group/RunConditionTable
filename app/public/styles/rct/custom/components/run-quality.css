@@ -21,3 +21,8 @@
     background-color: var(--red) !important;
     color: var(--white);
 }
+
+.rct .run-quality.mixed {
+    background-color: var(--orange) !important;
+    color: var(--white);
+}

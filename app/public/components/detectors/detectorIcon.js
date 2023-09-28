@@ -19,7 +19,7 @@ import { showModal } from '../../views/modal/modal.js';
 export default function detectorIcon(navigation, item, index, detectorName, timeBased = false, qualityChangePossible = false) {
     const runDetectorId = `${index}-${item.run_number}-${detectorName}`;
     const runBasedQcModalId = `${runDetectorId}-qc-modal`;
-    const runDetectorQuality = item[`${detectorName.toLowerCase()}_detector`];
+    const runDetectorQualityControlFlag = item[`${detectorName.toLowerCase()}_detector`];
     return [
         qualityChangePossible
             ? h('.modal', { id: runBasedQcModalId },
@@ -30,7 +30,7 @@ export default function detectorIcon(navigation, item, index, detectorName, time
                 }, item, index, detectorName, runDetectorId, timeBased)))
             : '',
 
-        h(`button.btn.pointer.run-quality.${runDetectorQuality}`, {
+        h(`button.btn.pointer.run-quality.${runDetectorQualityControlFlag.quality}`, {
             id: runDetectorId,
             onclick: () => {
                 if (qualityChangePossible) {
@@ -38,6 +38,6 @@ export default function detectorIcon(navigation, item, index, detectorName, time
                 }
             },
         },
-        runDetectorQuality),
+        runDetectorQualityControlFlag.quality),
     ];
 }
