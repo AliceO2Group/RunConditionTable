@@ -33,12 +33,10 @@ module.exports = {
                 },
                 bad: {
                     type: Sequelize.BOOLEAN,
-                    unique: true,
                     allowNull: false,
                 },
                 obsolate: {
                     type: Sequelize.BOOLEAN,
-                    unique: true,
                     allowNull: false,
                 },
             },

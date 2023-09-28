@@ -23,10 +23,14 @@ module.exports = {
                 },
                 time_start: {
                     type: Sequelize.DATE,
-                    allowNull: false,
+                    allowNull: true,
                 },
                 time_end: {
                     type: Sequelize.DATE,
+                    allowNull: true,
+                },
+                entire: {
+                    type: Sequelize.BOOLEAN,
                     allowNull: false,
                 },
                 comment: {
@@ -38,7 +42,7 @@ module.exports = {
                 },
                 run_number: {
                     type: Sequelize.INTEGER,
-                    allowNull: true,
+                    allowNull: false,
                     references: {
                         model: 'runs',
                         key: 'run_number',
@@ -46,7 +50,7 @@ module.exports = {
                 },
                 data_pass_id: {
                     type: Sequelize.INTEGER,
-                    allowNull: true,
+                    allowNull: false,
                     references: {
                         model: 'data_passes',
                         key: 'id',
@@ -54,7 +58,7 @@ module.exports = {
                 },
                 detector_id: {
                     type: Sequelize.INTEGER,
-                    allowNull: true,
+                    allowNull: false,
                     references: {
                         model: 'detectors_subsystems',
                         key: 'id',
@@ -62,7 +66,7 @@ module.exports = {
                 },
                 flag_type_id: {
                     type: Sequelize.INTEGER,
-                    allowNull: true,
+                    allowNull: false,
                     references: {
                         model: 'flag_types_dictionary',
                         key: 'id',

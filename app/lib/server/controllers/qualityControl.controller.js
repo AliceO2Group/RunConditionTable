@@ -11,13 +11,15 @@
  * or submit itself to any jurisdiction.
  */
 
-const { O2TokenService } = require('@aliceo2/web-ui');
-const { jwt } = require('../../config/configProvider');
 const { qualityControlService } = require('../../services/qualityControl/QualityControlService');
 const { stdDataRequestDTO } = require('../../domain/dtos');
 const { validateDtoOrRepondOnFailure } = require('../utilities');
 const Joi = require('joi');
-const { adaptFindAndCountAllInService } = require('../../utils');
+const { adaptFindAndCountAllInService, isInDevMode, isInTestMode, throwWrapper } = require('../../utils');
+
+const getUser = (session) => session?.username ??
+    (isInDevMode() || isInTestMode() ? 'dev/test-anonymous' :
+        throwWrapper('Neither req.session.username is provided nor app is in dev or test mode'));
 
 /**
  * List All time based qualities / flags in db including their verification
@@ -44,36 +46,40 @@ const listAllTimeBasedFlagsHandler = async (req, res, next) => {
 const createTimeBasedQualityControlFlag = async (req, res, next) => {
     const customDTO = stdDataRequestDTO.concat(Joi.object({
         query: {
-            time_end: Joi.number().required(),
-            time_start: Joi.number().required(),
+            entire: Joi.boolean().required(),
+            time_end: Joi.number().optional(),
+            time_start: Joi.number().optional(),
             data_pass_id: Joi.number().required(),
             run_number: Joi.number().required(),
             detector_id: Joi.number().required(),
             flag_type_id: Joi.number().required(),
+            comment: Joi.string().optional(),
         },
     }));
 
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
         const {
+            entire,
             time_end,
             time_start,
             data_pass_id,
             run_number,
             detector_id,
             flag_type_id,
+            comment,
         } = validatedDTO.query;
 
-        const { token } = req.query;
-
         const entityParams = {
-            addedBy: token ? new O2TokenService(jwt).verify(token).username : 'test',
+            entire,
             timeEnd: time_end,
             timeStart: time_start,
-            data_pass_id: data_pass_id,
-            run_number: run_number,
-            detector_id: detector_id,
-            flag_type_id: flag_type_id,
+            addedBy: getUser(req.session),
+            data_pass_id,
+            run_number,
+            detector_id,
+            flag_type_id,
+            comment,
         };
         await qualityControlService.createTimeBasedQualityControlFlag(entityParams);
         res.sendStatus(201);
@@ -96,10 +102,9 @@ const createTimeBasedQualityControlFlagVerification = async (req, res, next) => 
 
     const validatedDTO = await validateDtoOrRepondOnFailure(customDTO, req, res);
     if (validatedDTO) {
-        const { token } = req.query;
         const entityParams = {
             qcf_id: validatedDTO.params.qcFlagId,
-            verifiedBy: token ? new O2TokenService(jwt).verify(token).username : 'test',
+            verifiedBy: getUser(req.session),
         };
         await qualityControlService.createTimeBasedQualityControlFlagVerification(entityParams);
         res.sendStatus(201);

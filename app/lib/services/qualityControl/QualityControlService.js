@@ -62,7 +62,7 @@ class QualityControlService {
      * @returns {Promise} Promise object represents the result of this use case.
      */
     async createTimeBasedQualityControlFlag(entityParams) {
-        await QualityControlFlagRepository.T.create(entityParams);
+        await QualityControlFlagRepository.create(entityParams);
     }
 
     /**
@@ -71,7 +71,7 @@ class QualityControlService {
      * @returns {Promise} Promise object represents the result of this use case.
      */
     async deleteTimeBasedQualityControlFlag(id) {
-        return await QualityControlFlagRepository.T.removeOne({ where: { id } });
+        return await QualityControlFlagRepository.removeOne({ where: { id } });
     }
 
     /**
@@ -80,7 +80,7 @@ class QualityControlService {
      * @returns {Promise} Promise object represents the result of this use case.
      */
     async createTimeBasedQualityControlFlagVerification(entityParams) {
-        await QualityControlFlagVerificationRepository.T.create(entityParams);
+        await QualityControlFlagVerificationRepository.create(entityParams);
     }
 }
 
