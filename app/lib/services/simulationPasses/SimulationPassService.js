@@ -115,22 +115,36 @@ class SimulationPassService {
      */
     async getAnchorageForDataPass(dataPassId, query) {
         const baseClause = {
-            include: [
-                {
-                    model: DataPass,
-                    required: true,
-                    attributes: [],
-                    through: {
-                        where: {
-                            data_pass_id: dataPassId,
+            ...commonClause,
+            ...{
+                include: [
+                    {
+                        model: Run,
+                        required: false,
+                        attributes: [],
+                        through: {
+                            attributes: [],
                         },
                     },
-                },
-            ],
+                    {
+                        model: DataPass,
+                        required: true,
+                        attributes: [],
+                        where: {
+                            id: dataPassId,
+                        },
+                        through: {
+                            attributes: [],
+                        },
+                    },
+                ] },
         };
 
         const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
-        return { count, rows: rows.map((simulationPass) => simulationPassAdapter.toEntity(simulationPass)) };
+        return {
+            count: count.length,
+            rows: rows.map((simulationPass) => simulationPassAdapter.toEntity(simulationPass)),
+        };
     }
 }
 
