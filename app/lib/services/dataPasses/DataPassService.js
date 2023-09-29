@@ -91,7 +91,10 @@ class DataPassService {
         });
 
         const { count, rows } = await DataPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
-        return { count, rows: rows.map((dataPass) => dataPassAdapter.toEntity(dataPass)) };
+        return {
+            count: count.length,
+            rows: rows.map((dataPass) => dataPassAdapter.toEntity(dataPass)),
+        };
     }
 
     /**
