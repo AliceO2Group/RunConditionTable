@@ -11,18 +11,54 @@
  * or submit itself to any jurisdiction.
  */
 
+const { Sequelize } = require('sequelize');
 const {
     databaseManager: {
         repositories: {
             DataPassRepository,
         },
         models: {
+            Run,
             SimulationPass,
         },
     },
 } = require('../../database/DatabaseManager');
 const { dataPassAdapter } = require('../../database/adapters');
 const { QueryBuilder } = require('../../database/utilities');
+const { deepmerge } = require('../../utils');
+
+const additionalFields = [
+    [Sequelize.fn('count', Sequelize.fn('DISTINCT', Sequelize.col('Runs.run_number'))), 'runsCount'],
+    [Sequelize.fn('count', Sequelize.fn('DISTINCT', Sequelize.col('SimulationPasses.id'))), 'simulationPassesCount'],
+];
+const commonGroupClause = ['DataPass.id'];
+
+const commonClause = {
+    include: [
+        {
+            model: Run,
+            require: false,
+            attributes: [],
+            through: {
+                attributes: [],
+            },
+        },
+        {
+            model: SimulationPass,
+            require: false,
+            attributes: [],
+            through: {
+                attributes: [],
+            },
+        },
+    ],
+    attributes: {
+        include: additionalFields,
+    },
+
+    group: commonGroupClause,
+    subQuery: false,
+};
 
 class DataPassService {
     /**
@@ -31,8 +67,14 @@ class DataPassService {
      * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
     async getAll(query) {
-        const { count, rows } = await DataPassRepository.findAndCountAll(new QueryBuilder().addFromHttpRequestQuery(query));
-        return { count, rows: rows.map((dataPass) => dataPassAdapter.toEntity(dataPass)) };
+        const baseClause = commonClause;
+
+        const { count, rows } = await DataPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
+
+        return {
+            count: count.length,
+            rows: rows.map((dataPass) => dataPassAdapter.toEntity(dataPass)),
+        };
     }
 
     /**
@@ -42,11 +84,11 @@ class DataPassService {
      * @returns {Promise<DataPass[]>} Promise object represents the result of this use case.
      */
     async getDataPassesPerPeriod(periodId, query) {
-        const baseClause = {
+        const baseClause = deepmerge(commonClause, {
             where: {
                 period_id: periodId,
             },
-        };
+        });
 
         const { count, rows } = await DataPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return { count, rows: rows.map((dataPass) => dataPassAdapter.toEntity(dataPass)) };
@@ -60,22 +102,37 @@ class DataPassService {
      */
     async getAnchoredToSimulationPass(simulationPassId, query) {
         const baseClause = {
-            include: [
-                {
-                    model: SimulationPass,
-                    require: true,
-                    attributes: [],
-                    through: {
-                        where: {
-                            sim_pass_id: simulationPassId,
+            ...commonClause,
+            ...{
+                include: [
+                    {
+                        model: Run,
+                        require: false,
+                        attributes: [],
+                        through: {
+                            attributes: [],
                         },
                     },
-                },
-            ],
+                    {
+                        model: SimulationPass,
+                        require: false,
+                        attributes: [],
+                        where: {
+                            id: simulationPassId,
+                        },
+                        through: {
+                            attributes: [],
+                        },
+                    },
+                ],
+            },
         };
 
         const { count, rows } = await DataPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
-        return { count, rows: rows.map((dataPass) => dataPassAdapter.toEntity(dataPass)) };
+        return {
+            count: count.length,
+            rows: rows.map((dataPass) => dataPassAdapter.toEntity(dataPass)),
+        };
     }
 }
 
