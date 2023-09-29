@@ -21,6 +21,8 @@ const {
         models: {
             BeamType,
             Run,
+            DataPass,
+            SimulationPass,
         },
     },
 } = require('../../database/DatabaseManager');
@@ -34,34 +36,58 @@ class PeriodService {
      * @returns {Promise<Period[]>} Promise object represents the result of this use case.
      */
     async getAll(query) {
+        const additionalFields = [
+            [
+                Sequelize.fn('avg',
+                    Sequelize.fn('get_center_of_mass_energy', Sequelize.col('Runs.energy_per_beam'), Sequelize.col('BeamType.id'))),
+                'avgEnergy',
+            ],
+            [
+                Sequelize.fn('array_agg', Sequelize.fn('DISTINCT', Sequelize.col('Runs.energy_per_beam'))),
+                'distinctEnergies',
+            ],
+            [Sequelize.fn('count', Sequelize.col('Runs.run_number')), 'runsCount'],
+            [Sequelize.fn('count', Sequelize.col('DataPasses.id')), 'dataPassesCount'],
+            [Sequelize.fn('count', Sequelize.col('SimulationPasses.id')), 'simulationPassesCount'],
+        ];
+
         const baseClause = {
             include: [
                 {
                     model: BeamType,
                     required: true,
-                }, {
+                },
+                {
                     model: Run,
                     required: true,
                     attributes: [],
                 },
+                {
+                    model: DataPass,
+                    required: false,
+                    attributes: [],
+                },
+                {
+                    model: SimulationPass,
+                    required: false,
+                    attributes: [],
+                },
             ],
-            attributes: [
-                'id',
-                'name',
-                'year',
-                [
-                    Sequelize.fn('avg',
-                        Sequelize.fn('get_center_of_mass_energy', Sequelize.col('Runs.energy_per_beam'), Sequelize.col('BeamType.id'))),
-                    'avgEnergy',
-                ],
-                [
-                    Sequelize.fn('array_agg', Sequelize.fn('DISTINCT', Sequelize.col('Runs.energy_per_beam'))),
-                    'distinctEnergies',
-                ],
+            attributes: {
+                include: additionalFields,
+            },
+
+            group: [
+                'Period.id',
+                'BeamType.id',
+                'DataPasses.id',
+                'SimulationPasses.id',
+                'SimulationPasses->anchored_periods.period_id',
+                'SimulationPasses->anchored_periods.sim_pass_id',
             ],
-            group: ['Period.id', 'BeamType.id'],
             subQuery: false,
         };
+
         const { count, rows } = await PeriodRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return {
             count: count.length,
