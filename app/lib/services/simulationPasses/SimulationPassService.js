@@ -104,7 +104,10 @@ class SimulationPassService {
             });
 
         const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
-        return { count, rows: rows.map((simulationPass) => simulationPassAdapter.toEntity(simulationPass)) };
+        return {
+            count: count.length,
+            rows: rows.map((simulationPass) => simulationPassAdapter.toEntity(simulationPass)),
+        };
     }
 
     /**
