@@ -18,12 +18,51 @@ const {
         },
         models: {
             Period,
+            Run,
             DataPass,
         },
     },
 } = require('../../database/DatabaseManager');
 const { simulationPassAdapter } = require('../../database/adapters');
 const { QueryBuilder } = require('../../database/utilities');
+
+const { Sequelize } = require('sequelize');
+const { deepmerge } = require('../../utils');
+
+const additionalFields = [
+    [Sequelize.fn('count', Sequelize.fn('DISTINCT', Sequelize.col('Runs.run_number'))), 'runsCount'],
+    [Sequelize.fn('count', Sequelize.fn('DISTINCT', Sequelize.col('DataPasses.id'))), 'dataPassesCount'],
+];
+
+const commonGroupClause = ['SimulationPass.id'];
+
+const commonClause = {
+    include: [
+        {
+            model: Run,
+            required: false,
+            attributes: [],
+            through: {
+                attributes: [],
+            },
+        },
+        {
+            model: DataPass,
+            required: false,
+            attributes: [],
+            through: {
+                attributes: [],
+            },
+        },
+    ],
+
+    attributes: {
+        include: additionalFields,
+    },
+
+    group: commonGroupClause,
+    subQuery: false,
+};
 
 class SimulationPassService {
     /**
@@ -32,8 +71,12 @@ class SimulationPassService {
      * @returns {Promise<SimulationPass[]>} Promise object represents the result of this use case.
      */
     async getAll(query) {
-        const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder().addFromHttpRequestQuery(query));
-        return { count, rows: rows.map((simulationPass) => simulationPassAdapter.toEntity(simulationPass)) };
+        const baseClause = commonClause;
+        const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
+        return {
+            count: count.length,
+            rows: rows.map((simulationPass) => simulationPassAdapter.toEntity(simulationPass)),
+        };
     }
 
     /**
@@ -43,20 +86,22 @@ class SimulationPassService {
      * @returns {Promise<SimulationPass[]>} Promise object represents the result of this use case.
      */
     async getSimulationPassesPerPeriod(periodId, query) {
-        const baseClause = {
-            include: [
-                {
-                    model: Period,
-                    required: true,
-                    attributes: [],
-                    through: {
+        const baseClause = deepmerge(commonClause,
+            {
+                include: [
+                    {
+                        model: Period,
+                        required: true,
+                        attributes: [],
                         where: {
-                            period_id: periodId,
+                            id: periodId,
+                        },
+                        through: {
+                            attributes: [],
                         },
                     },
-                },
-            ],
-        };
+                ],
+            });
 
         const { count, rows } = await SimulationPassRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return { count, rows: rows.map((simulationPass) => simulationPassAdapter.toEntity(simulationPass)) };
