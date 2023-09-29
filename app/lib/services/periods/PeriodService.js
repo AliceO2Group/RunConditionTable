@@ -36,6 +36,21 @@ class PeriodService {
      * @returns {Promise<Period[]>} Promise object represents the result of this use case.
      */
     async getAll(query) {
+        const additionalFields = [
+            [
+                Sequelize.fn('avg',
+                    Sequelize.fn('get_center_of_mass_energy', Sequelize.col('Runs.energy_per_beam'), Sequelize.col('BeamType.id'))),
+                'avgEnergy',
+            ],
+            [
+                Sequelize.fn('array_agg', Sequelize.fn('DISTINCT', Sequelize.col('Runs.energy_per_beam'))),
+                'distinctEnergies',
+            ],
+            [Sequelize.fn('count', Sequelize.col('Runs.run_number')), 'runsCount'],
+            [Sequelize.fn('count', Sequelize.col('DataPasses.id')), 'dataPassesCount'],
+            [Sequelize.fn('count', Sequelize.col('SimulationPasses.id')), 'simulationPassesCount'],
+        ];
+
         const baseClause = {
             include: [
                 {
@@ -58,23 +73,9 @@ class PeriodService {
                     attributes: [],
                 },
             ],
-            attributes: [
-                'id',
-                'name',
-                'year',
-                [
-                    Sequelize.fn('avg',
-                        Sequelize.fn('get_center_of_mass_energy', Sequelize.col('Runs.energy_per_beam'), Sequelize.col('BeamType.id'))),
-                    'avgEnergy',
-                ],
-                [
-                    Sequelize.fn('array_agg', Sequelize.fn('DISTINCT', Sequelize.col('Runs.energy_per_beam'))),
-                    'distinctEnergies',
-                ],
-                [Sequelize.fn('count', Sequelize.col('Runs.run_number')), 'runsCount'],
-                [Sequelize.fn('count', Sequelize.col('DataPasses.id')), 'dataPassesCount'],
-                [Sequelize.fn('count', Sequelize.col('SimulationPasses.id')), 'simulationPassesCount'],
-            ],
+            attributes: {
+                include: additionalFields,
+            },
 
             group: [
                 'Period.id',
@@ -86,6 +87,7 @@ class PeriodService {
             ],
             subQuery: false,
         };
+
         const { count, rows } = await PeriodRepository.findAndCountAll(new QueryBuilder(baseClause).addFromHttpRequestQuery(query));
         return {
             count: count.length,
