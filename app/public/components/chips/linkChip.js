@@ -24,8 +24,8 @@ import { h } from '/js/src/index.js';
  * @return {vnode} the linkChip component
  */
 
-export default function linkChip(navigation, label, href) {
-    return h('a.btn.chip.m1.no-text-decoration', {
+export default function linkChip(navigation, label, href, classes = '') {
+    return h(`a.btn.chip.m1.no-text-decoration${classes}`, {
         onclick: (e) => navigation.handleLinkEvent(e),
         href: href,
     }, label);
