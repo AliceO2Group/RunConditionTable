@@ -30,15 +30,19 @@ const { pageNames } = RCT;
 export default function dataPanel(model, runs, detectors, flags) {
     const { dataAccess, periods, runsPerPeriod } = model;
     const { page, index } = dataAccess.getCurrentDataPointer();
-    const data = dataAccess.fetchedData[page][index];
 
+    if (page === pageNames.periods) {
+        return periodsPanel(periods, model);
+    }
+
+    const data = dataAccess.fetchedData[page][index];
     return data ? data.match({
         NotAsked: () => obsoleteUnknown(dataAccess),
         Loading: () => waiting(),
         Success: () => {
             switch (page) {
                 case pageNames.periods:
-                    return periodsPanel(periods, model);
+                    throw 'RCT RCT laaa la la laa la';
                 case pageNames.flags:
                     return flagsPanel(dataAccess, runs, detectors, flags);
                 case pageNames.runsPerDataPass:
