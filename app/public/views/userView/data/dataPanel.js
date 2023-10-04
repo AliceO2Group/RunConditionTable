@@ -31,10 +31,13 @@ export default function dataPanel(model, runs, detectors, flags) {
     const { dataAccess, periods } = model;
     const { page, index } = dataAccess.getCurrentDataPointer();
 
-    if (page === pageNames.periods) {
-        return periodsPanel(periods, model);
+    // Handling with new API
+    switch (page) {
+        case pageNames.periods:
+            return periodsPanel(periods, model);
     }
 
+    // Handling with legacy API
     const data = dataAccess.fetchedData[page][index];
     return data ? data.match({
         NotAsked: () => obsoleteUnknown(dataAccess),
