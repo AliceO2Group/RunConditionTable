@@ -20,7 +20,7 @@ import { exportFormats } from './overview/dataExport.js';
 import { pageTitle } from '../../components/common/pageTitle.js';
 import { periodsActiveColumns } from './ActiveColumns/periodsActiveColumns.js';
 import FilterModel from '../../model/filtering/FilterModel.js';
- 
+
 /**
  * Model representing handlers for periods page
  *
