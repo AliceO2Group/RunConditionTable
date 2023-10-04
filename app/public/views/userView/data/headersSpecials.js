@@ -20,8 +20,8 @@ const { fieldNames: fN } = RCT;
 const runFields = {
     name: 'Name',
     run_number: 'Run',
-    time_start: 'Start time',
-    time_end: 'End time',
+    time_o2_start: 'O2 start time',
+    time_o2_end: 'O2 end time',
     time_trg_start: 'Trg. start',
     time_trg_end: 'Trg. end',
     center_of_mass_energy: h('.center-of-mass-energy'),
