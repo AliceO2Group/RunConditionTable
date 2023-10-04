@@ -41,8 +41,6 @@ export default function dataPanel(model, runs, detectors, flags) {
         Loading: () => waiting(),
         Success: () => {
             switch (page) {
-                case pageNames.periods:
-                    throw 'RCT RCT laaa la la laa la';
                 case pageNames.flags:
                     return flagsPanel(dataAccess, runs, detectors, flags);
                 case pageNames.runsPerDataPass:

@@ -86,10 +86,6 @@ export default class FetchedDataManager {
     }
 
     async req(countAllRecord, url) {
-        if (this.model.router.params.page === 'periods') {
-            return;
-        }
-
         const { page, index } = this.model.getDataPointerFromUrl(url);
 
         let totalRecordsNumber = null;
