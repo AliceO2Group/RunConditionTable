@@ -18,7 +18,6 @@ module.exports = {
     args: { public: false },
     children: [
         {
-            path: '/time-based',
             method: 'get',
             controller: QualityControlController.listAllTimeBasedFlagsHandler,
             description: 'List all time based qualities / flags present in DB, including their verifications',

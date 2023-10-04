@@ -77,16 +77,23 @@
     "obsolete": "0"
   },
   {
-    "id": "65500",
-    "method": "ObsoleteFlagExample",
-    "name": "Obsolete flag example",
-    "bad": "1",
-    "obsolete": "1"
+    "id": "32768",
+    "method": "Good",
+    "name": "Good",
+    "bad": "0",
+    "obsolete": "0"
   },
   {
-    "id": "65501",
-    "method": "NotBadFlagExample",
-    "name": "Not bad flag example",
+    "id": "32769",
+    "method": "Bad",
+    "name": "Bad",
+    "bad": "0",
+    "obsolete": "0"
+  },
+  {
+    "id": "32770",
+    "method": "Mixed",
+    "name": "Mixed",
     "bad": "0",
     "obsolete": "0"
   },

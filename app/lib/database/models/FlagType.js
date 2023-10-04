@@ -27,12 +27,10 @@ module.exports = (sequelize) => {
         },
         bad: {
             type: Sequelize.BOOLEAN,
-            unique: true,
             allowNull: false,
         },
         obsolate: {
             type: Sequelize.BOOLEAN,
-            unique: true,
             allowNull: false,
         },
     }, { timestamps: false, tableName: 'flag_types_dictionary'});
