@@ -17,7 +17,7 @@ import { waiting, failureWithMessage } from '../../../components/messagePanel/me
 
 export default function periodsPanel(periodsModel, model) {
     return periodsModel.currentPagePeriods.match({
-        NotAsked: () => waiting(periodsModel),
+        NotAsked: () => waiting(),
         Loading: () => waiting(),
         Success: () => periodsContent(periodsModel, model),
         Failure: (errors) => failureWithMessage(periodsModel, errors),
