@@ -19,7 +19,9 @@
 
 const queryForRunsFields = `
         --p.name, 
-        r.run_number, 
+        r.run_number,
+        EXTRACT(EPOCH FROM COALESCE(r.time_trg_start, r.time_o2_start)) * 1000 as time_start, 
+        EXTRACT(EPOCH FROM COALESCE(r.time_trg_end, r.time_o2_end)) * 1000 as time_end, 
         extract( epoch from r.time_o2_start ) * 1000 as time_o2_start,
         extract( epoch from r.time_o2_end ) * 1000 as time_o2_end,
         extract( epoch from r.time_trg_start ) * 1000 as time_trg_start,
