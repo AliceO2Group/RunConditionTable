@@ -26,7 +26,9 @@ class DataPassAdapter {
             description,
             reconstructedEvents,
             outputSize,
-        } = databaseObject;
+            runsCount,
+            simulationPassesCount,
+        } = databaseObject.dataValues;
 
         return {
             id,
@@ -34,6 +36,8 @@ class DataPassAdapter {
             description,
             reconstructedEvents,
             outputSize,
+            runsCount: Number(runsCount),
+            simulationPassesCount: Number(simulationPassesCount),
         };
     }
 
