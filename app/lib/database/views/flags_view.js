@@ -40,8 +40,8 @@ const flags_view = (query) => {
     SELECT
         qcf.id,
         qcf.entire,
-        qcf.time_start, 
-        qcf.time_end, 
+        EXTRACT(EPOCH FROM COALESCE(qcf.time_start, r.time_trg_start, r.time_o2_start)) * 1000 as time_start, 
+        EXTRACT(EPOCH FROM COALESCE(qcf.time_end, r.time_trg_end, r.time_o2_end)) * 1000 as time_end, 
         ftd.name as flag_reason, 
         qcf.comment,
         r.run_number,
