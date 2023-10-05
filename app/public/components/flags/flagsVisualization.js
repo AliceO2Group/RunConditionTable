@@ -37,6 +37,8 @@ export default function flagsVisualization(runData, flagsData) {
             case 'LimitedAcceptance':
             case 'Mixed':
                 return flagReasonColors.limitedAcceptance;
+            case 'Good':
+                return flagReasonColors.good;
             case 'Notbad':
                 return flagReasonColors.neutral;
             case 'CertifiedbyExpert':
