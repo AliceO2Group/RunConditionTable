@@ -23,6 +23,7 @@ export default function detectorIcon(navigation, item, index, detectorName, time
 
     const { qcf, qcf_bkp } = runDetectorQualityControlFlag;
     const quality = qcf?.quality || qcf_bkp?.quality || 'NoData';
+    const qcFromBookkeeping = ! qcf?.quality && qcf_bkp?.quality;
     return [
         qualityChangePossible
             ? h('.modal', { id: runBasedQcModalId },
@@ -41,6 +42,6 @@ export default function detectorIcon(navigation, item, index, detectorName, time
                 }
             },
         },
-        quality),
+        quality, h('sub', qcFromBookkeeping ? 'sync' : '')),
     ];
 }
