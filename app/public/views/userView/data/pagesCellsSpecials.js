@@ -13,7 +13,7 @@
  */
 import { h } from '/js/src/index.js';
 import { RCT } from '../../../config.js';
-import { getReadableFileSizeString } from '../../../utils/dataProcessing/dataProcessingUtils.js';
+import { getReadableFileSizeString, dateFormatter } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 import linkChip from '../../../components/chips/linkChip.js';
 import { buildHref } from '../../../utils/url/urlUtils.js';
 const { dataReqParams: DRP, pageNames: PN, outerServices } = RCT;
@@ -94,19 +94,10 @@ pagesCellsSpecials[PN.mc] = {
     ],
 };
 
-const dateFormatter = (sec) => {
-    const cestOffset = 2 * 60 * 60 * 1000;
-    const localOffset = new Date().getTimezoneOffset() * 60 * 1000;
-    const d = new Date(Number(sec) + cestOffset + localOffset);
-    const dateString = d.toLocaleDateString();
-    const timeString = d.toLocaleTimeString();
-    return h('', h('.skinny', dateString), timeString);
-};
-
 pagesCellsSpecials[PN.runsPerPeriod] = {
     run_number: (_, item) => h('.thick', item.run_number),
-    time_start: (_, item) => dateFormatter(item.time_start),
-    time_end: (_, item) => dateFormatter(item.time_end),
+    time_o2_start: (_, item) => dateFormatter(item.time_o2_start),
+    time_o2_end: (_, item) => dateFormatter(item.time_o2_end),
     time_trg_start: (_, item) => dateFormatter(item.time_trg_start),
     time_trg_end: (_, item) => dateFormatter(item.time_trg_end),
     fill_number: (_, item) => h('a', {

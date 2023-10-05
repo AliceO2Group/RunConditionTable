@@ -13,11 +13,11 @@
  */
 
 import periodsContent from './periodsContent.js';
-import { waiting, unknown, failureWithMessage } from '../../../components/messagePanel/messages.js';
+import { waiting, failureWithMessage } from '../../../components/messagePanel/messages.js';
 
 export default function periodsPanel(periodsModel, model) {
     return periodsModel.currentPagePeriods.match({
-        NotAsked: () => unknown(periodsModel),
+        NotAsked: () => waiting(),
         Loading: () => waiting(),
         Success: () => periodsContent(periodsModel, model),
         Failure: (errors) => failureWithMessage(periodsModel, errors),

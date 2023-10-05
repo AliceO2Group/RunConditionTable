@@ -12,6 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
+import { h } from '/js/src/index.js';
+
 export const extractPeriodName = (dataPassName) => {
     const [period] = dataPassName.split('_');
     return period;
@@ -55,4 +57,13 @@ export const getReadableFileSizeString = (fileSizeInBytes) => {
         : acc, { index: 0, fileSize: fileSizeInBytes / 1024 });
 
     return `${Math.max(result.fileSize, 0.1).toFixed(1)} ${byteUnits[result.index]}`;
+};
+
+export const dateFormatter = (sec) => {
+    const cestOffset = 2 * 60 * 60 * 1000;
+    const localOffset = new Date().getTimezoneOffset() * 60 * 1000;
+    const d = new Date(Number(sec) + cestOffset + localOffset);
+    const dateString = d.toLocaleDateString();
+    const timeString = d.toLocaleTimeString();
+    return h('', h('.skinny', dateString), timeString);
 };

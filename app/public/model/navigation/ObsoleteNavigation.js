@@ -58,9 +58,6 @@ export default class Navigation extends Observable {
                     );
                 } else {
                     await this.pageNavigation(url, page);
-                    this.parent.fetchedData.reqForData()
-                        .then(() => {})
-                        .catch(() => {});
                 }
                 break;
             }
