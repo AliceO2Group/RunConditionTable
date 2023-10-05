@@ -8,15 +8,20 @@ CREATE or REPLACE FUNCTION get_run_det_data(
 LANGUAGE plpgsql
 AS $body$ 
 DECLARE ret json:= null;
+
 BEGIN
 
-    IF _data_pass_name IS NOT NULL THEN
-        SELECT json_build_object(
+    raise notice 'data: % % %', _data_pass_name, _run_number, _detector_name;
+
+    SELECT json_build_object(
+        'qcf', qcf,
+        'qcf_bkp', qcf_bkp
+    ) INTO ret FROM (SELECT
+
+        (SELECT json_build_object(
             'id', qcf.id, 
-            'entire', qcf.entire,
-            'quality', lower(ftd.name), 
-            'comment', qcf.comment
-            ) INTO ret
+            'quality', lower(ftd.name)
+            )
         FROM
             quality_control_flags AS qcf
             INNER JOIN flag_types_dictionary AS ftd
@@ -28,18 +33,25 @@ BEGIN
             WHERE
                 dp.name = _data_pass_name AND
                 ds.name = _detector_name AND
-                qcf.run_number = _run_number;
-        IF ret is not null then
-            return ret;
-        END IF;
-    END IF;
-
+                qcf.run_number = _run_number
+            ORDER BY qcf.updated_at DESC
+            LIMIT 1
+        ) as qcf
+    ,
     
-    SELECT json_build_object('quality', rd.quality ) INTO ret
-        FROM runs_detectors AS rd 
-        INNER JOIN detectors_subsystems AS ds 
-            ON rd.detector_id = ds.id
-        WHERE rd.run_number = _run_number AND ds.name = _detector_name;
+        (SELECT json_build_object(
+                'quality', rd.quality
+            )
+            FROM runs_detectors AS rd
+            INNER JOIN detectors_subsystems AS ds
+                ON rd.detector_id = ds.id
+            WHERE
+                rd.run_number = _run_number AND
+                ds.name = _detector_name
+        ) as qcf_bkp
+
+    ) as subq;
+
     return ret;
 END;
 $body$;
