@@ -22,7 +22,7 @@ export default function detectorIcon(navigation, item, index, detectorName, time
     const runDetectorQualityControlFlag = item[`${detectorName.toLowerCase()}_detector`];
 
     const { qcf, qcf_bkp } = runDetectorQualityControlFlag;
-    const quality = qcf?.quality || qcf_bkp?.quality || 'No data';
+    const quality = qcf?.quality || qcf_bkp?.quality || 'NoData';
     return [
         qualityChangePossible
             ? h('.modal', { id: runBasedQcModalId },

@@ -26,3 +26,8 @@
     background-color: var(--orange) !important;
     color: var(--white);
 }
+
+.rct .run-quality.NoData {
+    background-color: var(--dark-blue) !important;
+    color: var(--white);
+}
