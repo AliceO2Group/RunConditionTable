@@ -31,20 +31,6 @@ const flag_insert = (query) => `
     $do$;
 `;
 
-const flag_update = (query) => {
-    throw 'NOT IMPLEMENTED PLEASE REMOVE OLD FLAG INSTANCE';
-    `
-    DO                            
-    $do$
-    BEGIN
-        INSERT INTO quality_control_flags (data_pass_id, run_number, detector_id, flag_type_id, 
-            time_start, time_end, comment, added_by, addition_time, last_modified_by, last_modification_time)
-        VALUES(pass_id, ${query.run_number}, det_id, flag_id, 
-            ${query.time_start}, ${query.time_end}, '${query.comment}', '${query.added_by}', now(), null, null);
-    END
-    $do$;
-`;
-}
 const flag_delete = (query) => `
     DO                            
     $do$
@@ -67,6 +53,5 @@ $do$;
 module.exports = {
     flag_insert,
     flag_delete,
-    flag_update,
     verification_insert
 };
