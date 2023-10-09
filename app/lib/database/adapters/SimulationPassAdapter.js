@@ -28,7 +28,9 @@ class SimulationPassAdapter {
             PWG,
             requestedEvents,
             outputSize,
-        } = databaseObject;
+            dataPassesCount,
+            runsCount,
+        } = databaseObject.dataValues;
 
         return {
             id,
@@ -38,6 +40,8 @@ class SimulationPassAdapter {
             PWG,
             requestedEvents,
             outputSize,
+            dataPassesCount: Number(dataPassesCount),
+            runsCount: Number(runsCount),
         };
     }
 
