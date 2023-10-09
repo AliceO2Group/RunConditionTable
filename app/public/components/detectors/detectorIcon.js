@@ -22,8 +22,9 @@ export default function detectorIcon(navigation, item, index, detectorName, time
     const runDetectorQualityControlFlag = item[`${detectorName.toLowerCase()}_detector`];
 
     const { qcf, qcf_bkp } = runDetectorQualityControlFlag;
-    const quality = qcf?.quality || qcf_bkp?.quality || 'NoData';
+    const quality = qcf?.quality || qcf_bkp?.quality;
     const qcFromBookkeeping = ! qcf?.quality && qcf_bkp?.quality;
+
     return [
         qualityChangePossible
             ? h('.modal', { id: runBasedQcModalId },
@@ -34,7 +35,7 @@ export default function detectorIcon(navigation, item, index, detectorName, time
                 }, item, index, detectorName, runDetectorId, timeBased)))
             : '',
 
-        h(`button.btn.pointer.run-quality.${quality}`, {
+        h(`button.btn.pointer.run-quality.${quality ?? 'NoData'}`, {
             id: runDetectorId,
             onclick: () => {
                 if (qualityChangePossible) {
@@ -42,6 +43,6 @@ export default function detectorIcon(navigation, item, index, detectorName, time
                 }
             },
         },
-        quality, h('sub', qcFromBookkeeping ? 'sync' : '')),
+        quality ?? '.', h('sub', qcFromBookkeeping ? 'sync' : '')),
     ];
 }
