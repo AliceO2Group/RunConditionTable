@@ -12,17 +12,22 @@
  * or submit itself to any jurisdiction.
  */
 
-
-const handleArray = (data, field, isString) => {
-    let sqlLogicClause = undefined;
-    if (Array.isArray(data)) {
-        sqlLogicClause = data.map((d) => isString ? `'${d}'` : d).join(',');
-    } else if (typeof(data) === 'string' || !data) {
-        sqlLogicClause = isString ? `'${data}'` : data;
-    } else {
-        throw new Error(`incorrect format <${data}> for ${field}`);
+/**
+ * Build part of sql where clause like 'FIELD_NAME in (...DATA...)';
+ * @param {Array<String>|String} data - data to be used to build logical clause
+ * @param {String} fieldName - field name in database
+ * @param {Boolean} isString - if true values from data are wrapped with single quote
+ * @returns {String|undefined} - logical clause
+ */
+const dataFieldToSQLBelongsLogicalClause = (data, fieldName, isString) => {
+    if (!data) {
+        return undefined;
     }
-    return sqlLogicClause ? `${field} in (${sqlLogicClause})` : undefined;
+    if (!Array.isArray(data)) {
+        data = [data];
+    }
+    const rightOperand = (isString ? data.map((value) => `'${value}'`) : data).join(',');
+    return rightOperand ? `${fieldName} in (${rightOperand})` : undefined;
 }
 
 /**
@@ -32,8 +37,8 @@ const handleArray = (data, field, isString) => {
  * @returns {String} sql query
  */
 const flags_view = (query) => {
-    run_selection_sql = handleArray(query.run_numbers, 'r.run_number')
-    detector_selection_sql = handleArray(query.detector, 'ds.name', true)
+    run_selection_sql = dataFieldToSQLBelongsLogicalClause(query.run_numbers, 'r.run_number')
+    detector_selection_sql = dataFieldToSQLBelongsLogicalClause(query.detector, 'ds.name', true)
 
     const data_pass_sql = `dp.name = '${query.data_pass_name}'`;
     const whereClause = [data_pass_sql, run_selection_sql, detector_selection_sql]
