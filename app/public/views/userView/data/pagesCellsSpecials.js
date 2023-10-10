@@ -110,17 +110,17 @@ const linerUnderVerifier = '--------';
 pagesCellsSpecials[PN.flags] = {
     time_start: (item) => dateFormatter(item.time_start),
     time_end: (item) => dateFormatter(item.time_end),
-    by: (item) => ! item.by?.length
-        ? 'unverified'
+    by: (item) => ! item.by?.length ?
+        'unverified'
         : item.by.map((verifier) => h('', verifier, h('.skinny', linerUnderVerifier))),
-    verification_time: (item) => ! item.verification_time?.length
-        ? 'unverified'
-        : item.verification_time.map((e) => {
-            if (!e) {
+    verification_time: (item) => ! item.verification_time?.length ?
+        'unverified'
+        : item.verification_time.map((verification_time) => {
+            if (!verification_time) {
                 return 'unverified';
             }
-            const date = new Date(e);
-            return dateFormatter(date.getTime());
+            const date = new Date(verification_time);
+            h('', dateFormatter(date.getTime()), h('.skinny', linerUnderVerifier));
         }),
 };
 
