@@ -22,9 +22,7 @@ const handleArray = (data, field, isString) => {
     } else {
         throw `incorrect format <${data}> for ${field}`;
     }
-    sqlLogicClause = sqlLogicClause ? `${field} in (${sqlLogicClause})` : undefined;
-
-    return sqlLogicClause;
+    return sqlLogicClause ? `${field} in (${sqlLogicClause})` : undefined;
 }
 
 /**
