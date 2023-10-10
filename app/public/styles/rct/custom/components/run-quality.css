@@ -27,7 +27,7 @@
     color: var(--white);
 }
 
-.rct .run-quality.NoData {
+.rct .run-quality.no-data {
     background-color: var(--dark-blue) !important;
     color: var(--white);
 }

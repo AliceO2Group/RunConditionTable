@@ -35,7 +35,7 @@ export default function detectorIcon(navigation, item, index, detectorName, time
                 }, item, index, detectorName, runDetectorId, timeBased)))
             : '',
 
-        h(`button.btn.pointer.run-quality.${quality ?? 'NoData'}`, {
+        h(`button.btn.pointer.run-quality.${quality ?? 'no-data'}`, {
             id: runDetectorId,
             onclick: () => {
                 if (qualityChangePossible) {
