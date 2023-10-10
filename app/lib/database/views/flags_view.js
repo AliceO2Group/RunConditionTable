@@ -13,12 +13,12 @@
  */
 
 
-const handleArray = (data, field, escape) => {
+const handleArray = (data, field, isString) => {
     let sqlLogicClause = undefined;
     if (Array.isArray(data)) {
-        sqlLogicClause = data.map((d) => escape ? `'${d}'` : d).join(',');
+        sqlLogicClause = data.map((d) => isString ? `'${d}'` : d).join(',');
     } else if (typeof(data) === 'string' || !data) {
-        sqlLogicClause = escape ? `'${data}'` : data;
+        sqlLogicClause = isString ? `'${data}'` : data;
     } else {
         throw `incorrect format <${data}> for ${field}`;
     }
@@ -27,6 +27,12 @@ const handleArray = (data, field, escape) => {
     return sqlLogicClause;
 }
 
+/**
+ * Build sql query to fetch quality control flags for
+ * one data pass and (if provided) given runs and detector subsystems
+ * @param {Object} query containing data_pass_name (single name), run_numbers (list), detector (list)
+ * @returns {String} sql query
+ */
 const flags_view = (query) => {
     run_selection_sql = handleArray(query.run_numbers, 'r.run_number')
     detector_selection_sql = handleArray(query.detector, 'ds.name', true)
