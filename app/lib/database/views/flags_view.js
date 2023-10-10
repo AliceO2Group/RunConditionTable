@@ -20,7 +20,7 @@ const handleArray = (data, field, isString) => {
     } else if (typeof(data) === 'string' || !data) {
         sqlLogicClause = isString ? `'${data}'` : data;
     } else {
-        throw `incorrect format <${data}> for ${field}`;
+        throw new Error(`incorrect format <${data}> for ${field}`);
     }
     return sqlLogicClause ? `${field} in (${sqlLogicClause})` : undefined;
 }
