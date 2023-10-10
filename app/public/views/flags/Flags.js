@@ -40,7 +40,7 @@ export default class Flags extends Observable {
         const allFlags = this.getAllFlags();
         const flags = !Array.isArray(allFlags) ? [] : allFlags.map((flag) => {
             const { verifications } = flag;
-            flag.ver_time = verifications?.map(({ verification_time }) => verification_time);
+            flag.verification_time = verifications?.map(({ verification_time }) => verification_time);
             flag.by = verifications?.map(({ by }) => by);
             return flag;
         });

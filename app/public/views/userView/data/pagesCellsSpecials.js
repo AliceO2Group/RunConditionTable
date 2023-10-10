@@ -113,9 +113,9 @@ pagesCellsSpecials[PN.flags] = {
     by: (item) => ! item.by?.length
         ? 'unverified'
         : item.by.map((verifier) => h('', verifier, h('.skinny', linerUnderVerifier))),
-    ver_time: (item) => ! item.ver_time?.length
+    verification_time: (item) => ! item.verification_time?.length
         ? 'unverified'
-        : item.ver_time.map((e) => {
+        : item.verification_time.map((e) => {
             if (!e) {
                 return 'unverified';
             }

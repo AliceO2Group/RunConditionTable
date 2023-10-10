@@ -46,7 +46,7 @@ const fields = [
         display: true,
     },
     {
-        name: 'ver_time',
+        name: 'verification_time',
         display: true,
     },
 ];

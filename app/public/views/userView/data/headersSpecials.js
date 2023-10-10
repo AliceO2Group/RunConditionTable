@@ -61,7 +61,7 @@ const flagFields = {
     flag_reason: 'Reason',
     comment: 'Comment',
     by: 'Verified by',
-    ver_time: 'Verification time',
+    verification_time: 'Verification time',
 };
 
 const headersSpecials = {
