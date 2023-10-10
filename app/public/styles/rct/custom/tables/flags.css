@@ -68,3 +68,7 @@
     min-width: 10em;
     text-align: left;
 }
+
+.verification-border {
+    border-bottom: solid;
+}

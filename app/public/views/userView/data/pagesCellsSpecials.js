@@ -106,22 +106,16 @@ pagesCellsSpecials[PN.runsPerPeriod] = {
     }, item.fill_number, h('.external-link-15-blue')),
 };
 
-const linerUnderVerifier = '--------';
 pagesCellsSpecials[PN.flags] = {
     time_start: (item) => dateFormatter(item.time_start),
     time_end: (item) => dateFormatter(item.time_end),
-    by: (item) => ! item.by?.length ?
+    by: (item) => ! item.verifications?.length ?
         'unverified'
-        : item.by.map((verifier) => h('', verifier, h('.skinny', linerUnderVerifier))),
-    verification_time: (item) => ! item.verification_time?.length ?
+        : item.verifications.map(({ by: verifier }) => h('.verification-border', h('', verifier, h('.skinny.hidden', '.')))),
+    verification_time: (item) => ! item.verifications?.length ?
         'unverified'
-        : item.verification_time.map((verification_time) => {
-            if (!verification_time) {
-                return 'unverified';
-            }
-            const date = new Date(verification_time);
-            h('', dateFormatter(date.getTime()), h('.skinny', linerUnderVerifier));
-        }),
+        : item.verifications.map(({ verification_time }) =>
+            h('.verification-border', dateFormatter(new Date(verification_time).getTime()))),
 };
 
 pagesCellsSpecials[PN.runsPerDataPass] = pagesCellsSpecials[PN.runsPerPeriod];
