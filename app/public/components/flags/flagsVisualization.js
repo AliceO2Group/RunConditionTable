@@ -23,7 +23,9 @@ function filterDistinct(a) {
 }
 
 export default function flagsVisualization(runData, flagsData) {
-    const { time_start, time_end } = runData;
+    const { time_o2_start, time_o2_end, time_trg_start, time_trg_end } = runData;
+    const time_start = time_trg_start ?? time_o2_start;
+    const time_end = time_trg_end ?? time_o2_end;
 
     const distinctFlagReasons = filterDistinct(flagsData.map((flag) => flag.flag_reason.replace(/\s+/g, '')));
 
