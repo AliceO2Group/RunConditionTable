@@ -26,7 +26,7 @@ import { h } from '/js/src/index.js';
 
 export default function linkChip(navigation, label, href, additionalClasses = '') {
     additionalClasses = Array.isArray(additionalClasses) ? additionalClasses.join('.') : additionalClasses;
-    return h(`a.btn.chip.m1.no-text-decoration${additionalClasses}`, {
+    return h(`a.btn.chip.m1.no-text-decoration.${additionalClasses}`, {
         onclick: (e) => navigation.handleLinkEvent(e),
         href: href,
     }, label);
