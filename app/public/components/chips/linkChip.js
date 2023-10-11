@@ -20,12 +20,13 @@ import { h } from '/js/src/index.js';
  * @param {Navigation} navigation the content of the link displayed to the user
  * @param {string} label displayed chip name
  * @param {string} href the absolute URL targeted by the link
- * @param {string} additionDecorations string of dot separated css classes like .class1.class2 ...
+ * @param {string|string[]} additionalClasses list of css classes or string of dot separated ones like .class1.class2 ...
  * @return {vnode} the linkChip component
  */
 
-export default function linkChip(navigation, label, href, additionDecorations = '') {
-    return h(`a.btn.chip.m1.no-text-decoration${additionDecorations}`, {
+export default function linkChip(navigation, label, href, additionalClasses = '') {
+    additionalClasses = Array.isArray(additionalClasses) ? additionalClasses.join('.') : additionalClasses;
+    return h(`a.btn.chip.m1.no-text-decoration${additionalClasses}`, {
         onclick: (e) => navigation.handleLinkEvent(e),
         href: href,
     }, label);

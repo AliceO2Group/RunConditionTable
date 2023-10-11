@@ -21,7 +21,7 @@ const acceptableEnergyValues = RCT.mapping.energy.values;
 const acceptableEnergyMargin = RCT.mapping.energy.acceptableMargin;
 const fieldNames = FN.periods;
 
-const noRelatedDataDecoration = '.bg-gray-light';
+const noRelatedDataClass = '.bg-gray-light';
 
 /**
  * List of active columns for a generic periods table
@@ -51,7 +51,7 @@ export const periodsActiveColumns = {
                         [DRP.pageNumber]: 1,
                         sorting: '-run_number',
                     }),
-                    period.runsCount === 0 ? noRelatedDataDecoration : '',
+                    period.runsCount === 0 ? noRelatedDataClass : '',
                 ),
 
                 linkChip(
@@ -63,7 +63,7 @@ export const periodsActiveColumns = {
                         [DRP.itemsPerPage]: navigation.model.userPreferences.itemsPerPage,
                         [DRP.pageNumber]: 1,
                     }),
-                    period.dataPassesCount === 0 ? noRelatedDataDecoration : '',
+                    period.dataPassesCount === 0 ? noRelatedDataClass : '',
                 ),
 
                 linkChip(
@@ -75,7 +75,7 @@ export const periodsActiveColumns = {
                         [DRP.itemsPerPage]: navigation.model.userPreferences.itemsPerPage,
                         [DRP.pageNumber]: 1,
                     }),
-                    period.simulationPassesCount === 0 ? noRelatedDataDecoration : '',
+                    period.simulationPassesCount === 0 ? noRelatedDataClass : '',
                 )),
         ],
     },
