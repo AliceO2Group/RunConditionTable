@@ -21,7 +21,7 @@ const acceptableEnergyValues = RCT.mapping.energy.values;
 const acceptableEnergyMargin = RCT.mapping.energy.acceptableMargin;
 const fieldNames = FN.periods;
 
-const noRelatedDataClass = '.bg-gray-light';
+const noRelatedDataClass = 'bg-gray-light';
 
 /**
  * List of active columns for a generic periods table
