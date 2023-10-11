@@ -109,11 +109,11 @@ pagesCellsSpecials[PN.runsPerPeriod] = {
 pagesCellsSpecials[PN.flags] = {
     time_start: (item) => dateFormatter(item.time_start),
     time_end: (item) => dateFormatter(item.time_end),
-    by: (item) => ! item.verifications?.length ?
-        'unverified'
+    by: (item) => ! item.verifications?.length
+        ? 'unverified'
         : item.verifications.map(({ by: verifier }) => h('.verification-border', h('', verifier, h('.skinny.hidden', '.')))),
-    verification_time: (item) => ! item.verifications?.length ?
-        'unverified'
+    verification_time: (item) => ! item.verifications?.length
+        ? 'unverified'
         : item.verifications.map(({ verification_time }) =>
             h('.verification-border', dateFormatter(new Date(verification_time).getTime()))),
 };
