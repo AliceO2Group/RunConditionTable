@@ -72,7 +72,7 @@ export default function qcTypeSelection(navigation, close, item, index, detector
             ? h('.flex-wrap.justify-center.items-center.p-1rem.p-bottom-0',
                 h('button.btn.btn-primary', {
                     onclick: () => navigation.router.go(flagsUrl),
-                }, 'Time based quality'))
+                }, 'Quality Control Flags'))
             : '',
     ]);
 }

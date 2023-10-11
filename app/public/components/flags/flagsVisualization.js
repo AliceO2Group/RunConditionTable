@@ -15,23 +15,17 @@
 import { h } from '/js/src/index.js';
 import flagVisualization from './flagVisualization.js';
 import { RCT } from '../../config.js';
+import { dateFormatter } from '../../utils/dataProcessing/dataProcessingUtils.js';
 const { flagReasonColors } = RCT.quality;
 
 function filterDistinct(a) {
     return a.filter((value, index, array) => array.indexOf(value) === index);
 }
 
-const dateFormatter = (sec) => {
-    const cestOffset = 2 * 60 * 60 * 1000;
-    const localOffset = new Date().getTimezoneOffset() * 60 * 1000;
-    const d = new Date(Number(sec) + cestOffset + localOffset);
-    const dateString = d.toLocaleDateString();
-    const timeString = d.toLocaleTimeString();
-    return h('', h('.skinny', dateString), timeString);
-};
-
 export default function flagsVisualization(runData, flagsData) {
-    const { time_start, time_end } = runData;
+    const { time_o2_start, time_o2_end, time_trg_start, time_trg_end } = runData;
+    const time_start = time_trg_start ?? time_o2_start;
+    const time_end = time_trg_end ?? time_o2_end;
 
     const distinctFlagReasons = filterDistinct(flagsData.map((flag) => flag.flag_reason.replace(/\s+/g, '')));
 
@@ -43,7 +37,10 @@ export default function flagsVisualization(runData, flagsData) {
     const flagColor = (flagReason) => {
         switch (flagReason) {
             case 'LimitedAcceptance':
+            case 'Mixed':
                 return flagReasonColors.limitedAcceptance;
+            case 'Good':
+                return flagReasonColors.good;
             case 'Notbad':
                 return flagReasonColors.neutral;
             case 'CertifiedbyExpert':

@@ -16,6 +16,7 @@ const flagReasonColors = {
     neutral: '277DA1',
     bad: '922C40',
     limitedAcceptance: 'DC9750',
+    good: '2C9240',
 };
 
 module.exports = flagReasonColors;

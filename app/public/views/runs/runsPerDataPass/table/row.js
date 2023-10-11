@@ -33,7 +33,7 @@ export default function row(
     const detectorCells = visibleFields.filter((field) =>
         shouldDisplayDetectorField(field.name, model.parent.userPreferences.detectorList)).map((field) =>
         h(`td.${pageName}-detector-cell.text-ellipsis`,
-            item[field.name]
+            item[field.name] && (item[field.name]?.qcf_bkp || item[field.name]?.qcf)
                 ? detectorIcon(model.navigation, item, index, detectors.getDetectorName(field.name), true, true)
                 : ''));
 

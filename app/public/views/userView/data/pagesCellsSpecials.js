@@ -109,15 +109,13 @@ pagesCellsSpecials[PN.runsPerPeriod] = {
 pagesCellsSpecials[PN.flags] = {
     time_start: (item) => dateFormatter(item.time_start),
     time_end: (item) => dateFormatter(item.time_end),
-    ver_time: (item) => item.ver_time.isEmpty
+    by: (item) => ! item.verifications?.length
         ? 'unverified'
-        : item.ver_time.map((e) => {
-            if (!e) {
-                return 'unverified';
-            }
-            const date = new Date(e);
-            return dateFormatter(date.getTime());
-        }),
+        : item.verifications.map(({ by: verifier }) => h('.verification-border', h('', verifier, h('.skinny.hidden', '.')))),
+    verification_time: (item) => ! item.verifications?.length
+        ? 'unverified'
+        : item.verifications.map(({ verification_time }) =>
+            h('.verification-border', dateFormatter(new Date(verification_time).getTime()))),
 };
 
 pagesCellsSpecials[PN.runsPerDataPass] = pagesCellsSpecials[PN.runsPerPeriod];

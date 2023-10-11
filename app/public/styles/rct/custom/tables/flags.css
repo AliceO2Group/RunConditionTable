@@ -63,8 +63,12 @@
 }
 
 /* Verification time */
-.rct .flags-table .flags-ver_time-cell,
-.rct .flags-table .flags-ver_time-header {
+.rct .flags-table .flags-verification_time-cell,
+.rct .flags-table .flags-verification_time-header {
     min-width: 10em;
     text-align: left;
+}
+
+.verification-border {
+    border-bottom: solid;
 }

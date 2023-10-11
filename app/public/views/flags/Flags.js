@@ -38,7 +38,12 @@ export default class Flags extends Observable {
 
     getFlags(runNumber, detector) {
         const allFlags = this.getAllFlags();
-        const flags = Array.isArray(allFlags) ? allFlags : [];
+        const flags = !Array.isArray(allFlags) ? [] : allFlags.map((flag) => {
+            const { verifications } = flag;
+            flag.verification_time = verifications?.map(({ verification_time }) => verification_time);
+            flag.by = verifications?.map(({ by }) => by);
+            return flag;
+        });
         return flags.filter((e) => e.detector === detector && e.run_number.toString() === runNumber.toString());
     }
 }
