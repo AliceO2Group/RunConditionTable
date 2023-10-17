@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
         },
         jiraId: {
             type: Sequelize.STRING,
-            field: 'jira'
+            field: 'jira',
         },
         PWG: {
             type: Sequelize.TEXT,

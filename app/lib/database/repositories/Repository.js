@@ -14,9 +14,9 @@
 const { throwWrapper, NotFoundEntityError } = require('../../utils');
 const { QueryBuilder } = require('../utilities');
 
-const nonTransactionalFunctions = new Set(['constructor', 'asT', '_asT'])
+const nonTransactionalFunctions = new Set(['constructor', 'asT', '_asT']);
 
-const getTransactionalMethodsNames = (classObj, ) => {
+const getTransactionalMethodsNames = (classObj) => {
     const classesStack = [];
     while (typeof Object.getPrototypeOf(classObj) !== 'object') {
         classesStack.push(classObj);
@@ -24,10 +24,10 @@ const getTransactionalMethodsNames = (classObj, ) => {
     }
 
     return classesStack
-        .map(cl => Object.getOwnPropertyNames(cl.prototype))
+        .map((cl) => Object.getOwnPropertyNames(cl.prototype))
         .flat()
-        .filter(name => ! nonTransactionalFunctions.has(name));
-}
+        .filter((name) => ! nonTransactionalFunctions.has(name));
+};
 
 /**
  * Sequelize implementation of the Repository.
@@ -77,7 +77,7 @@ class Repository {
      */
     async findOne(queryBuilder = {}) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
-        queryBuilder.add({limit: 1})
+        queryBuilder.add({ limit: 1 });
         return this.model.findOne(queryBuilder.toImplementation());
     }
 
@@ -92,7 +92,7 @@ class Repository {
         return await dbOject.update(patch);
     }
 
-     /**
+    /**
      * Find a dbObject using query clause, apply given patch to it and save the dbObject to the database
      *
      * @param {QueryBuilder|Object} dbOject the database object on which to apply the patch
@@ -108,8 +108,8 @@ class Repository {
 
     /**
      * Create new object in db
-     * @param {Object} dbObjectParams 
-     * @return {Promise<Model>} 
+     * @param {Object} dbObjectParams
+     * @return {Promise<Model>}
      */
     async create(dbObjectParams, opts) {
         await this.model.create(dbObjectParams, opts);
@@ -122,14 +122,14 @@ class Repository {
      */
     async removeOne(queryBuilder) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
-        queryBuilder.add({limit: 1})
+        queryBuilder.add({ limit: 1 });
         return await this.model.destroy(queryBuilder.toImplementation()) == 1;
     }
 
     /**
      * Find or create model instance in db
      * @param {QueryBuilder|Object} queryBuilder
-     * @return {Promise<[Model, boolean]>} 
+     * @return {Promise<[Model, boolean]>}
      */
     async findOrCreate(queryBuilder) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
@@ -138,18 +138,18 @@ class Repository {
 
     /**
      * Create new objects in db
-     * @param {Array<Object>} dbObjectParams 
+     * @param {Array<Object>} dbObjectParams
      * @return {Promise<Model>}
      */
     async bulkCreate(dbObjectParams, opts) {
-        return await this.model.bulkCreate(dbObjectParams, opts)
+        return await this.model.bulkCreate(dbObjectParams, opts);
     }
 
     /**
      * Upsert db object
-     * @param {Object} dbObjectParams 
-     * @param {Promise<Model>} opts 
-     * @returns 
+     * @param {Object} dbObjectParams
+     * @param {Promise<Model>} opts
+     * @returns
      */
     async upsert(dbObjectParams, opts) {
         return await this.model.upsert(dbObjectParams, opts);
@@ -157,12 +157,10 @@ class Repository {
 
     _asT(customOptions) {
         const { sequelize } = this.model;
-        getTransactionalMethodsNames(this.constructor).forEach(transactionalMethodName => {
+        getTransactionalMethodsNames(this.constructor).forEach((transactionalMethodName) => {
             const boundMethodWithoutTransaction = this[transactionalMethodName].bind(this);
-            this[transactionalMethodName] = async (...args) => 
-                sequelize.transaction(customOptions, async (t) => { 
-                    return await boundMethodWithoutTransaction(...args);
-            });
+            this[transactionalMethodName] = async (...args) =>
+                sequelize.transaction(customOptions, async (t) => await boundMethodWithoutTransaction(...args));
         });
     }
 

@@ -15,34 +15,33 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('flag_types_dictionary', {
-                id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                },
-                name: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                    allowNull: false,
-                },
-                method: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                    allowNull: false,
-                },
-                bad: {
-                    type: Sequelize.BOOLEAN,
-                    allowNull: false,
-                },
-                obsolate: {
-                    type: Sequelize.BOOLEAN,
-                    allowNull: false,
-                },
+            id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+                autoIncrement: true,
             },
-        )
+            name: {
+                type: Sequelize.STRING,
+                unique: true,
+                allowNull: false,
+            },
+            method: {
+                type: Sequelize.STRING,
+                unique: true,
+                allowNull: false,
+            },
+            bad: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+            },
+            obsolate: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+            },
+        });
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.dropTable('flag_types_dictionary');
-    }
+    },
 };

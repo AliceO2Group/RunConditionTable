@@ -11,16 +11,16 @@
  * or submit itself to any jurisdiction.
  */
 
-
 const Repository = require('./Repository.js');
 
 const RunRepository = require('./RunRepository.js');
+
 /**
- * Object for holding repository classes defined in files in this directory. 
+ * Object for holding repository classes defined in files in this directory.
  * If repository is not defined here explicitly then it will be created implicitly via models mapping
  * NOTE:
  *  1. Instances are created here, so metioned files should export classes not instances.
- *  2. The object have to keep each repository under key the same as corresponding model is kept. 
+ *  2. The object have to keep each repository under key the same as corresponding model is kept.
  */
 const specificallyDefinedRepositories = {
     Run: RunRepository,
@@ -29,19 +29,19 @@ const specificallyDefinedRepositories = {
 /**
  * @see specificallyDefinedRepositories
  * It checks if specificallyDefinedRepositories is correct, if not, it throws an error.
- * @param {Object<string, Sequelize.Model>} models 
+ * @param {Object<string, Sequelize.Model>} models
  */
 const validateSpecificRepositoriesConfiguration = (models) => {
-    Object.entries(specificallyDefinedRepositories).forEach(([modelName, RepoClass]) => { 
-        if (! (modelName in models) || (! (RepoClass.prototype instanceof Repository))) {
-            throw Error({message: `Incorrect configuration of specificallyDefinedRepositories for modelName: <${modelName}>`})
+    Object.entries(specificallyDefinedRepositories).forEach(([modelName, RepoClass]) => {
+        if (! (modelName in models) || ! (RepoClass.prototype instanceof Repository)) {
+            throw Error({ message: `Incorrect configuration of specificallyDefinedRepositories for modelName: <${modelName}>` });
         }
-    })
-}
+    });
+};
 
 /**
  * Instantiate sequelize models repositories according to repositiry pattern.
- * Each Repository Object has transactional version of itself under field 'T' @see {Repository.asT}. Those versions use global sequelize options for transactions. 
+ * Each Repository Object has transactional version of itself under field 'T' @see {Repository.asT}. Those versions use global sequelize options for transactions.
  * @param {Object<string, Sequelize.Model>} models dict: modelName -> sequelize model, @see specificallyDefinedRepositories
  * @returns {Object<string, Repository>} dict: repositoryName -> repository instance per one model, (repositoryName = modelName + 'Repository')
  */
@@ -49,13 +49,15 @@ const repositoriesFactory = (models) => {
     validateSpecificRepositoriesConfiguration(models);
 
     const modelNameToRepository = Object.entries(models).map(([modelName, model]) =>
-        [modelName + 'Repository',
-        new (specificallyDefinedRepositories[modelName] ?? Repository) (model),
-    ]);
-    modelNameToRepository.forEach(([_, repository]) => { repository.T = repository.asT() });
+        [
+            `${modelName}Repository`,
+            new (specificallyDefinedRepositories[modelName] ?? Repository) (model),
+        ]);
+    modelNameToRepository.forEach(([_, repository]) => {
+        repository.T = repository.asT();
+    });
 
     return Object.fromEntries(modelNameToRepository);
 };
-
 
 module.exports = repositoriesFactory;

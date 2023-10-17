@@ -19,14 +19,14 @@ module.exports = (sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
-    }, { 
+    }, {
         tableName: 'verifications',
-        createdAt: true, 
+        createdAt: true,
         updatedAt: false,
     });
 
     QualityControlFlagVerification.associate = (models) => {
-        QualityControlFlagVerification.belongsTo(models.QualityControlFlag, {foreignKey: 'qcf_id'});
+        QualityControlFlagVerification.belongsTo(models.QualityControlFlag, { foreignKey: 'qcf_id' });
     };
 
     return QualityControlFlagVerification;

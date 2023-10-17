@@ -15,45 +15,44 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('simulation_passes', {
-                id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                },
-                name: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                },
-                description: {
-                    type: Sequelize.TEXT,
-                },
-                jira: {
-                    type: Sequelize.STRING,
-                },
-                pwg: {
-                    type: Sequelize.TEXT,
-                },
-                number_of_events: {
-                    type: Sequelize.INTEGER,
-                },
-                size: {
-                    type: Sequelize.REAL,
-                },
-                created_at: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-                },
-                updated_at: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-                },
+            id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+                autoIncrement: true,
             },
-        )
+            name: {
+                type: Sequelize.STRING,
+                unique: true,
+            },
+            description: {
+                type: Sequelize.TEXT,
+            },
+            jira: {
+                type: Sequelize.STRING,
+            },
+            pwg: {
+                type: Sequelize.TEXT,
+            },
+            number_of_events: {
+                type: Sequelize.INTEGER,
+            },
+            size: {
+                type: Sequelize.REAL,
+            },
+            created_at: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+            updated_at: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+        });
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.dropTable('simulation_passes');
-    }
+    },
 };

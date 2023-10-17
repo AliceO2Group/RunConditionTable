@@ -11,13 +11,13 @@
  * or submit itself to any jurisdiction.
  */
 
-const { QueryBuilder } = require("../utilities");
-const Repository = require("./Repository");
+const { QueryBuilder } = require('../utilities');
+const Repository = require('./Repository');
 
 /**
  * Sequelize implementation of the Repository.
  */
-class RunRepository extends Repository  {
+class RunRepository extends Repository {
     /**
      * Returns all Run entities with associated DetectorSubsystem entities.
      *
@@ -26,12 +26,14 @@ class RunRepository extends Repository  {
      */
     async findAndCountAllWithDetectors(queryClauses = new QueryBuilder()) {
         const baseClause = new QueryBuilder({
-            include: [{
-                model: this.model.sequelize.models.DetectorSubsystem,
-                raw:true,
-                required: true,
-            }],
-            subquery: false
+            include: [
+                {
+                    model: this.model.sequelize.models.DetectorSubsystem,
+                    raw: true,
+                    required: true,
+                },
+            ],
+            subquery: false,
         });
         return this.findAndCountAll(baseClause.add(queryClauses).toImplementation());
     }

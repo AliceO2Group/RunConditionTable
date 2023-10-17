@@ -11,7 +11,6 @@
  * or submit itself to any jurisdiction.
  */
 
-
 class SimulationPassAdapter {
     /**
      * Converts the given database object to an entity object.

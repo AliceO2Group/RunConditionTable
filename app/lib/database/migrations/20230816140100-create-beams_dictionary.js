@@ -15,20 +15,19 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('beams_dictionary', {
-                id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                },
-                beam_type: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                },
+            id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+                autoIncrement: true,
             },
-        )
+            beam_type: {
+                type: Sequelize.STRING,
+                unique: true,
+            },
+        });
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.dropTable('beams_dictionary');
-    }
+    },
 };

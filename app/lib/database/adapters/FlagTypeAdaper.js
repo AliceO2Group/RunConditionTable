@@ -12,7 +12,6 @@
  */
 
 class FlagTypeAdapter {
- 
     /**
      * Converts the given database object to an entity object.
      *

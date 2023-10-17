@@ -11,7 +11,6 @@
  * or submit itself to any jurisdiction.
  */
 
-
 class PeriodAdapter {
     /**
      * Converts the given database object to an entity object.
@@ -40,11 +39,11 @@ class PeriodAdapter {
             beamTypeId: BeamTypeId,
             beamType: BeamType?.name,
             avgEnergy,
-            distinctEnergies : distinctEnergies.filter((_) => (_)),
+            distinctEnergies: distinctEnergies.filter((_) => _),
             runsCount: Number(runsCount),
             dataPassesCount: Number(dataPassesCount),
             simulationPassesCount: Number(simulationPassesCount),
-        }
+        };
     }
 
     /**
@@ -77,7 +76,7 @@ class PeriodAdapter {
             runsCount,
             dataPassesCount,
             simulationPassesCount,
-        }
+        };
     }
 }
 

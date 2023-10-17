@@ -19,6 +19,6 @@ module.exports = (sequelize) => {
             type: Sequelize.STRING,
         },
     }, { tableName: 'runs_detectors' });
-    
+
     return RunDetectors;
 };

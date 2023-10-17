@@ -15,26 +15,25 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('simulation_passes_runs', {
-                run_number: {
-                    type: Sequelize.INTEGER,
-                    primaryKey: true,
-                    references: {
-                        model: 'runs',
-                        key: 'run_number',
-                    },
-                },
-                simulation_pass_id: {
-                    type: Sequelize.INTEGER,
-                    primaryKey: true,
-                    references: {
-                        model: 'simulation_passes',
-                        key: 'id',
-                    },
+            run_number: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                references: {
+                    model: 'runs',
+                    key: 'run_number',
                 },
             },
-        )
+            simulation_pass_id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                references: {
+                    model: 'simulation_passes',
+                    key: 'id',
+                },
+            },
+        });
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.dropTable('simulation_passes_runs');
-    }
+    },
 };

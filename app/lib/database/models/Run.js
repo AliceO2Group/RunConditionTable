@@ -23,26 +23,26 @@ module.exports = (sequelize) => {
         timeO2Start: {
             type: Sequelize.DATE,
             get() {
-                return Number(this.getDataValue('timeO2Start'))
-            }
+                return Number(this.getDataValue('timeO2Start'));
+            },
         },
         timeO2End: {
             type: Sequelize.DATE,
             get() {
-                return Number(this.getDataValue('timeO2End'))
-            }
+                return Number(this.getDataValue('timeO2End'));
+            },
         },
         timeTrgStart: {
             type: Sequelize.DATE,
             get() {
-                return Number(this.getDataValue('timeTrgStart'))
-            }
+                return Number(this.getDataValue('timeTrgStart'));
+            },
         },
         timeTrgEnd: {
             type: Sequelize.DATE,
             get() {
-                return Number(this.getDataValue('timeTrgEnd'))
-            }
+                return Number(this.getDataValue('timeTrgEnd'));
+            },
         },
         startTime: {
             type: Sequelize.VIRTUAL,
@@ -95,11 +95,10 @@ module.exports = (sequelize) => {
         },
     });
 
-    
     Run.associate = (models) => {
         Run.belongsTo(models.Period);
         Run.belongsToMany(models.DetectorSubsystem, {
-            through: models.RunDetectors, 
+            through: models.RunDetectors,
             foreignKey: 'run_number',
             timestamps: false,
         });
@@ -113,7 +112,7 @@ module.exports = (sequelize) => {
             foreignKey: 'run_number',
             timestamps: false,
         });
-        Run.hasMany(models.QualityControlFlag, {foreignKey: 'run_number'});
+        Run.hasMany(models.QualityControlFlag, { foreignKey: 'run_number' });
     };
 
     return Run;

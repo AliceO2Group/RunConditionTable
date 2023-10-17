@@ -12,7 +12,6 @@
  */
 
 class QualityControlFlagVerificationAdapter {
-
     /**
      * Converts the given database object to an entity object.
      *
@@ -30,7 +29,7 @@ class QualityControlFlagVerificationAdapter {
             id,
             verifiedBy,
             createdAt,
-        }
+        };
     }
 
     /**

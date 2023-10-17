@@ -21,7 +21,7 @@ module.exports = () => {
     describe('DatabaseSuite', () => {
         describe('should', () => {
             it('build query', async () => {
-                const params = {page: 'periods'};
+                const params = { page: 'periods' };
                 const result = PGQueryBuilder.buildSelect(params);
                 expect(result).to.not.be.null;
             });
@@ -29,16 +29,15 @@ module.exports = () => {
             it('return period view query correctly', async () => {
                 const expectedOutcome = `WITH periods_view AS (${views.periods_view()})
                     SELECT *
-                    FROM periods_view`
+                    FROM periods_view`;
 
-                const params = {page: 'periods'};
+                const params = { page: 'periods' };
                 const result = PGQueryBuilder.buildSelect(params);
                 expect(result).to.not.be.null;
                 expect(result).to.not.be.equal(expectedOutcome);
             });
 
             it('check query syntax for filtering params for periods view - 1', async () => {
-
                 const filteringParams = {
                     page: 'periods',
                     'items-per-page': '50',
@@ -48,15 +47,13 @@ module.exports = () => {
                     'beam-match': 'p-p',
                 };
 
-                await assert.doesNotReject( async () => {
+                await assert.doesNotReject(async () => {
                     const q = PGQueryBuilder.buildSelect(filteringParams);
                     await databaseService.pgExec(q);
                 });
-                
             });
 
             it('check query syntax for filtering params for periods view - 2', async () => {
-
                 const filteringParams = {
                     page: 'periods',
                     'items-per-page': '2',
@@ -65,18 +62,16 @@ module.exports = () => {
                     'name-match': '%c%',
                     'beam-match': 'p-p,Pb-Pb',
                     'year-exclude': ['2024', '2025,1999'],
-                    'year-between': ['2022,', '2222,2555', ',2055']
+                    'year-between': ['2022,', '2222,2555', ',2055'],
                 };
 
-                await assert.doesNotReject( async () => {
+                await assert.doesNotReject(async () => {
                     const q = PGQueryBuilder.buildSelect(filteringParams);
                     await databaseService.pgExec(q);
                 });
             });
 
-
             it('check query syntax for filtering params for periods view - 3 (strangely formatted params)', async () => {
-
                 const filteringParams = {
                     page: 'periods',
                     'items-per-page': '2',
@@ -86,18 +81,17 @@ module.exports = () => {
                     'name-exclude': ['%cccASDF%,', '%asdf,,,%asdf'],
                     'beam-match': 'p-p,Pb-Pb',
                     'year-exclude': ['2024', '2025'],
-                    'year-between': ['2022,', ',2555']
+                    'year-between': ['2022,', ',2555'],
 
                 };
 
-                await assert.doesNotReject( async () => {
+                await assert.doesNotReject(async () => {
                     const q = PGQueryBuilder.buildSelect(filteringParams);
                     await databaseService.pgExec(q);
                 });
             });
 
             it('check INCORRECT between clause in filtering params for periods view - 4', async () => {
-
                 const filteringParams = {
                     page: 'periods',
                     'items-per-page': '2',
@@ -110,9 +104,6 @@ module.exports = () => {
                     const q = PGQueryBuilder.buildSelect(filteringParams);
                 });
             });
-
-
-
         });
     });
 };

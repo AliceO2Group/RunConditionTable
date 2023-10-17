@@ -11,11 +11,11 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
- const config = require('../../config/configProvider.js');
- const run_detectors_field_in_sql_query_factory = (dataPassName = null) => config.rctData.detectors
-     .map(d => `(SELECT get_run_det_data(r.run_number, '${d.toUpperCase()}', '${dataPassName}')) as ${d.toUpperCase()}_detector`)
-     .join(',\n')
- 
+const config = require('../../config/configProvider.js');
+
+const run_detectors_field_in_sql_query_factory = (dataPassName = null) => config.rctData.detectors
+    .map((d) => `(SELECT get_run_det_data(r.run_number, '${d.toUpperCase()}', '${dataPassName}')) as ${d.toUpperCase()}_detector`)
+    .join(',\n');
 
 const queryForRunsFields = `
         --p.name, 
@@ -29,8 +29,7 @@ const queryForRunsFields = `
         r.l3_current,
         r.dipole_current
 `;
- 
- 
+
 const runs_per_period_view = (query) => `
         SELECT
             ${queryForRunsFields},
@@ -45,7 +44,7 @@ const runs_per_period_view = (query) => `
                             )
         ORDER BY r.run_number DESC
         `;
- 
+
 const runs_per_data_pass_view = (query) => `
         SELECT
         ${queryForRunsFields},
@@ -60,6 +59,5 @@ const runs_per_data_pass_view = (query) => `
         WHERE dp.name = '${query.index}'
         ORDER BY r.run_number DESC
         `;
- 
 
-module.exports = {runs_per_period_view, runs_per_data_pass_view};
+module.exports = { runs_per_period_view, runs_per_data_pass_view };

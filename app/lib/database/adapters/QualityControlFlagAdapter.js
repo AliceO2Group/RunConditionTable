@@ -58,7 +58,7 @@ class QualityControlFlagAdapter {
             updatedAt: Number(updatedAt),
             flagType: this.flagTypeAdapter.toEntity(flagType),
             verifications: verifications.map((verification) => this.qualityControlFlagVerificationAdapter.toEntity(verification)),
-        }
+        };
     }
 
     /**

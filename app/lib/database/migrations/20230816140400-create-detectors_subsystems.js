@@ -15,20 +15,19 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('detectors_subsystems', {
-                id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                },
-                name: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                },
+            id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+                autoIncrement: true,
             },
-        )
+            name: {
+                type: Sequelize.STRING,
+                unique: true,
+            },
+        });
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.dropTable('detectors_subsystems');
-    }
+    },
 };

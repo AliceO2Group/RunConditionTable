@@ -10,7 +10,7 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-const { databaseManager } = require('../../app/lib/database/DatabaseManager.js'); 
+const { databaseManager } = require('../../app/lib/database/DatabaseManager.js');
 const assert = require('assert');
 
 module.exports = () => {

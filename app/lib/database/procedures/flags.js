@@ -53,5 +53,5 @@ $do$;
 module.exports = {
     flag_insert,
     flag_delete,
-    verification_insert
+    verification_insert,
 };

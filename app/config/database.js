@@ -17,7 +17,6 @@ const legacyConfig = ResProvider.database();
 
 const config = { ...legacyConfig,
     username: legacyConfig.user, // TEMPORARILY
-    logging: legacyConfig.logging ? this.logger.debug.bind(this.logger) : false,
     dialect: 'postgres',
     define: {
         underscored: true,
