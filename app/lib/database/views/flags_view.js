@@ -37,8 +37,8 @@ const dataFieldToSQLBelongsLogicalClause = (data, fieldName, isString) => {
  * @returns {String} sql query
  */
 const flags_view = (query) => {
-    run_selection_sql = dataFieldToSQLBelongsLogicalClause(query.run_numbers, 'r.run_number');
-    detector_selection_sql = dataFieldToSQLBelongsLogicalClause(query.detector, 'ds.name', true);
+    const run_selection_sql = dataFieldToSQLBelongsLogicalClause(query.run_numbers, 'r.run_number');
+    const detector_selection_sql = dataFieldToSQLBelongsLogicalClause(query.detector, 'ds.name', true);
 
     const data_pass_sql = `dp.name = '${query.data_pass_name}'`;
     const whereClause = [data_pass_sql, run_selection_sql, detector_selection_sql]

@@ -101,7 +101,7 @@ module.exports = () => {
                 };
 
                 assert.throws(() => {
-                    const q = PGQueryBuilder.buildSelect(filteringParams);
+                    PGQueryBuilder.buildSelect(filteringParams);
                 });
             });
         });

@@ -17,7 +17,7 @@ const views = require('../views');
 const procedures = require('../procedures');
 const { adjustValuesToSql, switchCase } = require('../../utils');
 
-const { pageNames: PN, procedures: PC, filterTypes } = config.public;
+const { pageNames: PN, filterTypes } = config.public;
 const DRP = config.public.dataReqParams;
 
 const pageToViewName = {};
@@ -76,19 +76,15 @@ const handleLike = (fieldName, values, like) => {
 
 class PGQueryBuilder {
     static filteringPart(params) {
-        const filtersTypesToParams = {
-            match: [],
-            exclude: [],
-            between: [],
-        };
-
         // Mapping search params to categorized { key, value } pairs
         const filterTypesRegex = new RegExp(Object.keys(filterTypes).map((t) => `(.*-${t})`).join('|'));
         const filterParams = Object.entries(params)
-            .filter(([k, v]) => k.match(filterTypesRegex))
+            .filter(([k, _]) => k.match(filterTypesRegex))
             .map(([k, v]) => [...k.split('-'), v]);
         const fields2Filters = {};
-        filterParams.forEach((l) => fields2Filters[l[0]] = []);
+        filterParams.forEach((l) => {
+            fields2Filters[l[0]] = [];
+        });
         filterParams.forEach((l) => fields2Filters[l[0]].push(l.slice(1)));
 
         const cll = Object.entries(fields2Filters).map(([fieldName, clauses]) => Object.fromEntries(clauses.map((cl) => {
