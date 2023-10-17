@@ -39,7 +39,7 @@ class FlagTypeAdapter {
     /**
      * Converts the given entity object to database object.
      *
-     * @param {FlagType} databaseObject Object to convert.
+     * @param {FlagType} entityObject Object to convert.
      * @returns {SequelizeFlagType} Converted entity object.
      */
     toDatabase(entityObject) {

@@ -13,7 +13,6 @@
 
 const FlagTypeAdapter = require('./FlagTypeAdaper');
 const QualityControlFlagVerificationAdapter = require('./QualityControlFlagVerificationAdapter');
-const DetectorSubsystemAdapter = require('./DetectorSubsystemAdapter');
 
 class QualityControlFlagAdapter {
     constructor() {
@@ -64,7 +63,7 @@ class QualityControlFlagAdapter {
     /**
      * Converts the given entity object to database object.
      *
-     * @param {QualityControlFlag} databaseObject Object to convert.
+     * @param {QualityControlFlag} entityObject Object to convert.
      * @returns {SequelizeQualityControlFlag} Converted entity object.
      */
     toDatabase(entityObject) {
@@ -97,7 +96,8 @@ class QualityControlFlagAdapter {
             createdAt,
             updatedAt,
             FlagType: this.flagTypeAdapter.toDatabase(FlagType),
-            QualityControlFlagVerifications: verifications.map((verification) => this.qualityControlFlagVerificationAdapter.toDatabase(verification)),
+            QualityControlFlagVerifications: verifications
+                .map((verification) => this.qualityControlFlagVerificationAdapter.toDatabase(verification)),
         };
     }
 }

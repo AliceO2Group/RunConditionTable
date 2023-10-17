@@ -35,7 +35,7 @@ class QualityControlFlagVerificationAdapter {
     /**
      * Converts the given entity object to database object.
      *
-     * @param {QualityControlFlagVerification} databaseObject Object to convert.
+     * @param {QualityControlFlagVerification} entityObject Object to convert.
      * @returns {SequelizeQualityControlFlagVerification} Converted entity object.
      */
     toDatabase(entityObject) {

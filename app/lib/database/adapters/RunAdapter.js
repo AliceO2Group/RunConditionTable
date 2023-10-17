@@ -61,7 +61,7 @@ class RunAdapter {
     /**
      * Converts the given entity object to database object.
      *
-     * @param {Run} databaseObject Object to convert.
+     * @param {Run} entityObject Object to convert.
      * @returns {SequelizeRun} Converted entity object.
      */
     toDatabase(entityObject) {

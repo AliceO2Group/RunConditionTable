@@ -49,7 +49,7 @@ class PeriodAdapter {
     /**
      * Converts the given entity object to database object.
      *
-     * @param {Period} databaseObject Object to convert.
+     * @param {Period} entityObject Object to convert.
      * @returns {SequelizePeriod} Converted entity object.
      */
     toDatabase(entityObject) {
