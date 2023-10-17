@@ -42,7 +42,7 @@ const flags_view = (query) => {
 
     const data_pass_sql = `dp.name = '${query.data_pass_name}'`;
     const whereClause = [data_pass_sql, run_selection_sql, detector_selection_sql]
-        .filter((_) => _)
+        .filter((clause) => clause)
         .join(' AND ');
 
     return `

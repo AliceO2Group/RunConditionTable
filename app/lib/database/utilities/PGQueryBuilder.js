@@ -79,7 +79,7 @@ class PGQueryBuilder {
         // Mapping search params to categorized { key, value } pairs
         const filterTypesRegex = new RegExp(Object.keys(filterTypes).map((t) => `(.*-${t})`).join('|'));
         const filterParams = Object.entries(params)
-            .filter(([k, _]) => k.match(filterTypesRegex))
+            .filter(([k]) => k.match(filterTypesRegex))
             .map(([k, v]) => [...k.split('-'), v]);
         const fields2Filters = {};
         filterParams.forEach((l) => {
