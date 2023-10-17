@@ -118,7 +118,8 @@ class DatabaseService {
         };
 
         const dbResponseHandler = (dbRes) => {
-            let { fields, rows } = dbRes;
+            const { fields } = dbRes;
+            let { rows } = dbRes;
             const data = {};
 
             if (req.query[DRP.countRecords] === 'true') {
@@ -148,33 +149,6 @@ class DatabaseService {
         }
     }
 
-    async pgExecDataInsert(req, res) {
-        if (!this.checkToken(req, res)) {
-            return;
-        }
-        const dbResponseHandler = (dbRes) => res.json({ data: dbRes });
-        const dbResErrorHandler = (e) => {
-            this.logger.error(`${e.message} :: ${e.stack}`);
-            this.responseWithStatus(res, 400, e.message);
-        };
-        const connectErrorHandler = (connectErr) => {
-            this.logger.error(`Error acquiring client:: ${connectErr.message}`);
-            this.responseWithStatus(res, 500, connectErr.message);
-        };
-
-        try {
-            await this.pgExec(
-                PGQueryBuilder.buildInsert(params),
-                connectErrorHandler,
-                dbResponseHandler,
-                dbResErrorHandler,
-            );
-        } catch (e) {
-            this.logger.error(`${e.message} :: ${e.stack}`);
-            this.responseWithStatus(res, 400, e.message);
-        }
-    }
-
     checkToken(req, res) {
         const userData = this.loggedUsers.tokenToUserData[req.query.token];
         if (!userData && !(isInDevMode() || isInTestMode())) {
@@ -191,7 +165,7 @@ class DatabaseService {
     }
 
     async healthcheckInsertData() {
-        for (const [d, def] of Object.entries(config.rctData.healthcheckQueries.checkStaticData)) {
+        for (const def of Object.values(config.rctData.healthcheckQueries.checkStaticData)) {
             this.logger.info(`healthcheck : ${def.description}`);
             for (const q of def.query) {
                 const logger = config.rctData.suppressHealthcheckLogs ? () => null : (e) => this.logger.error(e.stack);
