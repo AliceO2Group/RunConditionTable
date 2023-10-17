@@ -210,6 +210,7 @@ class ResProvider {
             RCT_DB_USERNAME: 'user',
             RCT_DB_PASSWORD: 'password',
             RCT_DB_PORT: 'port',
+            RCT_DB_LOGGING: 'logging',
         };
         return ResProvider.viaEnvVars(databaseEnvVarsDef);
     }
