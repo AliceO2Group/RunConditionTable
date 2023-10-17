@@ -84,7 +84,7 @@ module.exports = {
             },
         });
     },
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface) {
         await queryInterface.dropTable('quality_control_flags');
     },
 };
