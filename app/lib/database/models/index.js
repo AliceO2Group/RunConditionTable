@@ -11,8 +11,6 @@
  * or submit itself to any jurisdiction.
  */
 
-const Sequelize = require('sequelize');
-
 const BeamType = require('./BeamType.js');
 const Period = require('./Period.js');
 const Run = require('./Run.js');
@@ -27,7 +25,7 @@ const ParticlesPhysData = require('./ParticilesPhysData.js');
 const MetaData = require('./Meta.js');
 
 /**
- *
+ * Prepare sequelize models instances
  * @param {Sequelize} sequelize instance
  * @returns {Object<string, Sequelize.Model>} dict modelName -> sequelize model
  */

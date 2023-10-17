@@ -42,6 +42,11 @@ class Repository {
         this.model = model;
     }
 
+    /**
+     * Count records
+     * @param {QueryBuilder|Object} queryBuilder @see QueryBuilder
+     * @returns {Promise<Number>} number of records
+     */
     async count(queryBuilder = new QueryBuilder()) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
         return this.model.count(queryBuilder.toImplementation());
@@ -50,7 +55,7 @@ class Repository {
     /**
      * Returns all entities.
      *
-     * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findAll options)
+     * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findAll options) @see QueryBuilder
      * @returns {Promise<Model>} Promise object representing the full mock data
      */
     async findAll(queryBuilder = new QueryBuilder()) {
@@ -61,7 +66,7 @@ class Repository {
     /**
      * Returns all entities and its quantity.
      *
-     * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findAndCountAll options)
+     * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findAndCountAll options) @see QueryBuilder
      * @returns {Promise<Model>} Promise object representing the full mock data
      */
     async findAndCountAll(queryBuilder = new QueryBuilder()) {
@@ -71,8 +76,7 @@ class Repository {
 
     /**
      * Returns one entity.
-     *
-     * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findOne options)
+     * @param {QueryBuilder|Object} queryBuilder the find query (see sequelize findOne options) @see QueryBuilder
      * @returns {Promise<Model>} Promise object representing the full mock data
      */
     async findOne(queryBuilder = {}) {
@@ -83,8 +87,7 @@ class Repository {
 
     /**
      * Apply a patch on a given dbObject and save the dbObject to the database
-     *
-     * @param {Model} dbOject the database object on which to apply the patch
+     * @param {Model} dbOject the database object on which to apply the patch @see QueryBuilder
      * @param {Object} patch the patch to apply
      * @return {Promise<boolean>} promise that resolves when the patch has been applied
      */
@@ -94,22 +97,22 @@ class Repository {
 
     /**
      * Find a dbObject using query clause, apply given patch to it and save the dbObject to the database
-     *
-     * @param {QueryBuilder|Object} dbOject the database object on which to apply the patch
+     * @param {QueryBuilder|Object} queryBuilder the database object on which to apply the patch @see QueryBuilder
      * @param {Object} patch the patch to apply
      * @throws {NotFoundEntityError} if cannot find dbObject with given query clause
      * @return {Promise<Model>} promise that resolves when the patch has been applied
      */
     async findOneAndUpdate(queryBuilder, patch) {
         const entity = await this.model.findOne(queryBuilder) ??
-            throwWrapper(new NotFoundEntityError(`No entity of model ${this.model.name} for clause ${JSON.stringify(query)}`));
+            throwWrapper(new NotFoundEntityError(`No entity of model ${this.model.name} for clause ${JSON.stringify(queryBuilder)}`));
         await entity.update(patch);
     }
 
     /**
      * Create new object in db
-     * @param {Object} dbObjectParams
-     * @return {Promise<Model>}
+     * @param {Object} dbObjectParams object params
+     * @param {Object} opts sequelize create opts
+     * @return {Promise<Model>} sequelize create promise
      */
     async create(dbObjectParams, opts) {
         await this.model.create(dbObjectParams, opts);
@@ -117,7 +120,7 @@ class Repository {
 
     /**
      * Remove one object from database according search
-     * @param {QueryBuilder|Object} queryBuilder
+     * @param {QueryBuilder|Object} queryBuilder @see QueryBuilder
      * @return {Promise<boolean>} indicate if model object was deleted from db
      */
     async removeOne(queryBuilder) {
@@ -128,8 +131,8 @@ class Repository {
 
     /**
      * Find or create model instance in db
-     * @param {QueryBuilder|Object} queryBuilder
-     * @return {Promise<[Model, boolean]>}
+     * @param {QueryBuilder|Object} queryBuilder @see QueryBuilder
+     * @return {Promise<[Model, boolean]>} sequelize findOrCreate return
      */
     async findOrCreate(queryBuilder) {
         queryBuilder = queryBuilder instanceof QueryBuilder ? queryBuilder : new QueryBuilder(queryBuilder);
@@ -138,18 +141,19 @@ class Repository {
 
     /**
      * Create new objects in db
-     * @param {Array<Object>} dbObjectParams
-     * @return {Promise<Model>}
+     * @param {Array<Object>} dbObjectParams list of objects
+     * @param {Object} opts sequelize#bulkCreate opts
+     * @return {Promise<Model>} sequelize bulk create result
      */
     async bulkCreate(dbObjectParams, opts) {
         return await this.model.bulkCreate(dbObjectParams, opts);
     }
 
     /**
-     * Upsert db object
-     * @param {Object} dbObjectParams
-     * @param {Promise<Model>} opts
-     * @returns
+     * Upsert entity in db
+     * @param {Array<Object>} dbObjectParams list of objects
+     * @param {Object} opts sequelize#upsert opts
+     * @return {Promise<Model>} sequelize upsert result
      */
     async upsert(dbObjectParams, opts) {
         return await this.model.upsert(dbObjectParams, opts);
@@ -160,7 +164,7 @@ class Repository {
         getTransactionalMethodsNames(this.constructor).forEach((transactionalMethodName) => {
             const boundMethodWithoutTransaction = this[transactionalMethodName].bind(this);
             this[transactionalMethodName] = async (...args) =>
-                sequelize.transaction(customOptions, async (t) => await boundMethodWithoutTransaction(...args));
+                sequelize.transaction(customOptions, async (_t) => await boundMethodWithoutTransaction(...args));
         });
     }
 
@@ -168,8 +172,8 @@ class Repository {
      * Create copy of repository object which all business related methods are wrapped with sequelize.transcation(),
      * e.g: Repository.asT().findAll() is equal to sequelize.transaction((t) => Repository.findAll())
      * Module cls-hooked handles passing transaction object to sequelize queries automatically.
-     * @property {Object} customOptions - options passed to sequelize.transaction(options, callback)
-     * @returns {Repository}
+     * @param {Object} customOptions - options passed to sequelize.transaction(options, callback)
+     * @returns {Repository} repository
      */
     asT(customOptions) {
         const instanceWithTransactions = new this.constructor(this.model);

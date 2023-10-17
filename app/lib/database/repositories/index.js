@@ -27,9 +27,10 @@ const specificallyDefinedRepositories = {
 };
 
 /**
- * @see specificallyDefinedRepositories
  * It checks if specificallyDefinedRepositories is correct, if not, it throws an error.
- * @param {Object<string, Sequelize.Model>} models
+ * @see specificallyDefinedRepositories
+ * @param {Object<string, Sequelize.Model>} models sequelize models
+ * @returns {undefined}
  */
 const validateSpecificRepositoriesConfiguration = (models) => {
     Object.entries(specificallyDefinedRepositories).forEach(([modelName, RepoClass]) => {
@@ -41,7 +42,8 @@ const validateSpecificRepositoriesConfiguration = (models) => {
 
 /**
  * Instantiate sequelize models repositories according to repositiry pattern.
- * Each Repository Object has transactional version of itself under field 'T' @see {Repository.asT}. Those versions use global sequelize options for transactions.
+ * Each Repository Object has transactional version of itself under field 'T' @see {Repository.asT}
+ * Those versions use global sequelize options for transactions.
  * @param {Object<string, Sequelize.Model>} models dict: modelName -> sequelize model, @see specificallyDefinedRepositories
  * @returns {Object<string, Repository>} dict: repositoryName -> repository instance per one model, (repositoryName = modelName + 'Repository')
  */
