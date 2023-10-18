@@ -39,7 +39,7 @@ class PeriodAdapter {
             beamTypeId: BeamTypeId,
             beamType: BeamType?.name,
             avgEnergy,
-            distinctEnergies: distinctEnergies.filter((_) => _),
+            distinctEnergies: distinctEnergies.filter((energy) => energy),
             runsCount: Number(runsCount),
             dataPassesCount: Number(dataPassesCount),
             simulationPassesCount: Number(simulationPassesCount),

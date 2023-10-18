@@ -32,7 +32,7 @@ module.exports = () => {
     describe('WebUiServerSuite', () => {
         describe('Routes definitions', () => {
             it('should parse routes correctly', () => {
-                assert(routes.every((r) =>[r.method, r.path, r.controller, r.description].every((_) => _)));
+                assert(routes.every((r) =>[r.method, r.path, r.controller, r.description].every((route) => route)));
                 assert(routes.every(({ controller }) =>
                     (Array.isArray(controller) ? controller : [controller])
                         .every((c) => c.constructor.name === 'AsyncFunction')));
