@@ -18,5 +18,5 @@
  * @property {string} name
  * @property {string} method
  * @property {boolean} bad
- * @property {boolean} obsolate 
+ * @property {boolean} obsolate
  */

@@ -33,10 +33,10 @@ module.exports = (sequelize) => {
             type: Sequelize.BOOLEAN,
             allowNull: false,
         },
-    }, { timestamps: false, tableName: 'flag_types_dictionary'});
+    }, { timestamps: false, tableName: 'flag_types_dictionary' });
 
     FlagType.associate = (models) => {
-        FlagType.hasMany(models.QualityControlFlag, {foreignKey: 'flag_type_id'});
+        FlagType.hasMany(models.QualityControlFlag, { foreignKey: 'flag_type_id' });
     };
 
     return FlagType;

@@ -28,7 +28,7 @@ const dataFieldToSQLBelongsLogicalClause = (data, fieldName, isString) => {
     }
     const rightOperand = (isString ? data.map((value) => `'${value}'`) : data).join(',');
     return rightOperand ? `${fieldName} in (${rightOperand})` : undefined;
-}
+};
 
 /**
  * Build sql query to fetch quality control flags for
@@ -37,14 +37,14 @@ const dataFieldToSQLBelongsLogicalClause = (data, fieldName, isString) => {
  * @returns {String} sql query
  */
 const flags_view = (query) => {
-    run_selection_sql = dataFieldToSQLBelongsLogicalClause(query.run_numbers, 'r.run_number')
-    detector_selection_sql = dataFieldToSQLBelongsLogicalClause(query.detector, 'ds.name', true)
+    const run_selection_sql = dataFieldToSQLBelongsLogicalClause(query.run_numbers, 'r.run_number');
+    const detector_selection_sql = dataFieldToSQLBelongsLogicalClause(query.detector, 'ds.name', true);
 
     const data_pass_sql = `dp.name = '${query.data_pass_name}'`;
     const whereClause = [data_pass_sql, run_selection_sql, detector_selection_sql]
-        .filter(_ => _)
+        .filter((clause) => clause)
         .join(' AND ');
-    
+
     return `
     SELECT
         qcf.id,
@@ -73,6 +73,6 @@ const flags_view = (query) => {
         GROUP BY qcf.id, qcf.time_start, qcf.time_end, ftd.name, qcf.comment, r.run_number, ds.name
 
     `;
-}
+};
 
 module.exports = flags_view;

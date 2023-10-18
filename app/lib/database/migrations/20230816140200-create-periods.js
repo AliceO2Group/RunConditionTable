@@ -15,41 +15,40 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('periods', {
-                id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                },
-                name: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                },
-                year: {
-                    type: Sequelize.INTEGER,
-                },
-                beam_type_id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: true,
-                    references: {
-                        model: 'beams_dictionary',
-                        key: 'id',
-                    },
-                },
-                created_at: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-                },
-                updated_at: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            name: {
+                type: Sequelize.STRING,
+                unique: true,
+            },
+            year: {
+                type: Sequelize.INTEGER,
+            },
+            beam_type_id: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+                references: {
+                    model: 'beams_dictionary',
+                    key: 'id',
                 },
             },
-        )
+            created_at: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+            updated_at: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+        });
     },
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface) {
         await queryInterface.dropTable('periods');
-    }
+    },
 };

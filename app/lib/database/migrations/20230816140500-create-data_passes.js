@@ -15,50 +15,49 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('data_passes', {
-                id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                },
-                name: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                },
-                description: {
-                    type: Sequelize.TEXT,
-                },
-                number_of_events: {
-                    type: Sequelize.INTEGER,
-                },
-                size: {
-                    type: Sequelize.REAL,
-                },
-                last_run: {
-                    type: Sequelize.INTEGER,
-                },
-                period_id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: true,
-                    references: {
-                        model: 'periods',
-                        key: 'id',
-                    },
-                },
-                created_at: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-                },
-                updated_at: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            name: {
+                type: Sequelize.STRING,
+                unique: true,
+            },
+            description: {
+                type: Sequelize.TEXT,
+            },
+            number_of_events: {
+                type: Sequelize.INTEGER,
+            },
+            size: {
+                type: Sequelize.REAL,
+            },
+            last_run: {
+                type: Sequelize.INTEGER,
+            },
+            period_id: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+                references: {
+                    model: 'periods',
+                    key: 'id',
                 },
             },
-        )
+            created_at: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+            updated_at: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+        });
     },
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface) {
         await queryInterface.dropTable('data_passes');
-    }
+    },
 };

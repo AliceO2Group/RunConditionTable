@@ -15,33 +15,32 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('verifications', {
-                id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                },
-                verified_by: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                },
-                qcf_id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: true,
-                    references: {
-                        model: 'quality_control_flags',
-                        key: 'id',
-                    },
-                },
-                created_at: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            verified_by: {
+                type: Sequelize.STRING,
+                allowNull: false,
+            },
+            qcf_id: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+                references: {
+                    model: 'quality_control_flags',
+                    key: 'id',
                 },
             },
-        )
+            created_at: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+        });
     },
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface) {
         await queryInterface.dropTable('verifications');
-    }
+    },
 };

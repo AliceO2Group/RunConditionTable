@@ -12,9 +12,9 @@
  */
 
 const { Sequelize } = require('sequelize');
-const { Log } = require('@aliceo2/web-ui')
-const { Umzug, SequelizeStorage, memoryStorage } = require('umzug');
-const path = require('path')
+const { Log } = require('@aliceo2/web-ui');
+const { Umzug, SequelizeStorage } = require('umzug');
+const path = require('path');
 const config = require('../../config');
 const modelsFactory = require('./models');
 const repositoriesFactory = require('./repositories');

@@ -17,7 +17,7 @@ const { filterToSequelizeWhereClause } = require('../../server/utilities');
 
 class QueryBuilder {
     constructor(initClauses) {
-        this.cluasesAccumulator = {...initClauses};
+        this.cluasesAccumulator = { ...initClauses };
     }
 
     addFromHttpRequestQuery({ filter, page, order }) {
@@ -25,13 +25,13 @@ class QueryBuilder {
             where: filterToSequelizeWhereClause(filter),
             ...page,
             order: order ? Object.entries(order) : null,
-        })
+        });
         return this;
     }
 
     add(clause) {
         if (clause instanceof QueryBuilder) {
-            this.cluasesAccumulator = deepmerge(this.cluasesAccumulator, clause.toImplementation())
+            this.cluasesAccumulator = deepmerge(this.cluasesAccumulator, clause.toImplementation());
         } else {
             this.cluasesAccumulator = deepmerge(this.cluasesAccumulator, clause);
         }

@@ -15,26 +15,25 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('anchored_periods', {
-                period_id: {
-                    type: Sequelize.INTEGER,
-                    primaryKey: true,
-                    references: {
-                        model: 'periods',
-                        key: 'id',
-                    },
-                },
-                sim_pass_id: {
-                    type: Sequelize.INTEGER,
-                    primaryKey: true,
-                    references: {
-                        model: 'simulation_passes',
-                        key: 'id',
-                    },
+            period_id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                references: {
+                    model: 'periods',
+                    key: 'id',
                 },
             },
-        )
+            sim_pass_id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                references: {
+                    model: 'simulation_passes',
+                    key: 'id',
+                },
+            },
+        });
     },
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface) {
         await queryInterface.dropTable('anchored_periods');
-    }
+    },
 };

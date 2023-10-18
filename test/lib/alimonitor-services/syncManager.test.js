@@ -110,7 +110,7 @@ module.exports = () => describe('SyncManager suite', () => {
                     .findAll({ include: [Run, Period] });
 
                 expect(data).to.length.greaterThan(0); //TODO
-                expect(data.map(({ Period }) => Period).filter((_) => _)).to.be.lengthOf(data.length);
+                expect(data.map(({ Period }) => Period).filter((period) => period)).to.be.lengthOf(data.length);
             });
         });
     });

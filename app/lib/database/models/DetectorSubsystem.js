@@ -23,12 +23,12 @@ module.exports = (sequelize) => {
 
     DetectorSubsystem.associate = (models) => {
         DetectorSubsystem.belongsToMany(models.Run, {
-            through: models.RunDetectors, 
+            through: models.RunDetectors,
             foreignKey: 'detector_id',
             timestamps: false,
-        })
-        DetectorSubsystem.hasMany(models.QualityControlFlag, {foreignKey: 'detector_id'});
+        });
+        DetectorSubsystem.hasMany(models.QualityControlFlag, { foreignKey: 'detector_id' });
     };
-    
+
     return DetectorSubsystem;
 };

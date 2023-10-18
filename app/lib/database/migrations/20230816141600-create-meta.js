@@ -15,25 +15,24 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('meta', {
-                name: {
-                    primaryKey: true,
-                    type: Sequelize.STRING,
-                    unique: true,
-                    allowNull: false,
-                },
-                val: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                    unique: true,
-                },
-                updated_at: {
-                    type: Sequelize.DATE,
-                    allowNull: false,
-                },
+            name: {
+                primaryKey: true,
+                type: Sequelize.STRING,
+                unique: true,
+                allowNull: false,
             },
-        )
+            val: {
+                type: Sequelize.STRING,
+                allowNull: false,
+                unique: true,
+            },
+            updated_at: {
+                type: Sequelize.DATE,
+                allowNull: false,
+            },
+        });
     },
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface) {
         await queryInterface.dropTable('meta');
-    }
+    },
 };

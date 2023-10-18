@@ -11,7 +11,6 @@
  * or submit itself to any jurisdiction.
  */
 
-
 class DetectorSubsystemAdapter {
     /**
      * Converts the given database object to an entity object.
@@ -36,7 +35,7 @@ class DetectorSubsystemAdapter {
     /**
      * Converts the given entity object to database object.
      *
-     * @param {DetectorSubsystem} databaseObject Object to convert.
+     * @param {DetectorSubsystem} entityObject Object to convert.
      * @returns {SequelizeDetectorSubsystem} Converted entity object.
      */
     toDatabase(entityObject) {

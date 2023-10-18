@@ -12,9 +12,8 @@
  * or submit itself to any jurisdiction.
  */
 
-
 const flags = require('./flags.js');
 
 module.exports = {
-    ...flags
+    ...flags,
 };

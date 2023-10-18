@@ -11,7 +11,6 @@
  * or submit itself to any jurisdiction.
  */
 
-
 class DataPassAdapter {
     /**
      * Converts the given database object to an entity object.
@@ -44,7 +43,7 @@ class DataPassAdapter {
     /**
      * Converts the given entity object to database object.
      *
-     * @param {DataPass} databaseObject Object to convert.
+     * @param {DataPass} entityObject Object to convert.
      * @returns {SequelizeDataPass} Converted entity object.
      */
     toDatabase(entityObject) {

@@ -16,7 +16,7 @@ const { Log } = require('@aliceo2/web-ui');
 const { Pool } = require('pg');
 const { PGQueryBuilder } = require('./utilities');
 const config = require('./../config/configProvider.js');
-const {distinct, isInDevMode, isInTestMode} = require('../utils')
+const { distinct, isInDevMode, isInTestMode } = require('../utils');
 
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataResponseFields;
@@ -38,12 +38,12 @@ class DatabaseService {
 
     buildPool() {
         config.database.idleTimeoutMillis = 2000;
-        config.database.max = 20
+        config.database.max = 20;
 
-        this.pool = new Pool(config.database)
+        this.pool = new Pool(config.database);
         this.pool.on('error', (e) => {
             this.logger.error(`database pg pool fatal error: ${e.stack}`);
-        })
+        });
     }
 
     async loginSession(req, res) {
@@ -58,10 +58,10 @@ class DatabaseService {
                 token: req.query.token,
             };
             this.loggedUsers.tokenToUserData[req.query.token] = userData;
-            this.responseWithStatus(res, 200, "logged");
+            this.responseWithStatus(res, 200, 'logged');
         } else {
             this.logger.info(`Restoring session with client: ${userData}`);
-            this.responseWithStatus(res, 200, "session restored");
+            this.responseWithStatus(res, 200, 'session restored');
         }
     }
 
@@ -85,7 +85,7 @@ class DatabaseService {
             } else {
                 throw e;
             }
-        })
+        });
 
         return await client.query(query)
             .then((dbRes) => {
@@ -93,7 +93,7 @@ class DatabaseService {
                     dbResponseHandler(dbRes);
                 }
                 client.release();
-                return dbRes
+                return dbRes;
             })
             .catch((e) => {
                 if (dbResErrorHandler) {
@@ -108,18 +108,19 @@ class DatabaseService {
     async pgExecFetchData(req, res) {
         if (!this.checkToken(req, res)) {
             return;
-        };
-
-        const params = {...req.query, ...req.params}
-
-        const connectErrorHandler = (connectErr) => {
-            this.logger.error('Error acquiring client:: ' + connectErr.stack)
-            this.responseWithStatus(res, 500, connectErr.message);
         }
 
+        const params = { ...req.query, ...req.params };
+
+        const connectErrorHandler = (connectErr) => {
+            this.logger.error(`Error acquiring client:: ${connectErr.stack}`);
+            this.responseWithStatus(res, 500, connectErr.message);
+        };
+
         const dbResponseHandler = (dbRes) => {
-            let { fields, rows } = dbRes;
-            let data = {};
+            const { fields } = dbRes;
+            let { rows } = dbRes;
+            const data = {};
 
             if (req.query[DRP.countRecords] === 'true') {
                 data[DRF.totalRowsCount] = rows.length;
@@ -129,51 +130,22 @@ class DatabaseService {
             }
 
             data[DRF.rows] = rows;
-            data[DRF.fields] = distinct(fields.map(f => f.name)).map(n => { return { name: n } });
+            data[DRF.fields] = distinct(fields.map((f) => f.name)).map((n) => ({ name: n }));
 
             res.json({ data: data });
         };
 
         const dbResErrorHandler = (e) => {
-            this.logger.error(e.message + ' :: ' + e.stack)
+            this.logger.error(`${e.message} :: ${e.stack}`);
             this.responseWithStatus(res, 400, e.message);
-        }
+        };
 
         try {
             const query = PGQueryBuilder.buildSelect(params);
             await this.pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler);
         } catch (e) {
-            this.logger.error(e.message + " :: " + e.stack)
-            this.responseWithStatus(res, 500)
-        }
-    }
-
-
-    async pgExecDataInsert(req, res) {
-        if (!this.checkToken(req, res)) {
-            return;
-        };
-        const dbResponseHandler = (dbRes) => {
-            return res.json({data: dbRes})
-        }
-        const dbResErrorHandler = (e) => {
-            this.logger.error(e.message + ' :: ' + e.stack)
-            this.responseWithStatus(res, 400, e.message);
-        }
-        const connectErrorHandler = (connectErr) => {
-            this.logger.error('Error acquiring client:: ' + connectErr.message)
-            this.responseWithStatus(res, 500, connectErr.message);
-        }
-        
-        try {
-            await this.pgExec(
-                PGQueryBuilder.buildInsert(params), 
-                connectErrorHandler, 
-                dbResponseHandler, 
-                dbResErrorHandler);
-        } catch (e) {
-            this.logger.error(e.message + ' :: ' + e.stack)
-            this.responseWithStatus(res, 400, e.message)
+            this.logger.error(`${e.message} :: ${e.stack}`);
+            this.responseWithStatus(res, 500);
         }
     }
 
@@ -193,16 +165,16 @@ class DatabaseService {
     }
 
     async healthcheckInsertData() {
-        for (const [d, def] of Object.entries(config.rctData.healthcheckQueries.checkStaticData)) {
+        for (const def of Object.values(config.rctData.healthcheckQueries.checkStaticData)) {
             this.logger.info(`healthcheck : ${def.description}`);
             for (const q of def.query) {
-                const logger = config.rctData.suppressHealthcheckLogs ? () => null : (e) => this.logger.error(e.stack)
-                await this.pgExec(q, logger, null, logger)
+                const logger = config.rctData.suppressHealthcheckLogs ? () => null : (e) => this.logger.error(e.stack);
+                await this.pgExec(q, logger, null, logger);
             }
         }
     }
 }
 
 module.exports = {
-    databaseService: new DatabaseService()
+    databaseService: new DatabaseService(),
 };

@@ -15,35 +15,34 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('particle_phys_data', {
-                id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                },
-                name: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                    allowNull: false,
-                },
-                full_name: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                    allowNull: false,
-                },
-                a: {
-                    type: Sequelize.SMALLINT,
-                    allowNull: false,
-                },
-                z: {
-                    type: Sequelize.SMALLINT,
-                    allowNull: false,
-                    unique: true,
-                },
+            id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+                autoIncrement: true,
             },
-        )
+            name: {
+                type: Sequelize.STRING,
+                unique: true,
+                allowNull: false,
+            },
+            full_name: {
+                type: Sequelize.STRING,
+                unique: true,
+                allowNull: false,
+            },
+            a: {
+                type: Sequelize.SMALLINT,
+                allowNull: false,
+            },
+            z: {
+                type: Sequelize.SMALLINT,
+                allowNull: false,
+                unique: true,
+            },
+        });
     },
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface) {
         await queryInterface.dropTable('particle_phys_data');
-    }
+    },
 };

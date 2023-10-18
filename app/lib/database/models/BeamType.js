@@ -1,4 +1,3 @@
-
 /**
  * @license
  * Copyright CERN and copyright holders of ALICE O2. This software is
@@ -21,11 +20,11 @@ module.exports = (sequelize) => {
             unique: true,
             field: 'beam_type',
         },
-    }, { timestamps: false, tableName: 'beams_dictionary'});
+    }, { timestamps: false, tableName: 'beams_dictionary' });
 
     BeamType.associate = (models) => {
-        BeamType.hasMany(models.Period); 
+        BeamType.hasMany(models.Period);
     };
-    
+
     return BeamType;
 };

@@ -76,7 +76,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
             state = this.nextState(state);
         }
 
-        return results.flat().every((_) => _);
+        return results.flat().every((result) => result);
     }
 
     processRawResponse(rawResponse) {

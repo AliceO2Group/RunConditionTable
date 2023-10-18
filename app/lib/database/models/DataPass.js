@@ -46,7 +46,7 @@ module.exports = (sequelize) => {
             foreignKey: 'data_pass_id',
             timestamps: false,
         });
-        DataPass.hasMany(models.QualityControlFlag, {foreignKey: 'data_pass_id'});
+        DataPass.hasMany(models.QualityControlFlag, { foreignKey: 'data_pass_id' });
     };
 
     return DataPass;

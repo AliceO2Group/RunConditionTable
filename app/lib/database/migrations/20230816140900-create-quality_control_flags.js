@@ -15,77 +15,76 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('quality_control_flags', {
-                id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                },
-                time_start: {
-                    type: Sequelize.DATE,
-                    allowNull: true,
-                },
-                time_end: {
-                    type: Sequelize.DATE,
-                    allowNull: true,
-                },
-                entire: {
-                    type: Sequelize.BOOLEAN,
-                    allowNull: false,
-                },
-                comment: {
-                    type: Sequelize.TEXT,
-                },
-                added_by: {
-                    type: Sequelize.STRING,
-                    allowNull: false,
-                },
-                run_number: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    references: {
-                        model: 'runs',
-                        key: 'run_number',
-                    },
-                },
-                data_pass_id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    references: {
-                        model: 'data_passes',
-                        key: 'id',
-                    },
-                },
-                detector_id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    references: {
-                        model: 'detectors_subsystems',
-                        key: 'id',
-                    },
-                },
-                flag_type_id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    references: {
-                        model: 'flag_types_dictionary',
-                        key: 'id',
-                    },
-                },
-                created_at: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-                },
-                updated_at: {
-                    allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            time_start: {
+                type: Sequelize.DATE,
+                allowNull: true,
+            },
+            time_end: {
+                type: Sequelize.DATE,
+                allowNull: true,
+            },
+            entire: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+            },
+            comment: {
+                type: Sequelize.TEXT,
+            },
+            added_by: {
+                type: Sequelize.STRING,
+                allowNull: false,
+            },
+            run_number: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'runs',
+                    key: 'run_number',
                 },
             },
-        )
+            data_pass_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'data_passes',
+                    key: 'id',
+                },
+            },
+            detector_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'detectors_subsystems',
+                    key: 'id',
+                },
+            },
+            flag_type_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'flag_types_dictionary',
+                    key: 'id',
+                },
+            },
+            created_at: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+            updated_at: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+        });
     },
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface) {
         await queryInterface.dropTable('quality_control_flags');
-    }
+    },
 };

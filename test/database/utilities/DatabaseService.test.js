@@ -13,7 +13,6 @@
 const { databaseService } = require('../../../app/lib/database/DatabaseService');
 const assert = require('assert');
 
-
 module.exports = () => {
     describe('DatabaseSuite', () => {
         describe('Check methods of DatabaseService', () => {

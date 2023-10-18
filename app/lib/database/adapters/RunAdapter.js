@@ -17,7 +17,7 @@ class RunAdapter {
     constructor() {
         this.detectorSubsystemAdapter = new DetectorSubsystemAdapter();
     }
-    
+
     /**
      * Converts the given database object to an entity object.
      *
@@ -55,13 +55,13 @@ class RunAdapter {
             l3CurrentVal,
             dipoleCurrentVal,
             detectorSubsystems: DetectorSubsystems?.map(this.detectorSubsystemAdapter.toEntity.bind(this.detectorSubsystemAdapter)),
-        }
+        };
     }
 
     /**
      * Converts the given entity object to database object.
      *
-     * @param {Run} databaseObject Object to convert.
+     * @param {Run} entityObject Object to convert.
      * @returns {SequelizeRun} Converted entity object.
      */
     toDatabase(entityObject) {
@@ -87,7 +87,7 @@ class RunAdapter {
             lhcBeamEnergy,
             l3CurrentVal,
             dipoleCurrentVal,
-        }
+        };
     }
 }
 

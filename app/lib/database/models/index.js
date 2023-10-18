@@ -11,8 +11,6 @@
  * or submit itself to any jurisdiction.
  */
 
-const Sequelize = require('sequelize');
-
 const BeamType = require('./BeamType.js');
 const Period = require('./Period.js');
 const Run = require('./Run.js');
@@ -27,8 +25,8 @@ const ParticlesPhysData = require('./ParticilesPhysData.js');
 const MetaData = require('./Meta.js');
 
 /**
- * 
- * @param {Sequelize} sequelize instance 
+ * Prepare sequelize models instances
+ * @param {Sequelize} sequelize instance
  * @returns {Object<string, Sequelize.Model>} dict modelName -> sequelize model
  */
 const modelsFactory = (sequelize) => {
@@ -46,10 +44,10 @@ const modelsFactory = (sequelize) => {
         ParticlesPhysData,
         MetaData,
     };
-    models = Object.entries(models).map(([modelName, model]) => [modelName, model(sequelize)]); // instantiate models
-    models.forEach(([_, modelInstance]) => modelInstance.associate?.(sequelize.models)); // associate models
+    models = Object.entries(models).map(([modelName, model]) => [modelName, model(sequelize)]); // Instantiate models
+    models.forEach(([_, modelInstance]) => modelInstance.associate?.(sequelize.models)); // Associate models
     models = Object.fromEntries(models);
-    
+
     return models;
 };
 

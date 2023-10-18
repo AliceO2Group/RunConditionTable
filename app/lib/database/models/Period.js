@@ -12,7 +12,6 @@
  */
 
 const Sequelize = require('sequelize');
-const { extractPeriodYear } = require('../../utils');
 
 module.exports = (sequelize) => {
     const Period = sequelize.define('Period', {
@@ -28,13 +27,13 @@ module.exports = (sequelize) => {
     Period.associate = (models) => {
         Period.hasMany(models.Run);
         Period.hasMany(models.DataPass);
-        Period.belongsTo(models.BeamType, {foreginKey: 'beam_type_id'})
-        Period.belongsToMany(models.SimulationPass,  {
+        Period.belongsTo(models.BeamType, { foreginKey: 'beam_type_id' });
+        Period.belongsToMany(models.SimulationPass, {
             through: 'anchored_periods',
             foreignKey: 'period_id',
             timestamps: false,
         });
     };
-    
+
     return Period;
 };

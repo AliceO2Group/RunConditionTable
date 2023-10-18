@@ -11,7 +11,6 @@
  * or submit itself to any jurisdiction.
  */
 
-
 class PeriodAdapter {
     /**
      * Converts the given database object to an entity object.
@@ -40,17 +39,17 @@ class PeriodAdapter {
             beamTypeId: BeamTypeId,
             beamType: BeamType?.name,
             avgEnergy,
-            distinctEnergies : distinctEnergies.filter((_) => (_)),
+            distinctEnergies: distinctEnergies.filter((energy) => energy),
             runsCount: Number(runsCount),
             dataPassesCount: Number(dataPassesCount),
             simulationPassesCount: Number(simulationPassesCount),
-        }
+        };
     }
 
     /**
      * Converts the given entity object to database object.
      *
-     * @param {Period} databaseObject Object to convert.
+     * @param {Period} entityObject Object to convert.
      * @returns {SequelizePeriod} Converted entity object.
      */
     toDatabase(entityObject) {
@@ -77,7 +76,7 @@ class PeriodAdapter {
             runsCount,
             dataPassesCount,
             simulationPassesCount,
-        }
+        };
     }
 }
 
