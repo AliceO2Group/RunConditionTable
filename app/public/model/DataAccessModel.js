@@ -79,14 +79,6 @@ export default class DataAccessModel extends Observable {
         this.fetchedData.changeRecordsVisibility(this.getCurrentData());
     }
 
-    async sync() {
-        const syncEndpoint = '/api/sync/';
-        this.loader.get(syncEndpoint);
-        await this.fetchedData.reqForData(true);
-        document.location.reload(true);
-        this.notify();
-    }
-
     getDataPointerFromUrl(url) {
         const pointer = Object.fromEntries(new URLSearchParams(url.search));
         return {
