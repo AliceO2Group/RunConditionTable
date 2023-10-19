@@ -13,7 +13,7 @@
  */
 
 const states = {
-    default: 'default',
+    default: 'dataAccess',
     serviceUnavailable: 'serviceUnavailable',
     sessionError: 'sessionError',
     dataAccess: 'dataAccess',
