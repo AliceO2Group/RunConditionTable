@@ -16,7 +16,7 @@ const { Log } = require('@aliceo2/web-ui');
 const { Pool } = require('pg');
 const { PGQueryBuilder } = require('./utilities');
 const config = require('./../config/configProvider.js');
-const { distinct, isInDevMode, isInTestMode } = require('../utils');
+const { distinct } = require('../utils');
 
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataResponseFields;
@@ -47,35 +47,7 @@ class DatabaseService {
     }
 
     async loginSession(req, res) {
-        const { body } = req;
-        let userData = this.loggedUsers.tokenToUserData[req.query.token];
-        if (!userData) {
-            this.logger.info('Logging new client: ');
-            userData = {
-                loginDate: new Date(),
-                name: body.username,
-                lastReqTime: new Date(),
-                token: req.query.token,
-            };
-            this.loggedUsers.tokenToUserData[req.query.token] = userData;
-            this.responseWithStatus(res, 200, 'logged');
-        } else {
-            this.logger.info(`Restoring session with client: ${userData}`);
-            this.responseWithStatus(res, 200, 'session restored');
-        }
-    }
-
-    async logoutSession(req, res) {
-        const { token } = req.query;
-        const userData = this.loggedUsers.tokenToUserData[token];
-        if (userData) {
-            this.loggedUsers.tokenToUserData[token] = undefined;
-        }
-        if (userData) {
-            this.responseWithStatus(res, 200, 'successfully logout');
-        } else {
-            this.responseWithStatus(res, 409, 'not logged');
-        }
+        this.responseWithStatus(res, 200, 'logged');
     }
 
     async pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler) {
