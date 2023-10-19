@@ -46,10 +46,6 @@ class DatabaseService {
         });
     }
 
-    async loginSession(req, res) {
-        this.responseWithStatus(res, 200, 'logged');
-    }
-
     async pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler) {
         const client = await this.pool.connect().catch((e) => {
             if (connectErrorHandler) {
