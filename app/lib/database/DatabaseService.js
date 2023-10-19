@@ -106,10 +106,6 @@ class DatabaseService {
     }
 
     async pgExecFetchData(req, res) {
-        if (!this.checkToken(req, res)) {
-            return;
-        }
-
         const params = { ...req.query, ...req.params };
 
         const connectErrorHandler = (connectErr) => {
@@ -147,17 +143,6 @@ class DatabaseService {
             this.logger.error(`${e.message} :: ${e.stack}`);
             this.responseWithStatus(res, 500);
         }
-    }
-
-    checkToken(req, res) {
-        const userData = this.loggedUsers.tokenToUserData[req.query.token];
-        if (!userData && !(isInDevMode() || isInTestMode())) {
-            const mess = 'SESSION_ERROR:: no user with such token';
-            this.logger.error(mess, req.query);
-            this.responseWithStatus(res, 400, mess);
-            return false;
-        }
-        return true;
     }
 
     responseWithStatus(res, status, message) {
