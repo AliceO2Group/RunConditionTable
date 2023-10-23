@@ -154,7 +154,7 @@ class ResProvider {
 
     static socksProvider() {
         const cern_socks_env_var = process.env.CERN_SOCKS;
-        logger.info(`CERN_SOCKS set to '${cern_socks_env_var}'`);
+        logger.debug(`CERN_SOCKS set to '${cern_socks_env_var}'`);
         if (process.env.RUNNING_ENV == 'DOCKER' && cern_socks_env_var?.toLowerCase() === 'true') {
             return 'socks://172.200.200.1:12345';
         }
@@ -233,9 +233,9 @@ class ResProvider {
 
     static passphraseProvider() {
         if (process.env.ALIMONITOR_PASSPHRASE) {
-            logger.info('using passphrase');
+            logger.debug('using passphrase');
         } else {
-            logger.info('no passphrase');
+            logger.debug('no passphrase');
         }
         return process.env.ALIMONITOR_PASSPHRASE;
     }

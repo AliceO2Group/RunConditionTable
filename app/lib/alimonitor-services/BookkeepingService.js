@@ -72,7 +72,7 @@ class BookkeepingService extends AbstractServiceSynchronizer {
                 this.metaDataHandler.bind(this),
             );
             results.push(partialResult);
-            this.logger.info(`processed ${state['page']} pages of ${this.metaStore['pageCount']}`);
+            this.logger.debug(`processed ${state['page']} pages of ${this.metaStore['pageCount']}`);
             state = this.nextState(state);
         }
 
