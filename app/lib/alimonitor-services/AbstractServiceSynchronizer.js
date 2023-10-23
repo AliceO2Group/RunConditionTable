@@ -75,14 +75,6 @@ class AbstractServiceSynchronizer {
             true,
         );
 
-        const { logsStacker } = pfxWrp;
-        logsStacker.logType('info');
-        if (!pfxWrp.content) {
-            if (logsStacker.any('error')) {
-                logsStacker.logType('warn');
-                logsStacker.logType('error');
-            }
-        }
         const passphrase = ResProvider.passphraseProvider();
 
         opts.pfx = pfxWrp.content;

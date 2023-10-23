@@ -137,17 +137,15 @@ class ResProvider {
         }
         if (!secContent) {
             logsStacker.put(
-                'error',
+                'warn',
                 `${description}: cannot load file from provided files: [${fileNames.join(',')}] nor from env var ${envVarName}`,
             );
         }
 
         if (!supressLogs) {
-            logsStacker.typeLog('info');
-            if (logsStacker.any('error')) {
-                logsStacker.typeLog('warn');
-                logsStacker.typeLog('error');
-            }
+            logsStacker.logType('info');
+            logsStacker.logType('warn');
+            logsStacker.logType('error');
         }
         return { content: secContent, logsStacker: logsStacker };
     }
