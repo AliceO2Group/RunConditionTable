@@ -17,7 +17,7 @@ import flagsPanel from '../../flags/overview/flagsPanel.js';
 import { default as runsPerDataPassPanel } from '../../runs/runsPerDataPass/overview/panel.js';
 import { default as runsPerPeriodPanel } from '../../runs/runsPerPeriod/overview/panel.js';
 import { failureWithStatus, obsoleteUnknown, waiting } from '../../../components/messagePanel/messages.js';
-import { RCT } from '../../../config.js';
+const RCT = window.RCT_CONF;
 import periodsPanel from '../../periods/overview/periodsPanel.js';
 const { pageNames } = RCT;
 

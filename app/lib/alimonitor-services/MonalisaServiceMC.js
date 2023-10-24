@@ -16,7 +16,7 @@
 const AbstractServiceSynchronizer = require('./AbstractServiceSynchronizer.js');
 const Utils = require('../utils');
 const { ServicesEndpointsFormatter, ServicesDataCommons: { extractPeriod, PERIOD_NAME_REGEX } } = require('./helpers');
-const config = require('../config/configProvider.js');
+const config = require('../../config');
 
 const { databaseManager: {
     repositories: {

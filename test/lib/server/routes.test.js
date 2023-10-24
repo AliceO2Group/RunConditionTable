@@ -44,25 +44,26 @@ module.exports = () => {
             });
         });
         describe('Endpoints for fetching data', () => {
-            routes.filter(({ method }) => method === 'get').map(async ({ path }) => {
-                // eslint-disable-next-line max-len
-                const url = new URL(`${getSelfLink()}/api${replaceAll(path, /:[^/]+/, '0')}`);
-                it(`should fetch from ${path} <${url}> without errors`, async () => {
-                    await assert.doesNotReject(makeHttpRequestForJSON(url));
-                });
-                if (url.pathname !== '/api/api-docs') {
-                    it(`should fetch from ${path} <${url}> corretly formatted data`, async () => {
-                        await assert.doesNotReject(responseSchema.validateAsync(await makeHttpRequestForJSON(url)));
-                    });
-                }
-                if (url.pathname !== '/api/api-docs') { // Limit/offset are supported for endpoints which controllers based on sequelize
-                    url.searchParams.append('page[limit]', 2);
-                    url.searchParams.append('page[offset]', 1);
+            routes
+                .filter(({ method, path }) => method === 'get' && path !== '/configuration.js')
+                .map(async ({ path }) => {
+                    const url = new URL(`${getSelfLink()}/api${replaceAll(path, /:[^/]+/, '0')}`);
                     it(`should fetch from ${path} <${url}> without errors`, async () => {
                         await assert.doesNotReject(makeHttpRequestForJSON(url));
                     });
-                }
-            });
+                    if (url.pathname !== '/api/api-docs') {
+                        it(`should fetch from ${path} <${url}> corretly formatted data`, async () => {
+                            await assert.doesNotReject(responseSchema.validateAsync(await makeHttpRequestForJSON(url)));
+                        });
+                    }
+                    if (url.pathname !== '/api/api-docs') { // Limit/offset are supported for endpoints which controllers based on sequelize
+                        url.searchParams.append('page[limit]', 2);
+                        url.searchParams.append('page[offset]', 1);
+                        it(`should fetch from ${path} <${url}> without errors`, async () => {
+                            await assert.doesNotReject(makeHttpRequestForJSON(url));
+                        });
+                    }
+                });
         });
 
         describe('Legacy endpoints for fetching data', () => {

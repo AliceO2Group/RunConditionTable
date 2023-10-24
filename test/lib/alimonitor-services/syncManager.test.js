@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const { rctData: { detectors } } = require('../../../app/lib/config/configProvider.js');
+const { rctData: { detectors } } = require('../../../app/lib/../config');
 const { syncManager: {
     services: {
         bookkeepingService,

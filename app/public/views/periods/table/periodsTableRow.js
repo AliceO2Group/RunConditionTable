@@ -13,7 +13,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../../config.js';
+const RCT = window.RCT_CONF;
 import { rowDisplayStyle } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function periodsTableRow(periodData, navigation, periodsModel) {

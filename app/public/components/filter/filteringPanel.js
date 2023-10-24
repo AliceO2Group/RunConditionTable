@@ -14,7 +14,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../config.js';
+const RCT = window.RCT_CONF;
 const { filterTypes } = RCT;
 
 /**

@@ -14,7 +14,7 @@
 
 import { Observable } from '/js/src/index.js';
 import { replaceUrlParams } from '../utils/url/urlUtils.js';
-import { RCT } from '../config.js';
+const RCT = window.RCT_CONF;
 const { dataReqParams } = RCT;
 
 const defaultItemsPerPage = 50;

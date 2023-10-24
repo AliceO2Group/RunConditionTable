@@ -12,7 +12,7 @@
  */
 
 import { Observable, RemoteData } from '/js/src/index.js';
-import { RCT } from '../../../config.js';
+const RCT = window.RCT_CONF;
 import { pageTitle } from '../../../components/common/pageTitle.js';
 import { getRemoteDataSlice } from '../../../utils/fetch/getRemoteDataSlice.js';
 import RunsModel from './RunsModel.js';

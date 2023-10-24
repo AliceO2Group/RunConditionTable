@@ -17,7 +17,7 @@ const { rctData: {
             values: beamTypes,
         },
     },
-} } = require('../../../../app/lib/config/configProvider.js');
+} } = require('../../../../app/lib/../config');
 
 const randint = (min = 0, max = 0) => Math.round(Math.random() * (max - min) + min);
 const choice = (arr) => arr[Math.floor(Math.random() * arr.length)];

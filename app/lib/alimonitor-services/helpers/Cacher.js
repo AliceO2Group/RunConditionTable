@@ -15,7 +15,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const config = require('../../config/configProvider');
+const config = require('../../../config');
 const { createHash } = require('crypto');
 
 const maxSystemFileNameLength = process.env.MAX_FILE_NAME_LENGTH || 255;

@@ -23,7 +23,7 @@ const { ServicesEndpointsFormatter,
     },
 } = require('./helpers');
 const MonalisaServiceDetails = require('./MonalisaServiceDetails.js');
-const config = require('../config/configProvider.js');
+const config = require('../../config');
 
 const { databaseManager: {
     repositories: {

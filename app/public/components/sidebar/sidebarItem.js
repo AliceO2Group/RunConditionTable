@@ -13,7 +13,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../config.js';
+const RCT = window.RCT_CONF;
 const { pageNames } = RCT;
 
 export default function sidebarItem(model, pageName, label) {

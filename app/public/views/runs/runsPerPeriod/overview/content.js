@@ -27,7 +27,7 @@ import sortingRow from '../../../userView/data/table/sortingRow.js';
 import { noMatchingData, noDataFound } from '../../../../components/messagePanel/messages.js';
 import noSubPageSelected from '../../../userView/data/table/noSubPageSelected.js';
 import dataActionButtons, { dataActions } from '../../../../components/buttons/dataActionButtons.js';
-import { RCT } from '../../../../config.js';
+const RCT = window.RCT_CONF;
 const { pageNames } = RCT;
 
 const applicableDataActions = {

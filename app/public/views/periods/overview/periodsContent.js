@@ -12,7 +12,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../../config.js';
+const RCT = window.RCT_CONF;
 import title from '../../../components/table/title.js';
 import dataActionButtons, { dataActions } from '../../../components/buttons/dataActionButtons.js';
 import { anyFiltersActive } from '../../../utils/filtering/filterUtils.js';

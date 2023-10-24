@@ -19,10 +19,12 @@ const dataPassRouter = require('./dataPass.router.js');
 const docsRouter = require('./docs.router.js');
 const simulationPassRouter = require('./simulationPass.router.js');
 const qualityControlRouter = require('./qualityControl.router.js');
+const configurationRouter = require('./configuration.router.js');
 const { isInDevMode, isInTestMode } = require('../../utils');
 
 const routeTrees = [
     docsRouter,
+    configurationRouter,
     periodRouter,
     runRouter,
     dataPassRouter,

@@ -15,7 +15,7 @@
 import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../userView/data/headersSpecials.js';
 import fields from './fields.js';
-import { RCT } from '../../../config.js';
+const RCT = window.RCT_CONF;
 
 export default function flagsTableHeader(model) {
     const displayedFields = fields.filter((e) => e.display === true);

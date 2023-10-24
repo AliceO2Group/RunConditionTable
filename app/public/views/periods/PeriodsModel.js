@@ -14,7 +14,7 @@
 import { Observable, RemoteData } from '/js/src/index.js';
 import { PaginationModel } from '../../components/table/pagination/PaginationModel.js';
 import { getRemoteDataSlice } from '../../utils/fetch/getRemoteDataSlice.js';
-import { RCT } from '../../config.js';
+const RCT = window.RCT_CONF;
 import { createCSVExport, createJSONExport } from '../../utils/dataExport/export.js';
 import { exportFormats } from './overview/dataExport.js';
 import { pageTitle } from '../../components/common/pageTitle.js';

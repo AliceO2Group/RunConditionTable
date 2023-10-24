@@ -13,7 +13,7 @@
 
 import { Observable, RemoteData } from '/js/src/index.js';
 import { PaginationModel } from '../../../components/table/pagination/PaginationModel.js';
-import { RCT } from '../../../config.js';
+const RCT = window.RCT_CONF;
 import { getRemoteDataSlice } from '../../../utils/fetch/getRemoteDataSlice.js';
 
 /**

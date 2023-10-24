@@ -12,6 +12,10 @@
  * or submit itself to any jurisdiction.
  */
 
+global.window = {
+    RCT_CONF: require('../app/config').public,
+};
+
 const DatabaseSuite = require('./database');
 const ApiSuite = require('./api');
 const PublicSuite = require('./public');

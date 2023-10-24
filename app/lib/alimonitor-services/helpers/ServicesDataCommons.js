@@ -14,7 +14,7 @@
  */
 
 const Utils = require('../../utils');
-const { rctData } = require('../../config/configProvider.js');
+const { rctData } = require('../../../config');
 
 /**
  * PERIOD_NAME_REGEX is a regular expression for examining

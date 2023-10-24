@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 import { h } from '/js/src/index.js';
-import { RCT } from '../../../config.js';
+const RCT = window.RCT_CONF;
 import { getReadableFileSizeString, dateFormatter } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 import linkChip from '../../../components/chips/linkChip.js';
 import { buildHref } from '../../../utils/url/urlUtils.js';

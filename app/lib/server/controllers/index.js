@@ -18,4 +18,5 @@ module.exports = {
     DataPassController: require('./dataPass.controller.js'),
     SimulationPassController: require('./simulationPass.controller.js'),
     QualityControlController: require('./qualityControl.controller.js'),
+    ConfigurationController: require('./configuration.controller.js'),
 };

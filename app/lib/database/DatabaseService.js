@@ -15,7 +15,7 @@
 const { Log } = require('@aliceo2/web-ui');
 const { Pool } = require('pg');
 const { PGQueryBuilder } = require('./utilities');
-const config = require('./../config/configProvider.js');
+const config = require('./../../config');
 const { distinct, isInDevMode, isInTestMode } = require('../utils');
 
 const DRP = config.public.dataReqParams;

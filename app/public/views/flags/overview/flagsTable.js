@@ -13,7 +13,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../../config.js';
+const RCT = window.RCT_CONF;
 import flagsTableHeader from '../table/flagsTableHeader.js';
 import flagsTableRow from '../table/flagsTableRow.js';
 import pagesCellsSpecials from '../../userView/data/pagesCellsSpecials.js';

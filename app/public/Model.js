@@ -14,7 +14,7 @@
 
 import { Observable, sessionService, QueryRouter, Loader } from '/js/src/index.js';
 import DataAccessModel from './model/DataAccessModel.js';
-import { RCT } from './config.js';
+const RCT = window.RCT_CONF;
 import Flags from './views/flags/Flags.js';
 import Detectors from './views/detectors/Detectors.js';
 import Runs from './views/runs/Runs.js';
