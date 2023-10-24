@@ -52,8 +52,6 @@ class RunConditionTableApplication {
         const { httpServer } = this;
         const { databaseService } = this;
 
-        httpServer.post(EP.login, (req, res) => databaseService.loginSession(req, res));
-        httpServer.post(EP.logout, (req, res) => databaseService.logoutSession(req, res));
         httpServer.get(EP.rctData, (req, res) => databaseService.pgExecFetchData(req, res), { public: isInDevMode() || isInTestMode() });
         httpServer.post(EP.insertData, (req, res) => databaseService.pgExecDataInsert(req, res), { public: isInDevMode() || isInTestMode() });
         httpServer.get(EP.sync, async (_req, _res) => this.syncManager.syncAll());

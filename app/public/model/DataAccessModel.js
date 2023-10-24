@@ -79,32 +79,6 @@ export default class DataAccessModel extends Observable {
         this.fetchedData.changeRecordsVisibility(this.getCurrentData());
     }
 
-    async logout() {
-        const logoutEndpoint = '/api/logout/';
-        const { result, status, ok } = this.loader.post(logoutEndpoint);
-        await this.parent._tokenExpirationHandler(status);
-
-        localStorage.token = null;
-        this.parent.mode = 'default';
-
-        if (!ok) {
-            alert(`Some error occurred: ${JSON.stringify(result)}`);
-        } else {
-            alert('successfully logged out');
-        }
-
-        this.router.go('/');
-        this.notify();
-    }
-
-    async sync() {
-        const syncEndpoint = '/api/sync/';
-        this.loader.get(syncEndpoint);
-        await this.fetchedData.reqForData(true);
-        document.location.reload(true);
-        this.notify();
-    }
-
     getDataPointerFromUrl(url) {
         const pointer = Object.fromEntries(new URLSearchParams(url.search));
         return {

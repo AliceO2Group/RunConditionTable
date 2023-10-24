@@ -16,7 +16,7 @@ const { Log } = require('@aliceo2/web-ui');
 const { Pool } = require('pg');
 const { PGQueryBuilder } = require('./utilities');
 const config = require('./../config/configProvider.js');
-const { distinct, isInDevMode, isInTestMode } = require('../utils');
+const { distinct } = require('../utils');
 
 const DRP = config.public.dataReqParams;
 const DRF = config.public.dataResponseFields;
@@ -44,38 +44,6 @@ class DatabaseService {
         this.pool.on('error', (e) => {
             this.logger.error(`database pg pool fatal error: ${e.stack}`);
         });
-    }
-
-    async loginSession(req, res) {
-        const { body } = req;
-        let userData = this.loggedUsers.tokenToUserData[req.query.token];
-        if (!userData) {
-            this.logger.info('Logging new client: ');
-            userData = {
-                loginDate: new Date(),
-                name: body.username,
-                lastReqTime: new Date(),
-                token: req.query.token,
-            };
-            this.loggedUsers.tokenToUserData[req.query.token] = userData;
-            this.responseWithStatus(res, 200, 'logged');
-        } else {
-            this.logger.info(`Restoring session with client: ${userData}`);
-            this.responseWithStatus(res, 200, 'session restored');
-        }
-    }
-
-    async logoutSession(req, res) {
-        const { token } = req.query;
-        const userData = this.loggedUsers.tokenToUserData[token];
-        if (userData) {
-            this.loggedUsers.tokenToUserData[token] = undefined;
-        }
-        if (userData) {
-            this.responseWithStatus(res, 200, 'successfully logout');
-        } else {
-            this.responseWithStatus(res, 409, 'not logged');
-        }
     }
 
     async pgExec(query, connectErrorHandler, dbResponseHandler, dbResErrorHandler) {
@@ -106,10 +74,6 @@ class DatabaseService {
     }
 
     async pgExecFetchData(req, res) {
-        if (!this.checkToken(req, res)) {
-            return;
-        }
-
         const params = { ...req.query, ...req.params };
 
         const connectErrorHandler = (connectErr) => {
@@ -147,17 +111,6 @@ class DatabaseService {
             this.logger.error(`${e.message} :: ${e.stack}`);
             this.responseWithStatus(res, 500);
         }
-    }
-
-    checkToken(req, res) {
-        const userData = this.loggedUsers.tokenToUserData[req.query.token];
-        if (!userData && !(isInDevMode() || isInTestMode())) {
-            const mess = 'SESSION_ERROR:: no user with such token';
-            this.logger.error(mess, req.query);
-            this.responseWithStatus(res, 400, mess);
-            return false;
-        }
-        return true;
     }
 
     responseWithStatus(res, status, message) {

@@ -70,9 +70,6 @@ export default class Model extends Observable {
         this.dataAccess.bubbleTo(this);
         this.dataAccess.setState(dataAccess.states.default);
 
-        this.loginEndpoint = `/api${RCT.endpoints.login}`;
-        this.login('physicist');
-
         this.handleLocationChange();
     }
 
@@ -92,21 +89,6 @@ export default class Model extends Observable {
                 break;
             default:
                 break;
-        }
-    }
-
-    async login(username) {
-        this.dataAccess.setState(dataAccess.states.default);
-        this.notify();
-
-        const { status, result, ok } = await this.loader.post(this.loginEndpoint, { username: username });
-        await this._tokenExpirationHandler(status);
-        if (ok) {
-            localStorage.token = sessionService.session.token;
-            this.dataAccess.setState(dataAccess.states.dataAccess);
-            this.notify();
-        } else if (/5\d\d/.test(status)) {
-            this.dataAccess.setState(dataAccess.states.serviceUnavailable, result);
         }
     }
 
@@ -144,9 +126,5 @@ export default class Model extends Observable {
     async controlServerRequest(name = '/api/auth-control/') {
         const { status } = this.loader.get(name);
         await this._tokenExpirationHandler(status);
-    }
-
-    restoreSession() {
-        //TODO
     }
 }
