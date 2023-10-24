@@ -14,7 +14,7 @@
  */
 
 const { switchCase } = require('../../utils');
-const config = require('../../config/configProvider');
+const config = require('../../../config');
 
 class PassCorrectnessMonitor {
     constructor(logger, errorsLoggingDepth) {

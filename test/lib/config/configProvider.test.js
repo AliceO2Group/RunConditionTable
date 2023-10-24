@@ -12,7 +12,7 @@
  */
 
 const { assert } = require('chai');
-const config = require('../../../app/lib/config/configProvider');
+const config = require('../../../app/lib/../config');
 
 module.exports = () => {
     describe('Config Provider', () => {

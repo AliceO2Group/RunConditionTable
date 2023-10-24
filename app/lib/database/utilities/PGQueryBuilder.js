@@ -12,7 +12,7 @@
  * or submit itself to any jurisdiction.
  */
 
-const config = require('../../config/configProvider.js');
+const config = require('../../../config');
 const views = require('../views');
 const procedures = require('../procedures');
 const { adjustValuesToSql, switchCase } = require('../../utils');

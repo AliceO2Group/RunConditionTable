@@ -14,7 +14,7 @@
 const { HttpServer } = require('@aliceo2/web-ui');
 const AuthControlManager = require('./AuthControlManager.js');
 const path = require('path');
-const config = require('../config/configProvider.js');
+const config = require('../../config');
 const { bindApiEndpoints } = require('./routers');
 
 const EP = config.public.endpoints;

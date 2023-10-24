@@ -13,8 +13,7 @@
  */
 // RCT
 const { Log } = require('@aliceo2/web-ui');
-const config = require('./lib/config/configProvider.js');
-const { buildPublicConfig } = require('./lib/config/publicConfigProvider.js');
+const config = require('./config');
 
 // Services
 const { syncManager } = require('./lib/alimonitor-services/SyncManager.js');
@@ -44,8 +43,6 @@ class RunConditionTableApplication {
         this.databaseManager = databaseManager;
         this.syncManager = syncManager;
         this.defineEndpoints();
-
-        buildPublicConfig(config);
     }
 
     defineEndpoints() {

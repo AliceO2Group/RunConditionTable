@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { Cacher } = require('../../../../app/lib/alimonitor-services/helpers');
-const { rctData: { detectors } } = require('../../../../app/lib/config/configProvider.js');
+const { rctData: { detectors } } = require('../../../../app/lib/../config');
 
 const { randint, choice, universalNoncontextualArrayDataGenerator, randomPeriodName, randomRunNumber, randomBeamType } = require('./common.js');
 

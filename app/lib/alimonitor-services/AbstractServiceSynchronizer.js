@@ -15,7 +15,7 @@
 
 const { SocksProxyAgent } = require('socks-proxy-agent');
 const { Log } = require('@aliceo2/web-ui');
-const config = require('../config/configProvider.js');
+const config = require('../../config');
 const { ResProvider, makeHttpRequestForJSON, arrayToChunks, applyOptsToObj, throwNotImplemented } = require('../utils');
 const { Cacher, PassCorrectnessMonitor, ProgressMonitor } = require('./helpers');
 
