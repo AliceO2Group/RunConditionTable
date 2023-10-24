@@ -16,7 +16,7 @@ import { h } from '/js/src/index.js';
 import flagsIndexChip from './flagsIndexChip.js';
 import title from '../table/title.js';
 import { extractPeriodName } from '../../utils/dataProcessing/dataProcessingUtils.js';
-import { RCT } from '../../config.js';
+const RCT = window.RCT_CONF;
 const { pageNames } = RCT;
 
 export default function flagBreadCrumbs(model, dataPass, run, detector) {

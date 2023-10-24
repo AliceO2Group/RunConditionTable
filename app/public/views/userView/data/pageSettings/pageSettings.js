@@ -14,7 +14,7 @@
 
 import { h, iconChevronBottom } from '/js/src/index.js';
 import quantityInput from '../../../../components/common/quantityInput.js';
-import { RCT } from '../../../../config.js';
+const RCT = window.RCT_CONF;
 
 export default function pageSettings(userPreferences, close) {
     const itemsPerPageInputId = 'rows-per-page-input-id-modal';

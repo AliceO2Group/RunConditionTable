@@ -13,7 +13,7 @@
  */
 
 import { h } from '/js/src/index.js';
-import { RCT } from '../../config.js';
+const RCT = window.RCT_CONF;
 import sidebarItem from './sidebarItem.js';
 import { modal, modalIds, showModal } from '../../views/modal/modal.js';
 import { pageTitle } from '../common/pageTitle.js';

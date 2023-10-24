@@ -16,6 +16,6 @@
 const { public: publicConfig } = require('../../../config');
 
 const getConfigurationHandler = async (_, response) =>
-    await response.status(200).type('.js').send(`window.RCT_CONFIGURATION=${JSON.stringify(publicConfig)}`);
+    await response.status(200).type('.js').send(`window.RCT_CONF=${JSON.stringify(publicConfig)}`);
 
 module.exports = { getConfigurationHandler };

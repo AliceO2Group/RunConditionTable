@@ -14,7 +14,7 @@
 
 const defaultPageNumber = 1;
 
-import { RCT } from '../../config.js';
+const RCT = window.RCT_CONF;
 import { shouldDisplayDetectorField } from '../../utils/dataProcessing/dataProcessingUtils.js';
 const DRF = RCT.dataResponseFields;
 

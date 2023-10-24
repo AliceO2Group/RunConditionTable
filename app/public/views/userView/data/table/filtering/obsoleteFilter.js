@@ -15,7 +15,7 @@
 
 import { h } from '/js/src/index.js';
 import { getFieldName } from '../../headersSpecials.js';
-import { RCT } from '../../../../../config.js';
+const RCT = window.RCT_CONF;
 import { wrappedUserInput } from '../../../../../utils/filtering/filterUtils.js';
 const { filterTypes } = RCT;
 

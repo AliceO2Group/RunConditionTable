@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import flagVisualization from './flagVisualization.js';
-import { RCT } from '../../config.js';
+const RCT = window.RCT_CONF;
 import { dateFormatter } from '../../utils/dataProcessing/dataProcessingUtils.js';
 const { flagReasonColors } = RCT.quality;
 

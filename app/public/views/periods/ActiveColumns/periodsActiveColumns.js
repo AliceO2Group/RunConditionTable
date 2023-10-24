@@ -13,7 +13,7 @@
 
 import { h } from '/js/src/index.js';
 import linkChip from '../../../components/chips/linkChip.js';
-import { RCT } from '../../../config.js';
+const RCT = window.RCT_CONF;
 import { getClosestDefinedEnergy } from '../../../utils/dataProcessing/dataProcessingUtils.js';
 import { buildHref } from '../../../utils/url/urlUtils.js';
 const { dataReqParams: DRP, pageNames: PN, fieldNames: FN } = RCT;

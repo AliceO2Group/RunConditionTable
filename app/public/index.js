@@ -11,7 +11,6 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-window.RCT_CONF = window.RCT_CONFIGURATION;
 
 import { mount, sessionService } from '/js/src/index.js';
 import view from './view.js';

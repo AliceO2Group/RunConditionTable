@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import { getHeaderSpecial, headerSpecPresent, nonDisplayable } from '../../../userView/data/headersSpecials.js';
-import { RCT } from '../../../../config.js';
+const RCT = window.RCT_CONF;
 import { isDetectorField, shouldDisplayDetectorField } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function header(visibleFields, data, model) {

@@ -11,7 +11,7 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-import { RCT } from '../../config.js';
+const RCT = window.RCT_CONF;
 const { filterTypes, fieldNames, filterInputTypes } = RCT;
 const sqlWildCard = '%';
 

@@ -14,7 +14,7 @@
 
 import { h } from '/js/src/index.js';
 import detectorIcon from '../../../../components/detectors/detectorIcon.js';
-import { RCT } from '../../../../config.js';
+const RCT = window.RCT_CONF;
 import { isDetectorField, rowDisplayStyle, shouldDisplayDetectorField } from '../../../../utils/dataProcessing/dataProcessingUtils.js';
 
 export default function row(

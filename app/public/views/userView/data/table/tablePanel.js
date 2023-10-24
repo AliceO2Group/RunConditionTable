@@ -29,7 +29,7 @@ import noSubPageSelected from './noSubPageSelected.js';
 import title from '../../../../components/table/title.js';
 import { anyFiltersActive } from '../../../../utils/filtering/filterUtils.js';
 import dataActionButtons, { dataActions } from '../../../../components/buttons/dataActionButtons.js';
-import { RCT } from '../../../../config.js';
+const RCT = window.RCT_CONF;
 const { pageNames } = RCT;
 
 const applicableDataActions = {
