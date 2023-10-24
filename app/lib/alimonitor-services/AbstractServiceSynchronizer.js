@@ -75,14 +75,6 @@ class AbstractServiceSynchronizer {
             true,
         );
 
-        const { logsStacker } = pfxWrp;
-        logsStacker.logType('info');
-        if (!pfxWrp.content) {
-            if (logsStacker.any('error')) {
-                logsStacker.logType('warn');
-                logsStacker.logType('error');
-            }
-        }
         const passphrase = ResProvider.passphraseProvider();
 
         opts.pfx = pfxWrp.content;
@@ -94,10 +86,10 @@ class AbstractServiceSynchronizer {
     setHttpSocksProxy(opts) {
         const proxy = ResProvider.socksProvider();
         if (proxy?.length > 0) {
-            this.logger.info(`using proxy/socks '${proxy}' to CERN network`);
+            this.logger.debug(`using proxy/socks '${proxy}' to CERN network`);
             opts.agent = new SocksProxyAgent(proxy);
         } else {
-            this.logger.info('service do not use proxy/socks to reach CERN network');
+            this.logger.debug('service do not use proxy/socks to reach CERN network');
         }
         return opts;
     }
@@ -177,7 +169,7 @@ class AbstractServiceSynchronizer {
 
     async getRawResponse(endpoint) {
         if (this.useCacheJsonInsteadIfPresent && Cacher.isCached(this.name, endpoint) || this.forceToUseOnlyCache) {
-            this.logger.info(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
+            this.logger.debug(`using cached json :: ${Cacher.cachedFilePath(this.name, endpoint)}`);
             return Cacher.getJsonSync(this.name, endpoint);
         }
         const onSucces = (endpoint, data) => {
@@ -198,7 +190,7 @@ class AbstractServiceSynchronizer {
      * Minor errors are understood as e.g. managable ambiguities in data.
      */
     async setSyncTask(options) {
-        this.progressMonitor = new ProgressMonitor({ logger: this.logger.info.bind(this.logger), percentageStep: 0.25 });
+        this.progressMonitor = new ProgressMonitor({ logger: this.logger.debug.bind(this.logger), percentageStep: 0.25 });
         this.forceStop = false;
         return await this.sync(options)
             .catch((fatalError) => {

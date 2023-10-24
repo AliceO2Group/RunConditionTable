@@ -50,7 +50,7 @@ class PassCorrectnessMonitor {
             logger.warn(`sync unseccessful for ${incorrect}/${dataSize}`);
         }
         if (omitted > 0) {
-            logger.info(`omitted data units ${omitted}/${dataSize}`);
+            logger.debug(`omitted data units ${omitted}/${dataSize}`);
         }
     }
 }

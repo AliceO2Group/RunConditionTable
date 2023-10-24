@@ -137,24 +137,22 @@ class ResProvider {
         }
         if (!secContent) {
             logsStacker.put(
-                'error',
+                'warn',
                 `${description}: cannot load file from provided files: [${fileNames.join(',')}] nor from env var ${envVarName}`,
             );
         }
 
         if (!supressLogs) {
-            logsStacker.typeLog('info');
-            if (logsStacker.any('error')) {
-                logsStacker.typeLog('warn');
-                logsStacker.typeLog('error');
-            }
+            logsStacker.logType('info');
+            logsStacker.logType('warn');
+            logsStacker.logType('error');
         }
         return { content: secContent, logsStacker: logsStacker };
     }
 
     static socksProvider() {
         const cern_socks_env_var = process.env.CERN_SOCKS;
-        logger.info(`CERN_SOCKS set to '${cern_socks_env_var}'`);
+        logger.debug(`CERN_SOCKS set to '${cern_socks_env_var}'`);
         if (process.env.RUNNING_ENV == 'DOCKER' && cern_socks_env_var?.toLowerCase() === 'true') {
             return 'socks://172.200.200.1:12345';
         }
@@ -233,9 +231,9 @@ class ResProvider {
 
     static passphraseProvider() {
         if (process.env.ALIMONITOR_PASSPHRASE) {
-            logger.info('using passphrase');
+            logger.debug('using passphrase');
         } else {
-            logger.info('no passphrase');
+            logger.debug('no passphrase');
         }
         return process.env.ALIMONITOR_PASSPHRASE;
     }

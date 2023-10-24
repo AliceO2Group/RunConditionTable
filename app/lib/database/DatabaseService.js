@@ -166,7 +166,7 @@ class DatabaseService {
 
     async healthcheckInsertData() {
         for (const def of Object.values(config.rctData.healthcheckQueries.checkStaticData)) {
-            this.logger.info(`healthcheck : ${def.description}`);
+            this.logger.debug(`healthcheck : ${def.description}`);
             for (const q of def.query) {
                 const logger = config.rctData.suppressHealthcheckLogs ? () => null : (e) => this.logger.error(e.stack);
                 await this.pgExec(q, logger, null, logger);
