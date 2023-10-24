@@ -210,7 +210,9 @@ class ResProvider {
             RCT_DB_PORT: 'port',
             RCT_DB_LOGGING: 'logging',
         };
-        return ResProvider.viaEnvVars(databaseEnvVarsDef);
+        const conf = ResProvider.viaEnvVars(databaseEnvVarsDef);
+        conf.logging = conf.logging === 'true';
+        return conf;
     }
 
     static winston() {

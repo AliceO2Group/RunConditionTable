@@ -12,6 +12,18 @@
  * or submit itself to any jurisdiction.
  */
 
+global.m = () => ({});
+global.m.render = () => ({});
+global.window = {
+    location: new URL('http://localhost:8081/?personid=0&name=_&token=_&username=_&access=_'),
+    history: {
+        replaceState: () => ({}),
+    },
+    m: global.m,
+    requestAnimationFrame: () => ({}),
+    cancelAnimationFrame: () => ({}),
+};
+
 const DatabaseSuite = require('./database');
 const ApiSuite = require('./api');
 const PublicSuite = require('./public');
