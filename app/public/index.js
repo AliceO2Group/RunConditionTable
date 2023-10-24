@@ -11,35 +11,17 @@
  * granted to it by virtue of its status as an Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
+window.RCT_CONF = window.RCT_CONFIGURATION;
 
 import { mount, sessionService } from '/js/src/index.js';
 import view from './view.js';
 import Model from './Model.js';
-import { RCT } from './config.js';
 
 sessionService.loadAndHideParameters();
-
-/*
- * TODO it behaves strangely
- * if (localStorage.token !== null && localStorage.token !== undefined) {
- * 	console.log("Try to relog", localStorage.token);
- * 	sessionService.session.token = localStorage.token;
- * }
- */
 window.sessionService = sessionService;
-window.RCT = RCT;
 
 const model = new Model(window, document);
 const debug = true; // Shows when redraw is done
 mount(document.body, view, model, debug);
 
 window.model = model;
-
-/*
- * TODO
- * if (localStorage.token !== null && localStorage.token !== undefined) {
- * 	model.controlServerRequest();
- * 	model.mode = 'mLogged'
- * 	model.notify();
- * }
- */
