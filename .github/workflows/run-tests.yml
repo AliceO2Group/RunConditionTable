@@ -22,7 +22,7 @@ jobs:
       - run: npm ci
       - run: npm run test
       - name: Send codecov report for RunConditionTable
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
