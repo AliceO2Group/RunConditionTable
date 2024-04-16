@@ -64,7 +64,7 @@
     "joi": "^17.11.0",
     "less": "^4.1.3",
     "pg": "^8.8.0",
-    "sequelize": "^6.34.0",
+    "sequelize": "^6.37.3",
     "umzug": "^3.2.1",
     "socks-proxy-agent": "^8.0.2"
   },
