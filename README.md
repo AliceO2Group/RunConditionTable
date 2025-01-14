@@ -1,4 +1,4 @@
-# [archived[ Run Condition Table
+# [archived] Run Condition Table
 
 RunConditionTable's functionality has been integrated into [Bookkeeping](https://github.com/AliceO2Group/Bookkeeping). Any feature or bug fixes requests should go into Bookkeeping Jira's board.
 
