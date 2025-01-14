@@ -1,4 +1,7 @@
-# Run Condition Table
+# [archived[ Run Condition Table
+
+RunConditionTable's functionality has been integrated into [Bookkeeping](https://github.com/AliceO2Group/Bookkeeping). Any feature or bug fixes requests should go into Bookkeeping Jira's board.
+
 [![Actions Status](https://github.com/AliceO2Group/RunConditionTable/workflows/Tests/badge.svg)](https://github.com/AliceO2Group/RunConditionTable/actions)
 [![codecov](https://codecov.io/gh/AliceO2Group/RunConditionTable/branch/master/graph/badge.svg)](https://codecov.io/gh/AliceO2Group/RunConditionTable)
 
